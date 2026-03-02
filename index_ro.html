@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Statistica Pietelor Financiare - Academia de Studii Economice din Bucuresti. Materiale de curs, slide-uri, seminarii, notebook-uri Python si Quantlet-uri.">
+    <meta name="keywords" content="statistica, piete financiare, SPF, GARCH, volatilitate, VaR, machine learning, Academia de Studii Economice">
+    <meta name="author" content="Prof. dr. Daniel Traian Pele">
+    <title>Statistica Pietelor Financiare | Academia de Studii Economice din Bucuresti</title>
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="logos/ase_logo.png" type="image/png">
+
+    <style>
+        /* ========== CSS Variables ========== */
+        :root {
+            --main-blue: #1A3A6E;
+            --accent-blue: #2A528C;
+            --ida-red: #DC3545;
+            --forest: #2E7D32;
+            --dark-gray: #333;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --border-color: #ddd;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.18);
+            --transition: all 0.3s ease;
+            --radius: 8px;
+            --max-width: 1200px;
+        }
+
+        /* ========== Reset & Base ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 70px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            background-color: var(--light-gray);
+        }
+
+        a {
+            color: var(--main-blue);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* ========== Header ========== */
+        .site-header {
+            background: linear-gradient(135deg, var(--main-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-logos img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.92;
+            transition: var(--transition);
+        }
+
+        .header-logos img:hover {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        .site-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        .site-header .subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .lang-switcher {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-switcher a {
+            color: var(--white);
+            padding: 0.3rem 0.7rem;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .lang-switcher a:hover,
+        .lang-switcher a.active {
+            background: var(--white);
+            color: var(--main-blue);
+            border-color: var(--white);
+        }
+
+        /* ========== Sticky Nav ========== */
+        .site-nav {
+            background: var(--white);
+            border-bottom: 2px solid var(--main-blue);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .site-nav .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+        }
+
+        .site-nav a {
+            display: block;
+            padding: 0.9rem 1.8rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .site-nav a:hover {
+            color: var(--main-blue);
+            border-bottom-color: var(--main-blue);
+            background: var(--light-gray);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-gray);
+            cursor: pointer;
+            padding: 0.8rem 1rem;
+        }
+
+        /* ========== Main Content ========== */
+        .main-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--main-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--ida-red);
+            display: inline-block;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        /* ========== Info Cards Grid ========== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .info-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--main-blue), var(--accent-blue));
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-card h3 {
+            color: var(--main-blue);
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .info-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-card p,
+        .info-card ul {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card ul li {
+            padding: 0.2rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .info-card ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            background: var(--ida-red);
+            border-radius: 50%;
+        }
+
+        /* ========== Chapter Cards ========== */
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .chapter-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chapter-card-header {
+            background: linear-gradient(135deg, var(--main-blue), var(--accent-blue));
+            color: var(--white);
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .chapter-number {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .chapter-card-header h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .chapter-card-body {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-topics {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem 0;
+            flex: 1;
+        }
+
+        .chapter-topics li {
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .chapter-topics li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55rem;
+            width: 6px;
+            height: 6px;
+            background: var(--ida-red);
+            border-radius: 50%;
+        }
+
+        .chapter-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* ========== Buttons ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--main-blue);
+            color: var(--white);
+            border-color: var(--main-blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: var(--white);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background: var(--forest);
+            color: var(--white);
+            border-color: var(--forest);
+        }
+
+        .btn-secondary:hover {
+            background: #1b5e20;
+            border-color: #1b5e20;
+            color: var(--white);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--main-blue);
+            border-color: var(--main-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--main-blue);
+            color: var(--white);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-disabled {
+            background: #e0e0e0;
+            color: #999;
+            border-color: #e0e0e0;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ========== Resources Section ========== */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .resource-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--forest), var(--accent-blue));
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resource-card h3 {
+            color: var(--main-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .resource-card p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0.8rem;
+        }
+
+        .resource-card a.resource-link {
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .resource-card a.resource-link:hover {
+            color: var(--ida-red);
+        }
+
+        /* ========== Contact Section ========== */
+        .contact-box {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--main-blue), var(--ida-red));
+        }
+
+        .contact-box h3 {
+            color: var(--main-blue);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-box p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-box a {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .contact-box a:hover {
+            color: var(--ida-red);
+        }
+
+        /* ========== Footer ========== */
+        .site-footer {
+            background: var(--dark-gray);
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+        }
+
+        .footer-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-logos img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .footer-logos img:hover {
+            opacity: 1;
+        }
+
+        .site-footer p {
+            font-size: 0.88rem;
+            margin-top: 0.5rem;
+        }
+
+        .site-footer a {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .site-footer a:hover {
+            color: var(--white);
+        }
+
+        /* ========== Back to Top ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--main-blue);
+            color: var(--white);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 768px) {
+            .site-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .site-header .subtitle {
+                font-size: 0.95rem;
+            }
+
+            .header-logos img {
+                height: 40px;
+            }
+
+            .header-logos {
+                gap: 1rem;
+            }
+
+            .lang-switcher {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
+
+            .nav-toggle {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .site-nav .nav-inner {
+                flex-wrap: wrap;
+            }
+
+            .site-nav a {
+                padding: 0.7rem 1.2rem;
+                text-align: center;
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .site-nav a:hover {
+                border-left-color: var(--main-blue);
+                border-bottom-color: transparent;
+            }
+
+            .chapters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .footer-logos img {
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header-logos img {
+                height: 32px;
+            }
+
+            .chapter-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="site-header" id="top">
+    <div class="lang-switcher">
+        <a href="index.html" title="English">EN</a>
+        <a href="index_ro.html" class="active" title="Romanian">RO</a>
+    </div>
+
+    <div class="header-logos">
+        <img src="logos/ase_logo.png" alt="Academia de Studii Economice din Bucuresti">
+        <img src="logos/ida_logo.png" alt="IDA">
+        <img src="logos/brc_logo.png" alt="BRC">
+        <img src="logos/ai4efin_logo.png" alt="AI4EFin">
+        <img src="logos/acad_logo.png" alt="Academy">
+        <img src="logos/msca_logo.png" alt="MSCA">
+    </div>
+
+    <h1>Statistica Pietelor Financiare</h1>
+    <p class="subtitle">Academia de Studii Economice din Bucuresti</p>
+</header>
+
+<!-- ==================== NAV ==================== -->
+<nav class="site-nav">
+    <div class="nav-inner">
+        <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">&#9776; Meniu</button>
+        <div class="nav-links">
+            <a href="#overview">Prezentare generala</a>
+            <a href="#chapters">Capitole</a>
+            <a href="#resources">Resurse</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="main-content">
+
+    <!-- ===== Overview Section ===== -->
+    <section id="overview">
+        <h2 class="section-title">Prezentare generala a cursului</h2>
+
+        <div class="info-grid">
+            <!-- Course Card -->
+            <div class="info-card">
+                <span class="icon">&#128218;</span>
+                <h3>Curs</h3>
+                <p>Statistica Pietelor Financiare (SPF)</p>
+            </div>
+
+            <!-- Schedule Card -->
+            <div class="info-card">
+                <span class="icon">&#128197;</span>
+                <h3>Program</h3>
+                <p>Program de licenta, Semestrul 2</p>
+            </div>
+
+            <!-- Requirements Card -->
+            <div class="info-card">
+                <span class="icon">&#128736;</span>
+                <h3>Cerinte</h3>
+                <ul>
+                    <li>Programare Python</li>
+                    <li>Statistica de baza</li>
+                    <li>Algebra liniara</li>
+                </ul>
+            </div>
+
+            <!-- Assessment Card -->
+            <div class="info-card">
+                <span class="icon">&#128200;</span>
+                <h3>Evaluare</h3>
+                <ul>
+                    <li>50% Examen final</li>
+                    <li>30% Proiect</li>
+                    <li>20% Activitate seminar</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Chapters Section ===== -->
+    <section id="chapters">
+        <h2 class="section-title">Capitole</h2>
+
+        <div class="chapters-grid">
+
+            <!-- Chapter 0 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">0</div>
+                    <h3>Introducere</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Prezentarea cursului si obiective</li>
+                        <li>Structura evaluarii si notare</li>
+                        <li>Planificarea cursului</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter0_introduction_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">1</div>
+                    <h3>Surse de date si randamente</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Surse de date si furnizori de date financiare</li>
+                        <li>Tipuri de randamente: simple, logaritmice si aritmetice</li>
+                        <li>Stationaritate si estimatori de volatilitate</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter1_data_indicators_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="RO/Seminars/seminar1_randamente_stationaritate_ro.pdf" class="btn btn-secondary" target="_blank">Seminar</a>
+                        <a href="Quantlets/Ch_01/SFM_ch1_returns/SFM_ch1_returns.ipynb" class="btn btn-outline" target="_blank">Notebook</a>
+                        <a href="Quantlets/SFM_ch1/SFM_ch1_returns.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 2 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">2</div>
+                    <h3>Distributii stabile</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Distributii stabile si estimarea parametrilor</li>
+                        <li>Cozi groase in randamentele financiare</li>
+                        <li>Comparatie VaR intre distributii</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter2_stable_distributions_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="RO/Seminars/seminar2_distributii_stabile_ro.pdf" class="btn btn-secondary" target="_blank">Seminar</a>
+                        <a href="Quantlets/SFM_ch2/SFM_ch2_stable_distributions.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 3 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">3</div>
+                    <h3>Probabilitate</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Teoria probabilitatilor si fundamente</li>
+                        <li>Variabile aleatoare si distributii</li>
+                        <li>Aplicatii in finante</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter3_probability_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch3/SFM_ch3_emh_tests.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 4 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">4</div>
+                    <h3>Estimatori de volatilitate</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Estimatori de volatilitate si proprietati</li>
+                        <li>Teste de radacina unitara (ADF, Phillips-Perron)</li>
+                        <li>Regresie spuria in serii financiare de timp</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter4_volatility_estimators_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch4/SFM_ch4_random_walk.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 5 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">5</div>
+                    <h3>TBD</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Testul raportului variantei Lo-MacKinlay</li>
+                        <li>Metode wild bootstrap</li>
+                        <li>Testarea ipotezei mersului aleator</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter5_tbd_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch5/SFM_ch5_variance_ratio.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 6 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">6</div>
+                    <h3>Fapte stilizate</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Cozi groase si gruparea volatilitatii</li>
+                        <li>Efectul de levier in randamentele financiare</li>
+                        <li>Gaussianitate agregationala</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter6_stylized_facts.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch6/SFM_ch6_stylized_facts.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 7 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">7</div>
+                    <h3>Modele avansate de volatilitate</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Modele ARCH si GARCH</li>
+                        <li>EWMA (Media mobila ponderata exponential)</li>
+                        <li>Estimarea volatilitatii conditionate</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="RO/Courses/chapter7_volatility_advanced_ro.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch7/SFM_ch7_garch.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 8 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">8</div>
+                    <h3>Modele de volatilitate II</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Modele EGARCH si TGARCH</li>
+                        <li>GJR-GARCH pentru efecte asimetrice</li>
+                        <li>Modelarea asimetrica a volatilitatii</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter8_volatility_models_2.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch8/SFM_ch8_egarch_tgarch.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 9 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">9</div>
+                    <h3>VaR si Expected Shortfall</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Metodologii Value at Risk (VaR)</li>
+                        <li>Expected Shortfall (CVaR)</li>
+                        <li>Metode parametrice si de simulare istorica</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter9_var_expected_shortfall.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch9/SFM_ch9_var_es.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 10 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">10</div>
+                    <h3>Modele de scoring</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Fundamentele scoring-ului de credit</li>
+                        <li>Regresia logistica pentru riscul de credit</li>
+                        <li>Analiza discriminant</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter10_scoring_models.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch10/SFM_ch10_scoring.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 11 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">11</div>
+                    <h3>Invatare automata</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Regularizarea LASSO pentru selectia variabilelor</li>
+                        <li>Paduri aleatoare pentru predictia financiara</li>
+                        <li>Aplicatii de invatare automata in finante</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter11_machine_learning.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch11/SFM_ch11_machine_learning.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 12 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">12</div>
+                    <h3>Criptomonede si Stablecoins</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Analiza pietei criptomonedelor</li>
+                        <li>Stablecoins si mecanismele lor</li>
+                        <li>Prezentare generala DeFi (Finante Descentralizate)</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter12_crypto_stablecoins.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch12/SFM_ch12_crypto.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 13 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">13</div>
+                    <h3>Risc sistemic</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Riscul sistemic si contagiunea financiara</li>
+                        <li>CoVaR si masuri conditionate de risc</li>
+                        <li>Modele de retea in finante</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter13_systemic_risk.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch13/SFM_ch13_systemic_risk.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 14 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">14</div>
+                    <h3>Ipoteza pietei fractale</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Fundamentele ipotezei pietei fractale</li>
+                        <li>Estimarea exponentului Hurst</li>
+                        <li>Memorie lunga in seriile financiare de timp</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter14_fractal_market_hypothesis.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                        <a href="Quantlets/SFM_ch14/SFM_ch14_fractal_hurst.py" class="btn btn-outline" target="_blank">Quantlet</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter 15 -->
+            <div class="chapter-card">
+                <div class="chapter-card-header">
+                    <div class="chapter-number">15</div>
+                    <h3>Recapitulare</h3>
+                </div>
+                <div class="chapter-card-body">
+                    <ul class="chapter-topics">
+                        <li>Recapitulare completa a cursului</li>
+                        <li>Pregatire pentru examen si concepte cheie</li>
+                        <li>Probleme practice si intrebari</li>
+                    </ul>
+                    <div class="chapter-actions">
+                        <a href="EN/Courses/chapter15_review.pdf" class="btn btn-primary" target="_blank">Slide-uri Curs</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== Resources Section ===== -->
+    <section id="resources">
+        <h2 class="section-title">Resurse</h2>
+
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h3>Quantlet</h3>
+                <p>O platforma open-source pentru cercetare reproductibila in statistica si finante. Explorati Quantlet-uri interactive pentru fiecare capitol al acestui curs.</p>
+                <a href="https://quantlet.com" class="resource-link" target="_blank" rel="noopener">quantlet.com &rarr;</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Quantinar</h3>
+                <p>O platforma pentru tutoriale de stiinta datelor si metode cantitative, combinand teoria cu exemple practice de programare in Python si R.</p>
+                <a href="https://quantinar.com" class="resource-link" target="_blank" rel="noopener">quantinar.com &rarr;</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Manual</h3>
+                <p>Franke, J., H&auml;rdle, W. K., Hafner, C. M. &mdash; <em>Statistics of Financial Markets: An Introduction</em>. Springer, seria Universitext.</p>
+                <a href="https://link.springer.com/book/10.1007/978-3-030-13751-9" class="resource-link" target="_blank" rel="noopener">Springer &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Contact Section ===== -->
+    <section id="contact">
+        <h2 class="section-title">Contact</h2>
+
+        <div class="contact-box">
+            <h3>Prof. dr. Daniel Traian Pele</h3>
+            <p>Academia de Studii Economice din Bucuresti</p>
+            <p>Departamentul de Statistica si Econometrie</p>
+            <p style="margin-top: 0.8rem;">
+                <a href="mailto:daniel.pele@csie.ase.ro">daniel.pele@csie.ase.ro</a>
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="site-footer">
+    <div class="footer-logos">
+        <img src="logos/ase_logo.png" alt="Academia de Studii Economice din Bucuresti">
+        <img src="logos/ida_logo.png" alt="IDA">
+        <img src="logos/brc_logo.png" alt="BRC">
+        <img src="logos/ai4efin_logo.png" alt="AI4EFin">
+        <img src="logos/acad_logo.png" alt="Academy">
+        <img src="logos/msca_logo.png" alt="MSCA">
+    </div>
+    <p>&copy; 2025 &ndash; 2026 Statistica Pietelor Financiare | Academia de Studii Economice din Bucuresti</p>
+    <p>Prof. dr. Daniel Traian Pele | <a href="mailto:daniel.pele@csie.ase.ro">daniel.pele@csie.ase.ro</a></p>
+</footer>
+
+<!-- ==================== Back to Top Button ==================== -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Inapoi sus">&#8679;</button>
+
+<!-- ==================== Scripts ==================== -->
+<script>
+    // Back to top button visibility
+    (function() {
+        var btn = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    })();
+
+    // Smooth scroll for nav links and close mobile menu
+    (function() {
+        var navLinks = document.querySelectorAll('.nav-links a');
+        var navLinksContainer = document.querySelector('.nav-links');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (navLinksContainer.classList.contains('open')) {
+                    navLinksContainer.classList.remove('open');
+                }
+            });
+        });
+    })();
+
+    // Active nav highlight on scroll
+    (function() {
+        var sections = document.querySelectorAll('section[id]');
+        var navLinks = document.querySelectorAll('.nav-links a');
+
+        function highlightNav() {
+            var scrollPos = window.scrollY + 100;
+            sections.forEach(function(section) {
+                var top = section.offsetTop;
+                var height = section.offsetHeight;
+                var id = section.getAttribute('id');
+                if (scrollPos >= top && scrollPos < top + height) {
+                    navLinks.forEach(function(link) {
+                        link.style.borderBottomColor = 'transparent';
+                        link.style.color = '';
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.style.borderBottomColor = '#1A3A6E';
+                            link.style.color = '#1A3A6E';
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightNav);
+        highlightNav();
+    })();
+</script>
+
+</body>
+</html>

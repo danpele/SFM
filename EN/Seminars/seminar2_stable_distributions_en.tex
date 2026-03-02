@@ -1,0 +1,1014 @@
+% Seminar 2: Stable Distributions
+% Statistics of Financial Markets
+% Bachelor's programme, Bucharest University of Economic Studies
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+
+% Ensure content fits on slides
+\setbeamersize{text margin left=8mm, text margin right=8mm}
+
+%=============================================================================
+% THEME AND STYLE CONFIGURATION
+%=============================================================================
+\usetheme{default}
+
+% Color Palette
+\definecolor{MainBlue}{RGB}{26, 58, 110}
+\definecolor{AccentBlue}{RGB}{26, 58, 110}
+\definecolor{IDAred}{RGB}{205, 0, 0}
+\definecolor{DarkGray}{RGB}{51, 51, 51}
+\definecolor{MediumGray}{RGB}{128, 128, 128}
+\definecolor{LightGray}{RGB}{248, 248, 248}
+\definecolor{VeryLightGray}{RGB}{235, 235, 235}
+\definecolor{KeynoteGray}{RGB}{218, 218, 218}
+\definecolor{SectionGray}{RGB}{120, 120, 120}
+\definecolor{FooterGray}{RGB}{100, 100, 100}
+\definecolor{Crimson}{RGB}{220, 53, 69}
+\definecolor{Forest}{RGB}{46, 125, 50}
+\definecolor{Amber}{RGB}{181, 133, 63}
+\definecolor{Orange}{RGB}{230, 126, 34}
+\definecolor{Purple}{RGB}{142, 68, 173}
+
+% Gradient background (background canvas ensures it works on fragile frames too)
+\setbeamertemplate{background canvas}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \shade[shading=axis, shading angle=315,
+        top color=white, bottom color=KeynoteGray]
+        (current page.south west) rectangle (current page.north east);
+    \end{tikzpicture}%
+}
+
+\setbeamercolor{palette primary}{bg=MainBlue, fg=white}
+\setbeamercolor{palette secondary}{bg=MainBlue!85, fg=white}
+\setbeamercolor{palette tertiary}{bg=MainBlue!70, fg=white}
+\setbeamercolor{structure}{fg=MainBlue}
+\setbeamercolor{title}{fg=IDAred}
+\setbeamercolor{frametitle}{fg=IDAred, bg=}
+\setbeamercolor{block title}{bg=MainBlue, fg=white}
+\setbeamercolor{block body}{bg=VeryLightGray, fg=DarkGray}
+\setbeamercolor{block title alerted}{bg=Crimson, fg=white}
+\setbeamercolor{block body alerted}{bg=Crimson!8, fg=DarkGray}
+\setbeamercolor{block title example}{bg=Forest, fg=white}
+\setbeamercolor{block body example}{bg=Forest!8, fg=DarkGray}
+\setbeamercolor{item}{fg=MainBlue}
+
+% Footer colours
+\setbeamercolor{author in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{title in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{date in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{section in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{subsection in head/foot}{fg=FooterGray, bg=}
+
+% Bullet styles
+\setbeamertemplate{itemize item}{\color{MainBlue}$\boxdot$}
+\setbeamertemplate{itemize subitem}{\color{MainBlue}$\blacktriangleright$}
+\setbeamertemplate{itemize subsubitem}{\color{MainBlue}\tiny$\bullet$}
+\setbeamertemplate{itemize/enumerate body begin}{\normalsize}
+\setbeamertemplate{itemize/enumerate subbody begin}{\normalsize}
+
+% Item spacing
+\setlength{\leftmargini}{10pt}
+\setlength{\leftmarginii}{10pt}
+\makeatletter
+\def\@listi{\leftmargin\leftmargini \topsep 0pt \parsep 0pt \itemsep 0pt}
+\def\@listii{\leftmargin\leftmarginii \topsep 0pt \parsep 0pt \itemsep 0pt}
+\makeatother
+
+\setbeamertemplate{navigation symbols}{}
+
+%=============================================================================
+% CUSTOM HEADER
+%=============================================================================
+\setbeamertemplate{headline}{%
+    \vskip10pt%
+    \hbox to \paperwidth{%
+        \hskip0.5cm%
+        {\small\color{FooterGray}\renewcommand{\hyperlink}[2]{##2}\insertsectionhead}%
+        \hfill%
+        \textcolor{FooterGray}{\small\insertframenumber}%
+        \hskip0.5cm%
+    }%
+    \vskip4pt%
+    {\color{FooterGray}\hrule height 0.4pt}%
+}
+
+%=============================================================================
+% CUSTOM FOOTER
+%=============================================================================
+\usepackage{fontawesome5}
+
+\setbeamertemplate{footline}{%
+    {\color{FooterGray}\hrule height 0.4pt}%
+    \vskip4pt%
+    \hbox to \paperwidth{%
+        \hskip0.5cm%
+        \textcolor{FooterGray}{\small Statistics of Financial Markets --- Seminar}%
+        \hfill%
+        \raisebox{-0.1em}{%
+            \begin{tikzpicture}[x=0.08em, y=0.08em, line width=0.4pt]
+                \draw[FooterGray] (0,3) -- (1,4) -- (2,3.5) -- (3,5) -- (4,4) -- (5,6) -- (6,5.5) -- (7,4) -- (8,5) -- (9,7) -- (10,6) -- (11,5) -- (12,6.5) -- (13,8) -- (14,7) -- (15,6) -- (16,7.5) -- (17,9) -- (18,8) -- (19,7) -- (20,8.5) -- (21,10) -- (22,9) -- (23,8) -- (24,9.5);
+            \end{tikzpicture}%
+        }%
+        \hskip0.5cm%
+    }%
+    \vskip6pt%
+}
+
+%=============================================================================
+% PACKAGES
+%=============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes, calc, decorations.pathreplacing, shadings}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{colortbl}
+\usepackage{listings}
+\lstset{language=Python, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{MainBlue}\bfseries,
+  commentstyle=\color{Forest}, stringstyle=\color{Crimson}, breaklines=true,
+  frame=none, backgroundcolor=\color{VeryLightGray}, xleftmargin=2mm}
+\hypersetup{colorlinks=true, linkcolor=MainBlue, urlcolor=MainBlue}
+\graphicspath{{../../logos/}{../../charts/}{../../photos/}}
+\hfuzz=2pt
+\vfuzz=2pt
+
+%=============================================================================
+% QUANTLET COMMAND
+%=============================================================================
+\newcommand{\quantlet}[2]{%
+    \hfill\href{#2}{%
+        \raisebox{-0.15em}{\includegraphics[height=0.7em]{ql_logo.png}}%
+        \textcolor{MainBlue}{\tiny\ #1}%
+    }%
+}
+
+%=============================================================================
+% CUSTOM TITLE PAGE
+%=============================================================================
+\defbeamertemplate*{title page}{hybrid}[1][]
+{
+    \vspace{0.2cm}
+    \begin{center}
+        \href{https://www.ase.ro}{\includegraphics[height=1.0cm]{ase_logo.png}}\hspace{0.3cm}%
+        \href{https://theida.net}{\includegraphics[height=1.0cm]{ida_logo.png}}\hspace{0.3cm}%
+        \href{https://blockchain-research-center.com}{\includegraphics[height=1.0cm]{brc_logo.png}}\hspace{0.3cm}%
+        \href{https://www.ai4efin.ase.ro}{\includegraphics[height=1.0cm]{ai4efin_logo.png}}\hspace{0.3cm}%
+        \href{https://ipe.ro/new}{\includegraphics[height=1.0cm]{acad_logo.png}}\hspace{0.3cm}%
+        \href{https://www.digital-finance-msca.com}{\includegraphics[height=1.0cm]{msca_logo.png}}%
+    \end{center}
+
+    \vspace{0.6cm}
+
+    \begin{center}
+        \begin{minipage}{0.1\textwidth}
+            \centering
+            \href{https://quantlet.com}{\includegraphics[height=1.1cm]{ql_logo.png}}
+        \end{minipage}%
+        \begin{minipage}{0.78\textwidth}
+            \centering
+            {\LARGE\bfseries\usebeamercolor[fg]{title}\inserttitle}
+
+            \vspace{0.3cm}
+
+            {\usebeamerfont{subtitle}\usebeamercolor[fg]{title}\insertsubtitle}
+        \end{minipage}%
+        \begin{minipage}{0.1\textwidth}
+            \centering
+            \href{https://quantinar.com}{\includegraphics[height=1.1cm]{qr_logo.png}}
+        \end{minipage}
+    \end{center}
+
+    \vspace{0.6cm}
+
+    \hspace{0.5cm}\begin{minipage}[t]{0.9\textwidth}
+        \raggedright{\usebeamerfont{author}\insertauthor}
+    \end{minipage}
+
+    \vspace{0.3cm}
+
+    \hspace{0.5cm}\begin{minipage}[t]{0.9\textwidth}
+        \raggedright\small\insertinstitute
+    \end{minipage}
+}
+
+%=============================================================================
+% THEOREM ENVIRONMENTS
+%=============================================================================
+\theoremstyle{definition}
+\setbeamertemplate{theorems}[numbered]
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{rmk}{Remark}
+
+%=============================================================================
+% CENTRED MINIPAGE
+%=============================================================================
+\newenvironment{cminipage}[1]{%
+    \par\noindent\hfill\begin{minipage}{#1}\ignorespaces
+}{%
+    \end{minipage}\hfill\null\par
+}
+
+%=============================================================================
+% CUSTOM COMMANDS
+%=============================================================================
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\B}{\mathbf{B}}
+\newcommand{\imark}{\textcolor{MainBlue}{\textbullet}}
+\newcommand{\RMSE}{\text{RMSE}}
+\newcommand{\MAE}{\text{MAE}}
+\newcommand{\MAPE}{\text{MAPE}}
+
+%=============================================================================
+% TITLE INFORMATION
+%=============================================================================
+\title[Statistics of Financial Markets]{Statistics of Financial Markets}
+\subtitle{Seminar 2: Stable Distributions}
+\author[D.T. Pele, A. Amza]{Daniel Traian PELE \\ Antoaneta Amza}
+\institute{Bucharest University of Economic Studies\\
+IDA Institute Digital Assets\\
+Blockchain Research Center\\
+AI4EFin Artificial Intelligence for Energy Finance\\
+Romanian Academy, Institute for Economic Forecasting\\
+MSCA Digital Finance}
+\date{}
+
+\begin{document}
+
+%=============================================================================
+% TITLE PAGE
+%=============================================================================
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}[noframenumbering]
+    \titlepage
+\end{frame}
+}
+
+%=============================================================================
+% OBJECTIVES
+%=============================================================================
+\section{Objectives}
+
+\begin{frame}{Learning Objectives}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{block}{By the end of this seminar you will be able to:}
+\begin{itemize}
+    \item Verify the stability property for Gaussian and Cauchy
+    \item Compute the characteristic function of a stable distribution
+    \item Analyse moments and tail behaviour
+    \item Estimate parameters of a stable distribution (McCulloch, MLE)
+    \item Compare VaR: Gaussian vs Stable vs Empirical
+    \item Implement stable fitting in Python
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{center}
+\begin{tikzpicture}[
+    node distance=0.4cm,
+    every node/.style={font=\scriptsize, align=center},
+    phase/.style={draw=MainBlue, fill=MainBlue!8, rounded corners=3pt,
+                  minimum width=3.8cm, minimum height=0.6cm}
+]
+\node[phase] (p1) {I. Manual exercises (25 min)};
+\node[phase, below=of p1] (p2) {II. Estimation (20 min)};
+\node[phase, below=of p2] (p3) {III. Tails \& risk (15 min)};
+\node[phase, below=of p3] (p4) {IV. Python (30 min)};
+\draw[-{Stealth}, MainBlue, thick] (p1) -- (p2);
+\draw[-{Stealth}, MainBlue, thick] (p2) -- (p3);
+\draw[-{Stealth}, MainBlue, thick] (p3) -- (p4);
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%=============================================================================
+% PART I: MANUAL EXERCISES
+%=============================================================================
+\section{Part I: Manual exercises}
+
+\begin{frame}{Exercise 1: Verifying Stability --- The Gaussian Case}
+\begin{block}{Problem}
+Let $X_1, X_2$ be i.i.d.\ $\sim \mathcal{N}(0, 1)$. Show that
+$a X_1 + b X_2 \stackrel{d}{=} c X + d$ for $a=3, b=4, c=5$.
+\end{block}
+
+\begin{exampleblock}{Solution}
+If $X_1 \sim \mathcal{N}(0, 1)$, then $aX_1 \sim \mathcal{N}(0, a^2)$ and $bX_2 \sim \mathcal{N}(0, b^2)$.
+
+Sum: $aX_1 + bX_2 \sim \mathcal{N}(0, a^2 + b^2) = \mathcal{N}(0, 9 + 16) = \mathcal{N}(0, 25)$.
+
+Hence $c = \sqrt{a^2 + b^2} = \sqrt{25} = 5$ and $d = 0$.
+
+\vspace{0.2cm}
+\textbf{Conclusion:} The normal distribution is stable with $\alpha = 2$. The stability property reduces to the variance addition rule.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Exercise 1 cont.: Cauchy Case + Comparison Table}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Cauchy case ($\alpha = 1$)}
+Let $X_1, X_2 \sim \text{Cauchy}(0,1)$ i.i.d.
+
+$aX_1 + bX_2 \sim \text{Cauchy}(0, a+b)$
+
+For $a=3, b=4$: $c = a + b = 7$, $d = 0$.
+
+\vspace{0.2cm}
+\textbf{Note:} For Cauchy, scales add \textit{linearly}, not quadratically!
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{General rule}
+For $S(\alpha, \beta, \gamma, \delta)$:
+$$c^\alpha = a^\alpha + b^\alpha$$
+
+\vspace{0.2cm}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+& $\alpha$ & Rule & $c$ \\
+\midrule
+Gaussian & 2 & $c^2 = a^2+b^2$ & 5 \\
+Cauchy & 1 & $c = a+b$ & 7 \\
+$S(1.5)$ & 1.5 & $c^{1.5} = a^{1.5}+b^{1.5}$ & 6.19 \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Exercise 2: The Characteristic Function}
+\begin{block}{Problem}
+Compute $\varphi_X(t)$ for $X \sim S(1.5, 0.3, 1, 0)$ at $t = 1$.
+\end{block}
+
+\begin{exampleblock}{Solution}
+The characteristic function of a stable distribution:
+$$\log \varphi_X(t) = -|t|^\alpha \left[1 - i\beta\,\text{sgn}(t)\tan\frac{\pi\alpha}{2}\right] + i\delta t$$
+
+For $\alpha = 1.5$, $\beta = 0.3$, $\gamma = 1$, $\delta = 0$, $t = 1$:
+$$\log \varphi_X(1) = -|1|^{1.5}\left[1 - i \cdot 0.3 \cdot 1 \cdot \tan\frac{3\pi}{4}\right]$$
+$$= -1 \cdot [1 - i \cdot 0.3 \cdot (-1)] = -1 - 0.3i$$
+
+Therefore:
+$$\varphi_X(1) = e^{-1 - 0.3i} = e^{-1}(\cos 0.3 - i\sin 0.3) \approx 0.351 - 0.109i$$
+$$|\varphi_X(1)| = e^{-1} \approx 0.368$$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Exercise 3: Moments and Tails}
+\begin{block}{Problem}
+A financial analyst models daily returns with $S(1.7, -0.2, 0.01, 0.0005)$. Which moments exist? What are the risk management implications?
+\end{block}
+
+\begin{exampleblock}{Solution}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Moment existence:}
+\begin{itemize}
+    \item $\E[|X|^p] < \infty$ if and only if $p < \alpha$
+    \item $\alpha = 1.7 \Rightarrow$
+    \begin{itemize}
+        \item Mean ($p=1$): \textcolor{Forest}{exists} ($1 < 1.7$)
+        \item Variance ($p=2$): \textcolor{Crimson}{does not exist} ($2 > 1.7$)
+        \item Kurtosis ($p=4$): \textcolor{Crimson}{does not exist}
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Practical implications:}
+\begin{itemize}
+    \item $\beta = -0.2$: negative skewness (downside risk)
+    \item Gaussian VaR \textbf{underestimates} true risk
+    \item Probability of a $-5\sigma$ event:
+    \begin{itemize}
+        \item Normal: $\approx 3 \times 10^{-7}$ (1 in 3.5M days)
+        \item Stable(1.7): $\approx 0.003$ (1 in 333 days)
+    \end{itemize}
+    \item Sharpe ratio is not rigorously defined!
+\end{itemize}
+\end{column}
+\end{columns}
+\end{exampleblock}
+\end{frame}
+
+%=============================================================================
+% PART II: ESTIMATION
+%=============================================================================
+\section{Part II: Estimation}
+
+\begin{frame}{McCulloch's Method --- Concept}
+\begin{block}{Key idea}
+Estimate parameters $(\alpha, \beta, \gamma, \delta)$ from \textbf{sample quantiles}.
+\end{block}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Intermediate statistics:}
+$$v_\alpha = \frac{q_{0.95} - q_{0.05}}{q_{0.75} - q_{0.25}}$$
+$$v_\beta = \frac{q_{0.95} + q_{0.05} - 2q_{0.50}}{q_{0.95} - q_{0.05}}$$
+
+\vspace{0.2cm}
+\begin{itemize}
+    \item $v_\alpha$ measures \textit{tail thickness}
+    \item $v_\beta$ measures \textit{asymmetry}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Reference table (selection):}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc}
+\toprule
+$v_\alpha$ & $\alpha$ & Interpretation \\
+\midrule
+2.44 & 2.0 & Gaussian \\
+2.62 & 1.9 & Near Gaussian \\
+3.04 & 1.7 & Moderate tails \\
+4.21 & 1.5 & Heavy tails \\
+6.31 & 1.3 & Very heavy tails \\
+\bottomrule
+\end{tabular}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{McCulloch --- Worked Example}
+\begin{block}{Numerical data}
+From a sample of 2{,}000 observations: $q_{0.05} = -3.42$, $q_{0.25} = -0.78$, $q_{0.50} = 0.05$, $q_{0.75} = 0.82$, $q_{0.95} = 3.61$.
+\end{block}
+
+\begin{exampleblock}{Step-by-step solution}
+\textbf{Step 1: Compute $v_\alpha$}
+$$v_\alpha = \frac{q_{0.95} - q_{0.05}}{q_{0.75} - q_{0.25}} = \frac{3.61 - (-3.42)}{0.82 - (-0.78)} = \frac{7.03}{1.60} = 4.39$$
+
+\textbf{Step 2: Estimate $\alpha$}
+From the table: $v_\alpha = 4.39$ corresponds to $\hat{\alpha} \approx 1.48$.
+
+\textbf{Step 3: Compute $v_\beta$}
+$$v_\beta = \frac{q_{0.95} + q_{0.05} - 2q_{0.50}}{q_{0.95} - q_{0.05}} = \frac{3.61 + (-3.42) - 2 \cdot 0.05}{7.03} = \frac{0.09}{7.03} \approx 0.013$$
+
+\textbf{Step 4: Estimate $\beta$}
+$v_\beta \approx 0.013 \approx 0 \Rightarrow \hat{\beta} \approx 0$ (nearly symmetric distribution).
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Maximum Likelihood Estimation (MLE)}
+\begin{block}{Procedure}
+$$\hat{\theta}_{MLE} = \arg\max_{\theta} \sum_{i=1}^{n} \log f(x_i; \alpha, \beta, \gamma, \delta)$$
+\end{block}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Challenges:}
+\begin{itemize}
+    \item PDF has no closed form (in general)
+    \item Requires numerical evaluation via FFT
+    \item Likelihood function is not convex
+    \item Slow convergence for small $\alpha$
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Advantages:}
+\begin{itemize}
+    \item Asymptotically most efficient estimator
+    \item Standard confidence intervals
+    \item Modern implementation: \texttt{scipy.stats.levy\_stable.fit()}
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Python one-liner:}
+\begin{lstlisting}
+from scipy.stats import levy_stable
+a, b, loc, sc = levy_stable.fit(data)
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Koutrouvelis Regression}
+\begin{block}{Two-stage method}
+Uses the empirical characteristic function (ECF).
+\end{block}
+
+\textbf{Stage 1:} Estimate $\alpha$ and $\gamma$ via linear regression:
+$$\log\left(-\log|\hat{\varphi}_n(t)|^2\right) = \log(2\gamma^\alpha) + \alpha \log|t|$$
+Regression $Y = a + bX$ with $Y_k = \log(-\log|\hat{\varphi}_n(t_k)|^2)$ and $X_k = \log|t_k|$.
+
+\vspace{0.3cm}
+\textbf{Stage 2:} Estimate $\beta$ and $\delta$ via regression on the imaginary part:
+$$\arg[\hat{\varphi}_n(t)] = \delta t - \beta\gamma^\alpha \tan\frac{\pi\alpha}{2}\,\text{sgn}(t)|t|^\alpha$$
+
+\vspace{0.2cm}
+\begin{alertblock}{Advantage}
+Numerically robust, does not require PDF evaluation, fast convergence.
+\end{alertblock}
+\end{frame}
+
+%=============================================================================
+% PART III: TAILS AND RISK
+%=============================================================================
+\section{Part III: Tails and risk}
+
+\begin{frame}{Heavy Tails --- Gaussian vs Stable}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{block}{Comparison table: Probability of extreme events}
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Event} & \textbf{Gaussian} & \textbf{Stable($\alpha$=1.7)} & \textbf{Ratio} \\
+\midrule
+$|X| > 3\sigma$ & $2.7 \times 10^{-3}$ & $1.9 \times 10^{-2}$ & $\approx 7\times$ \\
+$|X| > 5\sigma$ & $5.7 \times 10^{-7}$ & $3.0 \times 10^{-3}$ & $\approx 5{,}000\times$ \\
+$|X| > 10\sigma$ & $1.5 \times 10^{-23}$ & $5.2 \times 10^{-4}$ & $\approx 10^{19}\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+\begin{alertblock}{Practical implication}
+Gaussian models dramatically underestimate the risk of extreme events. A ``$10\sigma$'' event that the Gaussian considers virtually impossible occurs roughly once every $\sim$2{,}000 days ($\sim$8 years) under the stable model.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Exercise 4: Gaussian vs Stable VaR}
+\begin{block}{Problem}
+Portfolio of 1{,}000{,}000 EUR. Daily returns modelled with $S(1.7, -0.2, 0.01, 0.0005)$. Compare VaR at 1\%, 5\% and 0.1\%.
+\end{block}
+
+\begin{exampleblock}{Solution}
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{VaR level} & \textbf{Gaussian} & \textbf{Stable} & \textbf{Difference} \\
+\midrule
+5\% & $-$16{,}449 EUR & $-$21{,}340 EUR & +30\% \\
+1\% & $-$22{,}763 EUR & $-$39{,}870 EUR & +75\% \\
+0.1\% & $-$30{,}091 EUR & $-$87{,}420 EUR & +190\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\textbf{Conclusion:} The deeper into the tail, the larger the gap between Gaussian and Stable VaR. At 0.1\%, the stable model estimates losses nearly \textbf{3 times larger}.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Visual Comparison: Survival Function}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{ch2_tail_survival.png}
+\end{center}
+
+\vspace{-0.3cm}
+\begin{itemize}
+    \item Log-log plot: survival function $P(X > x)$
+    \item The stable distribution decays as a \textbf{power law}: $P(X > x) \sim C_\alpha x^{-\alpha}$
+    \item The normal distribution decays \textbf{exponentially}: the gap grows rapidly with $x$
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% PART IV: PYTHON IMPLEMENTATION
+%=============================================================================
+\section{Part IV: Python implementation}
+
+\begin{frame}[fragile]{Simulating Stable Distributions}
+
+\begin{lstlisting}
+import numpy as np
+from scipy.stats import levy_stable
+import matplotlib.pyplot as plt
+
+# Simulate stable distributions for different alpha
+alphas = [0.5, 1.0, 1.5, 2.0]
+x = np.linspace(-8, 8, 1000)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+colors = ['#DC3545', '#FF8C00', '#2E7D32', '#1A3A6E']
+labels = [r'$\alpha=0.5$ (Levy)', r'$\alpha=1.0$ (Cauchy)',
+          r'$\alpha=1.5$', r'$\alpha=2.0$ (Gaussian)']
+
+for a, c, lab in zip(alphas, colors, labels):
+    pdf = levy_stable.pdf(x, alpha=a, beta=0)
+    ax1.plot(x, pdf, color=c, label=lab)       # Linear scale
+    ax2.semilogy(x, pdf, color=c, label=lab)    # Log scale
+
+ax1.set_title('PDFs (linear)')
+ax2.set_title('PDFs (log scale) - tail behavior')
+for ax in [ax1, ax2]:
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12),
+              ncol=2, frameon=False)
+plt.tight_layout()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Fitting Stable to S\&P 500}
+
+\begin{lstlisting}
+import yfinance as yf
+from scipy.stats import levy_stable, norm
+
+# Download S&P 500 data
+sp500 = yf.download('^GSPC', start='2000-01-01', end='2025-12-31')
+returns = np.log(sp500['Close'] / sp500['Close'].shift(1)).dropna()
+
+# Fit stable distribution
+alpha, beta, loc, scale = levy_stable.fit(returns.values)
+print(f"Stable fit: alpha={alpha:.3f}, beta={beta:.3f}")
+
+# Fit normal
+mu, sigma = norm.fit(returns.values)
+print(f"Normal fit: mu={mu:.6f}, sigma={sigma:.6f}")
+
+# Compare on log-scale
+x = np.linspace(returns.min()*1.2, returns.max()*1.2, 1000)
+plt.hist(returns, bins=150, density=True, alpha=0.4, label='Data')
+plt.semilogy(x, levy_stable.pdf(x, alpha, beta, loc, scale),
+             label=f'Stable (alpha={alpha:.2f})')
+plt.semilogy(x, norm.pdf(x, mu, sigma), '--', label='Normal')
+plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1),
+           ncol=3, frameon=False)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Overlay PDF: Histogram + Stable + Normal (log-scale)}
+
+\begin{center}
+\includegraphics[width=0.78\textwidth]{ch2_sp500_stable_fit.png}
+\end{center}
+
+\vspace{-0.3cm}
+\begin{itemize}
+    \item On a logarithmic scale, the difference in the tails is striking
+    \item The stable distribution captures the \textbf{leptokurtosis} observed in the data
+    \item The normal underestimates probabilities in the distribution tails
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{VaR Comparison + Backtest}
+
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\begin{lstlisting}
+# VaR comparison
+levels = [0.01, 0.05, 0.001]
+for cl in levels:
+    var_s = levy_stable.ppf(
+        cl, alpha, beta, loc, scale)
+    var_n = norm.ppf(cl, mu, sigma)
+    var_e = np.percentile(
+        returns, cl*100)
+    print(f"VaR {cl*100:.1f}%:")
+    print(f"  Stable:    {var_s:.5f}")
+    print(f"  Normal:    {var_n:.5f}")
+    print(f"  Empirical: {var_e:.5f}")
+\end{lstlisting}
+\end{column}
+\begin{column}{0.52\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{ch2_var_comparison.png}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{AI Exercise: Prompt Engineering}
+\begin{block}{Exercise}
+Use ChatGPT or Claude to generate Python code that:
+\end{block}
+
+\begin{enumerate}
+    \item Downloads BTC-USD data for the last 5 years
+    \item Fits a stable distribution to the daily log-returns
+    \item Compares stable vs normal PDF graphically (log-scale)
+    \item Computes VaR at 1\% and 5\%
+    \item Performs a backtest: how many days exceeded the estimated VaR?
+\end{enumerate}
+
+\vspace{0.3cm}
+\begin{alertblock}{Suggested prompt}
+\textit{``Write Python code using scipy.stats.levy\_stable to fit a stable distribution to BTC-USD daily log-returns from yfinance. Plot histogram with stable and normal overlay on log-scale. Calculate VaR at 1\% and 5\% for both distributions and backtest against actual returns.''}
+\end{alertblock}
+\end{frame}
+
+%=============================================================================
+% CASE STUDY: S&P 500
+%=============================================================================
+\section{Case study: S\&P 500}
+
+\begin{frame}{Histogram + Stable vs Normal Fit}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{ch2_sp500_stable_fit.png}
+\end{center}
+
+\vspace{-0.2cm}
+\begin{itemize}
+    \item The stable distribution fits better both in the \textbf{centre} and in the \textbf{tails}
+    \item The normal overestimates density at $\pm 1\sigma$ and underestimates in the tails
+\end{itemize}
+\end{frame}
+
+\begin{frame}{PDF Comparison on Logarithmic Scale}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{ch2_stable_pdfs.png}
+\end{center}
+\end{column}
+\begin{column}{0.42\textwidth}
+\textbf{Observations:}
+\begin{itemize}
+    \item Panel B (log scale) highlights tail differences
+    \item $\alpha = 0.5$ (L\'{e}vy) has the heaviest tails
+    \item At $\alpha = 2.0$ we recover the normal distribution exactly
+    \item Financial returns typically have $\alpha \in [1.5, 1.9]$
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{VaR: Comparison Table}
+\begin{block}{VaR on S\&P 500 (2000--2025): Gaussian vs Stable vs Empirical}
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{VaR level} & \textbf{Gaussian} & \textbf{Stable} & \textbf{Empirical} \\
+\midrule
+5\% & $-1.91\%$ & $-2.14\%$ & $-2.08\%$ \\
+1\% & $-2.71\%$ & $-4.12\%$ & $-3.56\%$ \\
+0.1\% & $-3.59\%$ & $-8.97\%$ & $-6.88\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+\begin{itemize}
+    \item At the 5\% level, differences are small
+    \item At 1\%, the stable model is $\sim$50\% more conservative than Gaussian
+    \item At 0.1\%, the stable model estimates losses \textbf{2.5$\times$} larger
+    \item Empirical VaR falls \textbf{between} the two parametric models
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cross-Asset Comparison: Stability Index $\alpha$}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{ch2_cross_asset_alpha.png}
+\end{center}
+
+\vspace{-0.2cm}
+\begin{itemize}
+    \item Bitcoin has the lowest $\alpha$ $\Rightarrow$ heaviest tails
+    \item Bonds have the highest $\alpha$ (closest to Gaussian)
+    \item \textbf{No} asset class is perfectly Gaussian ($\alpha < 2$)
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% HOMEWORK
+%=============================================================================
+\section{Homework}
+
+\begin{frame}{Homework: Stable Distributions on BVB}
+\begin{block}{Requirements}
+\begin{enumerate}
+    \item Choose a stock listed on the Bucharest Stock Exchange (e.g.\ TLV, SNP, BRD, FP)
+    \item Download daily data for the last 5 years
+    \item Fit a stable distribution to the log-returns
+    \item Compare stable vs normal PDF graphically (log scale)
+    \item Compute VaR at 1\% and 5\% (stable vs normal vs empirical)
+    \item Interpret the results: is the Romanian market ``more Gaussian'' than S\&P 500?
+\end{enumerate}
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Hints}
+\begin{itemize}
+    \item Use \texttt{yfinance} with the BVB ticker (e.g.\ \texttt{TLV.RO})
+    \item \texttt{levy\_stable.fit()} can be slow --- use \texttt{floc=np.mean(data)}
+    \item Compare the estimated $\alpha$ with that of S\&P 500
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+%=============================================================================
+% SUMMARY
+%=============================================================================
+\section{Summary}
+
+\begin{frame}{Competence Checklist}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Theory}
+\begin{itemize}
+    \item[$\square$] Stability definition via sums
+    \item[$\square$] Parameters: $\alpha$, $\beta$, $\gamma$, $\delta$
+    \item[$\square$] Special cases: Gauss, Cauchy, L\'{e}vy
+    \item[$\square$] Characteristic function
+    \item[$\square$] Moment existence ($p < \alpha$)
+    \item[$\square$] Tail behaviour (power law)
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Practice}
+\begin{itemize}
+    \item[$\square$] McCulloch estimation (quantiles)
+    \item[$\square$] MLE with \texttt{levy\_stable.fit()}
+    \item[$\square$] Koutrouvelis regression (ECF)
+    \item[$\square$] VaR: stable vs normal vs empirical
+    \item[$\square$] Simulation and visualisation in Python
+    \item[$\square$] Interpreting $\alpha$ on real data
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+%=============================================================================
+% SEMINAR PLANNING
+%=============================================================================
+\section{Seminar planning}
+
+\begin{frame}{Seminar Planning}
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+\textbf{Week} & \textbf{Topic} & \textbf{Associated lecture} & \textbf{Main content} \\
+\midrule
+1 & Returns & Ch.\ 1: Data sources & Return types, stationarity \\
+\rowcolor{MainBlue!10}
+\textbf{2} & \textbf{Stable distributions} & \textbf{Ch.\ 2: Distributions} & \textbf{Stable fit, VaR, heavy tails} \\
+3 & EMH \& Random Walk & Ch.\ 3--4 & EMH tests, variance ratio \\
+4 & Stylized facts & Ch.\ 5--6 & ACF, volatility clustering \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+%=============================================================================
+% QUICK QUIZ
+%=============================================================================
+\section{Quick quiz}
+
+\begin{frame}{Quiz: 5 Questions}
+\begin{enumerate}
+    \item What are the bounds of the stability parameter $\alpha$?
+    \begin{enumerate}
+        \item[(a)] $0 < \alpha \leq 1$
+        \item[(b)] $0 < \alpha \leq 2$
+        \item[(c)] $-2 \leq \alpha \leq 2$
+        \item[(d)] $\alpha > 0$
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \item For a distribution $S(1.6, 0, 1, 0)$, which moments \textbf{exist}?
+    \begin{enumerate}
+        \item[(a)] Mean and variance
+        \item[(b)] Only the mean
+        \item[(c)] All moments
+        \item[(d)] No moments
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \item Which distribution is obtained at $\alpha = 1, \beta = 0$?
+    \begin{enumerate}
+        \item[(a)] Gaussian
+        \item[(b)] Cauchy
+        \item[(c)] L\'{e}vy
+        \item[(d)] Exponential
+    \end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Quiz: 5 Questions (cont.) + Answers}
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item In McCulloch's method, $v_\alpha = 2.44$ corresponds to:
+    \begin{enumerate}
+        \item[(a)] Cauchy
+        \item[(b)] Gaussian
+        \item[(c)] L\'{e}vy
+        \item[(d)] Stable($\alpha = 1.5$)
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \item Why is stable VaR $>$ Gaussian VaR at 0.1\%?
+    \begin{enumerate}
+        \item[(a)] The stable distribution has heavier tails
+        \item[(b)] The stable distribution is more symmetric
+        \item[(c)] The Gaussian has infinite variance
+        \item[(d)] The parameter $\beta$ is negative
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Answers}
+\begin{enumerate}
+    \item \textbf{(b)} $0 < \alpha \leq 2$
+    \item \textbf{(b)} Only the mean (since $p < \alpha = 1.6$, only $p < 1.6$)
+    \item \textbf{(b)} Cauchy
+    \item \textbf{(b)} Gaussian ($\alpha = 2.0$)
+    \item \textbf{(a)} Heavier tails of the stable distribution
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
+%=============================================================================
+% REFERENCES
+%=============================================================================
+\section{References}
+
+\begin{frame}{References}
+\begin{thebibliography}{9}
+\setbeamertemplate{bibliography item}[text]
+
+\bibitem{nolan2020}
+J.P. Nolan, \textit{Stable Distributions: Models for Heavy Tailed Data}, Birkh\"{a}user, 2020.
+
+\bibitem{mandelbrot1963}
+B. Mandelbrot, ``The variation of certain speculative prices,'' \textit{Journal of Business}, 36(4), 1963.
+
+\bibitem{rachev2003}
+S.T. Rachev, S. Mittnik, \textit{Stable Paretian Models in Finance}, Wiley, 2000.
+
+\bibitem{franke2019}
+J. Franke, W.K. H\"{a}rdle, C.M. Hafner, \textit{Statistics of Financial Markets}, 4th ed., Springer, 2019.
+
+\bibitem{mcculloch1986}
+J.H. McCulloch, ``Simple consistent estimators of stable distribution parameters,'' \textit{Communications in Statistics --- Simulation and Computation}, 15(4), 1986.
+
+\end{thebibliography}
+
+\vspace{0.3cm}
+\textbf{Online resources:}
+\begin{itemize}
+    \item \url{https://quantlet.com} --- Quantlet repository
+    \item \url{https://danpele.github.io/SFM/} --- Course materials
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% THANK YOU
+%=============================================================================
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}{}
+    \centering
+
+    \Huge\textcolor{MainBlue}{Thank you!}
+
+    \vspace{0.8cm}
+
+    \Large Questions?
+
+    \vspace{1cm}
+
+    \normalsize
+    Course materials available at: \url{https://danpele.github.io/SFM/}
+
+    \vspace{0.3cm}
+
+    \href{https://quantlet.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{ql_logo.png}} Quantlet}
+    \hspace{0.5cm}
+    \href{https://quantinar.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{qr_logo.png}} Quantinar}
+\end{frame}
+}
+
+\end{document}

@@ -1,0 +1,1082 @@
+% Chapter 2: Statistical Distributions in Capital Markets
+% Harvard-quality academic presentation
+% Bachelor program, Bucharest University of Economic Studies
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+
+% Ensure content fits on slides
+\setbeamersize{text margin left=8mm, text margin right=8mm}
+
+%=============================================================================
+% THEME AND STYLE CONFIGURATION
+%=============================================================================
+\usetheme{default}
+% Using default theme for clean header/footer control
+
+% Color Palette (matching Redispatch PDF)
+\definecolor{MainBlue}{RGB}{26, 58, 110}
+\definecolor{AccentBlue}{RGB}{26, 58, 110}
+\definecolor{IDAred}{RGB}{205, 0, 0}
+\definecolor{DarkGray}{RGB}{51, 51, 51}
+\definecolor{MediumGray}{RGB}{128, 128, 128}
+\definecolor{LightGray}{RGB}{248, 248, 248}
+\definecolor{VeryLightGray}{RGB}{235, 235, 235}
+\definecolor{KeynoteGray}{RGB}{218, 218, 218}
+\definecolor{SectionGray}{RGB}{120, 120, 120}
+\definecolor{FooterGray}{RGB}{100, 100, 100}
+\definecolor{Crimson}{RGB}{220, 53, 69}
+\definecolor{Forest}{RGB}{46, 125, 50}
+\definecolor{Amber}{RGB}{181, 133, 63}
+\definecolor{Orange}{RGB}{230, 126, 34}
+\definecolor{Purple}{RGB}{142, 68, 173}
+
+% Gradient background (exact Keynote 315° gradient: white to RGB 218,218,218)
+\setbeamertemplate{background}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \shade[shading=axis, shading angle=315,
+        top color=white, bottom color=KeynoteGray]
+        (current page.south west) rectangle (current page.north east);
+    \end{tikzpicture}%
+}
+% Fallback solid color for compatibility
+\setbeamercolor{background canvas}{bg=}
+
+\setbeamercolor{palette primary}{bg=MainBlue, fg=white}
+\setbeamercolor{palette secondary}{bg=MainBlue!85, fg=white}
+\setbeamercolor{palette tertiary}{bg=MainBlue!70, fg=white}
+\setbeamercolor{structure}{fg=MainBlue}
+\setbeamercolor{title}{fg=IDAred}
+\setbeamercolor{frametitle}{fg=IDAred, bg=}
+\setbeamercolor{block title}{bg=MainBlue, fg=white}
+\setbeamercolor{block body}{bg=VeryLightGray, fg=DarkGray}
+\setbeamercolor{block title alerted}{bg=Crimson, fg=white}
+\setbeamercolor{block body alerted}{bg=Crimson!8, fg=DarkGray}
+\setbeamercolor{block title example}{bg=Forest, fg=white}
+\setbeamercolor{block body example}{bg=Forest!8, fg=DarkGray}
+\setbeamercolor{item}{fg=MainBlue}
+
+% Footer colors (override Madrid theme blue)
+\setbeamercolor{author in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{title in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{date in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{section in head/foot}{fg=FooterGray, bg=}
+\setbeamercolor{subsection in head/foot}{fg=FooterGray, bg=}
+
+% Bullet styles (apply everywhere including blocks)
+\setbeamertemplate{itemize item}{\color{MainBlue}$\boxdot$}
+\setbeamertemplate{itemize subitem}{\color{MainBlue}$\blacktriangleright$}
+\setbeamertemplate{itemize subsubitem}{\color{MainBlue}\tiny$\bullet$}
+\setbeamertemplate{itemize/enumerate body begin}{\normalsize}
+\setbeamertemplate{itemize/enumerate subbody begin}{\normalsize}
+
+% Item spacing - compact style
+\setlength{\leftmargini}{10pt}       % Level 1: minimal indent
+\setlength{\leftmarginii}{10pt}      % Level 2: minimal additional indent
+% Compact list spacing (zero extra space before/after lists in blocks)
+\makeatletter
+\def\@listi{\leftmargin\leftmargini \topsep 0pt \parsep 0pt \itemsep 0pt}
+\def\@listii{\leftmargin\leftmarginii \topsep 0pt \parsep 0pt \itemsep 0pt}
+\makeatother
+
+\setbeamertemplate{navigation symbols}{}
+
+%=============================================================================
+% CUSTOM HEADLINE
+%=============================================================================
+\setbeamertemplate{headline}{%
+    \vskip10pt%
+    \hbox to \paperwidth{%
+        \hskip0.5cm%
+        {\small\color{FooterGray}\renewcommand{\hyperlink}[2]{##2}\insertsectionhead}%
+        \hfill%
+        \textcolor{FooterGray}{\small\insertframenumber}%
+        \hskip0.5cm%
+    }%
+    \vskip4pt%
+    {\color{FooterGray}\hrule height 0.4pt}%
+}
+
+%=============================================================================
+% CUSTOM FOOTER
+%=============================================================================
+\usepackage{fontawesome5}
+
+\setbeamertemplate{footline}{%
+    {\color{FooterGray}\hrule height 0.4pt}%
+    \vskip4pt%
+    \hbox to \paperwidth{%
+        \hskip0.5cm%
+        \textcolor{FooterGray}{\small Statistics of Financial Markets}%
+        \hfill%
+        \raisebox{-0.1em}{%
+            \begin{tikzpicture}[x=0.08em, y=0.08em, line width=0.4pt]
+                \draw[FooterGray] (0,3) -- (1,4) -- (2,3.5) -- (3,5) -- (4,4) -- (5,6) -- (6,5.5) -- (7,4) -- (8,5) -- (9,7) -- (10,6) -- (11,5) -- (12,6.5) -- (13,8) -- (14,7) -- (15,6) -- (16,7.5) -- (17,9) -- (18,8) -- (19,7) -- (20,8.5) -- (21,10) -- (22,9) -- (23,8) -- (24,9.5);
+            \end{tikzpicture}%
+        }%
+        \hskip0.5cm%
+    }%
+    \vskip6pt%
+}
+
+%=============================================================================
+% PACKAGES
+%=============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes, calc, decorations.pathreplacing, shadings}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{colortbl}
+\usepackage{listings}
+\lstset{language=Python, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{MainBlue}\bfseries,
+  commentstyle=\color{Forest}, stringstyle=\color{Crimson}, breaklines=true,
+  frame=none, backgroundcolor=\color{VeryLightGray}, xleftmargin=2mm}
+\hypersetup{colorlinks=true, linkcolor=MainBlue, urlcolor=MainBlue}
+\graphicspath{{../../logos/}{../../charts/}{../../photos/}}
+\hfuzz=2pt  % Suppress tiny overfull warnings (<2pt)
+\vfuzz=2pt  % Suppress tiny vertical overfull warnings (<2pt)
+
+%=============================================================================
+% QUANTLET COMMAND
+%=============================================================================
+\newcommand{\quantlet}[2]{%
+    \hfill\href{#2}{%
+        \raisebox{-0.15em}{\includegraphics[height=0.7em]{ql_logo.png}}%
+        \textcolor{MainBlue}{\tiny\ #1}%
+    }%
+}
+
+%=============================================================================
+% CUSTOM TITLE PAGE
+%=============================================================================
+\defbeamertemplate*{title page}{hybrid}[1][]
+{
+    \vspace{0.2cm}
+    % Logos row - top header (with clickable links)
+    \begin{center}
+        \href{https://www.ase.ro}{\includegraphics[height=1.0cm]{ase_logo.png}}\hspace{0.3cm}%
+        \href{https://theida.net}{\includegraphics[height=1.0cm]{ida_logo.png}}\hspace{0.3cm}%
+        \href{https://blockchain-research-center.com}{\includegraphics[height=1.0cm]{brc_logo.png}}\hspace{0.3cm}%
+        \href{https://www.ai4efin.ase.ro}{\includegraphics[height=1.0cm]{ai4efin_logo.png}}\hspace{0.3cm}%
+        \href{https://ipe.ro/new}{\includegraphics[height=1.0cm]{acad_logo.png}}\hspace{0.3cm}%
+        \href{https://www.digital-finance-msca.com}{\includegraphics[height=1.0cm]{msca_logo.png}}%
+    \end{center}
+
+    \vspace{0.6cm}
+
+    % Main title with Q logos on sides (with clickable links)
+    \begin{center}
+        \begin{minipage}{0.1\textwidth}
+            \centering
+            \href{https://quantlet.com}{\includegraphics[height=1.1cm]{ql_logo.png}}
+        \end{minipage}%
+        \begin{minipage}{0.78\textwidth}
+            \centering
+            {\LARGE\bfseries\usebeamercolor[fg]{title}\inserttitle}
+
+            \vspace{0.3cm}
+
+            {\usebeamerfont{subtitle}\usebeamercolor[fg]{title}\insertsubtitle}
+        \end{minipage}%
+        \begin{minipage}{0.1\textwidth}
+            \centering
+            \href{https://quantinar.com}{\includegraphics[height=1.1cm]{qr_logo.png}}
+        \end{minipage}
+    \end{center}
+
+    \vspace{0.6cm}
+
+    % Authors (left aligned)
+    \hspace{0.5cm}{\usebeamerfont{author}\insertauthor}
+
+    \vspace{0.3cm}
+
+    % Institute/Affiliations (left aligned)
+    \hspace{0.5cm}\begin{minipage}[t]{0.9\textwidth}
+        \raggedright\small\insertinstitute
+    \end{minipage}
+}
+
+%=============================================================================
+% THEOREM ENVIRONMENTS
+%=============================================================================
+\theoremstyle{definition}
+\setbeamertemplate{theorems}[numbered]
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{rmk}{Remark}
+
+%=============================================================================
+% CENTRED MINIPAGE (no extra vertical space)
+%=============================================================================
+\newenvironment{cminipage}[1]{%
+    \par\noindent\hfill\begin{minipage}{#1}\ignorespaces
+}{%
+    \end{minipage}\hfill\null\par
+}
+
+%=============================================================================
+% CUSTOM COMMANDS
+%=============================================================================
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\B}{\mathbf{B}}
+\newcommand{\imark}{\textcolor{MainBlue}{\textbullet}}
+\newcommand{\RMSE}{\text{RMSE}}
+\newcommand{\MAE}{\text{MAE}}
+\newcommand{\MAPE}{\text{MAPE}}
+
+%=============================================================================
+% TITLE INFORMATION
+%=============================================================================
+\title[Statistics of Financial Markets]{Statistics of Financial Markets}
+\subtitle{Chapter 2: Statistical Distributions in Capital Markets}
+\author[D.T. Pele]{Daniel Traian PELE}
+\institute{Bucharest University of Economic Studies\\
+IDA Institute Digital Assets\\
+Blockchain Research Center\\
+AI4EFin Artificial Intelligence for Energy Finance\\
+Romanian Academy, Institute for Economic Forecasting\\
+MSCA Digital Finance}
+\date{}
+
+%=============================================================================
+\begin{document}
+%=============================================================================
+
+%-----------------------------------------------------------------------------
+% TITLE SLIDE
+%-----------------------------------------------------------------------------
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}[noframenumbering]
+\titlepage
+\end{frame}
+}
+
+%=============================================================================
+% SECTION: MOTIVATION
+%=============================================================================
+\section{Motivation}
+
+%-----------------------------------------------------------------------------
+% Slide: Why Study Stable Distributions? (1/2)
+%-----------------------------------------------------------------------------
+\begin{frame}{Why Study Stable Distributions?}
+
+\begin{itemize}
+    \item Financial returns often exhibit \textbf{heavy tails} and \textbf{skewness} that the normal distribution cannot capture.
+    \item Empirical evidence consistently shows that the Gaussian assumption underestimates the probability of extreme events (crashes, booms).
+    \item \textbf{Stable distributions} provide a flexible framework for modeling such behavior.
+    \item They generalize the normal distribution while allowing for:
+    \begin{itemize}
+        \item Heavy tails (higher probability of extreme values)
+        \item Asymmetry (skewness in returns)
+        \item Varying degrees of peakedness
+    \end{itemize}
+    \item Understanding these distributions is essential for accurate risk assessment in financial markets.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Why Study Stable Distributions? (2/2)
+%-----------------------------------------------------------------------------
+\begin{frame}{Why Study Stable Distributions?}
+
+\begin{itemize}
+    \item Stable distributions arise naturally from the \textbf{Generalized Central Limit Theorem} (GCLT).
+    \item While the classical CLT leads to the normal distribution, the GCLT shows that sums of heavy-tailed random variables converge to stable laws.
+    \item Key applications in finance:
+    \begin{itemize}
+        \item \textbf{Risk management}: More accurate Value-at-Risk and Expected Shortfall estimates under heavy-tailed assumptions.
+        \item \textbf{Option pricing}: Models based on stable distributions capture the volatility smile observed in option markets.
+        \item \textbf{Portfolio theory}: Optimal allocation under non-Gaussian returns requires stable distribution frameworks.
+    \end{itemize}
+    \item Mandelbrot (1963) first applied stable distributions to model cotton prices, showing that financial data deviate significantly from normality.
+    \item Fama (1965) extended this analysis to stock market returns.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Motivating Example -- Heavy Tails in Financial Returns
+%-----------------------------------------------------------------------------
+\begin{frame}{Motivating Example -- Heavy Tails in Financial Returns}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+    \includegraphics[width=0.85\textwidth]{ch2_sp500_stable_fit.png}
+\end{center}
+
+\vspace{-0.2cm}
+{\small S\&P 500 log-returns: the stable distribution captures the heavy tails and leptokurtosis. On a log scale, the Gaussian severely underestimates tail probabilities.}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: INTRODUCTION
+%=============================================================================
+\section{Introduction}
+
+%-----------------------------------------------------------------------------
+% Slide: Outline
+%-----------------------------------------------------------------------------
+\begin{frame}{Outline}
+
+\begin{enumerate}
+    \item Motivation
+    \item Introduction
+    \item Definition
+    \item Properties
+    \item Parameterization
+    \item Estimation
+    \item Simulation
+    \item Conclusions
+    \item References
+\end{enumerate}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Stable Distributions
+%-----------------------------------------------------------------------------
+\begin{frame}{Stable Distributions}
+
+\begin{itemize}
+    \item A family of probability distributions characterized by \textbf{four parameters}:
+    \begin{itemize}
+        \item $\alpha \in (0, 2]$ -- \textbf{stability index} (tail heaviness)
+        \item $\beta \in [-1, 1]$ -- \textbf{skewness parameter}
+        \item $\gamma > 0$ -- \textbf{scale parameter}
+        \item $\delta \in \mathbb{R}$ -- \textbf{location parameter}
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \item Notation:
+    \[
+        X \sim S(\alpha, \beta, \gamma, \delta)
+    \]
+
+    \vspace{0.3cm}
+
+    \item The normal distribution is a \textbf{special case} with $\alpha = 2$.
+    \item For $\alpha < 2$, the distributions have \textbf{heavy tails} and \textbf{infinite variance}.
+    \item Stable distributions are the only possible limiting distributions for properly normalized sums of i.i.d.\ random variables.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Historical Development
+%-----------------------------------------------------------------------------
+\begin{frame}{Historical Development}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\bfseries}l l p{8cm}}
+    \toprule
+    \textbf{Year} & \textbf{Contributor} & \textbf{Contribution} \\
+    \midrule
+    1925 & Paul L\'{e}vy & Introduced the class of stable distributions; derived characteristic function representations. \\
+    1954 & Gnedenko \& Kolmogorov & Rigorous treatment of limit theorems; formalized the Generalized Central Limit Theorem. \\
+    1963 & Benoit Mandelbrot & Applied stable distributions to model cotton price variations; challenged the Gaussian assumption in finance. \\
+    1965 & Eugene Fama & Extended Mandelbrot's work to stock market returns; demonstrated heavy tails in financial data. \\
+    1997--2003 & John P. Nolan & Developed efficient numerical methods for computing stable densities, distributions, and quantiles. \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: DEFINITION
+%=============================================================================
+\section{Definition}
+
+%-----------------------------------------------------------------------------
+% Slide: What Are Stable Distributions?
+%-----------------------------------------------------------------------------
+\begin{frame}{What Are Stable Distributions?}
+
+\begin{defn}[Stable Distribution]
+A random variable $X$ is said to have a \textbf{stable distribution} if for any $X_1, X_2$ independent and identically distributed copies of $X$, and for any positive constants $a, b > 0$, there exist constants $c > 0$ and $d \in \mathbb{R}$ such that:
+\[
+    aX_1 + bX_2 \stackrel{d}{=} cX + d.
+\]
+\end{defn}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item The notation $\stackrel{d}{=}$ denotes \textbf{equality in distribution}.
+    \item This property means that linear combinations of i.i.d.\ stable random variables have the \textbf{same type of distribution} (up to location and scale).
+    \item The distribution is ``stable'' under addition -- it preserves its form.
+    \item This is a much stronger property than what holds for, e.g., the exponential or uniform distributions.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Defining Stability
+%-----------------------------------------------------------------------------
+\begin{frame}{Defining Stability}
+
+\begin{itemize}
+    \item For a stable distribution, the constant $c$ in the stability property satisfies:
+    \[
+        c = \left(a^\alpha + b^\alpha\right)^{1/\alpha}
+    \]
+    where $\alpha \in (0, 2]$ is the \textbf{stability index} (also called the \textbf{characteristic exponent}).
+
+    \vspace{0.3cm}
+
+    \item The value of $\alpha$ determines the tail behavior:
+    \begin{itemize}
+        \item When $\alpha = 2$: \textbf{Gaussian distribution} -- light tails, all moments exist.
+        \item When $\alpha < 2$: \textbf{Heavy-tailed distribution} -- tails decay as a power law:
+        \[
+            P(|X| > x) \sim C \cdot x^{-\alpha} \quad \text{as } x \to \infty.
+        \]
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \item Moments: For $\alpha < 2$, only moments of order $p < \alpha$ are finite.
+    \begin{itemize}
+        \item If $\alpha < 2$: variance is \textbf{infinite}.
+        \item If $\alpha \leq 1$: mean is \textbf{undefined}.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Generalized Central Limit Theorem (GCLT)
+%-----------------------------------------------------------------------------
+\begin{frame}{Generalized Central Limit Theorem (GCLT)}
+
+\begin{thm}[Generalized Central Limit Theorem]
+If $X_1, X_2, \ldots$ are i.i.d.\ random variables with a distribution in the \textbf{domain of attraction} of a stable law, then there exist sequences of constants $a_n > 0$ and $b_n \in \mathbb{R}$ such that:
+\[
+    \frac{X_1 + X_2 + \cdots + X_n - b_n}{a_n} \xrightarrow{d} S(\alpha, \beta, \gamma, \delta).
+\]
+\end{thm}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item The classical \textbf{Central Limit Theorem} (CLT) is a special case with $\alpha = 2$:
+    \begin{itemize}
+        \item When the $X_i$ have finite variance $\sigma^2$, the normalized sum converges to $N(0, \sigma^2)$.
+    \end{itemize}
+    \item The GCLT relaxes the finite variance assumption:
+    \begin{itemize}
+        \item Heavy-tailed distributions (with infinite variance) can still have well-defined limits.
+        \item These limits are stable distributions with $\alpha < 2$.
+    \end{itemize}
+    \item The normalizing constants satisfy $a_n \sim n^{1/\alpha}$ (rather than $a_n \sim \sqrt{n}$ for the classical CLT).
+\end{itemize}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: PROPERTIES
+%=============================================================================
+\section{Properties}
+
+%-----------------------------------------------------------------------------
+% Slide: Parameterization Overview
+%-----------------------------------------------------------------------------
+\begin{frame}{Parameterization Overview}
+
+\begin{itemize}
+    \item A stable random variable $X \sim S(\alpha, \beta, \gamma, \delta)$ is characterized by four parameters:
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c c l}
+    \toprule
+    \textbf{Parameter} & \textbf{Range} & \textbf{Role} \\
+    \midrule
+    $\alpha$ & $(0, 2]$ & \textbf{Stability index} -- controls tail heaviness \\
+    $\beta$ & $[-1, 1]$ & \textbf{Skewness parameter} -- controls asymmetry \\
+    $\gamma$ & $(0, \infty)$ & \textbf{Scale parameter} -- controls spread \\
+    $\delta$ & $(-\infty, \infty)$ & \textbf{Location parameter} -- shifts the distribution \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item When $\beta = 0$, the distribution is \textbf{symmetric} about $\delta$.
+    \item When $\alpha = 2$, the parameter $\beta$ becomes irrelevant (Gaussian is always symmetric).
+    \item The parameterization is \textbf{not unique} -- several conventions exist in the literature.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Effects of Parameters
+%-----------------------------------------------------------------------------
+\begin{frame}{Effects of Parameters}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Stability index $\alpha \in (0, 2]$}
+\begin{itemize}
+    \item Controls \textbf{tail heaviness}.
+    \item Smaller $\alpha$ $\Rightarrow$ heavier tails.
+    \item $\alpha = 2$: Gaussian (lightest tails).
+    \item $\alpha = 1$: Cauchy (very heavy tails).
+    \item $\alpha < 1$: Extremely heavy tails.
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Scale $\gamma > 0$}
+\begin{itemize}
+    \item Controls the \textbf{spread} (width) of the distribution.
+    \item Analogous to $\sigma$ in the normal distribution.
+    \item Larger $\gamma$ $\Rightarrow$ wider distribution.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{block}{Skewness $\beta \in [-1, 1]$}
+\begin{itemize}
+    \item Controls \textbf{asymmetry}.
+    \item $\beta = 0$: symmetric distribution.
+    \item $\beta > 0$: right-skewed (heavier right tail).
+    \item $\beta < 0$: left-skewed (heavier left tail).
+    \item $|\beta| = 1$: maximally skewed.
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Location $\delta \in \mathbb{R}$}
+\begin{itemize}
+    \item \textbf{Shifts} the entire distribution.
+    \item When $\alpha > 1$: $\delta$ is the mean.
+    \item When $\alpha \leq 1$: $\delta$ is the median (if $\beta = 0$).
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Probability Density Function
+%-----------------------------------------------------------------------------
+\begin{frame}{Probability Density Function}
+
+\begin{itemize}
+    \item In general, there is \textbf{no closed-form expression} for the probability density function (PDF) of a stable distribution.
+    \item The PDF is obtained via the \textbf{inverse Fourier transform} of the characteristic function $\phi(t)$:
+    \[
+        f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty} \phi(t)\, e^{-itx}\,dt.
+    \]
+
+    \vspace{0.2cm}
+
+    \item Closed-form PDFs exist only for three special cases:
+    \begin{itemize}
+        \item \textbf{Gaussian} ($\alpha = 2$): the normal distribution.
+        \item \textbf{Cauchy} ($\alpha = 1, \beta = 0$): the Cauchy distribution.
+        \item \textbf{L\'{e}vy} ($\alpha = 1/2, \beta = 1$): the L\'{e}vy distribution.
+    \end{itemize}
+
+    \vspace{0.2cm}
+
+    \item For all other parameter values, the PDF must be computed \textbf{numerically}.
+    \item Efficient algorithms for numerical computation were developed by Nolan (1997).
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Special Case -- Gaussian Distribution
+%-----------------------------------------------------------------------------
+\begin{frame}{Special Case -- Gaussian Distribution}
+
+\begin{itemize}
+    \item When $\alpha = 2$, the stable distribution reduces to the \textbf{normal (Gaussian) distribution}:
+    \[
+        X \sim N(\delta,\; 2\gamma^2).
+    \]
+
+    \item \textbf{Characteristic function}:
+    \[
+        \phi(t) = \exp\!\left(-\gamma^2 t^2 + i\delta t\right).
+    \]
+
+    \item \textbf{Probability density function}:
+    \[
+        f(x) = \frac{1}{\sqrt{4\pi\gamma^2}}\exp\!\left(-\frac{(x - \delta)^2}{4\gamma^2}\right).
+    \]
+
+    \item Key properties:
+    \begin{itemize}
+        \item \textbf{Symmetric} ($\beta$ is irrelevant when $\alpha = 2$).
+        \item \textbf{Light-tailed}: exponential decay in the tails.
+        \item \textbf{All moments exist}: $\E[|X|^p] < \infty$ for all $p > 0$.
+        \item The \textbf{only stable distribution with finite variance}: $\Var(X) = 2\gamma^2$.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Normal Distribution -- Simulation Example
+%-----------------------------------------------------------------------------
+\begin{frame}{Normal Distribution -- Simulation Example}
+\quantlet{SFM\_ch2\_stable\_distributions}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+    \includegraphics[width=0.85\textwidth]{ch2_stable_distributions.png}
+\end{center}
+
+\vspace{-0.2cm}
+{\small Panel D: Stable($\alpha=2.0$) $\equiv$ Gaussian. The KS test confirms equivalence with the normal distribution. All four panels show how the stability index $\alpha$ controls tail heaviness.}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Special Case -- Cauchy Distribution
+%-----------------------------------------------------------------------------
+\begin{frame}{Special Case -- Cauchy Distribution}
+
+\begin{itemize}
+    \item When $\alpha = 1$ and $\beta = 0$, the stable distribution reduces to the \textbf{Cauchy distribution}:
+    \[
+        X \sim \text{Cauchy}(\delta, \gamma).
+    \]
+
+    \item \textbf{Probability density function}:
+    \[
+        f(x) = \frac{1}{\pi\gamma\left[1 + \left(\frac{x - \delta}{\gamma}\right)^{\!2}\right]}.
+    \]
+
+    \vspace{0.2cm}
+
+    \item Key properties:
+    \begin{itemize}
+        \item \textbf{Symmetric} about $\delta$ and \textbf{heavy-tailed}: tails decay as $x^{-2}$.
+        \item \textbf{No mean}: $\E[|X|] = \infty$ (the integral diverges).
+        \item \textbf{No variance} or higher moments.
+        \item The \textbf{ratio of two independent standard normal} random variables follows a Cauchy distribution:
+        \[
+            \text{If } Z_1, Z_2 \sim N(0,1) \text{ i.i.d., then } \frac{Z_1}{Z_2} \sim \text{Cauchy}(0, 1).
+        \]
+        \item The sample mean of Cauchy random variables has the \textbf{same distribution} as a single observation (no averaging effect).
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Special Case -- Levy Distribution
+%-----------------------------------------------------------------------------
+\begin{frame}{Special Case -- L\'{e}vy Distribution}
+
+\begin{itemize}
+    \item When $\alpha = 0.5$ and $\beta = 1$, we obtain the \textbf{L\'{e}vy distribution}:
+    \[
+        X \sim S(0.5, 1, \gamma, \delta), \quad X > \delta
+    \]
+
+    \item \textbf{Probability density function}:
+    \[
+        f(x) = \sqrt{\frac{\gamma}{2\pi}} \cdot \frac{e^{-\gamma/(2(x-\delta))}}{(x-\delta)^{3/2}}, \quad x > \delta
+    \]
+
+    \item Applications:
+    \begin{itemize}
+        \item First passage times of Brownian motion.
+        \item Extreme value theory.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Tail Behaviour of Stable Distributions
+%-----------------------------------------------------------------------------
+\begin{frame}{Tail Behaviour of Stable Distributions}
+
+\begin{itemize}
+    \item For $0 < \alpha < 2$, stable distributions exhibit \textbf{power-law tails}:
+    \[
+        P(X > x) \sim C_\alpha(1+\beta)\,x^{-\alpha}, \qquad P(X < -x) \sim C_\alpha(1-\beta)\,x^{-\alpha}
+    \]
+    \item $C_\alpha = \dfrac{1-\alpha}{\Gamma(2-\alpha)\cos(\pi\alpha/2)}$.
+    \item The smaller $\alpha$, the heavier the tails.
+    \item $\beta$ introduces asymmetry: more mass on the left or right tail.
+    \item Tail decay is \textbf{polynomial}, not exponential (unlike the Gaussian).
+    \item Large-impact, low-probability events are more likely.
+\end{itemize}
+
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Moments and Their Existence
+%-----------------------------------------------------------------------------
+\begin{frame}{Moments and Their Existence}
+
+\begin{itemize}
+    \item Moment existence depends on $\alpha$:
+    \[
+        \E[|X|^p] < \infty \quad \text{for } 0 < p < \alpha; \qquad \E[|X|^p] = \infty \quad \text{for } p \geq \alpha
+    \]
+    \item The \textbf{mean} exists only if $\alpha > 1$.
+    \item The \textbf{variance} exists only if $\alpha = 2$ (the Gaussian case).
+    \item For Cauchy ($\alpha = 1$): no mean, no variance.
+    \item For L\'{e}vy ($\alpha = 0.5$): even $\E[X]$ does not exist.
+    \item This property makes stable distributions suitable for modelling extremes, but poses challenges for classical inference.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Stable PDFs -- Visual Comparison
+%-----------------------------------------------------------------------------
+\begin{frame}{Stable PDFs -- Visual Comparison}
+\quantlet{SFM\_ch2\_stable\_distributions}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+    \includegraphics[width=0.85\textwidth]{ch2_stable_pdfs.png}
+\end{center}
+
+\vspace{-0.2cm}
+{\small Left: linear scale. Right: log scale reveals tail differences. Financial returns typically have $\alpha \in [1.5, 1.9]$.}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Applications -- S&P 500 Stable Fit
+%-----------------------------------------------------------------------------
+\begin{frame}{Application: S\&P 500 Stable vs Normal Fit}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{center}
+    \includegraphics[width=0.78\textwidth]{ch2_sp500_stable_fit.png}
+\end{center}
+
+\vspace{-0.2cm}
+\begin{itemize}
+    \item The stable distribution captures the \textbf{leptokurtosis} observed in financial returns
+    \item The normal underestimates tail probabilities, leading to \textbf{underestimated risk}
+\end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: VaR Comparison
+%-----------------------------------------------------------------------------
+\begin{frame}{VaR: Stable vs Gaussian vs Empirical}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{center}
+    \includegraphics[width=\textwidth]{ch2_var_comparison.png}
+\end{center}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{S\&P 500 VaR Comparison}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Level} & \textbf{Gauss} & \textbf{Stable} & \textbf{Emp.} \\
+\midrule
+5\% & $-1.9\%$ & $-2.1\%$ & $-2.1\%$ \\
+1\% & $-2.7\%$ & $-4.1\%$ & $-3.6\%$ \\
+0.1\% & $-3.6\%$ & $-9.0\%$ & $-6.9\%$ \\
+\bottomrule
+\end{tabular}
+\end{block}
+
+\vspace{0.2cm}
+At 0.1\%, stable VaR is $\sim$2.5$\times$ larger than Gaussian VaR.
+\end{column}
+\end{columns}
+\end{frame}
+
+%=============================================================================
+% SECTION: PARAMETERIZATION
+%=============================================================================
+\section{Parameterization}
+
+%-----------------------------------------------------------------------------
+% Slide: Characteristic Function -- Parameterization A
+%-----------------------------------------------------------------------------
+\begin{frame}{Characteristic Function -- Parameterization A}
+
+\begin{itemize}
+    \item The characteristic function of $X \sim S(\alpha, \beta, \gamma, \delta)$ under \textbf{Parameterization A} (Samorodnitsky and Taqqu, 1994):
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{block}{Case $\alpha \neq 1$}
+\[
+    \phi(t) = \exp\!\left\{-\gamma^\alpha |t|^\alpha \left(1 - i\beta\,\text{sign}(t)\tan\frac{\pi\alpha}{2}\right) + i\delta t\right\}
+\]
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Case $\alpha = 1$}
+\[
+    \phi(t) = \exp\!\left\{-\gamma|t|\left(1 + i\beta\frac{2}{\pi}\,\text{sign}(t)\ln|t|\right) + i\delta t\right\}
+\]
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item Here $\text{sign}(t) = \begin{cases} 1 & t > 0 \\ 0 & t = 0 \\ -1 & t < 0 \end{cases}$\,.
+    \item This parameterization is widely used in probability theory and is continuous in all parameters \textbf{except} at $\alpha = 1$ when $\beta \neq 0$.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Characteristic Function -- Parameterization B
+%-----------------------------------------------------------------------------
+\begin{frame}{Characteristic Function -- Parameterization B}
+
+\begin{itemize}
+    \item \textbf{Parameterization B} (Nolan, 1997) provides a form that is continuous in \textbf{all} parameters, including at $\alpha = 1$:
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{block}{Case $\alpha \neq 1$}
+\[
+    \phi(t) = \exp\!\left\{-\gamma^\alpha |t|^\alpha \left(1 + i\beta\,\text{sign}(t)\tan\frac{\pi\alpha}{2}\left((\gamma|t|)^{1-\alpha} - 1\right)\right) + i\delta_B t\right\}
+\]
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item This parameterization has the advantage that the characteristic function is \textbf{jointly continuous} in all four parameters $(\alpha, \beta, \gamma, \delta_B)$.
+    \item It is particularly useful for \textbf{numerical computation} and \textbf{statistical estimation}.
+    \item The location parameter $\delta_B$ differs from $\delta$ in Parameterization A.
+\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+% Slide: Mapping Between Parameterizations
+%-----------------------------------------------------------------------------
+\begin{frame}{Mapping Between Parameterizations}
+
+\begin{itemize}
+    \item The relationship between the location parameters in Parameterization A ($\delta_A$) and Parameterization B ($\delta_B$) is given by:
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{block}{Conversion Formula}
+For $\alpha \neq 1$:
+\[
+    \delta_B = \delta_A + \beta\gamma\tan\frac{\pi\alpha}{2}
+\]
+
+For $\alpha = 1$:
+\[
+    \delta_B = \delta_A + \beta\gamma\frac{2}{\pi}\ln\gamma
+\]
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item When $\beta = 0$ (symmetric case): $\delta_A = \delta_B$ for all $\alpha$.
+    \item When $\alpha = 2$ (Gaussian case): $\delta_A = \delta_B$ regardless of $\beta$.
+    \item Care must be taken when comparing results from different software packages, as they may use different parameterizations.
+\end{itemize}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: ESTIMATION
+%=============================================================================
+\section{Estimation}
+
+%-----------------------------------------------------------------------------
+% Slide: Estimation Methods
+%-----------------------------------------------------------------------------
+\begin{frame}{Estimation Methods}
+
+\begin{itemize}
+    \item Since no closed-form PDF exists in general, parameter estimation for stable distributions requires specialized methods.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{block}{Quantile-Based Methods (McCulloch, 1986)}
+\begin{itemize}
+    \item Use sample quantiles to estimate $\alpha$ and $\beta$.
+    \item Fast and simple; good initial estimates.
+    \item Based on relationships between quantile ratios and stable parameters.
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Maximum Likelihood Estimation (Nolan, 2001)}
+\begin{itemize}
+    \item Numerically compute the PDF via Fourier inversion, then maximize the likelihood.
+    \item Asymptotically efficient but computationally intensive.
+    \item Requires accurate numerical integration routines.
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Characteristic Function Methods (Koutrouvelis, 1980)}
+\begin{itemize}
+    \item Fit the empirical characteristic function to the theoretical one via regression.
+    \item A good balance between accuracy and computational cost.
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: SIMULATION
+%=============================================================================
+\section{Simulation}
+
+%-----------------------------------------------------------------------------
+% Slide: Simulation of Stable Random Variables
+%-----------------------------------------------------------------------------
+\begin{frame}{Simulation of Stable Random Variables}
+
+\begin{itemize}
+    \item The Chambers--Mallows--Stuck (CMS) algorithm (1976) generates standard stable random variables $Z \sim S(\alpha, \beta, 1, 0)$:
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{block}{CMS Algorithm}
+\begin{enumerate}
+    \item Generate $U \sim \text{Uniform}\!\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$ and $W \sim \text{Exponential}(1)$, independently.
+    \item For $\alpha \neq 1$, compute:
+    \[
+        Z = S_{\alpha,\beta} \cdot \frac{\sin\!\left(\alpha(U + B_{\alpha,\beta})\right)}{(\cos U)^{1/\alpha}} \cdot \left(\frac{\cos\!\left(U - \alpha(U + B_{\alpha,\beta})\right)}{W}\right)^{\!(1-\alpha)/\alpha}
+    \]
+    where $B_{\alpha,\beta} = \frac{1}{\alpha}\arctan\!\left(\beta\tan\frac{\pi\alpha}{2}\right)$ and $S_{\alpha,\beta} = \left(1 + \beta^2\tan^2\frac{\pi\alpha}{2}\right)^{1/(2\alpha)}$.
+    \item Scale and shift: $X = \gamma Z + \delta$.
+\end{enumerate}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{itemize}
+    \item Available in Python via \texttt{scipy.stats.levy\_stable} and in R via the \texttt{stabledist} package.
+\end{itemize}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: CONCLUSIONS
+%=============================================================================
+\section{Conclusions}
+
+%-----------------------------------------------------------------------------
+% Slide: Summary
+%-----------------------------------------------------------------------------
+\begin{frame}{Summary}
+
+\begin{itemize}
+    \item Stable distributions provide a \textbf{theoretically grounded} and \textbf{flexible} framework for modeling financial returns that exhibit heavy tails and skewness.
+
+    \vspace{0.2cm}
+
+    \item Key takeaways:
+    \begin{itemize}
+        \item The \textbf{Generalized Central Limit Theorem} justifies the use of stable distributions as limits of sums of i.i.d.\ heavy-tailed variables.
+        \item Four parameters ($\alpha, \beta, \gamma, \delta$) control tail behavior, asymmetry, scale, and location.
+        \item The \textbf{Gaussian} ($\alpha = 2$) and \textbf{Cauchy} ($\alpha = 1, \beta = 0$) distributions are important special cases.
+        \item \textbf{No closed-form PDF} in general -- numerical methods are essential.
+        \item Multiple \textbf{parameterizations} exist; care is needed when comparing results.
+        \item Efficient \textbf{estimation} (MLE, quantile methods) and \textbf{simulation} (CMS algorithm) methods are available.
+    \end{itemize}
+
+    \vspace{0.2cm}
+
+    \item Stable distributions remain an active area of research in \textbf{financial econometrics}, \textbf{risk management}, and \textbf{quantitative finance}.
+\end{itemize}
+
+\end{frame}
+
+%=============================================================================
+% SECTION: REFERENCES
+%=============================================================================
+\section{References}
+
+%-----------------------------------------------------------------------------
+% Slide: References
+%-----------------------------------------------------------------------------
+\begin{frame}{References}
+
+\begin{thebibliography}{99}
+\setbeamertemplate{bibliography item}[text]
+
+\bibitem{Levy1925}
+L\'{e}vy, P. (1925).
+\textit{Calcul des probabilit\'{e}s}.
+Gauthier-Villars, Paris.
+
+\bibitem{Mandelbrot1963}
+Mandelbrot, B. (1963).
+The Variation of Certain Speculative Prices.
+\textit{The Journal of Business}, 36(4), 394--419.
+
+\bibitem{Fama1965}
+Fama, E.F. (1965).
+The Behavior of Stock-Market Prices.
+\textit{The Journal of Business}, 38(1), 34--105.
+
+\bibitem{Nolan2003}
+Nolan, J.P. (2003).
+Stable Distributions: Models for Heavy Tailed Data.
+Birkh\"{a}user, Boston. (Chapter 1 online at academic2.american.edu/\~{}jpnolan).
+
+\bibitem{FrankeHardleHafner2019}
+Franke, J., H\"{a}rdle, W.K., \& Hafner, C.M. (2019).
+\textit{Statistics of Financial Markets: An Introduction}. 4th ed.
+Springer, Berlin.
+
+\end{thebibliography}
+
+\end{frame}
+
+%=============================================================================
+\end{document}
+%=============================================================================

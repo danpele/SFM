@@ -1,0 +1,33 @@
+\frametitle{Applications}
+\begin{itemize}
+        \item \textbf{Estimating the Hurst exponent in Python}: use the \texttt{nolds} or \texttt{hurst} libraries for R/S and DFA:
+    \end{itemize}
+    \vspace{0.1cm}
+    \begin{lstlisting}
+import numpy as np
+import nolds
+
+# Simulated fractional Brownian motion (H = 0.7)
+from fbm import FBM
+f = FBM(n=10000, hurst=0.7, length=1, method='daviesharte')
+fbm_sample = f.fbm()
+increments = np.diff(fbm_sample)
+
+# R/S estimate
+H_rs = nolds.hurst_rs(increments)
+print(f"R/S Hurst estimate: {H_rs:.4f}")
+
+# DFA estimate
+H_dfa = nolds.dfa(increments)
+print(f"DFA Hurst estimate: {H_dfa:.4f}")
+    \end{lstlisting}
+    \vspace{0.1cm}
+    \begin{itemize}
+        \item \textbf{Rolling Hurst exponent}: compute $\hat{H}_t$ in a rolling window of size $w$ to detect \textbf{regime changes}:
+        \[
+            \hat{H}_t = \text{DFA}\bigl(\{r_{t-w+1}, \ldots, r_t\}\bigr), \qquad t = w, w+1, \ldots, T
+        \]
+        \item A \textbf{sudden drop} in $\hat{H}_t$ towards $0.5$ (or below) signals loss of fractal structure $\succ$ potential crisis indicator
+        \item \textbf{Practical application}: FMH-based risk management monitors horizon diversity via time-varying $H_t$ estimates as an \textbf{early warning signal} for market stress
+    \end{itemize}
+    \quantlet{SFM\_ch14\_fractal\_hurst}{https://github.com/QuantLet/SFM/tree/main/SFM_ch14/SFM_ch14_fractal_hurst}
