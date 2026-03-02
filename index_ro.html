@@ -497,6 +497,63 @@
             color: var(--ida-red);
         }
 
+        /* ========== Quiz Section ========== */
+        .quiz-container {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--main-blue);
+        }
+
+        .quiz-question h4 {
+            color: var(--main-blue);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+        }
+
+        .quiz-options li {
+            padding: 0.5rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .quiz-options li:hover {
+            background: #e3f2fd;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .answer-reveal {
+            display: none;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .answer-correct {
+            background: #c8e6c9;
+            border-left: 4px solid var(--forest);
+        }
+
+        .answer-incorrect {
+            background: #ffcdd2;
+            border-left: 4px solid var(--ida-red);
+        }
+
         /* ========== Contact Section ========== */
         .contact-box {
             background: var(--white);
@@ -741,6 +798,7 @@
         <div class="nav-links">
             <a href="#overview">Prezentare generala</a>
             <a href="#chapters">Capitole</a>
+            <a href="#quizzes">Teste</a>
             <a href="#resources">Resurse</a>
             <a href="#contact">Contact</a>
         </div>
@@ -1107,6 +1165,594 @@
         </div>
     </section>
 
+    <!-- ===== Quizzes Section ===== -->
+    <section id="quizzes">
+        <h2 class="section-title">Teste Interactive</h2>
+
+        <!-- GitHub Login Section (shown when NOT logged in) -->
+        <div id="github-login-section" style="margin-bottom: 1.5rem; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+            <p style="margin-bottom: 1rem; color: #555; font-size: 1.05rem;">Va rugam sa va autentificati cu contul GitHub pentru a accesa testele.</p>
+            <button onclick="loginWithGitHub()" style="padding: 0.75rem 2rem; background: #24292f; color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.6rem; transition: background 0.2s;">
+                <svg height="20" width="20" viewBox="0 0 16 16" fill="white"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Autentificare cu GitHub
+            </button>
+        </div>
+
+        <!-- Logged-in Section (shown AFTER login) -->
+        <div id="github-logged-in-section" style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; align-items: center; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img id="github-avatar" src="" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--main-blue);">
+                <div>
+                    <strong id="github-display-name" style="color: var(--main-blue);"></strong>
+                    <span id="github-username" style="color: #666; font-size: 0.9rem; margin-left: 0.3rem;"></span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <label for="student-group" style="font-weight: bold; color: var(--main-blue);">Grupa:</label>
+                <input type="text" id="student-group" placeholder="ex. A1" style="padding: 0.5rem 1rem; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1rem; width: 120px;">
+            </div>
+            <button onclick="saveGroup()" style="padding: 0.5rem 1.5rem; background: var(--main-blue); color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;">Salveaza</button>
+            <span id="student-saved" style="color: var(--forest); font-weight: bold; display: none;">&#10003; Salvat</span>
+            <button onclick="logoutGitHub()" style="padding: 0.5rem 1.2rem; background: #dc3545; color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;">Deconectare</button>
+        </div>
+
+        <!-- Quiz content (hidden until logged in) -->
+        <div id="quiz-content" style="display: none;">
+
+        <!-- Chapter Selector Tabs -->
+        <div class="chapter-tabs" style="margin-bottom: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; padding: 1rem; background: var(--light-gray); border-radius: 8px;">
+            <button class="tab-btn active" onclick="showChapter(0)" id="tab-ch0" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: var(--main-blue); color: white; border-radius: 8px; font-weight: bold; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">Cap 0</button>
+            <button class="tab-btn" onclick="showChapter(1)" id="tab-ch1" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: white; color: var(--main-blue); border-radius: 8px; font-weight: bold; transition: all 0.3s;">Cap 1</button>
+            <button class="tab-btn" onclick="showChapter(2)" id="tab-ch2" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: white; color: var(--main-blue); border-radius: 8px; font-weight: bold; transition: all 0.3s;">Cap 2</button>
+        </div>
+        <p style="text-align: center; color: #666; margin-bottom: 1.5rem;"><em>Faceti clic pe un tab de capitol de mai sus pentru a schimba intre teste</em></p>
+
+        <!-- Chapter 0 Quizzes: Introducere -->
+        <div class="quiz-container" id="chapter0-quizzes">
+            <h3 style="margin-bottom: 1.5rem;">Capitolul 0: Introducere</h3>
+
+            <div class="quiz-question" id="ch0q1">
+                <h4>Intrebarea 1: Focusul cursului</h4>
+                <p>Care este focusul principal al Statisticii Pietelor Financiare (SPF)?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 1, 'A')"><input type="radio" name="ch0q1"> A) Standarde contabile si audit</li>
+                    <li onclick="checkAnswer('ch0', 1, 'B')"><input type="radio" name="ch0q1"> B) Analiza politicilor macroeconomice</li>
+                    <li onclick="checkAnswer('ch0', 1, 'C')"><input type="radio" name="ch0q1"> C) Modelarea si analiza statistica a datelor financiare</li>
+                    <li onclick="checkAnswer('ch0', 1, 'D')"><input type="radio" name="ch0q1"> D) Cadre de guvernanta corporativa</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer1-correct">
+                    <strong>Corect!</strong> SPF se concentreaza pe aplicarea metodelor statistice pentru modelarea si analiza datelor de pe pietele financiare.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer1-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. SPF se concentreaza pe modelarea si analiza statistica a datelor financiare.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q2">
+                <h4>Intrebarea 2: Date financiare</h4>
+                <p>Ce tip de date sunt cel mai frecvent analizate in SPF?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 2, 'A')"><input type="radio" name="ch0q2"> A) Date din sondaje si chestionare</li>
+                    <li onclick="checkAnswer('ch0', 2, 'B')"><input type="radio" name="ch0q2"> B) Date din recensamantul populatiei</li>
+                    <li onclick="checkAnswer('ch0', 2, 'C')"><input type="radio" name="ch0q2"> C) Date de preturi si randamente de inalta frecventa</li>
+                    <li onclick="checkAnswer('ch0', 2, 'D')"><input type="radio" name="ch0q2"> D) Date experimentale de laborator</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer2-correct">
+                    <strong>Corect!</strong> SPF lucreaza in principal cu serii temporale financiare precum preturi, randamente si date de volatilitate.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer2-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. Pietele financiare genereaza date de preturi si randamente de inalta frecventa.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q3">
+                <h4>Intrebarea 3: SPF vs Statistica clasica</h4>
+                <p>Ce deosebeste SPF de statistica clasica?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 3, 'A')"><input type="radio" name="ch0q3"> A) SPF foloseste doar metode parametrice</li>
+                    <li onclick="checkAnswer('ch0', 3, 'B')"><input type="radio" name="ch0q3"> B) Datele financiare prezinta cozi groase, gruparea volatilitatii si dependenta temporala</li>
+                    <li onclick="checkAnswer('ch0', 3, 'C')"><input type="radio" name="ch0q3"> C) Statistica clasica nu poate gestiona seturi mari de date</li>
+                    <li onclick="checkAnswer('ch0', 3, 'D')"><input type="radio" name="ch0q3"> D) SPF nu necesita teoria probabilitatilor</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer3-correct">
+                    <strong>Corect!</strong> Datele financiare au caracteristici unice precum cozi groase, gruparea volatilitatii si dependenta seriala.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer3-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Datele financiare prezinta cozi groase, gruparea volatilitatii si dependenta temporala.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q4">
+                <h4>Intrebarea 4: Instrumente software</h4>
+                <p>Ce instrument software este utilizat in principal in acest curs pentru analiza datelor?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 4, 'A')"><input type="radio" name="ch0q4"> A) Microsoft Excel</li>
+                    <li onclick="checkAnswer('ch0', 4, 'B')"><input type="radio" name="ch0q4"> B) SPSS</li>
+                    <li onclick="checkAnswer('ch0', 4, 'C')"><input type="radio" name="ch0q4"> C) Python</li>
+                    <li onclick="checkAnswer('ch0', 4, 'D')"><input type="radio" name="ch0q4"> D) Stata</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer4-correct">
+                    <strong>Corect!</strong> Python este limbajul principal de programare folosit pentru analiza statistica si vizualizarea datelor in acest curs.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer4-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. Python este instrumentul principal utilizat in acest curs.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q5">
+                <h4>Intrebarea 5: Evaluare</h4>
+                <p>Care este structura de evaluare a acestui curs?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 5, 'A')"><input type="radio" name="ch0q5"> A) 100% examen final</li>
+                    <li onclick="checkAnswer('ch0', 5, 'B')"><input type="radio" name="ch0q5"> B) 50% examen, 50% proiect</li>
+                    <li onclick="checkAnswer('ch0', 5, 'C')"><input type="radio" name="ch0q5"> C) 70% examen, 20% proiect, 10% prezenta</li>
+                    <li onclick="checkAnswer('ch0', 5, 'D')"><input type="radio" name="ch0q5"> D) 40% examen, 40% proiect, 20% teme</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer5-correct">
+                    <strong>Corect!</strong> Evaluarea este 70% examen final, 20% proiect si 10% prezenta/participare.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer5-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. Evaluarea este 70% examen, 20% proiect, 10% prezenta.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q6">
+                <h4>Intrebarea 6: Fapte stilizate</h4>
+                <p>Ce este un "fapt stilizat" al randamentelor financiare?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 6, 'A')"><input type="radio" name="ch0q6"> A) Randamentele sunt intotdeauna distribuite normal</li>
+                    <li onclick="checkAnswer('ch0', 6, 'B')"><input type="radio" name="ch0q6"> B) Volatilitatea este constanta in timp</li>
+                    <li onclick="checkAnswer('ch0', 6, 'C')"><input type="radio" name="ch0q6"> C) Randamentele prezinta cozi groase si gruparea volatilitatii</li>
+                    <li onclick="checkAnswer('ch0', 6, 'D')"><input type="radio" name="ch0q6"> D) Pietele financiare sunt intotdeauna eficiente</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer6-correct">
+                    <strong>Corect!</strong> Cozile groase si gruparea volatilitatii sunt fapte stilizate bine stabilite ale distributiilor randamentelor financiare.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer6-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. Cozile groase si gruparea volatilitatii sunt fapte stilizate cheie.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q7">
+                <h4>Intrebarea 7: Tematica cursului</h4>
+                <p>Care dintre urmatoarele NU este o tema acoperita in SPF?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 7, 'A')"><input type="radio" name="ch0q7"> A) Modele GARCH</li>
+                    <li onclick="checkAnswer('ch0', 7, 'B')"><input type="radio" name="ch0q7"> B) Valoarea la risc (VaR)</li>
+                    <li onclick="checkAnswer('ch0', 7, 'C')"><input type="radio" name="ch0q7"> C) Contabilitatea in partida dubla</li>
+                    <li onclick="checkAnswer('ch0', 7, 'D')"><input type="radio" name="ch0q7"> D) Distributii stabile</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer7-correct">
+                    <strong>Corect!</strong> Contabilitatea in partida dubla este un concept contabil, nu o tema din SPF.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer7-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. Contabilitatea in partida dubla nu face parte din programa SPF.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q8">
+                <h4>Intrebarea 8: Quantlet-uri</h4>
+                <p>Care este scopul principal al unui Quantlet in acest curs?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 8, 'A')"><input type="radio" name="ch0q8"> A) Un test cu alegere multipla</li>
+                    <li onclick="checkAnswer('ch0', 8, 'B')"><input type="radio" name="ch0q8"> B) Un fragment de cod reutilizabil si documentat pentru analiza statistica</li>
+                    <li onclick="checkAnswer('ch0', 8, 'C')"><input type="radio" name="ch0q8"> C) Un tip de instrument financiar derivat</li>
+                    <li onclick="checkAnswer('ch0', 8, 'D')"><input type="radio" name="ch0q8"> D) Un rezumat al cursului</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer8-correct">
+                    <strong>Corect!</strong> Quantlet-urile sunt fragmente de cod reutilizabile si documentate care implementeaza proceduri statistice sau computationale specifice.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer8-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Un Quantlet este un fragment de cod reutilizabil si documentat pentru analiza statistica.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q9">
+                <h4>Intrebarea 9: Cozi groase</h4>
+                <p>Ce inseamna "cozi groase" in contextul randamentelor financiare?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 9, 'A')"><input type="radio" name="ch0q9"> A) Distributia este asimetrica spre stanga</li>
+                    <li onclick="checkAnswer('ch0', 9, 'B')"><input type="radio" name="ch0q9"> B) Randamentele extreme apar mai frecvent decat prevede distributia normala</li>
+                    <li onclick="checkAnswer('ch0', 9, 'C')"><input type="radio" name="ch0q9"> C) Randamentul mediu este foarte mare</li>
+                    <li onclick="checkAnswer('ch0', 9, 'D')"><input type="radio" name="ch0q9"> D) Seria temporala are un trend determinist</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer9-correct">
+                    <strong>Corect!</strong> Cozile groase inseamna ca evenimentele extreme (castiguri sau pierderi mari) apar mai des decat ar prezice distributia normala.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer9-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Cozile groase indica randamente extreme mai frecvente decat cele prezise de distributia normala.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q10">
+                <h4>Intrebarea 10: Domeniul academic</h4>
+                <p>Ce domeniu academic combina statistica, finantele si programarea ca in SPF?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 10, 'A')"><input type="radio" name="ch0q10"> A) Matematica pura</li>
+                    <li onclick="checkAnswer('ch0', 10, 'B')"><input type="radio" name="ch0q10"> B) Finante cantitative / econometrie financiara</li>
+                    <li onclick="checkAnswer('ch0', 10, 'C')"><input type="radio" name="ch0q10"> C) Psihologie comportamentala</li>
+                    <li onclick="checkAnswer('ch0', 10, 'D')"><input type="radio" name="ch0q10"> D) Administratie de afaceri</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer10-correct">
+                    <strong>Corect!</strong> Finantele cantitative si econometria financiara combina metode statistice, teorie financiara si instrumente computationale.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer10-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Finantele cantitative / econometria financiara integreaza aceste discipline.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch0" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch0')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Verifica Scorul</button>
+                <button onclick="resetQuiz('ch0')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reseteaza Testul</button>
+            </div>
+        </div>
+
+        <!-- Chapter 1 Quizzes: Surse de date si randamente -->
+        <div class="quiz-container" id="chapter1-quizzes" style="display: none;">
+            <h3 style="margin-bottom: 1.5rem;">Capitolul 1: Surse de Date &amp; Randamente</h3>
+
+            <div class="quiz-question" id="ch1q1">
+                <h4>Intrebarea 1: Randamentul simplu</h4>
+                <p>Care este formula randamentului simplu (net) $R_t$?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 1, 'A')"><input type="radio" name="ch1q1"> A) $\ln(P_t / P_{t-1})$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'B')"><input type="radio" name="ch1q1"> B) $P_t - P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'C')"><input type="radio" name="ch1q1"> C) $(P_t - P_{t-1}) / P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'D')"><input type="radio" name="ch1q1"> D) $P_t / P_{t-1}$</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer1-correct">
+                    <strong>Corect!</strong> Randamentul simplu este $R_t = (P_t - P_{t-1}) / P_{t-1}$, masurand variatia procentuala a pretului.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer1-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. $R_t = (P_t - P_{t-1}) / P_{t-1}$.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q2">
+                <h4>Intrebarea 2: Randamentul logaritmic</h4>
+                <p>Care este formula randamentului logaritmic (compus continuu) $r_t$?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 2, 'A')"><input type="radio" name="ch1q2"> A) $(P_t - P_{t-1}) / P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'B')"><input type="radio" name="ch1q2"> B) $\ln(P_t / P_{t-1})$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'C')"><input type="radio" name="ch1q2"> C) $P_t \cdot P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'D')"><input type="radio" name="ch1q2"> D) $\exp(P_t) - 1$</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer2-correct">
+                    <strong>Corect!</strong> Randamentul logaritmic este $r_t = \ln(P_t / P_{t-1})$, cunoscut si ca randament compus continuu.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer2-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. $r_t = \ln(P_t / P_{t-1})$.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q3">
+                <h4>Intrebarea 3: Efectul de varianta</h4>
+                <p>Ce este "variance drag" (efectul de varianta) in contextul randamentelor?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 3, 'A')"><input type="radio" name="ch1q3"> A) Varianta creste liniar in timp</li>
+                    <li onclick="checkAnswer('ch1', 3, 'B')"><input type="radio" name="ch1q3"> B) Media aritmetica a randamentelor depaseste media geometrica cu aproximativ $\sigma^2/2$</li>
+                    <li onclick="checkAnswer('ch1', 3, 'C')"><input type="radio" name="ch1q3"> C) Randamentele cu varianta mare au intotdeauna medie negativa</li>
+                    <li onclick="checkAnswer('ch1', 3, 'D')"><input type="radio" name="ch1q3"> D) O metoda de reducere a variantei portofoliului</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer3-correct">
+                    <strong>Corect!</strong> Variance drag inseamna ca media geometrica este mai mica decat media aritmetica cu aproximativ $\sigma^2/2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer3-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Variance drag este diferenta dintre media aritmetica si cea geometrica ($\approx \sigma^2/2$).
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q4">
+                <h4>Intrebarea 4: Avantajele randamentelor logaritmice</h4>
+                <p>De ce sunt preferate randamentele logaritmice pentru modelarea statistica?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 4, 'A')"><input type="radio" name="ch1q4"> A) Sunt intotdeauna pozitive</li>
+                    <li onclick="checkAnswer('ch1', 4, 'B')"><input type="radio" name="ch1q4"> B) Sunt aditive in timp si aproximativ distribuite normal</li>
+                    <li onclick="checkAnswer('ch1', 4, 'C')"><input type="radio" name="ch1q4"> C) Sunt mai usor de calculat</li>
+                    <li onclick="checkAnswer('ch1', 4, 'D')"><input type="radio" name="ch1q4"> D) Nu au niciodata valori extreme</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer4-correct">
+                    <strong>Corect!</strong> Randamentele logaritmice sunt aditive in timp ($r_{1:T} = \sum r_t$) si mai bine aproximate de distributia normala.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer4-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Randamentele logaritmice sunt aditive in timp si mai aproape de normalitate.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q5">
+                <h4>Intrebarea 5: Testul ADF</h4>
+                <p>Ce evalueaza testul Augmented Dickey-Fuller (ADF)?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 5, 'A')"><input type="radio" name="ch1q5"> A) Normalitatea randamentelor</li>
+                    <li onclick="checkAnswer('ch1', 5, 'B')"><input type="radio" name="ch1q5"> B) Prezenta unei radacini unitare (nestationaritate)</li>
+                    <li onclick="checkAnswer('ch1', 5, 'C')"><input type="radio" name="ch1q5"> C) Heteroscedasticitatea reziduurilor</li>
+                    <li onclick="checkAnswer('ch1', 5, 'D')"><input type="radio" name="ch1q5"> D) Autocorelarea la toate lag-urile</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer5-correct">
+                    <strong>Corect!</strong> Testul ADF are $H_0$: radacina unitara (nestationaritate) vs $H_1$: stationaritate.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer5-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Testul ADF verifica prezenta unei radacini unitare, indicand nestationaritate.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q6">
+                <h4>Intrebarea 6: Testul Jarque-Bera</h4>
+                <p>Ce evalueaza testul Jarque-Bera?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 6, 'A')"><input type="radio" name="ch1q6"> A) Stationaritatea seriei temporale</li>
+                    <li onclick="checkAnswer('ch1', 6, 'B')"><input type="radio" name="ch1q6"> B) Daca datele urmeaza o distributie normala (prin asimetrie si curtoza)</li>
+                    <li onclick="checkAnswer('ch1', 6, 'C')"><input type="radio" name="ch1q6"> C) Corelarea seriala a reziduurilor</li>
+                    <li onclick="checkAnswer('ch1', 6, 'D')"><input type="radio" name="ch1q6"> D) Prezenta radacinilor unitare</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer6-correct">
+                    <strong>Corect!</strong> Testul Jarque-Bera verifica normalitatea testand daca asimetria $= 0$ si excesul de curtoza $= 0$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer6-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Jarque-Bera testeaza normalitatea folosind asimetria si curtoza.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q7">
+                <h4>Intrebarea 7: Estimatorul Parkinson</h4>
+                <p>Ce estimator al volatilitatii foloseste intervalul de pret maxim-minim?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 7, 'A')"><input type="radio" name="ch1q7"> A) Deviatie standard esantionara</li>
+                    <li onclick="checkAnswer('ch1', 7, 'B')"><input type="radio" name="ch1q7"> B) Estimatorul Parkinson</li>
+                    <li onclick="checkAnswer('ch1', 7, 'C')"><input type="radio" name="ch1q7"> C) EWMA</li>
+                    <li onclick="checkAnswer('ch1', 7, 'D')"><input type="radio" name="ch1q7"> D) Volatilitatea realizata</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer7-correct">
+                    <strong>Corect!</strong> Estimatorul Parkinson (1980) utilizeaza intervalul maxim-minim zilnic: $\sigma^2_P = \frac{1}{4n\ln 2}\sum (\ln H_i - \ln L_i)^2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer7-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Estimatorul Parkinson utilizeaza intervalele de pret maxim-minim.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q8">
+                <h4>Intrebarea 8: Indicele Sharpe</h4>
+                <p>Ce masoara indicele Sharpe?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 8, 'A')"><input type="radio" name="ch1q8"> A) Randamentul total al unui activ</li>
+                    <li onclick="checkAnswer('ch1', 8, 'B')"><input type="radio" name="ch1q8"> B) Randamentul in exces pe unitate de risc (deviatie standard)</li>
+                    <li onclick="checkAnswer('ch1', 8, 'C')"><input type="radio" name="ch1q8"> C) Corelarea dintre doua active</li>
+                    <li onclick="checkAnswer('ch1', 8, 'D')"><input type="radio" name="ch1q8"> D) Pierderea maxima a unui portofoliu</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer8-correct">
+                    <strong>Corect!</strong> Indicele Sharpe este $S = (\bar{r} - r_f) / \sigma$, masurand randamentul ajustat la risc.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer8-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Indicele Sharpe masoara randamentul in exces pe unitate de risc.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q9">
+                <h4>Intrebarea 9: Date OHLC</h4>
+                <p>Ce reprezinta datele OHLC?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 9, 'A')"><input type="radio" name="ch1q9"> A) Doar preturile de inchidere</li>
+                    <li onclick="checkAnswer('ch1', 9, 'B')"><input type="radio" name="ch1q9"> B) Preturile de Deschidere, Maxim, Minim, Inchidere pentru fiecare perioada</li>
+                    <li onclick="checkAnswer('ch1', 9, 'C')"><input type="radio" name="ch1q9"> C) Doar randamentele overnight</li>
+                    <li onclick="checkAnswer('ch1', 9, 'D')"><input type="radio" name="ch1q9"> D) Date de flux de ordine si tranzactii</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer9-correct">
+                    <strong>Corect!</strong> OHLC inseamna Open, High, Low, Close &mdash; cele patru preturi cheie inregistrate in fiecare perioada de tranzactionare.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer9-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. OHLC = Deschidere, Maxim, Minim, Inchidere per perioada.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q10">
+                <h4>Intrebarea 10: Efectul de levier</h4>
+                <p>Ce este "efectul de levier" pe pietele financiare?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 10, 'A')"><input type="radio" name="ch1q10"> A) Utilizarea banilor imprumutati pentru a investi</li>
+                    <li onclick="checkAnswer('ch1', 10, 'B')"><input type="radio" name="ch1q10"> B) Randamentele negative tind sa creasca volatilitatea viitoare mai mult decat randamentele pozitive de aceeasi magnitudine</li>
+                    <li onclick="checkAnswer('ch1', 10, 'C')"><input type="radio" name="ch1q10"> C) Firmele mari au preturi de actiuni mai putin volatile</li>
+                    <li onclick="checkAnswer('ch1', 10, 'D')"><input type="radio" name="ch1q10"> D) Ratele dobanzilor determina direct preturile actiunilor</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer10-correct">
+                    <strong>Corect!</strong> Efectul de levier descrie raspunsul asimetric al volatilitatii la randamente negative vs. pozitive.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer10-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Efectul de levier inseamna ca randamentele negative cresc volatilitatea mai mult decat cele pozitive.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch1" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch1')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Verifica Scorul</button>
+                <button onclick="resetQuiz('ch1')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reseteaza Testul</button>
+            </div>
+        </div>
+
+        <!-- Chapter 2 Quizzes: Distributii statistice pe pietele de capital -->
+        <div class="quiz-container" id="chapter2-quizzes" style="display: none;">
+            <h3 style="margin-bottom: 1.5rem;">Capitolul 2: Distributii Statistice pe Pietele de Capital</h3>
+
+            <div class="quiz-question" id="ch2q1">
+                <h4>Intrebarea 1: Motivatie</h4>
+                <p>De ce sunt necesare distributiile stabile pentru modelarea randamentelor financiare?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 1, 'A')"><input type="radio" name="ch2q1"> A) Randamentele financiare sunt intotdeauna distribuite normal</li>
+                    <li onclick="checkAnswer('ch2', 1, 'B')"><input type="radio" name="ch2q1"> B) Randamentele financiare prezinta cozi groase si asimetrie pe care distributia normala nu le poate surprinde</li>
+                    <li onclick="checkAnswer('ch2', 1, 'C')"><input type="radio" name="ch2q1"> C) Distributia normala supraestimeaza evenimentele extreme</li>
+                    <li onclick="checkAnswer('ch2', 1, 'D')"><input type="radio" name="ch2q1"> D) Distributiile stabile au formule mai simple decat normala</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer1-correct">
+                    <strong>Corect!</strong> Ipoteza Gaussiana subestimeaza probabilitatea evenimentelor extreme (crahuri, boom-uri). Distributiile stabile permit cozi groase si asimetrie.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer1-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Randamentele financiare prezinta cozi groase si asimetrie pe care distributia normala nu le poate surprinde.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q2">
+                <h4>Intrebarea 2: TLCG</h4>
+                <p>Ce afirma Teorema Limita Centrala Generalizata (TLCG)?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 2, 'A')"><input type="radio" name="ch2q2"> A) Toate sumele de variabile aleatoare converg catre distributia normala</li>
+                    <li onclick="checkAnswer('ch2', 2, 'B')"><input type="radio" name="ch2q2"> B) Sumele normalizate de variabile i.i.d. cu cozi groase converg catre o distributie stabila</li>
+                    <li onclick="checkAnswer('ch2', 2, 'C')"><input type="radio" name="ch2q2"> C) TLC functioneaza doar pentru date financiare</li>
+                    <li onclick="checkAnswer('ch2', 2, 'D')"><input type="radio" name="ch2q2"> D) Distributiile cu cozi groase nu au teoreme limita</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer2-correct">
+                    <strong>Corect!</strong> TLCG generalizeaza TLC clasica: cand ipoteza de varianta finita este relaxata, sumele normalizate converg catre legi stabile cu $\alpha < 2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer2-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. TLCG arata ca sumele variabilelor cu cozi groase converg catre distributii stabile.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q3">
+                <h4>Intrebarea 3: Contributie istorica</h4>
+                <p>Cine a aplicat primul distributiile stabile pentru a modela preturile speculative?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 3, 'A')"><input type="radio" name="ch2q3"> A) Paul L&eacute;vy (1925)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'B')"><input type="radio" name="ch2q3"> B) Beno&icirc;t Mandelbrot (1963)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'C')"><input type="radio" name="ch2q3"> C) John P. Nolan (2003)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'D')"><input type="radio" name="ch2q3"> D) Eugene Fama (1970)</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer3-correct">
+                    <strong>Corect!</strong> Mandelbrot (1963) a aplicat primul distributiile stabile pentru a modela preturile bumbacului, aratand ca datele financiare deviaza semnificativ de la normalitate. Fama (1965) a extins analiza la randamentele actiunilor.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer3-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Mandelbrot (1963) a fost pionier in utilizarea distributiilor stabile in finante.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q4">
+                <h4>Intrebarea 4: Cei patru parametri</h4>
+                <p>O distributie stabila $X \sim S(\alpha, \beta, \gamma, \delta)$ este caracterizata de patru parametri. Ce controleaza $\beta \in [-1, 1]$?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 4, 'A')"><input type="radio" name="ch2q4"> A) Grosimea cozilor</li>
+                    <li onclick="checkAnswer('ch2', 4, 'B')"><input type="radio" name="ch2q4"> B) Asimetria (skewness)</li>
+                    <li onclick="checkAnswer('ch2', 4, 'C')"><input type="radio" name="ch2q4"> C) Scala (dispersia)</li>
+                    <li onclick="checkAnswer('ch2', 4, 'D')"><input type="radio" name="ch2q4"> D) Locatia (deplasarea)</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer4-correct">
+                    <strong>Corect!</strong> $\beta$ controleaza asimetria: $\beta = 0$ este simetric, $\beta > 0$ inseamna coada dreapta mai grea, $\beta < 0$ inseamna coada stanga mai grea.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer4-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. $\beta$ controleaza asimetria. ($\alpha$ controleaza grosimea cozilor, $\gamma$ controleaza scala, $\delta$ controleaza locatia.)
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q5">
+                <h4>Intrebarea 5: Cazuri speciale</h4>
+                <p>Care trei distributii stabile au functii densitate de probabilitate in forma inchisa?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 5, 'A')"><input type="radio" name="ch2q5"> A) Normala, Exponentiala, Poisson</li>
+                    <li onclick="checkAnswer('ch2', 5, 'B')"><input type="radio" name="ch2q5"> B) Gaussiana ($\alpha=2$), Cauchy ($\alpha=1, \beta=0$) si L&eacute;vy ($\alpha=0.5, \beta=1$)</li>
+                    <li onclick="checkAnswer('ch2', 5, 'C')"><input type="radio" name="ch2q5"> C) Student-$t$, Chi-patrat, F</li>
+                    <li onclick="checkAnswer('ch2', 5, 'D')"><input type="radio" name="ch2q5"> D) Toate distributiile stabile au PDF in forma inchisa</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer5-correct">
+                    <strong>Corect!</strong> Doar trei distributii stabile au PDF in forma inchisa: Gaussiana, Cauchy si L&eacute;vy. Toate celelalte necesita calcul numeric prin transformata Fourier inversa.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer5-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Gaussiana, Cauchy si L&eacute;vy sunt singurele distributii stabile cu densitati in forma inchisa.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q6">
+                <h4>Intrebarea 6: Comparatie VaR</h4>
+                <p>Pentru randamentele S&amp;P 500 la nivelul de 0.1%, cum se compara VaR stabila cu VaR Gaussiana?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 6, 'A')"><input type="radio" name="ch2q6"> A) Sunt aproximativ egale</li>
+                    <li onclick="checkAnswer('ch2', 6, 'B')"><input type="radio" name="ch2q6"> B) VaR stabila este de aproximativ 2.5 ori mai mare decat VaR Gaussiana</li>
+                    <li onclick="checkAnswer('ch2', 6, 'C')"><input type="radio" name="ch2q6"> C) VaR Gaussiana este mai mare</li>
+                    <li onclick="checkAnswer('ch2', 6, 'D')"><input type="radio" name="ch2q6"> D) VaR nu poate fi calculata pentru distributii stabile</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer6-correct">
+                    <strong>Corect!</strong> La nivelul de 0.1%, VaR stabila ($-9.0\%$) este de aproximativ 2.5 ori mai mare decat VaR Gaussiana ($-3.6\%$), aratand ca distributia normala subestimeaza sever riscul din cozi.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer6-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. VaR stabila este ~2.5&times; mai mare, reflectand cozile mai groase.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q7">
+                <h4>Intrebarea 7: Momente</h4>
+                <p>Pentru o distributie stabila cu $\alpha < 2$, care afirmatie despre momente este corecta?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 7, 'A')"><input type="radio" name="ch2q7"> A) Toate momentele exista</li>
+                    <li onclick="checkAnswer('ch2', 7, 'B')"><input type="radio" name="ch2q7"> B) Varianta este infinita; doar momentele de ordin $p < \alpha$ sunt finite</li>
+                    <li onclick="checkAnswer('ch2', 7, 'C')"><input type="radio" name="ch2q7"> C) Media nu exista niciodata</li>
+                    <li onclick="checkAnswer('ch2', 7, 'D')"><input type="radio" name="ch2q7"> D) Varianta este finita dar curtoza este infinita</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer7-correct">
+                    <strong>Corect!</strong> $E[|X|^p] < \infty$ pentru $0 < p < \alpha$ si $E[|X|^p] = \infty$ pentru $p \geq \alpha$. Media exista doar daca $\alpha > 1$, varianta exista doar daca $\alpha = 2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer7-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Pentru $\alpha < 2$, varianta este infinita; doar momentele fractionare de ordin $< \alpha$ exista.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q8">
+                <h4>Intrebarea 8: Metode de estimare</h4>
+                <p>Ce metoda de estimare a propus McCulloch (1986) pentru parametrii distributiilor stabile?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 8, 'A')"><input type="radio" name="ch2q8"> A) Verosimilitate maxima prin gradient descent</li>
+                    <li onclick="checkAnswer('ch2', 8, 'B')"><input type="radio" name="ch2q8"> B) Esantionare Bayesiana MCMC</li>
+                    <li onclick="checkAnswer('ch2', 8, 'C')"><input type="radio" name="ch2q8"> C) Estimare bazata pe cuantile folosind rapoarte de cuantile ale esantionului</li>
+                    <li onclick="checkAnswer('ch2', 8, 'D')"><input type="radio" name="ch2q8"> D) Metoda momentelor folosind varianta si curtoza</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer8-correct">
+                    <strong>Corect!</strong> Metoda McCulloch foloseste relatii intre rapoarte de cuantile si parametrii stabili pentru a furniza estimari rapide si simple ale lui $\alpha$ si $\beta$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer8-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este C. McCulloch (1986) a propus estimarea bazata pe cuantile. (Metoda momentelor esueaza deoarece varianta este infinita pentru $\alpha < 2$.)
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q9">
+                <h4>Intrebarea 9: Simulare</h4>
+                <p>Ce algoritm se foloseste pentru simularea variabilelor aleatoare stabile?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 9, 'A')"><input type="radio" name="ch2q9"> A) Transformarea Box-Muller</li>
+                    <li onclick="checkAnswer('ch2', 9, 'B')"><input type="radio" name="ch2q9"> B) Algoritmul Chambers-Mallows-Stuck (CMS)</li>
+                    <li onclick="checkAnswer('ch2', 9, 'C')"><input type="radio" name="ch2q9"> C) Metoda inversarii CDF</li>
+                    <li onclick="checkAnswer('ch2', 9, 'D')"><input type="radio" name="ch2q9"> D) Esantionare prin respingere dintr-o distributie normala</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer9-correct">
+                    <strong>Corect!</strong> Algoritmul CMS (1976) genereaza v.a. stabile standard folosind o variabila Uniforma si una Exponentiala. Este disponibil in Python prin <code>scipy.stats.levy_stable</code>.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer9-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Algoritmul Chambers-Mallows-Stuck (CMS) este metoda standard pentru simularea variabilelor aleatoare stabile.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q10">
+                <h4>Intrebarea 10: Comportamentul cozilor</h4>
+                <p>Cum descresc cozile distributiilor stabile ($\alpha < 2$) comparativ cu Gaussiana?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 10, 'A')"><input type="radio" name="ch2q10"> A) Exponential, ca Gaussiana</li>
+                    <li onclick="checkAnswer('ch2', 10, 'B')"><input type="radio" name="ch2q10"> B) Ca o lege de putere: $P(X > x) \sim C \cdot x^{-\alpha}$</li>
+                    <li onclick="checkAnswer('ch2', 10, 'C')"><input type="radio" name="ch2q10"> C) Au suport marginit (fara cozi)</li>
+                    <li onclick="checkAnswer('ch2', 10, 'D')"><input type="radio" name="ch2q10"> D) Logaritmic</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer10-correct">
+                    <strong>Corect!</strong> Cozile stabile urmeaza o lege de putere (descrestere polinomiala), nu exponentiala. Cu cat $\alpha$ e mai mic, cu atat cozile sunt mai groase. Randamentele financiare au de obicei $\alpha \in [1.5, 1.9]$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer10-incorrect">
+                    <strong>Incorect.</strong> Raspunsul corect este B. Distributiile stabile au cozi de tip lege de putere: $P(X > x) \sim C \cdot x^{-\alpha}$.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch2" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch2')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Verifica Scorul</button>
+                <button onclick="resetQuiz('ch2')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reseteaza Testul</button>
+            </div>
+        </div>
+
+        </div><!-- end quiz-content -->
+    </section>
+
     <!-- ===== Resources Section ===== -->
     <section id="resources">
         <h2 class="section-title">Resurse</h2>
@@ -1204,15 +1850,17 @@
 <!-- ==================== FOOTER ==================== -->
 <footer class="site-footer">
     <div class="footer-logos">
-        <img src="logos/ase_logo.png" alt="Academia de Studii Economice din Bucuresti">
-        <img src="logos/ida_logo.png" alt="IDA">
-        <img src="logos/brc_logo.png" alt="BRC">
-        <img src="logos/ai4efin_logo.png" alt="AI4EFin">
-        <img src="logos/acad_logo.png" alt="Academy">
-        <img src="logos/msca_logo.png" alt="MSCA">
+        <a href="https://www.ase.ro" target="_blank"><img src="logos/ase_logo.png" alt="ASE Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://www.theida.net/" target="_blank"><img src="logos/ida_logo.png" alt="IDA Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://ai4efin.ase.ro" target="_blank"><img src="logos/ai4efin_logo.png" alt="AI4EFin Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://www.digital-finance-msca.com/" target="_blank"><img src="logos/msca_logo.png" alt="MSCA Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://blockchain-research-center.com/" target="_blank"><img src="logos/brc_logo.png" alt="BRC Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://ipe.ro/new/" target="_blank"><img src="logos/acad_logo.png" alt="Academy Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
     </div>
-    <p>&copy; 2025 &ndash; 2026 Statistica Pietelor Financiare | Academia de Studii Economice din Bucuresti</p>
-    <p>Prof. dr. Daniel Traian Pele | <a href="mailto:daniel.pele@csie.ase.ro">daniel.pele@csie.ase.ro</a></p>
+    <p>Statistica Pietelor Financiare | Facultatea de Cibernetica, Statistica si Informatica Economica | Academia de Studii Economice din Bucuresti</p>
+    <p>Instructor: <strong>Prof. dr. Daniel Traian Pele</strong> | <a href="mailto:danpele@ase.ro" style="color: #ccc;">danpele@ase.ro</a></p>
+    <p>Anul universitar 2025&ndash;2026</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Toate materialele generate cu Python si LaTeX</p>
 </footer>
 
 <!-- ==================== Back to Top Button ==================== -->
@@ -1272,6 +1920,342 @@
         window.addEventListener('scroll', highlightNav);
         highlightNav();
     })();
+
+    // ==================== Quiz System ====================
+
+    // Google Sheets API (placeholder - replace with your deployed Apps Script URL)
+    const SHEETS_URL = 'YOUR_GOOGLE_SHEETS_URL';
+
+    // Chapter names for results
+    const chapterNames = {
+        0: 'Cap. 0 - Introducere',
+        1: 'Cap. 1 - Surse de Date si Randamente',
+        2: 'Cap. 2 - Distributii Statistice'
+    };
+
+    // GitHub OAuth Client ID (public - safe to embed)
+    const GITHUB_CLIENT_ID = 'Ov23liJNDMSO6UzqPjZp';
+
+    // Redirect to GitHub OAuth
+    function loginWithGitHub() {
+        localStorage.setItem('sfm-login-return', 'index_ro.html');
+        const redirectUri = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'callback.html';
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + GITHUB_CLIENT_ID + '&redirect_uri=' + encodeURIComponent(redirectUri) + '&scope=read:user';
+    }
+
+    // Show logged-in state
+    function showLoggedInState(user) {
+        document.getElementById('github-login-section').style.display = 'none';
+        document.getElementById('github-logged-in-section').style.display = 'flex';
+        document.getElementById('quiz-content').style.display = 'block';
+        document.getElementById('github-avatar').src = user.avatar_url;
+        document.getElementById('github-display-name').textContent = user.name;
+        document.getElementById('github-username').textContent = '@' + user.login;
+    }
+
+    // Logout
+    function logoutGitHub() {
+        localStorage.removeItem('sfm-github-user');
+        localStorage.removeItem('sfm-student-group');
+        document.getElementById('github-login-section').style.display = 'block';
+        document.getElementById('github-logged-in-section').style.display = 'none';
+        document.getElementById('quiz-content').style.display = 'none';
+    }
+
+    // Save group
+    function saveGroup() {
+        const group = document.getElementById('student-group').value.trim();
+        localStorage.setItem('sfm-student-group', group);
+        const saved = document.getElementById('student-saved');
+        saved.style.display = 'inline';
+        setTimeout(() => saved.style.display = 'none', 2000);
+    }
+
+    // Load state on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        const userData = localStorage.getItem('sfm-github-user');
+        if (userData) {
+            const user = JSON.parse(userData);
+            showLoggedInState(user);
+        }
+        const group = localStorage.getItem('sfm-student-group');
+        if (group) document.getElementById('student-group').value = group;
+    });
+
+    // Send results to Google Sheets
+    function sendResults(chapterNum, score, total) {
+        const userData = localStorage.getItem('sfm-github-user');
+        if (!userData) {
+            alert('Va rugam sa va autentificati cu GitHub inainte de a verifica scorul!');
+            return false;
+        }
+        const user = JSON.parse(userData);
+        const group = document.getElementById('student-group').value.trim();
+        const nota = Math.round((score / total) * 10 * 100) / 100;
+        const data = {
+            nume: user.name,
+            github_username: user.login,
+            grupa: group,
+            capitol: chapterNames[chapterNum] || 'Cap. ' + chapterNum,
+            scor: score + '/' + total,
+            total: Math.round((score / total) * 100) + '%',
+            nota: nota.toFixed(2)
+        };
+        if (SHEETS_URL && SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_URL') {
+            fetch(SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            });
+        }
+        return true;
+    }
+
+    // Answer keys
+    const ch0Answers = {
+        1: 'C', 2: 'C', 3: 'B', 4: 'C', 5: 'C',
+        6: 'C', 7: 'C', 8: 'B', 9: 'B', 10: 'B'
+    };
+
+    const ch1Answers = {
+        1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'B',
+        6: 'B', 7: 'B', 8: 'B', 9: 'B', 10: 'B'
+    };
+
+    const ch2Answers = {
+        1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B',
+        6: 'B', 7: 'B', 8: 'C', 9: 'B', 10: 'B'
+    };
+
+    let userAnswersCh0 = {};
+    let userAnswersCh1 = {};
+    let userAnswersCh2 = {};
+
+    // Show/hide chapters
+    function showChapter(chapter) {
+        document.getElementById('chapter0-quizzes').style.display = chapter === 0 ? 'block' : 'none';
+        document.getElementById('chapter1-quizzes').style.display = chapter === 1 ? 'block' : 'none';
+        document.getElementById('chapter2-quizzes').style.display = chapter === 2 ? 'block' : 'none';
+
+        // Update tab styles
+        document.getElementById('tab-ch0').style.background = chapter === 0 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch0').style.color = chapter === 0 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch0').style.boxShadow = chapter === 0 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+        document.getElementById('tab-ch1').style.background = chapter === 1 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch1').style.color = chapter === 1 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch1').style.boxShadow = chapter === 1 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+        document.getElementById('tab-ch2').style.background = chapter === 2 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch2').style.color = chapter === 2 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch2').style.boxShadow = chapter === 2 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+
+        // Re-typeset MathJax for newly visible content
+        if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+            try { MathJax.typeset(); } catch(e) {}
+        }
+    }
+
+    function checkAnswer(chapter, questionNum, selectedAnswer) {
+        let correctAnswers, userAnswers, prefix;
+
+        if (chapter === 'ch0') {
+            correctAnswers = ch0Answers;
+            userAnswers = userAnswersCh0;
+            prefix = 'ch0';
+        } else if (chapter === 'ch2') {
+            correctAnswers = ch2Answers;
+            userAnswers = userAnswersCh2;
+            prefix = 'ch2';
+        } else {
+            correctAnswers = ch1Answers;
+            userAnswers = userAnswersCh1;
+            prefix = 'ch1';
+        }
+
+        // If already answered, don't allow changes
+        if (userAnswers[questionNum] !== undefined) return;
+
+        userAnswers[questionNum] = selectedAnswer;
+
+        // Visually check the radio button
+        const qId = prefix + 'q' + questionNum;
+        const qDiv = document.getElementById(qId);
+        if (qDiv) {
+            qDiv.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            const lis = qDiv.querySelectorAll('.quiz-options li');
+            lis.forEach(li => {
+                const text = li.textContent.trim();
+                if (text.match(new RegExp('^' + selectedAnswer + '\\)'))) {
+                    const radio = li.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                }
+            });
+        }
+
+        // Show answer feedback
+        const isCorrect = selectedAnswer === correctAnswers[questionNum];
+        const correctDiv = document.getElementById(prefix + 'answer' + questionNum + '-correct');
+        const incorrectDiv = document.getElementById(prefix + 'answer' + questionNum + '-incorrect');
+        if (correctDiv) correctDiv.style.display = isCorrect ? 'block' : 'none';
+        if (incorrectDiv) incorrectDiv.style.display = isCorrect ? 'none' : 'block';
+
+        // Lock the question - disable all options
+        if (qDiv) {
+            qDiv.querySelectorAll('.quiz-options li').forEach(li => {
+                li.style.pointerEvents = 'none';
+                li.style.opacity = '0.7';
+            });
+        }
+    }
+
+    function calculateScore(chapter) {
+        let score = 0;
+        let answered = 0;
+        let total = 10;
+        let correctAnswers, userAnswers, displayId, qPrefix;
+
+        if (chapter === 'ch0' || chapter === 0) {
+            correctAnswers = ch0Answers;
+            userAnswers = userAnswersCh0;
+            displayId = 'score-display-ch0';
+            qPrefix = 'ch0';
+        } else if (chapter === 'ch2' || chapter === 2) {
+            correctAnswers = ch2Answers;
+            userAnswers = userAnswersCh2;
+            displayId = 'score-display-ch2';
+            qPrefix = 'ch2';
+        } else {
+            correctAnswers = ch1Answers;
+            userAnswers = userAnswersCh1;
+            displayId = 'score-display-ch1';
+            qPrefix = 'ch1';
+        }
+
+        for (let i = 1; i <= total; i++) {
+            if (userAnswers[i]) {
+                answered++;
+                if (userAnswers[i] === correctAnswers[i]) {
+                    score++;
+                }
+            }
+        }
+
+        const totalPercentage = Math.round((score / total) * 100);
+
+        let message = 'Scor: ' + score + '/' + total + ' (' + totalPercentage + '%)';
+        if (answered < total) {
+            message += ' - ' + (total - answered) + ' intrebari fara raspuns';
+        }
+
+        if (totalPercentage >= 90) {
+            message += ' - Excelent!';
+        } else if (totalPercentage >= 70) {
+            message += ' - Foarte bine!';
+        } else if (totalPercentage >= 50) {
+            message += ' - Continuati sa studiati!';
+        } else {
+            message += ' - Continuati sa exersati!';
+        }
+
+        document.getElementById(displayId).textContent = message;
+
+        // Send results to Google Sheets
+        const chapterNum = (chapter === 'ch0' || chapter === 0) ? 0 :
+                           (chapter === 'ch2' || chapter === 2) ? 2 : 1;
+        sendResults(chapterNum, score, total);
+
+        // Show answer key
+        const keyId = displayId.replace('score-display', 'answer-key');
+        let existingKey = document.getElementById(keyId);
+        if (!existingKey) {
+            existingKey = document.createElement('div');
+            existingKey.id = keyId;
+            existingKey.style.cssText = 'margin-top: 1.5rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;';
+            document.getElementById(displayId).parentNode.appendChild(existingKey);
+        }
+
+        function getOptionText(qId, letter) {
+            const qDiv = document.getElementById(qId);
+            if (!qDiv) return letter;
+            const lis = qDiv.querySelectorAll('.quiz-options li');
+            for (const li of lis) {
+                const text = li.textContent.trim();
+                if (text.match(new RegExp('^' + letter + '\\)'))) return text;
+            }
+            return letter;
+        }
+
+        function getQuestionText(qId) {
+            const qDiv = document.getElementById(qId);
+            if (!qDiv) return '';
+            const p = qDiv.querySelector('p');
+            return p ? p.textContent.trim() : '';
+        }
+
+        let keyHtml = '<h4 style="margin-bottom: 0.8rem; color: var(--main-blue);">Rezultate Detaliate</h4>';
+        keyHtml += '<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">';
+        keyHtml += '<tr style="background: var(--main-blue); color: white;"><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">Nr</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Intrebare</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Raspuns Corect</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Raspunsul Dvs.</th><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">&#10003;/&#10007;</th></tr>';
+        for (let i = 1; i <= total; i++) {
+            const qId = qPrefix + 'q' + i;
+            const isCorrect = userAnswers[i] === correctAnswers[i];
+            const bgColor = !userAnswers[i] ? '#f8f9fa' : (isCorrect ? '#e8f5e9' : '#ffebee');
+            const resultText = !userAnswers[i] ? '<span style="color:#999;">&mdash;</span>' : (isCorrect ? '<span style="color:#2E7D32; font-weight:bold;">&#10003;</span>' : '<span style="color:#DC3545; font-weight:bold;">&#10007;</span>');
+            const questionText = getQuestionText(qId);
+            const correctText = getOptionText(qId, correctAnswers[i]);
+            const userText = userAnswers[i] ? getOptionText(qId, userAnswers[i]) : '&mdash;';
+            keyHtml += '<tr style="background: ' + bgColor + ';"><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;"><strong>' + i + '</strong></td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + questionText + '</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + correctText + '</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + userText + '</td><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;">' + resultText + '</td></tr>';
+        }
+        keyHtml += '</table>';
+        existingKey.innerHTML = keyHtml;
+        existingKey.style.display = 'block';
+    }
+
+    function resetQuiz(chapter) {
+        let total = 10;
+        let prefix, displayId, container;
+
+        if (chapter === 'ch0' || chapter === 0) {
+            prefix = 'ch0';
+            displayId = 'score-display-ch0';
+            container = 'chapter0-quizzes';
+            userAnswersCh0 = {};
+        } else if (chapter === 'ch2' || chapter === 2) {
+            prefix = 'ch2';
+            displayId = 'score-display-ch2';
+            container = 'chapter2-quizzes';
+            userAnswersCh2 = {};
+        } else {
+            prefix = 'ch1';
+            displayId = 'score-display-ch1';
+            container = 'chapter1-quizzes';
+            userAnswersCh1 = {};
+        }
+
+        for (let i = 1; i <= total; i++) {
+            const correctDiv = document.getElementById(prefix + 'answer' + i + '-correct');
+            const incorrectDiv = document.getElementById(prefix + 'answer' + i + '-incorrect');
+            if (correctDiv) correctDiv.style.display = 'none';
+            if (incorrectDiv) incorrectDiv.style.display = 'none';
+        }
+
+        // Uncheck radio buttons for this chapter
+        document.querySelectorAll('#' + container + ' input[type="radio"]').forEach(function(radio) {
+            radio.checked = false;
+        });
+
+        // Unlock all quiz options
+        document.querySelectorAll('#' + container + ' .quiz-options li').forEach(function(li) {
+            li.style.pointerEvents = '';
+            li.style.opacity = '';
+        });
+
+        document.getElementById(displayId).textContent = '';
+
+        // Hide answer key
+        const keyId = displayId.replace('score-display', 'answer-key');
+        const keyDiv = document.getElementById(keyId);
+        if (keyDiv) keyDiv.style.display = 'none';
+    }
 </script>
 
 </body>

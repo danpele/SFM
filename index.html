@@ -497,6 +497,63 @@
             color: var(--ida-red);
         }
 
+        /* ========== Quiz Section ========== */
+        .quiz-container {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--main-blue);
+        }
+
+        .quiz-question h4 {
+            color: var(--main-blue);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+        }
+
+        .quiz-options li {
+            padding: 0.5rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .quiz-options li:hover {
+            background: #e3f2fd;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .answer-reveal {
+            display: none;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .answer-correct {
+            background: #c8e6c9;
+            border-left: 4px solid var(--forest);
+        }
+
+        .answer-incorrect {
+            background: #ffcdd2;
+            border-left: 4px solid var(--ida-red);
+        }
+
         /* ========== Contact Section ========== */
         .contact-box {
             background: var(--white);
@@ -741,6 +798,7 @@
         <div class="nav-links">
             <a href="#overview">Overview</a>
             <a href="#chapters">Chapters</a>
+            <a href="#quizzes">Quizzes</a>
             <a href="#resources">Resources</a>
             <a href="#contact">Contact</a>
         </div>
@@ -1107,6 +1165,594 @@
         </div>
     </section>
 
+    <!-- ===== Quizzes Section ===== -->
+    <section id="quizzes">
+        <h2 class="section-title">Interactive Quizzes</h2>
+
+        <!-- GitHub Login Section (shown when NOT logged in) -->
+        <div id="github-login-section" style="margin-bottom: 1.5rem; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+            <p style="margin-bottom: 1rem; color: #555; font-size: 1.05rem;">Please log in with your GitHub account to access the quizzes.</p>
+            <button onclick="loginWithGitHub()" style="padding: 0.75rem 2rem; background: #24292f; color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.6rem; transition: background 0.2s;">
+                <svg height="20" width="20" viewBox="0 0 16 16" fill="white"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Login with GitHub
+            </button>
+        </div>
+
+        <!-- Logged-in Section (shown AFTER login) -->
+        <div id="github-logged-in-section" style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; align-items: center; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img id="github-avatar" src="" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--main-blue);">
+                <div>
+                    <strong id="github-display-name" style="color: var(--main-blue);"></strong>
+                    <span id="github-username" style="color: #666; font-size: 0.9rem; margin-left: 0.3rem;"></span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <label for="student-group" style="font-weight: bold; color: var(--main-blue);">Group:</label>
+                <input type="text" id="student-group" placeholder="e.g. A1" style="padding: 0.5rem 1rem; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1rem; width: 120px;">
+            </div>
+            <button onclick="saveGroup()" style="padding: 0.5rem 1.5rem; background: var(--main-blue); color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;">Save</button>
+            <span id="student-saved" style="color: var(--forest); font-weight: bold; display: none;">&#10003; Saved</span>
+            <button onclick="logoutGitHub()" style="padding: 0.5rem 1.2rem; background: #dc3545; color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer;">Logout</button>
+        </div>
+
+        <!-- Quiz content (hidden until logged in) -->
+        <div id="quiz-content" style="display: none;">
+
+        <!-- Chapter Selector Tabs -->
+        <div class="chapter-tabs" style="margin-bottom: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; padding: 1rem; background: var(--light-gray); border-radius: 8px;">
+            <button class="tab-btn active" onclick="showChapter(0)" id="tab-ch0" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: var(--main-blue); color: white; border-radius: 8px; font-weight: bold; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">Ch 0</button>
+            <button class="tab-btn" onclick="showChapter(1)" id="tab-ch1" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: white; color: var(--main-blue); border-radius: 8px; font-weight: bold; transition: all 0.3s;">Ch 1</button>
+            <button class="tab-btn" onclick="showChapter(2)" id="tab-ch2" style="padding: 1rem 2rem; font-size: 1.1rem; cursor: pointer; border: 3px solid var(--main-blue); background: white; color: var(--main-blue); border-radius: 8px; font-weight: bold; transition: all 0.3s;">Ch 2</button>
+        </div>
+        <p style="text-align: center; color: #666; margin-bottom: 1.5rem;"><em>Click on a chapter tab above to switch between quizzes</em></p>
+
+        <!-- Chapter 0 Quizzes: Introduction -->
+        <div class="quiz-container" id="chapter0-quizzes">
+            <h3 style="margin-bottom: 1.5rem;">Chapter 0: Introduction</h3>
+
+            <div class="quiz-question" id="ch0q1">
+                <h4>Question 1: Course Focus</h4>
+                <p>What is the primary focus of Statistics of Financial Markets (SFM)?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 1, 'A')"><input type="radio" name="ch0q1"> A) Accounting standards and auditing</li>
+                    <li onclick="checkAnswer('ch0', 1, 'B')"><input type="radio" name="ch0q1"> B) Macroeconomic policy analysis</li>
+                    <li onclick="checkAnswer('ch0', 1, 'C')"><input type="radio" name="ch0q1"> C) Statistical modeling and analysis of financial data</li>
+                    <li onclick="checkAnswer('ch0', 1, 'D')"><input type="radio" name="ch0q1"> D) Corporate governance frameworks</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer1-correct">
+                    <strong>Correct!</strong> SFM focuses on applying statistical methods to model and analyze financial market data.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer1-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. SFM focuses on statistical modeling and analysis of financial data.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q2">
+                <h4>Question 2: Financial Data</h4>
+                <p>Which type of data is most commonly analyzed in SFM?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 2, 'A')"><input type="radio" name="ch0q2"> A) Survey and questionnaire data</li>
+                    <li onclick="checkAnswer('ch0', 2, 'B')"><input type="radio" name="ch0q2"> B) Census population data</li>
+                    <li onclick="checkAnswer('ch0', 2, 'C')"><input type="radio" name="ch0q2"> C) High-frequency price and return data</li>
+                    <li onclick="checkAnswer('ch0', 2, 'D')"><input type="radio" name="ch0q2"> D) Experimental laboratory data</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer2-correct">
+                    <strong>Correct!</strong> SFM primarily works with financial time series such as prices, returns, and volatility data.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer2-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. Financial markets generate high-frequency price and return data that is the focus of SFM.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q3">
+                <h4>Question 3: SFM vs Classical Statistics</h4>
+                <p>What distinguishes SFM from classical statistics?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 3, 'A')"><input type="radio" name="ch0q3"> A) SFM uses only parametric methods</li>
+                    <li onclick="checkAnswer('ch0', 3, 'B')"><input type="radio" name="ch0q3"> B) Financial data exhibits heavy tails, volatility clustering, and temporal dependence</li>
+                    <li onclick="checkAnswer('ch0', 3, 'C')"><input type="radio" name="ch0q3"> C) Classical statistics cannot handle large datasets</li>
+                    <li onclick="checkAnswer('ch0', 3, 'D')"><input type="radio" name="ch0q3"> D) SFM does not require probability theory</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer3-correct">
+                    <strong>Correct!</strong> Financial data has unique characteristics like heavy tails, volatility clustering, and serial dependence that require specialized methods.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer3-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Financial data exhibits heavy tails, volatility clustering, and temporal dependence.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q4">
+                <h4>Question 4: Software Tools</h4>
+                <p>Which software tool is primarily used in this course for data analysis?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 4, 'A')"><input type="radio" name="ch0q4"> A) Microsoft Excel</li>
+                    <li onclick="checkAnswer('ch0', 4, 'B')"><input type="radio" name="ch0q4"> B) SPSS</li>
+                    <li onclick="checkAnswer('ch0', 4, 'C')"><input type="radio" name="ch0q4"> C) Python</li>
+                    <li onclick="checkAnswer('ch0', 4, 'D')"><input type="radio" name="ch0q4"> D) Stata</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer4-correct">
+                    <strong>Correct!</strong> Python is the primary programming language used for statistical analysis and data visualization in this course.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer4-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. Python is the primary tool used in this course.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q5">
+                <h4>Question 5: Assessment</h4>
+                <p>What is the assessment structure for this course?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 5, 'A')"><input type="radio" name="ch0q5"> A) 100% final exam</li>
+                    <li onclick="checkAnswer('ch0', 5, 'B')"><input type="radio" name="ch0q5"> B) 50% exam, 50% project</li>
+                    <li onclick="checkAnswer('ch0', 5, 'C')"><input type="radio" name="ch0q5"> C) 70% exam, 20% project, 10% attendance</li>
+                    <li onclick="checkAnswer('ch0', 5, 'D')"><input type="radio" name="ch0q5"> D) 40% exam, 40% project, 20% homework</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer5-correct">
+                    <strong>Correct!</strong> The assessment is 70% final exam, 20% project, and 10% attendance/participation.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer5-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. The assessment is 70% exam, 20% project, 10% attendance.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q6">
+                <h4>Question 6: Stylized Facts</h4>
+                <p>What is a "stylized fact" of financial returns?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 6, 'A')"><input type="radio" name="ch0q6"> A) Returns are always normally distributed</li>
+                    <li onclick="checkAnswer('ch0', 6, 'B')"><input type="radio" name="ch0q6"> B) Volatility is constant over time</li>
+                    <li onclick="checkAnswer('ch0', 6, 'C')"><input type="radio" name="ch0q6"> C) Returns exhibit heavy tails and volatility clustering</li>
+                    <li onclick="checkAnswer('ch0', 6, 'D')"><input type="radio" name="ch0q6"> D) Financial markets are always efficient</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer6-correct">
+                    <strong>Correct!</strong> Heavy tails and volatility clustering are well-established stylized facts of financial return distributions.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer6-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. Heavy tails and volatility clustering are key stylized facts.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q7">
+                <h4>Question 7: Course Topics</h4>
+                <p>Which of the following is NOT a topic covered in SFM?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 7, 'A')"><input type="radio" name="ch0q7"> A) GARCH models</li>
+                    <li onclick="checkAnswer('ch0', 7, 'B')"><input type="radio" name="ch0q7"> B) Value-at-Risk</li>
+                    <li onclick="checkAnswer('ch0', 7, 'C')"><input type="radio" name="ch0q7"> C) Double-entry bookkeeping</li>
+                    <li onclick="checkAnswer('ch0', 7, 'D')"><input type="radio" name="ch0q7"> D) Stable distributions</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer7-correct">
+                    <strong>Correct!</strong> Double-entry bookkeeping is an accounting concept, not a topic in SFM.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer7-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. Double-entry bookkeeping is not part of the SFM curriculum.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q8">
+                <h4>Question 8: Quantlets</h4>
+                <p>What is the main purpose of a Quantlet in this course?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 8, 'A')"><input type="radio" name="ch0q8"> A) A multiple-choice test</li>
+                    <li onclick="checkAnswer('ch0', 8, 'B')"><input type="radio" name="ch0q8"> B) A reusable, documented code snippet for statistical analysis</li>
+                    <li onclick="checkAnswer('ch0', 8, 'C')"><input type="radio" name="ch0q8"> C) A type of financial derivative</li>
+                    <li onclick="checkAnswer('ch0', 8, 'D')"><input type="radio" name="ch0q8"> D) A lecture summary document</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer8-correct">
+                    <strong>Correct!</strong> Quantlets are reusable, documented code snippets that implement specific statistical or computational procedures.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer8-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. A Quantlet is a reusable, documented code snippet for statistical analysis.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q9">
+                <h4>Question 9: Heavy Tails</h4>
+                <p>What does "heavy tails" mean in the context of financial returns?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 9, 'A')"><input type="radio" name="ch0q9"> A) The distribution is skewed to the left</li>
+                    <li onclick="checkAnswer('ch0', 9, 'B')"><input type="radio" name="ch0q9"> B) Extreme returns occur more frequently than predicted by a normal distribution</li>
+                    <li onclick="checkAnswer('ch0', 9, 'C')"><input type="radio" name="ch0q9"> C) The mean return is very large</li>
+                    <li onclick="checkAnswer('ch0', 9, 'D')"><input type="radio" name="ch0q9"> D) The time series has a deterministic trend</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer9-correct">
+                    <strong>Correct!</strong> Heavy tails mean that extreme events (large gains or losses) occur more often than the normal distribution would predict.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer9-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Heavy tails indicate more frequent extreme returns than predicted by the normal distribution.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch0q10">
+                <h4>Question 10: Academic Field</h4>
+                <p>Which academic field combines statistics, finance, and programming as in SFM?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch0', 10, 'A')"><input type="radio" name="ch0q10"> A) Pure mathematics</li>
+                    <li onclick="checkAnswer('ch0', 10, 'B')"><input type="radio" name="ch0q10"> B) Quantitative finance / financial econometrics</li>
+                    <li onclick="checkAnswer('ch0', 10, 'C')"><input type="radio" name="ch0q10"> C) Behavioral psychology</li>
+                    <li onclick="checkAnswer('ch0', 10, 'D')"><input type="radio" name="ch0q10"> D) Business administration</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch0answer10-correct">
+                    <strong>Correct!</strong> Quantitative finance and financial econometrics combine statistical methods, financial theory, and computational tools.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch0answer10-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Quantitative finance / financial econometrics is the field that integrates these disciplines.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch0" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch0')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Check Score</button>
+                <button onclick="resetQuiz('ch0')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reset Quiz</button>
+            </div>
+        </div>
+
+        <!-- Chapter 1 Quizzes: Data Sources & Returns -->
+        <div class="quiz-container" id="chapter1-quizzes" style="display: none;">
+            <h3 style="margin-bottom: 1.5rem;">Chapter 1: Data Sources &amp; Returns</h3>
+
+            <div class="quiz-question" id="ch1q1">
+                <h4>Question 1: Simple Return</h4>
+                <p>What is the formula for simple (net) return $R_t$?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 1, 'A')"><input type="radio" name="ch1q1"> A) $\ln(P_t / P_{t-1})$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'B')"><input type="radio" name="ch1q1"> B) $P_t - P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'C')"><input type="radio" name="ch1q1"> C) $(P_t - P_{t-1}) / P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 1, 'D')"><input type="radio" name="ch1q1"> D) $P_t / P_{t-1}$</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer1-correct">
+                    <strong>Correct!</strong> The simple return is $R_t = (P_t - P_{t-1}) / P_{t-1}$, measuring the percentage change in price.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer1-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. $R_t = (P_t - P_{t-1}) / P_{t-1}$.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q2">
+                <h4>Question 2: Log Return</h4>
+                <p>What is the formula for log (continuously compounded) return $r_t$?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 2, 'A')"><input type="radio" name="ch1q2"> A) $(P_t - P_{t-1}) / P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'B')"><input type="radio" name="ch1q2"> B) $\ln(P_t / P_{t-1})$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'C')"><input type="radio" name="ch1q2"> C) $P_t \cdot P_{t-1}$</li>
+                    <li onclick="checkAnswer('ch1', 2, 'D')"><input type="radio" name="ch1q2"> D) $\exp(P_t) - 1$</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer2-correct">
+                    <strong>Correct!</strong> The log return is $r_t = \ln(P_t / P_{t-1})$, also known as the continuously compounded return.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer2-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. $r_t = \ln(P_t / P_{t-1})$.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q3">
+                <h4>Question 3: Variance Drag</h4>
+                <p>What is "variance drag" in the context of returns?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 3, 'A')"><input type="radio" name="ch1q3"> A) Variance increases linearly over time</li>
+                    <li onclick="checkAnswer('ch1', 3, 'B')"><input type="radio" name="ch1q3"> B) The arithmetic mean return exceeds the geometric mean by approximately $\sigma^2/2$</li>
+                    <li onclick="checkAnswer('ch1', 3, 'C')"><input type="radio" name="ch1q3"> C) Returns with high variance always have negative mean</li>
+                    <li onclick="checkAnswer('ch1', 3, 'D')"><input type="radio" name="ch1q3"> D) A method for reducing portfolio variance</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer3-correct">
+                    <strong>Correct!</strong> Variance drag means the geometric mean is lower than the arithmetic mean by approximately $\sigma^2/2$, eroding compounded wealth.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer3-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Variance drag is the gap between arithmetic and geometric mean returns ($\approx \sigma^2/2$).
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q4">
+                <h4>Question 4: Log Returns Advantage</h4>
+                <p>Why are log returns preferred for statistical modeling?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 4, 'A')"><input type="radio" name="ch1q4"> A) They are always positive</li>
+                    <li onclick="checkAnswer('ch1', 4, 'B')"><input type="radio" name="ch1q4"> B) They are additive over time and approximately normally distributed</li>
+                    <li onclick="checkAnswer('ch1', 4, 'C')"><input type="radio" name="ch1q4"> C) They are easier to compute</li>
+                    <li onclick="checkAnswer('ch1', 4, 'D')"><input type="radio" name="ch1q4"> D) They never have outliers</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer4-correct">
+                    <strong>Correct!</strong> Log returns are time-additive ($r_{1:T} = \sum r_t$) and better approximated by the normal distribution than simple returns.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer4-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Log returns are additive over time and closer to normality.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q5">
+                <h4>Question 5: ADF Test</h4>
+                <p>What does the Augmented Dickey-Fuller (ADF) test assess?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 5, 'A')"><input type="radio" name="ch1q5"> A) Normality of returns</li>
+                    <li onclick="checkAnswer('ch1', 5, 'B')"><input type="radio" name="ch1q5"> B) Presence of a unit root (non-stationarity)</li>
+                    <li onclick="checkAnswer('ch1', 5, 'C')"><input type="radio" name="ch1q5"> C) Heteroscedasticity in residuals</li>
+                    <li onclick="checkAnswer('ch1', 5, 'D')"><input type="radio" name="ch1q5"> D) Autocorrelation at all lags</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer5-correct">
+                    <strong>Correct!</strong> The ADF test has $H_0$: unit root (non-stationary) vs $H_1$: stationary.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer5-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The ADF test checks for a unit root, indicating non-stationarity.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q6">
+                <h4>Question 6: Jarque-Bera Test</h4>
+                <p>What does the Jarque-Bera test evaluate?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 6, 'A')"><input type="radio" name="ch1q6"> A) Stationarity of the time series</li>
+                    <li onclick="checkAnswer('ch1', 6, 'B')"><input type="radio" name="ch1q6"> B) Whether data follows a normal distribution (via skewness and kurtosis)</li>
+                    <li onclick="checkAnswer('ch1', 6, 'C')"><input type="radio" name="ch1q6"> C) Serial correlation in residuals</li>
+                    <li onclick="checkAnswer('ch1', 6, 'D')"><input type="radio" name="ch1q6"> D) Presence of unit roots</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer6-correct">
+                    <strong>Correct!</strong> The Jarque-Bera test checks normality by testing whether skewness $= 0$ and excess kurtosis $= 0$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer6-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Jarque-Bera tests normality using skewness and kurtosis.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q7">
+                <h4>Question 7: Parkinson Estimator</h4>
+                <p>Which volatility estimator uses the high-low price range?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 7, 'A')"><input type="radio" name="ch1q7"> A) Sample standard deviation</li>
+                    <li onclick="checkAnswer('ch1', 7, 'B')"><input type="radio" name="ch1q7"> B) Parkinson estimator</li>
+                    <li onclick="checkAnswer('ch1', 7, 'C')"><input type="radio" name="ch1q7"> C) EWMA</li>
+                    <li onclick="checkAnswer('ch1', 7, 'D')"><input type="radio" name="ch1q7"> D) Realized volatility</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer7-correct">
+                    <strong>Correct!</strong> The Parkinson (1980) estimator uses the daily high-low range: $\sigma^2_P = \frac{1}{4n\ln 2}\sum (\ln H_i - \ln L_i)^2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer7-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The Parkinson estimator uses high-low price ranges.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q8">
+                <h4>Question 8: Sharpe Ratio</h4>
+                <p>What does a Sharpe ratio measure?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 8, 'A')"><input type="radio" name="ch1q8"> A) Total return of an asset</li>
+                    <li onclick="checkAnswer('ch1', 8, 'B')"><input type="radio" name="ch1q8"> B) Excess return per unit of risk (standard deviation)</li>
+                    <li onclick="checkAnswer('ch1', 8, 'C')"><input type="radio" name="ch1q8"> C) The correlation between two assets</li>
+                    <li onclick="checkAnswer('ch1', 8, 'D')"><input type="radio" name="ch1q8"> D) Maximum drawdown of a portfolio</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer8-correct">
+                    <strong>Correct!</strong> The Sharpe ratio is $S = (\bar{r} - r_f) / \sigma$, measuring risk-adjusted return.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer8-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The Sharpe ratio measures excess return per unit of risk.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q9">
+                <h4>Question 9: OHLC Data</h4>
+                <p>What does OHLC data represent?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 9, 'A')"><input type="radio" name="ch1q9"> A) Only closing prices</li>
+                    <li onclick="checkAnswer('ch1', 9, 'B')"><input type="radio" name="ch1q9"> B) Open, High, Low, Close prices for each period</li>
+                    <li onclick="checkAnswer('ch1', 9, 'C')"><input type="radio" name="ch1q9"> C) Overnight returns only</li>
+                    <li onclick="checkAnswer('ch1', 9, 'D')"><input type="radio" name="ch1q9"> D) Order flow and trade data</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer9-correct">
+                    <strong>Correct!</strong> OHLC stands for Open, High, Low, Close &mdash; the four key prices recorded each trading period.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer9-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. OHLC = Open, High, Low, Close prices per period.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch1q10">
+                <h4>Question 10: Leverage Effect</h4>
+                <p>What is the "leverage effect" in financial markets?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch1', 10, 'A')"><input type="radio" name="ch1q10"> A) Using borrowed money to invest</li>
+                    <li onclick="checkAnswer('ch1', 10, 'B')"><input type="radio" name="ch1q10"> B) Negative returns tend to increase future volatility more than positive returns of the same magnitude</li>
+                    <li onclick="checkAnswer('ch1', 10, 'C')"><input type="radio" name="ch1q10"> C) Large firms have less volatile stock prices</li>
+                    <li onclick="checkAnswer('ch1', 10, 'D')"><input type="radio" name="ch1q10"> D) Interest rates directly determine stock prices</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch1answer10-correct">
+                    <strong>Correct!</strong> The leverage effect describes the asymmetric response of volatility to negative vs. positive returns.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch1answer10-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The leverage effect means negative returns increase volatility more than positive returns.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch1" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch1')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Check Score</button>
+                <button onclick="resetQuiz('ch1')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reset Quiz</button>
+            </div>
+        </div>
+
+        <!-- Chapter 2 Quizzes: Statistical Distributions in Capital Markets -->
+        <div class="quiz-container" id="chapter2-quizzes" style="display: none;">
+            <h3 style="margin-bottom: 1.5rem;">Chapter 2: Statistical Distributions in Capital Markets</h3>
+
+            <div class="quiz-question" id="ch2q1">
+                <h4>Question 1: Motivation</h4>
+                <p>Why are stable distributions needed to model financial returns?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 1, 'A')"><input type="radio" name="ch2q1"> A) Financial returns are always normally distributed</li>
+                    <li onclick="checkAnswer('ch2', 1, 'B')"><input type="radio" name="ch2q1"> B) Financial returns exhibit heavy tails and skewness that the normal distribution cannot capture</li>
+                    <li onclick="checkAnswer('ch2', 1, 'C')"><input type="radio" name="ch2q1"> C) The normal distribution overestimates extreme events</li>
+                    <li onclick="checkAnswer('ch2', 1, 'D')"><input type="radio" name="ch2q1"> D) Stable distributions have simpler formulas than the normal</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer1-correct">
+                    <strong>Correct!</strong> The Gaussian assumption underestimates the probability of extreme events (crashes, booms). Stable distributions allow for heavy tails and asymmetry.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer1-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Financial returns exhibit heavy tails and skewness that the normal distribution cannot capture.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q2">
+                <h4>Question 2: Generalized CLT</h4>
+                <p>What does the Generalized Central Limit Theorem (GCLT) state?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 2, 'A')"><input type="radio" name="ch2q2"> A) All sums of random variables converge to the normal distribution</li>
+                    <li onclick="checkAnswer('ch2', 2, 'B')"><input type="radio" name="ch2q2"> B) Normalized sums of heavy-tailed i.i.d. variables converge to a stable distribution</li>
+                    <li onclick="checkAnswer('ch2', 2, 'C')"><input type="radio" name="ch2q2"> C) The CLT only works for financial data</li>
+                    <li onclick="checkAnswer('ch2', 2, 'D')"><input type="radio" name="ch2q2"> D) Heavy-tailed distributions have no limit theorems</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer2-correct">
+                    <strong>Correct!</strong> The GCLT generalizes the classical CLT: when the finite variance assumption is relaxed, normalized sums converge to stable laws with $\alpha < 2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer2-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The GCLT shows sums of heavy-tailed variables converge to stable distributions.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q3">
+                <h4>Question 3: Historical Contribution</h4>
+                <p>Who first applied stable distributions to model speculative prices?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 3, 'A')"><input type="radio" name="ch2q3"> A) Paul L&eacute;vy (1925)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'B')"><input type="radio" name="ch2q3"> B) Beno&icirc;t Mandelbrot (1963)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'C')"><input type="radio" name="ch2q3"> C) John P. Nolan (2003)</li>
+                    <li onclick="checkAnswer('ch2', 3, 'D')"><input type="radio" name="ch2q3"> D) Eugene Fama (1970)</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer3-correct">
+                    <strong>Correct!</strong> Mandelbrot (1963) first applied stable distributions to model cotton prices, showing financial data deviate significantly from normality. Fama (1965) extended this to stock returns.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer3-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Mandelbrot (1963) pioneered the use of stable distributions in finance.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q4">
+                <h4>Question 4: Four Parameters</h4>
+                <p>A stable distribution $X \sim S(\alpha, \beta, \gamma, \delta)$ is characterized by four parameters. What does $\beta \in [-1, 1]$ control?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 4, 'A')"><input type="radio" name="ch2q4"> A) Tail heaviness</li>
+                    <li onclick="checkAnswer('ch2', 4, 'B')"><input type="radio" name="ch2q4"> B) Skewness (asymmetry)</li>
+                    <li onclick="checkAnswer('ch2', 4, 'C')"><input type="radio" name="ch2q4"> C) Scale (spread)</li>
+                    <li onclick="checkAnswer('ch2', 4, 'D')"><input type="radio" name="ch2q4"> D) Location (shift)</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer4-correct">
+                    <strong>Correct!</strong> $\beta$ controls asymmetry: $\beta = 0$ is symmetric, $\beta > 0$ means heavier right tail, $\beta < 0$ means heavier left tail.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer4-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. $\beta$ controls skewness. ($\alpha$ controls tail heaviness, $\gamma$ controls scale, $\delta$ controls location.)
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q5">
+                <h4>Question 5: Special Cases</h4>
+                <p>Which three stable distributions have closed-form probability density functions?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 5, 'A')"><input type="radio" name="ch2q5"> A) Normal, Exponential, Poisson</li>
+                    <li onclick="checkAnswer('ch2', 5, 'B')"><input type="radio" name="ch2q5"> B) Gaussian ($\alpha=2$), Cauchy ($\alpha=1, \beta=0$), and L&eacute;vy ($\alpha=0.5, \beta=1$)</li>
+                    <li onclick="checkAnswer('ch2', 5, 'C')"><input type="radio" name="ch2q5"> C) Student-$t$, Chi-squared, F-distribution</li>
+                    <li onclick="checkAnswer('ch2', 5, 'D')"><input type="radio" name="ch2q5"> D) All stable distributions have closed-form PDFs</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer5-correct">
+                    <strong>Correct!</strong> Only three stable distributions have closed-form PDFs: Gaussian, Cauchy, and L&eacute;vy. All others require numerical computation via inverse Fourier transform.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer5-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The Gaussian, Cauchy, and L&eacute;vy distributions are the only stable distributions with closed-form densities.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q6">
+                <h4>Question 6: VaR Comparison</h4>
+                <p>For S&amp;P 500 returns at the 0.1% level, how does stable VaR compare to Gaussian VaR?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 6, 'A')"><input type="radio" name="ch2q6"> A) They are approximately equal</li>
+                    <li onclick="checkAnswer('ch2', 6, 'B')"><input type="radio" name="ch2q6"> B) Stable VaR is approximately 2.5 times larger than Gaussian VaR</li>
+                    <li onclick="checkAnswer('ch2', 6, 'C')"><input type="radio" name="ch2q6"> C) Gaussian VaR is larger</li>
+                    <li onclick="checkAnswer('ch2', 6, 'D')"><input type="radio" name="ch2q6"> D) VaR cannot be computed for stable distributions</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer6-correct">
+                    <strong>Correct!</strong> At the 0.1% level, stable VaR ($-9.0\%$) is approximately 2.5 times larger than Gaussian VaR ($-3.6\%$), showing the normal distribution severely underestimates tail risk.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer6-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Stable VaR is ~2.5&times; larger, reflecting the heavier tails.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q7">
+                <h4>Question 7: Moments</h4>
+                <p>For a stable distribution with $\alpha < 2$, which statement about moments is correct?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 7, 'A')"><input type="radio" name="ch2q7"> A) All moments exist</li>
+                    <li onclick="checkAnswer('ch2', 7, 'B')"><input type="radio" name="ch2q7"> B) The variance is infinite; only moments of order $p < \alpha$ are finite</li>
+                    <li onclick="checkAnswer('ch2', 7, 'C')"><input type="radio" name="ch2q7"> C) The mean never exists</li>
+                    <li onclick="checkAnswer('ch2', 7, 'D')"><input type="radio" name="ch2q7"> D) The variance is finite but kurtosis is infinite</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer7-correct">
+                    <strong>Correct!</strong> $E[|X|^p] < \infty$ for $0 < p < \alpha$ and $E[|X|^p] = \infty$ for $p \geq \alpha$. The mean exists only if $\alpha > 1$, and the variance exists only if $\alpha = 2$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer7-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. For $\alpha < 2$, the variance is infinite; only fractional moments of order $< \alpha$ exist.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q8">
+                <h4>Question 8: Estimation Methods</h4>
+                <p>What estimation method did McCulloch (1986) propose for stable distribution parameters?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 8, 'A')"><input type="radio" name="ch2q8"> A) Maximum likelihood via gradient descent</li>
+                    <li onclick="checkAnswer('ch2', 8, 'B')"><input type="radio" name="ch2q8"> B) Bayesian MCMC sampling</li>
+                    <li onclick="checkAnswer('ch2', 8, 'C')"><input type="radio" name="ch2q8"> C) Quantile-based estimation using sample quantile ratios</li>
+                    <li onclick="checkAnswer('ch2', 8, 'D')"><input type="radio" name="ch2q8"> D) Method of moments using variance and kurtosis</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer8-correct">
+                    <strong>Correct!</strong> McCulloch's method uses relationships between quantile ratios and stable parameters to provide fast and simple initial estimates of $\alpha$ and $\beta$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer8-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is C. McCulloch (1986) proposed quantile-based estimation. (Method of moments fails because the variance is infinite for $\alpha < 2$.)
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q9">
+                <h4>Question 9: Simulation</h4>
+                <p>What algorithm is used to simulate stable random variables?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 9, 'A')"><input type="radio" name="ch2q9"> A) Box-Muller transform</li>
+                    <li onclick="checkAnswer('ch2', 9, 'B')"><input type="radio" name="ch2q9"> B) Chambers-Mallows-Stuck (CMS) algorithm</li>
+                    <li onclick="checkAnswer('ch2', 9, 'C')"><input type="radio" name="ch2q9"> C) Inverse CDF method</li>
+                    <li onclick="checkAnswer('ch2', 9, 'D')"><input type="radio" name="ch2q9"> D) Rejection sampling from a normal distribution</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer9-correct">
+                    <strong>Correct!</strong> The CMS (1976) algorithm generates standard stable r.v.s using a Uniform and an Exponential random variable. It is available in Python via <code>scipy.stats.levy_stable</code>.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer9-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. The Chambers-Mallows-Stuck (CMS) algorithm is the standard method for simulating stable random variables.
+                </div>
+            </div>
+
+            <div class="quiz-question" id="ch2q10">
+                <h4>Question 10: Tail Behavior</h4>
+                <p>How do stable distribution tails ($\alpha < 2$) decay compared to the Gaussian?</p>
+                <ul class="quiz-options">
+                    <li onclick="checkAnswer('ch2', 10, 'A')"><input type="radio" name="ch2q10"> A) Exponentially, like the Gaussian</li>
+                    <li onclick="checkAnswer('ch2', 10, 'B')"><input type="radio" name="ch2q10"> B) As a power law: $P(X > x) \sim C \cdot x^{-\alpha}$</li>
+                    <li onclick="checkAnswer('ch2', 10, 'C')"><input type="radio" name="ch2q10"> C) They have bounded support (no tails)</li>
+                    <li onclick="checkAnswer('ch2', 10, 'D')"><input type="radio" name="ch2q10"> D) Logarithmically</li>
+                </ul>
+                <div class="answer-reveal answer-correct" id="ch2answer10-correct">
+                    <strong>Correct!</strong> Stable tails follow a power law (polynomial decay), not exponential. The smaller $\alpha$, the heavier the tails. Financial returns typically have $\alpha \in [1.5, 1.9]$.
+                </div>
+                <div class="answer-reveal answer-incorrect" id="ch2answer10-incorrect">
+                    <strong>Incorrect.</strong> The correct answer is B. Stable distributions have power-law tails: $P(X > x) \sim C \cdot x^{-\alpha}$.
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <p id="score-display-ch2" style="font-size: 1.2rem; margin-bottom: 1rem; font-weight: bold;"></p>
+                <button onclick="calculateScore('ch2')" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none; margin-right: 1rem;">Check Score</button>
+                <button onclick="resetQuiz('ch2')" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem; cursor: pointer; border: none;">Reset Quiz</button>
+            </div>
+        </div>
+
+        </div><!-- end quiz-content -->
+    </section>
+
     <!-- ===== Resources Section ===== -->
     <section id="resources">
         <h2 class="section-title">Resources</h2>
@@ -1204,15 +1850,17 @@
 <!-- ==================== FOOTER ==================== -->
 <footer class="site-footer">
     <div class="footer-logos">
-        <img src="logos/ase_logo.png" alt="Bucharest University of Economic Studies">
-        <img src="logos/ida_logo.png" alt="IDA">
-        <img src="logos/brc_logo.png" alt="BRC">
-        <img src="logos/ai4efin_logo.png" alt="AI4EFin">
-        <img src="logos/acad_logo.png" alt="Academy">
-        <img src="logos/msca_logo.png" alt="MSCA">
+        <a href="https://www.ase.ro" target="_blank"><img src="logos/ase_logo.png" alt="ASE Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://www.theida.net/" target="_blank"><img src="logos/ida_logo.png" alt="IDA Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://ai4efin.ase.ro" target="_blank"><img src="logos/ai4efin_logo.png" alt="AI4EFin Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://www.digital-finance-msca.com/" target="_blank"><img src="logos/msca_logo.png" alt="MSCA Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://blockchain-research-center.com/" target="_blank"><img src="logos/brc_logo.png" alt="BRC Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
+        <a href="https://ipe.ro/new/" target="_blank"><img src="logos/acad_logo.png" alt="Academy Logo" style="background: white; padding: 5px; border-radius: 4px;"></a>
     </div>
-    <p>&copy; 2025 &ndash; 2026 Statistics of Financial Markets | Bucharest University of Economic Studies</p>
-    <p>Prof. dr. Daniel Traian Pele | <a href="mailto:daniel.pele@csie.ase.ro">daniel.pele@csie.ase.ro</a></p>
+    <p>Statistics of Financial Markets | Faculty of Cybernetics, Statistics and Economic Informatics | Bucharest University of Economic Studies</p>
+    <p>Instructor: <strong>Prof. dr. Daniel Traian Pele</strong> | <a href="mailto:danpele@ase.ro" style="color: #ccc;">danpele@ase.ro</a></p>
+    <p>Academic Year 2025&ndash;2026</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">All materials generated using Python and LaTeX</p>
 </footer>
 
 <!-- ==================== Back to Top Button ==================== -->
@@ -1272,6 +1920,342 @@
         window.addEventListener('scroll', highlightNav);
         highlightNav();
     })();
+
+    // ==================== Quiz System ====================
+
+    // Google Sheets API (placeholder - replace with your deployed Apps Script URL)
+    const SHEETS_URL = 'YOUR_GOOGLE_SHEETS_URL';
+
+    // Chapter names for results
+    const chapterNames = {
+        0: 'Ch. 0 - Introduction',
+        1: 'Ch. 1 - Data Sources & Returns',
+        2: 'Ch. 2 - Statistical Distributions'
+    };
+
+    // GitHub OAuth Client ID (public - safe to embed)
+    const GITHUB_CLIENT_ID = 'Ov23liJNDMSO6UzqPjZp';
+
+    // Redirect to GitHub OAuth
+    function loginWithGitHub() {
+        localStorage.setItem('sfm-login-return', 'index.html');
+        const redirectUri = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'callback.html';
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + GITHUB_CLIENT_ID + '&redirect_uri=' + encodeURIComponent(redirectUri) + '&scope=read:user';
+    }
+
+    // Show logged-in state
+    function showLoggedInState(user) {
+        document.getElementById('github-login-section').style.display = 'none';
+        document.getElementById('github-logged-in-section').style.display = 'flex';
+        document.getElementById('quiz-content').style.display = 'block';
+        document.getElementById('github-avatar').src = user.avatar_url;
+        document.getElementById('github-display-name').textContent = user.name;
+        document.getElementById('github-username').textContent = '@' + user.login;
+    }
+
+    // Logout
+    function logoutGitHub() {
+        localStorage.removeItem('sfm-github-user');
+        localStorage.removeItem('sfm-student-group');
+        document.getElementById('github-login-section').style.display = 'block';
+        document.getElementById('github-logged-in-section').style.display = 'none';
+        document.getElementById('quiz-content').style.display = 'none';
+    }
+
+    // Save group
+    function saveGroup() {
+        const group = document.getElementById('student-group').value.trim();
+        localStorage.setItem('sfm-student-group', group);
+        const saved = document.getElementById('student-saved');
+        saved.style.display = 'inline';
+        setTimeout(() => saved.style.display = 'none', 2000);
+    }
+
+    // Load state on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        const userData = localStorage.getItem('sfm-github-user');
+        if (userData) {
+            const user = JSON.parse(userData);
+            showLoggedInState(user);
+        }
+        const group = localStorage.getItem('sfm-student-group');
+        if (group) document.getElementById('student-group').value = group;
+    });
+
+    // Send results to Google Sheets
+    function sendResults(chapterNum, score, total) {
+        const userData = localStorage.getItem('sfm-github-user');
+        if (!userData) {
+            alert('Please log in with GitHub before checking the score!');
+            return false;
+        }
+        const user = JSON.parse(userData);
+        const group = document.getElementById('student-group').value.trim();
+        const nota = Math.round((score / total) * 10 * 100) / 100;
+        const data = {
+            nume: user.name,
+            github_username: user.login,
+            grupa: group,
+            capitol: chapterNames[chapterNum] || 'Ch. ' + chapterNum,
+            scor: score + '/' + total,
+            total: Math.round((score / total) * 100) + '%',
+            nota: nota.toFixed(2)
+        };
+        if (SHEETS_URL && SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_URL') {
+            fetch(SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            });
+        }
+        return true;
+    }
+
+    // Answer keys
+    const ch0Answers = {
+        1: 'C', 2: 'C', 3: 'B', 4: 'C', 5: 'C',
+        6: 'C', 7: 'C', 8: 'B', 9: 'B', 10: 'B'
+    };
+
+    const ch1Answers = {
+        1: 'C', 2: 'B', 3: 'B', 4: 'B', 5: 'B',
+        6: 'B', 7: 'B', 8: 'B', 9: 'B', 10: 'B'
+    };
+
+    const ch2Answers = {
+        1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B',
+        6: 'B', 7: 'B', 8: 'C', 9: 'B', 10: 'B'
+    };
+
+    let userAnswersCh0 = {};
+    let userAnswersCh1 = {};
+    let userAnswersCh2 = {};
+
+    // Show/hide chapters
+    function showChapter(chapter) {
+        document.getElementById('chapter0-quizzes').style.display = chapter === 0 ? 'block' : 'none';
+        document.getElementById('chapter1-quizzes').style.display = chapter === 1 ? 'block' : 'none';
+        document.getElementById('chapter2-quizzes').style.display = chapter === 2 ? 'block' : 'none';
+
+        // Update tab styles
+        document.getElementById('tab-ch0').style.background = chapter === 0 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch0').style.color = chapter === 0 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch0').style.boxShadow = chapter === 0 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+        document.getElementById('tab-ch1').style.background = chapter === 1 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch1').style.color = chapter === 1 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch1').style.boxShadow = chapter === 1 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+        document.getElementById('tab-ch2').style.background = chapter === 2 ? 'var(--main-blue)' : 'white';
+        document.getElementById('tab-ch2').style.color = chapter === 2 ? 'white' : 'var(--main-blue)';
+        document.getElementById('tab-ch2').style.boxShadow = chapter === 2 ? '0 2px 8px rgba(0,0,0,0.2)' : 'none';
+
+        // Re-typeset MathJax for newly visible content
+        if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+            try { MathJax.typeset(); } catch(e) {}
+        }
+    }
+
+    function checkAnswer(chapter, questionNum, selectedAnswer) {
+        let correctAnswers, userAnswers, prefix;
+
+        if (chapter === 'ch0') {
+            correctAnswers = ch0Answers;
+            userAnswers = userAnswersCh0;
+            prefix = 'ch0';
+        } else if (chapter === 'ch2') {
+            correctAnswers = ch2Answers;
+            userAnswers = userAnswersCh2;
+            prefix = 'ch2';
+        } else {
+            correctAnswers = ch1Answers;
+            userAnswers = userAnswersCh1;
+            prefix = 'ch1';
+        }
+
+        // If already answered, don't allow changes
+        if (userAnswers[questionNum] !== undefined) return;
+
+        userAnswers[questionNum] = selectedAnswer;
+
+        // Visually check the radio button
+        const qId = prefix + 'q' + questionNum;
+        const qDiv = document.getElementById(qId);
+        if (qDiv) {
+            qDiv.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            const lis = qDiv.querySelectorAll('.quiz-options li');
+            lis.forEach(li => {
+                const text = li.textContent.trim();
+                if (text.match(new RegExp('^' + selectedAnswer + '\\)'))) {
+                    const radio = li.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                }
+            });
+        }
+
+        // Show answer feedback
+        const isCorrect = selectedAnswer === correctAnswers[questionNum];
+        const correctDiv = document.getElementById(prefix + 'answer' + questionNum + '-correct');
+        const incorrectDiv = document.getElementById(prefix + 'answer' + questionNum + '-incorrect');
+        if (correctDiv) correctDiv.style.display = isCorrect ? 'block' : 'none';
+        if (incorrectDiv) incorrectDiv.style.display = isCorrect ? 'none' : 'block';
+
+        // Lock the question - disable all options
+        if (qDiv) {
+            qDiv.querySelectorAll('.quiz-options li').forEach(li => {
+                li.style.pointerEvents = 'none';
+                li.style.opacity = '0.7';
+            });
+        }
+    }
+
+    function calculateScore(chapter) {
+        let score = 0;
+        let answered = 0;
+        let total = 10;
+        let correctAnswers, userAnswers, displayId, qPrefix;
+
+        if (chapter === 'ch0' || chapter === 0) {
+            correctAnswers = ch0Answers;
+            userAnswers = userAnswersCh0;
+            displayId = 'score-display-ch0';
+            qPrefix = 'ch0';
+        } else if (chapter === 'ch2' || chapter === 2) {
+            correctAnswers = ch2Answers;
+            userAnswers = userAnswersCh2;
+            displayId = 'score-display-ch2';
+            qPrefix = 'ch2';
+        } else {
+            correctAnswers = ch1Answers;
+            userAnswers = userAnswersCh1;
+            displayId = 'score-display-ch1';
+            qPrefix = 'ch1';
+        }
+
+        for (let i = 1; i <= total; i++) {
+            if (userAnswers[i]) {
+                answered++;
+                if (userAnswers[i] === correctAnswers[i]) {
+                    score++;
+                }
+            }
+        }
+
+        const totalPercentage = Math.round((score / total) * 100);
+
+        let message = 'Score: ' + score + '/' + total + ' (' + totalPercentage + '%)';
+        if (answered < total) {
+            message += ' - ' + (total - answered) + ' questions unanswered';
+        }
+
+        if (totalPercentage >= 90) {
+            message += ' - Excellent!';
+        } else if (totalPercentage >= 70) {
+            message += ' - Good job!';
+        } else if (totalPercentage >= 50) {
+            message += ' - Keep studying!';
+        } else {
+            message += ' - Keep practicing!';
+        }
+
+        document.getElementById(displayId).textContent = message;
+
+        // Send results to Google Sheets
+        const chapterNum = (chapter === 'ch0' || chapter === 0) ? 0 :
+                           (chapter === 'ch2' || chapter === 2) ? 2 : 1;
+        sendResults(chapterNum, score, total);
+
+        // Show answer key
+        const keyId = displayId.replace('score-display', 'answer-key');
+        let existingKey = document.getElementById(keyId);
+        if (!existingKey) {
+            existingKey = document.createElement('div');
+            existingKey.id = keyId;
+            existingKey.style.cssText = 'margin-top: 1.5rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;';
+            document.getElementById(displayId).parentNode.appendChild(existingKey);
+        }
+
+        function getOptionText(qId, letter) {
+            const qDiv = document.getElementById(qId);
+            if (!qDiv) return letter;
+            const lis = qDiv.querySelectorAll('.quiz-options li');
+            for (const li of lis) {
+                const text = li.textContent.trim();
+                if (text.match(new RegExp('^' + letter + '\\)'))) return text;
+            }
+            return letter;
+        }
+
+        function getQuestionText(qId) {
+            const qDiv = document.getElementById(qId);
+            if (!qDiv) return '';
+            const p = qDiv.querySelector('p');
+            return p ? p.textContent.trim() : '';
+        }
+
+        let keyHtml = '<h4 style="margin-bottom: 0.8rem; color: var(--main-blue);">Detailed Results</h4>';
+        keyHtml += '<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">';
+        keyHtml += '<tr style="background: var(--main-blue); color: white;"><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">Q</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Question</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Correct Answer</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Your Answer</th><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">&#10003;/&#10007;</th></tr>';
+        for (let i = 1; i <= total; i++) {
+            const qId = qPrefix + 'q' + i;
+            const isCorrect = userAnswers[i] === correctAnswers[i];
+            const bgColor = !userAnswers[i] ? '#f8f9fa' : (isCorrect ? '#e8f5e9' : '#ffebee');
+            const resultText = !userAnswers[i] ? '<span style="color:#999;">&mdash;</span>' : (isCorrect ? '<span style="color:#2E7D32; font-weight:bold;">&#10003;</span>' : '<span style="color:#DC3545; font-weight:bold;">&#10007;</span>');
+            const questionText = getQuestionText(qId);
+            const correctText = getOptionText(qId, correctAnswers[i]);
+            const userText = userAnswers[i] ? getOptionText(qId, userAnswers[i]) : '&mdash;';
+            keyHtml += '<tr style="background: ' + bgColor + ';"><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;"><strong>' + i + '</strong></td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + questionText + '</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + correctText + '</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">' + userText + '</td><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;">' + resultText + '</td></tr>';
+        }
+        keyHtml += '</table>';
+        existingKey.innerHTML = keyHtml;
+        existingKey.style.display = 'block';
+    }
+
+    function resetQuiz(chapter) {
+        let total = 10;
+        let prefix, displayId, container;
+
+        if (chapter === 'ch0' || chapter === 0) {
+            prefix = 'ch0';
+            displayId = 'score-display-ch0';
+            container = 'chapter0-quizzes';
+            userAnswersCh0 = {};
+        } else if (chapter === 'ch2' || chapter === 2) {
+            prefix = 'ch2';
+            displayId = 'score-display-ch2';
+            container = 'chapter2-quizzes';
+            userAnswersCh2 = {};
+        } else {
+            prefix = 'ch1';
+            displayId = 'score-display-ch1';
+            container = 'chapter1-quizzes';
+            userAnswersCh1 = {};
+        }
+
+        for (let i = 1; i <= total; i++) {
+            const correctDiv = document.getElementById(prefix + 'answer' + i + '-correct');
+            const incorrectDiv = document.getElementById(prefix + 'answer' + i + '-incorrect');
+            if (correctDiv) correctDiv.style.display = 'none';
+            if (incorrectDiv) incorrectDiv.style.display = 'none';
+        }
+
+        // Uncheck radio buttons for this chapter
+        document.querySelectorAll('#' + container + ' input[type="radio"]').forEach(function(radio) {
+            radio.checked = false;
+        });
+
+        // Unlock all quiz options
+        document.querySelectorAll('#' + container + ' .quiz-options li').forEach(function(li) {
+            li.style.pointerEvents = '';
+            li.style.opacity = '';
+        });
+
+        document.getElementById(displayId).textContent = '';
+
+        // Hide answer key
+        const keyId = displayId.replace('score-display', 'answer-key');
+        const keyDiv = document.getElementById(keyId);
+        if (keyDiv) keyDiv.style.display = 'none';
+    }
 </script>
 
 </body>
