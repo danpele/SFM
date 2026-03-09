@@ -114,7 +114,7 @@ axes[0, 0].set_title('Stable Distribution PDFs (linear scale)',
 axes[0, 0].set_xlabel('x')
 axes[0, 0].set_ylabel('f(x)')
 axes[0, 0].set_ylim(0, 0.45)
-axes[0, 0].legend(frameon=False)
+axes[0, 0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False, fontsize=7)
 
 # Panel B: PDF comparison on log scale (tail behavior)
 for a, c, label in zip(alphas, colors, labels):
@@ -125,7 +125,7 @@ axes[0, 1].set_title('Log-Scale PDF (Tail Behavior)', fontweight='bold')
 axes[0, 1].set_xlabel('x')
 axes[0, 1].set_ylabel('log f(x)')
 axes[0, 1].set_ylim(1e-6, 1)
-axes[0, 1].legend(frameon=False)
+axes[0, 1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False, fontsize=7)
 
 # Panel C: Histogram + KDE + Normal for alpha=1.5
 alpha_demo = 1.5
@@ -148,7 +148,7 @@ axes[1, 0].set_title(f'Stable($\\alpha$={alpha_demo}) vs Normal',
 axes[1, 0].set_xlabel('x')
 axes[1, 0].set_ylabel('Density')
 axes[1, 0].set_xlim(-8, 8)
-axes[1, 0].legend(frameon=False, fontsize=7)
+axes[1, 0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, frameon=False, fontsize=7)
 
 kurt_15 = stats.kurtosis(sample_15)
 axes[1, 0].text(0.95, 0.95,
@@ -178,7 +178,7 @@ axes[1, 1].plot(x_gauss, pdf_normal_g, color='#2E7D32', linewidth=2,
 axes[1, 1].set_title('Stable($\\alpha$=2) = Gaussian', fontweight='bold')
 axes[1, 1].set_xlabel('x')
 axes[1, 1].set_ylabel('Density')
-axes[1, 1].legend(frameon=False, fontsize=7)
+axes[1, 1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, frameon=False, fontsize=7)
 
 # Verify alpha=2 equals Normal
 ks_stat, ks_pval = stats.kstest(

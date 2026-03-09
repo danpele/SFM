@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical and Financial Models - Course Website</title>
+
+    <!-- MathJax for beautiful math rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* ============================================================
+           CSS VARIABLES (Design System)
+           Extracted from: https://danpele.github.io/Time-Series-Analysis/
+           ============================================================ */
+        :root {
+            --main-blue: #1A3A6E;
+            --accent-blue: #2A528C;
+            --ida-red: #DC3545;
+            --forest: #2E7D32;
+            --dark-gray: #333;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+        }
+
+        /* ============================================================
+           RESET
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+        }
+
+        /* ============================================================
+           HEADER
+           - Gradient background from main-blue to accent-blue
+           - Logos on left and right, title centered
+           ============================================================ */
+        header {
+            background: linear-gradient(135deg, var(--main-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* ============================================================
+           NAVIGATION
+           - Sticky dark bar with centered links
+           - Language switcher pushed to the right with margin-left: auto
+           ============================================================ */
+        nav {
+            background: var(--dark-gray);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--main-blue);
+        }
+
+        /* ============================================================
+           LANGUAGE SWITCHER
+           - Sits inside nav ul as the last <li>
+           - Uses simple <a> links to index.html / index_ro.html
+           - .active class highlights current language
+           ============================================================ */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            padding-left: 2rem;
+        }
+
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid white;
+            border-radius: 4px;
+            background: transparent;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn:hover {
+            background: white;
+            color: var(--dark-gray);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: var(--main-blue);
+        }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            color: var(--main-blue);
+            border-bottom: 3px solid var(--ida-red);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ============================================================
+           COURSE INFO CARDS
+           - Auto-fit grid, 280px minimum column width
+           - Left border accent in main-blue
+           ============================================================ */
+        .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--main-blue);
+            overflow-x: auto;
+        }
+
+        .info-card h3 {
+            color: var(--main-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card p {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+        }
+
+        /* ============================================================
+           CHAPTER CARDS
+           - Auto-fit grid, 300px minimum column width
+           - Hover: lift up with shadow
+           - Blue header bar, white body
+           - List items with red ">" bullet
+           - Action buttons in flex row at bottom
+           ============================================================ */
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chapter-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .chapter-header {
+            background: var(--main-blue);
+            color: white;
+            padding: 1rem;
+        }
+
+        .chapter-header h3 {
+            margin: 0;
+        }
+
+        .chapter-body {
+            padding: 1.5rem;
+        }
+
+        .chapter-body ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .chapter-body li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .chapter-body li::before {
+            content: ">";
+            color: var(--ida-red);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .chapter-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* ============================================================
+           BUTTONS
+           - .btn base class
+           - Variants: primary (blue), secondary (green), outline, colab (yellow)
+           ============================================================ */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--main-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue);
+        }
+
+        .btn-secondary {
+            background: var(--forest);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1b5e20;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--main-blue);
+            color: var(--main-blue);
+            background: white;
+        }
+
+        .btn-outline:hover {
+            background: var(--main-blue);
+            color: white;
+        }
+
+        .btn-colab {
+            background: #F9AB00;
+            color: #333;
+        }
+
+        .btn-colab:hover {
+            background: #E09600;
+        }
+
+        .colab-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #F9AB00;
+            color: #333;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            margin-left: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .colab-badge:hover {
+            background: #E09600;
+        }
+
+        .colab-badge img {
+            height: 16px;
+        }
+
+        /* ============================================================
+           QUIZ SECTION
+           - Container with light-gray background
+           - Questions have left blue border
+           - Answer feedback: green for correct, red for incorrect
+           - Radio-based multiple choice with onclick handlers
+           ============================================================ */
+        .quiz-container {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--main-blue);
+        }
+
+        .quiz-question h4 {
+            color: var(--main-blue);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+        }
+
+        .quiz-options li {
+            padding: 0.5rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .quiz-options li:hover {
+            background: #e3f2fd;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .answer-reveal {
+            display: none;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .answer-correct {
+            background: #c8e6c9;
+            border-left: 4px solid var(--forest);
+        }
+
+        .answer-incorrect {
+            background: #ffcdd2;
+            border-left: 4px solid var(--ida-red);
+        }
+
+        /* ============================================================
+           RESOURCES SECTION
+           - Grid of resource items
+           - Each has an icon circle + text
+           ============================================================ */
+        .resources-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: var(--dark-gray);
+            transition: background 0.3s;
+        }
+
+        .resource-item:hover {
+            background: var(--light-gray);
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--main-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        footer {
+            background: var(--dark-gray);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .chapter-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================
+         HEADER
+         - Flexbox row: logo-left | title-center | logo-right
+         - Logos wrapped in <a> to institution homepages
+         - Logos have white background + padding for contrast on gradient
+         ================================================================ -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <a href="https://www.ase.ro" target="_blank">
+                <img src="../logos/ase_logo.png" alt="ASE Logo"
+                     style="height: 60px; background: white; padding: 5px; border-radius: 4px;">
+            </a>
+            <div style="text-align: center; flex: 1;">
+                <h1>Statistical and Financial Models</h1>
+                <p>Faculty of Cybernetics, Statistics and Economic Informatics | Bucharest University of Economic Studies, Romania</p>
+            </div>
+            <a href="https://www.theida.net/" target="_blank">
+                <img src="../logos/ida_logo.png" alt="IDA Logo"
+                     style="height: 60px; background: white; padding: 5px; border-radius: 4px;">
+            </a>
+        </div>
+    </header>
+
+    <!-- ================================================================
+         NAVIGATION + LANGUAGE SWITCHER
+         - Sticky bar with anchor links
+         - Language switcher as the last <li> using margin-left: auto
+         - Active language gets white background via .active class
+         - Switching is done via plain HTML links (no JS needed)
+         ================================================================ -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#chapters">Chapters</a></li>
+            <li><a href="#quizzes">Quizzes</a></li>
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="lang-switcher">
+                <a href="index.html" class="lang-btn active">EN</a>
+                <a href="index_ro.html" class="lang-btn">RO</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ================================================================
+         MAIN CONTENT
+         ================================================================ -->
+    <main>
+
+        <!-- ============================================================
+             SECTION: Course Overview (info cards)
+             ============================================================ -->
+        <section id="home">
+            <h2>Course Overview</h2>
+            <div class="course-info">
+                <div class="info-card">
+                    <h3>Course</h3>
+                    <p>Statistical and Financial Models</p>
+                    <p>Bucharest University of Economic Studies</p>
+                </div>
+                <div class="info-card">
+                    <h3>Duration</h3>
+                    <p><strong>Lectures:</strong> 2 hours/week</p>
+                    <p><strong>Seminars:</strong> 2 hours/week</p>
+                </div>
+                <div class="info-card">
+                    <h3>Prerequisites</h3>
+                    <p>Statistics, Probability Theory</p>
+                    <p>Linear Algebra, Python Programming</p>
+                </div>
+                <div class="info-card">
+                    <h3>Assessment</h3>
+                    <p>Final Exam: 70%</p>
+                    <p>Projects &amp; Assignments: 30%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION: Chapters (card grid)
+             - Each card: blue header, body with topic list, action buttons
+             - Button types: btn-primary (slides), btn-secondary (seminar),
+               btn-outline (notebooks), btn-colab (Colab links)
+             ============================================================ -->
+        <section id="chapters">
+            <h2>Course Chapters</h2>
+            <div class="chapters-grid">
+
+                <!-- Chapter 0 -->
+                <div class="chapter-card">
+                    <div class="chapter-header">
+                        <h3>Chapter 0: Introduction</h3>
+                    </div>
+                    <div class="chapter-body">
+                        <ul>
+                            <li>Course Overview</li>
+                            <li>Data Sources</li>
+                            <li>Financial Indicators</li>
+                            <li>Software Tools</li>
+                        </ul>
+                        <div class="chapter-links">
+                            <a href="EN/Courses/chapter0_introduction.pdf" class="btn btn-primary">
+                                Lecture Slides
+                            </a>
+                            <!-- Add seminar and notebook links as needed -->
+                            <!--
+                            <a href="EN/Seminars/chapter0_seminar.pdf" class="btn btn-secondary">
+                                Seminar
+                            </a>
+                            <a href="https://github.com/..." class="btn btn-outline" target="_blank">
+                                Lecture Notebook
+                            </a>
+                            <a href="https://github.com/..." class="btn btn-outline" target="_blank">
+                                Seminar Notebook
+                            </a>
+                            -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chapter 1: Example with all button types -->
+                <div class="chapter-card">
+                    <div class="chapter-header">
+                        <h3>Chapter 1: Data Sources and Financial Indicators</h3>
+                    </div>
+                    <div class="chapter-body">
+                        <ul>
+                            <li>Returns (Simple, Log, Arithmetic)</li>
+                            <li>Volatility Estimators</li>
+                            <li>Sharpe Ratio</li>
+                            <li>Efficient Frontier</li>
+                            <li>Stationarity</li>
+                        </ul>
+                        <div class="chapter-links">
+                            <a href="EN/Courses/chapter1_data_sources.pdf" class="btn btn-primary">
+                                Lecture Slides
+                            </a>
+                            <a href="EN/Seminars/seminar1_returns_stationarity_en.pdf" class="btn btn-secondary">
+                                Seminar
+                            </a>
+                            <a href="https://github.com/danpele/SFM/blob/main/Quantlets/Ch_01/" class="btn btn-outline" target="_blank">
+                                Quantlets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more chapter cards following the same pattern... -->
+                <!-- Chapter 2 -->
+                <div class="chapter-card">
+                    <div class="chapter-header">
+                        <h3>Chapter 2: Statistical Distributions</h3>
+                    </div>
+                    <div class="chapter-body">
+                        <ul>
+                            <li>Stable Distributions</li>
+                            <li>Heavy Tails</li>
+                            <li>Distribution Fitting</li>
+                            <li>QQ-Plots</li>
+                        </ul>
+                        <div class="chapter-links">
+                            <a href="EN/Courses/chapter2_statistical_distributions.pdf" class="btn btn-primary">
+                                Lecture Slides
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template for additional chapters:
+                <div class="chapter-card">
+                    <div class="chapter-header">
+                        <h3>Chapter N: Title</h3>
+                    </div>
+                    <div class="chapter-body">
+                        <ul>
+                            <li>Topic 1</li>
+                            <li>Topic 2</li>
+                        </ul>
+                        <div class="chapter-links">
+                            <a href="..." class="btn btn-primary">Lecture Slides</a>
+                            <a href="..." class="btn btn-secondary">Seminar</a>
+                            <a href="..." class="btn btn-outline" target="_blank">Notebook</a>
+                            <a href="https://colab.research.google.com/..." class="btn btn-colab" target="_blank">
+                                Open in Colab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                -->
+
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION: Quizzes
+             - Tab-based chapter selector (buttons styled like btn-outline)
+             - Quiz containers shown/hidden by showChapter() JS function
+             - Each question: radio options with onclick="checkAnswer(...)"
+             - Score calculation + results sent to Google Sheets
+             - GitHub authentication for student identity
+             ============================================================ -->
+        <section id="quizzes">
+            <h2>Self-Assessment Quizzes</h2>
+
+            <!-- GitHub Login Section (optional - for tracking scores) -->
+            <div id="github-login" style="margin-bottom: 1.5rem; padding: 1rem; background: var(--light-gray); border-radius: 8px;">
+                <p>Login with GitHub to track your quiz scores:</p>
+                <button onclick="loginWithGitHub()" class="btn btn-primary" id="github-login-btn">Login with GitHub</button>
+                <span id="github-user-info" style="display: none; margin-left: 1rem;"></span>
+            </div>
+
+            <!-- Chapter Tabs -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <button id="tab-ch0" onclick="showChapter(0)" class="btn btn-outline" style="background: var(--main-blue); color: white;">Ch 0</button>
+                <button id="tab-ch1" onclick="showChapter(1)" class="btn btn-outline">Ch 1</button>
+                <button id="tab-ch2" onclick="showChapter(2)" class="btn btn-outline">Ch 2</button>
+                <!-- Add more chapter tabs as needed -->
+            </div>
+
+            <!-- Chapter 0 Quiz Container -->
+            <div id="chapter0-quizzes" class="quiz-container">
+                <h3>Chapter 0: Introduction</h3>
+                <div id="ch0-questions-container">
+                    <!-- Dynamically generated by generateCh0Quiz() -->
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <button onclick="calculateScore('ch0')" class="btn btn-primary">Calculate Score</button>
+                    <button onclick="resetQuiz('ch0')" class="btn btn-outline" style="margin-left: 0.5rem;">Reset Quiz</button>
+                </div>
+                <p id="score-display-ch0" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+
+            <!-- Chapter 1 Quiz Container (example with static questions) -->
+            <div id="chapter1-quizzes" class="quiz-container" style="display: none;">
+                <h3>Chapter 1: Data Sources</h3>
+
+                <!-- Example Quiz Question -->
+                <div class="quiz-question" id="q1">
+                    <h4>Question 1: Returns</h4>
+                    <p>What is the advantage of using log returns over simple returns?</p>
+                    <ul class="quiz-options">
+                        <li onclick="checkAnswer('ch1', 1, 'A')"><input type="radio" name="q1"> A) They are always positive</li>
+                        <li onclick="checkAnswer('ch1', 1, 'B')"><input type="radio" name="q1"> B) They are time-additive and approximately normally distributed</li>
+                        <li onclick="checkAnswer('ch1', 1, 'C')"><input type="radio" name="q1"> C) They are easier to calculate</li>
+                        <li onclick="checkAnswer('ch1', 1, 'D')"><input type="radio" name="q1"> D) They are always larger than simple returns</li>
+                    </ul>
+                    <div class="answer-reveal answer-correct" id="answer1-correct">
+                        <strong>Correct!</strong> Log returns are time-additive (multi-period returns = sum of single-period log returns) and tend to be closer to normally distributed.
+                    </div>
+                    <div class="answer-reveal answer-incorrect" id="answer1-incorrect">
+                        <strong>Incorrect.</strong> The correct answer is B. Log returns have the property of time-additivity and approximate normality.
+                    </div>
+                </div>
+
+                <!-- Add more quiz questions following the same pattern -->
+
+                <div style="margin-top: 1.5rem;">
+                    <button onclick="calculateScore(1)" class="btn btn-primary">Calculate Score</button>
+                    <button onclick="resetQuiz(1)" class="btn btn-outline" style="margin-left: 0.5rem;">Reset Quiz</button>
+                </div>
+                <p id="score-display-ch1" style="margin-top: 1rem; font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+
+            <!-- Add more chapter quiz containers as needed, each with style="display: none;" -->
+
+        </section>
+
+        <!-- ============================================================
+             SECTION: Resources
+             - Grid of resource items with icon circles
+             ============================================================ -->
+        <section id="resources">
+            <h2>Resources</h2>
+            <div class="resources-list">
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">&#128218;</div>
+                    <div>
+                        <strong>Recommended Textbooks</strong>
+                        <p>Core reading materials for the course</p>
+                    </div>
+                </a>
+                <a href="https://github.com/danpele/SFM" class="resource-item" target="_blank">
+                    <div class="resource-icon">&#128187;</div>
+                    <div>
+                        <strong>GitHub Repository</strong>
+                        <p>Course code, notebooks, and quantlets</p>
+                    </div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">&#128202;</div>
+                    <div>
+                        <strong>Data Sources</strong>
+                        <p>Links to financial data providers</p>
+                    </div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">&#128196;</div>
+                    <div>
+                        <strong>Research Papers</strong>
+                        <p>Key academic references</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION: Contact
+             ============================================================ -->
+        <section id="contact">
+            <h2>Contact</h2>
+            <div class="course-info">
+                <div class="info-card">
+                    <h3>Instructor</h3>
+                    <p><strong>Daniel Pele</strong></p>
+                    <p>Faculty of Cybernetics, Statistics and Economic Informatics</p>
+                    <p>Bucharest University of Economic Studies</p>
+                </div>
+                <div class="info-card">
+                    <h3>Office Hours</h3>
+                    <p>By appointment</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================
+         FOOTER
+         ================================================================ -->
+    <footer>
+        <p>&copy; 2025 Statistical and Financial Models | Bucharest University of Economic Studies</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">
+            Faculty of Cybernetics, Statistics and Economic Informatics
+        </p>
+    </footer>
+
+    <!-- ================================================================
+         JAVASCRIPT
+         All quiz logic, GitHub auth, score tracking
+         ================================================================ -->
+    <script>
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const GITHUB_CLIENT_ID = 'YOUR_GITHUB_CLIENT_ID';  // Replace with your OAuth app client ID
+        const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL'; // Replace with your deployed Apps Script URL
+
+        // ============================================================
+        // GITHUB AUTHENTICATION
+        // - Uses GitHub OAuth flow
+        // - User info stored in localStorage as 'tsa-github-user'
+        // - callback.html handles the OAuth redirect
+        // ============================================================
+        function loginWithGitHub() {
+            // Store current page URL for redirect after login
+            localStorage.setItem('tsa-login-return', window.location.href);
+
+            const redirectUri = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'callback.html';
+            const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=read:user`;
+            window.location.href = authUrl;
+        }
+
+        function logoutGitHub() {
+            localStorage.removeItem('tsa-github-user');
+            document.getElementById('github-login-btn').style.display = 'inline-block';
+            document.getElementById('github-user-info').style.display = 'none';
+        }
+
+        // Check if user is already logged in on page load
+        (function checkGitHubLogin() {
+            const userData = localStorage.getItem('tsa-github-user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('github-login-btn').style.display = 'none';
+                const infoSpan = document.getElementById('github-user-info');
+                infoSpan.style.display = 'inline';
+                infoSpan.innerHTML = `Logged in as <strong>${user.name || user.login}</strong> <button onclick="logoutGitHub()" style="margin-left: 0.5rem; cursor: pointer; background: none; border: 1px solid #999; border-radius: 4px; padding: 0.2rem 0.5rem;">Logout</button>`;
+            }
+        })();
+
+        // ============================================================
+        // STUDENT GROUP MANAGEMENT
+        // ============================================================
+        function saveGroup() {
+            const groupInput = document.getElementById('group-input');
+            if (groupInput && groupInput.value.trim()) {
+                localStorage.setItem('tsa-student-group', groupInput.value.trim());
+                alert('Group saved: ' + groupInput.value.trim());
+            }
+        }
+
+        // ============================================================
+        // SEND RESULTS TO GOOGLE SHEETS
+        // ============================================================
+        function sendResults(chapterNum, score, total) {
+            const userData = localStorage.getItem('tsa-github-user');
+            const user = userData ? JSON.parse(userData) : {};
+            const group = localStorage.getItem('tsa-student-group') || '';
+
+            const payload = {
+                nume: user.name || user.login || 'Anonymous',
+                github_username: user.login || '',
+                grupa: group,
+                capitol: 'Chapter ' + chapterNum,
+                scor: score + '/' + total,
+                total: total,
+                nota: Math.round((score / total) * 100) + '%'
+            };
+
+            if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.log('Score submission error:', err));
+            }
+        }
+
+        // ============================================================
+        // QUIZ ANSWER DATA
+        // Map of question number -> correct answer letter
+        // Add answer keys for each chapter
+        // ============================================================
+
+        // Chapter 0 uses dynamic question bank (see generateCh0Quiz below)
+        let ch0Answers = {};
+        let userAnswersCh0 = {};
+
+        // Chapter 1 static answers (example)
+        const ch1Answers = {
+            1: 'B'   // Log returns are time-additive
+            // Add more answers...
+        };
+        let userAnswersCh1 = {};
+
+        // Add more chapter answer keys as needed:
+        // const ch2Answers = { 1: 'C', 2: 'B', ... };
+        // let userAnswersCh2 = {};
+
+        // ============================================================
+        // SHOW/HIDE CHAPTER QUIZ TABS
+        // Toggles visibility and updates tab button styling
+        // ============================================================
+        function showChapter(chapter) {
+            // Hide all chapter containers
+            const containers = document.querySelectorAll('[id$="-quizzes"]');
+            containers.forEach(c => c.style.display = 'none');
+
+            // Show selected chapter
+            const selected = document.getElementById('chapter' + chapter + '-quizzes');
+            if (selected) selected.style.display = 'block';
+
+            // Update tab button styles
+            const tabs = document.querySelectorAll('[id^="tab-ch"]');
+            tabs.forEach(tab => {
+                tab.style.background = 'white';
+                tab.style.color = 'var(--main-blue)';
+            });
+            const activeTab = document.getElementById('tab-ch' + chapter);
+            if (activeTab) {
+                activeTab.style.background = 'var(--main-blue)';
+                activeTab.style.color = 'white';
+            }
+
+            // Re-typeset MathJax for newly visible content
+            if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+                try { MathJax.typeset(); } catch(e) {}
+            }
+        }
+
+        // ============================================================
+        // CHECK ANSWER
+        // Called onclick for each quiz option
+        // Parameters: chapter (string like 'ch0'), questionNum, selectedAnswer
+        // ============================================================
+        function checkAnswer(chapter, questionNum, selectedAnswer) {
+            let correctAnswers, userAnswers, prefix;
+
+            // Map chapter string to the correct answer key and user answers object
+            if (chapter === 'ch0') {
+                correctAnswers = ch0Answers;
+                userAnswers = userAnswersCh0;
+                prefix = 'ch0';
+            } else if (chapter === 'ch1') {
+                correctAnswers = ch1Answers;
+                userAnswers = userAnswersCh1;
+                prefix = '';  // Chapter 1 uses unprefixed IDs (q1, answer1-correct, etc.)
+            }
+            // Add more chapters:
+            // else if (chapter === 'ch2') { ... }
+
+            if (!correctAnswers) return;
+
+            // If already answered, don't allow changes
+            if (userAnswers[questionNum] !== undefined) return;
+
+            userAnswers[questionNum] = selectedAnswer;
+
+            // Visually check the radio button
+            const qId = prefix ? prefix + 'q' + questionNum : 'q' + questionNum;
+            const qDiv = document.getElementById(qId);
+            if (qDiv) {
+                qDiv.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                const lis = qDiv.querySelectorAll('.quiz-options li');
+                lis.forEach(li => {
+                    const text = li.textContent.trim();
+                    if (text.match(new RegExp('^' + selectedAnswer + '\\)'))) {
+                        const radio = li.querySelector('input[type="radio"]');
+                        if (radio) radio.checked = true;
+                    }
+                });
+            }
+
+            // Show answer feedback
+            const isCorrect = selectedAnswer === correctAnswers[questionNum];
+            const answerPrefix = prefix || '';
+            const correctDiv = document.getElementById(answerPrefix + 'answer' + questionNum + '-correct');
+            const incorrectDiv = document.getElementById(answerPrefix + 'answer' + questionNum + '-incorrect');
+            if (correctDiv) correctDiv.style.display = isCorrect ? 'block' : 'none';
+            if (incorrectDiv) incorrectDiv.style.display = isCorrect ? 'none' : 'block';
+
+            // Lock the question - disable all options
+            if (qDiv) {
+                qDiv.querySelectorAll('.quiz-options li').forEach(li => {
+                    li.style.pointerEvents = 'none';
+                    li.style.opacity = '0.7';
+                });
+            }
+        }
+
+        // ============================================================
+        // CALCULATE SCORE
+        // Computes score, displays result, sends to Google Sheets,
+        // and shows detailed answer key table
+        // ============================================================
+        function calculateScore(chapter) {
+            let score = 0;
+            let answered = 0;
+            let total, correctAnswers, userAnswers, displayId, qPrefix;
+
+            if (chapter === 'ch0' || chapter === 0) {
+                total = 20;
+                correctAnswers = ch0Answers;
+                userAnswers = userAnswersCh0;
+                displayId = 'score-display-ch0';
+                qPrefix = 'ch0';
+            } else if (chapter === 1 || chapter === 'ch1') {
+                total = Object.keys(ch1Answers).length;
+                correctAnswers = ch1Answers;
+                userAnswers = userAnswersCh1;
+                displayId = 'score-display-ch1';
+                qPrefix = '';
+            }
+            // Add more chapters...
+
+            if (!correctAnswers) return;
+
+            for (let i = 1; i <= total; i++) {
+                if (userAnswers[i]) {
+                    answered++;
+                    if (userAnswers[i] === correctAnswers[i]) {
+                        score++;
+                    }
+                }
+            }
+
+            const totalPercentage = Math.round((score / total) * 100);
+
+            let message = `Score: ${score}/${total} (${totalPercentage}%)`;
+            if (answered < total) {
+                message += ` - ${total - answered} questions unanswered`;
+            }
+
+            if (totalPercentage >= 90) {
+                message += ' - Excellent!';
+            } else if (totalPercentage >= 70) {
+                message += ' - Good job!';
+            } else if (totalPercentage >= 50) {
+                message += ' - Keep studying!';
+            } else {
+                message += ' - Keep practicing!';
+            }
+
+            document.getElementById(displayId).textContent = message;
+
+            // Send results to Google Sheets
+            const chapterNum = (chapter === 'ch0' || chapter === 0) ? 0 :
+                               (typeof chapter === 'number') ? chapter : parseInt(chapter.replace('ch', ''));
+            sendResults(chapterNum, score, total);
+
+            // Show detailed answer key table
+            const keyId = displayId.replace('score-display', 'answer-key');
+            let existingKey = document.getElementById(keyId);
+            if (!existingKey) {
+                existingKey = document.createElement('div');
+                existingKey.id = keyId;
+                existingKey.style.cssText = 'margin-top: 1.5rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;';
+                document.getElementById(displayId).parentNode.appendChild(existingKey);
+            }
+
+            function getOptionText(qId, letter) {
+                const qDiv = document.getElementById(qId);
+                if (!qDiv) return letter;
+                const lis = qDiv.querySelectorAll('.quiz-options li');
+                for (const li of lis) {
+                    const text = li.textContent.trim();
+                    if (text.match(new RegExp('^' + letter + '\\)'))) return text;
+                }
+                return letter;
+            }
+
+            function getQuestionText(qId) {
+                const qDiv = document.getElementById(qId);
+                if (!qDiv) return '';
+                const p = qDiv.querySelector('p');
+                return p ? p.textContent.trim() : '';
+            }
+
+            let keyHtml = '<h4 style="margin-bottom: 0.8rem; color: var(--main-blue);">Detailed Results</h4>';
+            keyHtml += '<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">';
+            keyHtml += '<tr style="background: var(--main-blue); color: white;"><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">Q</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Question</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Correct Answer</th><th style="padding: 0.4rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">Your Answer</th><th style="padding: 0.4rem 0.6rem; text-align: center; border: 1px solid #dee2e6; width: 3%;">Result</th></tr>';
+            for (let i = 1; i <= total; i++) {
+                const qId = qPrefix ? qPrefix + 'q' + i : 'q' + i;
+                const isCorrect = userAnswers[i] === correctAnswers[i];
+                const bgColor = !userAnswers[i] ? '#f8f9fa' : (isCorrect ? '#e8f5e9' : '#ffebee');
+                const resultText = !userAnswers[i] ? '<span style="color:#999;">-</span>' : (isCorrect ? '<span style="color:#2E7D32; font-weight:bold;">OK</span>' : '<span style="color:#DC3545; font-weight:bold;">X</span>');
+                const questionText = getQuestionText(qId);
+                const correctText = getOptionText(qId, correctAnswers[i]);
+                const userText = userAnswers[i] ? getOptionText(qId, userAnswers[i]) : '-';
+                keyHtml += `<tr style="background: ${bgColor};"><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;"><strong>${i}</strong></td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">${questionText}</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">${correctText}</td><td style="padding: 0.3rem 0.6rem; text-align: left; border: 1px solid #dee2e6;">${userText}</td><td style="padding: 0.3rem 0.6rem; text-align: center; border: 1px solid #dee2e6;">${resultText}</td></tr>`;
+            }
+            keyHtml += '</table>';
+            existingKey.innerHTML = keyHtml;
+            existingKey.style.display = 'block';
+        }
+
+        // ============================================================
+        // RESET QUIZ
+        // Clears answers, re-enables options, hides feedback
+        // For ch0: regenerates shuffled questions from question bank
+        // ============================================================
+        function resetQuiz(chapter) {
+            let total, prefix, displayId, container;
+
+            if (chapter === 'ch0' || chapter === 0) {
+                generateCh0Quiz();
+                document.getElementById('score-display-ch0').textContent = '';
+                const ch0KeyDiv = document.getElementById('answer-key-ch0');
+                if (ch0KeyDiv) ch0KeyDiv.style.display = 'none';
+                return;
+            } else if (chapter === 1 || chapter === 'ch1') {
+                total = Object.keys(ch1Answers).length;
+                prefix = '';
+                displayId = 'score-display-ch1';
+                container = 'chapter1-quizzes';
+                userAnswersCh1 = {};
+            }
+            // Add more chapters...
+
+            if (!container) return;
+
+            for (let i = 1; i <= total; i++) {
+                const correctDiv = document.getElementById(`${prefix}answer${i}-correct`);
+                const incorrectDiv = document.getElementById(`${prefix}answer${i}-incorrect`);
+                if (correctDiv) correctDiv.style.display = 'none';
+                if (incorrectDiv) incorrectDiv.style.display = 'none';
+            }
+
+            document.querySelectorAll(`#${container} input[type="radio"]`).forEach(radio => {
+                radio.checked = false;
+            });
+
+            document.querySelectorAll(`#${container} .quiz-options li`).forEach(li => {
+                li.style.pointerEvents = '';
+                li.style.opacity = '';
+            });
+
+            document.getElementById(displayId).textContent = '';
+
+            const keyId = displayId.replace('score-display', 'answer-key');
+            const keyDiv = document.getElementById(keyId);
+            if (keyDiv) keyDiv.style.display = 'none';
+        }
+
+        // ============================================================
+        // DYNAMIC QUIZ GENERATION (Question Bank + Shuffle)
+        // Used for Chapter 0 - randomly selects 20 questions and
+        // shuffles both question order and option order
+        // ============================================================
+        const ch0QuestionBank = [
+            // Add your question objects here. Each object has:
+            // {
+            //     title: "Question Title",
+            //     text: "What is...?",
+            //     options: [
+            //         { letter: "A", text: "Option A text" },
+            //         { letter: "B", text: "Option B text" },
+            //         { letter: "C", text: "Option C text" },
+            //         { letter: "D", text: "Option D text" }
+            //     ],
+            //     correct: "B",  // Letter of the correct option
+            //     correctExplanation: "Explanation shown when correct...",
+            //     incorrectExplanation: "Explanation shown when incorrect..."
+            // }
+        ];
+
+        function generateCh0Quiz() {
+            const container = document.getElementById('ch0-questions-container');
+            if (!container) return;
+
+            // Shuffle the question bank to get random order
+            const shuffled = [...ch0QuestionBank].sort(() => Math.random() - 0.5);
+            // Take 20 questions (or all if bank has fewer)
+            const selected = shuffled.slice(0, 20);
+
+            // Reset answers
+            ch0Answers = {};
+            userAnswersCh0 = {};
+
+            const letters = ['A', 'B', 'C', 'D'];
+            let html = '';
+
+            selected.forEach((q, idx) => {
+                const qNum = idx + 1;
+
+                // Shuffle the options
+                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+                // Find which letter the correct answer ended up at
+                const correctOriginalLetter = q.correct;
+                const correctOptionObj = q.options.find(o => o.letter === correctOriginalLetter);
+                const newCorrectIdx = shuffledOptions.indexOf(correctOptionObj);
+                const newCorrectLetter = letters[newCorrectIdx];
+
+                // Store the new correct answer
+                ch0Answers[qNum] = newCorrectLetter;
+
+                html += `<div class="quiz-question" id="ch0q${qNum}">`;
+                html += `<h4>Question ${qNum}: ${q.title}</h4>`;
+                html += `<p>${q.text}</p>`;
+                html += `<ul class="quiz-options">`;
+
+                shuffledOptions.forEach((opt, optIdx) => {
+                    const letter = letters[optIdx];
+                    html += `<li onclick="checkAnswer('ch0', ${qNum}, '${letter}')"><input type="radio" name="ch0q${qNum}"> ${letter}) ${opt.text}</li>`;
+                });
+
+                html += `</ul>`;
+                html += `<div class="answer-reveal answer-correct" id="ch0answer${qNum}-correct">`;
+                html += `<strong>Correct!</strong> ${q.correctExplanation || ''}`;
+                html += `</div>`;
+                const updatedIncorrectExplanation = (q.incorrectExplanation || `The correct answer is ${newCorrectLetter}.`).replace(
+                    /The correct answer is [A-D]/,
+                    `The correct answer is ${newCorrectLetter}`
+                );
+                html += `<div class="answer-reveal answer-incorrect" id="ch0answer${qNum}-incorrect">`;
+                html += `<strong>Incorrect.</strong> ${updatedIncorrectExplanation}`;
+                html += `</div>`;
+                html += `</div>\n`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Generate Chapter 0 quiz on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                generateCh0Quiz();
+            });
+        } else {
+            generateCh0Quiz();
+        }
+
+        // ============================================================
+        // SMOOTH SCROLLING for navigation links
+        // ============================================================
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

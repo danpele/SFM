@@ -1,0 +1,870 @@
+% Capitolul 2: Seminar - Modele ARMA
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+\input{preamble}
+\subtitle{Seminar 2: Modele ARMA}
+
+\begin{document}
+
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \titlepage
+\end{frame}
+}
+
+
+%=============================================================================
+% OUTLINE
+%=============================================================================
+\begin{frame}{Cuprins Seminar}
+    \tableofcontents
+\end{frame}
+
+%=============================================================================
+% PART 1: MULTIPLE CHOICE QUIZZES
+%=============================================================================
+\section{Test Grilă}
+
+\begin{frame}{Test 1: Operatorul Lag}
+    \begin{alertblock}{Întrebare}
+        Care este rezultatul aplicării $(1-L)^2$ lui $X_t$?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} $X_t - X_{t-1}$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $X_t - 2X_{t-1} + X_{t-2}$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} $X_t + X_{t-1} + X_{t-2}$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} $X_t - X_{t-2}$
+\end{frame}
+
+\begin{frame}{Test 1: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: B}
+                $X_t - 2X_{t-1} + X_{t-2}$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Explicație:}
+            \begin{align*}
+                (1-L)^2 X_t &= (1 - 2L + L^2)X_t \\
+                &= X_t - 2X_{t-1} + X_{t-2}
+            \end{align*}
+
+            Aceasta este \textbf{diferența de ordinul doi} a lui $X_t$.
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_lag_operator.pdf}
+            {\tiny Operatorul lag: $L^k X_t = X_{t-k}$}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_lag\_operator}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_lag_operator}
+\end{frame}
+
+\begin{frame}{Test 2: Staționaritatea AR(1)}
+    \begin{alertblock}{Întrebare}
+        Pentru ce valoare a lui $\phi$ procesul AR(1) $X_t = 0.5 + \phi X_{t-1} + \varepsilon_t$ este staționar?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} $\phi = 1.2$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $\phi = 1.0$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} $\phi = -0.8$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} $\phi = -1.5$
+\end{frame}
+
+\begin{frame}{Test 2: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                $\phi = -0.8$ (Staționar)
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Condiția de staționaritate AR(1):}
+            $$|\phi| < 1$$
+
+            \vspace{0.2cm}
+
+            Verificarea fiecărei opțiuni:
+            \begin{itemize}
+                \item A: $|1.2| = 1.2 > 1$ \incorrect
+                \item B: $|1.0| = 1$ (rădăcină unitară) \incorrect
+                \item C: $|-0.8| = 0.8 < 1$ \correct
+                \item D: $|-1.5| = 1.5 > 1$ \incorrect
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ar1.pdf}
+            {\tiny AR(1): regiunea staționară $|\phi| < 1$}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ar1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ar1}
+\end{frame}
+
+\begin{frame}{Test 3: Modelul ACF}
+    \begin{alertblock}{Întrebare}
+        Observați următorul model ACF: vârf semnificativ la lag 1, apoi toate lag-urile în benzile de încredere. PACF arată descreștere graduală. Ce model este sugerat?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} AR(1)\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} MA(1)\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} ARMA(1,1)\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Zgomot alb
+\end{frame}
+
+\begin{frame}{Test 3: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: B}
+                MA(1)
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Regula cheie de identificare:}
+            \begin{itemize}
+                \item ACF se anulează după lag $q$ $\Rightarrow$ MA($q$)
+                \item PACF se anulează după lag $p$ $\Rightarrow$ AR($p$)
+            \end{itemize}
+
+            \vspace{0.2cm}
+
+            Aici: ACF se anulează la lag 1, PACF descrește
+
+            $\Rightarrow$ \textbf{MA(1)}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ma1.pdf}
+            {\tiny MA(1): ACF se anulează după lag 1}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ma1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ma1}
+\end{frame}
+
+\begin{frame}{Test 4: Invertibilitatea MA}
+    \begin{alertblock}{Întrebare}
+        Pentru procesul MA(1) $X_t = \varepsilon_t + 1.5\varepsilon_{t-1}$, este procesul invertibil?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Da, deoarece procesele MA sunt întotdeauna invertibile\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Da, deoarece $1.5 > 0$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Nu, deoarece $|\theta| = 1.5 > 1$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Nu, deoarece procesele MA nu sunt niciodată invertibile
+\end{frame}
+
+\begin{frame}{Test 4: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Nu este invertibil ($|\theta| = 1.5 > 1$)
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Invertibilitatea MA(1):}
+
+            Necesită $|\theta| < 1$
+
+            \vspace{0.2cm}
+
+            Echivalent: rădăcina lui $\theta(z) = 1 + \theta z = 0$ trebuie să fie în afara cercului unitate.
+
+            Aici: $z = -1/1.5 = -0.67$ este \textbf{în interior}.
+
+            \vspace{0.2cm}
+
+            $\Rightarrow$ \textcolor{Crimson}{\textbf{Nu este invertibil}}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ma1.pdf}
+            {\tiny Invertibilitate: rădăcina în afara cercului unitate}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ma1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ma1}
+\end{frame}
+
+\begin{frame}{Test 5: Reprezentarea ARMA}
+    \begin{alertblock}{Întrebare}
+        Forma compactă $\phi(L)X_t = \theta(L)\varepsilon_t$ reprezintă ce model?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Model AR pur\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Model MA pur\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Model ARMA\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Niciunul dintre cele de mai sus
+\end{frame}
+
+\begin{frame}{Test 5: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Model ARMA
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Notația cu polinoame lag:}
+            \begin{itemize}
+                \item $\phi(L) = 1 - \phi_1 L - \cdots - \phi_p L^p$
+                \item $\theta(L) = 1 + \theta_1 L + \cdots + \theta_q L^q$
+            \end{itemize}
+
+            \vspace{0.2cm}
+
+            Cazuri speciale:
+            \begin{itemize}
+                \item $\theta(L) = 1$: AR pur
+                \item $\phi(L) = 1$: MA pur
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_arma.pdf}
+            {\tiny ARMA(1,1): combină AR și MA}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_arma}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_arma}
+\end{frame}
+
+\begin{frame}{Test 6: Criterii Informaționale}
+    \begin{alertblock}{Întrebare}
+        Când comparăm ARMA(1,1) și ARMA(2,1) folosind BIC, care afirmație este corectă?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} BIC mai mic înseamnă întotdeauna prognoze mai bune\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} BIC penalizează complexitatea mai puțin decât AIC\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Modelul cu BIC mai mic este preferat\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} BIC poate compara doar modele cu același număr de parametri
+\end{frame}
+
+\begin{frame}{Test 6: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Modelul cu BIC mai mic este preferat
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Criterii Informaționale:}
+            \begin{align*}
+                \text{AIC} &= -2\ln(\hat{L}) + 2k \\
+                \text{BIC} &= -2\ln(\hat{L}) + k\ln(n)
+            \end{align*}
+
+            BIC penalizează complexitatea \textbf{mai mult} decât AIC (pentru $n > 7$).
+
+            \vspace{0.2cm}
+
+            $\Rightarrow$ BIC favorizează modele mai simple.
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_model_selection.pdf}
+            {\tiny Selecția modelului: AIC vs BIC}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_model\_selection}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_model_selection}
+\end{frame}
+
+\begin{frame}{Test 7: Testul Ljung-Box}
+    \begin{alertblock}{Întrebare}
+        După ajustarea unui model ARMA(2,1), rulați testul Ljung-Box pe reziduuri și obțineți valoare-p = 0.02. Ce concluzie trageți?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Modelul este adecvat\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Reziduurile sunt zgomot alb\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Există autocorelație semnificativă în reziduuri\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Modelul are prea mulți parametri
+\end{frame}
+
+\begin{frame}{Test 7: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Autocorelație semnificativă în reziduuri
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Testul Ljung-Box:}
+            \begin{itemize}
+                \item $H_0$: Reziduurile sunt zgomot alb
+                \item $H_1$: Autocorelație prezentă
+            \end{itemize}
+
+            \vspace{0.2cm}
+
+            valoare-p = 0.02 $<$ 0.05
+
+            $\Rightarrow$ \textcolor{Crimson}{\textbf{Respingem $H_0$}}
+
+            Modelul este \textbf{inadecvat} --- încercați alte ordine.
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_diagnostics.pdf}
+            {\tiny Diagnostice: ACF trebuie să fie zgomot alb}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_diagnostics}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_diagnostics}
+\end{frame}
+
+\begin{frame}{Test 8: Prognoză}
+    \begin{alertblock}{Întrebare}
+        Pentru un model AR(1) cu $\phi = 0.6$ și medie $\mu = 10$, ce se întâmplă cu prognozele când orizontul $h \to \infty$?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Prognozele cresc fără limită\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Prognozele converg la 0\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Prognozele converg la $\mu = 10$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Prognozele oscilează pentru totdeauna
+\end{frame}
+
+\begin{frame}{Test 8: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Prognozele converg la $\mu = 10$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Formula de prognoză AR(1):}
+            $$\hat{X}_{n+h|n} = \mu + \phi^h(X_n - \mu)$$
+
+            Deoarece $|\phi| = 0.6 < 1$:
+            $$\lim_{h \to \infty} \phi^h = 0$$
+
+            $\Rightarrow$ Prognozele converg la $\mu$.
+
+            \textbf{Revenire la medie.}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_forecasting.pdf}
+            {\tiny Prognoze AR(1): revenire la medie}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_forecasting}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_forecasting}
+\end{frame}
+
+\begin{frame}{Test 9: Rădăcinile AR(2)}
+    \begin{alertblock}{Întrebare}
+        Un proces AR(2) are rădăcinile caracteristice (ale $\phi(z) = 1 - \phi_1 z - \phi_2 z^2 = 0$) $z_1 = 0.8$ și $z_2 = -0.5$. Este staționar?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Da, deoarece ambele rădăcini sunt în interiorul cercului unitate\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Nu, deoarece o rădăcină este negativă\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Nu, deoarece rădăcinile trebuie să fie în afara cercului unitate\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Nu se poate determina fără mai multe informații
+\end{frame}
+
+\begin{frame}{Test 9: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: C}
+                Rădăcinile trebuie să fie în afara cercului unitate
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Condiția de staționaritate:}
+
+            Rădăcinile lui $\phi(z) = 0$ trebuie să fie \textbf{în afara} cercului unitate ($|z| > 1$).
+
+            \vspace{0.2cm}
+
+            Aici:
+            \begin{itemize}
+                \item $|z_1| = 0.8 < 1$ \incorrect
+                \item $|z_2| = 0.5 < 1$ \incorrect
+            \end{itemize}
+
+            Ambele în interior $\Rightarrow$ \textcolor{Crimson}{\textbf{Nestaționar}}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ar2.pdf}
+            {\tiny AR(2): rădăcini și triunghiul de staționaritate}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ar2}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ar2}
+\end{frame}
+
+\begin{frame}{Test 10: Proprietățile MA(q)}
+    \begin{alertblock}{Întrebare}
+        Pentru un proces MA(2), ACF-ul:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \textcolor{MainBlue}{\textbf{(A)}} Descrește exponențial\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Se anulează după lag 2\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Se anulează după lag 1\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Nu se anulează niciodată
+\end{frame}
+
+\begin{frame}{Test 10: Răspuns}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Răspuns: B}
+                Se anulează după lag 2
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \textbf{Proprietatea ACF pentru MA($q$):}
+
+            $$\rho(h) = 0 \text{ pentru } h > q$$
+
+            \vspace{0.2cm}
+
+            \begin{itemize}
+                \item MA(1): ACF se anulează după lag 1
+                \item MA(2): ACF se anulează după lag 2
+                \item MA($q$): ACF se anulează după lag $q$
+            \end{itemize}
+
+            Caracteristica cheie de identificare.
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ma1.pdf}
+            {\tiny MA: anularea ACF este semnătura}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ma1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ma1}
+\end{frame}
+
+%=============================================================================
+% PART 2: TRUE/FALSE QUESTIONS
+%=============================================================================
+\section{Întrebări Adevărat/Fals}
+
+\begin{frame}{Adevărat sau Fals? --- Întrebări}
+    \footnotesize
+    \begin{center}
+    \begin{tabular}{p{9cm}c}
+        \toprule
+        \textbf{Afirmație} & \textbf{A/F?} \\
+        \midrule
+        1. Un proces AR(2) poate prezenta comportament pseudo-ciclic. & ? \\[0.15cm]
+        2. Procesele MA necesită o condiție de staționaritate. & ? \\[0.15cm]
+        3. PACF-ul unui proces AR(p) se anulează după lag $p$. & ? \\[0.15cm]
+        4. Dacă AIC selectează ARMA(2,1) și BIC selectează ARMA(1,1), nu pot fi ambele corecte. & ? \\[0.15cm]
+        5. Intervalele de încredere se îngustează pe măsură ce orizontul crește. & ? \\[0.15cm]
+        6. Ecuațiile Yule-Walker pot fi folosite pentru a estima parametrii MA. & ? \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Adevărat sau Fals? --- Răspunsuri}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \small
+            \begin{enumerate}
+                \item \textcolor{Forest}{\textbf{ADEVĂRAT}}: AR(2) cu rădăcini complexe $\Rightarrow$ oscilații amortizate
+                \vspace{0.1cm}
+                \item \textcolor{Crimson}{\textbf{FALS}}: Procesele MA sunt întotdeauna staționare; au nevoie de \textit{invertibilitate}
+                \vspace{0.1cm}
+                \item \textcolor{Forest}{\textbf{ADEVĂRAT}}: Caracteristica cheie de identificare a AR($p$)
+                \vspace{0.1cm}
+                \item \textcolor{Crimson}{\textbf{FALS}}: Ambele sunt „corecte" pentru criteriile lor (AIC: estimare, BIC: parcimonie)
+                \vspace{0.1cm}
+                \item \textcolor{Crimson}{\textbf{FALS}}: IC se \textit{lărgesc} cu orizontul (mai multă incertitudine)
+                \vspace{0.1cm}
+                \item \textcolor{Crimson}{\textbf{FALS}}: Yule-Walker este pentru AR; MA folosește MLE
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \includegraphics[width=\textwidth]{ch2_ar2.pdf}
+            {\tiny AR(2): rădăcini complexe $\Rightarrow$ cicluri}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ar2}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ar2}
+\end{frame}
+
+%=============================================================================
+% PART 3: CALCULATION EXERCISES
+%=============================================================================
+\section{Exerciții de Calcul}
+
+\begin{frame}{Exercițiul 1: Proprietățile AR(1)}
+    \textbf{Problemă:} Considerați procesul AR(1):
+    $$X_t = 2 + 0.7 X_{t-1} + \varepsilon_t, \quad \varepsilon_t \sim WN(0, 9)$$
+
+    Calculați:
+    \begin{enumerate}
+        \item Media $\mu$
+        \item Varianța $\gamma(0)$
+        \item Autocovarianța $\gamma(1)$ și $\gamma(2)$
+        \item Autocorelația $\rho(1)$ și $\rho(2)$
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exercițiul 1: Soluție}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            Dat: $c = 2$, $\phi = 0.7$, $\sigma^2 = 9$
+
+            \vspace{0.2cm}
+            \textbf{1. Media:}
+            $$\mu = \frac{c}{1-\phi} = \frac{2}{1-0.7} = \frac{2}{0.3} = \textbf{6.67}$$
+
+            \textbf{2. Varianța:}
+            $$\gamma(0) = \frac{\sigma^2}{1-\phi^2} = \frac{9}{1-0.49} = \textbf{17.65}$$
+
+            \textbf{3. Autocovarianța:}
+            \begin{align*}
+                \gamma(1) &= \phi \cdot \gamma(0) = 0.7 \times 17.65 = \textbf{12.35}\\
+                \gamma(2) &= \phi^2 \cdot \gamma(0) = 0.49 \times 17.65 = \textbf{8.65}
+            \end{align*}
+
+            \textbf{4. Autocorelația:}
+            $$\rho(1) = \phi = \textbf{0.7}, \quad \rho(2) = \phi^2 = \textbf{0.49}$$
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_seminar_ex1_ar1.png}
+            {\tiny Simulare AR(1) și ACF}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ex1\_ar1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ex1_ar1}
+\end{frame}
+
+\begin{frame}{Exercițiul 2: Proprietățile MA(1)}
+    \textbf{Problemă:} Considerați procesul MA(1):
+    $$X_t = 5 + \varepsilon_t - 0.4\varepsilon_{t-1}, \quad \varepsilon_t \sim WN(0, 4)$$
+
+    Calculați:
+    \begin{enumerate}
+        \item Media $\mu$
+        \item Varianța $\gamma(0)$
+        \item Autocovarianța $\gamma(1)$
+        \item Autocorelația $\rho(1)$
+        \item Este acest proces invertibil?
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exercițiul 2: Soluție}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            Dat: $\mu = 5$, $\theta = -0.4$, $\sigma^2 = 4$
+
+            \vspace{0.2cm}
+            \textbf{1. Media:}
+            $$\E[X_t] = \mu = \textbf{5}$$
+
+            \textbf{2. Varianța:}
+            $$\gamma(0) = \sigma^2(1 + \theta^2) = 4(1.16) = \textbf{4.64}$$
+
+            \textbf{3. Autocovarianța:}
+            $$\gamma(1) = \theta\sigma^2 = -0.4 \times 4 = \textbf{-1.6}$$
+
+            \textbf{4. Autocorelația:}
+            $$\rho(1) = \frac{\gamma(1)}{\gamma(0)} = \frac{-1.6}{4.64} = \textbf{-0.345}$$
+
+            \textbf{5. Invertibilitate:} $|\theta| = 0.4 < 1$ $\Rightarrow$ \textcolor{Forest}{\textbf{Da}}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_seminar_ex2_ma1.png}
+            {\tiny MA(1): ACF se anulează după lag 1}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ex2\_ma1}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ex2_ma1}
+\end{frame}
+
+\begin{frame}{Exercițiul 3: Rădăcinile Caracteristice}
+    \textbf{Problemă:} Considerați procesul AR(2):
+    $$X_t = 0.5X_{t-1} + 0.3X_{t-2} + \varepsilon_t$$
+
+    \begin{enumerate}
+        \item Scrieți ecuația caracteristică
+        \item Găsiți rădăcinile caracteristice
+        \item Este acest proces staționar?
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exercițiul 3: Soluție}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \textbf{1. Ecuația caracteristică:}
+            $$\phi(z) = 1 - 0.5z - 0.3z^2 = 0$$
+            Sau: $0.3z^2 + 0.5z - 1 = 0$
+
+            \vspace{0.2cm}
+            \textbf{2. Rădăcinile (formula cuadratică):}
+            $$z = \frac{-0.5 \pm \sqrt{0.25 + 1.2}}{0.6}$$
+            $$z_1 = \textbf{1.17}, \quad z_2 = \textbf{-2.84}$$
+
+            \vspace{0.2cm}
+            \textbf{3. Verificarea staționarității:}
+
+            $|z_1| = 1.17 > 1$ \correct
+
+            $|z_2| = 2.84 > 1$ \correct
+
+            Ambele în afara cercului unitate $\Rightarrow$ \textcolor{Forest}{\textbf{Staționar}}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_seminar_ex3_roots.png}
+            {\tiny Rădăcini în afara cercului $\Rightarrow$ staționar}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ex3\_roots}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ex3_roots}
+\end{frame}
+
+\begin{frame}{Exercițiul 4: Prognoză}
+    \textbf{Problemă:} Ați ajustat un model AR(1):
+    $$X_t = 3 + 0.8X_{t-1} + \varepsilon_t, \quad \sigma^2 = 4$$
+
+    Dat $X_{100} = 20$, calculați:
+    \begin{enumerate}
+        \item Prognoza la 1 pas înainte $\hat{X}_{101|100}$
+        \item Prognoza la 2 pași înainte $\hat{X}_{102|100}$
+        \item Prognoza pe termen lung când $h \to \infty$
+        \item Intervalul de încredere de 95\% pentru $\hat{X}_{101|100}$
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exercițiul 4: Soluție}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            Dat: $c = 3$, $\phi = 0.8$, $\sigma^2 = 4$, $X_{100} = 20$
+
+            \textbf{Media:} $\mu = \frac{3}{1-0.8} = \textbf{15}$
+
+            \vspace{0.2cm}
+            \textbf{1. Prognoza la un pas:}
+            $$\hat{X}_{101|100} = 3 + 0.8 \times 20 = \textbf{19}$$
+
+            \textbf{2. Prognoza la doi pași:}
+            $$\hat{X}_{102|100} = 3 + 0.8 \times 19 = \textbf{18.2}$$
+
+            \textbf{3. Prognoza pe termen lung:}
+            $$\lim_{h \to \infty} \hat{X}_{100+h|100} = \mu = \textbf{15}$$
+
+            \textbf{4. IC 95\%:}
+            $$19 \pm 1.96 \times 2 = \textbf{[15.08, 22.92]}$$
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_seminar_ex4_forecast.png}
+            {\tiny Prognoza converge la medie}
+        \end{column}
+    \end{columns}
+    \quantlet{TSA\_ch2\_ex4\_forecast}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_ex4_forecast}
+\end{frame}
+
+%=============================================================================
+% PART 4: PYTHON EXERCISES
+%=============================================================================
+\section{Exerciții Python}
+
+\begin{frame}[fragile]{Exercițiu Python 1: Simulare și Ajustare AR(1)}
+    \textbf{Sarcină:}
+    \begin{enumerate}
+        \item Simulați 300 de observații dintr-un AR(1) cu $\phi = 0.6$
+        \item Reprezentați grafic seria și ACF/PACF
+        \item Ajustați un model AR(1) și comparați $\hat{\phi}$ vs $\phi$ real
+        \item Examinați diagnosticele reziduurilor
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Cod cheie:}
+    \begin{verbatim}
+from statsmodels.tsa.arima.model import ARIMA
+model = ARIMA(x, order=(1, 0, 0)).fit()
+print(model.summary())
+    \end{verbatim}
+
+    \quantlet{TSA\_ch2\_python\_simulate}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_python_simulate}
+\end{frame}
+
+\begin{frame}{Exercițiu Python 2: Selecția Modelului}
+    \textbf{Sarcină:}
+    \begin{enumerate}
+        \item Încărcați o serie de timp și verificați staționaritatea (testul ADF)
+        \item Comparați AIC/BIC pentru AR(1), MA(1), ARMA(1,1), ARMA(2,1)
+        \item Selectați cel mai bun model
+        \item Generați prognoze cu intervale de încredere
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Funcții cheie:}
+    \begin{itemize}
+        \item \texttt{adfuller(x)} pentru testul de staționaritate
+        \item \texttt{model.aic}, \texttt{model.bic} pentru criterii
+        \item \texttt{model.get\_forecast(h)} pentru predicții
+    \end{itemize}
+
+    \quantlet{TSA\_ch2\_python\_selection}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_python_selection}
+\end{frame}
+
+\begin{frame}{Exercițiu Python 3: Verificarea Diagnosticelor}
+    \textbf{Sarcină:} După ajustarea unui model, efectuați diagnostice complete:
+    \begin{enumerate}
+        \item Reprezentați grafic reziduurile în timp
+        \item Reprezentați grafic ACF-ul reziduurilor
+        \item Creați graficul Q-Q pentru normalitate
+        \item Rulați testul Ljung-Box
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Funcții cheie:}
+    \begin{itemize}
+        \item \texttt{model.resid} pentru reziduuri
+        \item \texttt{plot\_acf(resid)} pentru graficul ACF
+        \item \texttt{stats.probplot(resid)} pentru graficul Q-Q
+        \item \texttt{acorr\_ljungbox(resid, lags=[10])} pentru test
+    \end{itemize}
+
+    \quantlet{TSA\_ch2\_python\_diagnostics}{https://github.com/QuantLet/TSA/tree/main/TSA_ch2_python_diagnostics}
+\end{frame}
+
+%=============================================================================
+% PART 5: DISCUSSION QUESTIONS
+%=============================================================================
+\section{Întrebări de Discuție}
+
+\begin{frame}{Discuție 1: Selecția Modelului}
+    \textbf{Scenariu:} Modelați rate de inflație lunare. După verificarea staționarității:
+    \begin{itemize}
+        \item ACF: semnificativ la lag-urile 1, 2, 3, apoi descrește
+        \item PACF: semnificativ la lag-urile 1, 2, apoi se anulează
+        \item AIC selectează ARMA(2,3)
+        \item BIC selectează AR(2)
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \textbf{Întrebări:}
+    \begin{enumerate}
+        \item Ce sugerează modelul ACF/PACF?
+        \item De ce nu sunt de acord AIC și BIC?
+        \item Ce model ați alege și de ce?
+        \item Ce verificări suplimentare ați efectua?
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Discuție 2: Evaluarea Prognozei}
+    \textbf{Scenariu:} Ajustați un model ARMA(1,1) pe randamente zilnice de acțiuni. Ajustarea în eșantion arată bine (Ljung-Box p = 0.45), dar RMSE în afara eșantionului este mai rău decât mersul aleatoriu.
+
+    \vspace{0.3cm}
+    \textbf{Întrebări:}
+    \begin{enumerate}
+        \item Este aceasta surprinzător? De ce sau de ce nu?
+        \item Ce ne spune despre predictibilitatea randamentelor?
+        \item Ar trebui să concluzionați că modelul ARMA este inutil?
+        \item Ce alternative ați putea considera?
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Indiciu:} Gândiți-vă la Ipoteza Piețelor Eficiente și la ce captează ARMA vs. volatility clustering.
+\end{frame}
+
+%=============================================================================
+% EXERCIȚIU CU ASISTENȚĂ AI
+%=============================================================================
+\section{Exercițiu cu asistență AI}
+
+\begin{frame}{Exercițiu AI: Gândire critică}
+    \vspace{-3mm}
+    \begin{block}{\footnotesize Prompt de testat în ChatGPT / Claude / Copilot}
+        {\footnotesize
+        ``Descarcă de pe FRED numărul lunar de cereri inițiale de șomaj din SUA (seria ICNSA, neajustat sezonier) din 2010-01 până în 2024-12 (180 observații). Calculează diferențele logaritmice pentru a obține rata de creștere. Testează staționaritatea cu ADF și KPSS. Estimează modele ARMA cu ordine $(p,q)$ între $(1,0)$ și $(3,3)$, selectează cel mai bun model după AIC/BIC. Verifică reziduurile (Ljung-Box, normalitate) și prognozează 6 luni. Vreau cod Python complet cu grafice.''
+        }
+    \end{block}
+    \vspace{-2mm}
+    {\footnotesize
+    \textbf{Exercițiu}:
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Rulați prompt-ul într-un LLM la alegere și analizați critic răspunsul.
+        \item Verifică staționaritatea \textit{înainte} de a estima ARMA? Folosește ambele teste (ADF + KPSS)?
+        \item Cum gestionează vârful COVID-19 din date? Îl tratează ca outlier sau îl ignoră?
+        \item Selecția ordinelor $(p,q)$ e justificată prin ACF/PACF sau doar prin AIC?
+        \item Reziduurile sunt testate complet? (Ljung-Box, Q-Q plot, heteroscedasticitate)
+    \end{enumerate}
+    }
+    \vspace{-2mm}
+    \begin{alertblock}{}
+        {\footnotesize \textbf{Atenție}: Codul generat de AI poate rula fără erori și arăta profesional. \textit{Asta nu înseamnă că e corect.}}
+    \end{alertblock}
+\end{frame}
+
+%=============================================================================
+% KEY FORMULAS SUMMARY
+%=============================================================================
+\section{Formule Cheie}
+
+\begin{frame}{Rezumat Formule Cheie}
+    \small
+    \begin{center}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Concept} & \textbf{Formula} \\
+        \midrule
+        Media AR(1) & $\mu = c/(1-\phi)$ \\[0.1cm]
+        Varianța AR(1) & $\gamma(0) = \sigma^2/(1-\phi^2)$ \\[0.1cm]
+        ACF AR(1) & $\rho(h) = \phi^h$ \\[0.1cm]
+        Staționaritate AR(1) & $|\phi| < 1$ \\[0.1cm]
+        \midrule
+        Varianța MA(1) & $\gamma(0) = \sigma^2(1+\theta^2)$ \\[0.1cm]
+        ACF MA(1) & $\rho(1) = \theta/(1+\theta^2)$, $\rho(h) = 0$ pentru $h > 1$ \\[0.1cm]
+        Invertibilitate MA(1) & $|\theta| < 1$ \\[0.1cm]
+        \midrule
+        Prognoza AR(1) & $\hat{X}_{n+h|n} = \mu + \phi^h(X_n - \mu)$ \\[0.1cm]
+        IC Prognoză & $\hat{X} \pm z_{\alpha/2} \times \sqrt{\text{MSFE}(h)}$ \\[0.1cm]
+        \midrule
+        AIC & $-2\ln(\hat{L}) + 2k$ \\[0.1cm]
+        BIC & $-2\ln(\hat{L}) + k\ln(n)$ \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+\end{frame}
+
+%=============================================================================
+% EXERCIȚIU DE REPLICARE
+%=============================================================================
+\begin{frame}{Exercițiu de Replicare: Box \& Jenkins (1970)}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Obiectiv}
+            Replicați analiza seriei ``Airline Passengers'' (seria G din Box \& Jenkins, 1970) cu date actualizate.
+        \end{block}
+        \begin{enumerate}\setlength{\itemsep}{2pt}
+            {\small
+            \item Descărcați seria lunară de pasageri aerieni din România (INS sau Eurostat, 2010--2024)
+            \item Aplicați transformarea $\ln$ și diferențierea $(1-B)(1-B^{12})$
+            \item Identificați ordinul ARIMA folosind ACF/PACF (comparați cu Fig.\ 9.2 din Box \& Jenkins)
+            \item Estimați modelul ARIMA$(0,1,1)(0,1,1)_{12}$ --- ``airline model''
+            \item Verificați reziduurile: Ljung-Box, normalitate, ACF reziduuri
+            \item \textbf{Întrebare}: Modelul airline este încă adecvat pentru date moderne? Ce s-a schimbat?
+            }
+        \end{enumerate}
+        {\tiny Ref: Box, G.E.P.\ \& Jenkins, G.M.\ (1970). \textit{Time Series Analysis: Forecasting and Control}, Holden-Day.}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% END
+%=============================================================================
+\begin{frame}{}
+    \centering
+    \vspace{2cm}
+    {\Huge\textcolor{MainBlue}{Întrebări?}}
+
+    \vspace{1cm}
+
+    \normalsize
+    Succes la exerciții.
+
+    \vspace{0.5cm}
+
+    \textbf{Următorul Seminar:} ARIMA și Modele Sezoniere
+\end{frame}
+
+\end{document}

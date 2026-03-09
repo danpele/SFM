@@ -1,0 +1,2313 @@
+% Capitolul 1: Introducere în Analiza Seriilor de Timp
+% Prezentare academică de calitate Harvard
+% Program de licență, Academia de Studii Economice din București
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+\input{preamble}
+\subtitle{Capitolul 1: Procese Stochastice și Staționaritate}
+
+\begin{document}
+
+% Pagina de titlu (fără antet/subsol)
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \titlepage
+\end{frame}
+}
+
+%=============================================================================
+% OBIECTIVELE CURSULUI
+%=============================================================================
+\begin{frame}{Obiective de învățare}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{La finalul acestui capitol, veți fi capabili să:}
+            \begin{enumerate}\setlength{\itemsep}{0pt}
+                \item[\textcolor{MainBlue}{\textbf{1.}}] \textbf{Definiți} procesele stochastice și să înțelegeți proprietățile acestora
+                \item[\textcolor{MainBlue}{\textbf{2.}}] \textbf{Distingeți} între staționaritatea strictă și cea slabă (în covarianță)
+                \item[\textcolor{MainBlue}{\textbf{3.}}] \textbf{Identificați} procesele de zgomot alb și mers aleatoriu
+                \item[\textcolor{MainBlue}{\textbf{4.}}] \textbf{Calculați} și interpretați ACF (Funcția de Autocorelație) și PACF (Funcția de Autocorelație Parțială)
+                \item[\textcolor{MainBlue}{\textbf{5.}}] \textbf{Aplicați} operatorul lag și diferențierea
+                \item[\textcolor{MainBlue}{\textbf{6.}}] \textbf{Efectuați} teste de staționaritate: ADF (Augmented Dickey-Fuller) și KPSS (Kwiatkowski-Phillips-Schmidt-Shin)
+                \item[\textcolor{MainBlue}{\textbf{7.}}] \textbf{Analizați} date financiare de tip serie de timp
+                \item[\textcolor{MainBlue}{\textbf{8.}}] \textbf{Distingeți} între procesele cu rădăcină unitară și cele staționare în trend
+            \end{enumerate}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% CUPRINS
+%=============================================================================
+\begin{frame}{Cuprins}
+    \setbeamertemplate{section in toc}{\color{MainBlue}$\boxdot$~\inserttocsection}
+    \tableofcontents
+\end{frame}
+
+%=============================================================================
+% SECȚIUNE: MOTIVAȚIE
+%=============================================================================
+\section{Motivație}
+
+\begin{frame}{Exemple: serii staționare vs. nestaționare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{ch1_stationary_nonstationary_examples.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Observații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Prețurile} (stânga) sunt nestaționare: trend, media se schimbă în timp
+                \item \textbf{Randamentele} (dreapta) sunt staționare: medie $\approx 0$, varianță aprox. constantă
+                \item Randamente log: $r_t = \ln P_t - \ln P_{t-1}$ $\Rightarrow$ nestaționar $\to$ staționar (după diferențiere)
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+
+%=============================================================================
+% SECȚIUNEA 1: PROCESE STOCHASTICE
+%=============================================================================
+\section{Procese Stochastice}
+
+\begin{frame}{Proces stochastic: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.56\textheight, keepaspectratio]{ch1_def_stochastic.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Fiecare linie reprezintă o \textbf{realizare diferită} a aceluiași proces stochastic subiacent
+                \item Observăm doar \textbf{o singură realizare}, dar dorim să înțelegem proprietățile procesului
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Proces stochastic: definiție}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[Proces Stochastic]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un \textbf{proces stochastic} este o colecție de variabile aleatoare indexate după timp
+                \begin{itemize}
+                    \item $\{X_t(\omega) : t \in \mathcal{T}, \omega \in \Omega\}$
+                    \item $\Omega$ este spațiul eșantion (mulțimea tuturor rezultatelor posibile)
+                \end{itemize}
+            \end{itemize}
+        \end{defn}
+
+        \vspace{0.1cm}
+
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Două perspective}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{$\omega$ fixat}: O \textit{realizare} $\{X_t(\omega)\}_{t \in \mathcal{T}}$
+                    \item \textbf{$t$ fixat}: O \textit{variabilă aleatoare} $X_t$
+                \end{itemize}
+            \end{block}
+            \column{0.5\textwidth}
+            \begin{block}{De reținut}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item O serie de timp pe care o observăm nu este decât \textbf{o singură realizare} a procesului stochastic subiacent
+                \end{itemize}
+            \end{block}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Momentele unui proces stochastic}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Primele două momente caracterizează procesul}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Funcția de Medie}: $\mu_t = \E[X_t]$
+                \item \textbf{Autocovarianța (ACVF)}: $\gamma(t, s) = \Cov(X_t, X_s)$
+                \begin{itemize}
+                    \item $\gamma(t, s) = \E[(X_t - \mu_t)(X_s - \mu_s)]$
+                \end{itemize}
+                \item \textbf{Autocorelația (ACF)}:
+                \begin{itemize}
+                    \item $\rho(t, s) = \gamma(t, s) / \sqrt{\Var(X_t) \cdot \Var(X_s)}$
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Proprietăți ACF}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Interval}: $\rho(t, s) \in [-1, 1]$
+                    \item \textbf{Normalizare}: $\rho(t, t) = 1$ (corelație perfectă cu sine)
+                \end{itemize}
+            \end{exampleblock}
+            \column{0.48\textwidth}
+            \begin{alertblock}{Important}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{General}: $\mu_t$ și $\gamma(t,s)$ pot depinde de $t$
+                    \item \textbf{Staționar}: Elimină această dependență temporală
+                \end{itemize}
+            \end{alertblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 2: STAȚIONARITATE
+%=============================================================================
+\section{Staționaritate}
+
+\begin{frame}{De ce contează staționaritatea}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{alertblock}{Fără staționaritate}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Media, varianța se schimbă în timp
+                        \begin{itemize}
+                            \item Estimatorii sunt inconsistenți
+                        \end{itemize}
+                        \item Trecutul poate să nu prezică corect viitorul
+                        \item Metodele standard devin inaplicabile
+                        \item Risc de corelații false (spurios regression)
+                    \end{itemize}
+                \end{alertblock}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Cu staționaritate}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Proprietăți statistice constante
+                        \begin{itemize}
+                            \item Ergodicitate justificată
+                        \end{itemize}
+                        \item Putem estima parametrii dintr-o singură realizare
+                        \item Inferență statistică validă
+                        \item Modelele sunt bine definite
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+
+        \begin{alertblock}{Principiu fundamental}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Majoritatea modelelor de serii de timp necesită staționaritate
+                \item Exemple: ARMA (AutoRegressive Moving Average), ARIMA (AutoRegressive Integrated Moving Average)
+                \item Seriile nestaționare trebuie transformate (de ex.\ prin diferențiere) înainte de modelare
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Staționaritatea strictă: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.52\textheight, keepaspectratio]{ch1_def_strict_stationarity.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Translația în timp nu modifică distribuția comună a variabilelor
+                \item Oricare două ferestre temporale de aceeași lungime au aceleași proprietăți statistice
+                \item În practică: verificăm doar primele două momente (staționaritate slabă)
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Staționaritatea strictă}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.25cm}
+        \begin{defn}[Staționaritate Strictă (Puternică)]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un proces $\{X_t\}$ este \textbf{strict staționar} dacă pentru orice $k$, orice $t_1, \ldots, t_k$, și orice $h$:
+                \begin{itemize}
+                    \item $(X_{t_1}, \ldots, X_{t_k}) \stackrel{d}{=} (X_{t_1+h}, \ldots, X_{t_k+h})$
+                \end{itemize}
+                \item \textbf{Notație}: $X \stackrel{d}{=} Y$ înseamnă \textit{egalitate în distribuție}
+                \begin{itemize}
+                    \item $P(X \leq x) = P(Y \leq x)$
+                \end{itemize}
+            \end{itemize}
+        \end{defn}
+        \vspace{-0.1cm}
+        \begin{block}{Implicații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Distribuții identice}: $F_{X_t}(x)$ nu depinde de $t$
+                \begin{itemize}
+                    \item $\E[X_t] = \mu$ (medie constantă, dacă există)
+                    \item $\Var(X_t) = \sigma^2$ (varianță constantă, dacă există)
+                \end{itemize}
+                \item \textbf{Dependența de lag}: Distribuțiile comune depind doar de lag
+            \end{itemize}
+        \end{block}
+
+        \vspace{-0.2cm}
+
+        \begin{alertblock}{Notă}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Condiție foarte puternică, în general neverificabilă pe baza unei singure realizări
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Staționaritatea slabă: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.52\textheight, keepaspectratio]{ch1_def_weak_stationarity.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{exampleblock}{Cele trei condiții}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[X_t] = \mu$ constantă $\Rightarrow$ media nu depinde de timp
+                \item $\Var(X_t) = \sigma^2$ constantă $\Rightarrow$ varianța nu depinde de timp
+                \item $\Cov(X_t, X_{t+h}) = \gamma(h)$ $\Rightarrow$ autocovarianța depinde doar de lag $h$
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Staționaritatea slabă (covarianță)}
+    \begin{cminipage}{0.95\textwidth}
+        \small
+        \begin{defn}[Staționaritate Slabă (în Covarianță)]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un proces $\{X_t\}$ este \textbf{slab staționar} (sau staționar în covarianță) dacă:
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item $\E[X_t^2] < \infty$ pentru orice $t$
+                    \begin{itemize}
+                        \item Momente de ordinul 2 finite
+                    \end{itemize}
+                    \item $\E[X_t] = \mu$ pentru orice $t$
+                    \begin{itemize}
+                        \item Medie constantă (nu depinde de $t$)
+                    \end{itemize}
+                    \item $\Cov(X_t, X_{t+h}) = \gamma(h)$
+                    \begin{itemize}
+                        \item Autocovarianța depinde doar de lag-ul $h$, nu de $t$
+                    \end{itemize}
+                \end{itemize}
+            \end{itemize}
+        \end{defn}
+        \vspace{-2mm}
+        \begin{block}{Proprietăți}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Autocovarianța} este funcție doar de lag:
+                \begin{itemize}
+                    \item $\gamma(h) = \Cov(X_t, X_{t+h}) = \E[(X_t - \mu)(X_{t+h} - \mu)]$
+                \end{itemize}
+                \item \textbf{Autocorelația}:
+                \begin{itemize}
+                    \item $\rho(h) = \gamma(h)/\gamma(0) = \Cov(X_t, X_{t+h})/\Var(X_t)$
+                \end{itemize}
+                \item \textbf{Notă}: $\rho(0) = 1$, $|\rho(h)| \leq 1$, $\rho(h) = \rho(-h)$ (simetrie)
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Relația între staționaritate strictă și slabă}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{thm}[Implicație Fundamentală]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Dacă $\{X_t\}$ este \textbf{strict staționar} și $\E[X_t^2] < \infty$, atunci $\{X_t\}$ este și \textbf{slab staționar}
+            \end{itemize}
+        \end{thm}
+
+        \begin{proof}[Demonstrație]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Fie $t_1, t_2$ arbitrare și $h$ o deplasare temporală arbitrară
+                \item Din invarianța distribuției comune: $(X_{t_1}, X_{t_2}) \stackrel{d}{=} (X_{t_1+h}, X_{t_2+h})$
+                \item $\E[X_{t_1}] = \E[X_{t_1+h}] = \mu$ (medie constantă)
+                \item $\Cov(X_{t_1}, X_{t_2}) = \Cov(X_{t_1+h}, X_{t_2+h})$
+                \item Prin urmare, autocovarianța depinde doar de diferența $t_2 - t_1 = h$, nu de $t_1$
+            \end{itemize}
+        \end{proof}
+
+        \begin{alertblock}{Atenție: Reciproca \emph{nu} este adevărată.}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Există procese slab staționare care \textbf{nu} sunt strict staționare (a se vedea contraexemplul următor)
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu: modelul AR(1) este slab staționar}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{exampleblock}{Modelul AR(1) (AutoRegressive de ordin 1)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $X_t = \phi X_{t-1} + \varepsilon_t$, \quad $|\phi| < 1$
+                \item $\varepsilon_t \sim WN(0, \sigma^2)$ --- \textit{WN} (White Noise) = zgomot alb
+            \end{itemize}
+        \end{exampleblock}
+        \vspace{-2mm}
+        \begin{block}{Verificarea celor trei condiții}
+            \begin{enumerate}\setlength{\itemsep}{1pt}
+                \item \textbf{Medie constantă}: $\E[X_t] = \phi\,\E[X_{t-1}] + 0 = \phi\,\E[X_t]$ \;\; $\Rightarrow$ \;\; $\E[X_t] = 0$
+                \item \textbf{Varianță constantă}: $\Var(X_t) = \phi^2\,\Var(X_t) + \sigma^2$ \;\; $\Rightarrow$ \;\; $\Var(X_t) = \dfrac{\sigma^2}{1 - \phi^2}$
+                \item \textbf{Autocovarianța depinde doar de lag}:
+                    $\gamma(h) = \phi^{|h|} \cdot \dfrac{\sigma^2}{1 - \phi^2}$, \quad
+                    $\rho(h) = \phi^{|h|}$
+            \end{enumerate}
+        \end{block}
+        \vspace{-2mm}
+        \begin{exampleblock}{Exemplu numeric: $\phi = 0.8$, $\sigma^2 = 1$}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[X_t] = 0$, \quad $\Var(X_t) = \frac{1}{1-0.64} = 2.78$, \quad $\rho(1) = 0.8$, \; $\rho(2) = 0.64$, \; $\rho(5) = 0.33$
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Contraexemplu: slab staționar dar \emph{nu} strict staționar}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{exampleblock}{Construcție}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Fie $\{X_t\}$ variabile aleatoare \textbf{independente} cu:
+                $t$ par: $X_t \sim N(0, 1)$; \; $t$ impar: $X_t \sim \frac{\chi^2(5) - 5}{\sqrt{10}}$
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \vspace{-3mm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.40\textheight, keepaspectratio]{ch1_counterexample_stationarity.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Slab staționar \checkmark}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item $\E[X_t]=0$, $\Var(X_t)=1$, $\Cov(X_t,X_{t+h})=0$
+                \end{itemize}
+            \end{exampleblock}
+            \column{0.48\textwidth}
+            \begin{alertblock}{NU strict staționar \texttimes}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item Asimetria diferă: $0$ vs.\ $> 0$ $\Rightarrow$ $X_1 \stackrel{d}{\neq} X_2$
+                \end{itemize}
+            \end{alertblock}
+        \end{columns}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Proprietățile funcției de autocovarianță}
+    \begin{cminipage}{0.95\textwidth}
+        \small
+        \begin{prop}
+            Pentru un proces slab staționar, ACVF $\gamma(h)$ satisface:
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Simetrie:} $\gamma(h) = \gamma(-h)$
+                \item \textbf{Maximum la zero:} $|\gamma(h)| \leq \gamma(0) = \Var(X_t)$
+                \item \textbf{Semidefinit pozitiv:} $\sum_{i,j} a_i a_j \gamma(i - j) \geq 0$ pentru orice $a_1, \ldots, a_n \in \mathbb{R}$
+            \end{itemize}
+        \end{prop}
+
+        \begin{alertblock}{Demonstrație (prop. 3 --- semidefinit pozitiv)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item {\footnotesize $0 \leq \Var\!\left(\sum_{i=1}^n a_i X_{t+i}\right) = \sum_{i,j} a_i a_j \,\Cov(X_{t+i}, X_{t+j}) = \sum_{i,j} a_i a_j \gamma(i-j)$}
+            \end{itemize}
+        \end{alertblock}
+
+        \begin{exampleblock}{Implicație}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Nu orice funcție poate fi o funcție de autocovarianță validă
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Ergodicitatea: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-2mm}
+        \begin{center}
+            \includegraphics[width=\textwidth, height=0.56\textheight, keepaspectratio]{ch1_ergodicity.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{exampleblock}{}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Media temporală} (o singură realizare) și \textbf{media ansamblului} (realizări multiple) converg ambele la $\mu$
+                \item Ergodicitatea garantează că putem estima $\mu$ dintr-o \textbf{singură serie temporală} suficient de lungă
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Ergodicitatea: fundamentul inferenței din date}
+    \footnotesize
+    \vspace{-1mm}
+    \begin{defn}[Ergodicitate pentru Medie]
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item Un proces staționar $\{X_t\}$ este \textbf{ergodic pentru medie} dacă
+            $\bar{X}_T = \frac{1}{T}\sum_{t=1}^{T} X_t \xrightarrow{P} \mu$ când $T \to \infty$
+        \end{itemize}
+    \end{defn}
+    \vspace{-2mm}
+    \begin{alertblock}{De ce contează ergodicitatea?}
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \textbf{Problema}: Avem doar \textbf{o singură realizare} a procesului stochastic
+            \item \textbf{Soluția}: Ergodicitatea permite estimarea lui $\mu$ prin $\bar{X}_T$ --- media temporală converge la media populației. Fără ergodicitate, inferența statistică dintr-o singură serie nu este posibilă!
+        \end{itemize}
+    \end{alertblock}
+    \vspace{-2mm}
+    \begin{thm}[Condiție Suficientă]
+        Dacă $\sum_{h=0}^{\infty} |\gamma(h)| < \infty$ (autocovarianțe absolut sumabile), procesul este ergodic pentru medie.
+    \end{thm}
+    \vspace{-2mm}
+    {\scriptsize
+    \begin{alertblock}{Contraexemplu: staționar dar ne-ergodic}
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item Fie $Z \sim N(0,1)$, $X_t = Z$ $\forall\, t$. Strict staționar, dar $\bar{X}_T = Z$ $\Rightarrow$ \textbf{nu} converge la $\mu = 0$
+            \item \textbf{Concluzie}: ergodicitatea este o ipoteză \textbf{suplimentară}, mai puternică decât staționaritatea
+        \end{itemize}
+    \end{alertblock}
+    }
+\end{frame}
+
+\begin{frame}{Teorema de descompunere Wold}
+    \begin{cminipage}{0.95\textwidth}
+        \small
+        \begin{thm}[Wold, 1938]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Orice proces \textbf{staționar în covarianță} $\{X_t\}$ poate fi scris ca:
+                $X_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j} + \eta_t$
+                \begin{itemize}
+                    \item $\varepsilon_t \sim WN(0, \sigma^2)$ $\Rightarrow$ zgomot alb, cu $\psi_0 = 1$, $\sum \psi_j^2 < \infty$
+                    \item $\eta_t$ $\Rightarrow$ componenta deterministă (perfect predictibilă)
+                \end{itemize}
+            \end{itemize}
+        \end{thm}
+
+        \begin{exampleblock}{Semnificația teoremei Wold}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Descompunere}: Orice proces staționar = \textbf{MA($\infty$)} (\textit{Moving Average} de ordin infinit) + componentă deterministă
+                \begin{itemize}
+                    \item Justifică teoretic modelele MA($q$) și ARMA($p,q$) ca aproximații finite ale componentei stochastice
+                    \item Coeficienții $\psi_j$ (funcția de răspuns la impuls) măsoară impactul persistent al șocurilor trecute
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Demonstrația teoremei Wold (schiță)}
+    \begin{cminipage}{0.95\textwidth}
+        {\footnotesize
+        \begin{proof}[\footnotesize Schiță de demonstrație]
+            \vspace{-1mm}
+            \begin{enumerate}\setlength{\itemsep}{1pt}
+                \item \textbf{Spațiul Hilbert al trecutului}: $\mathcal{H}_t = \overline{\mathrm{sp}}\{X_s : s \leq t\}$, cu $\langle X, Y \rangle = \mathrm{Cov}(X,Y)$.
+
+                \item \textbf{Inovația}: Definim $\varepsilon_t = X_t - \hat{X}_t$, unde $\hat{X}_t = \mathrm{Proj}_{\mathcal{H}_{t-1}}(X_t)$ este proiecția ortogonală. Prin construcție, $\varepsilon_t \perp \mathcal{H}_{t-1}$, deci $\varepsilon_t \perp \varepsilon_s$ pentru $t \neq s$ $\Rightarrow$ $\{\varepsilon_t\}$ este zgomot alb.
+
+                \item \textbf{Reprezentarea iterativă}: Aplicând recursiv proiecția:
+                \vspace{-1mm}
+                \[
+                    X_t = \varepsilon_t + \psi_1 \varepsilon_{t-1} + \psi_2 \varepsilon_{t-2} + \cdots + \eta_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j} + \eta_t
+                \]
+                \vspace{-3mm}
+
+                unde $\psi_j$ rezultă din proiecțiile succesive, iar $\eta_t \in \mathcal{H}_{-\infty} = \bigcap_{t} \mathcal{H}_t$.
+
+                \item \textbf{Convergența}: $\sum_{j=0}^{\infty} \psi_j^2 < \infty$ deoarece $\mathrm{Var}(X_t) < \infty$ (staționaritate).
+
+                \item \textbf{Componenta deterministă}: $\eta_t \in \mathcal{H}_{-\infty}$ $\Rightarrow$ $\eta_t$ este \textit{perfect predictibilă} din trecutul infinit.\qedhere
+            \end{enumerate}
+        \end{proof}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Teorema Wold: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+            \includegraphics[height=3.5cm]{ch1_wold_decomposition.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $X_t$ = componentă \textbf{stochastică} (MA($\infty$), nepredictibilă) + componentă \textbf{deterministă} ($\eta_t$, predictibilă din trecutul infinit)
+                \item $\psi_j \to 0$: șocurile recente au impact mai mare decât cele îndepărtate
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_operators}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_operators}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 3: OPERATORUL LAG, DIFERENȚIEREA ȘI TRANSFORMĂRI
+%=============================================================================
+\section{Operatorul Lag și Diferențierea}
+
+\begin{frame}{Operatorul lag: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.55\textheight, keepaspectratio]{ch1_def_lag_operator.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{exampleblock}{Proprietăți}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $LX_t = X_{t-1}$ $\Rightarrow$ operatorul lag deplasează seria cu o perioadă în trecut
+                \item $L^k X_t = X_{t-k}$ $\Rightarrow$ deplasare cu $k$ perioade înapoi; $L^0 = I$ (identitate)
+                \item \textbf{Operatorul diferență}: $\Delta = (1-L)$, astfel $\Delta X_t = X_t - X_{t-1}$
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_operators}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_operators}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Operatorul lag}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[Operatorul lag]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Operatorul lag} (sau operatorul de întârziere) $L$ este definit prin: $LX_t = X_{t-1}$
+            \end{itemize}
+        \end{defn}
+
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Proprietăți}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Puteri}: $L^k X_t = X_{t-k}$ (întârzie cu $k$ perioade)
+                    \begin{itemize}
+                        \item Notație compactă pentru modele
+                    \end{itemize}
+                    \item \textbf{Identitate}: $L^0 = I$
+                    \item \textbf{Polinom}: $(1 - \phi L)X_t = X_t - \phi X_{t-1}$
+                \end{itemize}
+            \end{block}
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Exemple}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Prima diferență}: $(1-L)X_t = X_t - X_{t-1}$
+                    \item \textbf{A doua diferență}: $(1-L)^2 X_t = \Delta^2 X_t$
+                    \item \textbf{Diferență sezonieră}: $(1-L^{12})X_t = X_t - X_{t-12}$
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Efectul diferențierii: S\&P 500}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.56\textheight, keepaspectratio]{differencing_effect.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Sus}: Prețuri S\&P 500 $\Rightarrow$ trend clar, nestaționar ($I(1)$)
+                \item \textbf{Jos}: Randamente log $r_t = \ln P_t - \ln P_{t-1}$ $\Rightarrow$ fluctuează în jurul mediei $\approx 0$, staționar
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_operators}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_operators}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Diferențierea}
+    \vspace{-0.1cm}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\small
+        \begin{block}{De ce diferențiem?}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Prima diferență}: $\Delta X_t = X_t - X_{t-1} = (1 - L)X_t$
+                \begin{itemize}
+                    \item Elimină trendul stochastic și rădăcina unitară
+                    \item Mers aleatoriu: $\Delta X_t = \varepsilon_t$ (devine zgomot alb)
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \begin{defn}[Proces Integrat de Ordin $d$]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un proces $\{X_t\}$ este \textbf{integrat de ordin $d$}, notat $X_t \sim I(d)$, dacă:
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item $\Delta^d X_t = (1-L)^d X_t$ este staționar ($I(0)$ proces)
+                    \item $\Delta^{d-1} X_t$ \textbf{nu} este staționar
+                \end{itemize}
+            \end{itemize}
+        \end{defn}
+
+        \begin{exampleblock}{Exemple}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $I(0)$: Proces staționar (zgomot alb, AR staționar)
+                \item $I(1)$: Mers aleatoriu $\Rightarrow$ $\Delta X_t = \varepsilon_t$ este staționar
+                \item $I(2)$: Necesită două diferențieri succesive pentru a deveni staționar
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Transformări pentru staționarizare: logaritm și diferențiere}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.7\textwidth, height=0.38\textheight, keepaspectratio]{ch1_log_diff_gdp.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Secvența de transformare}
+            \vspace{-1mm}
+            \[
+                \underbrace{PIB_t}_{I(1),\;\text{varianță crescătoare}}
+                \;\xrightarrow{\;\ln(\cdot)\;}
+                \underbrace{\ln PIB_t}_{I(1),\;\text{varianță stabilizată}}
+                \;\xrightarrow{\;\Delta\;}
+                \underbrace{\Delta \ln PIB_t}_{I(0),\;\text{staționar}}
+                \;=\; \ln PIB_t - \ln PIB_{t-1}
+            \]
+            \vspace{-2mm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Logaritmul} elimină heteroscedasticitatea: varianța nu mai crește cu nivelul
+                \item \textbf{Diferențierea} elimină trendul și rădăcina unitară: media devine constantă
+                \item \textbf{Interpretare economică}: $\Delta \ln PIB_t \approx \tfrac{PIB_t - PIB_{t-1}}{PIB_{t-1}}$ = \textcolor{Forest}{rata de creștere economică}
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_operators}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_operators}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 4: ZGOMOT ALB ȘI MERS ALEATORIU
+%=============================================================================
+\section{Zgomot Alb și Mers Aleatoriu}
+
+\begin{frame}{Zgomot alb: ilustrare vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+            \includegraphics[width=\textwidth, height=0.82\textheight, keepaspectratio]{ch1_def_white_noise.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \hfill\quantlet{TSA\_ch1\_white\_noise}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_white_noise}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Procesul de zgomot alb}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\scriptsize
+        \begin{defn}[Zgomot Alb]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un proces $\{\varepsilon_t\}$ este \textbf{zgomot alb}, notat $\varepsilon_t \sim WN(0, \sigma^2)$, dacă:
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item $\E[\varepsilon_t] = 0$ pentru orice $t$ (medie zero)
+                    \item $\Var(\varepsilon_t) = \sigma^2$ pentru orice $t$ (varianță constantă)
+                    \item $\Cov(\varepsilon_t, \varepsilon_s) = 0$ pentru $t \neq s$ (necorelat)
+                \end{itemize}
+            \end{itemize}
+        \end{defn}
+        \vspace{-2mm}
+        \begin{block}{ACF al zgomotului alb}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Din definiție: $\gamma(0) = \sigma^2$ și $\gamma(h) = 0$ pentru $h \neq 0$;
+                $\rho(h) = \begin{cases} 1 & h = 0 \\ 0 & h \neq 0 \end{cases}$
+            \end{itemize}
+        \end{block}
+        \vspace{-2mm}
+        \begin{exampleblock}{Observație}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Zgomotul alb este cel mai simplu proces staționar --- element de bază al modelelor ARMA
+                \item Există trei tipuri principale: slab (necorelat), puternic (i.i.d.) și Gaussian (vezi diapozitivul următor)
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Cele trei tipuri de zgomot alb}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-2mm}
+        \begin{center}
+            \includegraphics[width=\textwidth, height=0.48\textheight, keepaspectratio]{ch1_white_noise_types.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\scriptsize
+        \begin{exampleblock}{Relația de incluziune: \normalfont Gaussian $\subset$ puternic (i.i.d.) $\subset$ slab (necorelat)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Slab}: $\Cov(\varepsilon_t, \varepsilon_s) = 0$, dar pot exista dependențe neliniare (ex.\ GARCH)
+                \item \textbf{Puternic}: $\varepsilon_t$ sunt i.i.d.\ (independente și identic distribuite) --- orice distribuție (ex.\ Student-$t$)
+                \item \textbf{Gaussian}: $\varepsilon_t \stackrel{iid}{\sim} N(0, \sigma^2)$ --- necorelat $\Leftrightarrow$ independent
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_white\_noise}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_white_noise}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Mers aleator: vizualizare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=\textwidth, height=0.58\textheight, keepaspectratio]{random_walk.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Observații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Fiecare șoc are \textbf{efect permanent}; $\Var(X_t) = t\sigma^2$ crește liniar cu $t$
+                \item \textbf{Soluție}: diferențierea transformă mersul aleatoriu în zgomot alb, $\Delta X_t = \varepsilon_t$
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Procesul de mers aleatoriu}
+    \begin{cminipage}{0.95\textwidth}
+        \small
+        \vspace{-3mm}
+        \begin{defn}[Mers Aleatoriu]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $X_t = X_{t-1} + \varepsilon_t$, \; $\varepsilon_t \sim WN(0, \sigma^2)$, $X_0 = 0$
+                \item \textbf{Forma explicită}: $X_t = \sum_{i=1}^{t} \varepsilon_i$
+            \end{itemize}
+        \end{defn}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{prop}[Proprietăți]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[X_t] = 0$
+                \item $\Var(X_t) = t\sigma^2$ (crește cu timpul)
+                \item $\Cov(X_t, X_s) = \min(t, s) \cdot \sigma^2$
+            \end{itemize}
+        \end{prop}
+        }
+        \vspace{-2mm}
+        {\scriptsize
+        \begin{proof}[Demonstrații]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[X_t] = \E\!\bigl[\sum_{i=1}^{t} \varepsilon_i\bigr] = 0$; \;
+                      $\Var(X_t) = t\sigma^2$ (independență); \;
+                      $\Cov(X_t, X_s) = \min(t,s)\,\sigma^2$
+            \end{itemize}
+        \end{proof}
+        }
+        \vspace{-4mm}
+        \begin{alertblock}{Nestaționar}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Var(X_t) = t\sigma^2$ depinde de $t$ $\Rightarrow$ mersul aleatoriu \textbf{nu este staționar}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Mers aleator cu drift}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\scriptsize
+        \begin{defn}[Mers Aleatoriu cu Drift]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $X_t = c + X_{t-1} + \varepsilon_t$, \; $c \neq 0$ este \textbf{driftul}
+                \item \textbf{Forma explicită}: $X_t = ct + \sum_{i=1}^{t} \varepsilon_i$
+            \end{itemize}
+        \end{defn}
+        \vspace{-2mm}
+        \begin{prop}[Proprietăți]
+            $\E[X_t] = ct$ (trend liniar); \; $\Var(X_t) = t\sigma^2$ (crește cu timpul)
+        \end{prop}
+        \vspace{-2mm}
+        \begin{alertblock}{Diferențiere}
+            $\Delta X_t = c + \varepsilon_t$ --- constantă plus zgomot alb $\Rightarrow$ seria diferențiată este staționară
+        \end{alertblock}
+        \vspace{-2mm}
+        \begin{exampleblock}{Importanța practică}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item PIB nominal, prețuri de acțiuni $\Rightarrow$ adesea modelate ca mers aleatoriu cu drift
+                \item Testul ADF: trei variante --- fără constantă, cu constantă, cu constantă și trend liniar
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Zgomot alb vs mers aleatoriu: comparație}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.65\textheight, keepaspectratio]{ch1_wn_rw.pdf}
+        \end{center}
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Zgomot alb vs mers aleatoriu: proprietăți comparative}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{center}
+        \renewcommand{\arraystretch}{1.25}
+        \begin{tabular}{l c c}
+            \hline
+            \textbf{Proprietate} & \textbf{Zgomot alb (WN)} & \textbf{Mers aleatoriu (RW)} \\
+            \hline
+            Model & $X_t = \varepsilon_t$ & $X_t = X_{t-1} + \varepsilon_t$ \\
+            Staționar? & \textcolor{Forest}{Da} & \textcolor{Crimson}{Nu} \\
+            $\Var(X_t)$ & $\sigma^2$ (constantă) & $t\sigma^2$ (crește liniar) \\
+            $\mathrm{ACF}(h),\; h \neq 0$ & $0$ & $\approx 1$ (descreștere lentă) \\
+            Memorie & Fără & Permanentă (șocuri persistă) \\
+            Diferențiere & --- & $\Delta X_t = \varepsilon_t$ (produce WN) \\
+            \hline
+        \end{tabular}
+        \end{center}
+        \vspace{0.1cm}
+        \begin{block}{Legătură}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Delta X_t = \varepsilon_t$ --- diferențierea mersului aleatoriu produce zgomot alb
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Staționaritate în trend vs.\ staționaritate în diferențe}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Staționaritate în trend --- TS (Trend Stationary)}
+                \begin{itemize}\setlength{\itemsep}{1pt}
+                    \item \textbf{Model}: $Y_t = \alpha + \beta t + \varepsilon_t$
+                    \begin{itemize}
+                        \item Trend \textbf{determinist}
+                        \item Abaterile de la trend sunt temporare
+                    \end{itemize}
+                    \item \textbf{Soluție}: regresie pe $t$, se extrag reziduurile
+                    \item \textbf{Efect}: Șocurile \emph{nu} au efect permanent
+                \end{itemize}
+            \end{block}
+
+            \column{0.48\textwidth}
+            \begin{alertblock}{Staționaritate în diferențe --- DS (Difference Stationary)}
+                \begin{itemize}\setlength{\itemsep}{1pt}
+                    \item \textbf{Model}: $Y_t = c + Y_{t-1} + \varepsilon_t$
+                    \begin{itemize}
+                        \item Trend \textbf{stochastic}
+                        \item Abaterile de la trend sunt permanente
+                    \end{itemize}
+                    \item \textbf{Soluție}: diferențiere ($\Delta Y_t$)
+                    \item \textbf{Efect}: Șocurile AU efect permanent
+                \end{itemize}
+            \end{alertblock}
+        \end{columns}
+
+        \begin{exampleblock}{De ce contează distincția?}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Diferențiere pe TS}: introduce o rădăcină unitară artificială în componenta MA a modelului
+                \item \textbf{Regresie pe DS}: produce reziduuri \textbf{tot nestaționare} (regresia spurioasă)
+                \item \textbf{Soluție}: Testele ADF și KPSS ajută la distincție --- alegerea greșită conduce la inferență invalidă
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu: serie cu trend determinist vs.\ trend stochastic}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{ch1_trend_types.pdf}
+        \end{center}
+        \vspace{-4mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{TS} (trend staționar): $Y_t = \alpha + \beta t + \varepsilon_t$ --- șocurile nu au efect permanent; reziduurile sunt staționare
+                \item \textbf{DS} (mers aleatoriu cu drift): $Y_t = c + Y_{t-1} + \varepsilon_t$ --- șocurile se acumulează; necesită diferențiere
+                \item Distincție esențială pentru aplicarea corectă a testelor ADF și KPSS
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_unit\_root\_tests}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_unit_root_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu: staționarizarea unei serii cu trend determinist}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{block}{Procedura de eliminare a trendului determinist}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item \textbf{Model}: $Y_t = \alpha + \beta\, t + \varepsilon_t$, \; cu $\varepsilon_t \sim \text{WN}(0, \sigma^2)$
+                \item \textbf{Pas 1}: Se estimează $\hat{\alpha}$ și $\hat{\beta}$ prin OLS:
+                      $\hat{\beta} = \frac{\sum_{t=1}^{T}(t - \bar{t})(Y_t - \bar{Y})}{\sum_{t=1}^{T}(t - \bar{t})^2}$, \quad
+                      $\hat{\alpha} = \bar{Y} - \hat{\beta}\,\bar{t}$
+                \item \textbf{Pas 2}: Se extrag reziduurile: $\hat{\varepsilon}_t = Y_t - \hat{\alpha} - \hat{\beta}\,t$ \; $\Rightarrow$ \textbf{serie staționară}
+            \end{itemize}
+        \end{block}
+        }
+        \vspace{-2mm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{ch1_detrending.pdf}
+        \end{center}
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Comparație ACF: staționar vs mers aleatoriu}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.52\textheight, keepaspectratio]{rw_vs_stationary.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Staționar}: ACF scade rapid (exponențial sau oscilant) spre zero
+                \item \textbf{Mers aleatoriu}: ACF scade foarte lent, rămâne aproape de 1 pentru mulți lag-uri
+                \item \textbf{Regulă practică}: ACF cu scădere lentă $\Rightarrow$ suspectăm rădăcină unitară $\Rightarrow$ test ADF
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 5: ACF ȘI PACF
+%=============================================================================
+\section{Funcții de Autocorelație}
+
+\begin{frame}{Tipare ACF pentru diferite procese}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.99\textwidth, height=0.60\textheight, keepaspectratio]{ch1_acf_examples.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Zgomot alb}: ACF = 0; \textbf{Staționar}: scade rapid; \textbf{Nestaționar}: scade lent
+                \item \textbf{Sezonier}: Vârfuri la lag-uri sezoniere (12, 24 pentru date lunare)
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_acf\_patterns}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_acf_patterns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Funcția de autocorelație eșantion}
+    \vspace{-0.2cm}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{block}{ACF eșantion la lag-ul $h$}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\hat{\rho}(h) = \frac{\sum_{t=1}^{T-h}(x_t - \bar{x})(x_{t+h} - \bar{x})}{\sum_{t=1}^{T}(x_t - \bar{x})^2}$; \;
+                      Proprietăți: $\hat{\rho}(0) = 1$, $|\hat{\rho}(h)| \leq 1$
+            \end{itemize}
+        \end{block}
+        \vspace{-1mm}
+        \begin{thm}[Bartlett, 1946]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Sub $H_0$ (zgomot alb), pentru $T$ mare: $\hat{\rho}(h) \xrightarrow{d} N(0, 1/T)$
+            \end{itemize}
+        \end{thm}
+        \vspace{-1mm}
+        \begin{block}{Banda de încredere 95\% pentru graficul ACF}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\pm 1{,}96/\sqrt{T}$ (benzile punctate din graficele ACF --- acoperire exactă doar sub $H_0$: zgomot alb)
+            \end{itemize}
+        \end{block}
+        \vspace{-1mm}
+        \begin{alertblock}{Atenție}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Formula Bartlett validă \textbf{doar sub $H_0$: zgomot alb}; pentru AR/MA, varianța asimptotică diferă
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Tipare ACF și PACF}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.53\textheight, keepaspectratio]{acf_pacf_examples.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{exampleblock}{Reguli de identificare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{AR($p$)}: ACF scade exponențial, PACF se anulează după lag $p$
+                \item \textbf{MA($q$)}: ACF se anulează după lag $q$, PACF scade exponențial
+                \item \textbf{ARMA($p,q$)}: Ambele scad exponențial/oscilant $\Rightarrow$ utilizați criterii AIC/BIC
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_acf\_patterns}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_acf_patterns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Funcția de autocorelație parțială (PACF)}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[Autocorelația Parțială]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{PACF} la lag-ul $h$, notat $\phi_{hh}$: ultimul coeficient din regresia:
+                \begin{itemize}
+                    \item $X_t = \phi_{h1}X_{t-1} + \phi_{h2}X_{t-2} + \cdots + \phi_{hh}X_{t-h} + e_t$
+                \end{itemize}
+                \item \textbf{Alternativ}:
+                \begin{itemize}
+                    \item $\phi_{hh} = \Corr\!\left(X_t - \hat{X}_t^{(h-1)},\; X_{t-h} - \hat{X}_{t-h}^{(h-1)}\right)$
+                \end{itemize}
+                \item \textbf{Interpretare}: Corelația \textit{directă} dintre $X_t$ și $X_{t-h}$, eliminând efectul lag-urilor intermediare $1, 2, \ldots, h-1$
+            \end{itemize}
+        \end{defn}
+
+        \begin{exampleblock}{Aplicație practică}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item PACF identifică direct ordinul $p$ al unui model AR($p$)
+                \item $\phi_{hh} = 0$ pentru $h > p$ $\Rightarrow$ PACF se anulează după lag-ul $p$
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Tipare de scădere ACF}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.53\textheight, keepaspectratio]{acf_theoretical.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Scădere exponențială}: Dependență pozitivă persistentă (AR cu $\phi > 0$)
+                \item \textbf{Scădere oscilantă}: Dependență alternantă (AR cu $\phi < 0$)
+                \item Viteza de scădere indică puterea memoriei procesului
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_acf\_patterns}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_acf_patterns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testul Ljung-Box: testarea zgomotului alb}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{defn}[Statistica Ljung-Box, 1978]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $H_0$: primele $m$ autocorelații sunt zero (seria este zgomot alb)
+                \item $Q(m) = T(T+2)\sum_{k=1}^{m} \frac{\hat{\rho}(k)^2}{T-k} \;\xrightarrow{H_0}\; \chi^2(m)$, \; unde $T$ = numărul de observații
+                \item Respingem $H_0$ dacă $Q(m) > \chi^2_{m,\alpha}$ sau $p\text{-valoare} < \alpha$
+            \end{itemize}
+        \end{defn}
+        }
+        \vspace{-1mm}
+        \begin{center}
+            \includegraphics[width=0.96\textwidth, height=0.50\textheight, keepaspectratio]{ch1_ljung_box.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \hfill\quantlet{TSA\_ch1\_white\_noise}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_white\_noise}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 6: TESTAREA STAȚIONARITĂȚII
+%=============================================================================
+\section{Testarea Staționarității}
+
+\begin{frame}{Testul Augmented Dickey-Fuller (ADF)}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{block}{Modelul ADF}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Delta X_t = \alpha + \gamma X_{t-1} + \sum_{i=1}^{p} \delta_i \Delta X_{t-i} + \varepsilon_t$, \;\;
+                $\gamma = \rho - 1$, \; $H_0: \gamma = 0 \Leftrightarrow \rho = 1$
+            \end{itemize}
+        \end{block}
+        \vspace{-2mm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Ipoteze}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{$H_0$}: $\gamma = 0$ (rădăcină unitară)
+                        \item \textbf{$H_1$}: $\gamma < 0$ (staționar)
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Statistica de Test}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item $\tau_{ADF} = \hat{\gamma}\, / \, SE(\hat{\gamma})$
+                        \item $\hat{\gamma}$ = coeficientul OLS (\textit{Ordinary Least Squares}) al lui $X_{t-1}$
+                        \item $SE(\hat{\gamma})$ = eroarea standard din regresia OLS
+                    \end{itemize}
+                \end{block}
+            \end{column}
+        \end{columns}
+        \vspace{-1mm}
+        \begin{alertblock}{Regula de decizie}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\tau_{ADF} <$ val.\ critică $\Rightarrow$ Respingem $H_0$ $\Rightarrow$ \textcolor{Forest}{Staționar}
+                \item $\tau_{ADF} \geq$ val.\ critică $\Rightarrow$ \textcolor{Crimson}{Nu respingem $H_0$ (rădăcină unitară)}
+                \item Valorile critice urmează distribuția Dickey-Fuller (\textbf{nu} $t$-Student --- distribuție asimetrică spre stânga!)
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testul KPSS}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Modelul}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $X_t = \xi t + r_t + \varepsilon_t$ unde $r_t = r_{t-1} + u_t$
+                \item $\varepsilon_t \sim WN(0, \sigma_\varepsilon^2)$ (eroare staționară); \; $u_t \sim WN(0, \sigma_u^2)$ (inovația mersului aleatoriu)
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Ipoteze (opus ADF)}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{$H_0$}: $\sigma_u^2 = 0$ \; (seria este $I(0)$, staționar)
+                        \item \textbf{$H_1$}: $\sigma_u^2 > 0$ \; (seria este $I(1)$, are rădăcină unitară)
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Statistica de Test}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item $LM = \frac{\sum_{t=1}^{T} S_t^2}{T^2 \hat{\sigma}^2_{LR}}$
+                        \item {\small $S_t = \sum_{i=1}^{t} \hat{e}_i$; \; $\hat{\sigma}^2_{LR}$ = varianța de lungă durată}
+                    \end{itemize}
+                \end{block}
+            \end{column}
+        \end{columns}
+
+        \vspace{0.1cm}
+
+        \begin{alertblock}{Regula de decizie}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $LM >$ valoarea critică $\Rightarrow$ Respingem $H_0$ $\Rightarrow$ \textcolor{Crimson}{Nestaționar (rădăcină unitară)}
+                \item $LM \leq$ valoarea critică $\Rightarrow$ Nu respingem $H_0$ $\Rightarrow$ \textcolor{Forest}{Staționar}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{ADF vs KPSS: comparație pe S\&P 500}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.50\textheight, keepaspectratio]{ch1_quiz3_adf_vs_kpss.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch1\_unit\_root\_tests}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_unit_root_tests}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{block}{Interpretare comparativă}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{ADF}: $H_0$ = rădăcină unitară --- respingem $\Rightarrow$ \textcolor{Forest}{staționar}
+                \item \textbf{KPSS}: $H_0$ = staționar --- respingem $\Rightarrow$ \textcolor{Crimson}{nestaționar}
+                \item Prețuri S\&P 500: ADF nu respinge $H_0$ + KPSS respinge $H_0$ $\Rightarrow$ \textbf{nestaționar}
+                \item Randamente S\&P 500: ADF respinge $H_0$ + KPSS nu respinge $H_0$ $\Rightarrow$ \textbf{staționar}
+            \end{itemize}
+        \end{block}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Utilizarea combinată a testelor ADF și KPSS}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Strategie de testare confirmatorie}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{ADF respinge $H_0$ + KPSS nu respinge $H_0$}: \textcolor{Forest}{Concluzie: Staționar}
+                \item \textbf{ADF nu respinge $H_0$ + KPSS respinge $H_0$}: \textcolor{Crimson}{Concluzie: Rădăcină Unitară}
+                \item \textbf{Ambele resping sau ambele nu resping}: Rezultate neconcludente
+                \begin{itemize}
+                    \item Necesită teste suplimentare: PP (Phillips-Perron)
+                    \item Sau DF-GLS (\textit{Dickey-Fuller Generalized Least Squares})
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{exampleblock}{Protocol de lucru recomandat}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Pasul 1}: Test ADF ($H_0$: rădăcină unitară) cu specificații alternative (constantă, trend)
+                \item \textbf{Pasul 2}: Test KPSS ($H_0$: staționar) cu aceeași specificație
+                \item \textbf{Pasul 3}: Rezultate concordante $\Rightarrow$ concluzie fermă
+                \begin{itemize}
+                    \item Rezultate divergente: teste suplimentare PP, DF-GLS
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Protocol complet de analiză a staționarității}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{block}{Protocol pas-cu-pas}
+            \begin{enumerate}\setlength{\itemsep}{2pt}
+                \item[\textcolor{MainBlue}{\textbf{1.}}] \textbf{Vizualizare}: graficul seriei $+$ ACF/PACF $\Rightarrow$ primă intuiție (trend? sezonalitate?)
+                \item[\textcolor{MainBlue}{\textbf{2.}}] \textbf{Test ADF}: $H_0$: rădăcină unitară. Specificați: doar constantă \textit{sau} constantă $+$ trend
+                \item[\textcolor{MainBlue}{\textbf{3.}}] \textbf{Test KPSS}: $H_0$: staționar. Aceeași specificație ca la ADF
+                \item[\textcolor{MainBlue}{\textbf{4.}}] \textbf{Decizie}:
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textcolor{Forest}{Concordant}: ADF respinge $+$ KPSS nu respinge $\Rightarrow$ \textbf{staționar}
+                        \item \textcolor{Forest}{Concordant}: ADF nu respinge $+$ KPSS respinge $\Rightarrow$ \textbf{nestaționar}
+                        \item \textcolor{Crimson}{Divergent}: teste suplimentare (PP, DF-GLS) sau transformare
+                    \end{itemize}
+                \item[\textcolor{MainBlue}{\textbf{5.}}] \textbf{Transformare} (dacă nestaționar): diferențiere ($\Delta y_t$), log $+$ diferențiere, sau detrending
+            \end{enumerate}
+        \end{block}
+        \vspace{0.1cm}
+        \begin{alertblock}{Regulă practică}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Aplicați \textbf{întotdeauna} cel puțin două teste cu $H_0$ opuse pentru a evita concluzii false
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testul Phillips-Perron (PP)}
+    \begin{cminipage}{0.95\textwidth}
+        \small
+        \begin{defn}[Phillips-Perron, 1988]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Testează aceeași ipoteză ca ADF: $H_0$: rădăcină unitară ($\gamma = 0$)
+                \item Modelul de bază (fără lag-uri augmentate): $\Delta y_t = \alpha + \gamma\, y_{t-1} + e_t$
+                \item Corectează autocorelația și heteroscedasticitatea din $e_t$ prin \textbf{corecție neparametrică} (Newey-West) a statisticii $t$
+            \end{itemize}
+        \end{defn}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Statistica PP}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item $Z_\alpha = t_\gamma \cdot \sqrt{\frac{s_e^2}{\hat{\lambda}^2}} - \frac{T(\hat{\lambda}^2 - s_e^2)}{2\hat{\lambda}^2 \cdot SE(\hat{\gamma})}$
+                        \item $t_\gamma$: statistica $t$ OLS pentru $\hat{\gamma}$; $\hat{\lambda}^2$: varianța de lungă durată (kernel Newey-West)
+                        \item $s_e^2$: varianța reziduală OLS; $T$: numărul de observații
+                        \item Valorile critice: identice cu ADF (distribuția Dickey-Fuller)
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{PP vs ADF}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{ADF}: adaugă lag-uri $\Delta y_{t-j}$ $\Rightarrow$ parametric
+                        \item \textbf{PP}: corectează statistica $t$ $\Rightarrow$ neparametric
+                        \item PP mai robust la heteroscedasticitate
+                        \item ADF mai robust la MA cu rădăcini aproape de $-1$
+                    \end{itemize}
+                \end{exampleblock}
+                \vspace{-0.2cm}
+                {\scriptsize
+                \begin{alertblock}{Python}
+                    \texttt{from statsmodels.tsa.stattools import PhillipsPerron}
+                \end{alertblock}
+                }
+            \end{column}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{PP vs ADF: comparație pe date reale}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.50\textheight, keepaspectratio]{ch1_unit_root_series.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch1\_unit\_root\_tests}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_unit_root_tests}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{block}{ADF vs PP: când diferă?}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Acord}: de regulă, ADF și PP conduc la aceleași concluzii
+                \item \textbf{Divergență}: date financiare cu heteroscedasticitate condiționată --- PP preferabil
+                \item \textbf{Divergență}: serii cu componentă MA cu rădăcini aproape de $-1$ --- ADF preferabil (PP poate supra-respinge)
+                \item \textbf{Bună practică}: rulați ambele teste și comparați rezultatele
+            \end{itemize}
+        \end{block}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testul DF-GLS (Elliott, Rothenberg, Stock 1996)}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{defn}[DF-GLS --- Dickey-Fuller cu detrending GLS]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Principiu}: elimină componenta deterministă prin \textbf{GLS} \textit{înainte} de testul ADF
+                \item \textbf{Pasul 1}: seria detrended GLS: $\tilde{y}_t = y_t - \hat{\beta}_0 - \hat{\beta}_1 t$, cu $\hat{\beta}$ estimați prin quasi-diferențiere ($\bar{\alpha} = 1 - c/T$)
+                \item \textbf{Pasul 2}: ADF pe $\tilde{y}_t$: \ $\Delta \tilde{y}_t = \gamma\, \tilde{y}_{t-1} + \sum_{j=1}^{p} \phi_j \Delta \tilde{y}_{t-j} + e_t$
+                \item $H_0$: rădăcină unitară ($\gamma = 0$) \ vs.\ $H_1$: staționar
+            \end{itemize}
+        \end{defn}
+        \vspace{-1mm}
+        \begin{block}{Avantaje față de ADF}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Putere superioară}: cel mai puternic test asimptotic din clasa testelor de rădăcină unitară
+                \item \textbf{Distorsiune de mărime redusă}: mai puțin sensibil la specificarea greșită a lag-urilor
+            \end{itemize}
+        \end{block}
+        \vspace{-1mm}
+        \begin{exampleblock}{Python}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \texttt{from arch.unitroot import DFGLS} \quad $\rightarrow$ \quad \texttt{DFGLS(y, trend='ct').summary()}
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 7: APLICAȚIE PE DATE REALE
+%=============================================================================
+\section{Aplicație pe Date Financiare}
+
+\begin{frame}{Analiza S\&P 500: prezentare generală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{sp500_analysis.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Observații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Prețuri}: Trend ascendent, $I(1)$, nestaționar; \textbf{Randamente}: Medie $\approx 0$, $I(0)$, staționar
+                \item \textbf{ACF $r_t$}: $\approx 0$ (eficiență); \textbf{ACF $r_t^2$}: semnificativ (\textit{volatility clustering})
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_ts\_basics}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_ts_basics}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Fapte stilizate ale randamentelor financiare}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{returns_distribution.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                {\scriptsize
+                \begin{block}{Proprietăți observate}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Asimetrie negativă (coadă stângă)
+                        \item Kurtosis excesiv ($\gg 3$)
+                        \item Cozi groase (\textit{heavy tails})
+                    \end{itemize}
+                \end{block}
+                }
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                {\scriptsize
+                \begin{alertblock}{Implicații}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Distribuția normală inadecvată
+                        \item Evenimente extreme mai probabile
+                        \item Necesită distribuții cu cozi groase
+                        \item Ex.: Student-$t$, GED (Generalized Error Distribution)
+                    \end{itemize}
+                \end{alertblock}
+                }
+            \end{column}
+        \end{columns}
+        \hfill\quantlet{TSA\_ch1\_ts\_basics}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_ts_basics}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{\textit{Volatility clustering}: gruparea volatilității}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{volatility_clustering.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{block}{Observații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Randamente mari (în valoare absolută) tind să fie urmate de randamente mari
+                \item Perioade de calm sunt urmate de perioade de volatilitate ridicată
+                \item \textbf{Volatilitate variabilă în timp} (\textit{volatility clustering}) $\Rightarrow$ necesită modele specializate (Cap.\ 5)
+                \item Modele ARCH (\textit{AutoRegressive Conditional Heteroskedasticity}) / GARCH (\textit{Generalized ARCH})
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch1\_ts\_basics}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_ts_basics}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% STUDIU DE CAZ
+%=============================================================================
+\section{Studiu de Caz: Testarea Staționarității}
+
+\begin{frame}{Studiu de caz: PIB-ul trimestrial al României}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.50\textheight, keepaspectratio]{ch1_case_gdp_raw.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch1\_case\_gdp}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_case_gdp}
+        \vspace{-0.2cm}
+        {\scriptsize
+        \begin{block}{Analiza inițială}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Date}: PIB anual România 1990--2024 (35 obs., sursa: World Bank, prețuri constante 2015 USD)
+                \item \textbf{Observații}: Trend ascendent, cu posibilă componentă sezonieră
+                \begin{itemize}
+                    \item Șocuri vizibile: criza 1999, criza financiară globală 2009, COVID-19 2020
+                \end{itemize}
+                \item \textbf{Ipoteză de lucru}: Serie nestaționară $\Rightarrow$ testăm cu ADF și KPSS
+            \end{itemize}
+        \end{block}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testarea staționarității: ADF și KPSS}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Testul ADF}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Ipoteză}: $H_0$: Rădăcină unitate
+                    \item \textbf{Rezultat}: Stat. ADF: $-0.14$
+                    \begin{itemize}
+                        \item p-value: $0.94$
+                        \item Nu respingem $H_0$
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Testul KPSS}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Ipoteză}: $H_0$: Staționară
+                    \item \textbf{Rezultat}: Stat. KPSS: $0.95^{**}$
+                    \begin{itemize}
+                        \item p-value: $< 0.01$
+                        \item Respingem $H_0$
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+        \vspace{0.2cm}
+        \begin{alertblock}{Concluzie: Ambele teste concordă}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Seria PIB este \textbf{nestaționară} $\Rightarrow$ necesită diferențiere
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Testul Zivot-Andrews (1992): rădăcină unitară cu breakpoint}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{block}{Model C (shift în medie și trend)}
+            \[
+                y_t = \mu + \beta\, t + \gamma\, y_{t-1} + \theta\, DU_t(\tau) + \delta\, DT_t(\tau) + \sum_{j=1}^{k} \phi_j \Delta y_{t-j} + e_t
+            \]
+            \vspace{-3mm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $DU_t(\tau) = \mathbf{1}(t > T_B)$, \quad $DT_t(\tau) = \mathbf{1}(t > T_B)\cdot(t - T_B)$
+                \item $H_0$: $\gamma = 1$ (rădăcină unitară) \quad vs.\ \quad $H_1$: $|\gamma| < 1$ cu breakpoint la $T_B$
+            \end{itemize}
+        \end{block}
+        }
+        \vspace{-2mm}
+        \begin{center}
+            \includegraphics[width=0.95\textwidth, height=0.35\textheight, keepaspectratio]{ch1_zivot_andrews.pdf}
+        \end{center}
+        \vspace{-2mm}
+        {\scriptsize
+        \texttt{from arch.unitroot import ZivotAndrews; ZivotAndrews(y, method='c').summary()}
+        }
+        \hfill\quantlet{TSA\_ch1\_case\_gdp}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_case_gdp}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Diferențierea: obținerea staționarității}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+            \includegraphics[width=0.96\textwidth, height=0.52\textheight, keepaspectratio]{ch1_gdp_differencing.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{alertblock}{Teste după transformare}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item ADF: $-4.95$ (p $<$ 0.001) \textcolor{Forest}{$\checkmark$}
+                    \item KPSS: $0.10$ (p $>$ 0.10) \textcolor{Forest}{$\checkmark$}
+                    \item Ambele confirmă staționaritate
+                \end{itemize}
+            \end{alertblock}
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Concluzie}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item $PIB_t$: $I(1)$ — nestaționar
+                    \item $\ln PIB_t$: $I(1)$ — varianță stabilizată
+                    \item $\Delta\ln PIB_t$: $I(0)$ — \textcolor{Forest}{staționar}
+                    \item Modelăm $\Delta\ln PIB_t$ = creșterea economică
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+        }
+        \hfill\quantlet{TSA\_ch1\_case\_gdp}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_case_gdp}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+\section{Utilizare IA}
+%=============================================================================
+
+\begin{frame}{Exercițiu IA: Gândire critică}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-2mm}
+        \begin{block}{\footnotesize Prompt de analizat în ChatGPT / Claude / Copilot}
+            {\small
+            ``Folosind yfinance, descarcă cursul zilnic EUR/RON (EURRON=X) din 2020-01-01 până în 2024-12-31 (aprox.\ 1.250 observații). Testează dacă seria este staționară folosind testele ADF și KPSS. Ajustează un model adecvat și prognozează cursul pentru următoarele 5 zile lucrătoare. Evaluează fiabilitatea prognozei.''
+            }
+        \end{block}
+        \vspace{-1mm}
+        {\small
+        \textbf{Exercițiu}:
+        \begin{enumerate}\setlength{\itemsep}{2pt}
+            \item Rulați promptul într-un LLM (\textit{Large Language Model}) la alegere și analizați critic răspunsul.
+            \item Descărcați date reale EUR/RON și reproduceți analiza. Rezultatele coincid?
+            \item Testul ADF este specificat corect (trend, lag-uri)? Ce se schimbă dacă modificați opțiunile?
+            \item Comparați prognoza modelului AI cu un \textit{benchmark} naiv ($\hat{X}_{t+1} = X_t$).
+            \item Dacă seria este un mers aleatoriu, are sens să estimăm un model ARMA?
+        \end{enumerate}
+        }
+        \vspace{-1mm}
+        \begin{alertblock}{}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item {\small \textbf{Atenție}: Un RMSE (\textit{Root Mean Squared Error}) mic și coeficienți semnificativi \textit{nu garantează} o prognoză utilă în afara eșantionului.}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% REZUMAT
+%=============================================================================
+\section{Rezumat}
+
+\begin{frame}{Concluzii principale}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Rezumat}
+            \small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Proces stochastic}: colecție de variabile aleatoare indexate după timp
+                \item \textbf{Staționaritate slabă}: medie, varianță, autocovarianță constante
+                \item \textbf{Zgomot alb}: $\varepsilon_t \sim WN(0, \sigma^2)$
+                \begin{itemize}
+                    \item Staționar, ACF $= 0$ pentru $h \neq 0$
+                \end{itemize}
+                \item \textbf{Mers aleator}: $X_t = X_{t-1} + \varepsilon_t$
+                \begin{itemize}
+                    \item Nestaționar, $\Var(X_t) = t\sigma^2$
+                \end{itemize}
+                \item \textbf{ACF/PACF}: instrumente esențiale pentru identificarea structurii
+                \item \textbf{Diferențierea}: transformă serii nestaționare în staționare
+                \item \textbf{Teste de rădăcină unitară}:
+                \begin{itemize}
+                    \item ADF ($H_0$: rădăcină unitară) vs KPSS ($H_0$: staționar)
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Formule importante}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            {\small
+            \begin{block}{Staționaritate slabă}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Momente constante}:
+                    \begin{itemize}
+                        \item $\E[X_t] = \mu$ (medie constantă)
+                        \item $\Var(X_t) = \sigma^2$ (varianță constantă)
+                    \end{itemize}
+                    \item \textbf{Autocovarianță}: $\gamma(h) = \Cov(X_t, X_{t+h})$
+                    \item \textbf{Autocorelație}: $\rho(h) = \gamma(h)/\gamma(0)$
+                \end{itemize}
+            \end{block}
+
+            \begin{block}{Operatorul lag}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Lag}: $LX_t = X_{t-1}$
+                    \item \textbf{Diferență}: $\Delta X_t = (1-L)X_t$
+                \end{itemize}
+            \end{block}
+            }
+
+            \column{0.48\textwidth}
+            {\small
+            \begin{exampleblock}{Zgomot alb (WN)}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Model}: $\varepsilon_t \sim WN(0, \sigma^2)$
+                    \item \textbf{ACF}: $\rho(h) = 0$ pentru $h \neq 0$
+                \end{itemize}
+            \end{exampleblock}
+
+            \begin{alertblock}{Mers aleator (RW)}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Model}: $X_t = X_{t-1} + \varepsilon_t$
+                    \item \textbf{Varianță}: $\Var(X_t) = t\sigma^2$ (crește)
+                \end{itemize}
+            \end{alertblock}
+            }
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Ce urmează}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Capitolul 2: Modele ARMA}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{AR($p$)}: Modele autoregresive
+                    \item \textbf{MA($q$)}: Modele cu medie mobilă
+                    \item \textbf{ARMA($p,q$)}: Modele mixte autoregresive--medie mobilă
+                    \item \textbf{Identificare}: cu ACF/PACF
+                \end{itemize}
+            \end{block}
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Ce vom învăța}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Estimare}: Parametrii modelului (MLE, OLS)
+                    \item \textbf{Diagnostic}: Verificarea reziduurilor (test Ljung-Box)
+                    \item \textbf{Prognoză}: Previziuni punctuale și intervale de încredere
+                    \item \textbf{Selecție}: AIC (\textit{Akaike Information Criterion}), BIC (\textit{Bayesian Information Criterion})
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNE: QUIZ
+%=============================================================================
+\section{Quiz}
+
+\begin{frame}{Întrebarea 1}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Care sunt cele trei condiții pentru staționaritatea slabă (în covarianță)?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Media zero, varianța infinită, covarianță dependentă de timp\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Media constantă, varianța constantă, autocovarianța depinde doar de lag\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Distribuție normală, independență, varianță unitară\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Trend liniar, sezonalitate constantă, reziduuri albe
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 1: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{ch1_quiz2_stationarity.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[X_t]=\mu$, $\Var(X_t)=\sigma^2$, $\gamma(t,s)=\gamma(|t-s|)$
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 2}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Care este ipoteza nulă ($H_0$) în testul ADF (Augmented Dickey-Fuller)?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Seria este staționară\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Seria are rădăcină unitară (este nestaționară)\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Seria nu are autocorelație\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Seria are distribuție normală
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 2: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{adf_test_visualization.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $H_0$: rădăcină unitară; $\tau_{ADF} <$ val.\ critică $\Rightarrow$ serie staționară
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_unit\_root\_tests}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_unit_root_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 3}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Care este ipoteza nulă ($H_0$) în testul KPSS?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Seria are rădăcină unitară (nestaționară)\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Seria este staționară\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Seria este un mers aleatoriu\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Seria are trend determinist
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 3: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{ch1_stationarity.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item KPSS: $H_0$ staționară (opus ADF). Folosiți ambele teste.
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_unit\_root\_tests}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_unit_root_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 4}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Care este proprietatea fundamentală a varianței unui mers aleatoriu $X_t = X_{t-1} + \varepsilon_t$?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Varianța este constantă: $\Var(X_t) = \sigma^2$\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Varianța crește liniar cu timpul: $\Var(X_t) = t\sigma^2$\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Varianța scade cu timpul\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Varianța este zero
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 4: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{ch1_quiz4_wn_rw.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Var(X_t) = t\sigma^2$ crește liniar $\Rightarrow$ nestaționar
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 5}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Cum arată ACF-ul unui mers aleatoriu (serie nestaționară cu rădăcină unitară)?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Toate valorile sunt zero după lag 0\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Scade exponențial rapid\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Scade foarte lent (persistență ridicată)\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Oscilează între pozitiv și negativ
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 5: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{rw_vs_stationary.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (C)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item ACF $\approx$ 1 pentru multe lag-uri, scădere lentă $\Rightarrow$ test ADF
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_random\_walk}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_random_walk}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 6}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{alertblock}{Întrebare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Cum obținem randamente staționare dintr-o serie de prețuri financiare $P_t$?
+            \end{itemize}
+        \end{alertblock}
+
+        \vspace{0.3cm}
+
+        \begin{block}{Variante de răspuns}
+
+            \textcolor{MainBlue}{\textbf{(A)}} Diferențiere simplă: $\Delta P_t = P_t - P_{t-1}$\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(B)}} Logaritmare apoi diferențiere: $r_t = \ln P_t - \ln P_{t-1}$\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(C)}} Doar logaritmare: $\ln P_t$\\[3pt]
+
+            \textcolor{MainBlue}{\textbf{(D)}} Standardizare: $(P_t - \bar{P})/s_P$
+
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 6: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.58\textheight, keepaspectratio]{differencing_effect.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Randamente log: $r_t = \ln P_t - \ln P_{t-1}$
+                \item Mai întâi $\ln$ (stabilizează varianța), apoi $\Delta$ (elimină trendul) $\Rightarrow$ serie staționară
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_operators}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_operators}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 7: PACF și identificarea modelului}
+    \begin{cminipage}{0.95\textwidth}
+        {\small
+        \begin{block}{Întrebare}
+            Ce indică un PACF care se anulează brusc după lag 2, în timp ce ACF descrește exponențial?
+        \end{block}
+        \vspace{0.3cm}
+        \begin{enumerate}
+            \item[\textcolor{MainBlue}{\textbf{(A)}}] Un proces MA(2)
+            \item[\textcolor{MainBlue}{\textbf{(B)}}] Un proces AR(2)
+            \item[\textcolor{MainBlue}{\textbf{(C)}}] Un proces ARMA(2,2)
+            \item[\textcolor{MainBlue}{\textbf{(D)}}] Un mers aleatoriu
+        \end{enumerate}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Întrebarea 7: Răspuns}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.42\textheight, keepaspectratio]{ch1_acf_examples.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\small
+        \begin{exampleblock}{Răspuns: (B) --- Proces AR(2)}
+            \begin{itemize}\setlength{\itemsep}{2pt}
+                \item \textbf{Regula de identificare}: PACF cu tăietură bruscă la lag $p$ $+$ ACF cu descreștere exponențială $\Rightarrow$ AR($p$)
+                \item PACF $\neq 0$ la lag 1 și 2, apoi $\approx 0$ pentru $h > 2$ $\Rightarrow$ \textbf{AR(2)}
+                \item Comparație: MA($q$) are ACF cu tăietură la lag $q$ și PACF cu descreștere exponențială (invers)
+            \end{itemize}
+        \end{exampleblock}
+        }
+        \hfill\quantlet{TSA\_ch1\_acf\_patterns}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_acf_patterns}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% EXTENSII: ANALIZĂ SPECTRALĂ, PROCESE LOCAL STAȚIONARE, WAVELET
+%=============================================================================
+\section{Extensii: Analiză Spectrală și Wavelet}
+
+\begin{frame}{Densitatea spectrală: domeniul frecvențelor}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{defn}[Densitatea spectrală de putere]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $S(\omega) = \frac{1}{2\pi} \sum_{h=-\infty}^{\infty} \gamma(h)\, e^{-i\omega h}$, \quad $\omega \in [-\pi, \pi]$
+                \item Descompune varianța pe frecvențe: $\gamma(0) = \int_{-\pi}^{\pi} S(\omega)\, d\omega$; perechea Fourier a ACF
+            \end{itemize}
+        \end{defn}
+        }
+        \vspace{-1mm}
+        \begin{columns}[T]
+            \begin{column}{0.45\textwidth}
+                {\footnotesize
+                \begin{block}{Interpretare}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item $S(\omega)$ mare la $\omega$ mic $\Rightarrow$ ciclu lung dominant
+                        \item Zgomot alb: $S(\omega) = \frac{\sigma^2}{2\pi}$ (plat)
+                        \item AR(1) $\phi > 0$: putere concentrată la frecvențe joase
+                        \item Periodograma: estimator empiric al lui $S(\omega)$
+                        \item \textcolor{MainBlue}{Detalii: Capitolul 12}
+                    \end{itemize}
+                \end{block}
+                }
+            \end{column}
+            \begin{column}{0.52\textwidth}
+                \begin{center}
+                    \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{ch12_spectral_density_gallery.pdf}
+                \end{center}
+            \end{column}
+        \end{columns}
+        \vspace{-2mm}
+        \hfill\quantlet{TSA\_ch12\_spectral\_density}{https://github.com/danpele/TSA/tree/main/TSA\_ch12/TSA\_ch12\_spectral\_density}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Procese local staționare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{defn}[Proces local staționar (Dahlhaus, 1997)]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Un proces $\{X_{t,T}\}$ este \textbf{local staționar} dacă admite o reprezentare spectrală cu funcție de transfer variabilă în timp $A(u,\omega)$, unde $u = t/T \in [0,1]$
+                \item \textbf{Intuiție}: procesul ,, arată'' staționar în vecinătăți mici de timp, dar proprietățile sale evoluează lent la scală globală
+            \end{itemize}
+        \end{defn}
+        }
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Contrast cu staționaritatea globală}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Global staționar}: densitatea spectrală $f(\omega)$ constantă în timp
+                        \item \textbf{Local staționar}: densitatea spectrală $f(u,\omega)$ variază neted cu $u = t/T$ (timp rescalat)
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Aplicații}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Randamente financiare cu regimuri de volatilitate variabile
+                        \item Serii macroeconomice cu rupturi structurale
+                        \item Semnale EEG/ECG cu structură spectrală variabilă în timp
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+        }
+        \hfill\quantlet{TSA\_ch1\_stationarity}{https://github.com/QuantLet/TSA/tree/main/TSA_ch1/TSA_ch1_stationarity}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Analiza wavelet: wavelet Morlet și comparație cu Fourier}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.52\textheight, keepaspectratio]{ch12_morlet_wavelet.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{CWT}: $W_X(a,b) = \frac{1}{\sqrt{a}} \int X(t)\, \psi^{*}\!\left(\frac{t-b}{a}\right) dt$ --- localizat în timp ($b$) și frecvență ($1/a$)
+                \item \textbf{Avantaj față de Fourier}: localizare \textit{simultană} timp--frecvență; analiza Fourier clasică pierde complet informația temporală
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch12\_wavelet}{https://github.com/danpele/TSA/tree/main/TSA_ch12/TSA_ch12_wavelet}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Analiza wavelet vs. Fourier: comparație vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.52\textheight, keepaspectratio]{ch12_wavelet_vs_fourier.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Fourier}: descompune în frecvențe globale --- nu poate detecta \textit{când anume} în timp apar ciclurile
+                \item \textbf{Wavelet}: detectează cicluri \textit{locale} în timp --- identifică rupturi structurale, schimbări de regim și periodicități tranzitorii
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch12\_wavelet}{https://github.com/danpele/TSA/tree/main/TSA_ch12/TSA_ch12_wavelet}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Scalograma PIB: analiză timp-frecvență}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+            \includegraphics[width=0.98\textwidth, height=0.52\textheight, keepaspectratio]{ch12_gdp_scalogram.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Scalograma: $|W_X(a,b)|^2$}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Reprezentare timp--scală cu \textbf{rezoluție adaptivă} --- detectează cicluri la diferite orizonturi temporale
+                \item Frecvențe înalte $\Rightarrow$ fereastră îngustă (rezoluție temporală bună); frecvențe joase $\Rightarrow$ fereastră largă (rezoluție spectrală bună) --- principiul incertitudinii Heisenberg
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch12\_scalogram}{https://github.com/danpele/TSA/tree/main/TSA_ch12/TSA_ch12_scalogram}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Coerența wavelet și descompunerea varianței}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Coerența wavelet}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Măsoară \textbf{co-mișcarea} dintre două serii la diferite scale temporale
+                        \item Analog al coeficientului de corelație, dar \textit{localizat} simultan în timp și frecvență
+                        \item Aplicații: relația petrol--burse de valori, sincronizarea ciclurilor economice internaționale
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Descompunerea varianței wavelet}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item $\Var(X) = \sum_{j=1}^{J} \nu_j^2$ (pe scale)
+                        \item Scala $j$: perioade $\approx [2^{j}, 2^{j+1})$ perioade de eșantionare
+                        \item Identifică orizonturile temporale dominante (scurt, mediu, lung)
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+        }
+        \vspace{-1mm}
+        {\footnotesize
+        \begin{block}{Pachete software}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Python}: \texttt{pywt} (PyWavelets) --- DWT, CWT, familii wavelet
+                \item \textbf{R}: \texttt{WaveletComp} --- coerență wavelet, scalograme
+                \item \textbf{R}: \texttt{wavelets} --- DWT, MODWT, analiză multirezoluție
+            \end{itemize}
+        \end{block}
+        }
+        \hfill\quantlet{TSA\_ch12\_wavelet}{https://github.com/danpele/TSA/tree/main/TSA_ch12/TSA_ch12_wavelet}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% BIBLIOGRAFIE
+%=============================================================================
+\section{Bibliografie}
+
+\begin{frame}{Bibliografie I}
+    \vspace{-0.3cm}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Manuale fundamentale}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Hamilton, J.D. (1994). \textit{Time Series Analysis}, Princeton University Press.
+                \item Hyndman, R.J., \& Athanasopoulos, G. (2021). \textit{Forecasting: Principles and Practice}, 3rd ed., OTexts.
+                \item Shumway, R.H., \& Stoffer, D.S. (2017). \textit{Time Series Analysis and Its Applications}, 4th ed., Springer.
+            \end{itemize}
+            }
+        \end{block}
+
+        \begin{exampleblock}{Referințe clasice}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Wold, H. (1938). \textit{A Study in the Analysis of Stationary Time Series}, Almqvist \& Wiksell.
+                \item Bartlett, M.S. (1946). On the Theoretical Specification and Sampling Properties of Autocorrelated Time-Series, \textit{JRSS Supplement}, 8(1), 27--41.
+                \item Box, G.E.P., \& Jenkins, G.M. (1970). \textit{Time Series Analysis: Forecasting and Control}, Holden-Day.
+            \end{itemize}
+            }
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Bibliografie II}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Teste de staționaritate}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Dickey, D.A., \& Fuller, W.A. (1979). Distribution of the Estimators for Autoregressive Time Series with a Unit Root, \textit{JASA}, 74(366), 427--431.
+                \item Kwiatkowski, D., Phillips, P.C.B., Schmidt, P., \& Shin, Y. (1992). Testing the Null Hypothesis of Stationarity Against the Alternative of a Unit Root, \textit{Journal of Econometrics}, 54(1--3), 159--178.
+                \item Phillips, P.C.B., \& Perron, P. (1988). Testing for a Unit Root in Time Series Regression, \textit{Biometrika}, 75(2), 335--346.
+            \end{itemize}
+            }
+        \end{block}
+
+        \begin{exampleblock}{Resurse online și cod}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Quantlet}: \url{https://quantlet.com} -- Platformă de cod pentru metode cantitative
+                \item \textbf{Quantinar}: \url{https://quantinar.com} -- Platformă de învățare pentru metode cantitative
+                \item \textbf{GitHub TSA}: \url{https://github.com/QuantLet/TSA/tree/main/TSA_ch1} -- Cod Python pentru acest capitol
+            \end{itemize}
+            }
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Bibliografie III}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Procese local staționare și analiză wavelet}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Dahlhaus, R. (1997). Fitting Time Series Models to Nonstationary Processes, \textit{The Annals of Statistics}, 25(1), 1--37.
+                \item Percival, D.B., \& Walden, A.T. (2000). \textit{Wavelet Methods for Time Series Analysis}, Cambridge University Press.
+                \item Gençay, R., Selçuk, F., \& Whitcher, B. (2002). \textit{An Introduction to Wavelets and Other Filtering Methods in Finance and Economics}, Academic Press.
+                \item Rua, A., \& Nunes, L.C. (2009). International Comovement of Stock Market Returns: A Wavelet Analysis, \textit{Journal of Empirical Finance}, 16(4), 632--639.
+            \end{itemize}
+            }
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{}
+    \begin{cminipage}{0.95\textwidth}
+        \centering
+        \vspace{1cm}
+
+        \Huge\textcolor{MainBlue}{Vă mulțumim!}
+
+        \vspace{0.8cm}
+
+        \Large Întrebări?
+
+        \vspace{1cm}
+
+        \normalsize
+        Materialele cursului sunt disponibile la: \url{https://danpele.github.io/Time-Series-Analysis/}
+
+        \vspace{0.3cm}
+
+        \href{https://quantlet.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{ql_logo.png}} Quantlet} \hspace{0.5cm}
+        \href{https://quantinar.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{qr_logo.png}} Quantinar}
+    \end{cminipage}
+\end{frame}
+
+\end{document}
+

@@ -243,7 +243,7 @@
 % TITLE INFORMATION
 %=============================================================================
 \title[Statistics of Financial Markets]{Statistics of Financial Markets}
-\subtitle{Chapter 2: Statistical Distributions in Capital Markets}
+\subtitle{Chapter 2: Statistical Distributions for Financial Markets}
 \author[D.T. Pele]{Daniel Traian PELE}
 \institute{Bucharest University of Economic Studies\\
 IDA Institute Digital Assets\\
@@ -263,820 +263,1807 @@ MSCA Digital Finance}
 {
 \setbeamertemplate{headline}{}
 \setbeamertemplate{footline}{}
-\begin{frame}[noframenumbering]
-\titlepage
+\begin{frame}[plain]
+    \titlepage
 \end{frame}
 }
 
 %=============================================================================
-% SECTION: MOTIVATION
+% LEARNING OBJECTIVES
 %=============================================================================
-\section{Motivation}
-
-%-----------------------------------------------------------------------------
-% Slide: Why Study Stable Distributions? (1/2)
-%-----------------------------------------------------------------------------
-\begin{frame}{Why Study Stable Distributions?}
-
-\begin{itemize}
-    \item Financial returns often exhibit \textbf{heavy tails} and \textbf{skewness} that the normal distribution cannot capture.
-    \item Empirical evidence consistently shows that the Gaussian assumption underestimates the probability of extreme events (crashes, booms).
-    \item \textbf{Stable distributions} provide a flexible framework for modeling such behavior.
-    \item They generalize the normal distribution while allowing for:
-    \begin{itemize}
-        \item Heavy tails (higher probability of extreme values)
-        \item Asymmetry (skewness in returns)
-        \item Varying degrees of peakedness
-    \end{itemize}
-    \item Understanding these distributions is essential for accurate risk assessment in financial markets.
-\end{itemize}
-
+\begin{frame}{Learning Objectives}
+    \begin{block}{By the end of this chapter, you will be able to:}
+    \begin{enumerate}
+        \item[\textcolor{MainBlue}{\textbf{1.}}] \textbf{Explain} why the choice of distribution affects financial risk estimation
+        \item[\textcolor{MainBlue}{\textbf{2.}}] \textbf{Compute} log-returns and interpret their statistical properties
+        \item[\textcolor{MainBlue}{\textbf{3.}}] \textbf{Identify} stylized facts of returns (heavy tails, skewness, clustering)
+        \item[\textcolor{MainBlue}{\textbf{4.}}] \textbf{Compare} Normal, Student-$t$, stable, and EVT distributions
+        \item[\textcolor{MainBlue}{\textbf{5.}}] \textbf{Apply} Value-at-Risk and Expected Shortfall under different distributional assumptions
+        \item[\textcolor{MainBlue}{\textbf{6.}}] \textbf{Evaluate} GARCH models with non-Gaussian innovations
+    \end{enumerate}
+    \end{block}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Why Study Stable Distributions? (2/2)
-%-----------------------------------------------------------------------------
-\begin{frame}{Why Study Stable Distributions?}
+%=============================================================================
+% TABLE OF CONTENTS
+%=============================================================================
+{
+\setbeamertemplate{headline}{%
+    \vskip10pt%
+    \hbox to \paperwidth{\hskip0.5cm\hfill\hskip0.5cm}%
+    \vskip4pt%
+    {\color{FooterGray}\hrule height 0.4pt}%
+}
+\begin{frame}{}
+    {\color{FooterGray}\hrule height 0.4pt}
+    \vspace{0.1cm}
+    {\Large\textcolor{IDAred}{\textbf{Contents}}}
+    \vspace{0.2cm}
+    {\small
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{enumerate}
+                \item Introduction
+                \item From Prices to Log-Returns
+                \item The Normal Distribution
+                \item Stylized Facts
+                \item The Student-$t$ Distribution
+                \item Asymmetric Distributions
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{enumerate}\setcounter{enumi}{6}
+                \item Stable Distributions
+                \item Extreme Value Theory
+                \item Distribution Comparison
+                \item Risk Management
+                \item Modern Extensions
+            \end{enumerate}
+        \end{column}
+    \end{columns}
+    }
+\end{frame}
+}
 
+%#############################################################################
+\section{Introduction --- Why Distributions Matter}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Why Does the Distribution Choice Matter?}
 \begin{itemize}
-    \item Stable distributions arise naturally from the \textbf{Generalized Central Limit Theorem} (GCLT).
-    \item While the classical CLT leads to the normal distribution, the GCLT shows that sums of heavy-tailed random variables converge to stable laws.
-    \item Key applications in finance:
-    \begin{itemize}
-        \item \textbf{Risk management}: More accurate Value-at-Risk and Expected Shortfall estimates under heavy-tailed assumptions.
-        \item \textbf{Option pricing}: Models based on stable distributions capture the volatility smile observed in option markets.
-        \item \textbf{Portfolio theory}: Optimal allocation under non-Gaussian returns requires stable distribution frameworks.
-    \end{itemize}
-    \item Mandelbrot (1963) first applied stable distributions to model cotton prices, showing that financial data deviate significantly from normality.
-    \item Fama (1965) extended this analysis to stock market returns.
+\item If we assume the wrong distribution, we \textbf{underestimate} the probability of extreme losses
+\item \textbf{Example}: October 19, 1987 --- the S\&P~500 fell 20.5\% in a single day
+\begin{itemize}
+\item Under the Normal assumption: a $\sim$25$\sigma$ event with probability $\approx 10^{-135}$
+\item Yet it happened --- the Normal distribution is inadequate for tail events
+\end{itemize}
+\item Banks and regulators need to quantify ``how bad can it get?''
+\item This requires \textbf{accurate distributional models}
 \end{itemize}
 
+\vspace{0.3cm}
+\begin{alertblock}{Key Insight}
+\begin{itemize}
+\item The choice of probability distribution directly determines how much capital a bank must hold against potential losses
+\end{itemize}
+\end{alertblock}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Motivating Example -- Heavy Tails in Financial Returns
-%-----------------------------------------------------------------------------
-\begin{frame}{Motivating Example -- Heavy Tails in Financial Returns}
-\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
+%--- Y3 Slide 2 ---
+\begin{frame}{The Distribution Choice Problem}
+\begin{itemize}
+\item \textbf{Preview}: In Section~2.10 we will formally define \textbf{Value-at-Risk (VaR)}, a key risk measure that depends entirely on the distributional assumption
+\item The candidates we will study:
+\begin{itemize}
+\item \textbf{Normal} --- the classical benchmark (thin tails)
+\item \textbf{Student-$t$} --- heavier tails, finite higher moments
+\item \textbf{Stable} --- heaviest tails, infinite variance possible
+\item \textbf{EVT} --- models only the tails, agnostic about the center
+\end{itemize}
+\item Each model implies a different answer to ``how bad can it get?''
+\end{itemize}
 
+\vspace{0.2cm}
 \begin{center}
-    \includegraphics[width=0.85\textwidth]{ch2_sp500_stable_fit.png}
-\end{center}
-
-\vspace{-0.2cm}
-{\small S\&P 500 log-returns: the stable distribution captures the heavy tails and leptokurtosis. On a log scale, the Gaussian severely underestimates tail probabilities.}
-
-\end{frame}
-
-%=============================================================================
-% SECTION: INTRODUCTION
-%=============================================================================
-\section{Introduction}
-
-%-----------------------------------------------------------------------------
-% Slide: Outline
-%-----------------------------------------------------------------------------
-\begin{frame}{Outline}
-
-\begin{enumerate}
-    \item Motivation
-    \item Introduction
-    \item Definition
-    \item Properties
-    \item Parameterization
-    \item Estimation
-    \item Simulation
-    \item Conclusions
-    \item References
-\end{enumerate}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Stable Distributions
-%-----------------------------------------------------------------------------
-\begin{frame}{Stable Distributions}
-
-\begin{itemize}
-    \item A family of probability distributions characterized by \textbf{four parameters}:
-    \begin{itemize}
-        \item $\alpha \in (0, 2]$ -- \textbf{stability index} (tail heaviness)
-        \item $\beta \in [-1, 1]$ -- \textbf{skewness parameter}
-        \item $\gamma > 0$ -- \textbf{scale parameter}
-        \item $\delta \in \mathbb{R}$ -- \textbf{location parameter}
-    \end{itemize}
-
-    \vspace{0.3cm}
-
-    \item Notation:
-    \[
-        X \sim S(\alpha, \beta, \gamma, \delta)
-    \]
-
-    \vspace{0.3cm}
-
-    \item The normal distribution is a \textbf{special case} with $\alpha = 2$.
-    \item For $\alpha < 2$, the distributions have \textbf{heavy tails} and \textbf{infinite variance}.
-    \item Stable distributions are the only possible limiting distributions for properly normalized sums of i.i.d.\ random variables.
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Historical Development
-%-----------------------------------------------------------------------------
-\begin{frame}{Historical Development}
-
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{>{\bfseries}l l p{8cm}}
-    \toprule
-    \textbf{Year} & \textbf{Contributor} & \textbf{Contribution} \\
-    \midrule
-    1925 & Paul L\'{e}vy & Introduced the class of stable distributions; derived characteristic function representations. \\
-    1954 & Gnedenko \& Kolmogorov & Rigorous treatment of limit theorems; formalized the Generalized Central Limit Theorem. \\
-    1963 & Benoit Mandelbrot & Applied stable distributions to model cotton price variations; challenged the Gaussian assumption in finance. \\
-    1965 & Eugene Fama & Extended Mandelbrot's work to stock market returns; demonstrated heavy tails in financial data. \\
-    1997--2003 & John P. Nolan & Developed efficient numerical methods for computing stable densities, distributions, and quantiles. \\
-    \bottomrule
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Tail Type} & \textbf{Kurtosis} & \textbf{Parameters} \\
+\midrule
+Normal & Exponential & 3 & 2 \\
+Student-$t$ & Power law & $>3$ & 3 \\
+Stable & Power law & $\infty$ & 4 \\
+GPD (EVT) & Flexible & --- & 2 \\
+\bottomrule
 \end{tabular}
 \end{center}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{Chapter Roadmap}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Foundations}
+\begin{enumerate}
+\item From prices to log-returns
+\item Normal distribution (benchmark)
+\item Stylized facts of financial returns
+\item Student-$t$ distribution
+\item Asymmetric distributions
+\end{enumerate}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Advanced Models \& Applications}
+\begin{enumerate}\setcounter{enumi}{5}
+\item Stable distributions
+\item Extreme Value Theory
+\item Distribution comparison
+\item \textcolor{Crimson}{\textbf{Risk management (VaR, ES)}}
+\item Modern extensions (GARCH)
+\end{enumerate}
+\end{column}
+\end{columns}
 
 \end{frame}
 
-%=============================================================================
-% SECTION: DEFINITION
-%=============================================================================
-\section{Definition}
+%--- MSc Slide 4 ---
+\begin{frame}{Distribution Choice and Derivative Pricing}
+\begin{itemize}
+\item Black--Scholes assumes log-normality $\Rightarrow$ constant implied volatility
+\item Empirical deviations produce the \textbf{volatility smile/skew}
+\item Portfolio optimization under non-Gaussian returns: mean-variance is suboptimal
+\item Regulatory context: Basel~II $\to$ Basel~III/IV framework
+\begin{itemize}
+\item Basel~II: 1\% VaR with Normal assumption
+\item Basel~III/IV: shift from 1\% VaR to 2.5\% ES
+\end{itemize}
+\end{itemize}
 
-%-----------------------------------------------------------------------------
-% Slide: What Are Stable Distributions?
-%-----------------------------------------------------------------------------
-\begin{frame}{What Are Stable Distributions?}
+\vspace{0.3cm}
+\begin{rmk}
+The entire Basel regulatory capital framework rests on distributional assumptions. Underestimating tail risk $\Rightarrow$ insufficient capital $\Rightarrow$ systemic fragility.
+\end{rmk}
+\end{frame}
 
-\begin{defn}[Stable Distribution]
-A random variable $X$ is said to have a \textbf{stable distribution} if for any $X_1, X_2$ independent and identically distributed copies of $X$, and for any positive constants $a, b > 0$, there exist constants $c > 0$ and $d \in \mathbb{R}$ such that:
+%--- PhD Slide 5 ---
+\begin{frame}{Model Uncertainty and Robust Risk Measures}
+\begin{itemize}
+\item \textbf{Model uncertainty}: Which distribution is ``correct''? Perhaps none.
+\item \textbf{Ambiguity aversion} (Ellsberg paradox in portfolio choice)
+\item Robust risk measures under distributional uncertainty:
 \[
-    aX_1 + bX_2 \stackrel{d}{=} cX + d.
+\rho_{\text{robust}}(X) = \sup_{Q \in \mathcal{Q}} \rho_Q(X)
+\]
+where $\mathcal{Q}$ is an ambiguity set of plausible distributions
+\item Minimax approaches: worst-case distributional analysis
+\item \textbf{Model risk quantification}: range of VaR/ES across plausible models provides a ``model risk premium''
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{From Prices to Log-Returns}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Definition of Log-Returns}
+\begin{defn}[Log-Return]
+The \textbf{log-return} (continuously compounded return) at time $t$ is:
+\[
+r_t = \ln\!\left(\frac{P_t}{P_{t-1}}\right) = \ln P_t - \ln P_{t-1}
+\]
+where $P_t$ is the asset price at time $t$.
+\end{defn}
+
+\vspace{0.2cm}
+\begin{itemize}
+\item \textbf{Additivity}: Multi-period returns are sums: $r_{t:t+k} = \sum_{i=1}^{k} r_{t+i}$
+\item \textbf{Approximation}: For small returns, $r_t \approx (P_t - P_{t-1})/P_{t-1}$
+\item \textbf{Statistical motivation}: Additive structure enables standard probability theory (CLT, stable limits)
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{Properties of Log-Returns}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Why log-returns?}
+\begin{itemize}
+\item Time-additive: $r_{[0,T]} = \sum_{t=1}^{T} r_t$
+\item Symmetric: $+5\%$ and $-5\%$ are comparable
+\item Unbounded below: can model large losses
+\item Enable CLT-based inference
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Simple vs.\ log-returns}
+\begin{itemize}
+\item Simple return: $R_t = \frac{P_t - P_{t-1}}{P_{t-1}}$
+\item Relationship: $r_t = \ln(1 + R_t)$
+\item Simple returns are \textit{not} additive across time
+\item But simple returns \textit{are} additive across portfolio assets
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Convention}
+\begin{itemize}
+\item Throughout this chapter, $r_t$ denotes the \textbf{log-return} unless stated otherwise
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+%--- MSc Slide 3 ---
+\begin{frame}{Continuous-Time Limit}
+\begin{itemize}
+\item Geometric Brownian Motion: $dS/S = \mu\,dt + \sigma\,dW$
+\item By It\^{o}'s lemma: $d\ln S = (\mu - \sigma^2/2)\,dt + \sigma\,dW$
+\item Jensen's inequality: $\E[\ln(P_T/P_0)] \neq \ln(\E[P_T/P_0])$
+\begin{itemize}
+\item The arithmetic mean return exceeds the geometric mean return
+\item Difference $\approx \sigma^2/2$ (``volatility drag'')
+\end{itemize}
+\item Log-return vs.\ simple return: implications for portfolio aggregation
+\begin{itemize}
+\item Log-returns: additive across \textit{time}
+\item Simple returns: additive across \textit{assets}
+\item Neither is additive in both dimensions simultaneously
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 4 ---
+\begin{frame}{Semimartingale Representation}
+\begin{itemize}
+\item Price processes modeled as \textbf{semimartingales}: $S_t = S_0 + A_t + M_t$
+\item It\^{o}'s lemma for semimartingales with jumps:
+\[
+d\ln S_t = \frac{dS_t}{S_{t^-}} - \frac{1}{2}\frac{d[S,S]_t^c}{S_{t^-}^2} + \sum_{s \leq t}\left(\ln\frac{S_s}{S_{s^-}} - \frac{\Delta S_s}{S_{s^-}}\right)
+\]
+\item Quadratic variation and realized volatility:
+\[
+[X,X]_t = \lim_{\|\Pi\| \to 0} \sum_{i} (X_{t_{i+1}} - X_{t_i})^2
+\]
+\item Non-continuous price processes: jumps and L\'{e}vy--It\^{o} decomposition
+\item High-frequency returns reveal microstructure noise, bid-ask bounce, Epps effect
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{The Normal Distribution}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{The Normal Distribution --- Definition and Properties}
+\begin{defn}[Normal Distribution]
+$X \sim N(\mu, \sigma^2)$ if:
+\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right), \quad x \in \R.
 \]
 \end{defn}
 
-\vspace{0.3cm}
-
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Moments}:
 \begin{itemize}
-    \item The notation $\stackrel{d}{=}$ denotes \textbf{equality in distribution}.
-    \item This property means that linear combinations of i.i.d.\ stable random variables have the \textbf{same type of distribution} (up to location and scale).
-    \item The distribution is ``stable'' under addition -- it preserves its form.
-    \item This is a much stronger property than what holds for, e.g., the exponential or uniform distributions.
+\item $\E[X] = \mu$, \quad $\Var(X) = \sigma^2$
+\item Skewness $= 0$
+\item Kurtosis $= 3$ (excess kurtosis $= 0$)
 \end{itemize}
-
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Key properties}:
+\begin{itemize}
+\item Symmetric about $\mu$
+\item 68--95--99.7 rule
+\item Tails decay as $e^{-x^2/2}$
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Defining Stability
-%-----------------------------------------------------------------------------
-\begin{frame}{Defining Stability}
-
+%--- Y3 Slide 2 ---
+\begin{frame}{Quantiles and the Central Limit Theorem}
 \begin{itemize}
-    \item For a stable distribution, the constant $c$ in the stability property satisfies:
-    \[
-        c = \left(a^\alpha + b^\alpha\right)^{1/\alpha}
-    \]
-    where $\alpha \in (0, 2]$ is the \textbf{stability index} (also called the \textbf{characteristic exponent}).
-
-    \vspace{0.3cm}
-
-    \item The value of $\alpha$ determines the tail behavior:
-    \begin{itemize}
-        \item When $\alpha = 2$: \textbf{Gaussian distribution} -- light tails, all moments exist.
-        \item When $\alpha < 2$: \textbf{Heavy-tailed distribution} -- tails decay as a power law:
-        \[
-            P(|X| > x) \sim C \cdot x^{-\alpha} \quad \text{as } x \to \infty.
-        \]
-    \end{itemize}
-
-    \vspace{0.3cm}
-
-    \item Moments: For $\alpha < 2$, only moments of order $p < \alpha$ are finite.
-    \begin{itemize}
-        \item If $\alpha < 2$: variance is \textbf{infinite}.
-        \item If $\alpha \leq 1$: mean is \textbf{undefined}.
-    \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Generalized Central Limit Theorem (GCLT)
-%-----------------------------------------------------------------------------
-\begin{frame}{Generalized Central Limit Theorem (GCLT)}
-
-\begin{thm}[Generalized Central Limit Theorem]
-If $X_1, X_2, \ldots$ are i.i.d.\ random variables with a distribution in the \textbf{domain of attraction} of a stable law, then there exist sequences of constants $a_n > 0$ and $b_n \in \mathbb{R}$ such that:
+\item \textbf{Quantiles}: The $\alpha$-quantile of $N(\mu, \sigma^2)$ is:
 \[
-    \frac{X_1 + X_2 + \cdots + X_n - b_n}{a_n} \xrightarrow{d} S(\alpha, \beta, \gamma, \delta).
+q_\alpha = \mu + \sigma\,\Phi^{-1}(\alpha)
+\]
+This will be used in Section~2.10 to define Value-at-Risk
+\item \textbf{Key quantiles}: $\Phi^{-1}(0.01) = -2.326$, \quad $\Phi^{-1}(0.05) = -1.645$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{thm}[Central Limit Theorem]
+If $X_1, X_2, \ldots$ are i.i.d.\ with $\E[X_i] = \mu$ and $\Var(X_i) = \sigma^2 < \infty$, then:
+\[
+\frac{\bar{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} N(0,1).
 \]
 \end{thm}
 
-\vspace{0.3cm}
-
 \begin{itemize}
-    \item The classical \textbf{Central Limit Theorem} (CLT) is a special case with $\alpha = 2$:
-    \begin{itemize}
-        \item When the $X_i$ have finite variance $\sigma^2$, the normalized sum converges to $N(0, \sigma^2)$.
-    \end{itemize}
-    \item The GCLT relaxes the finite variance assumption:
-    \begin{itemize}
-        \item Heavy-tailed distributions (with infinite variance) can still have well-defined limits.
-        \item These limits are stable distributions with $\alpha < 2$.
-    \end{itemize}
-    \item The normalizing constants satisfy $a_n \sim n^{1/\alpha}$ (rather than $a_n \sim \sqrt{n}$ for the classical CLT).
+\item \textbf{Stability}: Sum of independent normals is normal: $X + Y \sim N(\mu_1+\mu_2, \sigma_1^2+\sigma_2^2)$
 \end{itemize}
-
 \end{frame}
 
-%=============================================================================
-% SECTION: PROPERTIES
-%=============================================================================
-\section{Properties}
-
-%-----------------------------------------------------------------------------
-% Slide: Parameterization Overview
-%-----------------------------------------------------------------------------
-\begin{frame}{Parameterization Overview}
-
-\begin{itemize}
-    \item A stable random variable $X \sim S(\alpha, \beta, \gamma, \delta)$ is characterized by four parameters:
-\end{itemize}
-
-\vspace{0.2cm}
-
+%--- Y3 Slide 3 ---
+\begin{frame}{CLT Illustration}
 \begin{center}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{c c l}
-    \toprule
-    \textbf{Parameter} & \textbf{Range} & \textbf{Role} \\
-    \midrule
-    $\alpha$ & $(0, 2]$ & \textbf{Stability index} -- controls tail heaviness \\
-    $\beta$ & $[-1, 1]$ & \textbf{Skewness parameter} -- controls asymmetry \\
-    $\gamma$ & $(0, \infty)$ & \textbf{Scale parameter} -- controls spread \\
-    $\delta$ & $(-\infty, \infty)$ & \textbf{Location parameter} -- shifts the distribution \\
-    \bottomrule
-\end{tabular}
+\includegraphics[width=0.55\textwidth]{ch2_clt_illustration.png}
 \end{center}
-
-\vspace{0.3cm}
-
 \begin{itemize}
-    \item When $\beta = 0$, the distribution is \textbf{symmetric} about $\delta$.
-    \item When $\alpha = 2$, the parameter $\beta$ becomes irrelevant (Gaussian is always symmetric).
-    \item The parameterization is \textbf{not unique} -- several conventions exist in the literature.
+\item As $n$ increases, $\bar{X}_n$ approaches normality
+\item \textbf{Limitation}: CLT requires finite variance --- what if $\sigma^2 = \infty$?
 \end{itemize}
-
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Effects of Parameters
-%-----------------------------------------------------------------------------
-\begin{frame}{Effects of Parameters}
+%--- Y3 Slide 4 ---
+\begin{frame}{Normal Fit to S\&P 500 Returns}
+\quantlet{SFM\_ch2\_normal\_test}{https://github.com/QuantLet/SFM/tree/master/QID-3447-SFMnorm}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{ch2_normal_fit.png}
+\end{center}
+\begin{itemize}
+\item Normal PDF fits the center well but \textbf{misses the tails}
+\item Histogram has more mass in the tails than Normal predicts
+\end{itemize}
+\end{frame}
 
+%--- MSc Slide 5 ---
+\begin{frame}{Maximum Entropy and Normality Tests}
+\begin{itemize}
+\item \textbf{Maximum entropy}: Among all distributions with given $(\mu, \sigma^2)$, the Normal maximizes Shannon entropy $H = -\int f\ln f\,dx$
+\item \textbf{Normality tests}:
+\end{itemize}
+
+\vspace{0.1cm}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
-\begin{block}{Stability index $\alpha \in (0, 2]$}
-\begin{itemize}
-    \item Controls \textbf{tail heaviness}.
-    \item Smaller $\alpha$ $\Rightarrow$ heavier tails.
-    \item $\alpha = 2$: Gaussian (lightest tails).
-    \item $\alpha = 1$: Cauchy (very heavy tails).
-    \item $\alpha < 1$: Extremely heavy tails.
-\end{itemize}
-\end{block}
-
-\vspace{0.2cm}
-
-\begin{block}{Scale $\gamma > 0$}
-\begin{itemize}
-    \item Controls the \textbf{spread} (width) of the distribution.
-    \item Analogous to $\sigma$ in the normal distribution.
-    \item Larger $\gamma$ $\Rightarrow$ wider distribution.
-\end{itemize}
-\end{block}
+\textbf{Jarque--Bera test}:
+\[
+JB = \frac{n}{6}\!\left(S^2 + \frac{(K-3)^2}{4}\right) \sim \chi^2(2)
+\]
+Tests skewness $S$ and excess kurtosis $K-3$ jointly.
 \end{column}
-
 \begin{column}{0.48\textwidth}
-\begin{block}{Skewness $\beta \in [-1, 1]$}
+\textbf{Other tests}:
 \begin{itemize}
-    \item Controls \textbf{asymmetry}.
-    \item $\beta = 0$: symmetric distribution.
-    \item $\beta > 0$: right-skewed (heavier right tail).
-    \item $\beta < 0$: left-skewed (heavier left tail).
-    \item $|\beta| = 1$: maximally skewed.
+\item Shapiro--Wilk (regression-based)
+\item Anderson--Darling (CDF, tail-weighted)
+\item Kolmogorov--Smirnov (sup CDF distance)
 \end{itemize}
-\end{block}
-
-\vspace{0.2cm}
-
-\begin{block}{Location $\delta \in \mathbb{R}$}
-\begin{itemize}
-    \item \textbf{Shifts} the entire distribution.
-    \item When $\alpha > 1$: $\delta$ is the mean.
-    \item When $\alpha \leq 1$: $\delta$ is the median (if $\beta = 0$).
-\end{itemize}
-\end{block}
 \end{column}
 \end{columns}
 
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Probability Density Function
-%-----------------------------------------------------------------------------
-\begin{frame}{Probability Density Function}
-
-\begin{itemize}
-    \item In general, there is \textbf{no closed-form expression} for the probability density function (PDF) of a stable distribution.
-    \item The PDF is obtained via the \textbf{inverse Fourier transform} of the characteristic function $\phi(t)$:
-    \[
-        f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty} \phi(t)\, e^{-itx}\,dt.
-    \]
-
-    \vspace{0.2cm}
-
-    \item Closed-form PDFs exist only for three special cases:
-    \begin{itemize}
-        \item \textbf{Gaussian} ($\alpha = 2$): the normal distribution.
-        \item \textbf{Cauchy} ($\alpha = 1, \beta = 0$): the Cauchy distribution.
-        \item \textbf{L\'{e}vy} ($\alpha = 1/2, \beta = 1$): the L\'{e}vy distribution.
-    \end{itemize}
-
-    \vspace{0.2cm}
-
-    \item For all other parameter values, the PDF must be computed \textbf{numerically}.
-    \item Efficient algorithms for numerical computation were developed by Nolan (1997).
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Special Case -- Gaussian Distribution
-%-----------------------------------------------------------------------------
-\begin{frame}{Special Case -- Gaussian Distribution}
-
-\begin{itemize}
-    \item When $\alpha = 2$, the stable distribution reduces to the \textbf{normal (Gaussian) distribution}:
-    \[
-        X \sim N(\delta,\; 2\gamma^2).
-    \]
-
-    \item \textbf{Characteristic function}:
-    \[
-        \phi(t) = \exp\!\left(-\gamma^2 t^2 + i\delta t\right).
-    \]
-
-    \item \textbf{Probability density function}:
-    \[
-        f(x) = \frac{1}{\sqrt{4\pi\gamma^2}}\exp\!\left(-\frac{(x - \delta)^2}{4\gamma^2}\right).
-    \]
-
-    \item Key properties:
-    \begin{itemize}
-        \item \textbf{Symmetric} ($\beta$ is irrelevant when $\alpha = 2$).
-        \item \textbf{Light-tailed}: exponential decay in the tails.
-        \item \textbf{All moments exist}: $\E[|X|^p] < \infty$ for all $p > 0$.
-        \item The \textbf{only stable distribution with finite variance}: $\Var(X) = 2\gamma^2$.
-    \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Normal Distribution -- Simulation Example
-%-----------------------------------------------------------------------------
-\begin{frame}{Normal Distribution -- Simulation Example}
-\quantlet{SFM\_ch2\_stable\_distributions}{https://github.com/QuantLet/SFM}
-
 \begin{center}
-    \includegraphics[width=0.85\textwidth]{ch2_stable_distributions.png}
+\includegraphics[width=0.5\textwidth]{ch2_normality_tests.png}
 \end{center}
-
-\vspace{-0.2cm}
-{\small Panel D: Stable($\alpha=2.0$) $\equiv$ Gaussian. The KS test confirms equivalence with the normal distribution. All four panels show how the stability index $\alpha$ controls tail heaviness.}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Special Case -- Cauchy Distribution
-%-----------------------------------------------------------------------------
-\begin{frame}{Special Case -- Cauchy Distribution}
-
+%--- MSc Slide 6 ---
+\begin{frame}{Normality Tests --- Empirical Results}
 \begin{itemize}
-    \item When $\alpha = 1$ and $\beta = 0$, the stable distribution reduces to the \textbf{Cauchy distribution}:
-    \[
-        X \sim \text{Cauchy}(\delta, \gamma).
-    \]
-
-    \item \textbf{Probability density function}:
-    \[
-        f(x) = \frac{1}{\pi\gamma\left[1 + \left(\frac{x - \delta}{\gamma}\right)^{\!2}\right]}.
-    \]
-
-    \vspace{0.2cm}
-
-    \item Key properties:
-    \begin{itemize}
-        \item \textbf{Symmetric} about $\delta$ and \textbf{heavy-tailed}: tails decay as $x^{-2}$.
-        \item \textbf{No mean}: $\E[|X|] = \infty$ (the integral diverges).
-        \item \textbf{No variance} or higher moments.
-        \item The \textbf{ratio of two independent standard normal} random variables follows a Cauchy distribution:
-        \[
-            \text{If } Z_1, Z_2 \sim N(0,1) \text{ i.i.d., then } \frac{Z_1}{Z_2} \sim \text{Cauchy}(0, 1).
-        \]
-        \item The sample mean of Cauchy random variables has the \textbf{same distribution} as a single observation (no averaging effect).
-    \end{itemize}
+\item Moment generating function: $M_X(t) = \exp(\mu t + \sigma^2 t^2/2)$
+\item Multivariate normal: $\bm{X} \sim N(\bm{\mu}, \bm{\Sigma})$ with Mahalanobis distance
 \end{itemize}
 
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Special Case -- Levy Distribution
-%-----------------------------------------------------------------------------
-\begin{frame}{Special Case -- L\'{e}vy Distribution}
-
-\begin{itemize}
-    \item When $\alpha = 0.5$ and $\beta = 1$, we obtain the \textbf{L\'{e}vy distribution}:
-    \[
-        X \sim S(0.5, 1, \gamma, \delta), \quad X > \delta
-    \]
-
-    \item \textbf{Probability density function}:
-    \[
-        f(x) = \sqrt{\frac{\gamma}{2\pi}} \cdot \frac{e^{-\gamma/(2(x-\delta))}}{(x-\delta)^{3/2}}, \quad x > \delta
-    \]
-
-    \item Applications:
-    \begin{itemize}
-        \item First passage times of Brownian motion.
-        \item Extreme value theory.
-    \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Tail Behaviour of Stable Distributions
-%-----------------------------------------------------------------------------
-\begin{frame}{Tail Behaviour of Stable Distributions}
-
-\begin{itemize}
-    \item For $0 < \alpha < 2$, stable distributions exhibit \textbf{power-law tails}:
-    \[
-        P(X > x) \sim C_\alpha(1+\beta)\,x^{-\alpha}, \qquad P(X < -x) \sim C_\alpha(1-\beta)\,x^{-\alpha}
-    \]
-    \item $C_\alpha = \dfrac{1-\alpha}{\Gamma(2-\alpha)\cos(\pi\alpha/2)}$.
-    \item The smaller $\alpha$, the heavier the tails.
-    \item $\beta$ introduces asymmetry: more mass on the left or right tail.
-    \item Tail decay is \textbf{polynomial}, not exponential (unlike the Gaussian).
-    \item Large-impact, low-probability events are more likely.
-\end{itemize}
-
-\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Moments and Their Existence
-%-----------------------------------------------------------------------------
-\begin{frame}{Moments and Their Existence}
-
-\begin{itemize}
-    \item Moment existence depends on $\alpha$:
-    \[
-        \E[|X|^p] < \infty \quad \text{for } 0 < p < \alpha; \qquad \E[|X|^p] = \infty \quad \text{for } p \geq \alpha
-    \]
-    \item The \textbf{mean} exists only if $\alpha > 1$.
-    \item The \textbf{variance} exists only if $\alpha = 2$ (the Gaussian case).
-    \item For Cauchy ($\alpha = 1$): no mean, no variance.
-    \item For L\'{e}vy ($\alpha = 0.5$): even $\E[X]$ does not exist.
-    \item This property makes stable distributions suitable for modelling extremes, but poses challenges for classical inference.
-\end{itemize}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Stable PDFs -- Visual Comparison
-%-----------------------------------------------------------------------------
-\begin{frame}{Stable PDFs -- Visual Comparison}
-\quantlet{SFM\_ch2\_stable\_distributions}{https://github.com/QuantLet/SFM}
-
+\vspace{0.1cm}
 \begin{center}
-    \includegraphics[width=0.85\textwidth]{ch2_stable_pdfs.png}
-\end{center}
-
-\vspace{-0.2cm}
-{\small Left: linear scale. Right: log scale reveals tail differences. Financial returns typically have $\alpha \in [1.5, 1.9]$.}
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: Applications -- S&P 500 Stable Fit
-%-----------------------------------------------------------------------------
-\begin{frame}{Application: S\&P 500 Stable vs Normal Fit}
-\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
-
-\begin{center}
-    \includegraphics[width=0.78\textwidth]{ch2_sp500_stable_fit.png}
-\end{center}
-
-\vspace{-0.2cm}
-\begin{itemize}
-    \item The stable distribution captures the \textbf{leptokurtosis} observed in financial returns
-    \item The normal underestimates tail probabilities, leading to \textbf{underestimated risk}
-\end{itemize}
-\end{frame}
-
-%-----------------------------------------------------------------------------
-% Slide: VaR Comparison
-%-----------------------------------------------------------------------------
-\begin{frame}{VaR: Stable vs Gaussian vs Empirical}
-\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM}
-
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\begin{center}
-    \includegraphics[width=\textwidth]{ch2_var_comparison.png}
-\end{center}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{S\&P 500 VaR Comparison}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{lccl}
 \toprule
-\textbf{Level} & \textbf{Gauss} & \textbf{Stable} & \textbf{Emp.} \\
+\textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} & \textbf{Decision} \\
 \midrule
-5\% & $-1.9\%$ & $-2.1\%$ & $-2.1\%$ \\
-1\% & $-2.7\%$ & $-4.1\%$ & $-3.6\%$ \\
-0.1\% & $-3.6\%$ & $-9.0\%$ & $-6.9\%$ \\
+Jarque--Bera & $>1000$ & $<0.001$ & Reject $H_0$ \\
+Shapiro--Wilk & $<0.99$ & $<0.001$ & Reject $H_0$ \\
+Anderson--Darling & $>10$ & $<0.001$ & Reject $H_0$ \\
 \bottomrule
 \end{tabular}
-\end{block}
+\end{center}
+
+\begin{alertblock}{Conclusion}
+\begin{itemize}
+\item Normality is overwhelmingly rejected for daily financial returns
+\item The Normal distribution underestimates tail risk
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%--- PhD Slide 7 ---
+\begin{frame}{Berry--Esseen Bounds and Convergence Rates}
+\begin{thm}[Berry--Esseen]
+If $X_1, X_2, \ldots$ are i.i.d.\ with $\E[X_i]=0$, $\E[X_i^2]=\sigma^2$, $\E[|X_i|^3]=\rho < \infty$, then:
+\[
+\sup_x \left|F_n(x) - \Phi(x)\right| \leq \frac{C\,\rho}{\sigma^3\sqrt{n}}
+\]
+where $C \leq 0.4748$ (Shevtsova, 2011).
+\end{thm}
+
+\begin{itemize}
+\item Rate of convergence: $O(n^{-1/2})$ --- slow for heavy-tailed data
+\item Edgeworth expansions refine the CLT approximation for finite $n$
+\item \textbf{Normal as stable}: $N(\mu,\sigma^2) = S(2, 0, \sigma/\sqrt{2}, \mu)$ --- the $\alpha=2$ member of the stable family
+\item When $\E[X_i^2] = \infty$: CLT fails, but the \textbf{Generalized CLT} gives stable limits
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Stylized Facts of Financial Returns}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Fat Tails and Excess Kurtosis}
+\begin{itemize}
+\item \textbf{Kurtosis}: $\kappa = \E[(X-\mu)^4]/\sigma^4$; \quad excess kurtosis: $\kappa_e = \kappa - 3$
+\item Normal distribution: $\kappa_e = 0$
+\item Typical daily equity kurtosis: $\kappa \in [5, 50]$, so $\kappa_e \gg 0$
+\item \textbf{Interpretation}: Extreme returns occur far more often than the Normal predicts
+\end{itemize}
 
 \vspace{0.2cm}
-At 0.1\%, stable VaR is $\sim$2.5$\times$ larger than Gaussian VaR.
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Asset} & \textbf{Skewness} & \textbf{Excess Kurtosis} \\
+\midrule
+S\&P 500 (daily) & $-0.3$ & $\approx 10$ \\
+FTSE 100 (daily) & $-0.2$ & $\approx 8$ \\
+USD/EUR (daily) & $-0.1$ & $\approx 5$ \\
+Bitcoin (daily) & $-0.5$ & $\approx 15$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{Negative Skewness and Volatility Clustering}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Negative skewness}
+\begin{itemize}
+\item Left tail heavier than right tail
+\item Especially pronounced for equity indices
+\item Crashes are sharper than rallies
+\item Skewness $S = \E[(X-\mu)^3]/\sigma^3 < 0$
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Volatility clustering}
+\begin{itemize}
+\item ``Large changes followed by large changes'' (Mandelbrot, 1963)
+\item $\Corr(|r_t|, |r_{t+k}|) > 0$ for large $k$
+\item Returns are uncorrelated but \textbf{not independent}
+\item $\Corr(r_t, r_{t+k}) \approx 0$ but $\Corr(r_t^2, r_{t+k}^2) > 0$
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+\begin{block}{Implication}
+\begin{itemize}
+\item A single i.i.d.\ distribution cannot capture volatility clustering
+\item We need time-varying models (GARCH, Section~2.11)
+\end{itemize}
+\end{block}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{Aggregational Gaussianity}
+\begin{itemize}
+\item \textbf{Key observation}: As the holding period increases, the distribution of returns becomes \textit{more Gaussian}
+\item Daily returns: high kurtosis, heavy tails
+\item Weekly returns: moderate kurtosis
+\item Monthly returns: closer to Normal
+\item \textbf{Mechanism}: CLT-like effect --- monthly return $= \sum$ of $\sim$22 daily returns
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Frequency} & \textbf{Excess Kurtosis} & \textbf{JB $p$-value} \\
+\midrule
+Daily & $\approx 10$ & $< 0.001$ \\
+Weekly & $\approx 4$ & $< 0.001$ \\
+Monthly & $\approx 1.5$ & $\approx 0.05$ \\
+Quarterly & $\approx 0.5$ & $\approx 0.3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+%--- Y3 Slide 4 ---
+\begin{frame}{Summary of Stylized Facts}
+\begin{enumerate}
+\item \textbf{Fat tails}: $\kappa_e \gg 0$ --- extreme events more frequent than Normal
+\item \textbf{Negative skewness}: Left tail heavier (equities)
+\item \textbf{Volatility clustering}: Periods of high/low volatility persist
+\item \textbf{Aggregational Gaussianity}: Kurtosis decreases with horizon
+\item \textbf{No return autocorrelation}: $\Corr(r_t, r_{t+k}) \approx 0$ for $k \geq 1$
+\item \textbf{Squared return autocorrelation}: $\Corr(r_t^2, r_{t+k}^2) > 0$
+\end{enumerate}
+
+\vspace{0.3cm}
+\begin{alertblock}{The Challenge}
+\begin{itemize}
+\item Any adequate model for financial returns must reproduce these stylized facts
+\item The Normal distribution fails on points 1, 2, and 3
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%--- MSc Slide 5 ---
+\begin{frame}{Leverage Effect and Long Memory}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Leverage effect}
+\begin{itemize}
+\item Negative returns increase future volatility \textit{more} than positive returns of equal magnitude
+\item Asymmetric response: $\Corr(r_t, \sigma_{t+1}^2) < 0$
+\item Named after Black (1976): falling stock price $\Rightarrow$ higher leverage $\Rightarrow$ higher risk
+\item Captured by GJR-GARCH, EGARCH
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Long memory in volatility}
+\begin{itemize}
+\item $\Corr(|r_t|, |r_{t+k}|)$ decays \textit{slowly} (hyperbolically, not exponentially)
+\item Hurst exponent $H > 0.5$ for $|r_t|$
+\item Standard GARCH: exponential decay
+\item FIGARCH, HAR models capture long memory
+\end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
-%=============================================================================
-% SECTION: PARAMETERIZATION
-%=============================================================================
-\section{Parameterization}
-
-%-----------------------------------------------------------------------------
-% Slide: Characteristic Function -- Parameterization A
-%-----------------------------------------------------------------------------
-\begin{frame}{Characteristic Function -- Parameterization A}
-
+%--- MSc Slide 6 ---
+\begin{frame}{Gain/Loss Asymmetry}
 \begin{itemize}
-    \item The characteristic function of $X \sim S(\alpha, \beta, \gamma, \delta)$ under \textbf{Parameterization A} (Samorodnitsky and Taqqu, 1994):
-\end{itemize}
-
-\vspace{0.3cm}
-
-\begin{block}{Case $\alpha \neq 1$}
-\[
-    \phi(t) = \exp\!\left\{-\gamma^\alpha |t|^\alpha \left(1 - i\beta\,\text{sign}(t)\tan\frac{\pi\alpha}{2}\right) + i\delta t\right\}
-\]
-\end{block}
-
-\vspace{0.2cm}
-
-\begin{block}{Case $\alpha = 1$}
-\[
-    \phi(t) = \exp\!\left\{-\gamma|t|\left(1 + i\beta\frac{2}{\pi}\,\text{sign}(t)\ln|t|\right) + i\delta t\right\}
-\]
-\end{block}
-
-\vspace{0.3cm}
-
+\item \textbf{Gain/loss asymmetry}: Stock prices decline faster than they rise
+\item Large drawdowns happen in days; recovery takes months or years
+\item This asymmetry is distinct from skewness --- it concerns the \textit{dynamics}, not the marginal distribution
+\item \textbf{Absence of return autocorrelation}: $\Corr(r_t, r_{t+k}) \approx 0$ for $k \geq 1$
 \begin{itemize}
-    \item Here $\text{sign}(t) = \begin{cases} 1 & t > 0 \\ 0 & t = 0 \\ -1 & t < 0 \end{cases}$\,.
-    \item This parameterization is widely used in probability theory and is continuous in all parameters \textbf{except} at $\alpha = 1$ when $\beta \neq 0$.
+\item Markets are approximately efficient at the mean level
+\item But dependence exists in higher moments ($r_t^2$, $|r_t|$)
 \end{itemize}
-
+\end{itemize}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Characteristic Function -- Parameterization B
-%-----------------------------------------------------------------------------
-\begin{frame}{Characteristic Function -- Parameterization B}
-
+%--- PhD Slide 7 ---
+\begin{frame}{Cont (2001) Taxonomy and Multifractal Models}
 \begin{itemize}
-    \item \textbf{Parameterization B} (Nolan, 1997) provides a form that is continuous in \textbf{all} parameters, including at $\alpha = 1$:
-\end{itemize}
-
-\vspace{0.3cm}
-
-\begin{block}{Case $\alpha \neq 1$}
-\[
-    \phi(t) = \exp\!\left\{-\gamma^\alpha |t|^\alpha \left(1 + i\beta\,\text{sign}(t)\tan\frac{\pi\alpha}{2}\left((\gamma|t|)^{1-\alpha} - 1\right)\right) + i\delta_B t\right\}
-\]
-\end{block}
-
-\vspace{0.3cm}
-
+\item Cont (2001): systematic taxonomy of 11 stylized facts for asset returns
+\item \textbf{Multifractal models} (Mandelbrot, Fisher \& Calvet, 1997):
 \begin{itemize}
-    \item This parameterization has the advantage that the characteristic function is \textbf{jointly continuous} in all four parameters $(\alpha, \beta, \gamma, \delta_B)$.
-    \item It is particularly useful for \textbf{numerical computation} and \textbf{statistical estimation}.
-    \item The location parameter $\delta_B$ differs from $\delta$ in Parameterization A.
+\item $\E[|r_t|^q] \propto \Delta t^{\zeta(q)}$ with \textit{nonlinear} $\zeta(q)$ (multiscaling)
+\item Unifractal: $\zeta(q) = qH$ (linear); multifractal: $\zeta(q)$ concave
 \end{itemize}
-
+\item Cross-correlation structure and multivariate stylized facts
+\item Intraday stylized facts: microstructure noise, bid-ask bounce, Epps effect
+\end{itemize}
 \end{frame}
 
-%-----------------------------------------------------------------------------
-% Slide: Mapping Between Parameterizations
-%-----------------------------------------------------------------------------
-\begin{frame}{Mapping Between Parameterizations}
+%--- PhD Slide 8 ---
+\begin{frame}{Fractal Structure and Power Laws}
+\begin{itemize}
+\item \textbf{Power-law tails}: $P(|r| > x) \sim x^{-\alpha}$ with $\alpha \in [2, 5]$ for most financial assets
+\item Tail exponent $\alpha$ is remarkably stable across assets and time periods
+\item \textbf{Self-similarity}: Return distributions at different time scales are related by scaling
+\item Connection to stable distributions: if $\alpha < 2$, the GCLT implies stable limits
+\item The ``inverse cubic law'' (Gopikrishnan et al., 1999): $\alpha \approx 3$ for US equities
+\item Debate: true power law vs.\ slowly varying tails
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{The Student-$t$ Distribution}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Student-$t$ Distribution --- Definition}
+\begin{defn}[Student-$t$ Distribution]
+$X \sim t_\nu$ if:
+\[
+f(x;\nu) = \frac{\Gamma\!\left(\frac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\,\Gamma\!\left(\frac{\nu}{2}\right)} \left(1 + \frac{x^2}{\nu}\right)^{-(\nu+1)/2}, \quad x \in \R.
+\]
+\end{defn}
 
 \begin{itemize}
-    \item The relationship between the location parameters in Parameterization A ($\delta_A$) and Parameterization B ($\delta_B$) is given by:
+\item Single parameter $\nu > 0$ (\textbf{degrees of freedom}) controls tail heaviness
+\item $\E[X] = 0$ ($\nu > 1$); \quad $\Var(X) = \frac{\nu}{\nu-2}$ ($\nu > 2$)
+\item Excess kurtosis: $\kappa_e = \frac{6}{\nu-4}$ ($\nu > 4$)
+\item $\nu \to \infty$: converges to $N(0,1)$; \quad $\nu = 1$: Cauchy distribution
+\item Tails: $f(x) \sim |x|^{-(\nu+1)}$ \textbf{(power law)}
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{Student-$t$ PDFs --- Effect of $\nu$}
+\quantlet{SFM\_ch2\_student\_t\_fit}{https://github.com/QuantLet/SFM/tree/master/QID-3447-SFMstudent}
+
+\begin{center}
+\includegraphics[width=0.72\textwidth]{ch2_student_t_pdfs.png}
+\end{center}
+
+\begin{itemize}
+\item Smaller $\nu$ $\Rightarrow$ heavier tails, higher peak
+\item Financial returns: typically $\hat{\nu} \in [3, 8]$ for daily equity data
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{Student-$t$ Fit to S\&P 500}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{ch2_student_t_fit.png}
+\end{center}
+\begin{itemize}
+\item Student-$t$ captures the heavy tails much better than the Normal
+\item Estimated $\hat{\nu} \approx 4$--$5$ for daily S\&P~500; center and tails well-matched
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 4 ---
+\begin{frame}{Why Student-$t$ for Finance?}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Property} & \textbf{Normal} & \textbf{Student-$t$} \\
+\midrule
+Tail decay & Exponential ($e^{-x^2/2}$) & Power law ($|x|^{-\nu-1}$) \\
+Excess kurtosis & 0 & $6/(\nu-4)$ \\
+Parameters & 2 ($\mu, \sigma$) & 3 ($\mu, \sigma, \nu$) \\
+Extreme events & Very rare & More frequent \\
+Limit & --- & Normal ($\nu \to \infty$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\begin{block}{Key Advantage}
+\begin{itemize}
+\item Student-$t$ \textbf{nests} the Normal as a special case ($\nu \to \infty$) while allowing heavier tails
+\item It is the simplest heavy-tailed alternative
+\end{itemize}
+\end{block}
+\end{frame}
+
+%--- MSc Slide 5 ---
+\begin{frame}{Location-Scale Form and MLE}
+\begin{itemize}
+\item \textbf{Location-scale form}: $X = \mu + \sigma T$, where $T \sim t_\nu$
+\item MLE estimation of $(\mu, \sigma, \nu)$: maximize
+\[
+\ell(\mu,\sigma,\nu) = \sum_{t=1}^{n} \ln f\!\left(\frac{r_t - \mu}{\sigma}; \nu\right) - n\ln\sigma
+\]
+\item Information criteria for model selection:
+\begin{itemize}
+\item AIC $= -2\ell + 2k$ (penalizes complexity lightly)
+\item BIC $= -2\ell + k\ln n$ (penalizes complexity more)
+\end{itemize}
+\item Student-$t$ as innovation distribution in GARCH models: $\epsilon_t = \sigma_t z_t$, $z_t \sim t_\nu$
+\item QQ-plot diagnostics: departures from the 45$^\circ$ line indicate misspecification
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 6 ---
+\begin{frame}{Model Comparison: Normal vs.\ Student-$t$}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{ch2_dist_comparison_overlay.png}
+\end{center}
+\begin{center}
+\renewcommand{\arraystretch}{1.0}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Log-lik} & \textbf{AIC} & \textbf{BIC} \\
+\midrule
+Normal $(\mu, \sigma)$ & $\ell_1$ & $-2\ell_1 + 4$ & $-2\ell_1 + 2\ln n$ \\
+Student-$t$ $(\mu, \sigma, \nu)$ & $\ell_2 > \ell_1$ & $-2\ell_2 + 6$ & $-2\ell_2 + 3\ln n$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item Student-$t$ achieves substantially better AIC/BIC despite one extra parameter
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 7 ---
+\begin{frame}{Mixture Representation and Bayesian Interpretation}
+\begin{itemize}
+\item \textbf{Mixture representation}: $X \mid V \sim N(0, V)$, \quad $V \sim \text{Inv-Gamma}(\nu/2, \nu/2)$
+\begin{itemize}
+\item Student-$t$ = Normal with random variance (scale mixture of normals)
+\item Interpretation: $V$ captures time-varying volatility
+\end{itemize}
+\item \textbf{Bayesian interpretation}: Student-$t$ as marginal posterior under conjugate normal--inverse-gamma prior
+\item \textbf{Multivariate Student-$t$}: $f(\bm{x}) \propto \left(1 + \frac{(\bm{x}-\bm{\mu})'\bm{\Sigma}^{-1}(\bm{x}-\bm{\mu})}{\nu}\right)^{-(\nu+p)/2}$
+\item \textbf{Tail comparison}: $t_\nu$ tail index $= \nu$ vs.\ stable tail index $= \alpha$
+\item Student-$t$ is \textbf{not} closed under convolution; stable distributions \textbf{are}
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Asymmetric Distributions}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Why Asymmetry Matters}
+\begin{itemize}
+\item Negative skewness in equity returns: downside risk is larger than upside potential
+\item \textbf{Skewness} measures asymmetry: $S = \E[(X-\mu)^3]/\sigma^3$
+\item Symmetric distributions (Normal, Student-$t$) assign equal probability to left and right tails
+\item But empirically: the left tail of equity returns is \textbf{heavier} than the right tail
+\item We need distributions that can distinguish left from right tail behavior
 \end{itemize}
 
 \vspace{0.3cm}
-
-\begin{block}{Conversion Formula}
-For $\alpha \neq 1$:
-\[
-    \delta_B = \delta_A + \beta\gamma\tan\frac{\pi\alpha}{2}
-\]
-
-For $\alpha = 1$:
-\[
-    \delta_B = \delta_A + \beta\gamma\frac{2}{\pi}\ln\gamma
-\]
-\end{block}
-
-\vspace{0.3cm}
-
+\begin{alertblock}{Risk Implication}
 \begin{itemize}
-    \item When $\beta = 0$ (symmetric case): $\delta_A = \delta_B$ for all $\alpha$.
-    \item When $\alpha = 2$ (Gaussian case): $\delta_A = \delta_B$ regardless of $\beta$.
-    \item Care must be taken when comparing results from different software packages, as they may use different parameterizations.
+\item Ignoring skewness leads to underestimating \textbf{downside risk}
+\item A symmetric model with the correct kurtosis still misallocates probability between the two tails
 \end{itemize}
-
+\end{alertblock}
 \end{frame}
 
-%=============================================================================
-% SECTION: ESTIMATION
-%=============================================================================
-\section{Estimation}
-
-%-----------------------------------------------------------------------------
-% Slide: Estimation Methods
-%-----------------------------------------------------------------------------
-\begin{frame}{Estimation Methods}
-
-\begin{itemize}
-    \item Since no closed-form PDF exists in general, parameter estimation for stable distributions requires specialized methods.
-\end{itemize}
-
-\vspace{0.2cm}
-
-\begin{block}{Quantile-Based Methods (McCulloch, 1986)}
-\begin{itemize}
-    \item Use sample quantiles to estimate $\alpha$ and $\beta$.
-    \item Fast and simple; good initial estimates.
-    \item Based on relationships between quantile ratios and stable parameters.
-\end{itemize}
-\end{block}
+%--- Y3 Slide 2 ---
+\begin{frame}{Skewness in Financial Returns}
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Asset Class} & \textbf{Typical Skewness} & \textbf{Implication} \\
+\midrule
+Equity indices & $-0.1$ to $-0.5$ & Heavier left tail \\
+Individual stocks & $-0.3$ to $-1.0$ & Strong crash risk \\
+FX majors & $\approx 0$ & Approximately symmetric \\
+Commodities & Mixed & Depends on supply shocks \\
+Bonds & Slightly positive & Right tail (yield spikes) \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \vspace{0.2cm}
-
-\begin{block}{Maximum Likelihood Estimation (Nolan, 2001)}
 \begin{itemize}
-    \item Numerically compute the PDF via Fourier inversion, then maximize the likelihood.
-    \item Asymptotically efficient but computationally intensive.
-    \item Requires accurate numerical integration routines.
+\item Skewness affects 1\% VaR: a left-skewed distribution has a more extreme left quantile than a symmetric distribution with the same variance
 \end{itemize}
-\end{block}
-
-\vspace{0.2cm}
-
-\begin{block}{Characteristic Function Methods (Koutrouvelis, 1980)}
-\begin{itemize}
-    \item Fit the empirical characteristic function to the theoretical one via regression.
-    \item A good balance between accuracy and computational cost.
-\end{itemize}
-\end{block}
-
 \end{frame}
 
-%=============================================================================
-% SECTION: SIMULATION
-%=============================================================================
-\section{Simulation}
-
-%-----------------------------------------------------------------------------
-% Slide: Simulation of Stable Random Variables
-%-----------------------------------------------------------------------------
-\begin{frame}{Simulation of Stable Random Variables}
+%--- MSc Slide 3 ---
+\begin{frame}{Hansen's Skewed-$t$ Distribution}
+\begin{defn}[Hansen's Skewed-$t$ (Hansen, 1994)]
+\[
+f(x;\nu,\lambda) = \begin{cases}
+bc\!\left(1 + \frac{1}{\nu-2}\left(\frac{bx+a}{1-\lambda}\right)^{\!2}\right)^{-(\nu+1)/2} & x < -a/b \\[6pt]
+bc\!\left(1 + \frac{1}{\nu-2}\left(\frac{bx+a}{1+\lambda}\right)^{\!2}\right)^{-(\nu+1)/2} & x \geq -a/b
+\end{cases}
+\]
+where $\lambda \in (-1,1)$ is the skewness parameter, $a = 4\lambda c\frac{\nu-2}{\nu-1}$, $b^2 = 1 + 3\lambda^2 - a^2$, $c = \frac{\Gamma((\nu+1)/2)}{\sqrt{\pi(\nu-2)}\,\Gamma(\nu/2)}$.
+\end{defn}
 
 \begin{itemize}
-    \item The Chambers--Mallows--Stuck (CMS) algorithm (1976) generates standard stable random variables $Z \sim S(\alpha, \beta, 1, 0)$:
+\item $\lambda = 0$: symmetric Student-$t$; \quad $\lambda < 0$: heavier left tail
+\item Widely used as GARCH innovation distribution
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 4 ---
+\begin{frame}{Generalized Error Distribution (GED)}
+\begin{defn}[GED]
+\[
+f(x;\nu) = \frac{\nu}{2\,\Gamma(1/\nu)}\exp\!\left(-|x|^\nu\right), \quad \nu > 0.
+\]
+\end{defn}
+
+\begin{itemize}
+\item $\nu = 2$: Normal distribution; \quad $\nu = 1$: Laplace (double exponential)
+\item $\nu < 2$: heavier tails than Normal; \quad $\nu > 2$: lighter tails
+\item Controls tail heaviness through a single parameter
+\item Popular in GARCH models: GARCH-GED
 \end{itemize}
 
 \vspace{0.2cm}
+\begin{block}{MLE Estimation}
+\begin{itemize}
+\item For both skewed-$t$ and GED, estimate parameters via maximum likelihood
+\item Compare using AIC/BIC
+\end{itemize}
+\end{block}
+\end{frame}
 
-\begin{block}{CMS Algorithm}
+%--- MSc Slide 5 ---
+\begin{frame}{Asymmetric Distribution Comparison}
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Distribution} & \textbf{Parameters} & \textbf{Skewness} & \textbf{Tail type} \\
+\midrule
+Normal & $\mu, \sigma$ & 0 & Exponential \\
+Student-$t$ & $\mu, \sigma, \nu$ & 0 & Power law \\
+Skewed-$t$ & $\mu, \sigma, \nu, \lambda$ & $\neq 0$ & Power law (asymmetric) \\
+GED & $\mu, \sigma, \nu$ & 0 & Stretched exponential \\
+NIG & $\alpha, \beta, \delta, \mu$ & $\neq 0$ & Semi-heavy \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item More parameters $\Rightarrow$ better fit but risk of overfitting
+\item AIC/BIC balance goodness-of-fit against complexity
+\item For daily equity returns: skewed-$t$ often dominates
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 6 ---
+\begin{frame}{The Generalized Hyperbolic Family}
+\begin{itemize}
+\item \textbf{Generalized Hyperbolic (GH)} distribution: five parameters $(\lambda, \alpha, \beta, \delta, \mu)$
+\item PDF:
+\[
+f(x) \propto \left(\delta^2 + (x-\mu)^2\right)^{(\lambda - 1/2)/2} K_{\lambda-1/2}\!\left(\alpha\sqrt{\delta^2 + (x-\mu)^2}\right) e^{\beta(x-\mu)}
+\]
+where $K_\nu$ is the modified Bessel function of the second kind
+\item Special cases:
+\begin{itemize}
+\item \textbf{Hyperbolic}: $\lambda = 1$
+\item \textbf{NIG} (Normal Inverse Gaussian): $\lambda = -1/2$
+\item \textbf{VG} (Variance Gamma): $\delta \to 0$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 7 ---
+\begin{frame}{Normal Mean-Variance Mixtures}
+\begin{itemize}
+\item \textbf{GH as normal mean-variance mixture}:
+\[
+X \mid W \sim N(\mu + \beta W, W), \quad W \sim \text{GIG}(\lambda, \delta, \gamma)
+\]
+where GIG is the Generalized Inverse Gaussian distribution
+\item Barndorff-Nielsen (1977): excellent empirical fit to financial data
+\item \textbf{Affine closure}: GH distributions are closed under affine transformations
+\item Multivariate GH: tractable for portfolio problems
+\item Connection to L\'{e}vy processes: GH distributions are infinitely divisible $\Rightarrow$ GH L\'{e}vy processes
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Stable ($\alpha$-Stable) Distributions}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{What Is a Stable Distribution?}
+\begin{defn}[Stable Distribution --- Intuitive]
+A distribution is \textbf{stable} if a sum of i.i.d.\ copies has the same shape (up to location and scale). Formally, $X \sim S(\alpha, \beta, \gamma, \delta)$ if for i.i.d.\ copies $X_1, X_2$:
+\[
+aX_1 + bX_2 \stackrel{d}{=} cX + d, \quad c = (a^\alpha + b^\alpha)^{1/\alpha}.
+\]
+\end{defn}
+
+\begin{itemize}
+\item \textbf{Four parameters}:
+\begin{itemize}
+\item $\alpha \in (0, 2]$: \textbf{stability index} (tail heaviness) --- smaller $\alpha$ $\Rightarrow$ heavier tails
+\item $\beta \in [-1, 1]$: \textbf{skewness}
+\item $\gamma > 0$: \textbf{scale}
+\item $\delta \in \R$: \textbf{location}
+\end{itemize}
+\item Special cases: $\alpha = 2$ (Gaussian), $\alpha = 1, \beta = 0$ (Cauchy)
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{Why Variance May Not Exist}
+\begin{itemize}
+\item For $\alpha < 2$: $\E[|X|^p] < \infty$ if and only if $p < \alpha$
+\item In particular, $\E[X^2] = \infty$ when $\alpha < 2$ --- the \textbf{variance does not exist}
+\item The sample variance does not converge to a constant; it grows with $n$
+\item \textbf{Mandelbrot (1963)}: cotton price changes follow stable laws with $\alpha \approx 1.7$
+\item Typical estimates for financial returns: $\hat{\alpha} \in [1.5, 1.9]$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Paradigm Shift}
+\begin{itemize}
+\item If returns are truly stable with $\alpha < 2$, then classical portfolio theory (Markowitz mean-variance) breaks down
+\item Variance is not a meaningful risk measure when $\alpha < 2$
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{Stable Fit to S\&P 500}
+\quantlet{SFM\_ch2\_stable\_fit}{https://github.com/QuantLet/SFM/tree/master/QID-3447-SFMstable}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{ch2_sp500_stable_fit.png}
+\end{center}
+\begin{itemize}
+\item Stable distribution captures heavy tails better than Normal
+\item Estimated $\hat{\alpha} \approx 1.7$ for S\&P~500 daily returns
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 4 ---
+\begin{frame}{Stable vs.\ Normal vs.\ Student-$t$}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{ch2_dist_comparison_tails.png}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Normal} & \textbf{Student-$t$} & \textbf{Stable} \\
+\midrule
+Tail decay & $e^{-x^2/2}$ & $|x|^{-\nu-1}$ & $|x|^{-\alpha}$ \\
+Variance & Finite & Finite ($\nu>2$) & Infinite ($\alpha<2$) \\
+Closed under sum & Yes & No & Yes \\
+CLT limit & CLT & --- & GCLT \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+%--- MSc Slide 5 ---
+\begin{frame}{Characteristic Function}
+The stable distribution is defined via its \textbf{characteristic function} ($\alpha \neq 1$):
+\[
+\phi(t) = \E[e^{itX}] = \exp\!\left\{-\gamma^\alpha |t|^\alpha\!\left(1 - i\beta\,\text{sign}(t)\tan\frac{\pi\alpha}{2}\right) + i\delta t\right\}
+\]
+Case $\alpha = 1$:
+\[
+\phi(t) = \exp\!\left\{-\gamma|t|\!\left(1 + i\beta\frac{2}{\pi}\,\text{sign}(t)\ln|t|\right) + i\delta t\right\}
+\]
+
+\begin{itemize}
+\item \textbf{No closed-form PDF} in general (exceptions: Gaussian, Cauchy, L\'{e}vy)
+\item Density via inverse Fourier transform: $f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty}\phi(t)\,e^{-itx}\,dt$
+\item Numerical evaluation: Nolan's algorithm (1997)
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 6 ---
+\begin{frame}{Generalized Central Limit Theorem}
+\begin{thm}[GCLT]
+Stable distributions are the \textit{only} possible non-degenerate limits of normalized sums:
+\[
+\frac{S_n - b_n}{a_n} \xrightarrow{d} S(\alpha, \beta, \gamma, \delta)
+\]
+where $S_n = X_1 + \cdots + X_n$ for i.i.d.\ $X_i$.
+\end{thm}
+
+\begin{itemize}
+\item Classical CLT: $\alpha = 2$ (requires finite variance)
+\item GCLT: $\alpha < 2$ (allows infinite variance)
+\item \textbf{Stability property}: Sums of i.i.d.\ stable r.v.'s remain stable with the same $\alpha$
+\item \textbf{Power-law tails}: $P(X > x) \sim C_\alpha(1+\beta)\,x^{-\alpha}$ as $x \to \infty$
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 7 ---
+\begin{frame}{Stable PDFs --- Varying $\alpha$}
+\begin{center}
+\includegraphics[width=0.72\textwidth]{ch2_stable_pdfs.png}
+\end{center}
+
+\begin{itemize}
+\item Smaller $\alpha$ $\Rightarrow$ heavier tails, sharper peak
+\item $\alpha = 2$: Gaussian; $\alpha = 1$: Cauchy
+\item Financial returns: $\hat{\alpha} \in [1.5, 1.9]$
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 8 ---
+\begin{frame}{Estimation and Cross-Asset Analysis}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Estimation methods}:
+\begin{itemize}
+\item McCulloch quantile method (quick, consistent)
+\item MLE (Nolan, 1997) --- most efficient
+\item Characteristic function methods (Kogon \& Williams, 1998)
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{ch2_cross_asset_alpha.png}
+\end{center}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{itemize}
+\item $\hat{\alpha} \approx 1.7$ for S\&P~500; $\hat{\alpha} \approx 1.5$ for Bitcoin; $\hat{\alpha} \approx 1.8$ for FX
+\item $\alpha < 2$ across all major asset classes $\Rightarrow$ infinite variance is ubiquitous
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 9 ---
+\begin{frame}{Regular Variation and Domain of Attraction}
+\begin{defn}[Regular Variation]
+$L : (0,\infty) \to (0,\infty)$ is \textbf{slowly varying} at infinity if $\lim_{x\to\infty} L(tx)/L(x) = 1$ for all $t > 0$. A function $f$ is \textbf{regularly varying} with index $\rho$ if $f(x) = x^\rho L(x)$.
+\end{defn}
+
+\begin{thm}[Domain of Attraction]
+$F$ belongs to the domain of attraction of $S(\alpha, \beta, 1, 0)$ iff:
 \begin{enumerate}
-    \item Generate $U \sim \text{Uniform}\!\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$ and $W \sim \text{Exponential}(1)$, independently.
-    \item For $\alpha \neq 1$, compute:
-    \[
-        Z = S_{\alpha,\beta} \cdot \frac{\sin\!\left(\alpha(U + B_{\alpha,\beta})\right)}{(\cos U)^{1/\alpha}} \cdot \left(\frac{\cos\!\left(U - \alpha(U + B_{\alpha,\beta})\right)}{W}\right)^{\!(1-\alpha)/\alpha}
-    \]
-    where $B_{\alpha,\beta} = \frac{1}{\alpha}\arctan\!\left(\beta\tan\frac{\pi\alpha}{2}\right)$ and $S_{\alpha,\beta} = \left(1 + \beta^2\tan^2\frac{\pi\alpha}{2}\right)^{1/(2\alpha)}$.
-    \item Scale and shift: $X = \gamma Z + \delta$.
+\item $\bar{F}(x) = x^{-\alpha}L(x)$ (regularly varying tails)
+\item Balance condition: $\lim_{x\to\infty} \frac{\bar{F}(x)}{\bar{F}(x) + F(-x)} = \frac{1+\beta}{2}$
 \end{enumerate}
-\end{block}
+\end{thm}
+\end{frame}
+
+%--- PhD Slide 10 ---
+\begin{frame}{L\'{e}vy Processes}
+\begin{itemize}
+\item A \textbf{L\'{e}vy process} $\{L_t\}_{t\geq 0}$ has stationary independent increments
+\item $L_1 \sim S(\alpha, \beta, \gamma, \delta)$ defines a \textbf{stable L\'{e}vy process}
+\item \textbf{L\'{e}vy--It\^{o} decomposition}:
+\[
+L_t = bt + \sigma W_t + \int_{|x|\leq 1} x\,\tilde{N}(t,dx) + \int_{|x|>1} x\,N(t,dx)
+\]
+\item \textbf{L\'{e}vy measure} of a stable process:
+\[
+\nu(dx) = \begin{cases} c_+ x^{-\alpha-1}dx & x > 0 \\ c_- |x|^{-\alpha-1}dx & x < 0 \end{cases}
+\]
+\item Infinite activity: infinitely many small jumps in any finite interval
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 11 ---
+\begin{frame}{Tempered Stable Distributions}
+\begin{itemize}
+\item \textbf{Problem}: Pure stable distributions have infinite variance --- inconvenient for some applications
+\item \textbf{Solution}: Tempered stable distributions --- modify the L\'{e}vy measure:
+\[
+\nu(dx) = c\,|x|^{-\alpha-1}e^{-\lambda|x|}dx
+\]
+\item Retain heavy-tail behavior for moderate $x$ but guarantee \textbf{finite moments}
+\item Exponential tempering kills the extreme tail $\Rightarrow$ all moments exist
+\item Examples: CGMY model (Carr, Geman, Madan, Yor, 2002)
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 12 ---
+\begin{frame}{Stable vs.\ Student-$t$: The Great Debate}
+\begin{center}
+\renewcommand{\arraystretch}{1.0}
+\scriptsize
+\begin{tabular}{lcc}
+\toprule
+& \textbf{Stable} & \textbf{Student-$t$} \\
+\midrule
+Tail index & $\alpha$ & $\nu$ \\
+Finite moments & $p < \alpha$ & $p < \nu$ \\
+Closed under sum & Yes & No \\
+GCLT limit & Yes & No \\
+Variance & $\infty$ ($\alpha < 2$) & Finite ($\nu > 2$) \\
+Estimation & Harder (no closed-form PDF) & Standard MLE \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item Historical debate: Mandelbrot--Fama (stable) vs.\ Praetz--Blattberg--Gonedes (Student-$t$)
+\item Modern view: both capture power-law tails; choice depends on application
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.3\textwidth]{ch2_tail_survival.png}
+\end{center}
+\end{frame}
+
+%#############################################################################
+\section{Extreme Value Theory (EVT)}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{EVT --- Motivation}
+\begin{itemize}
+\item We need accurate models for \textbf{extreme events} (financial crises, market crashes)
+\item Instead of modeling the \textit{entire} distribution, EVT focuses on the \textbf{tails only}
+\item \textbf{Tail index $\xi$}: a single number that summarizes tail heaviness
+\begin{itemize}
+\item $\xi > 0$: heavy tails (power-law decay) --- typical for financial data
+\item $\xi = 0$: exponential tails (similar to Normal)
+\item $\xi < 0$: bounded tails (finite maximum)
+\end{itemize}
+\item Financial data: $\hat{\xi} > 0$ confirms that extreme events are more frequent than the Normal predicts
+\end{itemize}
 
 \vspace{0.2cm}
-
+\begin{block}{Key Idea}
 \begin{itemize}
-    \item Available in Python via \texttt{scipy.stats.levy\_stable} and in R via the \texttt{stabledist} package.
+\item EVT provides \textbf{mathematically rigorous} extrapolation into the tails, even beyond observed data
 \end{itemize}
-
+\end{block}
 \end{frame}
 
-%=============================================================================
-% SECTION: CONCLUSIONS
-%=============================================================================
+%--- Y3 Slide 2 ---
+\begin{frame}{GPD --- Descriptive Introduction}
+\begin{itemize}
+\item \textbf{Exceedances} above a high threshold $u$ tend to follow a specific shape:
+\[
+\text{The Generalized Pareto Distribution (GPD)}
+\]
+\item Think of it as: ``given that something extreme happened, how extreme was it?''
+\item The GPD has two parameters: shape $\xi$ and scale $\sigma$
+\item For financial data, typically $\hat{\xi} \in [0.1, 0.5]$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{ch2_evt_gpd_pot.png}
+\end{center}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{EVT in Practice --- Extreme Events}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{ch2_evt_gev_fit.png}
+\end{center}
+\begin{itemize}
+\item Block maxima (e.g., monthly worst loss) follow the GEV distribution
+\item Formal theorems at Master level; EVT-based VaR/ES in Section~2.10
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 4 ---
+\begin{frame}{Fisher--Tippett--Gnedenko Theorem}
+\begin{thm}[Fisher--Tippett--Gnedenko]
+If $M_n = \max(X_1, \ldots, X_n)$ and $\frac{M_n - b_n}{a_n} \xrightarrow{d} H$, then $H$ is the \textbf{GEV}:
+\[
+H(x;\xi,\mu,\sigma) = \exp\!\left\{-\left(1 + \xi\frac{x-\mu}{\sigma}\right)^{-1/\xi}\right\}
+\]
+\end{thm}
+
+\begin{itemize}
+\item Three types depending on $\xi$:
+\begin{itemize}
+\item $\xi > 0$: \textbf{Fr\'{e}chet} --- heavy tails (financial data)
+\item $\xi = 0$: \textbf{Gumbel} --- exponential tails
+\item $\xi < 0$: \textbf{Weibull} --- bounded tails
+\end{itemize}
+\item Analogous to CLT but for \textit{maxima} instead of sums
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 5 ---
+\begin{frame}{Pickands--Balkema--de Haan and POT Method}
+\begin{thm}[Pickands--Balkema--de Haan]
+For high threshold $u$, exceedances $Y = X - u \mid X > u$ follow the GPD:
+\[
+G(y;\xi,\sigma) = 1 - \left(1 + \xi\frac{y}{\sigma}\right)^{-1/\xi}, \quad y > 0.
+\]
+\end{thm}
+
+\begin{itemize}
+\item \textbf{POT method} (Peaks Over Threshold):
+\begin{enumerate}
+\item Choose threshold $u$ (mean excess plot, parameter stability)
+\item Fit GPD to exceedances via MLE
+\item Report $(\hat{\xi}, \hat{\sigma})$
+\end{enumerate}
+\item \textbf{Mean excess function}: $e(u) = \E[X - u \mid X > u] = \frac{\sigma + \xi u}{1 - \xi}$
+\item Linear in $u$ for GPD $\Rightarrow$ diagnostic tool for threshold selection
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 6 ---
+\begin{frame}{EVT-Based VaR and ES}
+\begin{itemize}
+\item \textbf{VaR from GPD}:
+\[
+\text{VaR}_\alpha = u + \frac{\sigma}{\xi}\!\left[\left(\frac{n\alpha}{N_u}\right)^{-\xi} - 1\right]
+\]
+where $N_u$ = number of exceedances, $n$ = total observations
+\item \textbf{ES from GPD}: $\text{ES}_\alpha = \frac{\text{VaR}_\alpha}{1-\xi} + \frac{\sigma - \xi u}{1-\xi}$, \quad $\xi < 1$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{ch2_evt_var_es.png}
+\end{center}
+\end{frame}
+
+%--- MSc Slide 7 ---
+\begin{frame}{Threshold Selection}
+\begin{itemize}
+\item \textbf{Mean excess plot}: plot $\hat{e}(u)$ vs.\ $u$; linearity suggests GPD is appropriate above that $u$
+\item \textbf{Parameter stability plot}: $\hat{\xi}(u)$ and $\hat{\sigma}^*(u)$ vs.\ $u$; stable region = good threshold
+\item Trade-off: too low $u$ $\Rightarrow$ bias (non-tail data included); too high $u$ $\Rightarrow$ high variance (few exceedances)
+\item Rule of thumb: use the top 5--10\% of observations
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 8 ---
+\begin{frame}{Hill Estimator}
+\begin{defn}[Hill Estimator]
+For order statistics $X_{(1)} \geq X_{(2)} \geq \cdots \geq X_{(n)}$:
+\[
+\hat{\xi}_{\text{Hill}}^{(k)} = \frac{1}{k}\sum_{i=1}^{k}\ln X_{(i)} - \ln X_{(k+1)}, \quad k = 1, \ldots, n-1.
+\]
+The tail index is $\alpha = 1/\hat{\xi}_{\text{Hill}}$.
+\end{defn}
+
+\begin{itemize}
+\item \textbf{Hill plot}: $\hat{\xi}_{\text{Hill}}^{(k)}$ vs.\ $k$; stable region indicates appropriate $k$
+\item \textbf{Bias--variance trade-off}: small $k$ $\Rightarrow$ high variance; large $k$ $\Rightarrow$ high bias
+\item Only valid for $\xi > 0$ (heavy tails)
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 9 ---
+\begin{frame}{Alternative Tail Index Estimators}
+\begin{itemize}
+\item \textbf{Pickands estimator}:
+\[
+\hat{\xi} = \frac{1}{\ln 2}\ln\frac{X_{(k)} - X_{(2k)}}{X_{(2k)} - X_{(4k)}}
+\]
+Works for all $\xi \in \R$ (not just $\xi > 0$)
+\item \textbf{Moment estimator} (Dekkers--Einmahl--de Haan): also works for all $\xi$
+\item \textbf{Second-order conditions}: Hall (1982) --- second-order parameter $\rho$ governs optimal $k$ in Hill estimator
+\item \textbf{Adaptive threshold selection}: minimize asymptotic MSE (Danielsson et al., 2001)
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 10 ---
+\begin{frame}{Connection to Stable Distributions}
+\begin{itemize}
+\item If $X \sim S(\alpha, \beta, \gamma, \delta)$ with $\alpha < 2$, then the EVT shape parameter is:
+\[
+\xi = 1/\alpha
+\]
+\item Stable distributions are in the domain of attraction of the Fr\'{e}chet GEV ($\xi > 0$)
+\item Hill estimator applied to stable data: $\hat{\alpha}_{\text{Hill}} = 1/\hat{\xi}_{\text{Hill}}$
+\item Comparing tail indices:
+\begin{itemize}
+\item Stable fit: $\hat{\alpha} \approx 1.7$ $\Rightarrow$ $\hat{\xi} \approx 0.59$
+\item Hill estimate: typically gives $\hat{\alpha} \in [3, 5]$ (for moderate tails)
+\item The discrepancy arises because Hill measures the \textit{local} tail decay, while stable $\alpha$ governs the \textit{global} shape
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Distribution Comparison and Model Selection}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{Visual Comparison of Distributions}
+\quantlet{SFM\_ch2\_dist\_comparison}{https://github.com/QuantLet/SFM/tree/master/QID-3447-SFMdist}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{ch2_dist_comparison_overlay.png}
+\end{center}
+\begin{itemize}
+\item Histogram with fitted overlays: Normal, Student-$t$, Stable
+\item Which distribution best captures the center, shoulders, and tails?
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{QQ-Plots}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{ch2_dist_comparison_qq.png}
+\end{center}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\item \textbf{QQ-plot}: Quantiles of data vs.\ theoretical distribution
+\item Perfect fit $\Rightarrow$ points on 45$^\circ$ line
+\item \textbf{S-shape}: heavier tails than model
+\item Normal QQ: systematic tail deviations
+\item Student-$t$ QQ: closer to 45$^\circ$ line
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{Log-Log Tail Plot}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{ch2_dist_comparison_tails.png}
+\end{center}
+
+\begin{itemize}
+\item Plot $\ln P(|X| > x)$ vs.\ $\ln x$
+\item Power-law tail: straight line with slope $-\alpha$
+\item Normal: curves downward (exponential decay)
+\item Student-$t$ and Stable: approximately linear (power-law decay)
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 4 ---
+\begin{frame}{Information Criteria and Formal Tests}
+\begin{itemize}
+\item \textbf{AIC/BIC comparison} across distributions:
+\end{itemize}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Distribution} & \textbf{$k$} & \textbf{AIC} & \textbf{BIC} \\
+\midrule
+Normal & 2 & Highest & Highest \\
+Student-$t$ & 3 & Lower & Lower \\
+Skewed-$t$ & 4 & Lowest & Lowest \\
+Stable & 4 & Comparable to skewed-$t$ & Comparable \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Kolmogorov--Smirnov}: $D_n = \sup_x |F_n(x) - F_\theta(x)|$
+\item \textbf{Anderson--Darling}: weighted CDF distance, more sensitive to tails
+\item \textbf{Likelihood ratio test}: for nested models (Normal vs.\ Student-$t$)
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 5 ---
+\begin{frame}{Comprehensive Model Comparison}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{ch2_risk_comparison_table.png}
+\end{center}
+
+\begin{itemize}
+\item No single distribution dominates across all criteria
+\item Student-$t$ and skewed-$t$: best balance of fit and parsimony
+\item Stable: best tail fit but computationally expensive
+\item EVT: best for extreme quantiles, but agnostic about center
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 6 ---
+\begin{frame}{Vuong Test and Scoring Rules}
+\begin{itemize}
+\item \textbf{Vuong (1989) test}: for comparing non-nested models
+\[
+V = \frac{\sum_{i=1}^n m_i}{\sqrt{n}\,\hat{\sigma}_m}, \quad m_i = \ln\frac{f_1(x_i;\hat{\theta}_1)}{f_2(x_i;\hat{\theta}_2)}
+\]
+$V \sim N(0,1)$ under $H_0$: models are equivalent
+\item \textbf{CRPS} (Continuous Ranked Probability Score):
+\[
+\text{CRPS}(F, x) = \int_{-\infty}^{\infty} (F(y) - \mathbf{1}_{y \geq x})^2\,dy
+\]
+\item Proper scoring rule: encourages honest probabilistic forecasts
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 7 ---
+\begin{frame}{Predictive Density Evaluation}
+\begin{itemize}
+\item \textbf{Diebold--Mariano test}: compare predictive densities out-of-sample
+\item \textbf{Cross-validation}: $k$-fold evaluation of distributional fit
+\item \textbf{Probability Integral Transform (PIT)}:
+\begin{itemize}
+\item If $F$ is the true CDF, then $U_i = F(X_i) \sim \text{Uniform}(0,1)$
+\item Test uniformity of PIT values $\Rightarrow$ test distributional adequacy
+\item Rosenblatt (1952) transform for multivariate case
+\end{itemize}
+\item In-sample fit $\neq$ out-of-sample predictive ability
+\item Overfitting risk: complex models (GH, 5 params) may overfit in-sample
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Risk Management Implications}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{The Risk Question}
+\begin{itemize}
+\item A bank holds a portfolio worth \$1{,}000{,}000
+\item Fundamental question: \textit{``What is the maximum loss we can expect on a given day, with a specified level of confidence?''}
+\item \textbf{Quantile intuition}: the $\alpha$-quantile $q_\alpha$ satisfies:
+\[
+P(r_t \leq q_\alpha) = \alpha
+\]
+\item For $\alpha = 0.01$: $q_{0.01}$ is exceeded (downside) only 1\% of the time
+\item In 100 trading days, we expect to lose more than $q_{0.01}$ on $\approx 1$ day
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 2 ---
+\begin{frame}{Value-at-Risk --- Definition}
+\begin{defn}[Value-at-Risk]
+The \textbf{Value-at-Risk} at level $\alpha$ is the loss threshold exceeded with probability $\alpha$:
+\[
+\text{VaR}_\alpha = -q_\alpha = -F^{-1}(\alpha),
+\]
+where $F$ is the CDF of returns.
+\end{defn}
+
+\begin{itemize}
+\item With probability $(1-\alpha)$, the daily loss will \textbf{not exceed} $\text{VaR}_\alpha$
+\item \textbf{Convention}: ``1\% VaR'' means $\alpha = 0.01$ (loss exceeded with 1\% probability)
+\item The minus sign converts the negative quantile into a positive loss amount
+\end{itemize}
+\end{frame}
+
+%--- Y3 Slide 3 ---
+\begin{frame}{VaR under the Normal Assumption}
+\begin{itemize}
+\item If $r_t \sim N(\mu, \sigma^2)$:
+\[
+\text{VaR}_\alpha = -(\mu + \sigma \cdot z_\alpha), \quad z_\alpha = \Phi^{-1}(\alpha)
+\]
+\item \textbf{Example}: $\mu = 0$, $\sigma = 0.015$, portfolio = \$1M, $\alpha = 0.01$:
+\[
+\text{VaR}_{0.01} = -0.015 \times (-2.326) \times 1{,}000{,}000 = \$34{,}890
+\]
+\item On 99 out of 100 trading days, loss will not exceed \$34{,}890
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[->] (-4,0) -- (4,0) node[right] {$r$};
+\draw[->] (-4,0) -- (-4,2.5) node[above] {$f(r)$};
+\draw[MainBlue, thick, domain=-4:4, samples=100] plot (\x, {2.2*exp(-\x*\x/2)});
+\fill[Crimson, opacity=0.3, domain=-4:-2.326, samples=50] plot (\x, {2.2*exp(-\x*\x/2)}) -- (-2.326,0) -- (-4,0) -- cycle;
+\draw[Crimson, thick, dashed] (-2.326,0) -- (-2.326,{2.2*exp(-2.326*2.326/2)});
+\node[below, Crimson] at (-2.326,-0.15) {$-\text{VaR}_{0.01}$};
+\node[Crimson] at (-3.2,0.4) {$\alpha = 1\%$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+%--- Y3 Slide 4 ---
+\begin{frame}{Why the Distribution Matters for VaR}
+\begin{center}
+\renewcommand{\arraystretch}{1.0}
+\scriptsize
+\begin{tabular}{l c c c}
+\toprule
+\textbf{Model} & \textbf{1\% VaR (\$1M)} & \textbf{0.1\% VaR (\$1M)} & \textbf{Ratio to Normal} \\
+\midrule
+Normal & \$27{,}000 & \$35{,}900 & 1.0$\times$ \\
+Student-$t$ ($\nu=5$) & \$33{,}700 & \$58{,}400 & 1.6$\times$ \\
+Stable ($\alpha=1.7$) & \$41{,}000 & \$90{,}200 & 2.5$\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item At 1\% level: moderate difference ($\sim$25\%); at 0.1\%: \textbf{dramatic} (1.6--2.5$\times$)
+\item \textbf{Conclusion}: Distribution choice directly affects required capital
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{ch2_var_comparison.png}
+\end{center}
+\end{frame}
+
+%--- Y3 Slide 5 ---
+\begin{frame}{Limitations of VaR}
+\begin{itemize}
+\item VaR tells us the \textit{threshold} of the worst $\alpha$-fraction of days
+\item But \textbf{not} how bad things get \textit{beyond} that threshold
+\item VaR does not distinguish between ``losing \$35k'' and ``losing \$200k'' --- both are ``VaR exceedances''
+\item A better measure (\textbf{Expected Shortfall}) addresses this limitation
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{VaR is Not Subadditive}
+\begin{itemize}
+\item Diversification can \textit{increase} VaR: $\text{VaR}(X+Y) > \text{VaR}(X) + \text{VaR}(Y)$ is possible
+\item This contradicts the principle that diversification reduces risk
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%--- MSc Slide 6 ---
+\begin{frame}{Expected Shortfall}
+\begin{defn}[Expected Shortfall]
+The \textbf{Expected Shortfall} (Conditional VaR) at level $\alpha$:
+\[
+\text{ES}_\alpha = -\frac{1}{\alpha}\int_0^\alpha F^{-1}(p)\,dp = \E[-X \mid X \leq -\text{VaR}_\alpha].
+\]
+\end{defn}
+
+\begin{itemize}
+\item \textbf{Interpretation}: average loss given we are in the worst $\alpha\%$ of days
+\item Under normality: $\text{ES}_\alpha = -\mu + \sigma\frac{\phi(\Phi^{-1}(\alpha))}{\alpha}$
+\item ES is a \textbf{coherent} risk measure (subadditive):
+\[
+\text{ES}(X+Y) \leq \text{ES}(X) + \text{ES}(Y)
+\]
+\item Diversification always reduces ES (unlike VaR)
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 7 ---
+\begin{frame}{Backtesting and Basel Framework}
+\begin{itemize}
+\item \textbf{Kupiec test}: $LR_{uc} = -2\ln\frac{\alpha^x(1-\alpha)^{n-x}}{\hat{\alpha}^x(1-\hat{\alpha})^{n-x}} \sim \chi^2(1)$
+\begin{itemize}
+\item $x$ = number of VaR exceedances in $n$ days; $H_0$: true rate $= \alpha$
+\end{itemize}
+\item \textbf{Christoffersen test}: independence of exceedances (no clustering)
+\item \textbf{Basel III/IV}: shift from 1\% VaR (10-day) to 2.5\% ES
+\item Traffic light: Green (0--4), Yellow (5--9), Red (10+) per 250 days
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{ch2_var_backtest.png}
+\end{center}
+\end{frame}
+
+%--- MSc Slide 8 ---
+\begin{frame}{VaR Backtest Results}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{ch2_risk_comparison_table.png}
+\end{center}
+
+\begin{itemize}
+\item Normal: too many VaR exceedances $\Rightarrow$ rejected by Kupiec test
+\item Student-$t$: exceedances close to expected rate
+\item EVT-based: conservative but robust
+\item \textbf{Model risk}: capital reserves depend on the model chosen
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 9 ---
+\begin{frame}{Spectral Risk Measures and Elicitability}
+\begin{itemize}
+\item \textbf{Spectral risk measures}:
+\[
+\rho_\phi(X) = -\int_0^1 \phi(p)\,F^{-1}(p)\,dp
+\]
+with risk spectrum $\phi(p) \geq 0$, $\int_0^1 \phi(p)\,dp = 1$, $\phi$ non-decreasing
+\item VaR: $\phi(p) = \delta(p - \alpha)$; \quad ES: $\phi(p) = \frac{1}{\alpha}\mathbf{1}_{p \leq \alpha}$
+\item \textbf{Elicitability} (Gneiting, 2011):
+\begin{itemize}
+\item VaR is elicitable: optimal under quantile loss $\rho(x,q) = (\alpha - \mathbf{1}_{x<q})(x-q)$
+\item ES is \textbf{not} elicitable alone
+\item (VaR, ES) is jointly elicitable (Fissler \& Ziegel, 2016)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 10 ---
+\begin{frame}{Capital Allocation and Model Risk}
+\begin{itemize}
+\item \textbf{Euler allocation}: allocate portfolio ES to individual positions:
+\[
+\text{ES}_i = \E[-X_i \mid X_{\text{total}} \leq -\text{VaR}_\alpha]
+\]
+\item Distributional assumptions directly affect allocated capital per desk
+\item \textbf{Stable distributions and extreme risk}: ES under stable diverges as $\alpha \to 0$ faster than under Student-$t$
+\item \textbf{Model risk quantification}: compute VaR/ES under multiple models; the range quantifies model uncertainty
+\item Regulatory response: stressed VaR, model risk add-ons
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section{Modern Extensions}
+%#############################################################################
+
+%--- Y3 Slide 1 ---
+\begin{frame}{GARCH --- Intuition}
+\begin{itemize}
+\item Returns are uncorrelated but \textbf{not independent}: volatility changes over time
+\item \textbf{GARCH(1,1)}: variance depends on past shocks and past variance:
+\[
+\sigma_t^2 = \omega + \alpha\epsilon_{t-1}^2 + \beta\sigma_{t-1}^2
+\]
+\item $\alpha$: reaction to shocks; $\beta$: persistence; $\alpha + \beta < 1$: stationarity
+\item After GARCH filtering, standardized residuals $z_t = \epsilon_t/\sigma_t$ are approximately i.i.d.
+\item But $z_t$ still shows \textbf{excess kurtosis} $\Rightarrow$ use Student-$t$ or skewed-$t$ innovations
+\end{itemize}
+\end{frame}
+
+%--- MSc Slide 2 ---
+\begin{frame}{GARCH with Non-Gaussian Innovations}
+\begin{itemize}
+\item \textbf{GARCH-$t$}: $r_t = \mu + \sigma_t z_t$, \quad $z_t \sim t_\nu$
+\item Captures both volatility clustering and heavy tails
+\item \textbf{Asymmetric GARCH}:
+\begin{itemize}
+\item GJR-GARCH: $\sigma_t^2 = \omega + (\alpha + \gamma\,\mathbf{1}_{\epsilon_{t-1}<0})\epsilon_{t-1}^2 + \beta\sigma_{t-1}^2$
+\item EGARCH: $\ln\sigma_t^2 = \omega + \alpha|z_{t-1}| + \gamma z_{t-1} + \beta\ln\sigma_{t-1}^2$
+\end{itemize}
+\item $\gamma > 0$ in GJR or $\gamma < 0$ in EGARCH captures the \textbf{leverage effect}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.45\textwidth]{ch2_garch_t_fit.png}
+\end{center}
+\end{frame}
+
+%--- MSc Slide 3 ---
+\begin{frame}{Gaussian Mixtures and Regime Switching}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\textbf{Gaussian mixtures}:
+\[
+f(x) = \sum_{k=1}^K \pi_k\,\phi(x;\mu_k, \sigma_k^2)
+\]
+\begin{itemize}
+\item $K=2$: calm regime ($\sigma_1$ small) + crisis regime ($\sigma_2$ large)
+\item EM algorithm for estimation
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Hamilton (1989) regime switching}:
+\begin{itemize}
+\item Latent Markov chain $s_t \in \{1,2\}$
+\item $r_t \mid s_t \sim N(\mu_{s_t}, \sigma_{s_t}^2)$
+\item Transition probabilities estimated via MLE
+\end{itemize}
+\end{column}
+\begin{column}{0.43\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{ch2_gaussian_mixture.png}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%--- MSc Slide 4 ---
+\begin{frame}{Regime Classification}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{ch2_regime_classification.png}
+\end{center}
+\begin{itemize}
+\item Smooth probability of being in ``crisis'' regime
+\item Crisis periods: 2001, 2008--2009, 2020
+\item Regime-switching captures time-varying tail risk
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 5 ---
+\begin{frame}{Stochastic Volatility and Jump-Diffusion}
+\begin{itemize}
+\item \textbf{Stochastic volatility}:
+\[
+d\ln\sigma_t^2 = \kappa(\theta - \ln\sigma_t^2)\,dt + \sigma_v\,dW_t^v
+\]
+with $\Corr(dW_t, dW_t^v) = \rho$ (leverage)
+\item \textbf{Jump-diffusion} (Merton, 1976):
+\[
+dS/S = \mu\,dt + \sigma\,dW + J\,dN_t
+\]
+where $N_t$ is a Poisson process, $J \sim N(\mu_J, \sigma_J^2)$
+\item Kou (2002): double-exponential jumps for analytical tractability
+\item These models generate heavy tails and volatility clustering simultaneously
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 6 ---
+\begin{frame}{L\'{e}vy-Driven Models}
+\begin{itemize}
+\item \textbf{BNS model} (Barndorff-Nielsen \& Shephard, 2001):
+\[
+dX_t = (\mu + \beta\sigma_t^2)\,dt + \sigma_t\,dW_t, \quad d\sigma_t^2 = -\lambda\sigma_t^2\,dt + dL_{\lambda t}
+\]
+where $L_t$ is a subordinator (increasing L\'{e}vy process)
+\item \textbf{GARCH with stable innovations}: Mittnik \& Rachev (1993)
+\item \textbf{Realized volatility}: $RV_t = \sum_{i=1}^{M} r_{t,i}^2$ (high-frequency)
+\item Fractionally integrated GARCH (FIGARCH) for long memory in volatility
+\end{itemize}
+\end{frame}
+
+%--- PhD Slide 7 ---
+\begin{frame}{Realized Measures and Microstructure}
+\begin{itemize}
+\item \textbf{Realized variance}: $RV_t = \sum_{i=1}^M r_{t,i}^2 \xrightarrow{p} \int_0^1 \sigma_s^2\,ds$ as $M \to \infty$
+\item \textbf{Microstructure noise}: at very high frequencies, bid-ask bounce biases $RV$ upward
+\item \textbf{Corrections}: subsampling, kernel estimators (Barndorff-Nielsen et al., 2008)
+\item \textbf{Jump detection}: bipower variation separates continuous and jump components
+\item Distribution of returns \textit{conditional on} realized volatility is closer to Gaussian (time-deformation)
+\end{itemize}
+\end{frame}
+
+%#############################################################################
 \section{Conclusions}
+%#############################################################################
 
-%-----------------------------------------------------------------------------
-% Slide: Summary
-%-----------------------------------------------------------------------------
-\begin{frame}{Summary}
-
+%--- Y3 Slide 1 ---
+\begin{frame}{Key Takeaways}
+\begin{enumerate}
+\item Financial returns are \textbf{not Normal}: fat tails, skewness, volatility clustering
+\item \textbf{Student-$t$}: simplest heavy-tailed model, captures excess kurtosis
+\item \textbf{Stable distributions}: theoretically motivated (GCLT), infinite variance possible
+\item \textbf{EVT}: rigorous framework for extreme tail modeling
+\item \textbf{VaR and ES}: the distribution choice directly affects risk measurement
 \begin{itemize}
-    \item Stable distributions provide a \textbf{theoretically grounded} and \textbf{flexible} framework for modeling financial returns that exhibit heavy tails and skewness.
-
-    \vspace{0.2cm}
-
-    \item Key takeaways:
-    \begin{itemize}
-        \item The \textbf{Generalized Central Limit Theorem} justifies the use of stable distributions as limits of sums of i.i.d.\ heavy-tailed variables.
-        \item Four parameters ($\alpha, \beta, \gamma, \delta$) control tail behavior, asymmetry, scale, and location.
-        \item The \textbf{Gaussian} ($\alpha = 2$) and \textbf{Cauchy} ($\alpha = 1, \beta = 0$) distributions are important special cases.
-        \item \textbf{No closed-form PDF} in general -- numerical methods are essential.
-        \item Multiple \textbf{parameterizations} exist; care is needed when comparing results.
-        \item Efficient \textbf{estimation} (MLE, quantile methods) and \textbf{simulation} (CMS algorithm) methods are available.
-    \end{itemize}
-
-    \vspace{0.2cm}
-
-    \item Stable distributions remain an active area of research in \textbf{financial econometrics}, \textbf{risk management}, and \textbf{quantitative finance}.
+\item 1\% VaR under Normal $\ll$ 1\% VaR under Student-$t$ $\ll$ 1\% VaR under Stable
 \end{itemize}
+\item \textbf{No single best model}: choice depends on application (pricing, risk, regulation)
+\end{enumerate}
 
+\vspace{0.2cm}
+\begin{block}{Central Message}
+\begin{itemize}
+\item \textbf{Underestimating tail risk has real consequences}: insufficient capital, unexpected losses, and systemic crises
+\item Accurate distributional modeling is not an academic exercise --- it is a regulatory and financial necessity
+\end{itemize}
+\end{block}
 \end{frame}
 
-%=============================================================================
-% SECTION: REFERENCES
-%=============================================================================
-\section{References}
+%--- Y3 Slide 2 ---
+\begin{frame}{Homework Assignments}
+\textbf{Year 3}:
+\begin{enumerate}
+\item Download 5 years of daily prices for a stock. Compute log-returns, sample moments, and test normality (Jarque--Bera).
+\item Fit Normal and Student-$t$ distributions via MLE. Compare using AIC/BIC and QQ-plots.
+\item Compute 1\% VaR and 0.1\% VaR under both models for a \$1M portfolio.
+\end{enumerate}
 
-%-----------------------------------------------------------------------------
-% Slide: References
-%-----------------------------------------------------------------------------
-\begin{frame}{References}
+\vspace{0.2cm}
+\textbf{additional}:
+\begin{enumerate}\setcounter{enumi}{3}
+\item Fit Hansen's skewed-$t$ and compute ES at the 1\% level.
+\item Perform a rolling-window VaR backtest (250-day window) and apply the Kupiec test.
+\end{enumerate}
+\end{frame}
 
+%--- MSc Slide 3 ---
+\begin{frame}{Advanced Homework}
+\begin{enumerate}\setcounter{enumi}{5}
+\item Fit a stable distribution to your data using MLE. Report $(\hat{\alpha}, \hat{\beta}, \hat{\gamma}, \hat{\delta})$.
+\item Apply the POT method: select threshold, fit GPD, compute EVT-based 1\% VaR and ES.
+\item Compare all models (Normal, Student-$t$, skewed-$t$, Stable, EVT) in a summary table.
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{additional}:
+\begin{enumerate}\setcounter{enumi}{8}
+\item Implement the Hill estimator. Create a Hill plot and discuss the bias--variance trade-off.
+\item Fit a GARCH(1,1)-$t$ model. Compare the distribution of standardized residuals with the unconditional return distribution.
+\end{enumerate}
+\end{frame}
+
+%--- PhD Slide 4 ---
+\begin{frame}{Research Directions}
+\begin{itemize}
+\item \textbf{Open questions}:
+\begin{itemize}
+\item Is the true tail index of financial returns closer to $\alpha \approx 3$ (finite variance) or $\alpha \approx 1.7$ (infinite variance)?
+\item How should we aggregate risk when distributions have infinite variance?
+\item Can machine learning improve distributional forecasting?
+\end{itemize}
+\item \textbf{Suggested readings}:
+\begin{itemize}
+\item Cont (2001): ``Empirical properties of asset returns: stylized facts and statistical issues''
+\item McNeil, Frey \& Embrechts (2015): \textit{Quantitative Risk Management}
+\item Nolan (2020): \textit{Stable Distributions --- Models for Heavy Tailed Data}
+\item Rachev (2003): \textit{Handbook of Heavy Tailed Distributions in Finance}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%#############################################################################
+\section*{References}
+%#############################################################################
+
+\begin{frame}{References I}
+\small
 \begin{thebibliography}{99}
-\setbeamertemplate{bibliography item}[text]
-
-\bibitem{Levy1925}
-L\'{e}vy, P. (1925).
-\textit{Calcul des probabilit\'{e}s}.
-Gauthier-Villars, Paris.
-
-\bibitem{Mandelbrot1963}
-Mandelbrot, B. (1963).
-The Variation of Certain Speculative Prices.
-\textit{The Journal of Business}, 36(4), 394--419.
-
-\bibitem{Fama1965}
-Fama, E.F. (1965).
-The Behavior of Stock-Market Prices.
-\textit{The Journal of Business}, 38(1), 34--105.
-
-\bibitem{Nolan2003}
-Nolan, J.P. (2003).
-Stable Distributions: Models for Heavy Tailed Data.
-Birkh\"{a}user, Boston. (Chapter 1 online at academic2.american.edu/\~{}jpnolan).
-
-\bibitem{FrankeHardleHafner2019}
-Franke, J., H\"{a}rdle, W.K., \& Hafner, C.M. (2019).
-\textit{Statistics of Financial Markets: An Introduction}. 4th ed.
-Springer, Berlin.
-
+\bibitem{mandelbrot63} Mandelbrot, B. (1963). The variation of certain speculative prices. \textit{Journal of Business}, 36(4), 394--419.
+\bibitem{fama65} Fama, E. (1965). The behavior of stock-market prices. \textit{Journal of Business}, 38(1), 34--105.
+\bibitem{cont01} Cont, R. (2001). Empirical properties of asset returns: stylized facts and statistical issues. \textit{Quantitative Finance}, 1(2), 223--236.
+\bibitem{hansen94} Hansen, B. (1994). Autoregressive conditional density estimation. \textit{International Economic Review}, 35(3), 705--730.
+\bibitem{nolan97} Nolan, J. P. (1997). Numerical calculation of stable densities and distribution functions. \textit{Stochastic Models}, 13(4), 759--774.
+\bibitem{mcneil05} McNeil, A., Frey, R. \& Embrechts, P. (2015). \textit{Quantitative Risk Management}. Princeton University Press.
+\bibitem{bn77} Barndorff-Nielsen, O. (1977). Exponentially decreasing distributions for the logarithm of particle size. \textit{Proceedings of the Royal Society of London A}, 353, 401--419.
 \end{thebibliography}
-
 \end{frame}
 
-%=============================================================================
+\begin{frame}{References II}
+\small
+\begin{thebibliography}{99}
+\bibitem{hamilton89} Hamilton, J. D. (1989). A new approach to the economic analysis of nonstationary time series. \textit{Econometrica}, 57(2), 357--384.
+\bibitem{merton76} Merton, R. (1976). Option pricing when underlying stock returns are discontinuous. \textit{Journal of Financial Economics}, 3, 125--144.
+\bibitem{rachev03} Rachev, S. T. (2003). \textit{Handbook of Heavy Tailed Distributions in Finance}. Elsevier.
+\bibitem{nolan20} Nolan, J. P. (2020). \textit{Stable Distributions --- Models for Heavy Tailed Data}. Birkh\"{a}user.
+\bibitem{vuong89} Vuong, Q. H. (1989). Likelihood ratio tests for model selection and non-nested hypotheses. \textit{Econometrica}, 57(2), 307--333.
+\bibitem{fissler16} Fissler, T. \& Ziegel, J. F. (2016). Higher order elicitability and Osband's principle. \textit{Annals of Statistics}, 44(4), 1680--1707.
+\bibitem{bns01} Barndorff-Nielsen, O. \& Shephard, N. (2001). Non-Gaussian Ornstein--Uhlenbeck-based models. \textit{Journal of the Royal Statistical Society B}, 63(2), 167--241.
+\end{thebibliography}
+\end{frame}
+
 \end{document}
-%=============================================================================

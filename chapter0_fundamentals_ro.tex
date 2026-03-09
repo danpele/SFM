@@ -1,0 +1,2172 @@
+% Capitolul 0: Fundamente ale Analizei Seriilor de Timp
+% Prezentare academică de calitate Harvard
+% Program de licență, Academia de Studii Economice din București
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+\input{preamble}
+\subtitle{Capitolul 0: Fundamente}
+
+\begin{document}
+
+% Pagina de titlu (fără antet/subsol)
+{
+    \setbeamertemplate{headline}{}
+    \setbeamertemplate{footline}{}
+    \begin{frame}
+        \titlepage
+    \end{frame}
+}
+
+%=============================================================================
+% OBIECTIVE DE ÎNVĂȚARE
+%=============================================================================
+\begin{frame}{Obiective de învățare}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{La sfârșitul acestui capitol, veți putea să:}
+            \begin{itemize}\setlength{\itemsep}{2pt}
+                \item[\textcolor{MainBlue}{\textbf{1.}}] \textbf{Definiți} seriile de timp și să le diferențiați de datele transversale și de panel
+                \item[\textcolor{MainBlue}{\textbf{2.}}] \textbf{Descompuneți} seriile de timp în componente de trend-ciclu, sezonalitate și reziduuri
+                \item[\textcolor{MainBlue}{\textbf{3.}}] \textbf{Aplicați} metodele de netezire exponențială: SES (Simple Exponential Smoothing), Holt, Holt-Winters
+                \item[\textcolor{MainBlue}{\textbf{}}] Cadrul ETS (Error-Trend-Seasonality) pentru selecția automată a modelului
+                \item[\textcolor{MainBlue}{\textbf{4.}}] \textbf{Evaluați} prognozele folosind MAE (Mean Absolute Error), RMSE (Root Mean Squared Error)
+                \item[\textcolor{MainBlue}{\textbf{}}] Metrici procentuale: MAPE (Mean Absolute Percentage Error), sMAPE (symmetric MAPE)
+                \item[\textcolor{MainBlue}{\textbf{5.}}] \textbf{Implementați} separarea antrenare/validare/test și validarea încrucișată
+                \item[\textcolor{MainBlue}{\textbf{6.}}] \textbf{Modelați} sezonalitatea folosind variabile dummy sau termeni Fourier
+                \item[\textcolor{MainBlue}{\textbf{7.}}] \textbf{Eliminați} trendul și sezonalitatea prin metode adecvate
+                \item[\textcolor{MainBlue}{\textbf{8.}}] \textbf{Diferențiați} între trendurile deterministe și stochastice
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% CUPRINS
+%=============================================================================
+\begin{frame}{Cuprins}
+    \setbeamertemplate{section in toc}{\color{MainBlue}$\boxdot$~\inserttocsection}
+    \tableofcontents
+\end{frame}
+
+%=============================================================================
+% MOTIVAȚIE
+%=============================================================================
+\section{Motivație}
+
+\begin{frame}{Seriile de timp sunt pretutindeni}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ch1_motivation_everywhere.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \quantlet{TSA\_ch0\_real\_data}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_real_data}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{exampleblock}{}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Finanțe}: Prețuri acțiuni, cursuri valutare, volume
+                \item \textbf{Economie}: PIB (Produs Intern Brut), șomaj, rate ale inflației
+                \item \textbf{Afaceri}: Vânzări, trafic web, cerere
+                \item \textbf{Știință}: Temperatură, poluare, semne vitale
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{De ce studiem seriile de timp?}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ch1_motivation_forecast.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch0\_real\_data}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_real_data}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{alertblock}{Obiectiv principal: prognoza}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Folosim tiparele istorice pentru a prognoza valori viitoare
+                \item Esențial pentru planificarea afacerilor, managementul riscului și deciziile de politică
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Înțelegerea structurii seriilor de timp}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ch1_motivation_components.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch0\_real\_data}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_real_data}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{exampleblock}{Descompunere}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Majoritatea seriilor de timp pot fi descompuse în: \textbf{trend-ciclu} + \textbf{sezonalitate} + \textbf{zgomot}
+            \end{itemize}
+        \end{exampleblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 1: CE ESTE O SERIE DE TIMP
+%=============================================================================
+\section{Ce Este o Serie de timp?}
+
+\begin{frame}{Serie de timp: ilustrație conceptuală}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.45\textheight, keepaspectratio]{ch1_def_timeseries.pdf}
+        \end{center}
+        \vspace{-0.2cm}
+        \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+        \begin{exampleblock}{Elemente fundamentale}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Notație formală}: $X_t$ = valoarea la momentul $t$, $t \in \{1, 2, \ldots, T\}$
+                \item \textbf{Autocorelație}: $\rho_k = \text{Corr}(X_t, X_{t-k})$ --- măsoară dependența temporală
+                \item Funcția ACF (Autocorrelation Function) cuantifică această dependență
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Definiția unei serii de timp}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[Serie de timp]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Serie de timp}: secvență de observații $\{X_t\}$ indexate după timp:
+                $\{X_t : t \in \mathcal{T}\}$
+                unde $\mathcal{T}$ este o mulțime de indici reprezentând momente de timp
+            \end{itemize}
+        \end{defn}
+
+        \vspace{0.2cm}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{block}{Caracteristici}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Ordonate}: ordine temporală naturală
+                    \item \textbf{Dependente}: observațiile consecutive sunt corelate
+                    \item \textbf{Discrete/Continue}: $t = 1, 2, 3, \ldots$
+                \end{itemize}
+            \end{block}
+
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Notație}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{$X_t$}: observația la momentul $t$
+                    \item \textbf{$\{X_t\}_{t=1}^{T}$}: serie cu $T$ observații
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Tipare comune în seriile de timp}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{ch1_ts_patterns.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+        \begin{block}{Tipuri de tipare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Trend}: creștere sau scădere pe termen lung
+                \item \textbf{Sezonier}: tipare periodice regulate
+                \item \textbf{Ciclic}: fluctuații pe termen mediu (2--10 ani)
+                \item \textbf{Aleatoriu}: fluctuații imprevizibile
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu practic: date financiare reale}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.44\textheight, keepaspectratio]{timeseries_definition.pdf}
+        \end{center}
+        \vspace{-0.2cm}
+        \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+        \begin{block}{S\&P 500 (2024)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Frecvență zilnică}: $\approx$ 252 zile de tranzacționare/an
+                \item \textbf{Caracteristici observate}: trend ascendent, volatilitate grupată
+                \item \textbf{Persistență}: efectul de inerție în prețuri
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Tipuri de date: comparație}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{data_types_comparison.pdf}
+        \end{center}
+        \vspace{-0.2cm}
+        \begin{center}
+        \small
+        \begin{tabular}{lccc}
+        \toprule
+        \textbf{Tip de Date} & \textbf{Unități ($N$)} & \textbf{Timp ($T$)} & \textbf{Exemplu} \\
+        \midrule
+        Transversale & Multe & 1 & Sondaj pe 1000 gospodării \\
+        Serie de timp & 1 & Multe & Prețuri zilnice S\&P 500 \\
+        Panel & Multe & Multe & PIB-ul a 50 țări, 20 ani \\
+        \bottomrule
+        \end{tabular}
+        \end{center}
+        \vspace{-2mm}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+\end{frame}
+
+\begin{frame}{Exemple de date de tip serie de timp}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{multiple_assets.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_real\_data}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_real_data}
+        \begin{exampleblock}{Date financiare reale}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Sursă}: Yahoo Finance (2019--2025), normalizate la baza 100
+                \item \textbf{Bitcoin}: cel mai volatil
+                \item \textbf{Aur}: cel mai stabil
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 2: DESCOMPUNEREA SERIILOR DE TIMP
+%=============================================================================
+\section{Descompunerea seriilor de timp}
+
+\begin{frame}{Descompunerea seriilor de timp: exemplu vizual}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{ch1_decomposition.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+        \begin{block}{Componente explicate}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Original}: seria observată
+                \item \textbf{Trend-Ciclu}: mișcare pe termen lung
+                \item \textbf{Sezonier}: tipar periodic
+                \item \textbf{Reziduu}: zgomot aleatoriu
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{De ce descompunem o serie de timp?}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Obiective}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Înțelegerea tiparelor subiacente
+                        \item Eliminarea sezonalității pentru modelare
+                        \item Identificarea direcției trendului
+                        \item Izolarea fluctuațiilor neregulate
+                        \item Îmbunătățirea acurateții prognozei
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Componente}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{$T_t$}: Trend-Ciclu
+                        \begin{itemize}
+                            \item Mișcare pe termen lung
+                        \end{itemize}
+                        \item \textbf{$S_t$}: Sezonier
+                        \begin{itemize}
+                            \item Tipar periodic regulat
+                        \end{itemize}
+                        \item \textbf{$\varepsilon_t$}: Reziduu
+                        \begin{itemize}
+                            \item Zgomot aleatoriu
+                        \end{itemize}
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+
+        \vspace{0.1cm}
+
+        \begin{block}{Modele clasice de descompunere}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Aditiv}: $X_t = T_t + S_t + \varepsilon_t$
+                \begin{itemize}
+                    \item Amplitudine sezonieră constantă
+                \end{itemize}
+                \item \textbf{Multiplicativ}: $X_t = T_t \times S_t \times \varepsilon_t$
+                \begin{itemize}
+                    \item Amplitudine sezonieră crește cu nivelul
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Componenta ciclică}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.51\textheight, keepaspectratio]{ch1_cyclical_component.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+        \vspace{-0.2cm}
+        {\small
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Caracteristici}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Durată}: fluctuații pe termen mediu (2--10 ani)
+                    \item \textbf{Aperiodic}: fără perioadă fixă (vs sezonalitate)
+                    \item \textbf{Origine}: reflectă ciclurile economice
+                \end{itemize}
+            \end{block}
+
+            \column{0.48\textwidth}
+            \begin{alertblock}{În practică}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Combinare}: ciclul combinat cu trendul
+                    \item \textbf{Dificultate}: greu de identificat în serii scurte
+                    \item \textbf{Soluție}: de obicei absorbit în trend-ciclu
+                \end{itemize}
+            \end{alertblock}
+        \end{columns}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Descompunere aditivă: vizualizare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ts_components_synthetic.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+        \vspace{-2mm}
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Descompunere}: Original = Trend + Sezonier + Reziduu
+                \item \textbf{Proprietate}: amplitudine sezonieră constantă, nu depinde de nivel
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Modelul de descompunere aditivă}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Model}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Ecuație}: $X_t = T_t + S_t + \varepsilon_t$
+                \begin{itemize}
+                    \item Componentele se adună pentru a forma seria observată
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.2cm}
+
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Când să folosim}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Fluctuații sezoniere constante}
+                    \begin{itemize}
+                        \item Amplitudinea nu depinde de nivel
+                    \end{itemize}
+                    \item \textbf{Varianța seriei stabilă}
+                    \begin{itemize}
+                        \item Măsoară dispersia în jurul mediei
+                        \item Estimator: $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.48\textwidth}
+            \begin{block}{Proprietăți}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Eroare}: $\E[\varepsilon_t] = 0$ (medie zero)
+                    \item \textbf{Sezonier}: $\sum_{j=1}^{s} S_j = 0$ (suma sezonală e zero)
+                    \item \textbf{Unități}: $S_t$ sunt aceleași ca $X_t$
+                \end{itemize}
+            \end{block}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Descompunere multiplicativă: date reale}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{airline_decomposition.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{exampleblock}{Exemplu}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Date Box-Jenkins: pasageri lunari (1949--1960)
+                \item Amplitudinea sezonieră crește cu nivelul
+            \end{itemize}
+        \end{exampleblock}
+        }
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+\end{frame}
+
+\begin{frame}{Modelul de descompunere multiplicativă}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{block}{Model}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Ecuație}: $X_t = T_t \times S_t \times \varepsilon_t$
+                \item Componentele se înmulțesc pentru a forma seria observată
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.05cm}
+
+        {\footnotesize
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Când să folosim}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Fluctuații crescătoare}: sezonalitatea crește cu nivelul
+                    \item \textbf{Heteroscedasticitate}: varianța crește în timp
+                    \item \textbf{Exemple}: date economice/financiare
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.48\textwidth}
+            \begin{block}{Proprietăți}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Eroare}: $\E[\varepsilon_t] = 1$ (centrat la 1)
+                    \item \textbf{Sezonier}: $\frac{1}{s}\sum_{j=1}^{s} S_j = 1$ (media e 1)
+                    \item \textbf{Unități}: $S_t$ este raport adimensional
+                \end{itemize}
+            \end{block}
+        \end{columns}
+        }
+
+        \vspace{0.05cm}
+
+        {\footnotesize
+        \begin{alertblock}{Sfat}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Transformare logaritmică}: multiplicativ $\Rightarrow$ aditiv
+                \item $\log X_t = \log T_t + \log S_t + \log \varepsilon_t$
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Aditivă vs multiplicativă: comparație}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{additive_vs_multiplicative.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+        \begin{block}{Diferența}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Multiplicativ}: componenta sezonieră este un \textit{raport}, centrată la valoarea 1
+                \item \textbf{Aditiv}: componenta sezonieră în \textit{unități absolute}, centrată la valoarea 0
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Media mobilă centrată: ilustrație vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ch1_def_moving_average.pdf}
+        \end{center}
+        \vspace{-2mm}
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Netezire}: elimină fluctuațiile pe termen scurt
+                \item \textbf{Rezultat}: dezvăluie trendul subiacent
+            \end{itemize}
+        \end{block}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+\end{frame}
+
+\begin{frame}{Estimarea trendului: media mobilă}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[media mobilă centrată]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Media mobilă centrată} de ordin $2q+1$:
+                \vspace{-0.2cm}
+                \begin{equation}
+                \hat{T}_t = \frac{1}{2q+1} \sum_{j=-q}^{q} X_{t+j}
+                \end{equation}
+                \vspace{-0.3cm}
+            \end{itemize}
+        \end{defn}
+
+        \vspace{0.2cm}
+
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Pentru date sezoniere}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Perioada $s$ impară}
+                    \begin{itemize}
+                        \item Se folosește medie simplă
+                    \end{itemize}
+                    \item \textbf{Perioada $s$ pară}
+                    \begin{itemize}
+                        \item $2 \times s$ MA cu ponderi jumătate
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+
+            \column{0.48\textwidth}
+            \begin{exampleblock}{Proprietăți}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Netezire}: elimină sezonierul \& aleatoriul
+                    \item \textbf{Fereastră mare} $\Rightarrow$ estimare mai netedă
+                    \item \textbf{Dezavantaj}: pierdere de date la extremități
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Indici sezonieri: interpretare}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{seasonal_pattern.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $S_t > 1$: activitate peste medie; $S_t < 1$: sub medie
+                \item Vârf al călătoriilor în iulie--august
+            \end{itemize}
+        \end{block}
+        }
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_seasonal}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_seasonal}
+\end{frame}
+
+\begin{frame}{Algoritmul descompunerii clasice}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Pași pentru descompunerea multiplicativă}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Pasul 1} $\Rightarrow$ \textbf{Estimare Trend}: $\hat{T}_t = MA_s(X_t)$
+                \begin{itemize}
+                    \item Medie mobilă centrată de ordinul perioadei sezoniere
+                \end{itemize}
+                \item \textbf{Pasul 2} $\Rightarrow$ \textbf{Eliminarea trendului}: $D_t = X_t / \hat{T}_t$
+                \item \textbf{Pasul 3} $\Rightarrow$ \textbf{Estimare Sezonier}: $\hat{S}_j = \text{media}(D_t \text{ pentru sezonul } j)$
+                \item \textbf{Pasul 4} $\Rightarrow$ \textbf{Normalizare}: scalare astfel încât $\frac{1}{s}\sum_{j=1}^{s} \hat{S}_j = 1$
+                \item \textbf{Pasul 5} $\Rightarrow$ \textbf{Calcul Reziduuri}: $\hat{\varepsilon}_t = X_t / (\hat{T}_t \times \hat{S}_t)$
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.3cm}
+
+        \begin{alertblock}{Notă}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Pentru descompunere aditivă}: operațiile se modifică
+                \begin{itemize}
+                    \item Împărțire $\Rightarrow$ scădere
+                    \item Înmulțire $\Rightarrow$ adunare
+                \end{itemize}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Descompunerea STL: ilustrație vizuală}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{ch1_def_stl.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Principiu}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item STL (Seasonal-Trend decomposition using LOESS): separă trend + sezonier + rest
+                \item Folosește regresie locală ponderată LOESS (LOcally Estimated Scatterplot Smoothing)
+            \end{itemize}
+        \end{block}
+        }
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_decomposition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_decomposition}
+\end{frame}
+
+\begin{frame}{Descompunerea STL: o abordare modernă}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[STL - Descompunere Sezonier-Trend folosind LOESS]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{STL}: folosește regresie locală ponderată (LOESS): $X_t = T_t + S_t + R_t$
+            \end{itemize}
+        \end{defn}
+
+        \vspace{0.1cm}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Avantaje}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Flexibilitate}: orice perioadă sezonieră
+                    \item \textbf{Variabilitate}: sezonalitatea poate evolua în timp
+                    \item \textbf{Robustețe}: rezistentă la valori extreme
+                    \item \textbf{Netezire}: estimări netede ale trendului
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.5\textwidth}
+            \begin{block}{Parametri}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{\texttt{period}}: perioada sezonieră
+                    \begin{itemize}
+                        \item Ex: 12 pentru date lunare, 4 pentru trimestriale
+                    \end{itemize}
+                    \item \textbf{\texttt{seasonal}}: fereastra de netezire
+                    \item \textbf{\texttt{robust}}: ponderare redusă pentru valori aberante
+                \end{itemize}
+            \end{block}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 3: METODE DE NETEZIRE EXPONENȚIALĂ
+%=============================================================================
+\section{Metode de Netezire Exponențială}
+
+\begin{frame}{Netezirea cu media mobilă}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.51\textheight, keepaspectratio]{ch1_moving_average.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \begin{block}{Compromisul dimensiunii ferestrei}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Fereastră mică}: reactivă dar zgomotoasă
+                \begin{itemize}
+                    \item Captează schimbări rapide, dar amplifică zgomotul
+                \end{itemize}
+                \item \textbf{Fereastră mare}: netedă dar cu întârziere
+                \begin{itemize}
+                    \item Elimină zgomotul, dar reacționează lent
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_definition}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_definition}
+\end{frame}
+
+\begin{frame}{Netezirea exponențială: prezentare generală}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Definiție}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Netezirea exponențială}: medii ponderate ale observațiilor trecute
+                \begin{itemize}
+                    \item Ponderile scad exponențial în timp
+                    \item Observațiile recente primesc ponderi mai mari
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.2cm}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{exampleblock}{De ce netezire exponențială?}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Simplă}: ușor de implementat și înțeles
+                    \begin{itemize}
+                        \item Un singur parametru de netezire
+                    \end{itemize}
+                    \item \textbf{Adaptivă}: ponderi mai mari pentru date recente
+                    \item \textbf{Versatilă}: gestionează trend și sezonalitate
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.5\textwidth}
+            \begin{alertblock}{Trei metode principale}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{SES} (Simple Exponential Smoothing): doar nivel
+                    \begin{itemize}
+                        \item Cea mai simplă metodă exponențială
+                    \end{itemize}
+                    \item \textbf{Holt}: nivel + trend
+                    \begin{itemize}
+                        \item Captează direcția de evoluție
+                    \end{itemize}
+                    \item \textbf{Holt-Winters}: + sezonalitate
+                    \begin{itemize}
+                        \item Model complet cu toate componentele
+                    \end{itemize}
+                \end{itemize}
+            \end{alertblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Netezirea exponențială simplă: efectul lui $\alpha$}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.51\textheight, keepaspectratio]{simple_exp_smoothing.pdf}
+        \end{center}
+        \vspace{-3mm}
+        \begin{exampleblock}{Compromis}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{$\alpha$ mic} $\Rightarrow$ prognoze netede
+                \begin{itemize}
+                    \item Mai multă pondere pe istoria îndepărtată
+                \end{itemize}
+                \item \textbf{$\alpha$ mare} $\Rightarrow$ urmărește datele
+                \begin{itemize}
+                    \item Reacție rapidă la schimbări recente
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_smoothing}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_smoothing}
+\end{frame}
+
+\begin{frame}{Netezirea exponențială simplă (SES)}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Model}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Ecuație}: $\hat{X}_{t+1|t} = \alpha X_t + (1-\alpha)\hat{X}_{t|t-1}$
+                \begin{itemize}
+                    \item $\alpha \in (0,1)$ este parametrul de netezire
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.2cm}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Cum funcționează}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Principiu}: ponderile scad exponențial
+                    \item \textbf{$\alpha$ mare}
+                    \begin{itemize}
+                        \item Prognoză reactivă la schimbări
+                    \end{itemize}
+                    \item \textbf{$\alpha$ mic}
+                    \begin{itemize}
+                        \item Prognoză mai netedă, stabilă
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.5\textwidth}
+            \begin{block}{Forma cu nivel}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Ecuație}: $\ell_t = \alpha X_t + (1-\alpha)\ell_{t-1}$
+                    \begin{itemize}
+                        \item $\ell_t$ = nivelul estimat la momentul $t$
+                        \item Prognoză: $\hat{X}_{t+h|t} = \ell_t$ (constantă)
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{SES: exemplu numeric pas cu pas}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{exampleblock}{Date: Vânzări lunare (mii EUR)}
+            \vspace{-0.1cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Date}: $X_1=100,\; X_2=110,\; X_3=105,\; X_4=115,\; X_5=120$ \quad ($\alpha=0.3$, $\hat{X}_{1|0}=100$)
+            \end{itemize}
+            \vspace{-0.1cm}
+        \end{exampleblock}
+        \vspace{-0.2cm}
+        \begin{block}{Calcul iterativ: $\hat{X}_{t+1|t} = \alpha X_t + (1-\alpha)\hat{X}_{t|t-1}$}
+            \vspace{-0.1cm}
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{ccccl}
+            \toprule
+            $t$ & $X_t$ & $\hat{X}_{t|t-1}$ & $e_t$ & Calcul $\hat{X}_{t+1|t}$ \\
+            \midrule
+            1 & 100 & 100.00 & 0.00 & $0.3 \times 100 + 0.7 \times 100 = \mathbf{100.00}$ \\
+            2 & 110 & 100.00 & 10.00 & $0.3 \times 110 + 0.7 \times 100 = \mathbf{103.00}$ \\
+            3 & 105 & 103.00 & 2.00 & $0.3 \times 105 + 0.7 \times 103 = \mathbf{103.60}$ \\
+            4 & 115 & 103.60 & 11.40 & $0.3 \times 115 + 0.7 \times 103.6 = \mathbf{107.02}$ \\
+            5 & 120 & 107.02 & 12.98 & $0.3 \times 120 + 0.7 \times 107.02 = \mathbf{110.91}$ \\
+            \bottomrule
+            \end{tabular}
+            \vspace{-0.1cm}
+        \end{block}
+        \vspace{-0.2cm}
+        \begin{alertblock}{Prognoză și evaluare}
+            \vspace{-0.1cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Prognoză}: $\hat{X}_{6|5} = \mathbf{110.91}$
+                \item \textbf{Metrici}: MAE $= 7.28$, \quad RMSE $= 8.97$
+            \end{itemize}
+            \vspace{-0.1cm}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metoda Holt: vizualizare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{holt_method.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_smoothing}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_smoothing}
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Metoda Holt}: captează nivelul și trendul, le proiectează în orizontul de prognoză
+                \item \textbf{$\alpha$}: controlează schimbări de nivel
+                \item \textbf{$\beta^*$}: controlează schimbări de trend
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metoda Holt cu trend liniar}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Ecuații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Nivel}: $\ell_t = \alpha X_t + (1-\alpha)(\ell_{t-1} + b_{t-1})$
+                \item \textbf{Trend}: $b_t = \beta^*(\ell_t - \ell_{t-1}) + (1-\beta^*)b_{t-1}$
+                \item \textbf{Prognoză}: $\hat{X}_{t+h|t} = \ell_t + h \cdot b_t$
+                \begin{itemize}
+                    \item Extrapolează trendul liniar pe $h$ pași
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{columns}[T]
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Parametri}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{$\alpha$}: netezire nivel
+                    \begin{itemize}
+                        \item Controlează reactivitatea la schimbări de nivel
+                    \end{itemize}
+                    \item \textbf{$\beta^*$}: netezire trend
+                    \begin{itemize}
+                        \item Controlează reactivitatea la schimbări de pantă
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+
+            \column{0.5\textwidth}
+            \begin{block}{Componente}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{$\ell_t$}: nivel estimat
+                    \begin{itemize}
+                        \item Media locală a seriei
+                    \end{itemize}
+                    \item \textbf{$b_t$}: trend estimat (pantă)
+                    \begin{itemize}
+                        \item Rata de creștere/descreștere
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Holt-Winters: captarea sezonalității}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.50\textheight, keepaspectratio]{holt_winters.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_smoothing}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_smoothing}
+        \begin{exampleblock}{Observație}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Descompunere completă}: separă nivel, trend și sezonier
+                \item \textbf{Prognoze sezoniere}: include atât trend cât și tipar periodic
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metoda sezonieră Holt-Winters}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Ecuații (sezonalitate aditivă)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Nivel}: $\ell_t = \alpha(X_t - S_{t-s}) + (1-\alpha)(\ell_{t-1} + b_{t-1})$
+                \item \textbf{Trend}: $b_t = \beta^*(\ell_t - \ell_{t-1}) + (1-\beta^*)b_{t-1}$
+                \item \textbf{Sezonier}: $S_t = \gamma(X_t - \ell_t) + (1-\gamma)S_{t-s}$
+                \item \textbf{Prognoză}: $\hat{X}_{t+h|t} = \ell_t + h \cdot b_t + S_{t+h-s(k+1)}$
+                \begin{itemize}
+                    \item Unde $k = \lfloor(h-1)/s\rfloor$
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{exampleblock}{Parametri}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{$\alpha$} — nivel
+                \item \textbf{$\beta^*$} — trend
+                \item \textbf{$\gamma$} — sezonier
+                \item \textbf{$s$} — perioadă sezonieră
+                \begin{itemize}
+                    \item Toți în $(0, 1)$; estimați prin minimizarea erorii
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Cadrul ETS: eroare-trend-sezonalitate}
+    \vspace{-0.2cm}
+    {\scriptsize
+    \begin{defn}[Modele ETS]
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \textbf{Cadrul ETS}: generalizează netezirea exponențială: ETS$(E, T, S)$
+        \end{itemize}
+    \end{defn}
+
+    \vspace{-0.1cm}
+
+    \begin{center}
+    \begin{tabular}{llll}
+    \toprule
+    \textbf{Componentă} & \textbf{N} & \textbf{A} & \textbf{M} \\
+    \midrule
+    Eroare (E) & -- & aditivă & multiplicativă \\
+    Trend (T) & Niciunul & Aditiv & Multiplicativ \\
+    Sezonier (S) & Niciunul & Aditiv & Multiplicativ \\
+    \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \vspace{-0.2cm}
+
+    \begin{exampleblock}{Exemple}
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \textbf{ETS(A,N,N)}: Netezire exponențială simplă $\Rightarrow$ doar nivel, fără trend sau sezonalitate
+            \item \textbf{ETS(A,A,N)}: Metoda Liniară Holt $\Rightarrow$ nivel + trend aditiv
+            \item \textbf{ETS(A,A,A)}: Holt-Winters aditivă $\Rightarrow$ nivel + trend + sezonalitate aditivă
+        \end{itemize}
+    \end{exampleblock}
+    }
+    \vspace{-0.35cm}
+    \begin{center}
+    \includegraphics[width=0.95\textwidth, height=0.18\textheight, keepaspectratio]{ch1_def_ets.pdf}
+    \end{center}
+    \quantlet{TSA\_ch0\_smoothing}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_smoothing}
+\end{frame}
+
+\begin{frame}{Selecția modelului ETS}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{ets_components.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_smoothing}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_smoothing}
+        \begin{exampleblock}{Selecție automată}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Criterii informaționale}: AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion)
+                \item \textbf{Selecție optimală}: echilibru între ajustare și complexitate
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metode cu trend amortizat}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.15cm}
+        \begin{block}{Parametrul de amortizare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Parametru}: $\phi \in (0,1)$
+                \begin{itemize}
+                    \item Previne extrapolarea excesivă a trendului
+                    \item Trendul converge către o constantă
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{-0.15cm}
+
+        \begin{block}{Ecuații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Nivel}: $\ell_t = \alpha X_t + (1-\alpha)(\ell_{t-1} + \phi b_{t-1})$
+                \item \textbf{Trend}: $b_t = \beta^*(\ell_t - \ell_{t-1}) + (1-\beta^*)\phi b_{t-1}$
+                \item \textbf{Prognoză}: $\hat{X}_{t+h|t} = \ell_t + \phi\frac{1-\phi^h}{1-\phi}b_t$
+            \end{itemize}
+        \end{block}
+
+        \vspace{-0.15cm}
+
+        \begin{exampleblock}{Comportament asimptotic}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Asimptotic}: când $h \to \infty$, prognoza $\to$ constantă
+                \begin{itemize}
+                    \item Previne extrapolare nerealistă pe termen lung
+                \end{itemize}
+                \item \textbf{Avantaj}: adesea mai bună pentru orizonturi lungi
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 4: EVALUAREA PROGNOZEI
+%=============================================================================
+\section{Evaluarea prognozei}
+
+\begin{frame}{Evaluarea prognozei: exemplu vizual}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{ch1_forecast_eval.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \begin{block}{Observații}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Sus}: actual vs.\ prognoză --- evaluare vizuală a calității prognozei
+                \item \textbf{Jos}: reziduuri --- medie zero, varianță constantă, fără tipar
+            \end{itemize}
+        \end{block}
+        \vspace{-2mm}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+\end{frame}
+
+\begin{frame}{Metrici de acuratețe a prognozei}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{block}{Eroarea de prognoză}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Definiție}: $e_t = X_t - \hat{X}_t$ (actual minus prezis)
+                \begin{itemize}
+                    \item Pozitivă $\Rightarrow$ subestimează; Negativă $\Rightarrow$ supraestimează
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+        }
+
+        \vspace{0.05cm}
+
+        {\footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Dependente de scală}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{MAE}: $\frac{1}{n}\sum|e_t|$
+                        \item \textbf{MSE (Mean Squared Error)}: $\frac{1}{n}\sum e_t^2$
+                        \item \textbf{RMSE}: $\sqrt{\text{MSE}}$
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Independente de scală}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{MAPE}: $\frac{100}{n}\sum\left|\frac{e_t}{X_t}\right|$
+                        \item \textbf{sMAPE}: $\frac{100}{n}\sum\frac{|e_t|}{(|X_t|+|\hat{X}_t|)/2}$
+                    \end{itemize}
+                \end{block}
+            \end{column}
+        \end{columns}
+        }
+
+        \vspace{0.05cm}
+
+        {\footnotesize
+        \begin{alertblock}{Ce să folosim?}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Aceeași serie}: RMSE, MAE $\Rightarrow$ comparare modele pe aceleași date
+                \item \textbf{Între serii diferite}: MAPE, sMAPE $\Rightarrow$ metrici procentuale, independente de scală
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Compararea metodelor de prognoză}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.55\textheight, keepaspectratio]{forecast_accuracy_metrics.pdf}
+        \end{center}
+        \vspace{-3mm}
+        {\footnotesize
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Stânga}: Prognoze SES, Holt, Holt-Winters
+                \item \textbf{Dreapta}: Metrici de eroare --- comparație vizuală și cantitativă
+            \end{itemize}
+        \end{block}
+        }
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+\end{frame}
+
+\begin{frame}{Diagnosticarea reziduurilor: vizualizare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{residual_diagnostics.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+        \begin{exampleblock}{Ce să verificăm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Grafic temporal}: fără tipare sistematice
+                \item \textbf{Histogramă}: verificare normalitate
+                \item \textbf{ACF}: fără autocorelație semnificativă
+                \item \textbf{Grafic Q-Q}: confirmare normalitate
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Diagnosticarea reziduurilor}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Proprietăți ale reziduurilor}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Medie zero}: $\E[e_t] = 0$
+                    \begin{itemize}
+                        \item Prognoza nu are eroare sistematică
+                    \end{itemize}
+                    \item \textbf{Necorelate}: $\Cov(e_t, e_{t-k}) = 0$
+                    \begin{itemize}
+                        \item Nu rămâne informație neexploatată
+                    \end{itemize}
+                    \item \textbf{Varianță constantă}: $\Var(e_t) = \sigma^2$
+                    \item \textbf{Distribuite normal}: pentru intervale de încredere
+                \end{itemize}
+            \end{block}
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Teste de diagnostic}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Testul Ljung-Box} (autocorelație):
+                    \begin{itemize}
+                        \item $Q = T(T+2)\sum_{k=1}^{h}\frac{\hat{\rho}_k^2}{T-k} \sim \chi^2_h$
+                        \item \textbf{Ajustare}: Pentru reziduurile unui model ARMA($p$,$q$), gradele de libertate se ajustează: $Q \sim \chi^2_{h-p-q}$
+                    \end{itemize}
+                    \item \textbf{Testul Jarque-Bera} (normalitate):
+                    \begin{itemize}
+                        \item $JB = \frac{T}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \sim \chi^2_2$
+                        \item $S$ = asimetrie, $K$ = kurtosis
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Validarea încrucișată pentru serii de timp}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{alertblock}{De ce nu CV standard?}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Dependență temporală}: observațiile sunt corelate
+                        \item \textbf{Ordinea contează}: trebuie respectată cronologia
+                        \item \textbf{K-fold standard} $\Rightarrow$ scurgere informațională (\emph{data leakage})
+                    \end{itemize}
+                \end{alertblock}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{block}{CV (cross-validation) cu origine mobilă}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Pasul 1}: antrenare pe $\{X_1, \ldots, X_t\}$
+                        \item \textbf{Pasul 2}: prognoză $\hat{X}_{t+h}$
+                        \item \textbf{Pasul 3}: incrementare $t$, repetare
+                    \end{itemize}
+                \end{block}
+            \end{column}
+        \end{columns}
+
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{cross_validation_forecast.pdf}
+        \end{center}
+        \vspace{-2mm}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+\end{frame}
+
+\begin{frame}{Separarea antrenare / validare / test}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.32\textwidth}
+                \begin{block}{Set de antrenare}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Estimarea parametrilor modelului
+                        \item Cea mai mare porțiune (60--80\%)
+                        \item Folosit pentru estimare
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.32\textwidth}
+                \begin{exampleblock}{Set de validare}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Ajustarea hiperparametrilor
+                        \item Compararea modelelor
+                        \item Selectarea celei mai bune abordări
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+            \begin{column}{0.32\textwidth}
+                \begin{alertblock}{Set de Test}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Doar evaluare finală
+                        \item Nu se folosește pentru ajustare
+                        \item Evaluare obiectivă a performanței
+                    \end{itemize}
+                \end{alertblock}
+            \end{column}
+        \end{columns}
+
+        \vspace{0.1cm}
+
+        \begin{center}
+        \includegraphics[width=0.75\textwidth, height=0.42\textheight, keepaspectratio]{train_test_validation.pdf}
+        \end{center}
+        \vspace{-2mm}
+
+    \end{cminipage}
+    \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+\end{frame}
+
+\begin{frame}{Fluxul de lucru pentru dezvoltarea modelului}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \begin{tikzpicture}[node distance=1.8cm, scale=0.85, transform shape]
+        \tikzstyle{process} = [rectangle, minimum width=2.2cm, minimum height=0.8cm, text centered, draw=MainBlue, fill=MainBlue!10, font=\small]
+        \tikzstyle{arrow} = [->, >=stealth, thick, MainBlue]
+
+        % Nodes
+        \node (train) [process] {1. Antrenare};
+        \node (validate) [process, right of=train, xshift=2cm] {2. Validare};
+        \node (select) [process, right of=validate, xshift=2cm] {3. Selectare};
+        \node (test) [process, right of=select, xshift=2cm] {4. Test Final};
+
+        % Arrows
+        \draw [arrow] (train) -- (validate);
+        \draw [arrow] (validate) -- (select);
+        \draw [arrow] (select) -- (test);
+
+        % Feedback loop
+        \draw [arrow, dashed, Crimson] (validate) to[bend right=40] node[below, font=\scriptsize] {Iterare} (train);
+
+        % Labels below
+        \node [below of=train, yshift=0.5cm, font=\scriptsize, text width=2.5cm, align=center] {Folosește datele de\\antrenare pentru\\estimarea parametrilor};
+        \node [below of=validate, yshift=0.5cm, font=\scriptsize, text width=2.5cm, align=center] {Compară modelele\\pe setul de validare};
+        \node [below of=select, yshift=0.5cm, font=\scriptsize, text width=2.5cm, align=center] {Alege modelul\\cu cele mai bune metrici};
+        \node [below of=test, yshift=0.5cm, font=\scriptsize, text width=2.5cm, align=center] {Raportează\\performanța obiectivă};
+        \end{tikzpicture}
+        \end{center}
+
+        \vspace{0.15cm}
+
+        \begin{alertblock}{Regulă critică}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Nu folosiți setul de test pentru selecție.}
+                \begin{itemize}
+                    \item Folosiți doar pentru evaluare finală
+                \end{itemize}
+                \item \textbf{Evitați scurgerea informațională}
+                \begin{itemize}
+                    \item Estimări prea optimiste ale performanței
+                \end{itemize}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Date reale: compararea prognozelor}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.2cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.44\textheight, keepaspectratio]{real_data_forecast_comparison.pdf}
+        \end{center}
+        \vspace{-0.2cm}
+        \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Date}: pasageri companii aeriene
+                \item \textbf{Cel mai bun}: Holt-Winters multiplicativă
+                \item Ideal pentru date cu sezonalitate crescătoare
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Performanța prognozei pe diferite seturi de date}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{multiple_series_comparison.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_forecast\_eval}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_forecast_eval}
+        \begin{block}{Interpretare}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Serii diferite}: necesită modele diferite
+                \item \textbf{Date sezoniere}: preferați metode sezoniere
+                \item \textbf{Nu există model universal}: testați mai multe abordări
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 5: MODELAREA SEZONALITĂȚII
+%=============================================================================
+\section{Modelarea sezonalității}
+
+\begin{frame}{Variabile dummy vs termeni Fourier}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{seasonality_fourier_dummies.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_seasonal}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_seasonal}
+        \begin{block}{Comparație}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Variabile dummy}: captează orice formă, necesită $s-1$ parametri
+                \item \textbf{Termeni Fourier}: doar $2K$ parametri, tipare netede, sinusoidale
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Modelarea sezonalității: două abordări}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{1. Variabile dummy}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Model}: $X_t = \mu + \sum_{j=1}^{s-1}\gamma_j D_{jt} + \varepsilon_t$
+                        \item $D_{jt} = 1$ dacă $t$ în sezonul $j$
+                        \item $s-1$ parametri
+                        \item Orice tipar sezonier
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{2. Termeni Fourier}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item {\small \textbf{Model}:}
+                            \vspace{-2mm}
+                            {\small $$X_t = \mu + \sum_{k=1}^{K}\!\Bigl[\alpha_k\sin\!\Bigl(\frac{2\pi k t}{s}\Bigr) + \beta_k\cos\!\Bigl(\frac{2\pi k t}{s}\Bigr)\Bigr]$$}
+                            \vspace{-4mm}
+                        \item Funcții sinusoidale
+                        \item $2K$ parametri
+                        \item Tipare netede
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Alegerea între dummy și Fourier}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \small
+        \begin{tabular}{lcc}
+        \toprule
+        \textbf{Criteriu} & \textbf{Dummy} & \textbf{Fourier} \\
+        \midrule
+        Parametri (lunar) & 11 & $2K$ (adesea 4--6) \\
+        Tipar sezonier & Orice formă & Neted/sinusoidal \\
+        Interpretare & Directă (efecte lunare) & Componente de frecvență \\
+        Sezoane de înaltă frecvență & Mulți parametri & Eficient \\
+        Sezonalitate multiplă & Complex & Ușor (adăugați termeni) \\
+        \bottomrule
+        \end{tabular}
+        \end{center}
+
+        \vspace{0.1cm}
+
+        \begin{exampleblock}{Recomandări}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Folosiți Dummy}
+                \begin{itemize}
+                    \item Tipare neregulate, coeficienți interpretabili
+                \end{itemize}
+                \item \textbf{Folosiți Fourier}
+                \begin{itemize}
+                    \item Tipare netede, sezonalitate de înaltă frecvență
+                    \item Utilizat în TBATS și Prophet
+                    \item TBATS: Trigonometric seasonality, Box-Cox, ARMA errors, Trend, Seasonal
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SECȚIUNEA 6: GESTIONAREA TRENDULUI ȘI SEZONALITĂȚII
+%=============================================================================
+\section{Gestionarea Trendului și Sezonalității}
+
+\begin{frame}{De ce eliminăm trendul și sezonalitatea?}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Motive pentru eliminarea trendului}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Cerința de staționaritate
+                        \item Focus pe fluctuații
+                        \item Evitarea regresiei false
+                        \item Permiterea inferenței valide
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Motive pentru desezonalizare}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item Dezvăluirea trendului subiacent
+                        \item Comparații între sezoane
+                        \item Simplificarea modelării
+                        \item Focus pe componenta neregulată
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+
+        \vspace{0.1cm}
+
+        \begin{alertblock}{Important}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Modelăm seria transformată}
+                \begin{itemize}
+                    \item Cu trendul și sezonalitatea eliminate
+                \end{itemize}
+                \item \textbf{Inversăm transformarea}
+                \begin{itemize}
+                    \item Readucem prognoza la scala originală
+                \end{itemize}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metode de eliminare a trendului: comparație}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.50\textheight, keepaspectratio]{detrending_methods.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{alertblock}{De reținut}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Metode diferite}: produc reziduuri diferite
+                \item \textbf{Alegere după tipul de trend}: considerați obiectivele analizei
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metode de eliminare a trendului}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Șase abordări comune de eliminare a trendului}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Diferențiere}: $\Delta X_t = X_t - X_{t-1}$
+                \begin{itemize}
+                    \item Cea mai utilizată, elimină trend stochastic
+                \end{itemize}
+                \item \textbf{Regresie liniară}: $\hat{T}_t = \hat{\beta}_0 + \hat{\beta}_1 t$
+                \item \textbf{Polinomială}: polinom de ordin superior
+                \item \textbf{Filtru HP (Hodrick-Prescott)}: echilibru estimare vs netezime
+                \item \textbf{Media mobilă}: $\hat{T}_t = MA_q(X_t)$
+                \item \textbf{LOESS}: regresie polinomială locală
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{exampleblock}{Alegerea depinde de}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Natura trendului}
+                \begin{itemize}
+                    \item Determinist vs stochastic
+                \end{itemize}
+                \item \textbf{Scopul analizei}
+                \begin{itemize}
+                    \item Prognoză vs analiză descriptivă
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Estimarea trendului: abordări multiple}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.42\textheight, keepaspectratio]{trend_estimation_comparison.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{exampleblock}{Comparație metode}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Media mobilă}: simplă dar cu întârziere
+                \item \textbf{Regresie polinomială}: flexibilă, parametrică
+                \item \textbf{Filtrul HP}: standard macroeconomic
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Filtrul HP: efectul lui $\lambda$}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{ch1_hp_filter_lambda.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{block}{Compromis}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{$\lambda$ mic}: trend flexibil --- urmează datele îndeaproape
+                \item \textbf{$\lambda$ mare}: trend neted --- se apropie de trend liniar
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Filtrul Hodrick-Prescott (HP)}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{defn}[Filtrul HP]
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Filtrul HP}: descompune $X_t$ în trend $\tau_t$ și ciclu $c_t$: $X_t = \tau_t + c_t$
+                \vspace{-0.2cm}
+                {\small\[
+                \min_{\{\tau_t\}} \left\{ \sum_{t=1}^{T}(X_t - \tau_t)^2 + \lambda \sum_{t=2}^{T-1}[(\tau_{t+1} - \tau_t) - (\tau_t - \tau_{t-1})]^2 \right\}
+                \]}
+                \vspace{-0.3cm}
+            \end{itemize}
+        \end{defn}
+
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{block}{Interpretare}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Primul termen}
+                    \begin{itemize}
+                        \item Ajustare la date
+                    \end{itemize}
+                    \item \textbf{Al doilea termen}
+                    \begin{itemize}
+                        \item Penalizare netezime
+                    \end{itemize}
+                    \item \textbf{$\lambda$}
+                    \begin{itemize}
+                        \item Controlează echilibrul între fidelitate și netezime
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Valori standard $\lambda$ (Ravn-Uhlig)}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Anual}
+                    \begin{itemize}
+                        \item $\lambda = 6.25$
+                    \end{itemize}
+                    \item \textbf{Trimestrial}
+                    \begin{itemize}
+                        \item $\lambda = 1600$ (standard macroeconomic)
+                    \end{itemize}
+                    \item \textbf{Lunar}
+                    \begin{itemize}
+                        \item $\lambda = 129600$
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Filtrul HP: extragerea ciclului de afaceri}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{ch1_hp_filter_cycle.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{exampleblock}{Aplicație}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Macroeconomie}: extragerea ciclurilor de afaceri
+                \item \textbf{Serii comune}: PIB, șomaj, inflație
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Filtrul HP: limitări}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{columns}[T]
+            \column{0.48\textwidth}
+            \begin{alertblock}{Probleme cunoscute}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Instabilitate la extremități}
+                    \begin{itemize}
+                        \item Estimările trendului nesigure la început și sfârșit
+                    \end{itemize}
+                    \item \textbf{Cicluri false}
+                    \begin{itemize}
+                        \item Poate crea dinamici artificiale
+                    \end{itemize}
+                    \item \textbf{Alegerea $\lambda$}
+                    \begin{itemize}
+                        \item Rezultatele sensibile la parametru
+                    \end{itemize}
+                \end{itemize}
+            \end{alertblock}
+            \column{0.5\textwidth}
+            \begin{exampleblock}{Alternative}
+                \begin{itemize}\setlength{\itemsep}{0pt}
+                    \item \textbf{Filtre bandă}: Baxter-King, Christiano-Fitzgerald
+                    \begin{itemize}
+                        \item Izolează frecvențe specifice
+                    \end{itemize}
+                    \item \textbf{Filtrul Hamilton}: bazat pe regresie
+                    \item \textbf{Componente neobservate}: modele cu spațiu de stări
+                \end{itemize}
+            \end{exampleblock}
+        \end{columns}
+
+        \begin{alertblock}{Critica lui Hamilton (2018)}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Hamilton (2018) demonstrează că filtrul HP introduce \textbf{componente ciclice false}
+                \item Propune alternativa: regresia $y_{t+h}$ pe $y_t, y_{t-1}, \ldots, y_{t-p}$ (implicit $h=8, p=4$ trimestrial)
+                \item Avantaj: nu necesită alegerea lui $\lambda$; nu suferă de probleme la capetele seriei
+            \end{itemize}
+        \end{alertblock}
+
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Ajustare sezonieră: vizualizare}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{seasonal_adjustment.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_seasonal}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_seasonal}
+        \begin{block}{Rezultat}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Seria ajustată sezonier}: dezvăluie trendul subiacent
+                \item Elimină fluctuațiile periodice din seria originală
+            \end{itemize}
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Metode de eliminare a sezonalității}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Patru abordări pentru eliminarea sezonalității}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Diferențiere sezonieră}: $\Delta_s X_t = X_t - X_{t-s}$
+                \begin{itemize}
+                    \item Elimină tipar periodic, simplu de aplicat
+                \end{itemize}
+                \item \textbf{Împărțire} (multiplicativ): $X_t^{adj} = X_t / \hat{S}_t$
+                \item \textbf{Scădere} (aditiv): $X_t^{adj} = X_t - \hat{S}_t$
+                \item \textbf{X-13ARIMA-SEATS}: standard oficial US Census Bureau
+                \begin{itemize}
+                    \item Metodă sofisticată, utilizată de institutele de statistică
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+
+        \vspace{0.1cm}
+
+        \begin{exampleblock}{Perioada sezonieră $s$}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Lunar: $s=12$ \quad|\quad Trimestrial: $s=4$
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu: trend determinist}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{deterministic_trend_example.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{exampleblock}{Rezultat}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Metodă}: \textcolor{Crimson}{regresie}
+                \item \textbf{Rezultat}: reziduuri staționare, ACF scade rapid
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Trend determinist vs stochastic}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \begin{block}{Trend determinist}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Model}: $X_t = \beta_0 + \beta_1 t + \varepsilon_t$
+                        \item \textbf{Caracteristici}:
+                        \begin{itemize}
+                            \item Trendul este o funcție de timp
+                            \item $\varepsilon_t$ este staționar
+                        \end{itemize}
+                        \item \textbf{Metodă}: eliminarea trendului prin regresie
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \begin{exampleblock}{Trend stochastic}
+                    \begin{itemize}\setlength{\itemsep}{0pt}
+                        \item \textbf{Model}: $X_t = X_{t-1} + \varepsilon_t$
+                        \item \textbf{Caracteristici}:
+                        \begin{itemize}
+                            \item Componentă de mers aleatoriu
+                            \item $\Delta X_t$ este staționar
+                        \end{itemize}
+                        \item \textbf{Metodă}: eliminarea trendului prin diferențiere
+                    \end{itemize}
+                \end{exampleblock}
+            \end{column}
+        \end{columns}
+
+        \vspace{0.1cm}
+
+        \begin{alertblock}{Metodă greșită = probleme}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Diferențiere pe trend determinist} $\Rightarrow$ supra-diferențiere
+                \begin{itemize}
+                    \item Introduce dependență artificială în serie
+                \end{itemize}
+                \item \textbf{Regresie pe trend stochastic} $\Rightarrow$ regresie falsă
+                \begin{itemize}
+                    \item Rezultate statistice invalide
+                \end{itemize}
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exemplu: trend stochastic (mers aleatoriu)}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{stochastic_trend_example.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{exampleblock}{Rezultat}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Metodă}: \textcolor{Crimson}{diferențiere}
+                \item \textbf{Rezultat}: diferențele sunt staționare (zgomot alb)
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Comparație alăturată}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{0.3cm}
+        \begin{center}
+        \includegraphics[width=0.95\textwidth, height=0.48\textheight, keepaspectratio]{trend_comparison_sidebyside.pdf}
+        \end{center}
+        \vspace{-0.1cm}
+        \quantlet{TSA\_ch0\_detrending}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_detrending}
+        \begin{alertblock}{Rețineți}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Trend determinist}: folosiți regresie --- trendul este o funcție predictibilă de timp
+                \item \textbf{Trend stochastic}: folosiți diferențiere --- trendul conține o componentă aleatoare
+            \end{itemize}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+\section{Utilizare IA}
+%=============================================================================
+
+\begin{frame}{Exercițiu AI: Gândire critică}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-3mm}
+        \begin{block}{\footnotesize Prompt de testat în ChatGPT / Claude / Copilot}
+            {\footnotesize
+            ``Folosind yfinance, descarcă prețurile lunare de închidere ale acțiunii Apple (AAPL) din 2015-01 până în 2024-12 (120 observații). Descompune seria în trend, sezonalitate și reziduuri. Determină dacă e mai potrivită descompunerea aditivă sau multiplicativă și prognozează prețul pentru următoarele 12 luni. Vreau cod Python complet cu grafice profesionale.''
+            }
+        \end{block}
+        \vspace{-2mm}
+        {\footnotesize
+        \begin{exampleblock}{Exercițiu}
+            \begin{enumerate}\setlength{\itemsep}{0pt}
+                \item Rulați prompt-ul într-un LLM la alegere și analizați critic răspunsul.
+                \item Ce tip de descompunere alege modelul? E corect? Justificați.
+                \item Cum evaluează calitatea prognozei? Metrica e calculată corect?
+                \item Verifică reziduurile --- prezintă structură neexplicată?
+                \item Rescrieți analiza corect și comparați cu un model de referință sezonier naiv.
+            \end{enumerate}
+        \end{exampleblock}
+        }
+        \vspace{-2mm}
+        \begin{alertblock}{}
+            {\footnotesize \textbf{Atenție}: Codul generat de AI poate rula fără erori și arăta profesional. \textit{Asta nu înseamnă că e corect.}}
+        \end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+\section{Rezumat}
+%=============================================================================
+
+\begin{frame}{Rezumat}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Ce am învățat în acest capitol}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item Definiția și Caracteristicile Seriei de Timp
+                \begin{itemize}
+                    \item Secvență de observații ordonate temporal cu dependență
+                \end{itemize}
+                \item Descompunere (Aditivă vs multiplicativă)
+                \begin{itemize}
+                    \item Componente: Trend-Ciclu + Sezonier + Reziduu
+                \end{itemize}
+                \item Metode de Netezire Exponențială
+                \begin{itemize}
+                    \item SES (nivel), Holt (+ trend), Holt-Winters (+ sezonalitate), ETS
+                \end{itemize}
+                \item Evaluarea și Validarea Prognozei
+                \begin{itemize}
+                    \item Metrici: MAE, RMSE, MAPE; Cross-Validation cu origine mobilă
+                \end{itemize}
+            \end{itemize}
+        \end{block}
+        \begin{exampleblock}{Concluzie}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Înțelegeți înainte de a modela}:
+                \begin{itemize}
+                    \item Vizualizați și descompuneți datele mai întâi
+                    \item Alegeți aditiv vs multiplicativ în funcție de comportamentul varianței
+                \end{itemize}
+            \end{itemize}
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+\begin{frame}{Ce urmează?}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{center}
+        \begin{minipage}{0.85\textwidth}
+        \begin{block}{Capitolul 1: Procese stochastice și staționaritate}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Procese Stochastice}: fundament matematic, variabile aleatoare indexate după timp
+                \item \textbf{Staționaritate}: strictă (distribuție invariantă) vs slabă (momente invariante)
+                \item \textbf{Procese Fundamentale}: zgomot alb și mers aleatoriu
+                \item Blocuri fundamentale pentru modelele ARIMA (AutoRegressive Integrated Moving Average)
+                \item \textbf{ACF și PACF (Partial Autocorrelation Function)}: instrumente pentru identificarea modelului
+            \end{itemize}
+        \end{block}
+        \end{minipage}
+        \end{center}
+
+        \vspace{0.3cm}
+        \begin{center}
+        \Large\textcolor{MainBlue}{Întrebări?}
+        \end{center}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% BIBLIOGRAFIE
+%=============================================================================
+\section{Bibliografie}
+
+\begin{frame}{Bibliografie I}
+    \vspace{-0.3cm}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Fundamente ale seriilor de timp}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Wold, H. (1938). \textit{A Study in the Analysis of Stationary Time Series}, Almqvist \& Wiksell.
+                \item Hamilton, J.D. (1994). \textit{Time Series Analysis}, Princeton University Press.
+                \item Brockwell, P.J., \& Davis, R.A. (2016). \textit{Introduction to Time Series and Forecasting}, 3rd ed., Springer.
+            \end{itemize}
+            }
+        \end{block}
+
+        \begin{exampleblock}{Descompunere și analiză exploratorie}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Cleveland, R.B., Cleveland, W.S., McRae, J.E., \& Terpenning, I. (1990). STL: A Seasonal-Trend Decomposition Procedure Based on Loess, \textit{Journal of Official Statistics}, 6(1), 3--33.
+                \item Hyndman, R.J., \& Athanasopoulos, G. (2021). \textit{Forecasting: Principles and Practice}, 3rd ed., OTexts.
+            \end{itemize}
+            }
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Bibliografie II}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Netezire exponențială și fundamente ETS}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Holt, C.C. (1957/2004). Forecasting Seasonals and Trends by Exponentially Weighted Moving Averages, \textit{International Journal of Forecasting}, 20(1), 5--10.
+                \item Winters, P.R. (1960). Forecasting Sales by Exponentially Weighted Moving Averages, \textit{Management Science}, 6(3), 324--342.
+                \item Hyndman, R.J., Koehler, A.B., Ord, J.K., \& Snyder, R.D. (2008). \textit{Forecasting with Exponential Smoothing: The State Space Approach}, Springer.
+            \end{itemize}
+            }
+        \end{block}
+
+        \begin{exampleblock}{Resurse online și cod}
+            {\small
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Quantlet}: \url{https://quantlet.com} -- Platformă de cod pentru metode cantitative
+                \item \textbf{Quantinar}: \url{https://quantinar.com} -- Platformă de învățare pentru metode cantitative
+                \item \textbf{GitHub TSA}: \url{https://github.com/QuantLet/TSA/tree/main/TSA_ch0} -- Cod Python pentru acest capitol
+            \end{itemize}
+            }
+        \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{}
+    \begin{cminipage}{0.95\textwidth}
+        \centering
+        \vspace{1cm}
+
+        \Huge\textcolor{MainBlue}{Vă Mulțumim!}
+
+        \vspace{0.8cm}
+
+        \Large Întrebări?
+
+        \vspace{1cm}
+
+        \normalsize
+        Materialele cursului sunt disponibile la: \url{https://danpele.github.io/Time-Series-Analysis/}
+
+        \vspace{0.3cm}
+
+        \href{https://quantlet.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{ql_logo.png}} Quantlet} \hspace{0.5cm}
+        \href{https://quantinar.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{qr_logo.png}} Quantinar}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PROPRIETĂȚI ÎN EȘANTION MIC VS. ASIMPTOTICE
+%=============================================================================
+\section{Proprietăți în Eșantion Mic vs.\ Asimptotice}
+
+\begin{frame}{Proprietăți asimptotice vs.\ eșantion mic}
+    \quantlet{TSA\_ch0\_finite\_sample}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_finite_sample}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        {\small
+        \begin{block}{Context}
+            Majoritatea testelor din analiza seriilor de timp (ADF, KPSS, Johansen, Ljung-Box) se bazează pe \textbf{distribuții asimptotice}. În practică, eșantioanele sunt finite: $T = 50$--$200$ pentru date trimestriale, $T = 100$--$500$ pentru date lunare.
+        \end{block}
+        \begin{alertblock}{Probleme cheie în eșantioane mici}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item \textbf{Distorsiunea dimensiunii}: rata reală de respingere $\neq$ nivelul nominal (ex.: test la 5\% respinge în 8--12\% din cazuri)
+                \item \textbf{Puterea}: probabilitatea de a respinge corect $H_0$ falsă (adesea foarte scăzută pentru procese aproape de rădăcină unitară)
+                \item \textbf{Bias}: estimatorii OLS ai coeficienților AR sunt deplasați spre zero (bias $\approx -(1+3\phi)/T$ pentru AR(1))
+            \end{itemize}
+        \end{alertblock}
+        \vspace{-0.1cm}
+        {\footnotesize
+        \begin{center}
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+            \textbf{Test} & \textbf{$H_0$} & \textbf{Dim.\ ($T{=}100$)} & \textbf{Putere ($T{=}100$)} & \textbf{Asimptotic} \\
+            \midrule
+            ADF         & Rădăcină unitară & Liberal (7--9\%) & Scăzută (30--50\%) & Distrib.\ DF \\
+            KPSS        & Staționaritate   & Conservator      & Moderată           & Standard \\
+            Johansen    & $r = 0$          & Liberal          & Bună               & Chi-pătrat \\
+            Ljung-Box   & Fără autocor.    & Liberal ($h$ mare) & Bună             & Chi-pătrat \\
+            \bottomrule
+        \end{tabular}
+        \end{center}
+        }
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Simulare Monte Carlo: Principii}
+    \quantlet{TSA\_ch0\_monte\_carlo}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_monte_carlo}
+    \begin{cminipage}{0.95\textwidth}
+        {\small
+        \begin{block}{Scop}
+            Evaluarea proprietăților testelor statistice când rezultatele analitice nu sunt disponibile.
+        \end{block}
+        \begin{exampleblock}{Algoritm}
+            \begin{enumerate}\setlength{\itemsep}{1pt}
+                \item Specificați \textbf{DGP} (Data Generating Process): ex.\ AR(1) cu $\phi = 0{,}95$, $\sigma = 1$
+                \item Pentru $b = 1, \ldots, B$ (ex.\ $B = 10\,000$):
+                \begin{enumerate}
+                    \item[a.] Generați eșantionul $\{y_1, \ldots, y_T\}$ din DGP
+                    \item[b.] Aplicați testul $\rightarrow$ obțineți statistica $\tau_b$ și p-valoarea $p_b$
+                    \item[c.] Înregistrați decizia: respingeți dacă $p_b < \alpha$
+                \end{enumerate}
+                \item Dimensiune empirică $= \frac{1}{B}\sum_{b=1}^{B} \mathbf{1}(p_b < \alpha)$ sub $H_0$
+                \item Putere empirică $= \frac{1}{B}\sum_{b=1}^{B} \mathbf{1}(p_b < \alpha)$ sub $H_1$
+            \end{enumerate}
+        \end{exampleblock}
+        \begin{alertblock}{Observație cheie}
+            Dacă dimensiunea empirică $\gg \alpha$, testul este \textit{over-sized} (prea multe rezultate fals pozitive).
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Corecții pentru eșantion mic}
+    \quantlet{TSA\_ch0\_bootstrap}{https://github.com/QuantLet/TSA/tree/main/TSA_ch0/TSA_ch0_bootstrap}
+    \begin{cminipage}{0.95\textwidth}
+        {\small
+        \begin{block}{Metode bootstrap}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item \textbf{Bootstrap rezidual}: reeșantionați reziduurile, reconstruiți seria, recalculați statistica
+                \item \textbf{Bootstrap bloc}: păstrează dependența temporală (Politis \& Romano, 1994)
+                \item \textbf{Bootstrap parametric}: simulați din modelul estimat
+            \end{itemize}
+        \end{block}
+        \begin{exampleblock}{Alte corecții}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item \textbf{Corecția Bartlett}: ajustează valorile critice folosind teoria asimptotică de ordin superior
+                \item \textbf{Valori critice pentru eșantion finit}: regresii pe suprafețe de răspuns (MacKinnon, 1996 pentru ADF)
+                \item \textbf{Teste rădăcină unitară pe panel}: exploatează dimensiunea transversală (IPS, LLC) pentru putere mai mare
+            \end{itemize}
+        \end{exampleblock}
+        \begin{alertblock}{Recomandare practică}
+            Raportați întotdeauna p-valorile bootstrap alături de cele asimptotice.
+        \end{alertblock}
+        }
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% GLOSAR RO--EN
+%=============================================================================
+\section{Glosar RO--EN}
+
+\begin{frame}{Glosar RO--EN (1/2)}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{block}{Termeni cheie utilizați pe parcursul cursului}
+            {\footnotesize
+            \begin{tabular}{@{}r l l@{}}
+                \toprule
+                \textcolor{MainBlue}{\textbf{Nr.}} & \textcolor{MainBlue}{\textbf{Termen RO}} & \textcolor{MainBlue}{\textbf{English Term}} \\
+                \midrule
+                1  & Ajustare sezonieră                  & Seasonal adjustment \\
+                2  & Autocorelație                       & Autocorrelation \\
+                3  & Coeficient de asimetrie             & Skewness \\
+                4  & Cointegrare                         & Cointegration \\
+                5  & Date de tip panel                   & Panel data \\
+                6  & Descompunere                        & Decomposition \\
+                7  & Diferențiere                        & Differencing \\
+                8  & Eroare medie absolută               & Mean Absolute Error (MAE) \\
+                9  & Funcția de autocorelație             & Autocorrelation Function (ACF) \\
+                10 & Funcția de autocorelație parțială    & Partial Autocorrelation Function (PACF) \\
+                11 & Gruparea volatilității               & Volatility clustering \\
+                12 & Medie mobilă                        & Moving average \\
+                13 & Mers aleatoriu                      & Random walk \\
+                14 & Model autoregresiv                  & Autoregressive model \\
+                15 & Netezire exponențială               & Exponential smoothing \\
+                \bottomrule
+            \end{tabular}
+            }
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Glosar RO--EN (2/2)}
+    \begin{cminipage}{0.95\textwidth}
+        \vspace{-0.2cm}
+        \begin{block}{Termeni cheie utilizați pe parcursul cursului \textnormal{(continuare)}}
+            {\footnotesize
+            \begin{tabular}{@{}r l l@{}}
+                \toprule
+                \textcolor{MainBlue}{\textbf{Nr.}} & \textcolor{MainBlue}{\textbf{Termen RO}} & \textcolor{MainBlue}{\textbf{English Term}} \\
+                \midrule
+                16 & Nivel de semnificație               & Significance level \\
+                17 & Prognoză                            & Forecast \\
+                18 & Punct de schimbare                  & Changepoint \\
+                19 & Rădăcină unitară                    & Unit root \\
+                20 & Scurgere informațională             & Data leakage \\
+                21 & Sezonalitate                        & Seasonality \\
+                22 & Serie de timp                       & Time series \\
+                23 & Serie staționară                    & Stationary series \\
+                24 & Spectrul de putere                  & Power spectrum \\
+                25 & Strat ascuns                        & Hidden layer \\
+                26 & Supraajustare                       & Overfitting \\
+                27 & Supradiferențiere                   & Overdifferencing \\
+                28 & Tendință                            & Trend \\
+                29 & Termen de eroare                    & Error term \\
+                30 & Varianță condiționată               & Conditional variance \\
+                31 & Variabile predictoare               & Features / predictor variables \\
+                32 & Volatilitate realizată              & Realized volatility \\
+                33 & Zgomot alb                          & White noise \\
+                \bottomrule
+            \end{tabular}
+            }
+        \end{block}
+    \end{cminipage}
+\end{frame}
+
+\end{document}
+
