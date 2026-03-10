@@ -514,6 +514,26 @@ GPD (EVT) & Flexibilă & --- & 2 \\
 \end{itemize}
 \end{frame}
 
+%--- PhD Slide 5c: Wasserstein în stress-testing ---
+\slidelevel{PhD}
+\begin{frame}{Wasserstein în practică --- Stress-testing bancar}
+\begin{exampleblock}{Scenariul: Criza din 2008 / Pandemia 2020}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Distribuția \textit{istorică} a randamentelor devine brusc irelevantă (non-staționaritate)
+\item VaR estimat pe date din 2005--2007 subestimează masiv pierderile din 2008
+\item \textbf{Problema}: cum ne protejăm când modelul pe care l-am estimat poate fi greșit?
+\end{itemize}
+\end{exampleblock}
+\begin{block}{Soluția: optimizare robustă cu vecinătate Wasserstein}
+\begin{itemize}\setlength\itemsep{2pt}
+\item În loc de a calcula VaR sub o \textit{singură} distribuție $\hat{P}$, calculăm sub \textbf{cea mai defavorabilă} distribuție dintr-o vecinătate: $\rho_{\text{robust}} = \sup_{Q:\, W_1(Q, \hat{P}) \leq \varepsilon} \text{VaR}_Q$
+\item Raza $\varepsilon$ = bugetul de incertitudine al băncii (cât de mult poate devia realitatea)
+\item $\varepsilon$ mic: optimism (,,criza nu se va repeta''); $\varepsilon$ mare: conservatorism (supraviețuire)
+\item \textbf{Basel~III+}: autoritățile impun \textit{stressed VaR} --- exact această filozofie
+\end{itemize}
+\end{block}
+\end{frame}
+
 %--- Y3 Slide 6 ---
 \slidelevel{Y3}
 \begin{frame}{Distribuția normală vs.\ realitate --- Vizualizare și exemplu}
@@ -622,6 +642,26 @@ unde $P_t$ este prețul activului la momentul $t$.
 \includegraphics[width=0.45\textwidth]{ch2_gbm_vs_levy.pdf}
 \end{center}
 \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{frame}
+
+%--- Y3 Slide 3b: Volatility Drag ---
+\slidelevel{Y3}
+\begin{frame}{Pierderea din volatilitate (\textit{Volatility Drag}) --- Demonstrație}
+\begin{exampleblock}{Exercițiu mental}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Portofoliul tău crește cu 50\% azi și scade cu 50\% mâine
+\item Randamentul mediu aritmetic: $(+50\% - 50\%)/2 = 0\%$. Dar banii reali?
+\item $100\$ \to 150\$ \to 75\$$. Ai pierdut \textbf{25\%}!
+\end{itemize}
+\end{exampleblock}
+\begin{block}{De ce log-randamentele spun adevărul}
+\begin{itemize}\setlength\itemsep{2pt}
+\item $r_1 = \ln(1{,}5) = +40{,}5\%$, \quad $r_2 = \ln(0{,}5) = -69{,}3\%$
+\item Suma: $r_1 + r_2 = -28{,}8\% = \ln(0{,}75)$ \checkmark \quad (aditivitatea funcționează!)
+\item Randamentul simplu \textbf{nu} este aditiv: $(+50\%) + (-50\%) \neq \ln(0{,}75)$
+\item \textbf{Regula}: $\E[\text{rand.\ geometric}] \approx \E[\text{rand.\ aritmetic}] - \sigma^2/2$; volatilitate mare $\Rightarrow$ pierdere reală mai severă
+\end{itemize}
+\end{block}
 \end{frame}
 
 %--- PhD Slide 4 ---
@@ -900,6 +940,25 @@ unde $C \leq 0{,}4748$ (Shevtsova, 2011).
 \end{itemize}
 \end{frame}
 
+%--- MSc Slide 7b: Regimul pre-asimptotic ---
+\slidelevel{MSc}
+\begin{frame}{Regimul pre-asimptotic --- De ce TLC nu ne salvează}
+\begin{block}{Conexiunea Berry-Esseen $\leftrightarrow$ Gaussianitate agregată}
+\begin{itemize}\setlength\itemsep{2pt}
+\item TLC ne \textbf{promite} convergența spre normalitate pe măsură ce agregăm
+\item Dar Berry-Esseen arată că viteza depinde de $\rho/\sigma^3$ (momentul de ordin 3)
+\item Randamentele financiare au $\rho/\sigma^3$ \textbf{foarte mare} (cozi groase) $\Rightarrow$ convergența este \textbf{dureros de lentă}
+\end{itemize}
+\end{block}
+\begin{alertblock}{Implicație practică}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Dacă randamentele ar avea cozi subțiri, 22 de zile (o lună) ar fi suficiente pentru normalitate perfectă
+\item Din cauza cozilor groase, nici măcar agregatele \textbf{anuale} nu sunt perfect Gaussiene
+\item \textbf{Concluzie} (Taleb): în finanțe, trăim permanent în \textit{regimul pre-asimptotic} --- TLC este o promisiune pe care datele noastre nu o pot onora
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
 %--- Y3 Slide 8 ---
 \slidelevel{Y3}
 \begin{frame}{Exemplu: Probabilitatea unei pierderi mari sub distribuția normală}
@@ -1089,6 +1148,27 @@ Trimestrială & $\approx 0{,}5$ & $\approx 0{,}3$ \\
 \item Structura corelațiilor încrucișate și fapte stilizate multivariate
 \item Fapte stilizate intra-zilnice: zgomot de microstructură, săritura bid-ask, efectul Epps
 \end{itemize}
+\end{frame}
+
+%--- MSc Slide 7b: Originea endogenă ---
+\slidelevel{MSc}
+\begin{frame}{De ce apar faptele stilizate? --- Microstructura pieței}
+\begin{block}{Cozile groase --- mecanisme de feedback pozitiv}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Într-o criză, scăderea prețului declanșează \textbf{apeluri în marjă} (\textit{margin calls})
+\item Investitorii sunt forțați să vândă $\Rightarrow$ prețul scade mai mult $\Rightarrow$ noi margin calls
+\item Ordinele automate \textit{stop-loss} amplifică mișcarea: vânzare automată sub un prag
+\item Rezultat: pierderi mult mai mari decât prevede distribuția normală
+\end{itemize}
+\end{block}
+\begin{block}{Clusterizarea volatilității --- fragmentarea informației}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Ordinele instituționale mari sunt fragmentate și executate pe parcursul mai multor zile
+\item Informația se integrează \textit{gradual} în preț, nu instantaneu (piețe imperfect eficiente)
+\item \textbf{Consecință}: perioade prelungite de volatilitate mare (sau mică)
+\item Efectul de levier (Black, 1976): scăderea $\Rightarrow$ levier mai mare $\Rightarrow$ risc perceput mai mare $\Rightarrow$ volatilitate crește
+\end{itemize}
+\end{block}
 \end{frame}
 
 %--- PhD Slide 8 ---
@@ -1364,6 +1444,39 @@ Randamentele zilnice au $\sigma = 1{,}5\%$. Calculați $P(r < -3\sigma) = P(r < 
 \begin{alertblock}{Concluzie}
 \begin{itemize}
 \item Student-$t$ prevede pierderi $> 3\sigma$ de \textbf{4{,}3$\times$ mai frecvent} decât distribuția normală ($0{,}584\%$ vs.\ $0{,}135\%$)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%--- Y3 Slide: Punte Student-t → Pareto ---
+\slidelevel{Y3}
+\begin{frame}{De la Student-$t$ la Pareto --- De ce avem nevoie de ambele?}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Student-$t$: modelul \textbf{complet}}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Modelează \textbf{întregul set de date} (centru + cozi)
+\item Compromis: dacă fitezi bine centrul, poți rata coada extremă
+\item Parametru global: $\nu$ controlează simultan vârful și cozile
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Pareto: \textbf{lupa pe coadă}}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Modelează \textbf{doar valorile extreme} ($x > x_m$)
+\item Nu face compromisuri: se concentrează exclusiv pe coada dreaptă
+\item Pregătește mental Teoria Valorilor Extreme (EVT)
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.2cm}
+\begin{alertblock}{Legătura matematică}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Student-$t$ cu $\nu$ g.l.\ are \textbf{cozi Pareto}: $P(X > x) \sim C \cdot x^{-\nu}$ pentru $x \to \infty$
+\item Indicele de coadă Pareto $\alpha$ = gradele de libertate $\nu$ ale Student-$t$
+\item Pareto nu este o alternativă la Student-$t$, ci o \textbf{unealtă complementară} de diagnostic
 \end{itemize}
 \end{alertblock}
 \end{frame}
