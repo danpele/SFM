@@ -213,7 +213,8 @@ if __name__ == '__main__':
         ax1.set_xlabel(r'$\log(n)$')
         ax1.set_ylabel(r'$\log(R/S)$')
         ax1.set_title('Panel A: R/S Analysis (S&P 500)', fontweight='bold')
-        ax1.legend(loc='upper left', frameon=False, fontsize=7)
+        ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+                   ncol=2, frameon=False, fontsize=7)
 
     # --- Panel B: Rolling Hurst for S&P 500 and BTC ---
     roll_assets = {'S&P 500': MAIN_BLUE, 'Bitcoin': CRIMSON}
