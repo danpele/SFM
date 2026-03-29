@@ -605,8 +605,8 @@ $$Q(m) = T(T+2)\sum_{k=1}^{m}\frac{\hat{\rho}_k^2}{T-k}$$
     \item Daily returns on major indices show small but statistically significant $\hat{\rho}_1 \approx 0.05$--$0.10$ (Lo \& MacKinlay, 1988). Economically small, but challenges strict weak-form EMH.
 \end{itemize}
 \end{exampleblock}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- Code Slide: Autocorrelation + Ljung-Box ---
@@ -631,8 +631,8 @@ print("ACF lags 1-5:", np.round(acf_vals[1:6], 4))
 lb = acorr_ljungbox(returns, lags=[10, 20], return_df=True)
 print(lb)  # If p-value < 0.05, reject weak-form EMH
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- ACF Plot Description ---
@@ -660,14 +660,14 @@ print(lb)  # If p-value < 0.05, reject weak-form EMH
 \end{column}
 \end{columns}
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \begin{alertblock}{Important}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item Predictable volatility $\neq$ predictable returns. EMH is about the \textbf{direction} of price changes, not their magnitude.
+    \item Predictable volatility $\neq$ predictable returns. EMH concerns \textbf{direction}, not magnitude.
 \end{itemize}
 \end{alertblock}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Autocorrelation Function: Empirical Results}
@@ -689,8 +689,8 @@ print(lb)  # If p-value < 0.05, reject weak-form EMH
 \end{itemize}
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{The Runs Test}
@@ -718,8 +718,8 @@ A \textbf{run} is a maximal consecutive sequence of returns with the same sign. 
 \end{itemize}
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{The Variance Ratio Test}
@@ -751,41 +751,33 @@ A \textbf{run} is a maximal consecutive sequence of returns with the same sign. 
 
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
+\end{cminipage}
 \end{frame}
 
 %--- Code Slide: Variance Ratio Test ---
 \begin{frame}[fragile]{Python: Variance Ratio Test on S\&P 500}
 \begin{cminipage}{0.95\textwidth}
 \begin{lstlisting}
-import numpy as np
-import yfinance as yf
-
+import numpy as np, yfinance as yf
 sp = yf.download('^GSPC', start='2015-01-01', end='2025-01-01')
-r = np.log(sp['Adj Close'] / sp['Adj Close'].shift(1)).dropna().values
+r = np.log(sp['Adj Close']/sp['Adj Close'].shift(1)).dropna().values
 
-def variance_ratio(returns, q):
-    """Lo-MacKinlay variance ratio test."""
-    T = len(returns)
-    mu = returns.mean()
-    # Variance of 1-period returns
-    sig1 = np.sum((returns - mu)**2) / (T - 1)
-    # q-period returns
-    rq = np.array([returns[i:i+q].sum() for i in range(T - q + 1)])
-    sigq = np.sum((rq - q * mu)**2) / (T - 1)
+def variance_ratio(ret, q):
+    T, mu = len(ret), ret.mean()
+    sig1 = np.sum((ret - mu)**2) / (T - 1)
+    rq = np.array([ret[i:i+q].sum() for i in range(T-q+1)])
+    sigq = np.sum((rq - q*mu)**2) / (T - 1)
     VR = sigq / (q * sig1)
-    # Asymptotic z-statistic (homoscedastic)
-    phi = 2 * (2*q - 1) * (q - 1) / (3 * q * T)
-    z = (VR - 1) / np.sqrt(phi)
-    return VR, z
+    phi = 2*(2*q-1)*(q-1) / (3*q*T)  # asymptotic variance
+    return VR, (VR-1)/np.sqrt(phi)
 
 for q in [2, 5, 10, 20]:
     vr, z = variance_ratio(r, q)
     print(f"VR({q:2d}) = {vr:.4f},  z = {z:+.3f}")
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Variance Ratio: Empirical Results}
@@ -834,8 +826,8 @@ BET (daily) & 1.12 & 1.18 & 1.10 & 1.01 & Stronger momentum (less efficient) \\
 \end{itemize}
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
+\end{cminipage}
 \end{frame}
 
 %--- Random Walk Types ---
@@ -934,8 +926,8 @@ Weakest: only zero autocorrelation. Allows dependence in higher moments.
 \end{alertblock}
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- Spectral Analysis ---
@@ -1007,8 +999,8 @@ Weakest: only zero autocorrelation. Allows dependence in higher moments.
     \item Market efficiency is \textbf{not constant} --- it varies with market conditions. This supports the AMH over static EMH.
 \end{itemize}
 \end{alertblock}
-\end{cminipage}
 \quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
+\end{cminipage}
 \end{frame}
 
 %--- ADF Formal Setup ---
@@ -1173,8 +1165,8 @@ kpss_p = kpss(prices, regression='ct', nlags='auto')
 print(f"KPSS (prices): stat={kpss_p[0]:.3f}, p={kpss_p[1]:.4f}")
 # KPSS (prices): stat=0.45, p=0.01 -> reject stationarity
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- Emerging Markets ---
@@ -1258,8 +1250,8 @@ BTC-USD & 0.22 & 0.98 & $<0.01$ & 0.55 & Not rejected (daily) \\
     \item \textcolor{Crimson}{\textbf{Overreaction:}} initial overshooting, subsequent reversal (De Bondt \& Thaler, 1985)
     \item \textcolor{MainBlue}{\textbf{Underreaction:}} slow adjustment, post-event drift (Post-Earnings Announcement Drift, PEAD --- Ball \& Brown, 1968)
 \end{itemize}
-\end{cminipage}
 \quantlet{SFM\_ch3\_event\_study}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_event_study}
+\end{cminipage}
 \end{frame}
 
 %--- Code Slide: Event Study Simulation ---
@@ -1267,32 +1259,23 @@ BTC-USD & 0.22 & 0.98 & $<0.01$ & 0.55 & Not rejected (daily) \\
 \begin{cminipage}{0.95\textwidth}
 \begin{lstlisting}
 import numpy as np
-
 np.random.seed(42)
-T_est, T_event = 240, 21  # estimation / event window
-N_events = 50
+T_est, T_evt, N = 240, 21, 50  # estimation / event / #events
 alpha, beta = 0.001, 1.1
-
 car_all = []
-for _ in range(N_events):
-    r_m = np.random.normal(0.0005, 0.01, T_est + T_event)
-    eps = np.random.normal(0, 0.008, T_est + T_event)
-    r_i = alpha + beta * r_m + eps
-    # Add abnormal return at event day (day 0 = index T_est+10)
-    r_i[T_est + 10] += 0.03  # 3% surprise
-    # Estimate model on estimation window
-    a_hat = np.mean(r_i[:T_est] - beta * r_m[:T_est])
-    # Abnormal returns in event window
-    ar = r_i[T_est:] - (a_hat + beta * r_m[T_est:])
+for _ in range(N):
+    r_m = np.random.normal(0.0005, 0.01, T_est + T_evt)
+    r_i = alpha + beta*r_m + np.random.normal(0, 0.008, T_est+T_evt)
+    r_i[T_est+10] += 0.03  # 3% surprise at event day
+    a_hat = np.mean(r_i[:T_est] - beta*r_m[:T_est])
+    ar = r_i[T_est:] - (a_hat + beta*r_m[T_est:])
     car_all.append(np.cumsum(ar))
-
 avg_car = np.mean(car_all, axis=0)
-t_stat = avg_car[-1] / (np.std([c[-1] for c in car_all])
-         / np.sqrt(N_events))
-print(f"CAR(-10,+10) = {avg_car[-1]:.4f}, t = {t_stat:.2f}")
+t = avg_car[-1] / (np.std([c[-1] for c in car_all]) / np.sqrt(N))
+print(f"CAR(-10,+10) = {avg_car[-1]:.4f}, t = {t:.2f}")
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_event\_study}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_event_study}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Event Study: Empirical Results}
@@ -1314,8 +1297,8 @@ print(f"CAR(-10,+10) = {avg_car[-1]:.4f}, t = {t_stat:.2f}")
 \end{itemize}
 \end{column}
 \end{columns}
-\end{cminipage}
 \quantlet{SFM\_ch3\_event\_study}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_event_study}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Post-Earnings Announcement Drift (PEAD)}
@@ -1954,8 +1937,8 @@ Theoretical basis & Neoclassical economics & Evolutionary biology \\
 \end{column}
 \end{columns}
 \end{block}
-\end{cminipage}
 \quantlet{SFM\_ch3\_hurst\_exponent}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_hurst_exponent}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Hurst Exponent: R/S Analysis Plot}
@@ -2007,8 +1990,8 @@ def hurst_rs(ts, min_w=20, max_w=None):
     return np.polyfit(ln, lr, 1)[0]
 print(f"Hurst (S&P 500): {hurst_rs(r):.3f}")  # ~0.52
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_hurst\_exponent}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_hurst_exponent}
+\end{cminipage}
 \end{frame}
 
 %--- AMH Empirical Evidence ---
@@ -2221,8 +2204,8 @@ Hurst exponent & $H = 0.523$ & --- & Near 0.5 (efficient) \\
 \bottomrule
 \end{tabular}
 \end{center}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 \begin{frame}{Case Study: Interpretation and Conclusions}
@@ -2979,8 +2962,8 @@ print(f"MA crossover: {cum_strat:.1%}, SR={sr_strat:.2f}")
 print(f"Buy & hold:   {cum_bh:.1%}, SR={sr_bh:.2f}")
 # Typically: MA crossover underperforms buy-and-hold
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- Python: Sentiment Analysis ---
@@ -3007,8 +2990,8 @@ print(f"Slope: {slope:.4f}, R^2: {r_val**2:.3f}, p: {p_val:.4f}")
 # High VIX predicts higher future returns (contrarian signal)
 # R^2 is small (~2-5%) but statistically significant
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+\end{cminipage}
 \end{frame}
 
 %--- Python: Cross-Asset Rolling Efficiency ---
@@ -3039,8 +3022,8 @@ for name, r in data.items():
 ax.legend(); ax.set_ylabel('|VR(5) - 1|')
 plt.savefig('ch3_rolling_efficiency.pdf', bbox_inches='tight')
 \end{lstlisting}
-\end{cminipage}
 \quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
+\end{cminipage}
 \end{frame}
 
 %#############################################################################
