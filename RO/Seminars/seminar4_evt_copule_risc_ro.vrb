@@ -1,0 +1,24 @@
+\frametitle{Lab 3: GARCH cu inovații non-Gaussiene}
+\begin{cminipage}{0.95\textwidth}
+\quantlet{SFM\_ch2\_modern\_extensions}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_modern_extensions}
+
+\begin{block}{Exercițiu Python (15 min)}
+Comparați GARCH(1,1) cu diferite inovații:
+\begin{enumerate}\setlength{\itemsep}{2pt}
+    \item Ajustați GARCH(1,1) cu inovații normale și Student-$t$
+    \item Comparați AIC/BIC
+    \item Extrageți reziduurile standardizate: sunt i.i.d.?
+    \item Calculați VaR 1\% \textbf{condiționat} pe volatilitatea curentă
+\end{enumerate}
+\end{block}
+
+\begin{lstlisting}
+from arch import arch_model
+# GARCH(1,1) with Student-t innovations
+model = arch_model(returns, vol='Garch', p=1, q=1, dist='t')
+res = model.fit(disp='off')
+# Conditional VaR
+cond_vol = res.conditional_volatility
+VaR_t = res.params['mu'] + cond_vol * t.ppf(0.01, res.params['nu'])
+\end{lstlisting}
+    \end{cminipage}

@@ -1,0 +1,1862 @@
+% Seminar 2: Classical Distributions --- Normal and Student-t
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+\input{preamble}
+\subtitle{Seminar 2: Classical Distributions --- Normal, Student-$t$ and Pareto}
+
+\begin{document}
+
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \titlepage
+\end{frame}
+}
+
+
+%=============================================================================
+% OUTLINE
+%=============================================================================
+\begin{frame}{Seminar Outline}
+    \begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Quick Review} -- Key formulas, properties and comparisons
+        \vspace{0.15cm}
+        \item \textbf{Multiple Choice Quiz} -- 15 questions with answer options
+        \vspace{0.15cm}
+        \item \textbf{True/False Questions} -- 14 conceptual evaluation questions
+        \vspace{0.15cm}
+        \item \textbf{Calculation Exercises} -- 8 problems solved step by step
+        \vspace{0.15cm}
+        \item \textbf{Python Exercises} -- 6 implementation and visualization exercises
+        \vspace{0.15cm}
+        \item \textbf{Discussion Questions} -- 4 scenarios and critical thinking
+        \vspace{0.15cm}
+        \item \textbf{AI-Assisted Exercises} -- Critical thinking with LLMs
+        \vspace{0.15cm}
+        \item \textbf{Summary} -- Conclusions and next steps
+    \end{itemize}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PART 1: QUICK REVIEW
+%=============================================================================
+\section{Quick Review}
+
+\begin{frame}{Key Formulas to Remember}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Normal Distribution:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item PDF: $f(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$
+                \item Skewness: $S = 0$, Kurtosis: $K = 3$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Student-$t$:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Excess kurtosis: $\kappa = 6/(\nu - 4)$, $\nu > 4$
+                \item $\nu \to \infty \Rightarrow \mathcal{N}(0,1)$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Pareto:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Survival: $\bar{F}(x) = (x_m/x)^\alpha$
+                \item $\E[X] = \alpha x_m/(\alpha - 1)$, $\alpha > 1$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Risk Measures:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Normal VaR: $\text{VaR}_\alpha = -(\mu + z_\alpha \sigma)$
+                \item Normal ES: $\text{ES}_\alpha = -\mu + \sigma \cdot \phi(z_\alpha)/\alpha$
+                \item $\text{ES} \geq \text{VaR}$ always
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Model Selection:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item AIC: $-2\ell + 2k$
+                \item BIC: $-2\ell + k\ln n$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \textbf{Jarque--Bera Test:}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $JB = \frac{n}{6}\left(\hat{S}^2 + \frac{(\hat{K}-3)^2}{4}\right) \sim \chi^2(2)$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Key Concepts Summary}
+\begin{cminipage}{0.95\textwidth}
+    \begin{center}
+    \small
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Concept} & \textbf{Key Point} & \textbf{When to Use} \\
+        \midrule
+        Normal & $S=0$, $K=3$; fully specified by $\mu, \sigma$ & Benchmark, null hypothesis \\
+        Student-$t$ & Heavy tails, $\kappa = 6/(\nu-4)$ & Daily returns ($\nu \approx 3$--$8$) \\
+        Pareto & Polynomial decay $x^{-\alpha}$ & Modelling extreme tails \\
+        \midrule
+        VaR & Loss quantile & Loss limit at level $\alpha$ \\
+        ES & Mean of losses $>$ VaR & Coherent risk measure \\
+        \midrule
+        AIC/BIC & Complexity penalty & Distributional model selection \\
+        Jarque--Bera & $H_0$: normality ($S=0, K=3$) & Normality test \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{The Empirical Rule and Limits of the Normal Distribution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{The 68--95--99.7 Rule:}
+                \item $\Pr(\mu - \sigma < X < \mu + \sigma) = 68.3\%$
+                \item $\Pr(\mu - 2\sigma < X < \mu + 2\sigma) = 95.4\%$
+                \item $\Pr(\mu - 3\sigma < X < \mu + 3\sigma) = 99.7\%$
+            \end{itemize}
+
+            \vspace{0.3cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Why does it fail in markets?}
+                \item The rule predicts: only 0.3\% beyond $3\sigma$
+                \item Reality: $5\sigma$--$10\sigma$ returns occur \textbf{tens of times} more frequently
+                \item \textbf{Example:} ``Black Monday'' (1987): $-22\%$ $\approx 25\sigma$
+                \item Under Normal: $\Pr < 10^{-100}$ --- practically impossible
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normal_pdf_theoretical.pdf}
+            {\tiny Normal distribution: symmetric, exponential tails}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Student-$t$: The Effect of Degrees of Freedom $\nu$}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{How $\nu$ controls the shape of the distribution:}
+            \end{itemize}
+
+            \vspace{0.1cm}
+            \small
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{cccc}
+            \toprule
+            $\nu$ & \textbf{Variance} & \textbf{Kurtosis} & \textbf{Tails} \\
+            \midrule
+            1 (Cauchy) & $\infty$ & $\infty$ & Very heavy \\
+            3 & 3.0 & $\infty$ & Heavy \\
+            5 & 1.67 & 9.0 & Moderate \\
+            10 & 1.25 & 4.0 & Light \\
+            30 & 1.07 & 3.2 & $\approx$ Normal \\
+            $\infty$ & 1.00 & 3.0 & Normal \\
+            \bottomrule
+            \end{tabular}
+            \normalsize
+
+            \vspace{0.2cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Financial returns:} $\hat{\nu} \approx 3$--$8$
+                \item The smaller $\nu$, the more extreme events
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_student_t_pdfs.pdf}
+            {\tiny Student-$t$: from Cauchy ($\nu=1$) to Normal ($\nu=\infty$)}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{The Pareto Distribution and the Power Law}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Power law:} $\Pr(X > x) \sim x^{-\alpha}$
+                \item \textbf{Polynomial decay} vs exponential (Normal)
+                \item Tails are \textbf{much} heavier
+            \end{itemize}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Applications in finance:}
+                \item Extreme losses (tails of returns)
+                \item Wealth distribution (the 80/20 rule)
+                \item Trading volumes
+                \item Company sizes on the stock exchange
+            \end{itemize}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Key property (scalability):}
+                \item $\Pr(X > 2x \mid X > x) = 2^{-\alpha}$, constant in $x$
+                \item The conditional probability does not depend on the threshold!
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_tail_survival.pdf}
+            {\tiny Pareto: polynomial decay on log-log scale}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Comparison: Distribution Tails}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Tail decay rate --- from light to heavy:}
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \small
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{lllll}
+    \toprule
+    \textbf{Distribution} & \textbf{Tail Decay} & \textbf{Finite Moments} & \textbf{VaR 1\%} ($\sigma=1\%$) & \textbf{Usage} \\
+    \midrule
+    Normal & $e^{-x^2/2}$ & All & 2.33\% & Benchmark \\
+    Student-$t$ ($\nu=5$) & $x^{-(\nu+1)}$ & $p < \nu$ & 3.37\% & Daily returns \\
+    Pareto ($\alpha=3$) & $x^{-\alpha}$ & $p < \alpha$ & 9.28\% & Extreme losses \\
+    Cauchy ($\nu=1$) & $x^{-2}$ & No moments & -- & Limiting case \\
+    \bottomrule
+    \end{tabular}
+    \normalsize
+
+    \vspace{0.3cm}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item $\Rightarrow$ The heavier the tails, the more \textbf{dramatically} VaR increases
+        \item The difference is small at 5\%, but \textbf{enormous} at 0.1\%
+        \item The choice of distribution matters most in the \textbf{extreme tails}
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PART 2: MULTIPLE CHOICE QUIZZES
+%=============================================================================
+\section{Multiple Choice Quiz}
+
+\begin{frame}{Quiz 1: The Jarque--Bera Test}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        The Jarque--Bera test checks:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} Stationarity of the series\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Normality of the distribution\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Absence of autocorrelation\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Homoscedasticity
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 1: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                Normality of the distribution
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Explanation:}
+            \end{itemize}
+            $$JB = \frac{n}{6}\left(\hat{S}^2 + \frac{(\hat{K} - 3)^2}{4}\right) \sim \chi^2(2)$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $H_0$: The distribution is normal ($S=0$, $K=3$)
+                \item $H_1$: The distribution is not normal
+                \item It is based on skewness and kurtosis
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normal_pdf_theoretical.pdf}
+            {\tiny Normal distribution: $S=0$, $K=3$}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_normal\_distribution}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_normal_distribution}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 2: Excess Kurtosis}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        The excess kurtosis of the Student-$t$ distribution with $\nu = 6$ is:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} 1.5\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} 3.0\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} 6.0\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Does not exist
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 2: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                $\kappa = 6/(6-4) = 3.0$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Excess kurtosis formula:}
+            \end{itemize}
+            $$\kappa = \frac{6}{\nu - 4} \quad \text{for } \nu > 4$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Checking the options:
+                \item A: $\kappa = 1.5$ would require $\nu = 8$ \incorrect
+                \item B: $\kappa = 6/(6-4) = 3.0$ \correct
+                \item C: $\kappa = 6.0$ would require $\nu = 5$ \incorrect
+                \item D: Kurtosis exists for $\nu > 4$ \incorrect
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_student_t_pdf_theoretical.pdf}
+            {\tiny Student-$t$: heavy tails, $\kappa > 0$}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_student\_t}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_student_t}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 3: Normal VaR}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        Normal VaR at 1\% with $\mu = 0$, $\sigma = 1\%$ is approximately:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} 1.65\%\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} 2.33\%\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} 3.09\%\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} 3.72\%
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 3: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                $\text{VaR}_{1\%} = 2.326 \times 1\% \approx 2.33\%$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Normal VaR formula:}
+            \end{itemize}
+            $$\text{VaR}_\alpha = -(\mu + z_\alpha \cdot \sigma)$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Key quantiles:
+                \item A: $z_{5\%} = -1.645$ \incorrect
+                \item B: $z_{1\%} = -2.326$ \correct
+                \item C: $z_{0.1\%} = -3.090$ \incorrect
+                \item D: Does not correspond to a standard level \incorrect
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normal_vs_empirical.pdf}
+            {\tiny VaR: left-tail quantile of the distribution}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 4: Student-$t$ and Convergence}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        When $\nu \to \infty$, the Student-$t$ distribution:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} Converges to Cauchy\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Converges to Normal\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Variance becomes infinite\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Does not converge
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 4: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                Converges to the standard normal distribution
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Distribution hierarchy:}
+                \item $\nu = 1$: Cauchy (very heavy tails)
+                \item $\nu = 3$--$8$: typical financial returns
+                \item $\nu = 30$: nearly normal
+                \item $\nu \to \infty$: exactly $\mathcal{N}(0,1)$
+                \item $\Rightarrow$ The normal distribution is a \textbf{limiting case} of the Student-$t$.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_student_t_pdf_theoretical.pdf}
+            {\tiny Student-$t$ converges to normal as $\nu \to \infty$}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_student\_t}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_student_t}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 5: Expected Shortfall}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        Which statement about ES is \textbf{true}?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} $\text{ES} < \text{VaR}$ always\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $\text{ES} \geq \text{VaR}$ always\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} $\text{ES} = \text{VaR}$ under normality\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} ES is not defined under Student-$t$
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 5: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                $\text{ES} \geq \text{VaR}$ always
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Definition of ES:}
+            \end{itemize}
+            $$\text{ES}_\alpha = \E[-X \mid -X > \text{VaR}_\alpha]$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item ES is the mean of losses \textit{conditional} on exceeding VaR $\Rightarrow$ it cannot be smaller than VaR.
+                \item Under normality: $\text{ES}/\text{VaR} \approx 1.14$ at 1\%.
+                \item Under Student-$t$: the ratio increases as $\nu$ decreases.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_tails.pdf}
+            {\tiny ES: area under the tail beyond VaR}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 6: Stylized Facts}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        Which of the following is NOT a stylized fact of financial returns?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} Heavy tails (leptokurtosis)\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Volatility clustering\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Perfect normal distribution\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Negative skewness
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 6: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: C}
+                Real returns are NOT normally distributed
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Stylized facts (Cont, 2001):}
+                \item Heavy tails: $\hat{K} > 3$ \correct
+                \item Volatility clustering \correct
+                \item Negative skewness in equities \correct
+                \item Normality: \textcolor{Crimson}{rejected} across all markets \incorrect
+                \item $\Rightarrow$ Normality is an \textbf{approximation}, not a fact.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_cs2a_stylized_3assets.pdf}
+            {\tiny Stylized facts: comparison of 3 assets}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_case\_study\_2a}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_case_study_2a}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 7: Skewness of Returns}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        For daily equity returns, $\hat{S} = -0.5$ suggests:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} More extreme positive returns\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} More extreme negative returns\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Perfect symmetry\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Excess kurtosis
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 7: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                The left tail is heavier
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Interpretation of skewness:}
+                \item $S < 0$: longer left tail (large losses) \correct
+                \item $S > 0$: longer right tail
+                \item $S = 0$: symmetry
+                \item In equities: the \textbf{leverage} effect (Black, 1976) --- declines are sharper than increases.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_overlay.pdf}
+            {\tiny Negative skewness: heavier left tail}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 8: MLE for the Normal}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        The MLE estimator for $\sigma^2$ in the normal case is:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} $\frac{1}{n-1}\sum_{i=1}^n(x_i - \bar{x})^2$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $\frac{1}{n}\sum_{i=1}^n(x_i - \bar{x})^2$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} $\frac{1}{n}\sum_{i=1}^n x_i^2$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} $\frac{1}{n-2}\sum_{i=1}^n(x_i - \bar{x})^2$
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 8: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                $\hat{\sigma}^2_{\text{MLE}} = \frac{1}{n}\sum(x_i - \bar{x})^2$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Explanation:}
+                \item MLE maximizes the log-likelihood:
+            \end{itemize}
+            $$\ell(\mu,\sigma^2) = -\frac{n}{2}\ln(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum(x_i-\mu)^2$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item A: the unbiased estimator (correct, but not MLE) \incorrect
+                \item B: MLE (slightly biased) \correct
+                \item C: does not centre at the mean \incorrect
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normal_pdf_theoretical.pdf}
+            {\tiny Normal: MLE coincides with method of moments}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_normal\_distribution}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_normal_distribution}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 9: The ES/VaR Ratio}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        If VaR at 1\% = 3\% and ES at 1\% = 4.5\%, the ES/VaR ratio is:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} 0.67\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} 1.00\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} 1.50\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} 3.00
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 9: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: C}
+                ES/VaR = 4.5\%/3\% = 1.50
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{The ES/VaR ratio:}
+                \item Under normality at 1\%: $\approx 1.14$
+                \item Under Student-$t$($\nu = 5$) at 1\%: $\approx 1.50$
+                \item The heavier the tails, the higher the ratio
+                \item ES/VaR $= 1.50 > 1.14$ $\Rightarrow$ the distribution is heavier than the normal distribution.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_tails.pdf}
+            {\tiny ES captures the severity of extreme losses}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 10: BIC Penalty}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        On a sample of $n = 5000$, BIC penalizes an additional parameter by:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} 2\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} 8.52\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} 5000\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} $\ln(2) \approx 0.69$
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 10: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                $\ln(5000) \approx 8.52$ per parameter
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{AIC vs BIC comparison:}
+            \end{itemize}
+            \begin{align*}
+                \text{AIC}&: \text{penalty} = 2k \\
+                \text{BIC}&: \text{penalty} = k\ln(n)
+            \end{align*}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item For $n = 5000$:
+                \item AIC: $+2$ per parameter
+                \item BIC: $+8.52$ per parameter
+                \item $\Rightarrow$ BIC favours \textbf{more parsimonious} models.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_cs2a_fit_comparison.pdf}
+            {\tiny AIC vs BIC: model selection}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 11: The Pareto Distribution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        The survival function of the Pareto($x_m, \alpha$) distribution is:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} $\bar{F}(x) = (x_m / x)^{\alpha}$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $\bar{F}(x) = e^{-\alpha x}$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} $\bar{F}(x) = 1/(1 + x^\alpha)$\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} $\bar{F}(x) = (x/x_m)^{-\alpha}$
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 11: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: A}
+                $\bar{F}(x) = \Pr(X > x) = (x_m / x)^{\alpha}$ for $x \geq x_m$
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Explanation:}
+                \item A: Correct --- polynomial decay (power law) \correct
+                \item B: Exponential decay (Exponential, not Pareto) \incorrect
+                \item C: Log-logistic distribution \incorrect
+                \item D: Equivalent to A only if $x_m = 1$ \incorrect
+                \item The key: Pareto tails decay as $x^{-\alpha}$, \textbf{much slower} than $e^{-x}$.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_hill_plot.pdf}
+            {\tiny Hill estimator: $\hat{\alpha}$ for Pareto tails}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_extreme\_value}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_extreme_value}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 12: The Central Limit Theorem}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        CLT guarantees convergence of the sample mean to Normal. Which condition is \textbf{essential}?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} The original distribution must be normal\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} The variance of the original distribution must be finite\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} The observations must be correlated\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} The sample must be smaller than 30
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 12: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                Finite variance is the essential condition
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Central Limit Theorem (Lindeberg-L\'evy):}
+                \item If $X_1, \ldots, X_n$ are i.i.d.\ with $\E[X] = \mu$ and $\Var(X) = \sigma^2 < \infty$:
+            \end{itemize}
+            $$\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item A: The original distribution can be \textit{anything} \incorrect
+                \item B: $\sigma^2 < \infty$ is necessary \correct
+                \item C: Observations must be \textit{independent} \incorrect
+                \item D: $n \to \infty$, not $n < 30$ \incorrect
+                \item \textbf{Without} finite variance $\Rightarrow$ convergence to \textit{stable} distributions
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_clt_illustration.pdf}
+            {\tiny CLT: convergence to Normal as $n$ increases}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 13: Interpreting Q-Q Plots}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        On a normal Q-Q plot, points curving \textbf{upward} at the right end and \textbf{downward} at the left end indicate:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} Perfect normality\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Lighter tails than the normal\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Heavier tails than the normal\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Positive skewness
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 13: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: C}
+                Heavier tails than the normal distribution
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Interpreting Q-Q plots:}
+                \item Straight line: the distribution fits \correct
+                \item \textbf{S}-shaped curvature: heavy tails (leptokurtosis)
+                \item Right end $\uparrow$: larger positive extreme values
+                \item Left end $\downarrow$: larger negative extreme values
+                \item $\Rightarrow$ Returns have more \textbf{extreme events} than the normal distribution predicts
+                \item The Q-Q plot is \textit{visual}, not a formal test
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_qq.pdf}
+            {\tiny Q-Q plot: tail deviations indicate leptokurtosis}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 14: VaR Subadditivity}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        VaR is not subadditive. What does this mean?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} $\text{VaR}(A+B) \leq \text{VaR}(A) + \text{VaR}(B)$ always\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} $\text{VaR}(A+B) > \text{VaR}(A) + \text{VaR}(B)$ is possible\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} VaR cannot be computed for portfolios\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} VaR is always greater than ES
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 14: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                Diversification can \textit{increase} VaR
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Lack of subadditivity:}
+                \item There exist cases where combining 2 assets \textbf{increases} total VaR
+                \item This contradicts the diversification principle
+                \item \textbf{Classic example:} two digital options with small loss probabilities
+                \item ES satisfies subadditivity \textbf{always}:
+            \end{itemize}
+            $$\text{ES}(A+B) \leq \text{ES}(A) + \text{ES}(B)$$
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Rightarrow$ ES is a \textbf{coherent} risk measure; VaR is not
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_var_subadditivity.pdf}
+            {\tiny VaR: diversification does not guarantee reduction}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 15: Moments of the Pareto Distribution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Question}
+        If $X \sim \text{Pareto}(\alpha = 2.5)$, which moments are finite?
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Answer Options}
+    \textcolor{MainBlue}{\textbf{(A)}} Mean only\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Mean and variance\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Mean, variance and skewness\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} All moments
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz 15: Answer}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{exampleblock}{Answer: B}
+                Mean and variance, but not skewness
+            \end{exampleblock}
+
+            \vspace{0.2cm}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Pareto moment rule:}
+                \item $\E[X^p] < \infty$ if and only if $p < \alpha$
+                \item With $\alpha = 2.5$:
+                \item $p = 1$ (mean): $1 < 2.5$ \correct
+                \item $p = 2$ (variance): $2 < 2.5$ \correct
+                \item $p = 3$ (skewness): $3 > 2.5$ \incorrect \ infinite
+                \item \textbf{Moment hierarchy:}
+            \end{itemize}
+            \small
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{ll}
+            \toprule
+            $\alpha > 1$ & Finite mean \\
+            $\alpha > 2$ & Finite variance \\
+            $\alpha > 3$ & Finite skewness \\
+            $\alpha > 4$ & Finite kurtosis \\
+            \bottomrule
+            \end{tabular}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_hill_plot.pdf}
+            {\tiny Hill estimator: $\hat{\alpha}$ determines which moments exist}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_extreme\_value}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_extreme_value}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PART 2: TRUE/FALSE QUESTIONS
+%=============================================================================
+\section{True/False Questions}
+
+\begin{frame}{True or False? --- Questions}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Answer with True (T) or False (F):}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item The normal distribution is fully specified by its mean and variance.
+        \item The Jarque--Bera test has high power on small samples ($n < 30$).
+        \item The excess kurtosis of the Student-$t$ distribution exists for any $\nu > 0$.
+        \item Normal VaR underestimates the true risk at the 1\% level in financial markets.
+        \item ES is a coherent risk measure, but VaR is not.
+        \item AIC penalizes complexity more than BIC.
+        \item The mean of the Pareto distribution with $\alpha = 1.5$ is finite.
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{True or False? --- Answers}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \footnotesize
+            \begin{enumerate}\setlength{\itemsep}{1pt}
+                \item \textcolor{Forest}{\textbf{T}}: $\mathcal{N}(\mu, \sigma^2)$ has exactly 2 parameters
+                \item \textcolor{Crimson}{\textbf{F}}: JB has \textit{low} power on small samples; requires $n \geq 100$
+                \item \textcolor{Crimson}{\textbf{F}}: Kurtosis exists only for $\nu > 4$; variance only for $\nu > 2$
+                \item \textcolor{Forest}{\textbf{T}}: Empirical tails are heavier than normal tails
+                \item \textcolor{Forest}{\textbf{T}}: VaR is not subadditive; ES satisfies the coherence axioms
+                \item \textcolor{Crimson}{\textbf{F}}: BIC penalizes \textit{more} ($k\ln n$ vs $2k$ for $n > 7$)
+                \item \textcolor{Forest}{\textbf{T}}: $\E[X] = \alpha x_m/(\alpha - 1)$ finite for $\alpha > 1$; with $\alpha = 1.5$ $\Rightarrow$ the mean exists
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_overlay.pdf}
+            {\tiny Normal vs Student-$t$ vs Empirical}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{True or False? --- Questions (Part II)}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Answer with True (T) or False (F):}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \setcounter{enumi}{7}
+        \item The Central Limit Theorem requires finite variance of the original distribution.
+        \item The Q-Q plot is a \textit{formal} normality test (it produces a $p$-value).
+        \item Expected Shortfall is subadditive for any continuous distribution.
+        \item The Cauchy distribution is Student-$t$ with $\nu = 1$.
+        \item Pareto with $\alpha = 0.8$ has a finite mean.
+        \item VaR at 5\% is always greater than VaR at 1\%.
+        \item Log-returns are preferred over simple returns because they are additive over time.
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{True or False? --- Answers (Part II)}
+\begin{cminipage}{0.95\textwidth}
+    \footnotesize
+    \begin{enumerate}\setlength{\itemsep}{1pt}
+        \setcounter{enumi}{7}
+        \item \textcolor{Forest}{\textbf{T}}: Standard CLT requires $\Var(X) < \infty$; without finite variance $\Rightarrow$ convergence to stable distributions, not Normal
+        \item \textcolor{Crimson}{\textbf{F}}: The Q-Q plot is a \textit{graphical} tool, not a formal test; formal tests are JB, SW, AD
+        \item \textcolor{Forest}{\textbf{T}}: ES satisfies subadditivity: $\text{ES}(A+B) \leq \text{ES}(A) + \text{ES}(B)$ --- a key coherence property
+        \item \textcolor{Forest}{\textbf{T}}: Cauchy $\equiv t_1$; it has neither a defined mean nor variance
+        \item \textcolor{Crimson}{\textbf{F}}: The Pareto mean exists only for $\alpha > 1$; with $\alpha = 0.8 < 1$ $\Rightarrow$ infinite mean
+        \item \textcolor{Crimson}{\textbf{F}}: VaR at 5\% $<$ VaR at 1\% (the 5\% quantile is closer to the centre than the 1\% quantile)
+        \item \textcolor{Forest}{\textbf{T}}: $r_{1 \to T} = \sum_{t=1}^T r_t$ --- temporal additivity; simple returns compound multiplicatively
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PART 3: CALCULATION EXERCISES
+%=============================================================================
+\section{Calculation Exercises}
+
+\begin{frame}{Exercise 1: Log-Returns and the JB Test}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} Closing prices over 5 days: $P_0 = 100$, $P_1 = 103$, $P_2 = 99$, $P_3 = 101$, $P_4 = 105$.
+        \item Calculate:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Log-returns $r_t = \ln(P_t / P_{t-1})$
+        \item Sample mean, variance, skewness, kurtosis
+        \item The Jarque--Bera statistic and the conclusion at 5\%
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 1: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{1. Log-returns:}
+            \end{itemize}
+            \small
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{ccc}
+            \toprule
+            $t$ & $P_t/P_{t-1}$ & $r_t$ \\
+            \midrule
+            1 & 1.030 & 0.0296 \\
+            2 & 0.961 & $-0.0396$ \\
+            3 & 1.020 & 0.0200 \\
+            4 & 1.040 & 0.0388 \\
+            \bottomrule
+            \end{tabular}
+            \normalsize
+
+            \vspace{0.2cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{2. Moments:}
+            $\bar{r} = 0.0122$, $s^2 = 0.001186$,
+            $\hat{S} \approx -0.86$, $\hat{K} \approx 2.05$
+                \item \textbf{3. JB:}
+            $JB = \frac{4}{6}(0.74 + 0.23) = 0.64$
+                \item $\chi^2_{0.05}(2) = 5.99 \Rightarrow$ \textcolor{Forest}{\textbf{Do not reject}} $H_0$
+                \item \textit{Caution: low power with $n=4$!}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normality_tests.pdf}
+            {\tiny Normality tests on real returns}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_normal\_distribution}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_normal_distribution}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 2: Normal VaR and ES}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} Portfolio of 10\,000\,000 EUR, $\mu = 0.05\%$, $\sigma = 1.2\%$ daily.
+        \item Calculate:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Normal VaR at 5\%, 1\% and 0.1\%
+        \item ES at 1\% under the normal assumption
+        \item The ES/VaR ratio at 1\%
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 2: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\text{VaR}_\alpha = -(\mu + z_\alpha \sigma) \cdot W$
+            \end{itemize}
+
+            \vspace{0.2cm}
+            \renewcommand{\arraystretch}{1.2}
+            \begin{tabular}{ccc}
+            \toprule
+            $\alpha$ & $z_\alpha$ & \textbf{VaR (EUR)} \\
+            \midrule
+            5\% & $-1.645$ & 192\,400 \\
+            1\% & $-2.326$ & 274\,100 \\
+            0.1\% & $-3.090$ & 365\,800 \\
+            \bottomrule
+            \end{tabular}
+
+            \vspace{0.2cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{ES at 1\%:}
+            \end{itemize}
+            $$\text{ES}_{1\%} = -\mu + \sigma \frac{\phi(z_{0.01})}{0.01} = 3.13\%$$
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Rightarrow$ 313\,200 EUR
+                \item \textbf{Ratio:} $\text{ES}/\text{VaR} = 1.143$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_normal_fit.pdf}
+            {\tiny VaR: left-tail quantile}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 3: AIC/BIC --- Normal vs Student-$t$}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} On $n = 2000$ daily returns:
+    \end{itemize}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item Normal ($k=2$): $\ell_N = 6421.3$
+        \item Student-$t$ ($k=3$): $\ell_t = 6487.1$
+    \end{itemize}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item Calculate AIC, BIC and interpret.
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 3: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\text{AIC} = -2\ell + 2k$, \quad $\text{BIC} = -2\ell + k\ln n$
+            \end{itemize}
+
+            \vspace{0.2cm}
+            \renewcommand{\arraystretch}{1.3}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Model} & $k$ & \textbf{AIC} & \textbf{BIC} \\
+            \midrule
+            Normal & 2 & $-12\,839$ & $-12\,827$ \\
+            Student-$t$ & 3 & $-12\,968$ & $-12\,951$ \\
+            \bottomrule
+            \end{tabular}
+
+            \vspace{0.2cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Delta\text{AIC} = 129.6$
+                \item $\Rightarrow$ Student-$t$ \textbf{very significantly} preferred ($\Delta > 10$)
+                \item \textbf{Excess kurtosis:} $\kappa = 6/(\hat{\nu} - 4)$
+                \item With $\hat{\nu} = 5.2$: $\kappa = 5.0$ (much $> 0$)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_student_t_fit.pdf}
+            {\tiny Student-$t$ fit: captures the tails better}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_student\_t}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_student_t}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 4: Normal vs Student-$t$ VaR}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} Portfolio with $\mu = 0$, $\sigma = 1.5\%$ daily. Student-$t$ with $\hat{\nu} = 5$.
+        \item Calculate:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item VaR at 1\% under Normal and Student-$t$
+        \item ES at 1\% under both assumptions
+        \item The ES/VaR ratio for each distribution
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 4: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $z_{1\%} = -2.326$, \; $t_{5}^{-1}(0.01) \approx -3.365$
+                \item \textbf{1. VaR at 1\%:}
+            \end{itemize}
+            \renewcommand{\arraystretch}{1.2}
+            \begin{tabular}{lc}
+            \toprule
+            \textbf{Model} & \textbf{VaR 1\%} \\
+            \midrule
+            Normal & $2.326 \times 1.5\% = \mathbf{3.49\%}$ \\
+            Student-$t$ & $3.365 \times 1.5\% = \mathbf{5.05\%}$ \\
+            \bottomrule
+            \end{tabular}
+
+            \vspace{0.2cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{2. ES at 1\%:}
+            \end{itemize}
+            \begin{tabular}{lcc}
+            \toprule
+            & \textbf{ES} & \textbf{ES/VaR} \\
+            \midrule
+            Normal & 3.99\% & 1.14 \\
+            Student-$t$ & 7.58\% & 1.50 \\
+            \bottomrule
+            \end{tabular}
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Rightarrow$ Student-$t$ gives VaR $\mathbf{45\%}$ higher.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_dist_comparison_tails.pdf}
+            {\tiny Normal vs Student-$t$: the difference grows in the tails}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 5: Pareto Distribution --- Heavy Tails}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} The extreme losses of a portfolio follow a Pareto distribution with $x_m = 2\%$ and $\alpha = 3$.
+        \item Calculate:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item The probability of a loss greater than 4\%: $\Pr(X > 4\%)$
+        \item The mean loss: $\E[X]$
+        \item The variance: $\Var(X)$
+        \item VaR at 1\% (99\% quantile)
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 5: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \small
+    \vspace{-0.2cm}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{1.} $\Pr(X > 4\%) = (x_m/x)^\alpha = (2/4)^3 = 1/8 = \mathbf{12.5\%}$
+                \item \textbf{2.} Mean ($\alpha = 3 > 1$):
+            $\E[X] = \frac{\alpha x_m}{\alpha - 1} = \frac{3 \times 2\%}{2} = \mathbf{3\%}$
+                \item \textbf{3.} Variance ($\alpha = 3 > 2$):
+            $\Var(X) = \frac{\alpha x_m^2}{(\alpha-1)^2(\alpha-2)} = \frac{12}{4} = \mathbf{3\%^2}$
+                \item \textbf{4.} VaR at 1\%: $\Pr(X > q) = 0.01$
+                \item $q = x_m (0.01)^{-1/\alpha} = 2\% \times 100^{1/3} \approx \mathbf{9.28\%}$
+                \item Pareto VaR $= 9.28\%$ vs Normal $\approx 5.6\%$ ($+66\%$!)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \includegraphics[width=\textwidth]{ch2_mean_excess_plot.pdf}
+            {\tiny Mean excess plot: linear $\Rightarrow$ Pareto tail}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_extreme\_value}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_extreme_value}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 6: Likelihood Ratio Test}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} On $n = 1500$ daily returns of the BET index:
+    \end{itemize}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item Normal ($k=2$): $\ell_N = 5102.7$
+        \item Student-$t$ ($k=3$): $\ell_t = 5189.4$
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Calculate the likelihood ratio (LR) test statistic
+        \item The test is at significance level $\alpha = 1\%$. Do we reject $H_0$: Normal?
+        \item Estimate $\hat{\nu}$ from the relation $\hat{\kappa} = 4.8$ (sample excess kurtosis)
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 6: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{1. LR statistic:}
+            \end{itemize}
+            $$LR = 2(\ell_t - \ell_N) = 2(5189.4 - 5102.7) = \mathbf{173.4}$$
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{2. Test:} $LR \sim \chi^2(1)$ under $H_0$
+                \item $\chi^2_{0.01}(1) = 6.635$
+                \item $173.4 \gg 6.635$ $\Rightarrow$ \textcolor{Crimson}{\textbf{Reject}} $H_0$
+                \item $p$-value $\approx 0$ --- normality is clearly rejected
+                \item \textbf{3. Estimating $\hat{\nu}$:}
+                \item $\kappa = 6/(\nu - 4) = 4.8$
+                \item $\nu - 4 = 6/4.8 = 1.25$
+                \item $\hat{\nu} = \mathbf{5.25}$ (typical for equities)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \includegraphics[width=\textwidth]{ch2_student_t_fit.pdf}
+            {\tiny LR test: Student-$t$ significantly better}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_student\_t}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_student_t}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 7: Cross-Asset Comparison --- VaR and ES}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} Three assets with estimated daily returns:
+    \end{itemize}
+    \vspace{0.1cm}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Asset} & $\hat{\mu}$ & $\hat{\sigma}$ & $\hat{\nu}$ & $\hat{S}$ & $\hat{K}$ \\
+    \midrule
+    S\&P 500 & 0.04\% & 1.1\% & 5.2 & $-0.3$ & 5.5 \\
+    Bitcoin & 0.10\% & 3.8\% & 3.5 & $-0.1$ & 8.0 \\
+    Bonds (10Y) & 0.01\% & 0.4\% & 7.8 & 0.1 & 3.8 \\
+    \bottomrule
+    \end{tabular}
+    \normalsize
+    \vspace{0.1cm}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Calculate Normal VaR at 1\% for each asset
+        \item Calculate Student-$t$ VaR at 1\% (using the quantile table)
+        \item For which asset is the Normal vs Student-$t$ difference the largest?
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 7: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \small
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{Key quantiles:} $z_{1\%} = 2.326$
+                \item $t_{5.2}^{-1}(0.01) \approx 3.30$, $t_{3.5}^{-1}(0.01) \approx 4.14$, $t_{7.8}^{-1}(0.01) \approx 2.78$
+            \end{itemize}
+
+            \vspace{0.1cm}
+            \renewcommand{\arraystretch}{1.2}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Asset} & \textbf{VaR$_N$} & \textbf{VaR$_t$} & \textbf{$\Delta$\%} \\
+            \midrule
+            S\&P 500 & 2.52\% & 3.59\% & +42\% \\
+            Bitcoin & 8.74\% & 15.63\% & \textcolor{Crimson}{\textbf{+79\%}} \\
+            Bonds 10Y & 0.92\% & 1.10\% & +20\% \\
+            \bottomrule
+            \end{tabular}
+
+            \vspace{0.15cm}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\Rightarrow$ \textbf{Bitcoin}: largest tail impact
+                \item Reason: $\hat{\nu} = 3.5$ (very high kurtosis)
+                \item Bonds: close to Normal ($\hat{\nu} = 7.8$)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \includegraphics[width=\textwidth]{ch2_cross_asset_alpha.pdf}
+            {\tiny Cross-asset: different $\hat{\alpha}$ estimates}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_case\_study\_2a}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_case_study_2a}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 8: Mean Excess Function and Pareto Tail}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Problem:} Losses above threshold $u$ have the mean excess function $e(u) = \E[X - u \mid X > u]$.
+        \item For Pareto($x_m, \alpha$): $e(u) = u / (\alpha - 1)$.
+        \item Data: for thresholds $u = 2\%, 3\%, 4\%, 5\%$, the observed mean excesses are:
+    \end{itemize}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{ccccc}
+    \toprule
+    $u$ & 2\% & 3\% & 4\% & 5\% \\
+    \midrule
+    $\hat{e}(u)$ & 1.05\% & 1.48\% & 2.10\% & 2.45\% \\
+    \bottomrule
+    \end{tabular}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Check whether $\hat{e}(u)$ is approximately linear in $u$ (does it justify Pareto?)
+        \item Estimate $\hat{\alpha}$ from the slope of the relationship $e(u) = u/(\alpha-1)$
+        \item Calculate VaR at 1\% using the estimated $\hat{\alpha}$ and $x_m = 2\%$
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercise 8: Solution}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item \textbf{1. Linearity:} ratio $\hat{e}(u)/u$:
+            \end{itemize}
+            \small
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{ccc}
+            \toprule
+            $u$ & $\hat{e}(u)$ & $\hat{e}(u)/u$ \\
+            \midrule
+            2\% & 1.05\% & 0.525 \\
+            3\% & 1.48\% & 0.493 \\
+            4\% & 2.10\% & 0.525 \\
+            5\% & 2.45\% & 0.490 \\
+            \bottomrule
+            \end{tabular}
+            \normalsize
+
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item Ratio $\approx 0.51$ (linear) $\Rightarrow$ \textcolor{Forest}{\textbf{Pareto justified}}
+                \item \textbf{2.} $1/(\alpha-1) \approx 0.51 \Rightarrow \hat{\alpha} \approx \mathbf{2.96}$
+                \item \textbf{3. VaR 1\%:}
+                \item $q = x_m \cdot (0.01)^{-1/\alpha} = 2\% \times 100^{1/2.96}$
+                \item $= 2\% \times 4.73 \approx \mathbf{9.46\%}$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \includegraphics[width=\textwidth]{ch2_mean_excess_plot.pdf}
+            {\tiny Linear mean excess $\Rightarrow$ Pareto tail}
+        \end{column}
+    \end{columns}
+    \quantlet{SFM\_ch2\_extreme\_value}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_extreme_value}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PART 4: PYTHON EXERCISES
+%=============================================================================
+\section{Python Exercises}
+
+\begin{frame}[fragile]{Python Exercise 1: Download and Normality Tests}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Download S\&P 500 data for the last 5 years using \texttt{yfinance}
+        \item Calculate descriptive statistics (mean, std, skewness, kurtosis)
+        \item Apply the Jarque--Bera and Shapiro--Wilk tests
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key code:}
+    \begin{verbatim}
+import yfinance as yf
+from scipy import stats
+data = yf.download('^GSPC', start='2020-01-01', end='2025-01-01')
+returns = np.log(data['Adj Close'] / data['Adj Close'].shift(1)).dropna()
+jb_stat, jb_pval = stats.jarque_bera(returns)
+    \end{verbatim}
+
+    \quantlet{SFM\_ch2\_normal\_distribution}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_normal_distribution}
+\end{frame}
+
+\begin{frame}[fragile]{Python Exercise 2: MLE Estimation and AIC/BIC}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Fit Normal and Student-$t$ via MLE
+        \item Calculate AIC and BIC for each model
+        \item Compare and select the best model
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key code:}
+    \begin{verbatim}
+mu_n, sigma_n = stats.norm.fit(returns)
+df_t, loc_t, sc_t = stats.t.fit(returns)
+ll_n = np.sum(stats.norm.logpdf(returns, mu_n, sigma_n))
+ll_t = np.sum(stats.t.logpdf(returns, df_t, loc_t, sc_t))
+aic_n = -2*ll_n + 2*2;  aic_t = -2*ll_t + 2*3
+    \end{verbatim}
+
+    \quantlet{SFM\_ch2\_student\_t}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_student_t}
+\end{frame}
+
+\begin{frame}[fragile]{Python Exercise 3: VaR Comparison}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Calculate VaR at 5\%, 1\%, 0.1\% under Normal, Student-$t$ and Empirical
+        \item Visualize the histogram with Normal vs Student-$t$ overlay (log-scale)
+        \item Calculate ES via Monte Carlo under Student-$t$
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key functions:}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \texttt{stats.norm.ppf(alpha)} for the normal quantile
+        \item \texttt{stats.t.ppf(alpha, df)} for the Student-$t$ quantile
+        \item \texttt{np.quantile(returns, alpha)} for the empirical quantile
+    \end{itemize}
+
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{frame}
+
+\begin{frame}[fragile]{Python Exercise 4: Pareto --- Fit and VaR}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Extract the extreme losses (above the 95\% quantile) from S\&P 500
+        \item Fit a Pareto distribution to these losses
+        \item Compare Pareto VaR vs Normal VaR at 1\% and 0.1\%
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key code:}
+    \begin{verbatim}
+losses = -returns[returns < 0]
+threshold = np.quantile(losses, 0.95)
+tail = losses[losses > threshold]
+alpha_hat, loc, scale = stats.pareto.fit(tail, floc=0)
+var_pareto = stats.pareto.ppf(0.99, alpha_hat, loc, scale)
+    \end{verbatim}
+
+    \quantlet{SFM\_ch2\_extreme\_value}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_extreme_value}
+\end{frame}
+
+\begin{frame}[fragile]{Python Exercise 5: Q-Q Plots and Visual Diagnostics}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Construct Q-Q plots of S\&P 500 returns against Normal and Student-$t$
+        \item Add a 95\% confidence interval to the Q-Q plot
+        \item Interpret the tail deviations
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key code:}
+    \begin{verbatim}
+from scipy import stats
+import matplotlib.pyplot as plt
+# Normal Q-Q plot
+stats.probplot(returns, dist="norm", plot=plt)
+# Student-t Q-Q plot
+df_hat = stats.t.fit(returns)[0]
+stats.probplot(returns, dist=stats.t, sparams=(df_hat,), plot=plt)
+    \end{verbatim}
+
+    \quantlet{SFM\_ch2\_distribution\_comparison}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_distribution_comparison}
+\end{frame}
+
+\begin{frame}[fragile]{Python Exercise 6: Bootstrap VaR and Confidence Intervals}
+    \textbf{Task:}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Estimate VaR at 1\% via bootstrap (10\,000 resamples)
+        \item Calculate the 95\% confidence interval for VaR
+        \item Compare bootstrap VaR with parametric VaR (Normal, Student-$t$)
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \textbf{Key code:}
+    \begin{verbatim}
+n_boot = 10000
+var_boot = np.zeros(n_boot)
+for i in range(n_boot):
+    sample = np.random.choice(returns, size=len(returns), replace=True)
+    var_boot[i] = -np.quantile(sample, 0.01)
+ci_lower, ci_upper = np.quantile(var_boot, [0.025, 0.975])
+    \end{verbatim}
+
+    \quantlet{SFM\_ch2\_risk\_management}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_risk_management}
+\end{frame}
+
+%=============================================================================
+% PART 5: DISCUSSION QUESTIONS
+%=============================================================================
+\section{Discussion Questions}
+
+\begin{frame}{Discussion 1: Normality in Financial Markets}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenario:} The JB test rejects normality on S\&P 500 ($p < 0.001$), but risk management still uses Normal VaR.
+        \item \textbf{Questions:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Why is the Normal model still used if it is statistically rejected?
+        \item At which VaR level (5\%, 1\%, 0.1\%) does the difference matter most?
+        \item How does the conclusion change if we use weekly instead of daily data?
+        \item What are the implications for regulatory capital (Basel III)?
+    \end{enumerate}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Discussion 2: Choosing the Degrees of Freedom $\nu$}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenario:} You estimate Student-$t$ on 3 assets: S\&P 500 ($\hat{\nu} = 5.2$), Bitcoin ($\hat{\nu} = 3.5$), Bonds ($\hat{\nu} = 7.8$).
+        \item \textbf{Questions:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item What determines the differences in $\hat{\nu}$ across asset classes?
+        \item Bitcoin with $\hat{\nu} = 3.5$: which moments do \textit{not} exist?
+        \item If $\hat{\nu} < 4$, is the Sharpe ratio still valid?
+        \item How does $\hat{\nu}$ change during crisis vs calm periods?
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Hint:} Think about the relationship $\E[|X|^p] < \infty$ if $p < \nu$.
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Discussion 3: Lessons from Financial Crises}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenario:} During the 2008 crisis, the S\&P 500 recorded daily returns of $-9\%$ (Oct 15) and $-8\%$ (Sep 29). Under the normal distribution with $\sigma = 1.2\%$, these events have probability $< 10^{-12}$.
+        \item \textbf{Questions:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item How many standard deviations does a $-9\%$ return represent under Normal with $\sigma = 1.2\%$?
+        \item What would be the probability of the same event under Student-$t$ with $\nu = 4$?
+        \item What role did \textbf{heavy tails} play in the underestimation of risk by banks pre-2008?
+        \item How would minimum regulatory capital change if banks used Student-$t$ instead of Normal?
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Hint:} $-9\% / 1.2\% = 7.5\sigma$. Under Normal: $\Pr(Z < -7.5) \approx 3 \times 10^{-14}$
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Discussion 4: Practical Trade-offs --- Normal vs Student-$t$}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenario:} You are a risk analyst. Your manager asks for a daily VaR report. You have at your disposal Normal, Student-$t$ and the empirical method.
+        \item \textbf{Questions:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item What are the \textbf{advantages} of the Normal model? (simplicity, closed-form, CLT)
+        \item When is Student-$t$ \textbf{indispensable}? (VaR at 1\%, short horizon, volatile assets)
+        \item What problems does the \textbf{empirical} method have with limited data? (0.1\% quantile with $n = 500$?)
+        \item How do you combine all 3 approaches in a comprehensive report?
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \begin{block}{Practical Recommendation}
+        {\small Report VaR/ES under \textbf{all} 3 assumptions. The difference between them is informative.}
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% AI-ASSISTED EXERCISE
+%=============================================================================
+\section{AI-Assisted Exercise}
+
+\begin{frame}{AI Exercise: Critical Thinking}
+\begin{cminipage}{0.95\textwidth}
+    \vspace{-3mm}
+    \begin{block}{\footnotesize Prompt to test in ChatGPT / Claude / Copilot}
+        {\footnotesize
+        ``Download daily data for Apple stock (AAPL) from Yahoo Finance from 2015 to 2025. Calculate log-returns. Apply the Jarque-Bera and Shapiro-Wilk tests. Fit the normal and Student-t distributions via MLE. Compare AIC/BIC. Calculate VaR at 1\% and 5\% under both assumptions + empirical. Visualize: histogram with overlay + Q-Q plot. I want complete Python code.''
+        }
+    \end{block}
+    \vspace{-2mm}
+    {\footnotesize
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Exercise}:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Run the prompt in an LLM of your choice and critically analyze the response.
+        \item Does it use \texttt{stats.t.fit()} correctly (3 parameters: $\nu$, loc, scale)?
+        \item Are AIC/BIC calculated correctly ($-2\ell + 2k$ vs $-2\ell + k\ln n$)?
+        \item Is the Q-Q plot for the $t$ distribution or only for the normal?
+        \item Does it compare parametric VaR with empirical VaR? Are they consistent?
+    \end{enumerate}
+    }
+    \vspace{-2mm}
+    \begin{alertblock}{}
+        {\footnotesize \textbf{Warning}: AI-generated code may run without errors and look professional. \textit{That does not mean it is correct.}}
+    \end{alertblock}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{AI Exercise 2: Comparison Across LLMs}
+\begin{cminipage}{0.95\textwidth}
+    \vspace{-3mm}
+    \begin{block}{\footnotesize Prompt to test in multiple LLMs}
+        {\footnotesize
+        ``Explain the difference between VaR and Expected Shortfall. Why is VaR not a coherent risk measure? Give a simple numerical example where VaR is not subadditive, but ES is. Show the calculation step by step.''
+        }
+    \end{block}
+    \vspace{-2mm}
+    {\footnotesize
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Exercise}:
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Test the prompt in \textbf{3 different LLMs} (ChatGPT, Claude, Gemini)
+        \item Check the numerical example: are the probabilities and values consistent?
+        \item Does the LLM correctly demonstrate the \textbf{lack of subadditivity} of VaR?
+        \item Is the formula ES $= \E[-X \mid -X > \text{VaR}]$ applied correctly?
+        \item Which LLM gives the clearest and mathematically most correct explanation?
+    \end{enumerate}
+    }
+    \vspace{-2mm}
+    \begin{alertblock}{}
+        {\footnotesize \textbf{Note}: Numerical examples are the weak point of LLMs. Check \textit{every} calculation step.}
+    \end{alertblock}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% SUMMARY
+%=============================================================================
+\section{Summary}
+
+\begin{frame}{Key Conclusions from Today}
+\begin{cminipage}{0.95\textwidth}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item \textbf{Normality is rejected} across all financial markets --- the JB test confirms
+        \item \textbf{Student-$t$ captures heavy tails} --- $\hat{\nu} \approx 3$--$8$ for daily returns
+        \item \textbf{Excess kurtosis} $\kappa = 6/(\nu-4)$ increases as $\nu$ decreases
+        \item \textbf{Normal VaR underestimates} real risk, especially at 1\% and 0.1\%
+        \item \textbf{ES $\geq$ VaR} always; the ES/VaR ratio increases with tail heaviness
+        \item \textbf{Pareto describes the tails} --- polynomial vs exponential decay
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \begin{block}{Next Seminar}
+        Stable Distributions
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% REFERENCES
+%=============================================================================
+\begin{frame}{Bibliography I}
+    \begin{cminipage}{0.95\textwidth}
+    \begin{block}{Distributions and Risk Management}
+        {\small
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item Fama, E.F.\ (1965). ``The Behavior of Stock-Market Prices,'' \textit{Journal of Business}, 38(1), 34--105.
+            \item Cont, R.\ (2001). ``Empirical Properties of Asset Returns: Stylized Facts and Statistical Issues,'' \textit{Quantitative Finance}, 1, 223--236.
+            \item McNeil, A.J., Frey, R.\ \& Embrechts, P.\ (2015). \textit{Quantitative Risk Management}. 2nd ed., Princeton.
+            \item Mandelbrot, B.\ (1963). ``The Variation of Certain Speculative Prices,'' \textit{Journal of Business}, 36(4), 394--419.
+        \end{itemize}
+        }
+    \end{block}
+    \begin{exampleblock}{Software Tools}
+        {\small
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \texttt{scipy.stats} -- Distributions, MLE, statistical tests
+            \item \texttt{yfinance} -- Financial data download
+            \item \texttt{matplotlib}, \texttt{seaborn} -- Visualization
+            \item \texttt{numpy}, \texttt{pandas} -- Computation and data manipulation
+        \end{itemize}
+        }
+    \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Replication Exercise: Fama (1965)}
+    \begin{cminipage}{0.95\textwidth}
+        \begin{block}{Objective}
+            Replicate the analysis of Fama (1965) on the non-normality of stock returns, using current data.
+        \end{block}
+        \begin{enumerate}\setlength{\itemsep}{2pt}
+            {\small
+            \item Download daily returns for S\&P 500 and 5 individual stocks (last 10 years)
+            \item Calculate descriptive statistics: mean, standard deviation, skewness, kurtosis
+            \item Apply the Jarque--Bera test to each series
+            \item Fit Normal and Student-$t$ via MLE, compare AIC/BIC
+            \item Plot normal vs Student-$t$ Q-Q plots for each series
+            \item \textbf{Question}: Are the conclusions of Fama (1965) still valid today?
+            }
+        \end{enumerate}
+        {\tiny Ref: Fama, E.F.\ (1965). ``The Behavior of Stock-Market Prices,'' \textit{Journal of Business}, 38(1), 34--105. \url{https://www.jstor.org/stable/2350752}}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Homework: Seminar 2}
+\begin{cminipage}{0.95\textwidth}
+    \begin{block}{Objective}
+        Analyze the distribution of returns for 3 assets from different classes.
+    \end{block}
+    \begin{enumerate}\setlength{\itemsep}{2pt}
+        {\small
+        \item Download daily returns for: a stock index (e.g.\ BET), a stock (e.g.\ FP.RO) and a cryptocurrency (e.g.\ BTC-USD) --- last 5 years
+        \item Calculate descriptive statistics: mean, standard deviation, skewness, kurtosis
+        \item Apply the Jarque--Bera, Shapiro--Wilk, Anderson--Darling tests
+        \item Fit Normal and Student-$t$ via MLE, compare AIC/BIC
+        \item Calculate VaR and ES at 1\% under both assumptions + empirical
+        \item Plot normal vs Student-$t$ Q-Q plots for each asset
+        \item \textbf{Question}: Which asset deviates the most from normality? Why?
+        }
+    \end{enumerate}
+    \quantlet{SFM\_ch2\_case\_study\_2a}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_02/SFM_ch2_case_study_2a}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{}
+    \begin{cminipage}{0.95\textwidth}
+    \centering
+    \Huge\textcolor{IDAred}{Thank you!}
+
+    \vspace{1cm}
+
+    \Large\textcolor{MainBlue}{Questions?}
+
+    \vspace{0.8cm}
+
+    \normalsize
+    Seminar materials are available at: \url{https://danpele.github.io/SFM/}
+
+    \vspace{0.2cm}
+
+    \href{https://quantlet.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{ql_logo.png}} Quantlet} \hspace{0.5cm}
+    \href{https://quantinar.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{qr_logo.png}} Quantinar}
+    \end{cminipage}
+\end{frame}
+
+\end{document}

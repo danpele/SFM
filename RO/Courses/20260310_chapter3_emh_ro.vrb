@@ -1,0 +1,28 @@
+\frametitle{Python: Eficiență mobilă cross-asset (Rolling Efficiency)}
+\begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}
+import yfinance as yf, numpy as np, pandas as pd
+
+tickers = {"S&P 500": "^GSPC", "BTC": "BTC-USD",
+           "Gold": "GC=F",     "BET": "^BETI"}
+window = 500
+
+def rolling_vr(ret, q=5, w=500):
+    vr = []
+    for i in range(w, len(ret)):
+        r = ret.iloc[i-w:i].values
+        var1 = np.var(r, ddof=1)
+        rq = np.array([r[j:j+q].sum() for j in range(len(r)-q+1)])
+        varq = np.var(rq, ddof=1)
+        vr.append(varq / (q * var1) if var1 > 0 else np.nan)
+    return pd.Series(vr, index=ret.index[w:])
+
+for name, tk in tickers.items():
+    data = yf.download(tk, start="2015-01-01", end="2025-01-01")
+    ret  = np.log(data["Close"]/data["Close"].shift(1)).dropna()
+    vr   = rolling_vr(ret)
+    ineff = np.abs(vr - 1).mean()
+    print(f"{name:10s}: |VR-1| mediu = {ineff:.4f}")
+\end{lstlisting}
+\end{cminipage}
+\quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}

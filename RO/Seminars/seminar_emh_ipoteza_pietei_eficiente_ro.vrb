@@ -1,0 +1,29 @@
+\frametitle{Exercițiu Python 6: Variance Ratio Rolling Backtest}
+\begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Strategie bazata pe VR: daca VR(5) < 0.9 => mean reversion
+#   => cumparam dupa scadere, vindem dupa crestere
+window, q = 250, 5
+positions = np.zeros(len(returns))
+for i in range(window, len(returns)):
+    ret_w = returns.values[i-window:i]
+    vr, _ = variance_ratio(ret_w, q)
+    if vr < 0.9:  # mean reversion regime
+        positions[i] = -np.sign(returns.values[i-1])  # contrarian
+    else:
+        positions[i] = 0  # nu tranzactionam
+
+strat_ret = positions[1:] * returns.values[1:]
+cum_ret = np.cumsum(strat_ret)
+sharpe = np.mean(strat_ret) / np.std(strat_ret) * np.sqrt(252)
+print(f"Sharpe ratio strategie VR: {sharpe:.3f}")
+
+plt.figure(figsize=(12, 5))
+plt.plot(np.cumsum(strat_ret), label=f'Strategie VR (Sharpe={sharpe:.2f})')
+plt.plot(np.cumsum(returns.values[1:]), label='Buy & Hold', alpha=0.5)
+plt.legend(); plt.title('Backtest: Strategie bazata pe Variance Ratio')
+plt.savefig('emh_vr_backtest.pdf')
+\end{lstlisting}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}

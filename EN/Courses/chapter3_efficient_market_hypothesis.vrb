@@ -1,0 +1,29 @@
+\frametitle{Python: Cross-Asset Rolling Efficiency}
+\begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}
+import yfinance as yf, numpy as np, pandas as pd
+import matplotlib.pyplot as plt
+
+tickers = {'^GSPC':'S&P500', 'GC=F':'Gold', 'BTC-USD':'BTC'}
+data = {}
+for tk, name in tickers.items():
+    d = yf.download(tk, start='2018-01-01', end='2025-01-01')
+    data[name] = np.log(d['Adj Close']/d['Adj Close'].shift(1))
+
+def rolling_vr(r, q=5, window=500):
+    out = pd.Series(index=r.index, dtype=float)
+    for i in range(window, len(r)):
+        seg = r.iloc[i-window:i].dropna().values
+        var1 = np.var(seg, ddof=1)
+        rq = np.array([seg[j:j+q].sum() for j in range(len(seg)-q)])
+        out.iloc[i] = np.var(rq, ddof=1)/(q*var1) if var1>0 else np.nan
+    return out
+fig, ax = plt.subplots(figsize=(10, 4))
+for name, r in data.items():
+    vr = rolling_vr(r.dropna())
+    ax.plot(vr.index, abs(vr-1), label=name, alpha=0.7)
+ax.legend(); ax.set_ylabel('|VR(5) - 1|')
+plt.savefig('ch3_rolling_efficiency.pdf', bbox_inches='tight')
+\end{lstlisting}
+\end{cminipage}
+\quantlet{SFM\_ch3\_variance\_ratio}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_03/SFM_ch3_variance_ratio}
