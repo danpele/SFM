@@ -1,0 +1,1422 @@
+% Seminar: Ipoteza Pieței Eficiente (EMH)
+% Statistica Piețelor Financiare
+
+\documentclass[9pt, aspectratio=169, t]{beamer}
+\input{preamble}
+\subtitle{Seminar: Ipoteza Pieței Eficiente (EMH)}
+
+\begin{document}
+
+%=============================================================================
+% PAGINA DE TITLU
+%=============================================================================
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \titlepage
+\end{frame}
+}
+
+%=============================================================================
+% CUPRINS SEMINAR
+%=============================================================================
+\begin{frame}{Cuprins Seminar}
+    \begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Obiective} -- Competențe vizate, formele EMH, teste clasice
+        \vspace{0.1cm}
+        \item \textbf{Partea I: Exerciții manual} -- Random walk, autocorelație, runs test, variance ratio
+        \vspace{0.1cm}
+        \item \textbf{Partea II: Teste statistice} -- McCulloch cuantile, event study, comparație forme
+        \vspace{0.1cm}
+        \item \textbf{Partea III: Anomalii și AMH} -- Heavy tails, anomalii calendaristice, Hurst, adevărat/fals
+        \vspace{0.1cm}
+        \item \textbf{Partea IV: Python} -- Autocorelație, variance ratio, event study, Hurst, backtest
+        \vspace{0.1cm}
+        \item \textbf{Discuții și AI} -- Scenarii practice, verificarea codului AI (2 exerciții)
+        \vspace{0.1cm}
+        \item \textbf{Studiu de caz: S\&P 500} -- Analiza eficienței pe date reale
+        \vspace{0.1cm}
+        \item \textbf{Temă} -- Eficiența pe BVB
+        \vspace{0.1cm}
+        \item \textbf{Test rapid} -- 8+ întrebări cu răspunsuri detaliate
+        \vspace{0.1cm}
+        \item \textbf{Rezumat și Bibliografie} -- Checklist, referințe
+    \end{itemize}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% OBIECTIVE
+%=============================================================================
+\section{Obiective}
+
+\begin{frame}{Obiective de învățare}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{block}{La finalul seminarului veți putea:}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Enunța și distinge cele trei forme ale EMH (slabă, semi-tare, tare)
+    \item Verifica proprietatea de martingal a unui random walk
+    \item Calcula autocorelația eșantionului și statistica Ljung-Box
+    \item Aplica testul runs și testul variance ratio
+    \item Realiza un event study complet (AR, CAR)
+    \item Interpreta exponentul Hurst în contextul eficienței
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{center}
+\begin{tikzpicture}[
+    node distance=0.4cm,
+    every node/.style={font=\scriptsize, align=center},
+    phase/.style={draw=MainBlue, fill=MainBlue!8, rounded corners=3pt,
+                  minimum width=3.8cm, minimum height=0.6cm}
+]
+\node[phase] (p1) {I. Exerciții manual (25 min)};
+\node[phase, below=of p1] (p2) {II. Teste statistice (20 min)};
+\node[phase, below=of p2] (p3) {III. Anomalii și AMH (15 min)};
+\node[phase, below=of p3] (p4) {IV. Python (30 min)};
+\draw[-{Stealth}, MainBlue, thick] (p1) -- (p2);
+\draw[-{Stealth}, MainBlue, thick] (p2) -- (p3);
+\draw[-{Stealth}, MainBlue, thick] (p3) -- (p4);
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Cele trei forme ale EMH (Fama, 1970)}
+\begin{cminipage}{0.95\textwidth}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{center}
+    \begin{tabular}{llll}
+    \toprule
+    \textbf{Forma} & \textbf{Informație reflectată} & \textbf{Implicație} & \textbf{Test} \\
+    \midrule
+    Slabă & Prețuri trecute & Analiza tehnică inutilă & Autocorelație, VR \\
+    Semi-tare & Toată info publică & Analiza fundamentală inutilă & Event study \\
+    Tare & Toată info (și privată) & Insider trading neprofitabil & Performanța insiders \\
+    \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \vspace{0.2cm}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Forma slabă:} $\E[r_{t+1} | r_t, r_{t-1}, \ldots] = \E[r_{t+1}]$ --- randamentele trecute nu ajută
+        \item \textbf{Forma semi-tare:} $\E[r_{t+1} | \Omega_t^{\text{public}}] = \E[r_{t+1}]$ --- nicio informație publică nu ajută
+        \item \textbf{Forma tare:} $\E[r_{t+1} | \Omega_t^{\text{total}}] = \E[r_{t+1}]$ --- nicio informație nu ajută
+        \item \textbf{Notație:} $\Omega_t$ = mulțimea informațiilor disponibile la momentul $t$
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{De la Random Walk la Martingal}
+\begin{cminipage}{0.95\textwidth}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Modelul Random Walk}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $P_t = P_{t-1} + \varepsilon_t$, \; $\varepsilon_t \sim \text{i.i.d.}(0, \sigma^2)$
+                \item Randament: $r_t = P_t - P_{t-1} = \varepsilon_t$
+                \item Randamentele sunt i.i.d.\ cu medie zero
+            \end{itemize}
+            \end{block}
+
+            \vspace{0.2cm}
+            \begin{block}{Proprietatea de Martingal}
+            \begin{itemize}\setlength{\itemsep}{0pt}
+                \item $\E[P_{t+1} | \Omega_t] = P_t$
+                \item Condiție mai slabă decât random walk
+                \item Permite heteroscedasticitate condițională
+                \item Suficientă pentru EMH forma slabă
+            \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[
+                x=4.5cm, y=0.5cm,
+                every node/.style={font=\scriptsize}
+            ]
+            % Hierarchy
+            \node[draw=MainBlue, fill=MainBlue!8, rounded corners, minimum width=4cm, minimum height=0.6cm] (rw) at (0,6) {Random Walk (i.i.d.)};
+            \node[draw=MainBlue, fill=MainBlue!8, rounded corners, minimum width=4cm, minimum height=0.6cm] (mds) at (0,4) {Martingale Difference (MDS)};
+            \node[draw=MainBlue, fill=MainBlue!8, rounded corners, minimum width=4cm, minimum height=0.6cm] (mart) at (0,2) {Martingal};
+            \node[draw=Crimson, fill=Crimson!8, rounded corners, minimum width=4cm, minimum height=0.6cm] (emh) at (0,0) {EMH forma slabă};
+            \draw[-{Stealth}, MainBlue, thick] (rw) -- (mds) node[midway, right=3pt] {mai general};
+            \draw[-{Stealth}, MainBlue, thick] (mds) -- (mart) node[midway, right=3pt] {mai general};
+            \draw[-{Stealth}, Crimson, thick] (mart) -- (emh) node[midway, right=3pt] {implică};
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PARTEA I: EXERCIȚII MANUAL
+%=============================================================================
+\section{Partea I: Exerciții manual}
+
+\begin{frame}{Exercițiul 1: Random Walk --- Proprietatea de Martingal}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Problemă}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Fie $P_t = P_{t-1} + \varepsilon_t$ cu $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$ i.i.d. Arătați că $\E[P_{t+1} | \Omega_t] = P_t$ (proprietatea de martingal).
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Rezolvare}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Din modelul random walk: $P_{t+1} = P_t + \varepsilon_{t+1}$
+    \item Aplicăm speranța condițională:
+$$\E[P_{t+1} | \Omega_t] = \E[P_t + \varepsilon_{t+1} | \Omega_t] = P_t + \E[\varepsilon_{t+1} | \Omega_t]$$
+    \item Deoarece $\varepsilon_{t+1}$ este independent de $\Omega_t$ și $\E[\varepsilon_{t+1}] = 0$:
+$$\E[P_{t+1} | \Omega_t] = P_t + 0 = P_t \quad \checkmark$$
+    \item \textbf{Concluzie:} Prețul curent este cea mai bună predicție pentru prețul viitor.
+    \item \textbf{Extensie:} $\E[P_{t+k} | \Omega_t] = P_t$ pentru orice $k \geq 1$ (prin inducție).
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 1 cont.: Implicații practice}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Ce implică martingalul?}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Randamentele sunt \textbf{impredictibile}: $\E[r_{t+1} | \Omega_t] = 0$
+    \item Nicio strategie bazată pe prețuri trecute nu poate genera profit sistematic
+    \item Analiza tehnică (medii mobile, RSI, MACD) nu are putere predictivă
+    \item ``Piața nu are memorie''
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Ce NU implică}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Prețurile nu sunt ``aleatoare'' --- reflectă fundamentalele
+    \item Volatilitatea poate fi predictibilă (GARCH): $\Var(r_{t+1}|\Omega_t) \neq \text{const}$
+    \item Primă de risc: $\E[r_{t+1}|\Omega_t] = \mu > 0$ (sub-martingal)
+    \item Piața poate fi eficientă \textbf{și} volatilă
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{alertblock}{}
+    {\small \textbf{Atenție:} EMH nu presupune $r_t \sim \mathcal{N}(0, \sigma^2)$. Randamentele pot avea cozi grele, volatilitate variabilă etc. Condiția cheie este \textit{impredictibilitatea}, nu normalitatea.}
+\end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 2: Autocorelația și Ljung-Box}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Problemă}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Date: randamente zilnice $r_1, \ldots, r_{10}$: 0.02, $-$0.01, 0.03, $-$0.02, 0.01, 0.04, $-$0.03, 0.02, $-$0.01, 0.03.
+    \item Calculați autocorelația la lag 1 ($\hat\rho_1$) și lag 2 ($\hat\rho_2$), apoi statistica Ljung-Box $Q(2)$.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Rezolvare --- Autocorelație}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Media: $\bar{r} = \frac{1}{10}\sum r_i = 0.008$
+    \item Autocovarianță:
+$\hat\gamma_k = \frac{1}{n}\sum_{t=k+1}^{n}(r_t - \bar{r})(r_{t-k} - \bar{r})$
+    \item $\hat\gamma_0 = 0.000436$, \; $\hat\gamma_1 = -0.000298$, \; $\hat\gamma_2 = 0.000062$
+    \item Autocorelație: $\hat\rho_k = \hat\gamma_k / \hat\gamma_0$
+    \item $\hat\rho_1 = -0.000298 / 0.000436 \approx \mathbf{-0.683}$
+    \item $\hat\rho_2 = 0.000062 / 0.000436 \approx \mathbf{0.142}$
+    \item \textbf{Interpretare:} Autocorelație negativă la lag 1 --- posibil efect de mean reversion
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 2 cont.: Statistica Ljung-Box}
+    \begin{cminipage}{0.95\textwidth}
+\begin{exampleblock}{Rezolvare --- Ljung-Box}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Formula:}
+$Q(m) = n(n+2)\sum_{k=1}^{m}\frac{\hat\rho_k^2}{n-k}$
+    \item Cu $n = 10$, $m = 2$:
+$Q(2) = 120 \left[\frac{0.467}{9} + \frac{0.020}{8}\right]
+= 120 [0.0519 + 0.0025] = \mathbf{6.53}$
+    \item Sub $H_0$: $Q(2) \sim \chi^2(2)$. Valoare critică la 5\%: $\chi^2_{0.05}(2) = 5.99$.
+    \item $Q(2) = 6.53 > 5.99$ $\Rightarrow$ \textcolor{Crimson}{\textbf{Respingem $H_0$}} la nivel de 5\%.
+    \item \textbf{Concluzie:} Randamentele prezintă autocorelație semnificativă --- evidență contra EMH slabe.
+\end{itemize}
+\end{exampleblock}
+
+\begin{alertblock}{}
+    {\small \textbf{Notă:} Eșantionul este foarte mic ($n=10$). Pe date reale, $n > 250$, iar autocorelațiile sunt de obicei nesemnificative pentru indici mari.}
+\end{alertblock}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 3: Testul Runs}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Problemă}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Secvența de semne a randamentelor: $+, -, +, -, +, +, -, +, -, +$.
+    \item Calculați $R$ (numărul de runs), $\E[R]$, $\Var(R)$, statistica $Z$.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Rezolvare}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Grupuri: $(+)(-)( +)(-)( +,+)(-)(+)(-)(+)$ $\Rightarrow$ $R = 9$ runs
+    \item $n_+ = 6$ (pozitive), $n_- = 4$ (negative), $n = 10$
+    \item Speranța: $\E[R] = \frac{2 n_+ n_-}{n} + 1 = \frac{2 \cdot 6 \cdot 4}{10} + 1 = 5.8$
+    \item Varianța:
+$\Var(R) = \frac{2n_+n_-(2n_+n_- - n)}{n^2(n-1)} = \frac{2 \cdot 6 \cdot 4 \cdot (48-10)}{100 \cdot 9} = \frac{1824}{900} = 2.027$
+    \item Statistica $Z$:
+$Z = \frac{R - \E[R]}{\sqrt{\Var(R)}} = \frac{9 - 5.8}{\sqrt{2.027}} = \frac{3.2}{1.424} = \mathbf{2.247}$
+    \item $|Z| = 2.247 > 1.96$ $\Rightarrow$ \textcolor{Crimson}{\textbf{Respingem $H_0$}} la 5\%: prea multe runs (alternare excesivă)
+    \item \textbf{Interpretare:} Alternare frecventă sugerează mean reversion pe termen scurt
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 3b: Testul Variance Ratio}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Problemă}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Date: randamente zilnice $r_1, \ldots, r_{10}$: 0.02, $-$0.01, 0.03, $-$0.02, 0.01, 0.04, $-$0.03, 0.02, $-$0.01, 0.03.
+    \item Calculați $VR(2)$ și $VR(5)$, interpretați.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Rezolvare}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Definiție:} $VR(q) = \Var(r_t + \cdots + r_{t+q-1}) / (q \cdot \Var(r_t))$. Sub random walk: $VR(q) = 1$
+    \item $\hat\sigma^2_1 = \frac{1}{n-1}\sum(r_t - \bar{r})^2 = 0.000484$
+    \item Randamente 2-perioade: 0.01, 0.02, 0.01, $-$0.01, 0.05, 0.01, $-$0.01, 0.01, 0.02
+    \item $\hat\sigma^2_2 = 0.000325$ $\Rightarrow$ $VR(2) = 0.000325 / 0.000484 \approx \mathbf{0.672}$
+    \item Randamente 5-perioade: 0.03, 0.05, 0.03, 0.00, 0.05, 0.05
+    \item $\hat\sigma^2_5 = 0.000395$ $\Rightarrow$ $VR(5) = 0.000395 / 0.000484 \approx \mathbf{0.817}$
+    \item $VR < 1$ $\Rightarrow$ \textbf{mean reversion}; $VR > 1$ $\Rightarrow$ \textbf{momentum}
+\end{itemize}
+\end{exampleblock}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 3c: Tabel comparativ --- Random Walk Normal vs Cauchy}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Proprietăți ale Random Walk-ului sub diferite distribuții}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+\textbf{Proprietate} & \textbf{Normal: $\varepsilon_t \sim \mathcal{N}(0,\sigma^2)$} & \textbf{Cauchy: $\varepsilon_t \sim C(0,\gamma)$} \\
+\midrule
+Media $\E[\varepsilon_t]$ & $0$ & Nu există \\
+Varianța & $\sigma^2$ (finită) & $\infty$ \\
+Proprietatea de martingal & Da & Nu (media nu există) \\
+CLT se aplică & Da ($\bar{r} \to \mathcal{N}$) & Nu ($\bar{r} \sim C(0,\gamma)$) \\
+$\Var(P_T)$ după $T$ pași & $T\sigma^2$ & $\infty$ \\
+Prob.\ randament $> 5\sigma$ & $\approx 3 \times 10^{-7}$ & $\approx 0.013$ \\
+Ljung-Box valid & Da & Problematic (momente $\infty$) \\
+Variance ratio valid & Da & Nu (varianța nedefinită) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.1cm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Implicație:} Testele clasice de eficiență presupun momente finite
+    \item Dacă randamentele au cozi grele ($\alpha < 2$), testele trebuie adaptate
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PARTEA II: TESTE STATISTICE
+%=============================================================================
+\section{Partea II: Teste statistice}
+
+\begin{frame}{Analogia McCulloch cuantile --- Variance Ratio}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{McCulloch: cuantile $\to$ $\alpha$}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item $v_\alpha = \frac{q_{0.95} - q_{0.05}}{q_{0.75} - q_{0.25}}$
+    \item Măsoară \textit{greutatea cozilor}
+    \item Normal: $v_\alpha \approx 2.44$
+    \item Cauchy: $v_\alpha \approx 25.0$
+    \item \textbf{Idee:} raportul de range-uri
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Variance Ratio: varianțe $\to$ eficiență}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item $VR(q) = \frac{\sigma^2(q)}{q \cdot \sigma^2(1)}$
+    \item Măsoară \textit{dependența serială}
+    \item Random walk: $VR(q) = 1$
+    \item Mean reversion: $VR(q) < 1$
+    \item \textbf{Idee:} raportul de varianțe
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Analogie:} Ambele folosesc \textit{rapoarte} de statistici la \textit{scale diferite}
+    \item McCulloch: scale spațiale (cuantile); VR: scale temporale (orizonturi)
+    \item Ambele sunt robuste la outliers (cuantilele și varianțele multi-perioadă)
+    \item \textbf{Conexiune:} Dacă $\alpha < 2$ (cozi grele), VR poate fi distorsionat!
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Event Study --- Metodologie pas cu pas}
+    \begin{cminipage}{0.95\textwidth}
+\small
+\begin{block}{Etapele unui event study}
+\begin{enumerate}\setlength{\itemsep}{0pt}
+    \item \textbf{Definire eveniment și fereastră:} eveniment la $t=0$, fereastra $[-L, T]$
+    \item \textbf{Fereastra de estimare:} $[-L, -M]$ --- estimăm modelul normal
+    \item \textbf{Fereastra evenimentului:} $[-M+1, T]$ --- calculăm randamente anormale
+    \item \textbf{Modelul normal:} $R_{it} = \alpha_i + \beta_i R_{mt} + \varepsilon_{it}$
+    \item \textbf{Randament anormal:}
+$AR_{it} = R_{it} - (\hat\alpha_i + \hat\beta_i R_{mt})$
+    \item \textbf{Randament anormal cumulat:}
+$CAR_i(\tau_1, \tau_2) = \sum_{t=\tau_1}^{\tau_2} AR_{it}$
+    \item \textbf{Test:}
+$t_{\text{CAR}} = \overline{CAR}(\tau_1, \tau_2) / (\hat\sigma_{\text{CAR}} / \sqrt{N})$
+\end{enumerate}
+\end{block}
+
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Ipoteză nulă:} $H_0$: $\E[CAR] = 0$ (piața eficientă --- nu reacționează anormal)
+    \item \textbf{Alternativă:} Informația este absorbită lent sau apare insider trading
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Event Study --- Schema temporală}
+    \begin{cminipage}{0.95\textwidth}
+\begin{center}
+\begin{tikzpicture}[
+    x=0.065\textwidth,
+    every node/.style={font=\scriptsize}
+]
+% Timeline
+\draw[-{Stealth}, thick] (-1,0) -- (14,0);
+% Estimation window
+\draw[MainBlue, very thick] (0,0) -- (5,0);
+\draw[MainBlue] (0,-0.2) -- (0,0.2);
+\draw[MainBlue] (5,-0.2) -- (5,0.2);
+\node[above=5pt, MainBlue] at (2.5,0) {Fereastra de estimare};
+\node[below=5pt] at (0,0) {$-L$};
+\node[below=5pt] at (5,0) {$-M$};
+% Event window
+\draw[Crimson, very thick] (6,0) -- (11,0);
+\draw[Crimson] (6,-0.2) -- (6,0.2);
+\draw[Crimson] (11,-0.2) -- (11,0.2);
+\node[above=5pt, Crimson] at (8.5,0) {Fereastra evenimentului};
+% Event
+\draw[Crimson, thick, dashed] (8.5,-0.4) -- (8.5,0.4);
+\node[below=10pt, Crimson, font=\scriptsize\bfseries] at (8.5,0) {Eveniment ($t=0$)};
+% Post-event
+\draw[Forest, very thick] (11,0) -- (13,0);
+\draw[Forest] (13,-0.2) -- (13,0.2);
+\node[above=5pt, Forest] at (12,0) {Post-event};
+\node[below=5pt] at (13,0) {$+T$};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+\textbf{Fereastră} & \textbf{Interval tipic} & \textbf{Scop} & \textbf{Calculăm} \\
+\midrule
+Estimare & $[-250, -11]$ & Parametrii modelului & $\hat\alpha_i, \hat\beta_i$ \\
+Eveniment & $[-10, +10]$ & Detectarea reacției & $AR_{it}$, $CAR_i$ \\
+Post-event & $[+11, +60]$ & Drift pe termen lung & $CAR$ cumulat \\
+\bottomrule
+\end{tabular}
+\end{center}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 4: Event Study --- Calculul AR și CAR}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Problemă}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item O companie anunță rezultatele trimestriale la $t=0$. Din fereastra de estimare: $\hat\alpha = 0.001$, $\hat\beta = 1.2$, $\hat\sigma_\varepsilon = 0.015$. Calculați AR și CAR.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Rezolvare}
+\renewcommand{\arraystretch}{1.1}
+\begin{center}
+\footnotesize
+\begin{tabular}{ccccc}
+\toprule
+$t$ & $R_{it}$ & $R_{mt}$ & $\E[R_{it}] = 0.001 + 1.2 R_{mt}$ & $AR_{it}$ \\
+\midrule
+$-2$ & 0.005 & 0.003 & 0.0046 & 0.0004 \\
+$-1$ & 0.012 & 0.002 & 0.0034 & \textcolor{Forest}{\textbf{0.0086}} \\
+$0$ & 0.035 & 0.005 & 0.0070 & \textcolor{Forest}{\textbf{0.0280}} \\
+$+1$ & 0.008 & 0.004 & 0.0058 & 0.0022 \\
+$+2$ & $-0.002$ & $-0.001$ & $-0.0002$ & $-0.0018$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item $CAR(-1, +1) = 0.0086 + 0.0280 + 0.0022 = \mathbf{0.0388}$ (3.88\%)
+    \item $t_{\text{CAR}} = 0.0388 / (0.015 / \sqrt{3}) = 0.0388 / 0.00866 = \mathbf{4.48}$
+    \item $|t| = 4.48 > 1.96$ $\Rightarrow$ \textcolor{Forest}{\textbf{CAR semnificativ pozitiv}} --- piața reacționează la anunț
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 4 cont.: Interpretare EMH}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Piață eficientă (semi-tare)}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Tot $AR$ concentrat la $t=0$
+    \item $AR_{-1} \approx 0$ (fără anticipare)
+    \item $AR_{+1}, AR_{+2} \approx 0$ (absorbție rapidă)
+    \item CAR: salt la $t=0$, apoi plat
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Ce observăm în datele noastre}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item $AR_{-1} = 0.86\%$ --- \textcolor{Crimson}{posibil insider trading}
+    \item $AR_0 = 2.80\%$ --- reacție principală
+    \item $AR_{+1} = 0.22\%$ --- absorbție lentă
+    \item \textbf{Concluzie:} Evidență contra eficienței semi-tari
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Scenariu} & \textbf{$AR$ pre-event} & \textbf{$AR$ la $t=0$} & \textbf{$AR$ post-event} \\
+\midrule
+Eficient & $\approx 0$ & Mare & $\approx 0$ \\
+Insider trading & Semnificativ & Mare & $\approx 0$ \\
+Reacție lentă & $\approx 0$ & Mic & Semnificativ \\
+Suprareacție & $\approx 0$ & Foarte mare & Negativ (reversal) \\
+\bottomrule
+\end{tabular}
+\end{center}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Comparație: Teste pentru formele EMH}
+    \begin{cminipage}{0.95\textwidth}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+\textbf{Forma EMH} & \textbf{Teste} & \textbf{$H_0$} & \textbf{Rezultate tipice} \\
+\midrule
+\multirow{4}{*}{Slabă} & Autocorelație / Ljung-Box & $\rho_k = 0, \forall k$ & Mici dar semnificative \\
+ & Runs test & Secvență aleatoare & Ușoară alternare \\
+ & Variance ratio & $VR(q) = 1$ & $VR < 1$ pe termen scurt \\
+ & Hurst exponent & $H = 0.5$ & $H \in [0.5, 0.6]$ \\
+\midrule
+\multirow{2}{*}{Semi-tare} & Event study & $CAR = 0$ & CAR $\neq 0$ pre/post \\
+ & Anomalii calendaristice & Fără efect sezonier & Efect ianuarie, luni \\
+\midrule
+\multirow{2}{*}{Tare} & Performanța insiders & Fără exces retur & Exces semnificativ \\
+ & Fonduri mutual & $\alpha_{\text{Jensen}} = 0$ & $\alpha \approx 0$ (net fees) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Rezultat general:} Forma slabă --- în mare parte confirmată; semi-tare --- evidență mixtă; tare --- respinsă
+    \item Eficiența variază în timp (Andrew Lo, 2004: Adaptive Markets Hypothesis)
+\end{itemize}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PARTEA III: ANOMALII ȘI AMH
+%=============================================================================
+\section{Partea III: Anomalii și AMH}
+
+\begin{frame}{Cozi grele și eficiența pieței}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{EMH presupune implicit cozi subțiri}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Testele clasice (Ljung-Box, VR) presupun $\Var(r_t) < \infty$
+    \item Dacă $r_t \sim S(\alpha, \beta, \gamma, \delta)$ cu $\alpha < 2$:
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item Varianța este infinită
+        \item Ljung-Box Q devine distorsionat
+        \item VR nu converge la 1
+    \end{itemize}
+    \item \textbf{Paradox:} piața poate fi eficientă dar testele clasice o resping
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Soluții}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Teste robuste:} VR cu corecție heteroscedastică (Lo-MacKinlay)
+    \item \textbf{Bootstrap:} Nu presupune distribuție specifică
+    \item \textbf{Teste bazate pe ranguri:} Nu depind de momente
+    \item \textbf{Teste bazate pe cuantile:} Analogia McCulloch
+    \item \textbf{Hurst exponent:} $R/S$ analiza --- funcționează și cu cozi grele
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{alertblock}{}
+    {\small \textbf{Lecție cheie:} Înainte de a testa eficiența, verificați distribuția randamentelor. Cozi grele pot invalida testele clasice!}
+\end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Anomalii calendaristice}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Exercițiu: Anomalia de luni (Monday effect)}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Randamente medii pe zile (date istorice, S\&P 500):
+\end{itemize}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+ & Luni & Marți & Miercuri & Joi & Vineri \\
+\midrule
+$\bar{r}$ (\%) & $-0.08$ & 0.02 & 0.05 & 0.04 & 0.06 \\
+$t$-stat & $-2.10$ & 0.55 & 1.32 & 1.05 & 1.58 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Luni: randament negativ semnificativ ($t = -2.10$, $p < 0.05$)
+    \item \textbf{Explicații posibile:} efectul weekend-ului, investitori instituționali, settlement
+    \item \textbf{Contra-argument:} anomalia a \textit{dispărut} după publicare (Schwert, 2003)
+    \item Alte anomalii: \textbf{efect ianuarie}, efect turn-of-month, efect Halloween
+    \item \textbf{AMH (Lo, 2004):} Anomaliile apar și dispar pe măsură ce piața se adaptează
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiul 5: Exponentul Hurst}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Definiție}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Exponentul Hurst $H$ măsoară memoria lungă: $R(n)/S(n) \sim c \cdot n^H$ ($R$ = range, $S$ = std)
+\end{itemize}
+\end{block}
+
+\renewcommand{\arraystretch}{1.1}
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\toprule
+\textbf{Interval} & \textbf{Interpretare} & \textbf{Implicație EMH} \\
+\midrule
+$H = 0.5$ & Random walk (fără memorie) & EMH confirmată \\
+$H > 0.5$ & Memorie lungă (persistență) & Contra EMH --- trending \\
+$H < 0.5$ & Anti-persistență (mean reversion) & Contra EMH --- revertare \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{exampleblock}{Exercițiu}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Un analist estimează $H = 0.58$ pe randamentele zilnice BET. Interpretați:
+    \item $H > 0.5$ $\Rightarrow$ memorie lungă slabă; tendințe de continuare (momentum)
+    \item \textbf{Implicație:} O strategie trend-following ar putea fi profitabilă
+    \item \textbf{Atenție:} Estimarea lui $H$ este sensibilă la metoda folosită și la lungimea seriei
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Adevărat sau Fals?}
+    \begin{cminipage}{0.95\textwidth}
+\footnotesize
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{enumerate}\setlength{\itemsep}{1pt}
+    \item \textit{``Dacă piața este eficientă, prețurile se mișcă aleatoriu.''}
+    \item[] \textcolor{Forest}{\textbf{Adevărat.}} Randamentele sunt impredictibile $\Rightarrow$ random walk (aproximativ).
+
+    \item \textit{``EMH implică prețuri corecte în orice moment.''}
+    \item[] \textcolor{Crimson}{\textbf{Fals.}} EMH implică doar că \textit{abaterile} nu sunt predictibile. Bule pot exista.
+
+    \item \textit{``VR(q) = 1 demonstrează eficiența pieței.''}
+    \item[] \textcolor{Crimson}{\textbf{Fals.}} $VR=1$ este condiție \textit{necesară} dar nu \textit{suficientă}. Testează doar forma slabă.
+
+    \item \textit{``Un $H = 0.7$ înseamnă că piața este ineficientă.''}
+    \item[] \textcolor{Forest}{\textbf{Parțial adevărat.}} Indică memorie lungă, dar poate fi cauzat de clustering volatilitate.
+\end{enumerate}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{enumerate}\setlength{\itemsep}{1pt}
+    \setcounter{enumi}{4}
+    \item \textit{``Insider trading demonstrează că piața nu este eficientă forma tare.''}
+    \item[] \textcolor{Forest}{\textbf{Adevărat.}} Dacă insiderii obțin profit sistematic, informația privată nu este reflectată.
+
+    \item \textit{``Autocorelația zero a randamentelor implică independență.''}
+    \item[] \textcolor{Crimson}{\textbf{Fals.}} Autocorelația măsoară doar dependența \textit{liniară}. $r_t^2$ poate fi autocorelat.
+
+    \item \textit{``AMH contrazice EMH.''}
+    \item[] \textcolor{Crimson}{\textbf{Fals.}} AMH este o \textit{generalizare}. EMH este un caz special al AMH.
+\end{enumerate}
+\end{column}
+\end{columns}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PARTEA IV: PYTHON
+%=============================================================================
+\section{Partea IV: Python}
+
+\begin{frame}[fragile]{Python 1: Autocorelație și Ljung-Box}
+    \begin{cminipage}{0.95\textwidth}
+\vspace{-2mm}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+import numpy as np, yfinance as yf, matplotlib.pyplot as plt
+from statsmodels.stats.diagnostic import acorr_ljungbox
+from statsmodels.graphics.tsaplots import plot_acf
+
+sp500 = yf.download('^GSPC', start='2020-01-01', end='2025-12-31')
+returns = sp500['Adj Close'].pct_change().dropna()
+
+# Autocorelatia la lag 1-20
+acf_vals = [returns.autocorr(lag=k) for k in range(1, 21)]
+print("Autocorelatii lag 1-5:", [f"{v:.4f}" for v in acf_vals[:5]])
+
+# Testul Ljung-Box
+lb_test = acorr_ljungbox(returns, lags=[5, 10, 20], return_df=True)
+print(lb_test)
+
+# Grafic ACF
+fig, ax = plt.subplots(1, 1, figsize=(10, 4))
+plot_acf(returns, lags=40, ax=ax, title='ACF Randamente S&P 500')
+plt.tight_layout(); plt.savefig('emh_acf_sp500.pdf')
+\end{lstlisting}
+\vspace{-2mm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Rezultat tipic:} $|\hat\rho_k| < 0.05$ pentru indici mari --- autocorelații mici dar nenule, eficiență ``aproximativă''
+\end{itemize}
+\vspace{-1mm}
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Python 2: Testul Variance Ratio}
+    \begin{cminipage}{0.95\textwidth}
+\vspace{-2mm}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+import numpy as np
+def variance_ratio(returns, q):
+    """Variance ratio VR(q) cu statistica Z."""
+    n = len(returns); mu = returns.mean()
+    sigma2_1 = np.sum((returns - mu)**2) / (n - 1)
+    ret_q = np.array([returns[i:i+q].sum() for i in range(n - q + 1)])
+    sigma2_q = np.sum((ret_q - q * mu)**2) / (n - q)
+    vr = sigma2_q / (q * sigma2_1)
+    z = (vr - 1) / np.sqrt(2 * (q - 1) / n)  # sub homoscedasticitate
+    return vr, z
+
+for q in [2, 5, 10, 20]:
+    vr, z = variance_ratio(returns.values, q)
+    sig = '*' if abs(z) > 1.96 else ''
+    print(f"VR({q:2d}) = {vr:.4f}, Z = {z:+.3f} {sig}")
+\end{lstlisting}
+\vspace{-2mm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Rezultat tipic S\&P 500:} $VR(2) \approx 0.98$, $VR(5) \approx 0.95$ --- ușoară mean reversion
+    \item $VR < 1$ pe termen scurt, $VR > 1$ pe termen lung (momentum la luni)
+\end{itemize}
+\vspace{-1mm}
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Python 3: Simulare Event Study}
+    \begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+n_firms, T_est, T_evt = 50, 200, 21  # 50 firme, [-10, +10]
+
+# Simulare: efect real = +3% la t=0, +0.5% la t=-1 (leak)
+car_all = np.zeros(T_evt)
+for _ in range(n_firms):
+    beta = 0.8 + 0.4 * np.random.rand()
+    r_mkt = np.random.normal(0.0005, 0.01, T_evt)
+    noise = np.random.normal(0, 0.015, T_evt)
+    r_stock = 0.001 + beta * r_mkt + noise
+    r_stock[9] += 0.005   # leak la t=-1
+    r_stock[10] += 0.03   # eveniment la t=0
+    ar = r_stock - (0.001 + beta * r_mkt)  # AR (model cunoscut)
+    car_all += np.cumsum(ar) / n_firms
+
+plt.figure(figsize=(10, 5))
+plt.plot(range(-10, 11), car_all, 'b-o', markersize=4)
+plt.axvline(x=0, color='r', linestyle='--', label='Eveniment')
+plt.xlabel('Zile relative'); plt.ylabel('CAR mediu')
+plt.title('Event Study simulat (N=50 firme)')
+plt.legend(); plt.grid(True, alpha=0.3); plt.savefig('emh_event_study_sim.pdf')
+\end{lstlisting}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Python 4: Exponentul Hurst (R/S)}
+    \begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+import numpy as np
+def hurst_rs(series, min_window=10, max_window=None):
+    """Estimare Hurst prin metoda R/S."""
+    n = len(series)
+    if max_window is None: max_window = n // 4
+    windows = np.unique(np.logspace(
+        np.log10(min_window), np.log10(max_window), 30).astype(int))
+    rs_list, ns_list = [], []
+    for w in windows:
+        rs_vals = []
+        for start in range(0, n - w, w):
+            chunk = series[start:start + w]
+            cumdev = np.cumsum(chunk - chunk.mean())
+            R = cumdev.max() - cumdev.min()
+            S = chunk.std(ddof=1)
+            if S > 0: rs_vals.append(R / S)
+        if rs_vals:
+            rs_list.append(np.mean(rs_vals)); ns_list.append(w)
+    H = np.polyfit(np.log(ns_list), np.log(rs_list), 1)[0]
+    return H
+H = hurst_rs(returns.values)
+print(f"Hurst (S&P 500): H = {H:.4f}")  # Tipic: [0.50, 0.60]
+\end{lstlisting}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Python 4 cont.: Hurst rolling}
+    \begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+import pandas as pd
+
+# Hurst rolling pe ferestre de 500 zile
+window = 500
+hurst_rolling = pd.Series(index=returns.index[window:], dtype=float)
+for i in range(window, len(returns)):
+    hurst_rolling.iloc[i - window] = hurst_rs(
+        returns.values[i-window:i], min_window=10)
+
+plt.figure(figsize=(12, 5))
+plt.plot(hurst_rolling.index, hurst_rolling.values, 'b-', lw=0.8)
+plt.axhline(y=0.5, color='r', linestyle='--', label='Random walk (H=0.5)')
+plt.fill_between(hurst_rolling.index, 0.45, 0.55,
+                 alpha=0.1, color='green', label='Zona eficienta')
+plt.xlabel('Data'); plt.ylabel('Hurst exponent')
+plt.title('Hurst exponent rolling (fereastra = 500 zile)')
+plt.legend(); plt.grid(True, alpha=0.3)
+plt.savefig('emh_hurst_rolling.pdf')
+\end{lstlisting}
+
+\vspace{-0.1cm}
+\small
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item $H$ variază în timp --- confirmare a \textbf{AMH}; în crize $H$ crește, în perioade calme $H \to 0.5$
+\end{itemize}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Exercițiu Python 5: Comparație cross-asset a eficienței}
+    \begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Exercitiu: Comparati eficienta pe mai multe active
+tickers = {'^GSPC': 'S&P 500', 'BTC-USD': 'Bitcoin',
+           'GC=F': 'Aur', 'EURUSD=X': 'EUR/USD'}
+results = []
+for ticker, name in tickers.items():
+    data = yf.download(ticker, start='2020-01-01')
+    ret = data['Adj Close'].pct_change().dropna()
+    H = hurst_rs(ret.values)
+    lb = acorr_ljungbox(ret, lags=[10], return_df=True)
+    vr, z = variance_ratio(ret.values, 5)
+    results.append({'Activ': name, 'H': H,
+                    'VR(5)': vr, 'LB p-val': lb['lb_pvalue'].values[0]})
+
+import pandas as pd
+df = pd.DataFrame(results)
+print(df.to_string(index=False))
+# Intrebare: Care activ este cel mai "eficient"?
+# Criteriu: H ~ 0.5, VR ~ 1, LB p-val > 0.05
+\end{lstlisting}
+
+\vspace{0.1cm}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Cerință:} Realizați tabelul, identificați cel mai eficient activ
+    \item \textbf{Așteptare:} S\&P 500 $>$ EUR/USD $>$ Aur $>$ Bitcoin (în ordinea eficienței)
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}[fragile]{Exercițiu Python 6: Variance Ratio Rolling Backtest}
+    \begin{cminipage}{0.95\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Strategie bazata pe VR: daca VR(5) < 0.9 => mean reversion
+#   => cumparam dupa scadere, vindem dupa crestere
+window, q = 250, 5
+positions = np.zeros(len(returns))
+for i in range(window, len(returns)):
+    ret_w = returns.values[i-window:i]
+    vr, _ = variance_ratio(ret_w, q)
+    if vr < 0.9:  # mean reversion regime
+        positions[i] = -np.sign(returns.values[i-1])  # contrarian
+    else:
+        positions[i] = 0  # nu tranzactionam
+
+strat_ret = positions[1:] * returns.values[1:]
+cum_ret = np.cumsum(strat_ret)
+sharpe = np.mean(strat_ret) / np.std(strat_ret) * np.sqrt(252)
+print(f"Sharpe ratio strategie VR: {sharpe:.3f}")
+
+plt.figure(figsize=(12, 5))
+plt.plot(np.cumsum(strat_ret), label=f'Strategie VR (Sharpe={sharpe:.2f})')
+plt.plot(np.cumsum(returns.values[1:]), label='Buy & Hold', alpha=0.5)
+plt.legend(); plt.title('Backtest: Strategie bazata pe Variance Ratio')
+plt.savefig('emh_vr_backtest.pdf')
+\end{lstlisting}
+
+\quantlet{SFM\_ch3\_emh\_tests}{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03/SFM_ch3_emh_tests}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiu AI: Prompt Engineering pentru analiza EMH}
+\begin{cminipage}{0.95\textwidth}
+    \vspace{-3mm}
+    \begin{block}{\footnotesize Prompt de testat}
+        {\footnotesize
+        ``Scrie cod Python care: (1) descarcă randamentele zilnice S\&P 500 din ultimii 10 ani, (2) calculează autocorelația la lag 1--20 și testul Ljung-Box, (3) calculează variance ratio VR(q) pentru q=2,5,10,20, (4) estimează exponentul Hurst prin metoda R/S, (5) concluzionează dacă piața este eficientă forma slabă.''
+        }
+    \end{block}
+    \vspace{-2mm}
+    {\footnotesize
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Verificați:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item LLM-ul folosește \texttt{yfinance} corect (ticker \texttt{\^{}GSPC})?
+        \item Formula autocorelației este corectă ($\hat\gamma_k / \hat\gamma_0$)?
+        \item Ljung-Box: aplică corecția $(n+2)$ sau doar $n$? (Ljung-Box vs Box-Pierce)
+        \item VR: include corecția pentru heteroscedasticitate (Lo-MacKinlay)?
+        \item Hurst: metoda R/S sau DFA? Rezultatele sunt în $[0.4, 0.7]$?
+        \item Concluzia este \textit{nuanțată} (nu da/nu categoric)?
+    \end{enumerate}
+    }
+    \vspace{-2mm}
+    \begin{alertblock}{}
+        {\footnotesize \textbf{Atenție}: Un LLM poate genera concluzii prea categorice. Eficiența este o chestiune de \textit{grad}, nu de da/nu.}
+    \end{alertblock}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Exercițiu AI 2: Verificarea codului generat --- Event Study}
+\begin{cminipage}{0.95\textwidth}
+    \vspace{-3mm}
+    \begin{block}{\footnotesize Prompt de testat}
+        {\footnotesize
+        ``Scrie cod Python care: (1) descarcă randamentele zilnice ale AAPL și S\&P 500, (2) implementează un event study complet pentru anunțul de earnings din Q4 2024, cu fereastra de estimare [-250, -11] și fereastra evenimentului [-5, +5], (3) calculează AR, CAR și testul $t$, (4) estimează exponentul Hurst prin R/S pe fereastra pre-event și post-event, (5) vizualizează CAR cu intervale de încredere.''
+        }
+    \end{block}
+    \vspace{-2mm}
+    {\footnotesize
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Verificați:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item LLM-ul separă corect fereastra de estimare de fereastra evenimentului?
+        \item Modelul normal folosește regresie OLS ($R_i = \alpha + \beta R_m + \varepsilon$)?
+        \item $AR$ este calculat ca diferență: $AR = R_i - \hat{R}_i$ (nu ca reziduu brut)?
+        \item Intervalele de încredere pentru CAR folosesc $\hat\sigma_\varepsilon$ din fereastra de estimare?
+        \item Hurst pe ferestre scurte ($<100$ obs.) are sens? Rezultatul este fiabil?
+    \end{enumerate}
+    }
+    \vspace{-2mm}
+    \begin{alertblock}{}
+        {\footnotesize \textbf{Atenție}: Multe LLM-uri confundă fereastra de estimare cu fereastra evenimentului. Verificați că parametrii $\hat\alpha, \hat\beta$ sunt estimați \textbf{exclusiv} pe date pre-event. Hurst pe ferestre scurte produce estimări instabile.}
+    \end{alertblock}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Discuție 1: EMH în practică}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenariu:} Un fond quantitativ dezvoltă o strategie de tranzacționare bazată pe mean reversion, exploatând faptul că $VR(5) \approx 0.85$ pe un indice bursier. Strategia funcționează 2 ani, apoi devine neprofitabilă.
+        \item \textbf{Întrebări:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item De ce strategia a funcționat inițial? (Ineficiență temporară, lichiditate redusă)
+        \item De ce a încetat să funcționeze? (Alți participanți au descoperit aceeași anomalie)
+        \item Cum se încadrează aceasta în \textbf{AMH} (Lo, 2004)?
+        \item Ce rol joacă \textbf{costurile de tranzacție} în definirea eficienței?
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \begin{block}{Recomandare}
+        {\small Eficiența nu este o proprietate binară. O piață poate fi ``eficientă net de costuri'' chiar dacă există predictibilitate statistică. Profitul trebuie să depășească spread-ul, comisioanele și slippage-ul.}
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Discuție 2: Limitările testelor de eficiență}
+\begin{cminipage}{0.95\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Scenariu:} Aplicați testul Ljung-Box pe randamentele zilnice BET (indicele BVB) și obțineți $Q(10) = 25.3$, $p = 0.005$. Concluzia naivă: ``BVB este ineficientă.''
+        \item \textbf{Întrebări:}
+    \end{itemize}
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item Ce presupune Ljung-Box despre distribuția randamentelor? (Momente finite, staționaritate)
+        \item Dacă randamentele au cozi grele ($\alpha < 2$), testul este \textbf{valid}?
+        \item Autocorelația poate fi cauzată de \textbf{thin trading} (tranzacționare rară)?
+        \item Care este diferența între \textbf{semnificație statistică} și \textbf{semnificație economică}?
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Indiciu:} Pe BVB, autocorelația este adesea cauzată de non-sincronizarea tranzacțiilor, nu de ineficiență reală. Testați cu date \textbf{săptămânale} pentru a elimina efectul thin trading.
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% STUDIU DE CAZ: S&P 500
+%=============================================================================
+\section{Studiu de caz: S\&P 500}
+
+\begin{frame}{S\&P 500: Analiza eficienței (2015--2025)}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Rezumatul testelor pe randamente zilnice S\&P 500}
+\renewcommand{\arraystretch}{1.1}
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+\textbf{Test} & \textbf{Statistică} & \textbf{p-value} & \textbf{Concluzie} \\
+\midrule
+Autocorelație lag 1 & $\hat\rho_1 \approx -0.02$ & $> 0.10$ & Nesemnificativ \\
+Ljung-Box $Q(10)$ & $\approx 18.5$ & $\approx 0.047$ & Semnificativ marginal \\
+Runs test & $Z \approx -1.3$ & $\approx 0.19$ & Nesemnificativ \\
+$VR(2)$ & $\approx 0.97$ & $\approx 0.12$ & Nesemnificativ \\
+$VR(10)$ & $\approx 0.91$ & $\approx 0.03$ & Semnificativ \\
+Hurst (R/S) & $H \approx 0.54$ & --- & Ușoară persistență \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Concluzie:} S\&P 500 este ``aproape eficient'' forma slabă
+    \item Deviațiile sunt mici și greu de exploatat după costuri de tranzacție
+    \item VR pe termen mediu sugerează ușoară mean reversion
+    \item Hurst $> 0.5$ indică memorie lungă slabă (posibil din clustering volatilitate)
+\end{itemize}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{S\&P 500: Eficiența variază în timp (AMH)}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Perioade de ineficiență}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{2008--2009:} Criza financiară
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item $H \approx 0.65$, $VR(5) \approx 0.82$
+        \item Autocorelație semnificativă
+        \item Panică $\Rightarrow$ momentum negativ
+    \end{itemize}
+    \item \textbf{2020 (martie):} COVID-19
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item $H \approx 0.62$, autocorelație negativă
+        \item Suprareacție urmată de recovery rapid
+    \end{itemize}
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Perioade de eficiență}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{2013--2017:} Bull market stabil
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item $H \approx 0.51$, $VR \approx 0.99$
+        \item Autocorelații nesemnificative
+        \item Piață ``calmă și eficientă''
+    \end{itemize}
+    \item \textbf{2023--2024:} Post-criză
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item $H \approx 0.53$
+        \item Lichiditate crescută
+    \end{itemize}
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\begin{alertblock}{Adaptive Markets Hypothesis (Lo, 2004)}
+    {\small Eficiența pieței nu este o proprietate fixă, ci un \textbf{proces dinamic}. Piețele devin mai eficiente în perioade calme și mai puțin eficiente în crize.}
+\end{alertblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% TEMĂ
+%=============================================================================
+\section{Tema pentru acasă}
+
+\begin{frame}{Temă: Eficiența pieței pe BVB}
+    \begin{cminipage}{0.95\textwidth}
+\begin{block}{Cerințe}
+\begin{enumerate}\setlength{\itemsep}{0pt}
+    \item Alegeți o acțiune listată la BVB (ex: TLV, SNP, BRD, FP)
+    \item Descărcați datele zilnice din ultimii 5 ani (\texttt{yfinance}, ticker ex: \texttt{TLV.RO})
+    \item Calculați autocorelația la lag 1--10 și testul Ljung-Box
+    \item Calculați variance ratio $VR(q)$ pentru $q = 2, 5, 10, 20$
+    \item Estimați exponentul Hurst prin metoda R/S
+    \item Comparați cu S\&P 500: este BVB mai ``eficientă'' sau mai ``ineficientă''?
+    \item Interpretați diferențele (lichiditate, nr.\ participanți, informație)
+\end{enumerate}
+\end{block}
+
+\vspace{0.1cm}
+\begin{exampleblock}{Indicii}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Piețele emergente sunt de obicei \textit{mai puțin} eficiente (lichiditate redusă)
+    \item BVB poate avea autocorelație mai mare datorită tranzacționării rare (thin trading)
+    \item Folosiți funcțiile Python din acest seminar ca punct de plecare
+    \item \textbf{Bonus:} Aplicați Hurst rolling și identificați perioade de (in)eficiență
+\end{itemize}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% REZUMAT
+%=============================================================================
+\section{Rezumat}
+
+\begin{frame}{Checklist competențe}
+    \begin{cminipage}{0.95\textwidth}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Teorie}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item[$\square$] Cele trei forme ale EMH (Fama)
+    \item[$\square$] Random walk vs martingal
+    \item[$\square$] Autocorelația și testul Ljung-Box
+    \item[$\square$] Testul runs (secvențe de semne)
+    \item[$\square$] Variance ratio și interpretare
+    \item[$\square$] Event study: AR, CAR, semnificație
+    \item[$\square$] Exponentul Hurst și memorie lungă
+    \item[$\square$] Adaptive Markets Hypothesis (Lo)
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Practică}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item[$\square$] Autocorelație + Ljung-Box în Python
+    \item[$\square$] Variance ratio pe date reale
+    \item[$\square$] Simulare event study
+    \item[$\square$] Estimarea Hurst (R/S)
+    \item[$\square$] Hurst rolling (eficiență în timp)
+    \item[$\square$] Comparație cross-asset
+    \item[$\square$] Backtest strategie bazată pe VR
+    \item[$\square$] Interpretarea rezultatelor AI
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+    \vspace{0.3cm}
+    \begin{block}{Următorul Seminar}
+        Volatilitate --- estimatori clasici, GARCH, volatilitate implicită
+    \end{block}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% PLANIFICAREA SEMINARELOR
+%=============================================================================
+\section{Planificarea seminarelor}
+
+\begin{frame}{Planificarea seminarelor}
+    \begin{cminipage}{0.95\textwidth}
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\footnotesize
+\begin{tabular}{clll}
+\toprule
+\textbf{Săpt.} & \textbf{Tema} & \textbf{Curs asociat} & \textbf{Conținut principal} \\
+\midrule
+1 & Randamente & Cap.\ 1: Surse de date & Tipuri randamente, staționaritate \\
+2 & Distribuții clasice & Cap.\ 2: Distribuții & Normal, Student-$t$, Pareto, VaR \\
+3 & Distribuții stabile & Cap.\ 2: Distribuții & Fit stabil, VaR, cozi grele \\
+4 & EVT, Copule, Risc & Cap.\ 4: EVT \& Copule & GEV, GPD, copule, VaR/ES \\
+\rowcolor{MainBlue!10}
+\textbf{5} & \textbf{EMH --- Eficiența pieței} & \textbf{Cap.\ 5: EMH} & \textbf{Autocorelație, VR, event study} \\
+6 & Volatilitate & Cap.\ 7: Volatilitate & Estimatori, GARCH, vol.\ implicită \\
+7 & Selecția modelului & Cap.\ 6: Sel.\ modelului & AIC/BIC, backtesting VaR \\
+\bottomrule
+\end{tabular}
+\end{center}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% TEST RAPID
+%=============================================================================
+\section{Test rapid}
+
+\begin{frame}{Quiz: 5 întrebări}
+    \begin{cminipage}{0.95\textwidth}
+\begin{enumerate}\setlength{\itemsep}{0pt}
+    \item Care formă a EMH implică că analiza tehnică este inutilă?
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] Forma tare
+        \item[(b)] Forma slabă
+        \item[(c)] Forma semi-tare
+        \item[(d)] Niciuna
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \item Ce valoare a Variance Ratio indică un random walk?
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] $VR = 0$
+        \item[(b)] $VR = 0.5$
+        \item[(c)] $VR = 1$
+        \item[(d)] $VR = 2$
+    \end{enumerate}
+
+    \vspace{0.2cm}
+    \item Un exponent Hurst $H = 0.35$ indică:
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] Random walk
+        \item[(b)] Persistență (trending)
+        \item[(c)] Anti-persistență (mean reversion)
+        \item[(d)] Eficiență perfectă
+    \end{enumerate}
+\end{enumerate}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Quiz: 5 întrebări (cont.) + Răspunsuri}
+    \begin{cminipage}{0.95\textwidth}
+\small
+\begin{enumerate}\setlength{\itemsep}{0pt}
+    \setcounter{enumi}{3}
+    \item În event study, $CAR > 0$ înainte de anunț sugerează:
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] Piață eficientă \quad (b) Insider trading \quad (c) Suprareacție \quad (d) Mean reversion
+    \end{enumerate}
+
+    \vspace{0.1cm}
+    \item Testul Ljung-Box are sub $H_0$ distribuția:
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] Normal \quad (b) Student-$t$ \quad (c) $\chi^2$ \quad (d) $F$
+    \end{enumerate}
+
+    \vspace{0.1cm}
+    \item Conform AMH (Lo, 2004), eficiența pieței:
+    \begin{enumerate}\setlength{\itemsep}{0pt}
+        \item[(a)] Este constantă în timp \quad (b) Variază în timp
+        \item[(c)] Nu poate fi testată \quad\;\, (d) Este întotdeauna respinsă
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{0.1cm}
+\begin{exampleblock}{Răspunsuri}
+\small
+\begin{enumerate}\setlength{\itemsep}{0pt}
+    \item \textbf{(b)} Forma slabă --- prețurile trecute sunt deja reflectate
+    \item \textbf{(c)} $VR = 1$ --- varianța crește liniar cu orizontul
+    \item \textbf{(c)} Anti-persistență ($H < 0.5$): seria tinde să se întoarcă la medie
+    \item \textbf{(b)} Insider trading --- informația se scurge înaintea anunțului oficial
+    \item \textbf{(c)} $\chi^2(m)$ cu $m$ grade de libertate (= numărul de lag-uri)
+    \item \textbf{(b)} Variază în timp --- piețele se adaptează la condițiile din mediu
+\end{enumerate}
+\end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+\begin{frame}{Test 7: Proprietatea de martingal}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Întrebare}
+        Dacă prețul unui activ urmează un martingal, $\E[P_{t+1}|\Omega_t] = P_t$, atunci:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Variante de răspuns}
+    \textcolor{MainBlue}{\textbf{(A)}} Randamentele sunt normal distribuite\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Randamentele sunt impredictibile (medie condițională zero)\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Volatilitatea este constantă\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Prețurile nu se pot schimba
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Test 7: Răspuns}
+\begin{cminipage}{0.95\textwidth}
+    \begin{exampleblock}{Răspuns: B}
+        Randamentele au medie condițională zero: $\E[r_{t+1}|\Omega_t] = 0$.
+    \end{exampleblock}
+
+    \vspace{0.2cm}
+
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Demonstrație:}
+        \item $\E[P_{t+1}|\Omega_t] = P_t$ $\Rightarrow$ $\E[P_{t+1} - P_t|\Omega_t] = 0$ $\Rightarrow$ $\E[r_{t+1}|\Omega_t] = 0$
+        \item A: \incorrect{} Martingalul nu presupune normalitate! Randamentele pot avea cozi grele.
+        \item C: \incorrect{} Volatilitatea poate fi stochastică ($\Var(r_{t+1}|\Omega_t)$ variabilă). Aceasta este compatibilă cu efectele GARCH.
+        \item D: \incorrect{} Prețurile se schimbă, dar schimbările sunt \textit{impredictibile}.
+        \item \textbf{Concluzie:} Martingalul este o proprietate a \textit{mediei}, nu a \textit{distribuției complete}.
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Test 8: Variance Ratio și dependența serială}
+\begin{cminipage}{0.95\textwidth}
+    \begin{alertblock}{Întrebare}
+        Dacă $VR(5) = 0.75$ pe randamentele unui activ, aceasta sugerează:
+    \end{alertblock}
+
+    \vspace{0.5cm}
+    \begin{block}{Variante de răspuns}
+    \textcolor{MainBlue}{\textbf{(A)}} Random walk --- piața este eficientă\\[3pt]
+    \textcolor{MainBlue}{\textbf{(B)}} Momentum --- tendințe de continuare\\[3pt]
+    \textcolor{MainBlue}{\textbf{(C)}} Mean reversion --- autocorelație negativă\\[3pt]
+    \textcolor{MainBlue}{\textbf{(D)}} Distribuție normală a randamentelor
+    \end{block}
+\end{cminipage}
+\end{frame}
+
+\begin{frame}{Test 8: Răspuns}
+\begin{cminipage}{0.95\textwidth}
+    \begin{exampleblock}{Răspuns: C}
+        $VR(5) < 1$ indică mean reversion (autocorelație negativă).
+    \end{exampleblock}
+
+    \vspace{0.2cm}
+
+    \begin{itemize}\setlength{\itemsep}{0pt}
+        \item \textbf{Interpretare:}
+        \item $VR(q) = 1 + 2\sum_{k=1}^{q-1}\left(1 - \frac{k}{q}\right)\rho_k$
+        \item $VR < 1$ $\Rightarrow$ suma ponderată a autocorelațiilor este \textbf{negativă}
+        \item Varianța pe 5 zile este cu 25\% mai mică decât de $5\times$ varianța zilnică
+        \item \textbf{Implicație:} Randamentele tind să se ``anuleze'' pe perioade de 5 zile
+        \item A: $VR = 1$ ar indica random walk \incorrect
+        \item B: $VR > 1$ ar indica momentum \incorrect
+        \item D: VR nu testează normalitatea, ci dependența serială \incorrect
+    \end{itemize}
+\end{cminipage}
+\end{frame}
+
+%=============================================================================
+% BIBLIOGRAFIE
+%=============================================================================
+\section{Bibliografie}
+
+\begin{frame}{Bibliografie}
+    \begin{cminipage}{0.95\textwidth}
+    \begin{block}{Ipoteza Pieței Eficiente}
+        {\small
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item Fama, E.F. (1970). ``Efficient Capital Markets: A Review of Theory and Empirical Work,'' \textit{Journal of Finance}, 25(2).
+            \item Lo, A.W. (2004). ``The Adaptive Markets Hypothesis,'' \textit{Journal of Portfolio Management}, 30(5).
+            \item Lo, A.W., MacKinlay, A.C. (1988). ``Stock Market Prices Do Not Follow Random Walks,'' \textit{Review of Financial Studies}, 1(1).
+            \item Campbell, J.Y., Lo, A.W., MacKinlay, A.C. (1997). \textit{The Econometrics of Financial Markets}, Princeton UP.
+            \item Mandelbrot, B. (1963). ``The Variation of Certain Speculative Prices,'' \textit{Journal of Business}, 36(4).
+            \item Franke, J., H\"{a}rdle, W.K., Hafner, C.M. (2019). \textit{Statistics of Financial Markets}, 4th ed., Springer.
+        \end{itemize}
+        }
+    \end{block}
+
+    \begin{exampleblock}{Resurse online}
+        {\small
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \url{https://quantlet.com} --- Quantlet repository
+            \item \url{https://danpele.github.io/SFM/} --- Materialele cursului
+        \end{itemize}
+        }
+    \end{exampleblock}
+    \end{cminipage}
+\end{frame}
+
+%=============================================================================
+% MULȚUMESC
+%=============================================================================
+\begin{frame}{}
+    \begin{cminipage}{0.95\textwidth}
+    \centering
+    \Huge\textcolor{IDAred}{Vă mulțumesc!}
+    \vspace{1cm}
+    \Large\textcolor{MainBlue}{Întrebări?}
+    \vspace{0.8cm}
+    \normalsize
+    Materialele seminarului sunt disponibile la: \url{https://danpele.github.io/SFM/}
+    \vspace{0.2cm}
+    \href{https://quantlet.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{ql_logo.png}} Quantlet} \hspace{0.5cm}
+    \href{https://quantinar.com}{\raisebox{-0.15em}{\includegraphics[height=0.8em]{qr_logo.png}} Quantinar}
+    \end{cminipage}
+\end{frame}
+
+\end{document}
