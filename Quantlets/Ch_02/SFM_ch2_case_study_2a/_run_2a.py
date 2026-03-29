@@ -72,7 +72,7 @@ for name, rets in returns.items():
           f"{stats.skew(r):>8.3f} {stats.kurtosis(r):>8.2f} "
           f"{r.min()*100:>8.2f} {r.max()*100:>8.2f}")
 
-fig, axes = plt.subplots(2, 3, figsize=(14, 6))
+fig, axes = plt.subplots(2, 3, figsize=(14, 7))
 
 for j, name in enumerate(returns.keys()):
     # Price
@@ -153,10 +153,10 @@ for j, name in enumerate(returns.keys()):
     ax.set_xlabel('Log-return')
     if j == 0:
         ax.set_ylabel('Density (log scale)')
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12),
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
               ncol=1, frameon=False, fontsize=6)
 
-plt.tight_layout()
+plt.tight_layout(rect=[0, 0.10, 1, 1])
 save_fig('ch2_cs2a_fit_comparison')
 
 fig, axes = plt.subplots(2, 3, figsize=(14, 8))

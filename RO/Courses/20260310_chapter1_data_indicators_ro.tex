@@ -89,11 +89,14 @@
         \hskip0.5cm%
         {\small\color{FooterGray}\renewcommand{\hyperlink}[2]{##2}\insertsectionhead}%
         \hfill%
+        \showlevel\hspace{4pt}%
         \textcolor{FooterGray}{\small\insertframenumber}%
         \hskip0.5cm%
     }%
     \vskip4pt%
-    {\color{FooterGray}\hrule height 0.4pt}%
+    {\color{\currentlevelcolor}\hrule height 1.5pt}%
+    \global\slidelevelnum=0%
+    \gdef\currentlevelcolor{FooterGray}%
 }
 
 %=============================================================================
@@ -136,7 +139,7 @@
 \usepackage{colortbl}
 \hypersetup{colorlinks=true, linkcolor=MainBlue, urlcolor=MainBlue}
 \graphicspath{{../../logos/}{../../charts/}{../../photos/}}
-\hfuzz=2pt  % Suppress tiny overfull warnings (<2pt)
+\hfuzz=7pt  % Suppress tiny overfull warnings (<7pt)
 \vfuzz=2pt  % Suppress tiny vertical overfull warnings (<2pt)
 
 %=============================================================================
@@ -237,6 +240,37 @@
 \newcommand{\MAE}{\text{MAE}}
 \newcommand{\MAPE}{\text{MAPE}}
 
+% Indicatoare nivel academic pe slide-uri  (numeric \ifnum — bulletproof in beamer templates)
+\newcount\slidelevelnum
+\global\slidelevelnum=0
+\makeatletter
+\newcommand{\slidelevel}[1]{%
+    \global\slidelevelnum=0%
+    \def\tmp@SL{#1}\def\tmp@SLy{Y3}\def\tmp@SLm{MSc}\def\tmp@SLp{PhD}%
+    \ifx\tmp@SL\tmp@SLy \global\slidelevelnum=1\fi%
+    \ifx\tmp@SL\tmp@SLm \global\slidelevelnum=2\fi%
+    \ifx\tmp@SL\tmp@SLp \global\slidelevelnum=3\fi%
+}
+\makeatother
+\gdef\currentlevelcolor{FooterGray}
+\newcommand{\showlevel}{%
+    \ifnum\slidelevelnum=1%
+        \colorbox{Forest}{\strut\textcolor{white}{\sffamily\bfseries\fontsize{8}{9}\selectfont Y3}}%
+        \gdef\currentlevelcolor{Forest}%
+    \fi%
+    \ifnum\slidelevelnum=2%
+        \colorbox{MainBlue}{\strut\textcolor{white}{\sffamily\bfseries\fontsize{8}{9}\selectfont MSc}}%
+        \gdef\currentlevelcolor{MainBlue}%
+    \fi%
+    \ifnum\slidelevelnum=3%
+        \colorbox{Crimson}{\strut\textcolor{white}{\sffamily\bfseries\fontsize{8}{9}\selectfont PhD}}%
+        \gdef\currentlevelcolor{Crimson}%
+    \fi%
+    \ifnum\slidelevelnum=0%
+        \gdef\currentlevelcolor{FooterGray}%
+    \fi%
+}
+
 %=============================================================================
 % INFORMAȚII TITLU
 %=============================================================================
@@ -280,6 +314,40 @@ MSCA Digital Finance}
 \end{frame}
 
 %=============================================================================
+% GHID DE STUDIU
+%=============================================================================
+\begin{frame}{Ghid de studiu --- Cum să folosiți materialele}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Înainte de curs (\textit{pre-reading})}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Franke et al.\ (2019), Cap.\ 1 (20 pag.)
+\item Campbell et al.\ (1997), Cap.\ 1.1--1.3
+\item Opțional: Cont (2001), Secțiunile 1--2
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{După curs (\textit{review})}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Refaceți exercițiile din slide-uri \textbf{fără} a privi rezolvările
+\item Rulați cel puțin 2 notebook-uri Quantlet
+\item Completați quiz-ul ca auto-evaluare
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.2cm}
+\begin{alertblock}{Resurse digitale}
+\begin{itemize}\setlength\itemsep{1pt}
+\item \textbf{Slide-uri + cod}: \url{https://danpele.github.io/SFM/}
+\item \textbf{Quantlet-uri interactive}: \url{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01}
+\item \textbf{Forum de discuții}: Platforma e-learning ASE
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%=============================================================================
 % CUPRINS
 %=============================================================================
 {
@@ -311,7 +379,7 @@ MSCA Digital Finance}
                 \item Randamente ajustate la risc
                 \item Caz de utilizare AI
                 \item Rezumat
-                \item Quiz
+                \item Quiz \& Exerciții de examen
                 \item Bibliografie
             \end{itemize}
         \end{column}
@@ -641,7 +709,7 @@ $V_t$ & Volum & Acțiuni tranzacționate \\
 \end{center}
 \end{column}
 \end{columns}
-\quantlet{SFM\_ch1\_ohlc\_ob}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
+\quantlet{SFM\_ch1\_ohlc\_orderbook}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
 \end{frame}
 
 \begin{frame}{OHLC: Exemplu numeric}
@@ -671,7 +739,7 @@ $V_t$ & Volum & Acțiuni tranzacționate \\
     \item Ziua 4 (5 Ian): \textcolor{Forest}{lumânare bullish puternică} --- Close $-$ Open $= \$4.30$; volum mare.
     \item Randamentul logaritmic zilnic, 2 Ian: $r = \ln(187.90/185.20) = 0.01449 \approx 1.45\%$.
 \end{itemize}
-\quantlet{SFM\_ch1\_ohlc\_ob}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
+\quantlet{SFM\_ch1\_ohlc\_orderbook}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
 \end{frame}
 
 \begin{frame}{Prețul ajustat de închidere}
@@ -770,7 +838,7 @@ $t \geq 10$ & niciuna & $P_t^{\text{adj}} = P_t$ \\
 \begin{center}
 \includegraphics[width=0.55\linewidth]{sfm_ch1_orderbook.pdf}
 \end{center}
-\quantlet{SFM\_ch1\_ohlc\_ob}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
+\quantlet{SFM\_ch1\_ohlc\_orderbook}{https://github.com/QuantLet/Stat_fin_markets/tree/master/Ch_01/SFM_ch1_ohlc_orderbook}
 \end{frame}
 
 \begin{frame}{Microstructura pieței}
@@ -888,16 +956,14 @@ $t \geq 10$ & niciuna & $P_t^{\text{adj}} = P_t$ \\
     \item $\Cov(X_t, X_{t-k}) = \gamma(k)$ \quad (autocovarianța depinde doar de lag-ul $k$, nu de $t$).
 \end{enumerate}
 \end{defn}
-\vspace{0.1cm}
-\begin{itemize}
+\vspace{0.05cm}
+\begin{itemize}\setlength{\itemsep}{1pt}
     \item \textbf{Prețurile} $P_t$ sunt în general \textbf{nestaționare}: au trend, rădăcini unitare și varianță variabilă în timp.
     \item \textbf{Randamentele} $r_t = \ln(P_t/P_{t-1})$ sunt aproximativ staționare: medie și varianță relativ constante.
-    \item \textbf{Notație formală (ordine de integrare)}:
-    \[
-    P_t \sim I(1) \quad \text{(nestaționară, rădăcină unitară)}, \qquad r_t = \Delta \ln P_t \sim I(0) \quad \text{(staționară)}.
-    \]
+    \item \textbf{Notație formală}:
+    $P_t \sim I(1)$ (nestaționară, rădăcină unitară), \quad $r_t = \Delta \ln P_t \sim I(0)$ (staționară).
     \item \textbf{Intuiție}: \textit{„Prețurile cresc, randamentele oscilează."} Analizăm randamente deoarece metodele statistice cer staționaritate.
-    \item \textbf{Test formal}: testul Augmented Dickey-Fuller (ADF) respinge ipoteza nulă de rădăcină unitară pentru randamente, dar nu pentru prețuri.
+    \item \textbf{Test formal}: testul ADF respinge ipoteza nulă de rădăcină unitară pentru randamente, dar nu pentru prețuri.
 \end{itemize}
 \end{frame}
 
@@ -1361,6 +1427,26 @@ MDD: $\text{MDD} = \min_{t \in [0,T]} DD_t$.
     \end{itemize}
 \end{frame}
 }
+
+%--- Y3 Quick check: Randamente ---
+\slidelevel{Y3}
+\begin{frame}{Opriți-vă și gândiți-vă \hfill {\normalsize\textcolor{MediumGray}{\textit{(auto-evaluare)}}}}
+\begin{alertblock}{Verificare rapidă --- Randamente}
+\begin{enumerate}\setlength\itemsep{4pt}
+\item Un activ crește cu 20\% și apoi scade cu 20\%. Randamentul total simplu este 0\%? Dar cel logaritmic?
+\item De ce log-randamentele sunt preferate în modelarea statistică?
+\item Ce este ,,pierderea din varianță'' (\textit{variance drag}) și de ce contează pentru investitorii pe termen lung?
+\end{enumerate}
+\end{alertblock}
+\vspace{0.2cm}
+\begin{exampleblock}{Răspunsuri}
+\begin{enumerate}\setlength\itemsep{1pt}
+\item Nu! $100 \to 120 \to 96$, pierdere $-4\%$. Log: $\ln(1{,}2) + \ln(0{,}8) = \ln(0{,}96) = -4{,}1\%$ \checkmark
+\item Sunt \textbf{aditive în timp} ($r_{[0,T]} = \sum r_t$), simetrice, și nemărginite inferior.
+\item $\E[\text{geom}] \approx \E[\text{aritm}] - \sigma^2/2$; volatilitate mare erodează randamentul compus.
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
 
 %=============================================================================
 % SECȚIUNEA 4: FAPTE STILIZATE
@@ -2147,6 +2233,26 @@ Dacă $\sigma_{\text{daily}} = 1.5\%$, calculați:
 \end{frame}
 }
 
+%--- Y3 Quick check: Estimatori de volatilitate ---
+\slidelevel{Y3}
+\begin{frame}{Opriți-vă și gândiți-vă \hfill {\normalsize\textcolor{MediumGray}{\textit{(auto-evaluare)}}}}
+\begin{alertblock}{Verificare rapidă --- Estimatori de volatilitate}
+\begin{enumerate}\setlength\itemsep{4pt}
+\item Estimatorul Parkinson folosește doar $H_t$ și $L_t$. De ce este mai eficient decât close-to-close?
+\item Estimatorul Yang-Zhang combină overnight + open-to-close + range. Când este cel mai avantajos?
+\item Regula $\sigma_T = \sigma_1\sqrt{T}$ presupune randamente i.i.d. Ce se întâmplă dacă există autocorelație pozitivă?
+\end{enumerate}
+\end{alertblock}
+\vspace{0.2cm}
+\begin{exampleblock}{Răspunsuri}
+\begin{enumerate}\setlength\itemsep{1pt}
+\item Range-ul $(H-L)$ conține informație despre traiectoria intra-zilnică, nu doar punctul final.
+\item Când există \textbf{salt overnight} semnificativ (e.g.\ earnings, macro news).
+\item Volatilitatea anuală este \textbf{mai mare} decât $\sigma\sqrt{252}$: $\sigma_T^2 = T\sigma^2(1 + 2\sum \rho_k)$.
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
 %=============================================================================
 % SECȚIUNEA 6: COMPARAȚIE DE EFICIENȚĂ
 %=============================================================================
@@ -2187,7 +2293,7 @@ Realized Vol & $\gg$14 & Da & Extensii & Intrazilnice \\
 \begin{columns}[T]
 \begin{column}{0.50\textwidth}
 \begin{block}{Când folosim care?}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
     \item \textbf{CC}: doar prețuri de închidere disponibile.
     \item \textbf{Parkinson}: estimare rapidă de interval; piețe fără drift.
     \item \textbf{GK}: cea mai bună eficiență când drift $\approx 0$.
@@ -2199,7 +2305,7 @@ Realized Vol & $\gg$14 & Da & Extensii & Intrazilnice \\
 \end{column}
 \begin{column}{0.46\textwidth}
 \begin{block}{Capcane frecvente}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
     \item GK/Parkinson pe date în trend $\Rightarrow$ distorsionat în jos.
     \item Ignorarea gap-urilor overnight $\Rightarrow$ subestimează vol totală.
     \item Fereastră prea scurtă $\Rightarrow$ zgomotoasă; prea lungă $\Rightarrow$ depășită.
@@ -2519,6 +2625,26 @@ Orice portofoliu eficient poate fi exprimat ca o combinație liniară a doar dou
     \end{itemize}
 \end{frame}
 }
+
+%--- Y3 Quick check: Randamente ajustate la risc ---
+\slidelevel{Y3}
+\begin{frame}{Opriți-vă și gândiți-vă \hfill {\normalsize\textcolor{MediumGray}{\textit{(auto-evaluare)}}}}
+\begin{alertblock}{Verificare rapidă --- Performanță ajustată la risc}
+\begin{enumerate}\setlength\itemsep{4pt}
+\item Fond A: $\bar{R} = 20\%$, $\sigma = 30\%$. Fond B: $\bar{R} = 10\%$, $\sigma = 8\%$. Cu $R_f = 3\%$, care are Sharpe mai bun?
+\item De ce Sortino este adesea preferat Sharpe pentru fonduri cu randamente asimetrice?
+\item Maximum Drawdown = $-45\%$. Ce informație aduce aceasta pe care $\sigma$ nu o oferă?
+\end{enumerate}
+\end{alertblock}
+\vspace{0.2cm}
+\begin{exampleblock}{Răspunsuri}
+\begin{enumerate}\setlength\itemsep{1pt}
+\item $SR_A = 17/30 = 0{,}57$; $SR_B = 7/8 = 0{,}88$. Fondul B, deși cu randament mai mic!
+\item Sortino penalizează doar volatilitatea descendentă ($\sigma_{\text{down}}$), nu și pe cea ascendentă.
+\item MDD arată \textbf{cel mai rău scenariu real} trăit de investitor --- $\sigma$ nu surprinde persistența pierderilor.
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
 
 %=============================================================================
 % SECȚIUNEA 8: CAZ DE UTILIZARE AI
@@ -3553,7 +3679,7 @@ Excess kurtosis & 6,0 \\
 %=============================================================================
 % REZOLVĂRI EXERCIȚII
 %=============================================================================
-\section*{Rezolvări exerciții}
+\section{Rezolvări exerciții de examen}
 
 \begin{frame}{Exercițiul 1: Rezolvare}
 \begin{block}{Rezolvare}
@@ -3651,10 +3777,10 @@ $\sigma_{\text{anual}} = 7{,}04\% \times \sqrt{12} = 7{,}04\% \times 3{,}464 = 2
 
 \begin{frame}{Exercițiul 6: Rezolvare}
 \begin{block}{Rezolvare}
-\textbf{1.} Sharpe Ratio: $SR = \frac{\bar{R} - R_f}{\sigma}$.
+\textbf{1.} Sharpe Ratio: $SR = \frac{\bar{R} - R_f}{\sigma}$, cu $R_f = 2\%$.
 \begin{itemize}
-\item Fond A: $SR_A = \frac{12\% - 4\%}{12\%} = \frac{8\%}{12\%} = 0{,}667$
-\item Fond B: $SR_B = \frac{10\% - 4\%}{6{,}75\%} = \frac{6\%}{6{,}75\%} = 0{,}889$
+\item Fond A: $SR_A = \frac{14\% - 2\%}{18\%} = \frac{12\%}{18\%} = 0{,}667$
+\item Fond B: $SR_B = \frac{10\% - 2\%}{9\%} = \frac{8\%}{9\%} = 0{,}889$
 \end{itemize}
 
 \textbf{2.} Fondul B este preferabil ($SR_B > SR_A$): randament mai bun per unitate de risc.
@@ -3666,7 +3792,7 @@ $\sigma_{\text{anual}} = 7{,}04\% \times \sqrt{12} = 7{,}04\% \times 3{,}464 = 2
 \item Sensibil la alegerea lui $R_f$ și la orizontul de timp.
 \end{itemize}
 
-\textbf{4.} Pentru $SR_A = SR_B$: $\frac{\bar{R}_A - 4\%}{12\%} = 0{,}889$ $\Rightarrow$ $\bar{R}_A = 4\% + 0{,}889 \times 12\% = 14{,}67\%$.
+\textbf{4.} Pentru $SR_A = SR_B$: $\frac{\bar{R}_A - 2\%}{18\%} = 0{,}889$ $\Rightarrow$ $\bar{R}_A = 2\% + 0{,}889 \times 18\% = 18{,}0\%$.
 \end{block}
 \end{frame}
 
@@ -3677,7 +3803,7 @@ $\sigma_{\text{anual}} = 7{,}04\% \times \sqrt{12} = 7{,}04\% \times 3{,}464 = 2
 \textbf{2.} Drawdown la fiecare moment: $DD_t = (P_t - M_t)/M_t$.
 \begin{itemize}
 \item $DD_0 = 0\%$, $DD_1 = 0\%$, $DD_2 = (110-120)/120 = -8{,}33\%$
-\item $DD_3 = 0\%$, $DD_4 = (90-130)/130 = -30{,}77\%$, $DD_5 = (125-130)/130 = -3{,}85\%$
+\item $DD_3 = 0\%$, $DD_4 = (90-130)/130 = -30{,}77\%$, $DD_5 = (95-130)/130 = -26{,}92\%$
 \end{itemize}
 
 \textbf{3.} \textbf{Maximum Drawdown}: $\text{MDD} = -30{,}77\%$ (la $t = 4$).
@@ -3871,25 +3997,26 @@ Activ \textbf{foarte riscant}: volatilitate ridicată, drawdown sever, distribu�
     \end{cminipage}
 \end{frame}
 
-\begin{frame}{Bibliografie IV}
+\begin{frame}[shrink=5]{Bibliografie IV}
     \vspace{-0.3cm}
     \begin{cminipage}{0.95\textwidth}
     \begin{block}{Studii comparative}
-        {\small
-        \begin{itemize}\setlength{\itemsep}{0pt}
-            \item Fa{\l}dzi\'{n}ski, M., Osi\'{n}ska, M. (2016). Volatility estimators in econometric analysis of risk transfer. \textit{Dynamic Econometric Models}, 16(1), 1--20.
-            \item \"{O}zt\"{u}rk, H., Erol, U., Yuksel, A. (2016). Extreme value volatility estimators and realized volatility of ISE. \textit{Int.\ J.\ of Economics and Finance}, 8(8), 73.
-            \item Cadenas-Morales, E. (2022). Bitcoin volatility estimate applying Rogers and Satchell range model. \textit{IJFIRM}, 12(1), 49--79.
+        {\footnotesize
+        \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}
+            \item Fa{\l}dzi\'{n}ski, M., Osi\'{n}ska, M. (2016). Volatility estimators in econometric analysis of risk transfer. \textit{Dyn.\ Econom.\ Models}, 16(1), 1--20.
+            \item \"{O}zt\"{u}rk, H. et al.\ (2016). Extreme value volatility estimators and realized volatility of ISE. \textit{Int.\ J.\ Econ.\ Fin.}, 8(8), 73.
+            \item Cadenas-Morales, E. (2022). Bitcoin volatility estimate applying RS range model. \textit{IJFIRM}, 12(1), 49--79.
         \end{itemize}
         }
     \end{block}
 
     \begin{exampleblock}{Volatilitate realizată}
-        {\small
-        \begin{itemize}\setlength{\itemsep}{0pt}
+        {\footnotesize
+        \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}
             \item Barndorff-Nielsen, O.E., Shephard, N. (2002). Econometric Analysis of Realized Volatility. \textit{JRSS B}, 64(2), 253--280.
-            \item Christensen, K., Podolskij, M. (2007). Realized range-based estimation of integrated variance. \textit{J.\ of Econometrics}, 141(2), 323--349.
-            \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \ldots and the Cross-Section of Expected Returns. \textit{Review of Financial Studies}, 29(1), 5--68.
+            \item Bandi, F.M., Russell, J.R. (2008). Microstructure Noise, Realized Variance, and Optimal Sampling. \textit{Rev.\ Econ.\ Stud.}, 75(2), 339--369.
+            \item Christensen, K., Podolskij, M. (2007). Realized range-based estimation of integrated variance. \textit{J.\ Econometrics}, 141(2), 323--349.
+            \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \ldots and the Cross-Section of Expected Returns. \textit{Rev.\ Fin.\ Stud.}, 29(1), 5--68.
         \end{itemize}
         }
     \end{exampleblock}
@@ -3946,6 +4073,100 @@ Activ \textbf{foarte riscant}: volatilitate ridicată, drawdown sever, distribu�
     \end{cminipage}
 \end{frame}
 
+%=============================================================================
+% CRITERII DE EVALUARE
+%=============================================================================
+\slidelevel{Y3}
+\begin{frame}{Criterii de evaluare --- Exerciții și proiect}
+\begin{block}{Grila de notare (aplicabilă la examen și proiect)}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Nivel} & \textbf{Calcul} & \textbf{Interpretare} \\
+\midrule
+\textcolor{Forest}{\textbf{9--10}} & Formule + calcule corecte, complete & Leagă de decizia de business \\
+\textcolor{Amber}{\textbf{7--8}} & Formule corecte, erori minore & Interpretare corectă, superficială \\
+\textcolor{Orange}{\textbf{5--6}} & Formula corectă, greșeli de aplicare & Repetă definiția fără context \\
+\textcolor{Crimson}{\textbf{$<$5}} & Formula greșită sau lipsă & Fără interpretare \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+\begin{alertblock}{Pondere evaluare}
+\begin{itemize}\setlength\itemsep{0pt}
+\item Examen scris: 70\% \quad Proiect individual: 20\% \quad Participare activă: 10\%
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%=============================================================================
+% LECTURA PE NIVELE
+%=============================================================================
+\begin{frame}{Lectură recomandată pe nivele}
+\begin{block}{\textcolor{Forest}{\textbf{Y3}} --- Lectură minimă}
+\begin{itemize}\setlength\itemsep{0pt}
+\item Franke et al.\ (2019), Cap.\ 1; Cont (2001), \S1--3; exercițiile 1--5 din curs
+\end{itemize}
+\end{block}
+\begin{block}{\textcolor{MainBlue}{\textbf{MSc}} --- Lectură suplimentară}
+\begin{itemize}\setlength\itemsep{0pt}
+\item + Tsay (2010), Cap.\ 1--2; Campbell et al.\ (1997); exercițiile 6--10 și studiul de caz
+\end{itemize}
+\end{block}
+\begin{block}{\textcolor{Crimson}{\textbf{PhD}} --- Lectură avansată}
+\begin{itemize}\setlength\itemsep{0pt}
+\item + Yang \& Zhang (2000); Barndorff-Nielsen \& Shephard (2002); slide-urile despre volatilitatea realizată
+\end{itemize}
+\end{block}
+\end{frame}
+
+%=============================================================================
+% FRONTIERE ML
+%=============================================================================
+\slidelevel{MSc}
+\begin{frame}{Frontiere: Machine Learning și volatilitatea}
+\begin{block}{Estimarea modernă a volatilității}
+\begin{itemize}\setlength\itemsep{0pt}
+\item \textbf{LSTM / GRU} pentru predicția volatilității: captează dependențe pe termen lung mai bine decât GARCH (Kim \& Won, 2018)
+\item \textbf{Random Forests} pentru selecția estimatorului optim: alegerea automată între CC, Parkinson, GK, YZ în funcție de regim
+\item \textbf{HAR-RV + ML}: combinarea volatilității realizate cu \textit{gradient boosting} pentru previziuni superioare
+\end{itemize}
+\end{block}
+\begin{alertblock}{Conexiune cu acest capitol}
+\begin{itemize}\setlength\itemsep{0pt}
+\item Estimatorii clasici (CC, Parkinson, GK, YZ) rămân \textbf{benchmark-uri} indispensabile
+\item ML nu le înlocuiește --- le \textbf{combină}: un model ML folosește CC + range + volum ca \textit{features}
+\item \textbf{Provocare}: explicabilitate --- un Sharpe Ratio este mai transparent decât un model black-box
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%=============================================================================
+% EXIT TICKET
+%=============================================================================
+\slidelevel{Y3}
+\begin{frame}{Bilet de ieșire (\textit{Exit Ticket}) \hfill {\normalsize\textcolor{MediumGray}{\textit{(1 minut)}}}}
+\begin{alertblock}{Completați înainte de a pleca (anonim, pe hârtie sau online)}
+\begin{enumerate}\setlength\itemsep{6pt}
+\item \textbf{Un lucru clar}: Ce concept din cursul de azi ați înțeles cel mai bine?
+\item \textbf{Un lucru neclar}: Ce concept necesită mai multă clarificare?
+\item \textbf{O întrebare}: Ce întrebare ați dori să explorați mai departe?
+\end{enumerate}
+\end{alertblock}
+\vspace{0.3cm}
+\begin{block}{De ce facem acest exercițiu?}
+\begin{itemize}\setlength\itemsep{2pt}
+\item Răspunsurile anonime ajustează conținutul \textbf{următorului curs}
+\item Cercetările arată că reflecția imediat după curs crește retenția cu 20--40\% (Roediger \& Butler, 2011)
+\end{itemize}
+\end{block}
+\end{frame}
+
+%=============================================================================
+% FINAL
+%=============================================================================
 \begin{frame}{}
     \begin{cminipage}{0.95\textwidth}
         \centering

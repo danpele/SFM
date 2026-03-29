@@ -74,7 +74,7 @@ def plot_pareto_pdf_cdf():
     colors = [CRIMSON, MAIN_BLUE, FOREST, AMBER]
     x = np.linspace(1.001, 6, 500)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 3.0))
 
     for alpha, c in zip(alphas, colors):
         # scipy pareto: pdf(x, b) = b / x^(b+1) for x >= 1
@@ -87,15 +87,15 @@ def plot_pareto_pdf_cdf():
     ax1.set_xlabel('$x$')
     ax1.set_ylabel('$f(x)$')
     ax1.set_title('Pareto PDF')
-    ax1.legend()
+    ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=4, frameon=False, fontsize=7)
     ax1.set_ylim(0, 5)
 
     ax2.set_xlabel('$x$')
     ax2.set_ylabel('$F(x)$')
     ax2.set_title('Pareto CDF')
-    ax2.legend(loc='lower right')
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=4, frameon=False, fontsize=7)
 
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
     save_fig('ch2_pareto_pdf_cdf')
     print("[OK] ch2_pareto_pdf_cdf.pdf")
 
@@ -110,7 +110,7 @@ def plot_pareto_loglog():
     colors = [CRIMSON, MAIN_BLUE, FOREST, AMBER]
     x = np.logspace(0, 3, 500)
 
-    fig, ax = plt.subplots(figsize=(3.2, 2.5))
+    fig, ax = plt.subplots(figsize=(3.2, 3.0))
 
     for alpha, c in zip(alphas, colors):
         survival = pareto_dist.sf(x, alpha)  # 1 - CDF
@@ -120,7 +120,7 @@ def plot_pareto_loglog():
     ax.set_xlabel('$x$ (log scale)')
     ax.set_ylabel('$P(X > x)$ (log scale)')
     ax.set_title('Survival function (log-log)')
-    ax.legend(fontsize=7)
+    ax.legend(loc='lower left', frameon=False, fontsize=7)
 
     fig.tight_layout()
     save_fig('ch2_pareto_loglog_survival')
@@ -178,7 +178,7 @@ def plot_hill_sp500():
 
     k_vals, alpha_hat = hill_estimator(losses)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 3.0))
 
     # Hill plot
     ax1.plot(k_vals, alpha_hat, color=MAIN_BLUE, linewidth=0.6)
@@ -190,7 +190,7 @@ def plot_hill_sp500():
     ax1.set_ylabel(r'$\hat{\alpha}_{\mathrm{Hill}}$')
     ax1.set_title('Hill plot — S&P 500 losses')
     ax1.set_ylim(1, 8)
-    ax1.legend()
+    ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=7)
 
     # Log-log empirical survival vs fitted Pareto (tail only: top 10%)
     sorted_losses = np.sort(losses)[::-1]
@@ -214,9 +214,9 @@ def plot_hill_sp500():
     ax2.set_xlabel('Loss magnitude (log)')
     ax2.set_ylabel('$P(L > x)$ (log)')
     ax2.set_title('Tail fit — S&P 500')
-    ax2.legend(fontsize=7)
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=7)
 
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
     save_fig('ch2_pareto_hill_sp500')
     print(f"[OK] ch2_pareto_hill_sp500.pdf  (MLE alpha={alpha_mle:.2f}, Hill alpha~{median_alpha:.2f})")
 
@@ -259,7 +259,7 @@ def plot_pareto_market_cap():
     n = len(mcaps)
     rank = np.arange(1, n + 1)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 3.0))
 
     # Rank-size plot (Zipf)
     ax1.bar(rank, mcaps, color=MAIN_BLUE, alpha=0.7, width=0.8)
@@ -279,9 +279,9 @@ def plot_pareto_market_cap():
     ax2.set_xlabel('Rank (log)')
     ax2.set_ylabel('Market Cap (log)')
     ax2.set_title("Zipf's law — log-log")
-    ax2.legend()
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=7)
 
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
     save_fig('ch2_pareto_market_cap')
     print(f"[OK] ch2_pareto_market_cap.pdf  (Zipf slope = {slope:.2f})")
 
@@ -297,7 +297,7 @@ def plot_pareto_mle_demo():
     n_samples = [50, 200, 1000, 5000]
     colors = [CRIMSON, MAIN_BLUE, FOREST, AMBER]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5.5, 3.0))
 
     # Left: histogram + fitted PDF for n=1000
     sample = pareto_dist.rvs(true_alpha, size=1000)
@@ -314,7 +314,7 @@ def plot_pareto_mle_demo():
     ax1.set_ylabel('Density')
     ax1.set_title('Pareto MLE fit')
     ax1.set_xlim(0.9, 8)
-    ax1.legend(fontsize=7)
+    ax1.legend(loc='upper right', frameon=False, fontsize=7)
 
     # Right: convergence of MLE as n grows
     n_reps = 500
@@ -332,7 +332,7 @@ def plot_pareto_mle_demo():
     ax2.set_xlabel(r'$\hat{\alpha}_{\mathrm{MLE}}$')
     ax2.set_ylabel('Density')
     ax2.set_title('MLE convergence')
-    ax2.legend(fontsize=6.5)
+    ax2.legend(loc='upper right', frameon=False, fontsize=7)
 
     fig.tight_layout()
     save_fig('ch2_pareto_mle_demo')
@@ -364,7 +364,7 @@ def plot_pareto_tail_fitting():
     sorted_losses = np.sort(losses)[::-1]
     n_all = len(sorted_losses)
 
-    fig, axes = plt.subplots(1, 3, figsize=(7.5, 2.5))
+    fig, axes = plt.subplots(1, 3, figsize=(7.5, 3.0))
 
     # --- Panel 1: QQ-plot Pareto (top 10% tail) ---
     ax1 = axes[0]
@@ -428,9 +428,9 @@ def plot_pareto_tail_fitting():
     ax3.set_xlabel('Loss magnitude')
     ax3.set_ylabel('CDF')
     ax3.set_title('Tail CDF fit (top 5%)')
-    ax3.legend(fontsize=7)
+    ax3.legend(loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=7)
 
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
     save_fig('ch2_pareto_tail_fitting')
     print(f"[OK] ch2_pareto_tail_fitting.pdf  (alpha_5pct={a5:.2f}, alpha_10pct={alpha_hat:.2f})")
 

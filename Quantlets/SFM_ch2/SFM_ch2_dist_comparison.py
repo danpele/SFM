@@ -206,15 +206,15 @@ ax.set_ylim(1e-3, None)
 ax.set_title('S\\&P 500 Log-Returns: Distribution Comparison', fontweight='bold')
 ax.set_xlabel('Log-return')
 ax.set_ylabel('Density (log scale)')
-ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.10),
-          ncol=2, frameon=False, fontsize=7)
+ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+          ncol=3, frameon=False, fontsize=7)
 
 ax.text(0.02, 0.95,
         f'n = {n:,}\nBest AIC: {best_aic}\nBest BIC: {best_bic}',
         transform=ax.transAxes, fontsize=7, va='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
 
-plt.tight_layout(rect=[0, 0.06, 1, 1])
+plt.tight_layout(rect=[0, 0.10, 1, 1])
 save_fig('ch2_dist_comparison_overlay')
 
 # =============================================================================

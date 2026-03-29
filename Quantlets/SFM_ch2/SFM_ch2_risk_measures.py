@@ -109,7 +109,7 @@ for i in range(window, n):
     df_t, loc_t, scale_t = student_t.fit(roll)
     var_t[i] = student_t.ppf(alpha_var, df_t, loc=loc_t, scale=scale_t)
 
-# Identify exceedances (return < -VaR means VaR breach; VaR is negative)
+# Identify exceedances (return < VaR means VaR breach; VaR is negative)
 valid = ~np.isnan(var_normal)
 exc_normal = (returns_arr < var_normal) & valid
 exc_t = (returns_arr < var_t) & valid
@@ -183,7 +183,7 @@ ax1.scatter(exc_dates_t, exc_vals_t, color=ORANGE, s=12, zorder=5,
 
 ax1.set_title('A. Rolling 99% VaR Backtest (250-day window)', fontweight='bold')
 ax1.set_ylabel('Log-return')
-ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.02),
+ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12),
            ncol=3, frameon=False, fontsize=7)
 plt.setp(ax1.get_xticklabels(), visible=False)
 
@@ -217,7 +217,7 @@ ax2.set_ylabel('Count')
 ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
            ncol=3, frameon=False, fontsize=7)
 
-plt.tight_layout(rect=[0, 0.04, 1, 1])
+plt.tight_layout(rect=[0, 0.08, 1, 1])
 save_fig('ch2_var_backtest')
 
 # =============================================================================
