@@ -21,7 +21,7 @@ from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
-# --- Standard chart style (Nature journal quality) ---
+# --- Standard chart style (presentation-quality, large + transparent) ---
 plt.rcParams['figure.facecolor'] = 'none'
 plt.rcParams['axes.facecolor'] = 'none'
 plt.rcParams['savefig.facecolor'] = 'none'
@@ -29,25 +29,27 @@ plt.rcParams['savefig.transparent'] = True
 plt.rcParams['axes.grid'] = False
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = ['Helvetica', 'Arial', 'DejaVu Sans']
-plt.rcParams['font.size'] = 8
-plt.rcParams['axes.labelsize'] = 9
-plt.rcParams['axes.titlesize'] = 10
-plt.rcParams['xtick.labelsize'] = 8
-plt.rcParams['ytick.labelsize'] = 8
-plt.rcParams['legend.fontsize'] = 8
+plt.rcParams['font.size'] = 13
+plt.rcParams['axes.labelsize'] = 14
+plt.rcParams['axes.titlesize'] = 15
+plt.rcParams['xtick.labelsize'] = 12
+plt.rcParams['ytick.labelsize'] = 12
+plt.rcParams['legend.fontsize'] = 12
 plt.rcParams['legend.facecolor'] = 'none'
 plt.rcParams['legend.framealpha'] = 0
 plt.rcParams['axes.spines.top'] = False
 plt.rcParams['axes.spines.right'] = False
-plt.rcParams['axes.linewidth'] = 0.5
-plt.rcParams['lines.linewidth'] = 0.75
+plt.rcParams['axes.linewidth'] = 1.0
+plt.rcParams['lines.linewidth'] = 2.0
+plt.rcParams['savefig.dpi'] = 300
+plt.rcParams['figure.dpi'] = 120
 
 def save_fig(name):
-    """Save figure with transparent background."""
+    """Save figure with transparent background, high DPI."""
     plt.savefig(f'../../charts/{name}.pdf', bbox_inches='tight', transparent=True)
     plt.savefig(f'../../charts/{name}.png', bbox_inches='tight', transparent=True, dpi=300)
     plt.close()
-    print(f"   Saved: {name}.pdf")
+    print(f"   Saved: {name}.pdf / .png")
 
 # Colors
 MainBlue = '#1A3A6E'
@@ -380,7 +382,7 @@ for h, name in zip(freq_horizons, freq_names):
 print("\n7. CREATING FIGURE")
 print("-" * 40)
 
-fig, axes = plt.subplots(3, 2, figsize=(14, 14))
+fig, axes = plt.subplots(3, 2, figsize=(18, 20))
 
 # ---- Panel A: R/S analysis log-log plot for SPY ----
 ax = axes[0, 0]
@@ -406,9 +408,9 @@ ax.set_title('Panel A: R/S Analysis (SPY)', fontweight='bold')
 ax.set_xlabel('Block size n')
 ax.set_ylabel('R/S')
 ax.text(0.05, 0.95, f'H = {H_rs:.3f}', transform=ax.transAxes,
-        ha='left', va='top', fontsize=10, fontweight='bold', color=MainBlue,
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-ax.legend(frameon=False, loc='lower right', fontsize=7)
+        ha='left', va='top', fontweight='bold', color=MainBlue,
+        bbox=dict(boxstyle='round', facecolor='none', edgecolor='none', alpha=0))
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.20), ncol=3)
 
 # ---- Panel B: DFA log-log plot for SPY ----
 ax = axes[0, 1]
@@ -433,9 +435,9 @@ ax.set_title('Panel B: Detrended Fluctuation Analysis (SPY)', fontweight='bold')
 ax.set_xlabel('Window size n')
 ax.set_ylabel('F(n)')
 ax.text(0.05, 0.95, f'$\\alpha$ = {alpha_dfa:.3f}', transform=ax.transAxes,
-        ha='left', va='top', fontsize=10, fontweight='bold', color=MainBlue,
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-ax.legend(frameon=False, loc='lower right', fontsize=7)
+        ha='left', va='top', fontweight='bold', color=MainBlue,
+        bbox=dict(boxstyle='round', facecolor='none', edgecolor='none', alpha=0))
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.20), ncol=3)
 
 # ---- Panel C: Hurst exponent comparison bar chart (SPY, BTC, EUR) ----
 ax = axes[1, 0]
@@ -463,13 +465,13 @@ for bar_group in [bars1, bars2]:
 ax.axhline(y=0.5, color='gray', linestyle='--', linewidth=1.0,
            label='H = 0.5 (random walk)')
 ax.set_xticks(x_pos)
-ax.set_xticklabels(bar_labels, fontsize=9)
+ax.set_xticklabels(bar_labels)
 ax.set_title('Panel C: Hurst Exponent Comparison', fontweight='bold')
 ax.set_ylabel('Hurst Exponent (H)')
 ax.set_ylim(0.25, 0.80)
-ax.legend(frameon=False, loc='upper right', fontsize=7)
-ax.text(0.02, 0.02, 'H > 0.5: persistent\nH < 0.5: anti-persistent\nH = 0.5: random walk',
-        transform=ax.transAxes, ha='left', va='bottom', fontsize=7,
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.20), ncol=3)
+ax.text(0.02, 0.02, 'H > 0.5: persistent  |  H < 0.5: anti-persistent',
+        transform=ax.transAxes, ha='left', va='bottom', fontsize=10,
         color='gray', style='italic')
 
 # ---- Panel D: Rolling Hurst exponent (252-day window, R/S) for SPY ----
@@ -490,12 +492,12 @@ ax.set_title(f'Panel D: Rolling Hurst Exponent (SPY, {window_h}d Window)',
 ax.set_xlabel('Date')
 ax.set_ylabel('Hurst Exponent')
 ax.set_ylim(0.30, 0.80)
-ax.legend(frameon=False, loc='upper right', fontsize=7)
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=2)
 ax.text(0.02, 0.02,
         f'Mean H = {np.mean(rolling_h):.3f}, Std = {np.std(rolling_h):.3f}',
-        transform=ax.transAxes, ha='left', va='bottom', fontsize=7,
+        transform=ax.transAxes, ha='left', va='bottom',
         color=MainBlue,
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        bbox=dict(boxstyle='round', facecolor='none', edgecolor='none', alpha=0))
 
 # ---- Panel E: Multiscale volatility ----
 ax = axes[2, 0]
@@ -511,7 +513,7 @@ ax.fill_between(agg_horizons, ann_vol_empirical, ann_vol_rw, alpha=0.10,
 ax.set_title('Panel E: Multiscale Volatility (SPY)', fontweight='bold')
 ax.set_xlabel('Aggregation horizon (days)')
 ax.set_ylabel('Annualized Volatility')
-ax.legend(frameon=False, loc='upper left', fontsize=7)
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.20), ncol=2)
 
 # Compute empirical scaling exponent from variance
 var_empirical_raw = []
@@ -527,7 +529,7 @@ ax.text(0.95, 0.05,
         f'Var scaling: Var ~ $n^{{2H}}$\nEstimated H = {H_var:.3f}',
         transform=ax.transAxes, ha='right', va='bottom', fontsize=8,
         color=Purple, fontweight='bold',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        bbox=dict(boxstyle='round', facecolor='none', edgecolor='none', alpha=0))
 
 # ---- Panel F: Self-similarity illustration ----
 ax = axes[2, 1]
@@ -554,12 +556,12 @@ ax.set_title('Panel F: Self-Similarity of Return Distributions (SPY)',
 ax.set_xlabel('Standardized Return')
 ax.set_ylabel('Density')
 ax.set_xlim(-5, 5)
-ax.legend(frameon=False, fontsize=7)
+ax.legend(frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.20), ncol=4)
 ax.text(0.95, 0.95,
         'Self-similar shape\nacross frequencies',
-        transform=ax.transAxes, ha='right', va='top', fontsize=8,
+        transform=ax.transAxes, ha='right', va='top',
         color=MainBlue, style='italic',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        bbox=dict(boxstyle='round', facecolor='none', edgecolor='none', alpha=0))
 
 plt.tight_layout()
 save_fig('ch14_fractal_hurst')
