@@ -1142,6 +1142,217 @@ def fig_violation_dist():
 
 
 # =============================================================================
+# CASE LTCM 1998
+# =============================================================================
+def fig_ltcm_1998():
+    np.random.seed(1998)
+    n_pre = 600
+    n_crisis = 90
+    r_pre = np.random.normal(0.0005, 0.007, n_pre)
+    r_crisis = np.random.normal(-0.0025, 0.030, n_crisis)
+    r_crisis[20] = -0.085
+    r_crisis[28] = -0.060
+    r_crisis[35] = -0.045
+    r_all = np.concatenate([r_pre, r_crisis])
+    dates = pd.date_range('1996-01-01', periods=len(r_all), freq='B')
+
+    win = 250
+    alpha = 0.01
+    var_n = np.full(len(r_all), np.nan)
+    for t in range(win, len(r_all)):
+        w = r_all[t-win:t]
+        var_n[t] = -(w.mean() + w.std() * stats.norm.ppf(alpha))
+    hits = (r_all < -var_n)
+
+    fig, ax = plt.subplots(figsize=(7.8, 3.4))
+    ax.plot(dates, r_all * 100, color=Gray, lw=0.55, label='LTCM strategy P&L')
+    ax.plot(dates, -var_n * 100, color=Forest, lw=1.0, label='$-$VaR Normal-250 (1%)')
+    ax.scatter(dates[hits], r_all[hits]*100, s=18, color=Crimson, marker='o',
+               label=f'Violations ({hits.sum()})')
+    ax.axvspan(dates[n_pre], dates[-1], color=Crimson, alpha=0.10, label='Aug-Oct 1998')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Daily P&L / VaR (%)')
+    ax.set_title('LTCM 1998: 4-SD events repeated 6 times in 6 months',
+                 color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax, ncol=2, y=-0.30)
+    plt.tight_layout()
+    save_fig('ch11_ltcm_1998')
+
+
+# =============================================================================
+# CASE COVID March 2020
+# =============================================================================
+def fig_covid_2020():
+    np.random.seed(2020)
+    n_pre = 400
+    n_crisis = 30
+    n_post = 200
+    r_pre = np.random.normal(0.0006, 0.008, n_pre)
+    r_crisis = np.random.normal(-0.010, 0.045, n_crisis)
+    r_crisis[5] = -0.119  # March 16, 2020
+    r_crisis[2] = -0.075
+    r_crisis[8] = -0.052
+    r_post = np.random.normal(0.0010, 0.018, n_post)
+    r_all = np.concatenate([r_pre, r_crisis, r_post])
+    dates = pd.date_range('2019-01-01', periods=len(r_all), freq='B')
+
+    win = 250
+    alpha = 0.01
+    var_n = np.full(len(r_all), np.nan)
+    var_hs = np.full(len(r_all), np.nan)
+    for t in range(win, len(r_all)):
+        w = r_all[t-win:t]
+        var_n[t] = -(w.mean() + w.std() * stats.norm.ppf(alpha))
+        var_hs[t] = -np.quantile(w, alpha)
+    hits_n = (r_all < -var_n)
+
+    fig, ax = plt.subplots(figsize=(7.8, 3.4))
+    ax.plot(dates, r_all*100, color=Gray, lw=0.55, label='S&P 500 returns')
+    ax.plot(dates, -var_n*100, color=Forest, lw=1.0, label='$-$VaR Normal-250')
+    ax.plot(dates, -var_hs*100, color=MainBlue, lw=1.0, label='$-$VaR HS-250')
+    ax.scatter(dates[hits_n], r_all[hits_n]*100, s=18, color=Crimson, marker='o',
+               label=f'Normal violations ({hits_n.sum()})')
+    ax.axvspan(dates[n_pre], dates[n_pre+n_crisis], color=Crimson, alpha=0.10,
+               label='COVID Mar 2020')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Return / VaR (%)')
+    ax.set_title('COVID March 2020: regime break, even GARCH-VaR fails day 1',
+                 color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax, ncol=3, y=-0.30)
+    plt.tight_layout()
+    save_fig('ch11_covid_2020')
+
+
+# =============================================================================
+# CASE Archegos 2021 - concentration / counterparty risk
+# =============================================================================
+def fig_archegos_2021():
+    np.random.seed(2021)
+    n = 250
+    r_baseline = np.random.normal(0.0008, 0.020, n)
+    r_baseline[200] = -0.16   # GSX -41%, ViacomCBS -27% events
+    r_baseline[205] = -0.12
+    r_baseline[210] = -0.09
+    dates = pd.date_range('2020-09-01', periods=n, freq='B')
+
+    losses_bn = pd.Series({'Credit Suisse': 5.5, 'Nomura': 2.9,
+                           'Morgan Stanley': 0.9, 'UBS': 0.8,
+                           'Mitsubishi UFJ': 0.3})
+
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.2))
+
+    ax1 = axes[0]
+    ax1.plot(dates, r_baseline*100, color=Gray, lw=0.6, label='Pf returns')
+    ax1.axhline(-0.04*100, color=Forest, lw=0.9, ls='--', label='VaR 1% (Normal)')
+    ax1.scatter(dates[r_baseline < -0.06], r_baseline[r_baseline < -0.06]*100,
+                s=24, color=Crimson, marker='o', label='Margin call triggers')
+    ax1.axvspan(dates[195], dates[215], color=Crimson, alpha=0.10, label='Mar 2021 unwind')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Daily return (%)')
+    ax1.set_title('Archegos concentrated swaps: tail losses', color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax1, ncol=2, y=-0.32)
+
+    ax2 = axes[1]
+    bars = ax2.barh(losses_bn.index, losses_bn.values,
+                    color=[Crimson, Orange, Amber, MainBlue, Forest])
+    for bar, val in zip(bars, losses_bn.values):
+        ax2.text(val + 0.1, bar.get_y()+bar.get_height()/2,
+                 f'${val:.1f}B', va='center', fontsize=8)
+    ax2.set_xlabel('Reported loss (USD bn)')
+    ax2.set_title('Counterparty losses (Mar 2021)', color=MainBlue, fontsize=10)
+    ax2.invert_yaxis()
+    ax2.set_xlim(0, 7)
+
+    plt.tight_layout()
+    save_fig('ch11_archegos_2021')
+
+
+# =============================================================================
+# CASE UK gilts October 2022 - LDI pensions
+# =============================================================================
+def fig_uk_gilts_2022():
+    np.random.seed(2022)
+    n = 200
+    dates = pd.date_range('2022-04-01', periods=n, freq='B')
+    base_yield = 1.8
+    yields = base_yield + np.cumsum(np.random.normal(0.005, 0.015, n))
+    # mini-budget Sep 23, 2022
+    shock_idx = 125
+    yields[shock_idx:shock_idx+5] += np.array([0.50, 0.75, 0.85, 0.55, 0.30])
+    yields[shock_idx+5:] += 0.30
+
+    pnl = -np.diff(yields, prepend=yields[0]) * 100  # bps -> price impact
+    var_normal = np.full(n, np.nan)
+    win = 60
+    for t in range(win, n):
+        var_normal[t] = -np.std(pnl[t-win:t]) * 2.326
+
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.2))
+
+    ax1 = axes[0]
+    ax1.plot(dates, yields, color=MainBlue, lw=1.1, label='10Y gilt yield (%)')
+    ax1.axvline(dates[shock_idx], color=Crimson, ls='--', lw=0.9, label='Mini-budget Sep 23')
+    ax1.fill_between(dates[shock_idx:shock_idx+5],
+                     yields[shock_idx:shock_idx+5].min()-0.2,
+                     yields[shock_idx:shock_idx+5].max()+0.2,
+                     color=Crimson, alpha=0.10, label='BoE intervention')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Yield (%)')
+    ax1.set_title('UK 10Y gilt: +250bps in 5 days', color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax1, ncol=2, y=-0.32)
+
+    ax2 = axes[1]
+    ax2.plot(dates, pnl, color=Gray, lw=0.55, label='LDI P&L (bps)')
+    ax2.plot(dates, -var_normal, color=Forest, lw=1.0, label='$-$VaR 1% (60d Normal)')
+    ax2.scatter(dates[pnl < -var_normal], pnl[pnl < -var_normal],
+                s=18, color=Crimson, label='Violations')
+    ax2.set_xlabel('Date')
+    ax2.set_ylabel('P&L (bps)')
+    ax2.set_title('LDI strategy: VaR-60 ignores tail-of-tails', color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax2, ncol=2, y=-0.32)
+
+    plt.tight_layout()
+    save_fig('ch11_uk_gilts_2022')
+
+
+# =============================================================================
+# CLIMATE / ESG VaR - transition risk on energy sector
+# =============================================================================
+def fig_climate_var():
+    np.random.seed(2024)
+    n = 1500
+    dates = pd.date_range('2018-01-01', periods=n, freq='B')
+
+    # Two regimes: pre-transition (low vol), transition shocks (high vol + drift)
+    regime = (np.arange(n) > 800).astype(float)
+    drift = -0.0003 * regime
+    vol = 0.012 + 0.010 * regime
+    r_brown = drift + vol * np.random.standard_t(df=5, size=n) * np.sqrt(3/5)
+    r_green = 0.0004 + 0.014 * np.random.standard_t(df=8, size=n) * np.sqrt(6/8)
+
+    win = 250
+    alpha = 0.01
+    z = stats.norm.ppf(alpha)
+    var_brown = pd.Series(r_brown).rolling(win).apply(
+        lambda x: -(x.mean() + x.std() * z), raw=True)
+    var_green = pd.Series(r_green).rolling(win).apply(
+        lambda x: -(x.mean() + x.std() * z), raw=True)
+
+    fig, ax = plt.subplots(figsize=(7.8, 3.4))
+    ax.plot(dates, var_brown*100, color=Crimson, lw=1.1, label='Brown sector VaR 1%')
+    ax.plot(dates, var_green*100, color=Forest, lw=1.1, label='Green sector VaR 1%')
+    ax.axvspan(dates[800], dates[-1], color=Amber, alpha=0.08,
+               label='Transition regime (post-2021 policy)')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('1-day VaR (%)')
+    ax.set_title('Climate transition risk: brown-asset VaR rises ~80% under policy regime',
+                 color=MainBlue, fontsize=10)
+    legend_outside_bottom(ax, ncol=2, y=-0.30)
+    plt.tight_layout()
+    save_fig('ch11_climate_var')
+
+
+# =============================================================================
 # RUN ALL
 # =============================================================================
 if __name__ == '__main__':
@@ -1178,5 +1389,10 @@ if __name__ == '__main__':
     fig_cross_asset()
     fig_lvar()
     fig_violation_dist()
+    fig_ltcm_1998()
+    fig_covid_2020()
+    fig_archegos_2021()
+    fig_uk_gilts_2022()
+    fig_climate_var()
     print('=' * 70)
     print('Done.')
