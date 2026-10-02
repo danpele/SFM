@@ -1,0 +1,566 @@
+% Capitolul 0: Introducere
+% Statistica piețelor financiare -- Program de licență, Academia de Studii Economice din București
+% CONVERTIT de latex/build_chapter0.py -- din deck-ul vechi; se editează direct sau se mută într-un generator.
+
+\newcommand{\coursename}{Statistica piețelor financiare}
+\def\sfmlang{ro}
+\input{../../latex/preamble}
+
+\newcommand{\qlurl}[1]{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_00/#1}
+
+\title[Statistica piețelor financiare]{Statistica piețelor financiare}
+\subtitle{Capitolul 0: Introducere}
+\author[D.T. Pele]{Daniel Traian PELE}
+\institute{Academia de Studii Economice din București\\
+IDA Institute Digital Assets\\
+Blockchain Research Center\\
+AI4EFin Artificial Intelligence for Energy Finance\\
+Academia Română, Institutul de Prognoză Economică\\
+MSCA Digital Finance}
+\date{}
+
+\providecommand{\sfmapplink}[3]{\hypertarget{#2}{}\hyperlink{#1}{\beamergotobutton{#3}}}  % APPLINKS-MACROS
+\providecommand{\sfmappback}[2]{\begin{tikzpicture}[remember picture,overlay]\node[anchor=south east] at ([xshift=-3mm,yshift=7mm]current page.south east){\hyperlink{#1}{\beamerreturnbutton{#2}}};\end{tikzpicture}}  % APPLINKS-MACROS
+\providecommand{\sfmchlink}[2]{\href{#1}{#2}}  % APPLINKS-MACROS
+\providecommand{\sfmchlinkt}[2]{\href{#1}{\usebeamercolor[fg]{frametitle}#2}}  % APPLINKS-MACROS
+\begin{document}
+
+% Pagina de titlu (fără antet/subsol)
+{
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \titlepage
+\end{frame}
+}
+% BEGIN-ACRONYMS (generat de latex/acronyms.py; nu editati manual)
+\begin{frame}{Acronime folosite în acest material}
+\setbeamertemplate{itemize/enumerate body begin}{\tiny}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{APT}: Arbitrage Pricing Theory (teoria evaluării prin arbitraj)
+    \item \textbf{AR}: AutoRegressive (model); in event studies: Abnormal Return (model autoregresiv; în studiile de eveniment: randament anormal)
+    \item \textbf{ARIMA}: AutoRegressive Integrated Moving Average (model) (model autoregresiv integrat cu medie mobilă)
+    \item \textbf{ARMA}: AutoRegressive Moving Average (model) (model autoregresiv cu medie mobilă)
+    \item \textbf{BS}: Black–Scholes (option pricing model) (modelul Black–Scholes de evaluare a opțiunilor)
+    \item \textbf{CAPM}: Capital Asset Pricing Model (modelul de evaluare a activelor financiare)
+    \item \textbf{EGARCH}: Exponential GARCH (GARCH exponențial)
+    \item \textbf{EMH}: Efficient Market Hypothesis (ipoteza pieței eficiente)
+    \item \textbf{ETF}: Exchange-Traded Fund (fond tranzacționat la bursă)
+    \item \textbf{EVT}: Extreme Value Theory (teoria valorilor extreme)
+    \item \textbf{FMH}: Fractal Market Hypothesis (ipoteza pieței fractale)
+    \item \textbf{FTX}: FTX Trading Ltd. (crypto exchange, bankrupt in November 2022) (bursa cripto FTX, falimentară în noiembrie 2022)
+    \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity (heteroscedasticitate condiționată autoregresivă generalizată)
+\end{itemize}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{LSTM}: Long Short-Term Memory (network) (rețea cu memorie pe termen lung și scurt)
+    \item \textbf{MMV}: Market-to-Metcalfe Value (ratio) (raportul dintre valoarea de piață și valoarea Metcalfe)
+    \item \textbf{NFT}: Non-Fungible Token (jeton nefungibil)
+    \item \textbf{RMSE}: Root Mean Squared Error (rădăcina erorii pătratice medii)
+    \item \textbf{SEC}: Securities and Exchange Commission (Comisia americană pentru valori mobiliare)
+    \item \textbf{SFM}: Statistics of Financial Markets (Statistica piețelor financiare (cursul))
+    \item \textbf{SV}: Stochastic Volatility (model) (model cu volatilitate stocastică)
+    \item \textbf{SVCJ}: Stochastic Volatility with Correlated Jumps (model) (volatilitate stocastică cu salturi corelate în preț și volatilitate)
+    \item \textbf{SVJ}: Stochastic Volatility with Jumps (model) (volatilitate stocastică cu salturi în preț)
+    \item \textbf{TFLOPS}: Tera FLoating-point Operations Per Second (mii de miliarde de operații în virgulă mobilă pe secundă)
+    \item \textbf{TGARCH}: Threshold GARCH (GARCH cu prag (asimetric))
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END-ACRONYMS
+
+%=============================================================================
+% MOTIVAȚIE
+%=============================================================================
+\section{Motivație}
+
+\begin{frame}{Este piața financiară!}
+\begin{center}
+    \vspace{0.5cm}
+    {\large\textit{``It's the economy, Stupid!''}}
+
+    \vspace{0.3cm}
+
+    {\small --- James Carville, 1992 (strategul campaniei lui Bill Clinton)}
+
+    \vspace{1cm}
+
+    {\Large\textbf{\textcolor{IDAred}{Este piața financiară!}}}
+
+    \vspace{0.5cm}
+
+    {\small Piețele financiare sunt coloana vertebrală a economiei moderne.\\
+    Înțelegerea proprietăților lor statistice este esențială pentru luarea deciziilor informate.}
+\end{center}
+\end{frame}
+
+\begin{frame}{De ce studiem Statistica piețelor financiare (SFM)?}
+\begin{itemize}
+    \item Piețele financiare sunt extrem de complexe, dinamice și volatile.
+    \item Compromisurile între risc și randament trebuie analizate cu atenție pentru a lua decizii investiționale informate.
+    \item Evaluarea prețurilor, acoperirea riscului și managementul portofoliului depind de modele cantitative și statistice.
+    \item Luarea deciziilor bazate pe date este fundamentală în finanțe, mai ales odată cu apariția big data și a învățării automate.
+    \item Finanțele moderne se bazează puternic pe tehnici statistice pentru
+    \begin{itemize}
+        \item Modele de evaluare a activelor (CAPM, APT)
+        \item Managementul riscului (VaR, Expected Shortfall)
+        \item Optimizarea portofoliului (Analiza Medie-Varianță, Black-Litterman)
+        \item Tranzacționare algoritmică și analiza microstructurii pieței
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Aplicații practice ale SFM}
+\begin{itemize}
+    \item Evaluarea activelor și predicția randamentelor
+    \begin{itemize}
+        \item Determinarea prețului corect al activelor financiare folosind modele statistice.
+        \item Capital Asset Pricing Model (CAPM), modele multifactoriale Fama-French.
+        \item Modele de predicție a randamentelor bazate pe învățare automată.
+        \item Arbitraj statistic și investiții bazate pe factori.
+    \end{itemize}
+    \item Managementul riscului și stabilitatea financiară
+    \begin{itemize}
+        \item Cuantificarea riscului financiar, măsurarea volatilității și gestionarea riscului de portofoliu.
+        \item Value at Risk (VaR) și Conditional Value at Risk (CVaR).
+        \item Evaluarea în măsură neutră la risc și simulări Monte Carlo.
+        \item Teoria Valorilor Extreme (EVT) pentru estimarea riscului de coadă.
+        \item Teste de stres și analiză de scenarii pentru conformitatea reglementară (Basel III, Solvency II).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Aplicații practice ale SFM}
+\begin{itemize}
+    \item Tranzacționare algoritmică și de înaltă frecvență
+    \begin{itemize}
+        \item Obiectiv: Utilizarea modelelor cantitative pentru dezvoltarea strategiilor de tranzacționare profitabile.
+        \item Arbitraj statistic folosind modele de co-integrare.
+        \item Modelarea impactului pe piață și strategii de execuție.
+        \item Modele de market-making și furnizare de lichiditate.
+        \item Tranzacționare de înaltă frecvență folosind învățare automată (LSTM-uri, deep reinforcement learning).
+    \end{itemize}
+    \item Riscul de credit și stabilitatea financiară
+    \begin{itemize}
+        \item Obiectiv: Evaluarea probabilității de nerambursare și a stabilității sistemului financiar.
+        \item Modele de scoring de credit (ex. Regresie Logistică, Random Forests).
+        \item Modele structurale ale riscului de credit (Modelul Merton).
+        \item Modele de formă redusă (modelul Jarrow-Turnbull).
+        \item Indicatori de risc sistemic și modelarea contagiunii.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cum ajută statistica pe piețele financiare}
+\begin{itemize}
+    \item Detectarea tendințelor și anomaliilor de piață
+    \begin{itemize}
+        \item Identificarea oportunităților de arbitraj, a tiparelor de revenire la medie și a tendințelor sezoniere.
+    \end{itemize}
+    \item Construirea modelelor predictive pentru prețurile activelor
+    \begin{itemize}
+        \item Aplicarea învățării automate, a analizei seriilor de timp și a metodelor econometrice.
+    \end{itemize}
+    \item Măsurarea și gestionarea riscului financiar
+    \begin{itemize}
+        \item Utilizarea indicatorilor statistici de risc, a testelor de stres și a analizei de scenarii.
+    \end{itemize}
+    \item Validarea teoriilor financiare cu date empirice
+    \begin{itemize}
+        \item Ipoteza Piețelor Eficiente (EMH)
+        \item Teorii din Finanțele Comportamentale
+        \item Modele de evaluare a activelor
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ascensiunea mașinilor}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \underline{Cray 2}: cel mai rapid supercomputer din lume: 1985--1990
+    \item 1.9 GFLOPs
+    \item 5,500 livre
+    \item \$49,863,243.49 milioane (dolari actuali)
+    \item $10^{\wedge}$(G=9, T=12, P=15, E=18)
+\end{itemize}
+
+\vspace{0.5cm}
+
+{\small\textcolor{IDAred}{G = Giga, T = Tera, P = Peta, E = Exa}}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{center}
+    {\small\textit{[Imagine supercomputer Cray 2]}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ascensiunea mașinilor}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item 2016 iPhone 7, 178 GFLOPs
+    \item 2021 iPhone 13, 1200 GFLOPs
+    \item 2025 iPhone 16, 2.15 TFLOPS
+    \item 170 g = 1K EUR
+    \item $10^{\wedge}$(G9, T12, P15, E18)
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{center}
+    {\small\textit{[Imagini cu cipul A18, placa Cray-2 și iPhone]}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Repere ale criptomonedelor}
+\begin{center}
+    {\small\textit{[Graficul indicelui S\&P Cryptocurrency MegaCap, 2017--2025]}}
+
+    \vspace{0.3cm}
+
+    Evenimente cheie adnotate pe grafic:
+\end{center}
+\begin{itemize}
+    \item 2017 Boom și 2018 Prăbușirea bulei
+    \item 2020 Mai: A 3-a înjumătățire Bitcoin
+    \item 2020 Boom și 2021 Prăbușirea bulei
+    \item 2021 Boom NFT
+    \item 2022 Apr: Reglementare SEC
+    \item 2022 Nov: Falimentul FTX
+    \item 2024 Ian: BTC Spot ETF
+    \item 2024 Apr: A 4-a înjumătățire BTC
+    \item 2024 Mai: ETH Spot ETF
+    \item 2024 Nov: Trump ales
+\end{itemize}
+{\small\textit{Sursa datelor: S\&P Cryptocurrency MegaCap Index -- 14 ian. 2025}}
+\end{frame}
+
+\begin{frame}{Bule speculative}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+{\small
+În primăvara anului 1720, Sir Isaac Newton deținea acțiuni la South Sea Company, cea mai căutată acțiune din Anglia. Pe măsură ce a apărut un zvon printre oameni că s-a descoperit minereu de argint/aur, aceasta era o ``știre falsă'' așa cum le numim astăzi. Marele fizician a mormăit că `\textcolor{IDAred}{putea calcula mișcările corpurilor cerești, dar nu nebunia oamenilor}.' Newton și-a vândut acțiunile South Sea, obținând un profit de 100\% totalizând \pounds 7,000. Dar la doar câteva luni, prins de entuziasmul sălbatic al pieței, Newton a cumpărat din nou la un preț mult mai mare --- și a pierdut \pounds 20,000 (sau mai mult de \pounds 5 milioane în banii din 2025). Pentru tot restul vieții, a interzis oricui să rostească cuvintele `South Sea' în prezența sa.
+}
+
+\vspace{0.2cm}
+
+{\small\textit{[Graficul acțiunilor South Sea, decembrie 1718 -- decembrie 1721]}}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{center}
+    {\small\textit{[Portretul lui Newton]}}
+
+    \vspace{0.3cm}
+
+    {\small\textit{[Ilustrație cu mărul lui Newton]}}
+
+    \vspace{0.2cm}
+
+    {\small \href{https://www.ams.org/journals/notices/201906/rnoti-p952.pdf}{\underline{Andrew Odlyzko (2019)}}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Valori intrinseci ale CC}
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+    \item În cele din urmă zero sau adoptare în continuare?
+    \item Legea lui Metcalfe: $p$ capitalizare de piață,
+    \begin{itemize}
+        \item $p = e^{\alpha_0} u^{\beta_0}$ și $\beta_0 = 2$.
+        \item $u$: \# utilizatori activi, adică adrese
+    \end{itemize}
+    \item Legea (generalizată) a lui Metcalfe:
+    \[
+    \log(p) = \alpha + \beta \log(u) + \varepsilon
+    \]
+\end{itemize}
+
+\vspace{0.5cm}
+
+{\small \href{https://doi.org/10.1016/j.econlet.2018.09.007}{\underline{Wheatley S et al (2018)}}}
+\end{column}
+\begin{column}{0.52\textwidth}
+\begin{center}
+    {\small\textit{[Grafic log-log Capitalizare de piață (USD) vs Utilizatori activi, 2010--2025]}}
+
+    \vspace{1cm}
+
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bule}
+\begin{columns}[T]
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+    \item Raportul Piață-Metcalfe
+    \[
+    \text{MMV}_i = \frac{p_i}{e^{\alpha} u_i^{\beta}}
+    \]
+    după ajustarea regresiei log-log,
+    \[
+    (\alpha, \beta) = (-1.75, 2.12)
+    \]
+    \item Șase bule identificate
+\end{itemize}
+
+\vspace{0.5cm}
+
+{\small \href{https://doi.org/10.1016/j.econlet.2018.09.007}{\underline{Wheatley S et al (2018)}}}
+\end{column}
+\begin{column}{0.55\textwidth}
+\begin{center}
+    {\small\textit{[Grafic raport MMV, 2010--2024, perioade de bule colorate]}}
+
+    \vspace{1cm}
+
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Noul Aur}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{itemize}
+    \item Capitalizare de piață Aur (27 apr. 2023) 13,192 Miliarde USD
+    \item Capitalizare de piață BTC (27 apr. 2023) \quad 559 Miliarde USD
+\end{itemize}
+
+\hfill{\small 4.2\%}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item Capitalizare de piață Aur (16 ian. 2025) 18.318 Trilioane USD
+    \item Capitalizare de piață BTC (16 ian. 2025) \quad 1.972 Trilioane USD
+\end{itemize}
+
+\hfill{\small 9.29\%}
+
+\vspace{0.3cm}
+
+Dacă BTC și CC sunt văzute ca rezervă de valoare, atunci prețul poate crește încă mult.
+
+\vspace{0.2cm}
+
+{\small \href{https://companiesmarketcap.com/bitcoin/marketcap/}{\underline{Istoricul capitalizării de piață a Bitcoin}}}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{center}
+    {\small\textit{[Imagine monedă de aur + logo Bitcoin]}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelul de volatilitate stocastică cu salturi corelate}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\[
+\frac{dS_t}{S_t} = r\,dt + \sqrt{V_t}\,dW_t^s + Z_t^y\,dN_t,
+\]
+\[
+dV_t = \kappa(\theta - V_t)\,dt + \sigma_v\sqrt{V_t}\,dW_t^v + Z_t^v\,dN_t,
+\]
+\[
+\Cov(dW_t^s, dW_t^v) = \rho\,dt, \quad P(dN_t = 1) = \lambda\,dt
+\]
+\[
+Z_t^v \sim \text{Exp}(\mu_v), \quad Z_t^y | Z_t^v \sim N(\mu_y + \rho_j Z_t^v, \sigma_y^2).
+\]
+
+\vspace{0.3cm}
+
+{\small\textit{[Boxplot-uri și serii de timp RMSE in-sample și out-of-sample pentru modelele BS, SV, SVJ, SVCJ]}}
+\end{column}
+\begin{column}{0.42\textwidth}
+{\small
+\begin{tabular}{lcccc}
+\toprule
+ & BS & SV & SVJ & SVCJ \\
+\midrule
+$\sigma$ & 0.0278 & & & \\
+$\rho$ & & 0.1462 & $-0.3310$ & $-0.6245$ \\
+$\kappa$ & & 0.2203 & 1.5459 & 0.7425 \\
+$\theta$ & & 0.0006 & 0.0008 & 0.0008 \\
+$V_0$ & & 0.0013 & 0.0009 & 0.0009 \\
+$\sigma_v$ & & 0.0216 & 0.0368 & 0.0489 \\
+$\lambda$ & & & 0.0040 & 0.0033 \\
+$\mu_v$ & & & 0.2359 & 0.3166 \\
+$\rho_j$ & & & & $-1.0821$ \\
+$\sigma_y$ & & & 0.1890 & 0.1267 \\
+$\mu_v$ & & & & 0.0206 \\
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.2cm}
+
+{\scriptsize \href{https://doi.org/10.1016/j.frl.2021.102483}{\underline{Teng \& Haerdle (2022)}} Financial analytics of inverse BTC options in a stoch.\ vol.\ world}
+\end{column}
+\end{columns}
+\end{frame}
+
+%=============================================================================
+% CUPRINS
+%=============================================================================
+{
+\setbeamertemplate{headline}{%
+    \vskip10pt%
+    \hbox to \paperwidth{%
+        \hskip0.5cm%
+        \hfill%
+        \hskip0.5cm%
+    }%
+    \vskip4pt%
+    {\color{FooterGray}\hrule height 0.4pt}%
+}
+\begin{frame}{}
+    {\color{FooterGray}\hrule height 0.4pt}
+
+    \vspace{0.3cm}
+
+    {\Large\textcolor{IDAred}{\textbf{Cuprins}}}
+
+    \vspace{0.4cm}
+
+    \begin{itemize}
+        \item Motivație \checkmark
+        \item Prezentare generală a cursului
+        \item Resurse
+        \item Notare
+        \item Bibliografie
+    \end{itemize}
+\end{frame}
+}
+
+%=============================================================================
+% PREZENTARE GENERALĂ A CURSULUI
+%=============================================================================
+\section{Prezentare generală a cursului}
+
+\begin{frame}{Obiectivele cursului}
+\begin{itemize}
+    \item Înțelegerea metodelor statistice fundamentale aplicate în finanțe.
+    \item Dezvoltarea expertizei în teoria probabilităților și aplicațiile acesteia pe piețele financiare.
+    \item Învățarea modelelor de serii de timp (ARIMA, GARCH) pentru analiza datelor financiare.
+    \item Studierea Ipotezei Piețelor Eficiente (EMH) și a validării sale empirice.
+    \item Explorarea Ipotezei Piețelor Fractale (FMH) și a proceselor cu memorie lungă.
+    \item Înțelegerea grupării volatilității și a implicațiilor acesteia pentru modelarea riscului.
+    \item Analiza indicatorilor de risc precum VaR, CVaR și măsurile de risc sistemic.
+    \item Învățarea modelelor de risc de credit și a rolului lor în stabilitatea financiară.
+    \item Lucrul cu seturi de date financiare reale și implementarea în Python/R.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Teme principale abordate}
+\begin{itemize}
+    \item Probabilități și metode statistice în finanțe
+    \begin{itemize}
+        \item Distribuțiile de probabilitate ale randamentelor activelor (Normală, Log-normală, t-distribuție, Distribuții stabile).
+        \item Simulări Monte Carlo pentru evaluare și estimarea riscului.
+        \item Procese stocastice în finanțe (mișcarea Browniană, procese L\'{e}vy, Mișcarea Browniană Fracțională).
+    \end{itemize}
+    \item Analiza seriilor de timp și prognoză
+    \begin{itemize}
+        \item Modele autoregresive (AR, ARMA, ARIMA) pentru predicția randamentelor.
+        \item Modelarea volatilității: GARCH, EGARCH, TGARCH.
+        \item Gruparea volatilității: De ce volatilitatea este persistentă și grupată pe piețele financiare.
+    \end{itemize}
+    \item Ipoteza Piețelor Eficiente (EMH) și Ipoteza Piețelor Fractale (FMH)
+    \begin{itemize}
+        \item EMH: Eficiența de formă slabă, semi-puternică și puternică.
+        \item Teste empirice ale EMH folosind tehnici statistice (mers aleatoriu, autocorelație, teste de raport al varianței).
+        \item FMH: Comportamentul nestaționar al piețelor financiare, auto-similaritate și procese cu memorie lungă.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Teme principale abordate}
+\begin{itemize}
+    \item Gruparea volatilității și stabilitatea financiară
+    \begin{itemize}
+        \item Gruparea volatilității: De ce piețele financiare prezintă perioade persistente de volatilitate ridicată/scăzută.
+        \item Efectul de levier: Cum șocurile negative cresc volatilitatea mai mult decât șocurile pozitive.
+        \item Indicatori de risc: Value at Risk (VaR), Conditional VaR (CVaR).
+    \end{itemize}
+    \item Riscul de credit și predicția nerambursării
+    \begin{itemize}
+        \item Modele de scoring de credit
+        \item Teste de stres și cadrul reglementar Basel III.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% RESURSE
+%=============================================================================
+\section{Resurse}
+
+\begin{frame}{Resurse}
+\begin{itemize}
+    \item \textbf{Manual principal}:
+    \begin{itemize}
+        \item H\"{a}rdle, W.K., Hautsch, N., Overbeck, L. (2017). \textit{Applied Quantitative Finance}. Springer.
+    \end{itemize}
+    \item \textbf{Lectură suplimentară}:
+    \begin{itemize}
+        \item Franke, J., H\"{a}rdle, W.K., Hafner, C.M. (2019). \textit{Statistics of Financial Markets: An Introduction}. 4th Edition, Springer.
+        \item Tsay, R.S. (2010). \textit{Analysis of Financial Time Series}. 3rd Edition, Wiley.
+        \item Campbell, J.Y., Lo, A.W., MacKinlay, A.C. (1997). \textit{The Econometrics of Financial Markets}. Princeton University Press.
+    \end{itemize}
+    \item \textbf{Software}: Python (statsmodels, scipy, arch), R
+    \item \textbf{Resurse online}: Quantlet.com, depozite GitHub
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% NOTARE
+%=============================================================================
+\section{Notare}
+
+\begin{frame}{Notare}
+\begin{itemize}
+    \item \textbf{Examen final}: 60\%
+    \item \textbf{Proiect/Temă}: 40\%
+    \begin{itemize}
+        \item Proiecte individuale sau de grup folosind date financiare reale
+        \item Implementare în Python sau R
+        \item Raport scris + prezentare
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+%=============================================================================
+% BIBLIOGRAFIE
+%=============================================================================
+\section{Bibliografie}
+
+\begin{frame}{Bibliografie}
+{\small
+\begin{thebibliography}{99}
+\bibitem{franke2019} Franke, J., H\"{a}rdle, W.K., Hafner, C.M. (2019). \textit{Statistics of Financial Markets: An Introduction}. 4th Edition, Springer.
+\bibitem{tsay2010} Tsay, R.S. (2010). \textit{Analysis of Financial Time Series}. 3rd Edition, Wiley.
+\bibitem{campbell1997} Campbell, J.Y., Lo, A.W., MacKinlay, A.C. (1997). \textit{The Econometrics of Financial Markets}. Princeton University Press.
+\bibitem{hardle2017} H\"{a}rdle, W.K., Hautsch, N., Overbeck, L. (2017). \textit{Applied Quantitative Finance}. Springer.
+\bibitem{wheatley2018} Wheatley, S., Sornette, D., Huber, T., Reppen, M., Gantner, R.N. (2018). Are Bitcoin Bubbles Predictable? \textit{Economics Letters}, 172, 149--152.
+\bibitem{odlyzko2019} Odlyzko, A. (2019). Newton's Financial Misadventures in the South Sea Bubble. \textit{Notices of the AMS}, 66(7), 952--960.
+\bibitem{teng2022} Teng, H., Haerdle, W.K. (2022). Financial analytics of inverse BTC options in a stochastic volatility world. \textit{Finance Research Letters}, 47, 102483.
+\end{thebibliography}
+}
+\end{frame}
+
+\end{document}
