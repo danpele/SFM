@@ -240,14 +240,14 @@
                 id: 'returns', num: 1,
                 title: { en: 'Data, returns and indicators', ro: 'Date, randamente și indicatori' },
                 topics: {
-                    en: ['Prices, OHLC data, simple and log returns, aggregation over time', 'Volatility, Sharpe ratio, drawdown, volatility drag', 'Stationarity of prices and returns'],
-                    ro: ['Prețuri, date OHLC, randamente simple și logaritmice, agregarea în timp', 'Volatilitate, raport Sharpe, drawdown, volatility drag', 'Staționaritatea prețurilor și a randamentelor']
+                    en: ['Data sources and data quality: adjusted prices, total return indices, checking a series', 'Simple and log returns, multi-period and portfolio returns, annualisation', 'Descriptive statistics and performance indicators: CAGR, Sharpe, Sortino, maximum drawdown, Calmar, volatility drag'],
+                    ro: ['Surse de date și calitatea datelor: prețuri ajustate, indici de randament total, verificarea unei serii', 'Randamente simple și logaritmice, pe mai multe perioade și ale portofoliilor, anualizare', 'Statistici descriptive și indicatori de performanță: CAGR, Sharpe, Sortino, maximum drawdown, Calmar, volatility drag']
                 },
                 links: {
-                    en: [pdf('slides', 'EN/Courses/chapter1_data_sources.pdf'), pdf('seminar', 'EN/Seminars/seminar1_returns_stationarity_en.pdf'),
-                         nb('Quantlets/Ch_01/SFM_ch1_returns/SFM_ch1_returns.ipynb'), ql('Quantlets/Ch_01')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter1_data_indicators_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar1_randamente_stationaritate_ro.pdf'),
-                         nb('Quantlets/Ch_01/SFM_ch1_returns/SFM_ch1_returns.ipynb'), ql('Quantlets/Ch_01')]
+                    en: [pdf('slides', 'EN/Courses/chapter1_data_returns_indicators.pdf'), pdf('seminar', 'EN/Seminars/seminar1_data_returns_indicators.pdf'),
+                         nb('notebooks/EN/chapter1_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter1_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_01')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol1_date_randamente_indicatori.pdf'), pdf('seminar', 'RO/Seminarii/seminar1_date_randamente_indicatori_ro.pdf'),
+                         nb('notebooks/EN/chapter1_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter1_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_01')]
                 },
                 quantinar: q('sfm')
             },

@@ -21,3 +21,10 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch0_lehman_2008.jpg | https://commons.wikimedia.org/wiki/File:Lehman_Brothers-NYC-20080915.jpg | Robert Scoble | CC BY 2.0 | 2008-09-15 |
 | ch0_fidi_march_2020.jpg | https://commons.wikimedia.org/wiki/File:Subdued_FiDi_(50063555551).jpg | Billie Grace Ward | CC BY 2.0 | 2020-03-25 |
 | ch0_bitcoin_whitepaper.jpg | https://commons.wikimedia.org/wiki/File:Bitcoin-whitepaper-poster_page-0001.jpg | Text: Satoshi Nakamoto (2008); poster: DailyCoinPost | CC0 | 2018-10-31 |
+
+## Chapter 1 — Data, returns and indicators
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch1_sharpe_2007.jpg | https://commons.wikimedia.org/wiki/File:William_sharpe_2007.jpg | Larry D. Moore | CC BY 4.0 | 2007-10-30 |
+| ch1_reuters_ticker.jpg | https://commons.wikimedia.org/wiki/File:Reuters_News_Ticker.jpg | bgilliard | CC BY-SA 2.0 | 2005-10-29 |
