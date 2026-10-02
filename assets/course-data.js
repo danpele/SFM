@@ -228,7 +228,7 @@
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter0_introduction.pdf')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter0_introduction_ro.pdf')]
+                    ro: [pdf('slides', 'RO/Cursuri/capitol0_introducere.pdf')]
                 },
                 quantinar: q('sfm')
             },
