@@ -7,7 +7,7 @@ EXTRA = {
     'AIC': ('Akaike Information Criterion', 'en', 'criteriul informațional Akaike', None),
     'BIC': ('Bayesian Information Criterion', 'en', 'criteriul informațional bayesian', None),
     'EDF': ('Empirical Distribution Function', 'en', 'funcția de repartiție empirică', None),
-    'EM': ('Expectation–Maximisation (algorithm)', 'en', 'algoritmul de așteptare–maximizare', None),
+    'EM': ('Expectation–Maximisation (algorithm)', 'en', 'algoritmul EM: pasul de medie condiționată și pasul de maximizare', None),
     'EMA': ('Exponential Moving Average', 'en', 'medie mobilă exponențială', None),
     'GED': ('Generalised Error Distribution', 'en', 'distribuția erorii generalizate', None),
     'KS': ('Kolmogorov–Smirnov (test)', 'en', 'testul Kolmogorov–Smirnov', None),

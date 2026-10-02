@@ -89,7 +89,7 @@ MSCA Digital Finance}
     \item \textbf{BVB}: Bursa de Valori București
     \item \textbf{COVID-19}: COronaVIrus Disease 2019 (boala provocată de coronavirus, 2019)
     \item \textbf{EDF}: Empirical Distribution Function (funcția de repartiție empirică)
-    \item \textbf{EM}: Expectation–Maximisation (algorithm) (algoritmul de așteptare–maximizare)
+    \item \textbf{EM}: Expectation–Maximisation (algorithm) (algoritmul EM: pasul de medie condiționată și pasul de maximizare)
     \item \textbf{EMA}: Exponential Moving Average (medie mobilă exponențială)
     \item \textbf{EODHD}: EOD Historical Data (market-data provider) (furnizor de date de piață)
     \item \textbf{ES}: Expected Shortfall (pierderea așteptată în coadă)
@@ -118,14 +118,14 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{Întrebarea}: avem șapte distribuții candidate pentru randamentele zilnice; pe care să o folosească un manager de risc și cît de siguri putem fi?
     \begin{itemize}
-        \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolele 2}, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{3} și \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{5}: distribuția Normală eșuează; Student-t, legile stabile și teoria valorilor extreme descriu fiecare o parte a imaginii
+        \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolele 2}, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{3} și \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{5}: distribuția Normală eșuează; Student-t, distribuțiile stabile și teoria valorilor extreme descriu fiecare doar o parte a fenomenului
     \end{itemize}
     \item \textbf{Traseul} capitolului
     \begin{itemize}
-        \item candidații și ce trebuie să reproducă; verosimilitatea maximă, recapitulată
+        \item candidații și proprietățile pe care trebuie să le reproducă; recapitulare: metoda verosimilității maxime
         \item compararea modelelor: teste ale raportului de verosimilitate, AIC și BIC
         \item verificarea unui model: teste de concordanță, grafice PP și QQ
-        \item scopul decide: care model nimerește VaR 1\%, în eșantion și în afara lui
+        \item scopul decide: ce model estimează corect VaR 1\%, în eșantion și în afara lui
         \item supraajustarea și incertitudinea de model
     \end{itemize}
 \end{itemize}
@@ -153,7 +153,7 @@ MSCA Digital Finance}
     \item Concordanța: \refStephens; lucrările originale \refAD, \refLilliefors
     \item Quantlet-urile Python ale capitolului: \href{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_06}{Quantlets/Ch\_06}
     \begin{itemize}
-        \item portate din Quantlet-urile SFESumm și SFEVaRqqplot; fiecare grafic are legătură către Quantlet-ul care îl desenează
+        \item adaptate după Quantlet-urile SFESumm și SFEVaRqqplot; fiecare grafic are un link către Quantlet-ul care îl generează
     \end{itemize}
     \item Notebook-ul cursului: \href{\colaburl{notebooks/EN/chapter6_lecture_notebook.ipynb}}{deschideți în Google Colab}
     \item Curs video: \quantinar{Measuring Statistical Risk}{https://quantinar.com/course/100080/measuring-statistical-risk}
@@ -176,10 +176,10 @@ MSCA Digital Finance}
     \end{itemize}
     \item Pentru randamente, „util” depinde de scop
     \begin{itemize}
-        \item evaluare și alegerea portofoliului: corpul distribuției (zilele obișnuite)
-        \item managementul riscului: coada stîngă (cele mai proaste 1\% dintre zile)
+        \item evaluarea activelor și alegerea portofoliului: corpul distribuției (zilele obișnuite)
+        \item managementul riscului: coada stîngă (cele mai slabe zile, 1\% din total)
     \end{itemize}
-    \item Acest capitol: o trusă de instrumente pentru compararea modelelor și obiceiul de a întreba „util pentru ce?”
+    \item Acest capitol: instrumentele de comparare a modelelor și obiceiul de a întreba „util pentru ce?”
 \end{itemize}
 \end{column}
 \begin{column}{0.34\textwidth}
@@ -215,15 +215,15 @@ stabilă & 4 & putere, $x^{-\alpha}$, $\alpha < 2$ & da ($\beta$) & \sfmchlink{h
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Candidații alături}
+\begin{frame}{Candidații comparați}
 \itemsize{\footnotesize}
 \begin{center}
     \includegraphics[width=0.97\textwidth,height=0.58\textheight,keepaspectratio]{sfm_ch6_candidates.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Toate cu media 0 și varianța 1 (stabila: același interval intercuartilic ca legea Normală); panoul din dreapta pe scară logaritmică
-    \item În jurul centrului arată la fel; în cozi diferă prin ordine de mărime
+    \item Toate au media 0 și varianța 1 (distribuția stabilă: același interval intercuartilic ca distribuția Normală); panoul din dreapta folosește scara logaritmică
+    \item În centru arată aproape la fel; în cozi diferă cu cîteva ordine de mărime
 \end{itemize}
 \quantlet{SFM\_ch6\_candidates}{\qlurl{SFM_ch6_candidates}}
 \end{frame}
@@ -236,12 +236,12 @@ stabilă & 4 & putere, $x^{-\alpha}$, $\alpha < 2$ & da ($\beta$) & \sfmchlink{h
         \item Normală $3{,}2 \times 10^{-5}$; GED $9{,}5 \times 10^{-4}$; Student-t $2{,}4 \times 10^{-3}$; amestec Normal $2{,}5 \times 10^{-3}$
         \item NIG $3{,}2 \times 10^{-3}$; skewed-t $4{,}5 \times 10^{-3}$; stabilă $8{,}1 \times 10^{-3}$
     \end{itemize}
-    \item Student-t dă acestei pierderi o probabilitate de circa $76$ de ori mai mare decît legea Normală
-    \item O măsură de risc precum VaR 1\% stă exact acolo unde candidații nu sînt de acord
+    \item Distribuția Student-t atribuie acestei pierderi o probabilitate de circa $76$ de ori mai mare decît distribuția Normală
+    \item O măsură de risc precum VaR 1\% se află exact în zona în care candidații diferă
     \item \textbf{Întrebare pentru sală}: dacă toate se potrivesc bine în centru, de ce nu îl păstrăm pe cel mai simplu?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item cel mai simplu (Normal) greșește exact în zona care determină cerințele de capital și de marjă
+        \item cel mai simplu model (distribuția Normală) greșește exact în zona care determină cerințele de capital și de marjă
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -254,7 +254,7 @@ stabilă & 4 & putere, $x^{-\alpha}$, $\alpha < 2$ & da ($\beta$) & \sfmchlink{h
 \vspace{-0.25cm}
 \begin{itemize}
     \item Quantlet-ul SFESumm: randamentele logaritmice lunare DAX între primele zile de tranzacționare, iulie 2004 -- mai 2014 ($n = 119$), extinse aici pînă la 1 sep. 2026
-    \item Chiar și randamentele lunare sînt asimetrice și cu cozi groase: slide-ul următor dă cifrele
+    \item Chiar și randamentele lunare sînt asimetrice și au cozi groase: cifrele sînt pe slide-ul următor
 \end{itemize}
 \quantlet{SFM\_ch6\_summary}{\qlurl{SFM_ch6_summary}}
 \end{frame}
@@ -289,27 +289,27 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
     \begin{itemize}
         \item ajustarea pentru acțiunile gratuite este aplicată cu o zi întîrziere (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2}): un crah fals urmat de o creștere falsă
     \end{itemize}
-    \item Efectul celor două zile asupra modelului ajustat
+    \item Efectul celor două zile asupra modelului estimat
     \begin{itemize}
-        \item aplatizarea $20{,}5$ cu ele, $16{,}5$ fără; $\hat\nu$ Student-t: $3{,}33$ vs $3{,}44$
+        \item aplatizarea $20{,}5$ cu ele, $16{,}5$ fără; $\hat\nu$ Student-t: $3{,}33$ față de $3{,}44$
         \item clasamentul AIC nu se schimbă aici (cel mai bun: Student-t), dar momentele se schimbă
     \end{itemize}
-    \item Regula: verificați cele mai mari randamente față de prețul de închidere și de știri înainte de orice selecție de model; cele două zile sînt eliminate în restul capitolului
+    \item Regula: înainte de orice selecție de model, comparați cele mai mari randamente cu prețurile de închidere și cu știrile; în restul capitolului, cele două zile sînt eliminate
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Recapitulare: Candidații}
 \itemsize{\small}
 \begin{itemize}
-    \item Șapte candidați cu 2 pînă la 5 parametri; sînt de acord în centru și diferă în cozi
-    \item Orice model trebuie să reproducă asimetria și aplatizarea mult peste 3, chiar și pentru randamentele lunare
-    \item Curățați întîi datele: două prețuri greșite au crescut aplatizarea TLV cu circa $19\%$ din valoarea ei
+    \item Șapte candidați cu 2 pînă la 5 parametri; aproape identici în centru, foarte diferiți în cozi
+    \item Orice model trebuie să reproducă asimetria și o aplatizare mult peste 3, chiar și pentru randamentele lunare
+    \item Curățați întîi datele: fără cele două prețuri greșite, aplatizarea TLV scade cu circa $19\%$
 \end{itemize}
 \end{frame}
 
 
 %=============================================================================
-\section{Verosimilitatea maximă, recapitulată}
+\section{Recapitulare: metoda verosimilității maxime}
 %=============================================================================
 
 \begin{frame}{Verosimilitate și log-verosimilitate}
@@ -318,13 +318,13 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
     \item Datele $r_1, \dots, r_n$, presupuse i.i.d.\ (independente și identic distribuite), cu densitatea $f(r; \theta)$
     \begin{itemize}
         \item \textbf{verosimilitatea}: $L(\theta) = \prod_{t=1}^n f(r_t; \theta)$, densitatea eșantionului observat, ca funcție de $\theta$
-        \item \textbf{log-verosimilitatea}: $\ell(\theta) = \sum_{t=1}^n \ln f(r_t; \theta)$; sumele sînt mai ușoare decît produsele
+        \item \textbf{log-verosimilitatea}: $\ell(\theta) = \sum_{t=1}^n \ln f(r_t; \theta)$; sumele se manipulează mai ușor decît produsele
     \end{itemize}
     \item \textbf{Estimarea de verosimilitate maximă (ML, maximum likelihood)}: $\hat\theta = \arg\max_\theta \ell(\theta)$
     \begin{itemize}
-        \item $\ell(\hat\theta)$, log-verosimilitatea maximizată, este materia primă a fiecărei comparații din acest capitol
+        \item $\ell(\hat\theta)$, log-verosimilitatea maximizată, stă la baza tuturor comparațiilor din acest capitol
     \end{itemize}
-    \item $n$ mare: $\hat\theta$ este aproximativ Normal în jurul lui $\theta$ adevărat, cu covarianța $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$ (inversa informației observate)
+    \item Pentru $n$ mare, $\hat\theta$ are o distribuție aproximativ Normală în jurul valorii adevărate $\theta$, cu covarianța $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$ (inversa informației observate)
 \end{itemize}
 \end{frame}
 
@@ -333,18 +333,18 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
 \begin{itemize}
     \item $\ell(\mu, \sigma) = -\dfrac{n}{2}\ln(2\pi\sigma^2) - \dfrac{1}{2\sigma^2}\sum_t (r_t - \mu)^2$
     \begin{itemize}
-        \item anulînd derivatele: $\hat\mu = \bar r$, $\hat\sigma^2 = \frac{1}{n}\sum_t (r_t - \bar r)^2$ (împărțitor $n$, nu $n - 1$)
-        \item înlocuind: $\ell(\hat\theta) = -\dfrac{n}{2}\big[\ln(2\pi\hat\sigma^2) + 1\big]$
+        \item anulînd derivatele: $\hat\mu = \bar r$, $\hat\sigma^2 = \frac{1}{n}\sum_t (r_t - \bar r)^2$ (numitorul $n$, nu $n - 1$)
+        \item înlocuind în $\ell$: $\ell(\hat\theta) = -\dfrac{n}{2}\big[\ln(2\pi\hat\sigma^2) + 1\big]$
     \end{itemize}
     \item S\&P 500, randamente logaritmice zilnice în \%, 2000--2026: $n = 6\,714$, $\hat\mu = 0{,}025$, $\hat\sigma = 1{,}213$
     \begin{itemize}
         \item $\ln(2\pi\hat\sigma^2) = 2{,}2240$, deci $\ell(\hat\theta) = -\frac{6\,714}{2}(2{,}2240 + 1) = -10\,823$
     \end{itemize}
-    \item Doar modelul Normal are o formă închisă; celelalte se maximizează numeric
+    \item Doar modelul Normal are soluție analitică; celelalte se maximizează numeric
 \end{itemize}
 \end{frame}
 
-\begin{frame}{ML numerică pentru ceilalți candidați (S\&P 500)}
+\begin{frame}{Estimarea ML numerică pentru ceilalți candidați (S\&P 500)}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -363,7 +363,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Optimizator: Nelder--Mead pe parametri transformați (de exemplu $\ln\sigma$, $\ln(\nu - 2)$); amestecul Normal prin algoritmul EM (expectation--maximisation); densitatea stabilă prin FFT (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3})
+    \item Algoritmul de optimizare: Nelder--Mead aplicat parametrilor transformați (de exemplu $\ln\sigma$, $\ln(\nu - 2)$); amestecul Normal prin algoritmul EM (expectation--maximisation); densitatea stabilă prin FFT (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3})
     \item Skewed-t: $\mu$ și $\sigma$ sînt media și abaterea standard (parametrizarea lui Hansen)
 \end{itemize}\quantlet{SFM\_ch6\_ml\_fits}{\qlurl{SFM_ch6_ml_fits}}
 \end{frame}
@@ -371,14 +371,14 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \begin{frame}{Cum citim estimările}
 \itemsize{\small}
 \begin{itemize}
-    \item Student-t $\hat\nu = 2{,}67$: cozi ca $x^{-2{,}67}$; varianța există ($\nu > 2$), aplatizarea nu ($\nu < 4$)
+    \item Student-t $\hat\nu = 2{,}67$: cozi de tip $x^{-2{,}67}$; varianța există ($\nu > 2$), aplatizarea nu există ($\nu < 4$)
     \begin{itemize}
-        \item aplatizarea de selecție $13{,}7$ estimează o mărime pe care modelul ajustat o declară infinită
+        \item aplatizarea de selecție $13{,}7$ estimează o mărime care, conform modelului estimat, este infinită
     \end{itemize}
     \item Skewed-t $\hat\lambda = -0{,}067 < 0$: o coadă stîngă puțin mai lungă (crahuri)
     \item GED $\hat\beta = 0{,}88$: sub 2 (Normală) și chiar sub 1 (Laplace): un vîrf ascuțit
     \item Amestecul Normal: $79\%$ zile calme cu abaterea standard $0{,}71\%$, $21\%$ zile agitate cu $2{,}26\%$ și medie negativă
-    \item Stabila $\hat\alpha = 1{,}540$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3}): cozi mai groase decît orice alt candidat
+    \item Distribuția stabilă, $\hat\alpha = 1{,}540$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3}): cozi mai groase decît orice alt candidat
 \end{itemize}
 \end{frame}
 
@@ -389,8 +389,8 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Pentru fiecare $\nu$, maximizăm $\ell$ după locație și scală; curba scade cu $-92$ la $\nu = 5$
-    \item Intervalul de 95\%: toți $\nu$ cu $2[\ell(\hat\nu) - \ell(\nu)] \le 3{,}84$, aici $[2{,}5; 2{,}8]$ în jurul lui $\hat\nu = 2{,}67$: cozile sînt bine determinate
+    \item Pentru fiecare $\nu$, maximizăm $\ell$ în raport cu locația și scala; la $\nu = 5$, curba scade cu $-92$
+    \item Intervalul de încredere de 95\%: toate valorile $\nu$ pentru care $2[\ell(\hat\nu) - \ell(\nu)] \le 3{,}84$, aici $[2{,}5; 2{,}8]$ în jurul lui $\hat\nu = 2{,}67$: grosimea cozilor este estimată precis
 \end{itemize}
 \quantlet{SFM\_ch6\_ml\_fits}{\qlurl{SFM_ch6_ml_fits}}
 \end{frame}
@@ -400,17 +400,17 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \begin{itemize}
     \item \textbf{Maxime locale}: optimizatorul se poate opri pe un deal care nu este cel mai înalt
     \begin{itemize}
-        \item remediu: mai multe valori de start (amestecurile din acest capitol folosesc 4 pînă la 12 starturi)
+        \item remediu: mai multe valori inițiale (amestecurile din acest capitol folosesc între 4 și 12 puncte de pornire)
     \end{itemize}
     \item \textbf{Frontiere}: $\nu \to 2$, o pondere a amestecului $\to 0$, $|\lambda| \to 1$
     \begin{itemize}
         \item erorile standard și testele obișnuite nu sînt valide la frontieră (secțiunea următoare)
     \end{itemize}
-    \item \textbf{Parametrizarea}: aceeași lege, parametri diferiți
+    \item \textbf{Parametrizarea}: aceeași distribuție, parametrizări diferite
     \begin{itemize}
         \item scala Student-t din scipy nu este abaterea standard: $\mathrm{sd} = \mathrm{scale}\sqrt{\nu/(\nu - 2)}$
     \end{itemize}
-    \item \textbf{Verificare}: comparați $\ell(\hat\theta)$ al modelelor imbricate; un model mai larg nu poate avea un maxim mai mic
+    \item \textbf{Verificare}: comparați $\ell(\hat\theta)$ pentru modelele imbricate; un model mai general nu poate avea un maxim mai mic
 \end{itemize}
 \end{frame}
 
@@ -418,8 +418,8 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \itemsize{\small}
 \begin{itemize}
     \item $\ell(\theta) = \sum_t \ln f(r_t; \theta)$; estimarea ML o maximizează
-    \item Normală: formă închisă, $\ell(\hat\theta) = -\frac{n}{2}[\ln(2\pi\hat\sigma^2) + 1]$; celelalte: numeric
-    \item Precizia din curbura lui $\ell$ sau din log-verosimilitatea profil
+    \item Normală: soluție analitică, $\ell(\hat\theta) = -\frac{n}{2}[\ln(2\pi\hat\sigma^2) + 1]$; celelalte: numeric
+    \item Precizia rezultă din curbura lui $\ell$ sau din log-verosimilitatea profil
     \item Atenție la maxime locale, frontiere și parametrizări
 \end{itemize}
 \end{frame}
@@ -440,23 +440,23 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
     \end{itemize}
     \item Neimbricate: Student-t și GED, Student-t și stabilă, skewed-t și NIG
     \begin{itemize}
-        \item niciunul nu este caz particular al celuilalt: au nevoie de alte instrumente (testul Vuong, AIC)
+        \item niciunul nu este caz particular al celuilalt: sînt necesare alte instrumente (testul Vuong, AIC)
     \end{itemize}
-    \item Imbricate: întotdeauna $\ell_1(\hat\theta_1) \ge \ell_0(\hat\theta_0)$; întrebarea este dacă cîștigul depășește hazardul
+    \item Modele imbricate: întotdeauna $\ell_1(\hat\theta_1) \ge \ell_0(\hat\theta_0)$; întrebarea este dacă cîștigul depășește ce s-ar obține din întîmplare
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Testul raportului de verosimilitate}
 \itemsize{\small}
 \begin{itemize}
-    \item $H_0$: modelul 0 (restrîns) este adevărat; $H_1$: modelul 1 (mai larg)
+    \item $H_0$: modelul 0 (restrîns) este adevărat; $H_1$: modelul 1 (mai general)
     \begin{itemize}
         \item $LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \ge 0$
-        \item \textbf{Teorema lui Wilks} (\refWilks): sub $H_0$, $LR \approx \chi^2(d)$, cu $d = k_1 - k_0$ restricții, dacă valorile restrînse sînt în interiorul spațiului parametrilor
+        \item \textbf{Teorema lui Wilks} (\refWilks): sub $H_0$, $LR \approx \chi^2(d)$, cu $d = k_1 - k_0$ restricții, dacă valorile fixate se află în interiorul spațiului parametrilor
     \end{itemize}
     \item Decizia la 5\%: respingem $H_0$ dacă $LR > \chi^2_{0{,}95}(d)$
     \begin{itemize}
-        \item $\chi^2_{0{,}95}(1) = 3{,}84$, $\chi^2_{0{,}95}(2) = 5{,}99$
+        \item $\chi^2_{0{,}95}(1) = 3{,}84$; $\chi^2_{0{,}95}(2) = 5{,}99$
     \end{itemize}
     \item Intuiția: de două ori logaritmul raportului dintre verosimilitățile datelor sub cele două modele
 \end{itemize}
@@ -469,7 +469,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
     \begin{itemize}
         \item $LR = 2(-9\,838 - (-9\,848)) = 19{,}63 > 3{,}84$; $p <0{,}001$: respingem $\lambda = 0$
     \end{itemize}
-    \item Același test în alte serii
+    \item Același test pentru alte serii
     \begin{itemize}
         \item DAX: $LR = 20{,}92$, $p <0{,}001$: asimetria este necesară
         \item BET: $LR = 0{,}35$, $p = 0{,}555$; Bitcoin: $LR = 0{,}42$, $p = 0{,}515$: nicio dovadă de asimetrie
@@ -484,7 +484,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \begin{itemize}
     \item $H_0$: $1/\nu = 0$ este pe marginea spațiului $1/\nu \ge 0$: teorema lui Wilks nu se aplică
     \begin{itemize}
-        \item \refSL: legea sub $H_0$ este un amestec 50:50 de $\chi^2(0)$ (o masă punctuală în 0) și $\chi^2(1)$
+        \item \refSL: distribuția statisticii sub $H_0$ este un amestec 50:50 de $\chi^2(0)$ (o masă de probabilitate concentrată în 0) și $\chi^2(1)$
         \item valoarea critică la 5\%: $\chi^2_{0{,}90}(1) = 2{,}71$ în loc de $3{,}84$; valoarea $p$ naivă este dublul celei corecte
     \end{itemize}
     \item Date reale: $LR$ = 1\,949 (S\&P 500), 1\,337 (Bitcoin): modelul Normal este respins cu oricare valoare critică
@@ -492,7 +492,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
     \item \textbf{Ce credeți?} Contează frontiera cînd $LR$ este de ordinul miilor?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item nu pentru decizie; da pentru eșantioane mici și valori $LR$ la limită, unde înjumătățește valoarea $p$
+        \item nu pentru decizia de aici; contează însă în eșantioane mici și pentru valori $LR$ la limită, unde înjumătățește valoarea $p$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -503,7 +503,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \footnotesize
 \begin{tabular}{lrrr}
 \toprule
-& Student-t vs GED & Student-t vs stabilă & skewed-t vs NIG \\
+& Student-t față de GED & Student-t față de stabilă & skewed-t față de NIG \\
 \midrule
 BET & $3{,}70$ ($<0{,}001$) & $9{,}33$ ($<0{,}001$) & $-1{,}34$ ($0{,}179$) \\
 S\&P 500 & $0{,}40$ ($0{,}686$) & $6{,}52$ ($<0{,}001$) & $-2{,}20$ ($0{,}028$) \\
@@ -514,8 +514,8 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
 \end{center}
 \begin{itemize}
     \item \refVuong: $m_t = \ln f_1(r_t) - \ln f_2(r_t)$, $V = \sqrt{n}\,\bar m / s_m \approx N(0, 1)$ dacă ambele modele sînt la fel de aproape de adevăr
-    \item $V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; (valoarea $p$) în paranteză
-    \item Student-t bate legea stabilă peste tot; NIG bate skewed-t pe S\&P 500 și DAX; Student-t vs GED diferă de la o piață la alta
+    \item $V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; valoarea $p$ este în paranteză
+    \item Student-t este preferat distribuției stabile pe toate piețele; NIG este preferat distribuției skewed-t pentru S\&P 500 și DAX; comparația Student-t--GED diferă de la o piață la alta
 \end{itemize}\quantlet{SFM\_ch6\_lr\_aic}{\qlurl{SFM_ch6_lr_aic}}
 \end{frame}
 
@@ -539,16 +539,16 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
 \begin{columns}[T]
 \begin{column}{0.64\textwidth}
 \begin{itemize}
-    \item Hirotugu Akaike a întrebat: care model va prezice cel mai bine date \textbf{noi}?
+    \item Hirotugu Akaike și-a pus întrebarea: ce model va prezice cel mai bine date \textbf{noi}?
     \begin{itemize}
-        \item distanța de la adevărul $g$ la un model $f$: divergența Kullback--Leibler \refKL
+        \item distanța de la distribuția adevărată $g$ la un model $f$: divergența Kullback--Leibler \refKL
         \item $KL(g, f) = E_g[\ln g(R) - \ln f(R)] \ge 0$, zero doar dacă $f = g$
     \end{itemize}
-    \item $\ell(\hat\theta)$ este prea optimistă: aceleași date aleg $\hat\theta$ și îl judecă
+    \item $\ell(\hat\theta)$ este prea optimistă: aceleași date servesc și la estimarea lui $\hat\theta$, și la evaluarea lui
     \begin{itemize}
-        \item optimismul este de circa $k$, numărul de parametri \refAkaike
+        \item supraestimarea este, în medie, de circa $k$, numărul de parametri \refAkaike
     \end{itemize}
-    \item Rezultatul: $\mathrm{AIC} = -2\ell(\hat\theta) + 2k$, o estimare a potrivirii așteptate în afara eșantionului (mai mic este mai bine)
+    \item Rezultatul: $\mathrm{AIC} = -2\ell(\hat\theta) + 2k$, o estimare a calității ajustării așteptate în afara eșantionului (valoarea mai mică este preferată)
 \end{itemize}
 \end{column}
 \begin{column}{0.32\textwidth}
@@ -571,9 +571,9 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
     \item \textbf{BIC} (Bayesian information criterion, criteriul informațional bayesian) \refSchwarz: $\mathrm{BIC} = -2\ell(\hat\theta) + k\ln n$
     \begin{itemize}
         \item scopul: modelul adevărat, dacă este printre candidați (consistență)
-        \item penalizarea pe parametru $\ln n$: $8{,}81$ pentru $n = 6\,714$, de peste patru ori penalizarea AIC de 2
+        \item penalizarea pe parametru $\ln n$: $8{,}81$ pentru $n = 6\,714$, de peste patru ori mai mare decît penalizarea AIC, egală cu 2
     \end{itemize}
-    \item Ambele: mai mic este mai bine; doar diferențele dintre modele pe \textbf{aceleași date} au sens
+    \item Pentru ambele criterii, valoarea mai mică este preferată; doar diferențele dintre modele estimate pe \textbf{aceleași date} sînt interpretabile
 \end{itemize}
 \end{frame}
 
@@ -586,13 +586,13 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
     \end{itemize}
     \item \textbf{Ponderea Akaike}: $w_i = \dfrac{e^{-\Delta_i/2}}{\sum_j e^{-\Delta_j/2}}$
     \begin{itemize}
-        \item ponderea dovezilor pentru modelul $i$ între candidați; ponderile însumează 1
+        \item ponderea dovezilor în favoarea modelului $i$ dintre candidați; suma ponderilor este 1
         \item două modele cu $\Delta = 0$ și $\Delta = 2$: $w = 1/(1 + e^{-1}) \approx 0{,}73$ și $0{,}27$
     \end{itemize}
     \item \textbf{Ce credeți?} Este $\Delta = 2$ o diferență „semnificativă”?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item nu: AIC nu este un test; o diferență de 2 înseamnă că ambele modele rămîn plauzibile (circa 73\% vs 27\%)
+        \item nu: AIC nu este un test; o diferență de 2 înseamnă că ambele modele rămîn plauzibile (circa 73\% față de 27\%)
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -618,11 +618,11 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \begin{itemize}
     \item Exemplu: NIG, $\mathrm{AIC} = -2(-9\,824) + 2 \cdot 4 = 19\,657$
     \item NIG cîștigă pe ambele criterii; următorul model, skewed-t, are $\Delta = 28{,}1$, deci $e^{-\Delta/2} \approx 8{,}1 \times 10^{-7}$: ponderea $w \approx 1$ pentru NIG
-    \item Normală: $\Delta$AIC de 1\,993; legea stabilă: 137
+    \item modelul Normal: $\Delta$AIC de 1\,993; distribuția stabilă: 137
 \end{itemize}\quantlet{SFM\_ch6\_lr\_aic}{\qlurl{SFM_ch6_lr_aic}}
 \end{frame}
 
-\begin{frame}{$\Delta$AIC pe șapte serii}
+\begin{frame}{$\Delta$AIC pentru șapte serii}
 \itemsize{\footnotesize}
 \begin{center}
     \includegraphics[width=0.97\textwidth,height=0.62\textheight,keepaspectratio]{sfm_ch6_delta_aic.pdf}
@@ -643,13 +643,13 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
     \end{itemize}
     \item Concluzii robuste
     \begin{itemize}
-        \item modelul Normal este ultimul peste tot, la 479 (BRD) pînă la 2\,425 (BET) de puncte
-        \item legea stabilă ($\Delta$ de la 23 la 197) și amestecul Normal nu sînt niciodată competitive
+        \item modelul Normal este ultimul peste tot, cu $\Delta$AIC între 479 (BRD) și 2\,425 (BET)
+        \item distribuția stabilă ($\Delta$ de la 23 la 197) și amestecul Normal nu sînt niciodată competitive
     \end{itemize}
     \item \textbf{Întrebare pentru sală}: pentru BRD, AIC preferă skewed-t ($\Delta$ al Student-t: $1{,}0$); ce model preferă BIC?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item Student-t: un parametru în minus economisește $\ln n \approx 8{,}2$ puncte BIC, mai mult decît cîștigul de potrivire; cu $\Delta \approx 1$, cele două sînt practic la egalitate
+        \item Student-t: un parametru în minus reduce BIC cu $\ln n \approx 8{,}2$, mai mult decît cîștigul de ajustare; cu $\Delta \approx 1$, cele două sînt practic la egalitate
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -658,7 +658,7 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \itemsize{\small}
 \begin{itemize}
     \item AIC $= -2\ell + 2k$ (predicție); BIC $= -2\ell + k\ln n$ (modelul adevărat, penalizare mai mare)
-    \item Citiți $\Delta$AIC și ponderile Akaike, nu nivelul AIC; $\Delta \le 2$ înseamnă egalitate
+    \item Citiți $\Delta$AIC și ponderile Akaike, nu nivelul AIC; $\Delta \le 2$ înseamnă practic egalitate
     \item Indici: NIG; Bitcoin: GED; acțiuni BVB: Student-t; Normală și stabilă: niciodată
     \item AIC ordonează candidații; nu spune dacă cel mai bun este suficient de bun
 \end{itemize}
@@ -704,12 +704,12 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
     \begin{itemize}
         \item cu datele ordonate $u_{(i)} = F(r_{(i)})$: $D_n = \max_i \max\{i/n - u_{(i)},\ u_{(i)} - (i-1)/n\}$
     \end{itemize}
-    \item $F$ complet cunoscută: legea lui $D_n$ nu depinde de $F$ (Kolmogorov, 1933)
+    \item $F$ complet cunoscută: distribuția lui $D_n$ nu depinde de $F$ (Kolmogorov, 1933)
     \begin{itemize}
         \item $n$ mare: respingem la 5\% dacă $D_n > 1{,}358/\sqrt{n}$; tabele pentru $n$ mic: \refSmirnov
         \item $n = 6\,714$: valoarea critică $0{,}017$
     \end{itemize}
-    \item Andrei Kolmogorov a dat și axiomele probabilității (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol4_probabilitate.pdf}{Capitolul 4})
+    \item Andrei Kolmogorov este și autorul axiomaticii probabilităților (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol4_probabilitate.pdf}{Capitolul 4})
 \end{itemize}
 \end{column}
 \begin{column}{0.36\textwidth}
@@ -729,26 +729,26 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
         \item $u_{(i)} = \Phi(r_{(i)})$: $0{,}018$; $0{,}345$; $0{,}618$; $0{,}816$; $0{,}945$ ($\Phi$: funcția de repartiție Normală standard)
         \item $i/n$: $0{,}2;\ 0{,}4;\ 0{,}6;\ 0{,}8;\ 1{,}0$; cea mai mare distanță este $u_{(3)} - 2/5 = 0{,}218$
     \end{itemize}
-    \item $D_5 = 0{,}218 < 0{,}563$, valoarea critică exactă de 5\% pentru $n = 5$: nu respingem
-    \item Cu cinci observații, aproape orice lege trece: testul are putere mică în eșantioane mici
+    \item $D_5 = 0{,}218 < 0{,}563$, valoarea critică exactă la 5\% pentru $n = 5$: nu respingem
+    \item Cu cinci observații, aproape orice distribuție trece testul: în eșantioane mici, puterea testului este redusă
 \end{itemize}\quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
 
 \begin{frame}{Parametri estimați: problema Lilliefors}
 \itemsize{\small}
 \begin{itemize}
-    \item În practică, $F$ are parametri estimați: $F(x; \hat\theta)$ este ajustată pe aceleași date
+    \item În practică, $F$ are parametri estimați: $F(x; \hat\theta)$ este estimată pe aceleași date
     \begin{itemize}
-        \item ajustarea apropie $F$ de $F_n$: $D_n$ este mai mic decît pentru o $F$ cunoscută
+        \item estimarea apropie $F$ de $F_n$: $D_n$ este mai mic decît pentru o $F$ cunoscută
         \item valorile critice obișnuite sînt prea mari: testul aproape că nu mai respinge
     \end{itemize}
-    \item \refLilliefors: valori critice prin simulare pentru legea Normală cu $\hat\mu$, $\hat\sigma$ (nivelul 5\%)
+    \item \refLilliefors: valori critice obținute prin simulare pentru distribuția Normală cu $\hat\mu$, $\hat\sigma$ (nivelul 5\%)
     \begin{itemize}
         \item $n = 5$: $0{,}351$ în loc de $0{,}563$; $n = 1000$: $0{,}029$ în loc de $0{,}043$
     \end{itemize}
     \item Orice model: \textbf{bootstrap parametric} \refSGQ
     \begin{itemize}
-        \item simulăm $n$ extrageri din $F(\cdot; \hat\theta)$, reajustăm, recalculăm statistica; repetăm de $B$ ori
+        \item simulăm $n$ extrageri din $F(\cdot; \hat\theta)$, reestimăm parametrii, recalculăm statistica; repetăm de $B$ ori
         \item valoarea $p$ $= (1 + \#\{\text{statistici bootstrap} \ge \text{cea observată}\})/(B + 1)$
     \end{itemize}
 \end{itemize}
@@ -766,7 +766,7 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
     \end{itemize}
     \item Formula de calcul \refADb: $A^2 = -n - \frac{1}{n}\sum_i (2i - 1)\big[\ln u_{(i)} + \ln(1 - u_{(n + 1 - i)})\big]$
     \begin{itemize}
-        \item ponderea $1/[F(1 - F)]$ este uriașă unde $F$ este aproape de 0 sau 1: în cozi
+        \item ponderea $1/[F(1 - F)]$ este foarte mare acolo unde $F$ este aproape de 0 sau 1, adică în cozi
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -786,8 +786,8 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item S\&P 500 față de ajustarea Normală. Stînga: distanța KS are maximul la $x = -0{,}41\%$, aproape de centru ($F = 36\%$), cu $D_n = 0{,}093$
-    \item În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult; ponderea Anderson--Darling (dreapta) pune cea mai mare distanță la $x = -6{,}9\%$
+    \item S\&P 500 comparat cu distribuția Normală estimată. Stînga: distanța KS are maximul la $x = -0{,}41\%$, aproape de centru ($F = 36\%$), cu $D_n = 0{,}093$
+    \item În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult; cu ponderea Anderson--Darling (dreapta), distanța maximă apare la $x = -6{,}9\%$
 \end{itemize}
 \quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
@@ -829,7 +829,7 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{column}
 \begin{column}{0.52\textwidth}
 \begin{itemize}
-    \item Bootstrap parametric, $B = 199$, valori critice de 95\%
+    \item Bootstrap parametric, $B = 199$, valori critice (cuantila de 95\%)
     \begin{itemize}
         \item Student-t: KS $0{,}009$, AD $0{,}71$
         \item skewed-t: KS $0{,}008$, AD $0{,}35$
@@ -839,26 +839,26 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{itemize}
 \end{column}
 \end{columns}\begin{itemize}
-    \item KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; mai mic este mai bine
+    \item KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; valorile mai mici indică o ajustare mai bună
 \end{itemize}\quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
 
-\begin{frame}{Semnificație statistică vs semnificație practică}
+\begin{frame}{Semnificație statistică și semnificație practică}
 \itemsize{\small}
 \begin{itemize}
-    \item Cu $n = 6\,714$, fiecare model este respins: testele detectează abateri minuscule
+    \item Cu $n = 6\,714$, toate modelele sînt respinse: testele detectează abateri minuscule
     \begin{itemize}
-        \item iar randamentele reale nu sînt i.i.d.\ (gruparea volatilității), deci nicio lege i.i.d.\ nu poate trece
+        \item în plus, randamentele reale nu sînt i.i.d.\ (volatility clustering), deci nicio distribuție i.i.d.\ nu poate trece testul
     \end{itemize}
     \item Folosiți statisticile pentru a \textbf{ordona} modelele
     \begin{itemize}
         \item AD: Normală $127{,}35$, Student-t $4{,}69$, skewed-t $2{,}25$, NIG $0{,}88$
-        \item ca la AIC: NIG primul, modelul Normal mult în urmă
+        \item ca la AIC: NIG pe primul loc, modelul Normal mult în urmă
     \end{itemize}
-    \item \textbf{Întrebare pentru sală}: un test KS pe 50 de randamente zilnice nu respinge legea Normală; este atunci legea Normală potrivită pentru VaR 1\%?
+    \item \textbf{Întrebare pentru sală}: un test KS pe 50 de randamente zilnice nu respinge distribuția Normală; este atunci distribuția Normală potrivită pentru VaR 1\%?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item nu: cu $n = 50$, testul respinge rar chiar și date Student-t (în $30\%$ din cazuri la $n = 100$), iar KS abia se uită la coadă
+        \item nu: cu $n = 50$, testul respinge rar chiar și date Student-t (în $30\%$ din cazuri la $n = 100$), iar KS aproape ignoră coada
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -866,10 +866,10 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \begin{frame}{Recapitulare: Testele de concordanță}
 \itemsize{\small}
 \begin{itemize}
-    \item KS: cea mai mare distanță; CvM: pătratul distanței integrat; AD: același, ponderat spre cozi
+    \item KS: cea mai mare distanță; CvM: pătratul distanței, integrat; AD: aceeași mărime, cu pondere mai mare în cozi
     \item Parametri estimați: tabelele Lilliefors sau un bootstrap parametric; niciodată tabelul KS clasic
     \item Puterea: AD > CvM > KS pentru alternative cu cozi groase
-    \item Eșantioanele mari resping totul: ordonați după statistică și priviți graficele
+    \item Pe eșantioane mari, testele resping orice model: ordonați modelele după statistică și examinați graficele
 \end{itemize}
 \end{frame}
 
@@ -878,20 +878,20 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \section{Grafice PP și QQ}
 %=============================================================================
 
-\begin{frame}{Două moduri de a privi o ajustare}
+\begin{frame}{Două moduri de a evalua vizual ajustarea}
 \itemsize{\small}
 \begin{itemize}
     \item \textbf{Grafic PP} (probabilitate--probabilitate): punctele $\big(p_i, F(r_{(i)})\big)$ cu $p_i = (i - 0{,}5)/n$
     \begin{itemize}
         \item ambele axe în $[0, 1]$: se văd diferențele din centru; cozile sînt înghesuite în colțuri
-        \item geamănul vizual al KS: cea mai mare distanță pe verticală față de diagonală este apropiată de $D_n$
+        \item echivalentul grafic al testului KS: cea mai mare distanță pe verticală față de diagonală este apropiată de $D_n$
     \end{itemize}
     \item \textbf{Grafic QQ} (cuantilă--cuantilă): punctele $\big(F^{-1}(p_i), r_{(i)}\big)$
     \begin{itemize}
-        \item în unități de randament: cozile sînt întinse, fiecare zi extremă se vede
-        \item capete deasupra/sub dreaptă: cozile modelului sînt prea scurte; capete aplatizate: cozile modelului sînt prea lungi
+        \item în unități de randament: cozile sînt dilatate, iar fiecare zi extremă este vizibilă
+        \item capetele se îndepărtează de dreaptă: cozile modelului sînt prea scurte; capetele aplatizate: cozile modelului sînt prea lungi
     \end{itemize}
-    \item Managementul riscului citește grafice QQ; graficele PP și KS au același unghi mort
+    \item În managementul riscului se folosesc graficele QQ; graficele PP și testul KS au același punct orb
 \end{itemize}
 \end{frame}
 
@@ -902,7 +902,7 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Normală: o formă de S în centru (prea puține randamente mici, prea multe medii), cea mai mare distanță $0{,}093$
+    \item Normală: o formă de S în centru (prea puține randamente mici, prea multe de mărime medie), cea mai mare distanță $0{,}093$
     \item Student-t, skewed-t, stabilă: pe diagonală; într-un grafic PP nu se pot deosebi
 \end{itemize}
 \quantlet{SFM\_ch6\_pp\_qq}{\qlurl{SFM_ch6_pp_qq}}
@@ -915,8 +915,8 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Cea mai proastă zi a fost $-12{,}8\%$; cuantila modelului la aceeași probabilitate: Normală $-4{,}6\%$, Student-t $-22{,}9\%$, skewed-t $-24{,}5\%$, stabilă $-116{,}1\%$
-    \item Modelele care păreau identice în graficul PP sînt foarte departe unele de altele în coada îndepărtată
+    \item Cel mai mic randament zilnic a fost $-12{,}8\%$; cuantila modelului la aceeași probabilitate: Normală $-4{,}6\%$, Student-t $-22{,}9\%$, skewed-t $-24{,}5\%$, stabilă $-116{,}1\%$
+    \item Modelele care păreau identice în graficul PP diferă puternic în extremitatea cozii
 \end{itemize}
 \quantlet{SFM\_ch6\_pp\_qq}{\qlurl{SFM_ch6_pp_qq}}
 \end{frame}
@@ -928,8 +928,8 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Normală (roșu): capetele abrupte la toate cele trei serii; Student-t și skewed-t urmează datele pînă departe în cozi
-    \item Ultimele cîteva puncte sînt zile izolate (cele mai mari crahuri): acolo cozile ajustate diferă cel mai mult, iar incertitudinea este cea mai mare
+    \item Normală (roșu): capete abrupte pentru toate cele trei serii; Student-t și skewed-t urmăresc datele pînă departe în cozi
+    \item Ultimele cîteva puncte sînt zile izolate (cele mai mari crahuri): acolo cozile estimate diferă cel mai mult, iar incertitudinea este cea mai mare
 \end{itemize}
 \quantlet{SFM\_ch6\_pp\_qq}{\qlurl{SFM_ch6_pp_qq}}
 \end{frame}
@@ -937,15 +937,15 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \begin{frame}{Recapitulare: Graficele PP și QQ}
 \itemsize{\small}
 \begin{itemize}
-    \item PP: probabilități, bun pentru centru; QQ: cuantile, bun pentru cozi
+    \item PP: probabilități, util pentru centru; QQ: cuantile, util pentru cozi
     \item Modelele cu cozi groase care arată la fel în graficele PP diferă mult în graficele QQ
-    \item Arătați întotdeauna graficul QQ al modelului ales lîngă AIC-ul lui
+    \item Prezentați întotdeauna graficul QQ al modelului ales alături de valoarea AIC
 \end{itemize}
 \end{frame}
 
 
 %=============================================================================
-\section{Scopul decide: care model nimerește VaR 1\%?}
+\section{Scopul decide: ce model estimează corect VaR 1\%?}
 %=============================================================================
 
 \begin{frame}{VaR și ES}
@@ -964,7 +964,7 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{VaR 1\% și ES 2,5\% în fiecare model (în eșantion)}
+\begin{frame}{VaR 1\% și ES 2,5\% pentru fiecare model (în eșantion)}
 \itemsize{\footnotesize}
 \textbf{VaR 1\%} (\%)\begin{center}
 \scriptsize
@@ -1004,8 +1004,8 @@ Bitcoin & $10{,}84$ & $8{,}03$ & $13{,}37$ & $13{,}18$ & $10{,}17$ & $11{,}06$ &
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Normală: cu $14$--$24\%$ prea mic peste tot; stabilă: pînă la $36\%$ prea mare
-    \item Student-t, skewed-t și NIG rămîn la cel mult $10\%$ de VaR 1\% empiric; GED este puțin prea jos
+    \item Normală: prea mic cu $14$--$24\%$ pe toate seriile; stabilă: prea mare cu pînă la $36\%$
+    \item Student-t, skewed-t și NIG se abat cu cel mult $10\%$ de la VaR 1\% empiric; GED este puțin prea mic
 \end{itemize}
 \quantlet{SFM\_ch6\_tail\_var}{\qlurl{SFM_ch6_tail_var}}
 \end{frame}
@@ -1017,8 +1017,8 @@ Bitcoin & $10{,}84$ & $8{,}03$ & $13{,}37$ & $13{,}18$ & $10{,}17$ & $11{,}06$ &
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate în fiecare model ajustat
-    \item La 1\%, toate modelele cu cozi groase sînt apropiate; dincolo de pierderi de $5\%$, dreapta stabilă este mult prea sus, iar cea Normală se prăbușește
+    \item Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate pentru fiecare model estimat
+    \item La 1\%, toate modelele cu cozi groase sînt apropiate; pentru pierderi de peste $5\%$, curba distribuției stabile este mult prea sus, iar cea Normală scade abrupt
 \end{itemize}
 \quantlet{SFM\_ch6\_tail\_var}{\qlurl{SFM_ch6_tail_var}}
 \end{frame}
@@ -1041,7 +1041,7 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \begin{itemize}
     \item Depășire: o zi cu $r_t < -\mathrm{VaR}_{1\%}$; pentru un model corect, numărul lor este $\mathrm{Binomial}(n; 0{,}01)$
     \item \refKupiec: $LR_{uc} = -2\ln\dfrac{(1-\alpha)^{n - x}\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \approx \chi^2(1)$, $x$ = numărul de depășiri
-    \item S\&P 500: Student-t 67 depășiri la 67 așteptate ($p = 0{,}986$); NIG, cîștigătorul AIC, 52 ($p = 0{,}053$)
+    \item S\&P 500: Student-t, 67 depășiri față de 67 așteptate ($p = 0{,}986$); NIG, cîștigătorul AIC, 52 ($p = 0{,}053$)
     \item Cel mai bun model pentru întreaga densitate nu este întotdeauna cel mai bun pentru o cuantilă; există scoruri axate pe coadă \refDPD
 \end{itemize}\quantlet{SFM\_ch6\_tail\_var}{\qlurl{SFM_ch6_tail_var}}
 \end{frame}
@@ -1063,16 +1063,16 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \begin{frame}{De ce în afara eșantionului?}
 \itemsize{\small}
 \begin{itemize}
-    \item În eșantion, un model mai larg se potrivește cel puțin la fel de bine: $\ell$ nu scade niciodată cînd adăugăm parametri
+    \item În eșantion, un model mai general se ajustează cel puțin la fel de bine: $\ell$ nu scade niciodată cînd adăugăm parametri
     \begin{itemize}
-        \item \textbf{supraajustare} (overfitting): parametrii în plus potrivesc zgomotul eșantionului de estimare, nu trăsături ale randamentelor viitoare
+        \item \textbf{supraajustare} (overfitting): parametrii suplimentari modelează zgomotul eșantionului de estimare, nu trăsături ale randamentelor viitoare
     \end{itemize}
-    \item Verificarea cinstită: estimăm pînă la 31 decembrie 2019, evaluăm pe 2020--2026 (crahul COVID-19, șocul inflației din 2022, tarifele din 2025)
+    \item Verificarea onestă: estimăm pînă la 31 decembrie 2019 și evaluăm pe 2020--2026 (crahul COVID-19, șocul inflației din 2022, taxele vamale din 2025)
     \begin{itemize}
-        \item \textbf{scorul logaritmic}: media lui $\ln f(r_t; \hat\theta)$ pe zilele de test; mai mare este mai bine, o regulă de scor proprie \refGR
+        \item \textbf{scorul logaritmic}: media lui $\ln f(r_t; \hat\theta)$ pe zilele de test; valoarea mai mare este preferată; este o regulă de scor proprie (proper scoring rule) \refGR
         \item \textbf{depășirile} VaR 1\% (Kupiec) și \textbf{pierderea pinball} $\frac{1}{n}\sum_t (\alpha - \mathbf{1}\{r_t < q\})(r_t - q)$ a cuantilei de 1\% $q$
     \end{itemize}
-    \item Un scor este \textbf{propriu} dacă distribuția adevărată obține cel mai bun scor așteptat: cine prognozează nu cîștigă distorsionînd
+    \item Un scor este \textbf{propriu} dacă distribuția adevărată obține cel mai bun scor așteptat: prognozistul nu are nimic de cîștigat dacă își distorsionează prognoza
 \end{itemize}
 \end{frame}
 
@@ -1083,7 +1083,7 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Stînga: fiecare model cu cozi groase bate scorul logaritmic al modelului Normal cu $0{,}13$ pînă la $0{,}21$ pe zi; diferențele dintre ele sînt mici
+    \item Stînga: fiecare model cu cozi groase depășește scorul logaritmic al modelului Normal cu $0{,}13$ pînă la $0{,}21$ pe zi; diferențele dintre ele sînt mici
     \item Dreapta: ratele de depășire ale VaR 1\%; ținta este linia punctată de la 1\%
 \end{itemize}
 \quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
@@ -1106,9 +1106,9 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \end{center}
 \begin{itemize}
     \item Depășiri ale VaR 1\% pe zilele de test; aștept.: numărul așteptat; ist.: simularea istorică (cuantila de 1\% a eșantionului de estimare)
-    \item Cîștigătorul AIC din 2000--2019 are cel mai bun scor logaritmic doar pentru DAX; în rest, cel mai bun scor aparține unui vecin apropiat
-    \item BET: modelul Normal are 17 depășiri la 16{,}7 așteptate, modelele cu cozi groase doar 5: perioada 2020--2026 a fost mai calmă pentru BET decît 2000--2019
-    \item Numărul corect din motivul greșit: un model static nu poate urmări schimbările de volatilitate
+    \item Cîștigătorul AIC din 2000--2019 are cel mai bun scor logaritmic doar pentru DAX; în rest, cel mai bun scor aparține unui model apropiat în clasament
+    \item BET: modelul Normal are 17 depășiri față de 16{,}7 așteptate, modelele cu cozi groase doar 5: perioada 2020--2026 a fost mai calmă pentru BET decît 2000--2019
+    \item Numărul potrivit, dar din motive greșite: un model static nu poate urmări schimbările de volatilitate
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
@@ -1120,7 +1120,7 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \vspace{-0.25cm}
 \begin{itemize}
     \item S\&P 500, estimare 2017--2018 ($n = 501$), test 2019--2026 ($n = 1\,939$); $c$ componente au $3c - 1$ parametri
-    \item În eșantion (albastru), potrivirea crește cu fiecare componentă; în afara eșantionului (roșu) atinge maximul la $c = 3$ și apoi scade
+    \item În eșantion (albastru), calitatea ajustării crește cu fiecare componentă; în afara eșantionului (roșu) atinge maximul la $c = 3$ și apoi scade
 \end{itemize}
 \quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
@@ -1136,25 +1136,25 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
     \begin{itemize}
         \item cu $n = 501$, penalizarea AIC de 2 pe parametru este prea slabă pentru a opri componentele în plus
     \end{itemize}
-    \item Diferența dintre potrivirea în eșantion și cea din afara lui crește cu numărul de parametri: această diferență este supraajustarea
+    \item Diferența dintre ajustarea în eșantion și cea din afara lui crește cu numărul de parametri: această diferență este supraajustarea
     \item Regula: eșantioane scurte, mulți parametri $\Rightarrow$ preferați BIC sau AICc și păstrați întotdeauna o perioadă de test
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
-\begin{frame}{VaR 1\% mobil: reajustare lunară}
+\begin{frame}{VaR 1\% pe fereastră mobilă: reestimare lunară}
 \itemsize{\footnotesize}
 \begin{center}
     \includegraphics[width=0.97\textwidth,height=0.55\textheight,keepaspectratio]{sfm_ch6_rolling_var.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item S\&P 500: fiecare model reajustat la fiecare 20 de zile de tranzacționare pe cele 1000 de zile anterioare; linia VaR 1\% este desenată ca prag de pierdere $-\mathrm{VaR}$
-    \item Triunghiurile negre: depășiri ale VaR Student-t; vin în grupuri (martie 2020)
+    \item S\&P 500: fiecare model este reestimat la fiecare 20 de zile de tranzacționare pe cele 1000 de zile anterioare; linia VaR 1\% este desenată ca prag de pierdere $-\mathrm{VaR}$
+    \item Triunghiurile negre: depășiri ale VaR Student-t; apar grupat (martie 2020)
 \end{itemize}
 \quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
-\begin{frame}{Backtesting mobil: rezultatele}
+\begin{frame}{Backtesting pe fereastră mobilă: rezultatele}
 \itemsize{\footnotesize}
 \begin{center}
 \footnotesize
@@ -1164,15 +1164,15 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \midrule
 S\&P 500, rata (\%) & $2{,}35$ & $1{,}56$ & $1{,}47$ & $1{,}58$ \\
 S\&P 500, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $<0{,}001$ & $<0{,}001$ \\
-S\&P 500, maximum într-un an & 36 & 31 & 28 & 29 \\
+S\&P 500, maximul anual & 36 & 31 & 28 & 29 \\
 BET, rata (\%) & $1{,}98$ & $1{,}52$ & $1{,}38$ & $1{,}25$ \\
 BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Backtesting 2003--2026, $n = 5\,714$ zile pentru S\&P 500; rata țintă 1\%; cel mai prost an este 2008 pentru fiecare model și ambele serii
-    \item Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\%: volatilitatea se schimbă mai repede decît o fereastră de 1000 de zile
+    \item Backtesting 2003--2026, $n = 5\,714$ zile pentru S\&P 500; rata țintă 1\%; cel mai slab an este 2008, pentru toate modelele și pentru ambele serii
+    \item Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\%: volatilitatea se schimbă mai repede decît se poate adapta o fereastră de 1000 de zile
     \item Remediul este un model pentru volatilitatea însăși: GARCH, Capitolele 8 și 9
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
@@ -1184,8 +1184,8 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item DAX din 2000: VaR 1\% Normal cu volatilitatea ultimelor 250 de zile, RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponențială, $\lambda = 0{,}96$); graficul QQ al lui $L/\mathrm{VaR}$ față de cuantilele Normale
-    \item O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept: pierderile dincolo de VaR sînt prea mari și prea dese ($2{,}13\%$ și $2{,}07\%$ depășiri)
+    \item DAX din 2000: VaR 1\% Normal cu volatilitatea ultimelor 250 de zile, RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\lambda = 0{,}96$); graficul QQ al lui $L/\mathrm{VaR}$ față de cuantilele Normale
+    \item O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept: pierderile dincolo de VaR sînt prea mari și prea frecvente ($2{,}13\%$ și $2{,}07\%$ depășiri)
 \end{itemize}
 \quantlet{SFM\_ch6\_var\_qqplot}{\qlurl{SFM_ch6_var_qqplot}}
 \end{frame}
@@ -1194,7 +1194,7 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \itemsize{\small}
 \begin{itemize}
     \item Judecați modelele pe date pe care nu le-au văzut: scor logaritmic, depășiri, pierdere pinball
-    \item Supraajustarea: potrivirea în eșantion crește cu parametrii, cea din afara lui nu; BIC ne-a protejat, AIC nu
+    \item Supraajustarea: calitatea ajustării în eșantion crește cu numărul de parametri, cea din afara lui nu; BIC ne-a protejat, AIC nu
     \item Cozile groase ajută, dar modelele statice eșuează în crize: volatilitatea trebuie modelată (GARCH)
 \end{itemize}
 \end{frame}
@@ -1211,8 +1211,8 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item S\&P 500, 200 de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează grupurile de volatilitate); în fiecare, șase modele reajustate
-    \item Stînga: NIG are cel mai mic AIC în $94\%$ din reeșantionări; dreapta: dispersia bootstrap a VaR 1\% în fiecare model
+    \item S\&P 500, 200 de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează volatility clustering); în fiecare reeșantionare, cele șase modele sînt reestimate
+    \item Stînga: NIG are cel mai mic AIC în $94\%$ din reeșantionări; dreapta: dispersia bootstrap a VaR 1\% pentru fiecare model
 \end{itemize}
 \quantlet{SFM\_ch6\_model\_uncertainty}{\qlurl{SFM_ch6_model_uncertainty}}
 \end{frame}
@@ -1222,15 +1222,15 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \begin{itemize}
     \item \textbf{Incertitudinea parametrilor}: același model, reestimat pe date reeșantionate
     \begin{itemize}
-        \item VaR 1\% Student-t: banda bootstrap de 90\% $[3{,}14; 3{,}87]\%$; NIG: $[3{,}34; 4{,}18]\%$
+        \item VaR 1\% Student-t: intervalul bootstrap de 90\% $[3{,}14; 3{,}87]\%$; NIG: $[3{,}34; 4{,}18]\%$
     \end{itemize}
     \item \textbf{Incertitudinea de model}: modele diferite pe aceleași date
     \begin{itemize}
         \item VaR 1\% median: GED $3{,}27\%$, Student-t $3{,}47\%$, NIG $3{,}71\%$, amestec Normal $3{,}92\%$
         \item dispersia dintre modele este comparabilă cu dispersia din interiorul unui model
     \end{itemize}
-    \item Chiar cînd cîștigătorul AIC este clar, cifra care contează pentru risc nu este
-    \item Măsurile de coadă bazate pe entropie sînt o altă cale de a rezuma această incertitudine: \refPeleA, \refPeleB
+    \item Chiar cînd cîștigătorul AIC este clar, cifra relevantă pentru risc rămîne incertă
+    \item Măsurile de coadă construite pe baza entropiei oferă o altă cale de a rezuma această incertitudine: \refPeleA, \refPeleB
 \end{itemize}
 \end{frame}
 
@@ -1240,7 +1240,7 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \scriptsize
 \begin{tabular}{lrrrrr}
 \toprule
-& date & Normală & interval cozi groase & mediat & interval (\%) \\
+& date & Normală & interval (cozi groase) & mediat & interval (\%) \\
 \midrule
 BET & $4{,}13$ & $3{,}19$ & $[3{,}74; 4{,}94]$ & $4{,}11$ & $32$ \\
 S\&P 500 & $3{,}45$ & $2{,}80$ & $[3{,}27; 4{,}54]$ & $3{,}72$ & $39$ \\
@@ -1254,20 +1254,20 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
 \end{center}
 \begin{itemize}
     \item VaR 1\% în \%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\% dintre cele șase modele nenormale; intervalul (\%): max/min $- 1$
-    \item Mediat: $\sum_i w_i\,\mathrm{VaR}_i$ cu ponderile Akaike; o rudă frecventistă a medierii bayesiene a modelelor \refHoeting
-    \item \textbf{Riscul de model}: intervalul dintre modelele plauzibile; autoritățile cer băncilor să îl măsoare \refKerkhof, \refDanielsson
+    \item Mediat: $\sum_i w_i\,\mathrm{VaR}_i$ cu ponderile Akaike; un analog frecventist al medierii bayesiene a modelelor \refHoeting
+    \item \textbf{Riscul de model}: amplitudinea rezultatelor între modelele plauzibile; autoritățile de supraveghere cer băncilor să îl măsoare \refKerkhof, \refDanielsson
 \end{itemize}\quantlet{SFM\_ch6\_model\_uncertainty}{\qlurl{SFM_ch6_model_uncertainty}}
 \end{frame}
 
-\begin{frame}{Un flux de lucru pentru selecția modelului}
+\begin{frame}{Etapele selecției modelului}
 \itemsize{\small}
 \begin{itemize}
-    \item \textbf{1. Datele}: verificați cele mai mari randamente față de prețuri și știri; eliminați doar erorile dovedite
+    \item \textbf{1. Datele}: comparați cele mai mari randamente cu prețurile și cu știrile; eliminați doar erorile dovedite
     \item \textbf{2. Candidații}: alegeți-i după faptele stilizate (cozi, asimetrie), nu după comoditate
     \item \textbf{3. Ajustare și clasament}: ML, apoi AIC și BIC; teste LR pentru perechile imbricate, Vuong pentru celelalte
-    \item \textbf{4. Verificare}: statistica AD și graficul QQ ale fruntașilor; zona care vă interesează trebuie să se potrivească
+    \item \textbf{4. Verificare}: statistica AD și graficul QQ pentru primele modele din clasament; modelul trebuie să se potrivească bine în zona care vă interesează
     \item \textbf{5. Validare}: în afara eșantionului, cu funcția de pierdere potrivită scopului (depășiri pentru VaR)
-    \item \textbf{6. Raportare}: cîștigătorul, urmăritorii și intervalul cifrei de risc între ei
+    \item \textbf{6. Raportare}: cîștigătorul, modelele de pe locurile următoare și intervalul valorilor de risc între acestea
 \end{itemize}
 \end{frame}
 
@@ -1288,9 +1288,9 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
 \begin{frame}{O întrebare deschisă}
 \itemsize{\small}
 \begin{itemize}
-    \item \textbf{Mai cîștigă NIG după ce eliminăm gruparea volatilității?}
+    \item \textbf{Mai cîștigă NIG după ce eliminăm efectul de volatility clustering?}
     \begin{itemize}
-        \item o parte din cozile groase ale randamentelor zilnice vine din volatilitatea variabilă (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
+        \item o parte din cozile groase ale randamentelor zilnice provine din volatilitatea variabilă în timp (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
         \item randamentele împărțite la o prognoză de volatilitate (de exemplu EMA, $\lambda = 0{,}96$) au cozi mai subțiri; care candidat li se potrivește cel mai bine?
     \end{itemize}
     \item De ce este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere
@@ -1305,7 +1305,7 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
     \item \textbf{Literatura}: lista studiilor care compară distribuțiile randamentelor după filtrarea GARCH, cu eșantioanele și criteriile lor
     \item \textbf{Cod}: o primă versiune a buclei „standardizează, ajustează șapte modele, ordonează după AIC și BIC, testează în afara eșantionului”
     \item \textbf{Robustețe}: alte filtre de volatilitate, alte ferestre și alte piețe
-    \item \textbf{Explicație}: o primă versiune a motivului pentru care se schimbă clasamentul după filtrare
+    \item \textbf{Explicație}: o primă explicație a schimbării clasamentului după filtrare
     \item Exemplu de prompt
     \begin{itemize}
         \item \aiprompt{Write Python code that divides daily log returns by an EMA volatility (lambda = 0.96), fits Normal, Student-t, skewed-t, GED and NIG by maximum likelihood, and reports AIC, BIC and Akaike weights.}
@@ -1316,10 +1316,10 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
 \begin{frame}{Verificări necesare}
 \itemsize{\small}
 \begin{itemize}
-    \item Informația din viitor: volatilitatea zilei $t$ trebuie să folosească doar randamentele pînă la $t - 1$
+    \item Informația din viitor (look-ahead bias): volatilitatea zilei $t$ trebuie să folosească doar randamentele pînă la $t - 1$
     \item Numărul de parametri: $k$ din AIC trebuie să includă fiecare parametru estimat, inclusiv pe cei ai filtrului de volatilitate, dacă au fost estimați
     \item Aceleași date pentru toate modelele: valorile AIC calculate pe eșantioane diferite nu se pot compara
-    \item Parametrizările: scală vs abatere standard la Student-t; S0 vs S1 la legea stabilă
+    \item Parametrizările: scală sau abatere standard la Student-t; S0 sau S1 la distribuția stabilă
     \item Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul
 \end{itemize}
 \end{frame}
@@ -1338,7 +1338,7 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
         \item comparați grupurile de depășiri din 2008 și 2020 cu cele ale modelelor necondiționate
     \end{itemize}
     \item Rezultat: un tabel, un grafic și un paragraf despre ce se schimbă și de ce
-    \item Declarați orice folosire a AI și listați erorile AI pe care le-ați corectat
+    \item Declarați orice folosire a AI și enumerați erorile AI pe care le-ați corectat
 \end{itemize}
 \end{frame}
 
@@ -1347,14 +1347,14 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
 \section{Rezumat}
 %=============================================================================
 
-\begin{frame}{Idei principale}
+\begin{frame}{Idei de reținut}
 \itemsize{\small}
 \begin{itemize}
     \item Alegerea modelului începe cu date curate și un scop: corpul sau coada?
-    \item ML ajustează; testele LR compară modele imbricate (atenție la frontiere); Vuong le compară pe cele neimbricate
+    \item ML estimează parametrii; testele LR compară modele imbricate (atenție la frontiere); Vuong le compară pe cele neimbricate
     \item AIC și BIC ordonează toți candidații; citiți $\Delta$ și ponderile Akaike
-    \item Testele EDF: AD se uită la cozi, KS nu; cu $n$ mare toate sînt respinse, deci ordonați și desenați
-    \item Randamentele reale: cîștigă NIG, GED și Student-t; legile Normală și stabilă pierd peste tot
+    \item Testele EDF: AD pune accentul pe cozi, KS nu; cu $n$ mare toate modelele sînt respinse, deci ordonați modelele și examinați graficele
+    \item Pe randamentele reale cîștigă NIG, GED și Student-t; distribuțiile Normală și stabilă pierd peste tot
     \item Validați în afara eșantionului și raportați intervalul VaR între modelele plauzibile
 \end{itemize}
 \end{frame}
@@ -1382,12 +1382,12 @@ Pierderea pinball & $\frac{1}{n}\sum_t (\alpha - \mathbf{1}\{r_t < q\})(r_t - q)
 }
 \end{frame}
 
-\begin{frame}{Verificați-vă}
+\begin{frame}{Autoevaluare}
 \itemsize{\small}
 \begin{itemize}
     \item \textbf{Întrebare}: modelul A are $\ell = -1000$ cu $k = 3$, modelul B are $\ell = -998$ cu $k = 5$; care are AIC mai mic?
     \begin{itemize}
-        \item \textbf{Răspuns}: A: $2006$; B: $2006$; egalitate ($\Delta = 0$): cei doi parametri în plus cîștigă exact cît penalizarea lor
+        \item \textbf{Răspuns}: A: $2006$; B: $2006$; egalitate ($\Delta = 0$): cei doi parametri în plus aduc un cîștig egal exact cu penalizarea lor
     \end{itemize}
     \item \textbf{Întrebare}: A este imbricat în B; este B semnificativ mai bun la 5\%?
     \begin{itemize}
@@ -1395,7 +1395,7 @@ Pierderea pinball & $\frac{1}{n}\sum_t (\alpha - \mathbf{1}\{r_t < q\})(r_t - q)
     \end{itemize}
     \item \textbf{Întrebare}: de ce nu poate un test KS cu parametri estimați să folosească tabelul KS clasic?
     \begin{itemize}
-        \item \textbf{Răspuns}: ajustarea apropie $F$ de date, deci $D_n$ este prea mic; folosiți Lilliefors sau un bootstrap parametric
+        \item \textbf{Răspuns}: estimarea apropie $F$ de date, deci $D_n$ este prea mic; folosiți Lilliefors sau un bootstrap parametric
     \end{itemize}
     \item Urmează: \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}, piețele eficiente, mersul aleator și testele variance ratio
 \end{itemize}

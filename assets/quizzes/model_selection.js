@@ -31,7 +31,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                     "$2\\ell(\\hat\\theta) - 2k$",
                     "$\\ell(\\hat\\theta) - k$"
                 ],
-                "correctExplanation": "AIC $= -2\\ell(\\hat\\theta) + 2k$; mai mic este mai bine.",
+                "correctExplanation": "AIC $= -2\\ell(\\hat\\theta) + 2k$; valoarea mai mică este preferată.",
                 "incorrectExplanation": "AIC $= -2\\ell(\\hat\\theta) + 2k$; varianta cu $k\\ln n$ este BIC."
             }
         },
@@ -132,7 +132,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Testarea parametrului de asimetrie",
-                "text": "Pentru a testa Student-t ($\\lambda = 0$) în skewed-t, ce lege urmează statistica raportului de verosimilitate sub $H_0$?",
+                "text": "Testăm Student-t ($\\lambda = 0$) ca submodel al skewed-t. Ce distribuție are statistica raportului de verosimilitate sub $H_0$?",
                 "options": [
                     "$\\chi^2(1)$, valoarea critică 3,84 la 5%",
                     "$\\chi^2(4)$",
@@ -186,15 +186,15 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Normală în Student-t",
-                "text": "De ce nu este exact testul $\\chi^2(1)$ obișnuit pentru legea Normală inclusă în Student-t?",
+                "text": "De ce nu este exact testul $\\chi^2(1)$ obișnuit pentru distribuția Normală ca submodel al Student-t?",
                 "options": [
                     "Pentru că cele două modele nu sînt imbricate",
                     "Pentru că Student-t are trei parametri",
-                    "Pentru că $1/\\nu = 0$ este pe frontiera spațiului parametrilor, deci legea sub $H_0$ este un amestec 50:50 de 0 și $\\chi^2(1)$",
+                    "Pentru că $1/\\nu = 0$ este pe frontiera spațiului parametrilor, deci distribuția statisticii sub $H_0$ este un amestec 50:50 de 0 și $\\chi^2(1)$",
                     "Pentru că randamentele nu sînt Normale"
                 ],
-                "correctExplanation": "La frontieră, legea sub $H_0$ este $\\frac12\\chi^2(0) + \\frac12\\chi^2(1)$ (Self și Liang, 1987); valoarea critică la 5% este 2,71.",
-                "incorrectExplanation": "Modelele sînt imbricate, dar restricția $1/\\nu = 0$ este pe marginea lui $1/\\nu \\ge 0$; legea sub $H_0$ devine un amestec 50:50, iar valoarea critică la 5% este 2,71."
+                "correctExplanation": "La frontieră, distribuția statisticii sub $H_0$ este $\\frac12\\chi^2(0) + \\frac12\\chi^2(1)$ (Self și Liang, 1987); valoarea critică la 5% este 2,71.",
+                "incorrectExplanation": "Modelele sînt imbricate, dar restricția $1/\\nu = 0$ este pe frontiera mulțimii $1/\\nu \\ge 0$; distribuția statisticii sub $H_0$ devine un amestec 50:50, iar valoarea critică la 5% este 2,71."
             }
         },
         {
@@ -267,15 +267,15 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Parametri estimați",
-                "text": "Ajustați $\\mu$ și $\\sigma$ pe date și apoi aplicați KS față de $N(\\hat\\mu, \\hat\\sigma^2)$ cu tabelul KS standard. Ce se întîmplă?",
+                "text": "Estimați $\\mu$ și $\\sigma$ din date și apoi aplicați KS față de $N(\\hat\\mu, \\hat\\sigma^2)$ cu tabelul KS standard. Ce se întîmplă?",
                 "options": [
                     "Testul respinge prea des",
                     "Testul respinge prea rar: valorile critice sînt prea mari (folosiți Lilliefors sau un bootstrap parametric)",
                     "Nimic: tabelul rămîne exact",
                     "Statistica devine negativă"
                 ],
-                "correctExplanation": "$F$ ajustată este trasă spre date, deci $D_n$ este mic; valorile critice corecte (Lilliefors) sînt mai mici.",
-                "incorrectExplanation": "Ajustarea pe aceleași date face $D_n$ mai mic decît pentru o $F$ cunoscută; tabelul standard este prea îngăduitor, deci folosiți tabelele Lilliefors sau un bootstrap parametric."
+                "correctExplanation": "$F$ estimată este apropiată de date, deci $D_n$ este mai mic; valorile critice corecte (Lilliefors) sînt mai mici.",
+                "incorrectExplanation": "Estimarea pe aceleași date face $D_n$ mai mic decît pentru o $F$ cunoscută; tabelul standard este prea îngăduitor, deci folosiți tabelele Lilliefors sau un bootstrap parametric."
             }
         },
         {
@@ -355,7 +355,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                     "Trecem la nivelul de 10% ca să treacă vreun model",
                     "Păstrăm modelul Normal, oricum toate sînt respinse"
                 ],
-                "correctExplanation": "Un $n$ mare detectează abateri minuscule; statisticile tot ordonează modelele, iar graficele arată unde este nepotrivirea.",
+                "correctExplanation": "Un $n$ mare detectează abateri minuscule; statisticile permit totuși ordonarea modelelor, iar graficele arată unde modelul nu se potrivește.",
                 "incorrectExplanation": "Cu eșantioane mari respingerea este aproape sigură; folosiți statisticile pentru a compara modelele și graficul QQ pentru a judeca zona care contează."
             }
         },
@@ -377,13 +377,13 @@ window.SFM_DATA.quizzes['model-selection'] = {
                 "title": "Bootstrap parametric",
                 "text": "Cum se calculează o valoare $p$ prin bootstrap parametric pentru o statistică EDF?",
                 "options": [
-                    "Reeșantionăm randamentele observate cu întoarcere și recalculăm statistica fără reajustare",
-                    "Simulăm eșantioane din modelul ajustat, reajustăm fiecare eșantion, recalculăm statistica și numărăm de cîte ori depășește valoarea observată",
+                    "Reeșantionăm randamentele observate cu întoarcere și recalculăm statistica fără reestimare",
+                    "Simulăm eșantioane din modelul estimat, reestimăm modelul pe fiecare eșantion, recalculăm statistica și numărăm de cîte ori depășește valoarea observată",
                     "Folosim tabelul KS asimptotic",
                     "Împărțim statistica la $\\sqrt{n}$"
                 ],
-                "correctExplanation": "Simulăm din $F(\\cdot; \\hat\\theta)$, reajustăm, recalculăm; $p = (1 + \\#\\{\\text{simulate} \\ge \\text{observată}\\})/(B + 1)$.",
-                "incorrectExplanation": "Pasul de reajustare reproduce efectul estimării parametrilor; reeșantionarea datelor fără reajustare nu îl reproduce."
+                "correctExplanation": "Simulăm din $F(\\cdot; \\hat\\theta)$, reestimăm, recalculăm; $p = (1 + \\#\\{\\text{simulate} \\ge \\text{observată}\\})/(B + 1)$.",
+                "incorrectExplanation": "Pasul de reestimare reproduce efectul estimării parametrilor; reeșantionarea datelor fără reestimare nu îl reproduce."
             }
         },
         {
@@ -402,15 +402,15 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "PP sau QQ?",
-                "text": "Ce grafic arată cel mai bine dacă un model nimerește pierderile extreme?",
+                "text": "Ce grafic arată cel mai bine dacă un model descrie corect pierderile extreme?",
                 "options": [
                     "Graficul PP",
                     "O histogramă cu 10 clase",
                     "Graficul QQ",
                     "Graficul în timp al randamentelor"
                 ],
-                "correctExplanation": "Graficele QQ lucrează în unități de randament și întind cozile; graficele PP înghesuie cozile în colțuri.",
-                "incorrectExplanation": "Graficele PP compară probabilități în $[0, 1]$ și ascund cozile; graficele QQ compară cuantile, deci fiecare zi extremă se vede."
+                "correctExplanation": "Graficele QQ lucrează în unități de randament și dilată cozile; graficele PP înghesuie cozile în colțuri.",
+                "incorrectExplanation": "Graficele PP compară probabilități în $[0, 1]$ și ascund cozile; graficele QQ compară cuantile, deci fiecare zi extremă este vizibilă."
             }
         },
         {
@@ -429,12 +429,12 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Citirea unui grafic QQ",
-                "text": "Într-un grafic QQ al randamentelor (cuantilele empirice pe verticală) față de o lege Normală ajustată, capetele se îndepărtează de dreaptă, sub ea în stînga și deasupra în dreapta. Ce înseamnă?",
+                "text": "Într-un grafic QQ al randamentelor (cuantilele empirice pe verticală) față de o distribuție Normală estimată, capetele se îndepărtează de dreaptă, sub ea în stînga și deasupra în dreapta. Ce înseamnă?",
                 "options": [
                     "Cozile modelului sînt prea lungi",
                     "Datele sînt asimetrice doar spre dreapta",
                     "Modelul se potrivește bine",
-                    "Cozile modelului sînt prea scurte: datele au mai multe valori extreme decît permite legea Normală"
+                    "Cozile modelului sînt prea scurte: datele au mai multe valori extreme decît prevede distribuția Normală"
                 ],
                 "correctExplanation": "Extremele empirice dincolo de cuantilele modelului înseamnă cozi mai groase în date.",
                 "incorrectExplanation": "Punctele sub dreaptă în stînga și deasupra ei în dreapta înseamnă că extremele observate sînt mai mari decît cuantilele modelului: cozile modelului sînt prea scurte."
@@ -510,7 +510,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "VaR Normal pe date reale",
-                "text": "Pentru S&P 500 din 2000, VaR 1% empiric este $3{,}45\\%$. Ce dă modelul Normal ajustat?",
+                "text": "Pentru S&P 500 din 2000, VaR 1% empiric este $3{,}45\\%$. Ce valoare dă modelul Normal estimat?",
                 "options": [
                     "Circa $3{,}45\\%$, același",
                     "Circa $4{,}15\\%$, prea mare",
@@ -518,7 +518,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                     "Nu se poate calcula"
                 ],
                 "correctExplanation": "Modelul Normal dă $2{,}80\\%$: cozile subțiri subestimează pierderea de 1%.",
-                "incorrectExplanation": "Ajustarea Normală dă $2{,}80\\%$, sub valoarea empirică de $3{,}45\\%$; modelele cu cozi groase (Student-t, skewed-t, NIG) sînt mult mai aproape."
+                "incorrectExplanation": "Modelul Normal estimat dă $2{,}80\\%$, sub valoarea empirică de $3{,}45\\%$; modelele cu cozi groase (Student-t, skewed-t, NIG) sînt mult mai aproape."
             }
         },
         {
@@ -537,15 +537,15 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Supraajustarea",
-                "text": "Amestecuri Normale cu 1 pînă la 6 componente sînt ajustate pe doi ani de randamente S&P 500. Ce tipar indică supraajustarea?",
+                "text": "Amestecuri Normale cu 1 pînă la 6 componente sînt estimate pe doi ani de randamente S&P 500. Ce tipar indică supraajustarea?",
                 "options": [
                     "Log-verosimilitatea în eșantion scade cu mai multe componente",
                     "AIC și BIC aleg întotdeauna cel mai mare model",
-                    "Potrivirea în afara eșantionului crește cu fiecare componentă",
-                    "Potrivirea în eșantion crește cu fiecare componentă, iar cea din afara eșantionului atinge maximul la 3 componente și apoi scade"
+                    "Calitatea ajustării în afara eșantionului crește cu fiecare componentă",
+                    "Calitatea ajustării în eșantion crește cu fiecare componentă, iar cea din afara eșantionului atinge maximul la 3 componente și apoi scade"
                 ],
-                "correctExplanation": "Parametrii în plus potrivesc zgomotul: potrivirea în eșantion crește, cea din afara lui se deteriorează.",
-                "incorrectExplanation": "În eșantion, un model mai mare nu se potrivește niciodată mai prost; supraajustarea apare cînd potrivirea din afara eșantionului nu mai crește și scade."
+                "correctExplanation": "Parametrii în plus modelează zgomotul: calitatea ajustării în eșantion crește, cea din afara lui se deteriorează.",
+                "incorrectExplanation": "În eșantion, un model mai general nu se ajustează niciodată mai slab; supraajustarea apare cînd calitatea ajustării din afara eșantionului nu mai crește și scade."
             }
         },
         {
@@ -571,7 +571,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                     "Da, dacă și AIC-ul lui este cel mai mic",
                     "Doar pentru modelul Normal"
                 ],
-                "correctExplanation": "Scopul decide: un model VaR se judecă după depășiri și după pierderea pe cuantilă.",
+                "correctExplanation": "Scopul decide: un model VaR se judecă după depășiri și după pierderea pinball.",
                 "incorrectExplanation": "Scorul logaritmic răsplătește și corpul distribuției; cuantila de 1% poate fi totuși greșită, cum arată perioada de test pentru DAX."
             }
         },
@@ -591,7 +591,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Crah sau eroare de date?",
-                "text": "Banca Transilvania are $-15\\%$ și $+20\\%$ în două zile consecutive din mai 2016 și $-22\\%$ pe 19 decembrie 2018. Ce faceți înainte de ajustare?",
+                "text": "Banca Transilvania are $-15\\%$ și $+20\\%$ în două zile consecutive din mai 2016 și $-22\\%$ pe 19 decembrie 2018. Ce faceți înainte de estimarea modelelor?",
                 "options": [
                     "Eliminați toate cele trei zile, pentru că sînt valori aberante",
                     "Verificați prețul de închidere, prețul ajustat și piața: eliminați perechea din 2016 (ajustare întîrziată pentru acțiuni gratuite) și păstrați crahul din 2018",
@@ -650,7 +650,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                     "Pentru că EM nu converge niciodată",
                     "Pentru că un amestec nu poate fi asimetric",
                     "Pentru că AIC ignoră numărul de parametri",
-                    "Pentru că departe în cozi rămîne Normal (cu cozi subțiri) și plătește pentru doi parametri în plus"
+                    "Pentru că departe în cozi rămîne Normal (cu cozi subțiri) și este penalizat pentru doi parametri în plus"
                 ],
                 "correctExplanation": "Departe în coadă domină componenta Normală mai largă, care tot scade ca $e^{-x^2}$.",
                 "incorrectExplanation": "Un amestec îngroașă cozile doar pînă la componenta lui cea mai largă, a cărei coadă este Normală; parametrii în plus sînt penalizați de AIC și BIC."
