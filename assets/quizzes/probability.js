@@ -52,7 +52,7 @@ window.SFM_DATA.quizzes['probability'] = {
                 "incorrectExplanation": "Zero correlation only rules out linear dependence; $Y = X^2$ is completely determined by $X$."
             },
             "ro": {
-                "title": "Necorelare vs independență",
+                "title": "Necorelare și independență",
                 "text": "Fie $X \\sim N(0, 1)$ și $Y = X^2$. Care afirmație este adevărată?",
                 "options": ["$X$ și $Y$ sînt independente pentru că au corelația zero", "$X$ și $Y$ sînt corelate pozitiv", "$X$ și $Y$ sînt independente pentru că $Y$ este mereu pozitiv", "$X$ și $Y$ sînt necorelate, dar dependente"],
                 "correctExplanation": "$\\mathrm{Cov}(X, X^2) = E[X^3] = 0$, deci sînt necorelate, dar $Y$ este o funcție de $X$: cunoscînd $X$, aflăm exact $Y$.",
@@ -71,9 +71,9 @@ window.SFM_DATA.quizzes['probability'] = {
             "ro": {
                 "title": "Randamente și pătratele lor",
                 "text": "Pentru S&P 500, 2000–2026, $\\mathrm{Corr}(r_t, r_{t-1}) \\approx -0{,}10$ și $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0{,}31$, cu o bandă i.i.d. de $\\pm 0{,}024$. Ce rezultă?",
-                "options": ["Randamentele sînt independente", "Randamentele nu sînt independente: mărimea unei mișcări este previzibilă pe baza zilei de ieri", "Randamentele sînt Normale", "Pătratele randamentelor sînt zgomot alb"],
+                "options": ["Randamentele sînt independente", "Randamentele nu sînt independente: mărimea unei mișcări este previzibilă pe baza zilei de ieri", "Randamentele au distribuție Normală", "Pătratele randamentelor sînt zgomot alb"],
                 "correctExplanation": "Independența ar face și pătratele necorelate; corelația lor de 0,31 este volatility clustering.",
-                "incorrectExplanation": "O corelație puternică a pătratelor randamentelor nu este compatibilă cu independența: volatilitatea vine în grupuri."
+                "incorrectExplanation": "O corelație puternică a pătratelor randamentelor nu este compatibilă cu independența: volatilitatea apare grupat."
             }
         },
         {
@@ -89,8 +89,8 @@ window.SFM_DATA.quizzes['probability'] = {
                 "title": "Proprietatea turnului",
                 "text": "Cît este $E\\big[E[Y \\mid X]\\big]$?",
                 "options": ["$E[X]$", "$E[Y]$", "$E[XY]$", "$\\mathrm{Var}(Y)$"],
-                "correctExplanation": "Legea speranțelor iterate: media condiționată, mediată după $X$, redă media necondiționată $E[Y]$.",
-                "incorrectExplanation": "Media speranței condiționate peste toate valorile lui $X$ redă $E[Y]$ (legea speranțelor iterate)."
+                "correctExplanation": "Legea speranțelor iterate: media condiționată, luată în medie după $X$, redă media necondiționată $E[Y]$.",
+                "incorrectExplanation": "Media speranței condiționate, calculată pe toate valorile lui $X$, redă $E[Y]$ (legea speranțelor iterate)."
             }
         },
         {
@@ -122,7 +122,7 @@ window.SFM_DATA.quizzes['probability'] = {
             "ro": {
                 "title": "Un amestec de două regimuri Normale",
                 "text": "Randamentele zilnice sînt $N(0, 0{,}8^2)$ în zilele calme (probabilitatea 0,8) și $N(0, 2^2)$ în zilele agitate. Cît este aplatizarea distribuției necondiționate?",
-                "options": ["Circa 6,1, peste valoarea Normală 3", "Exact 3, pentru că fiecare regim este Normal", "Sub 3", "Nu se poate calcula"],
+                "options": ["Circa 6,1, peste valoarea 3 a distribuției Normale", "Exact 3, pentru că fiecare regim este Normal", "Sub 3", "Nu se poate calcula"],
                 "correctExplanation": "$\\mathrm{Var} = 1{,}312$, $E[r^4] = 3(0{,}8 \\times 0{,}8^4 + 0{,}2 \\times 2^4) = 10{,}58$, aplatizarea $10{,}58/1{,}312^2 \\approx 6{,}1$: amestecarea varianțelor creează cozi groase.",
                 "incorrectExplanation": "Un amestec de distribuții Normale cu varianțe diferite nu este Normal: aplatizarea lui este circa 6,1, mecanismul din spatele cozilor GARCH."
             }
@@ -175,7 +175,7 @@ window.SFM_DATA.quizzes['probability'] = {
                 "text": "Pentru orice distribuție cu varianță finită, cel mult ce pondere din observații se află la 4 sau mai multe abateri standard de medie?",
                 "options": ["0,006%", "4%", "6,25%", "25%"],
                 "correctExplanation": "$P(|X - \\mu| \\ge k\\sigma) \\le 1/k^2 = 1/16 = 6{,}25\\%$; S&P 500 a avut circa 0,7%, iar distribuția Normală dă 0,006%.",
-                "incorrectExplanation": "Cebîșev dă $1/k^2 = 6{,}25\\%$ pentru $k = 4$; 0,006% este valoarea Normală, nu o margine valabilă pentru orice distribuție."
+                "incorrectExplanation": "Cebîșev dă $1/k^2 = 6{,}25\\%$ pentru $k = 4$; 0,006% este valoarea pentru distribuția Normală, nu o margine valabilă pentru orice distribuție."
             }
         },
         {
@@ -274,7 +274,7 @@ window.SFM_DATA.quizzes['probability'] = {
             },
             "ro": {
                 "title": "Simularea istorică",
-                "text": "A extrage $U \\sim U(0, 1)$ și a returna cuantila empirică de ordin $U$ a randamentelor zilnice trecute este același lucru cu:",
+                "text": "Extragerea lui $U \\sim U(0, 1)$ și folosirea cuantilei empirice de ordin $U$ a randamentelor zilnice trecute echivalează cu:",
                 "options": ["Simularea din distribuția Normală", "Estimarea unei distribuții Student-t", "Simularea unui model GARCH", "Reeșantionarea cu întoarcere a zilelor trecute (simulare istorică, bootstrap)"],
                 "correctExplanation": "Funcția cuantilă empirică pune masa $1/n$ pe fiecare randament observat: transformarea inversă devine reeșantionarea zilelor trecute.",
                 "incorrectExplanation": "Transformarea inversă empirică reeșantionează randamentele observate, deci păstrează cozile lor groase, dar nu și ordinea în timp."
@@ -345,7 +345,7 @@ window.SFM_DATA.quizzes['probability'] = {
                 "text": "Ce condiție definește un martingal $\\{X_t\\}$ în raport cu informația $\\mathcal{F}_t$?",
                 "options": ["$E[X_{t+1} \\mid \\mathcal{F}_t] = X_t$", "$X_{t+1} - X_t$ i.i.d. Normale", "$\\mathrm{Var}(X_{t+1} \\mid \\mathcal{F}_t)$ constantă", "$\\mathrm{Corr}(X_t, X_{t+1}) = 0$"],
                 "correctExplanation": "Un martingal este un joc echitabil: cea mai bună prognoză pentru mîine, dată fiind informația de azi, este valoarea de azi.",
-                "incorrectExplanation": "Este restricționată doar media condiționată; varianța condiționată se poate schimba în timp, ca în GARCH."
+                "incorrectExplanation": "Definiția impune o condiție doar asupra mediei condiționate; varianța condiționată se poate schimba în timp, ca în GARCH."
             }
         },
         {
@@ -409,11 +409,11 @@ window.SFM_DATA.quizzes['probability'] = {
                 "incorrectExplanation": "The real values are far outside the GBM range: GBM cannot produce heavy tails or volatility clustering, although it matches the mean and volatility."
             },
             "ro": {
-                "title": "Ce ratează GBM",
-                "text": "S&P 500, 2000–2026, are excesul de aplatizare circa 10,7 și $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0{,}31$; 300 de simulări GBM de aceeași lungime rămîn în circa $\\pm 0{,}1$ și $\\pm 0{,}02$. Ce ratează GBM?",
+                "title": "Limitele modelului GBM",
+                "text": "S&P 500, 2000–2026, are excesul de aplatizare circa 10,7 și $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0{,}31$; 300 de simulări GBM de aceeași lungime rămîn în intervalele de circa $\\pm 0{,}1$ și $\\pm 0{,}02$. Ce nu reproduce GBM?",
                 "options": ["Randamentul mediu", "Volatilitatea totală", "Cozile groase și volatility clustering", "Nimic: diferențele sînt zgomot de eșantionare"],
                 "correctExplanation": "GBM are randamente logaritmice Normale i.i.d.: exces de aplatizare zero și nicio autocorelație a pătratelor randamentelor, departe de valorile reale.",
-                "incorrectExplanation": "Valorile reale sînt mult în afara intervalului GBM: GBM nu poate produce cozi groase sau volatility clustering, deși potrivește media și volatilitatea."
+                "incorrectExplanation": "Valorile reale sînt mult în afara intervalului GBM: GBM nu poate genera cozi groase sau volatility clustering, deși reproduce media și volatilitatea."
             }
         }
     ]

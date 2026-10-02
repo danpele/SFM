@@ -1,7 +1,7 @@
 r"""
 build_seminar4.py -- Seminarul 4 (Probabilitate pentru finanțe), EN + RO dintr-o singură sursă
 ==============================================================================================
-Seminarul are loc ÎNAINTEA cursului 4: secțiunea „Ce vă trebuie azi” dă tot ce folosesc cerințele.
+Seminarul are loc ÎNAINTEA cursului 4: secțiunea „Noțiuni necesare azi” conține tot ce folosesc cerințele.
 Formatul A/B/C: A derivări și calcule pe hîrtie, B simulări și date reale, fiecare cu o întrebare de interpretare,
 C o întrebare deschisă și critica unui răspuns AI. [Rezolvat]: rezolvarea vizibilă pentru toți; [Propus]: rezolvarea
 doar în versiunea profesorului (*_solutions.tex, exclusă din git). Studenții nu predau nimic.
@@ -160,12 +160,12 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
     (T('\\textbf{Question}: how do we describe, condition and simulate random returns and prices?',
        '\\textbf{Întrebarea}: cum descriem, condiționăm și simulăm randamente și prețuri aleatoare?'),
      [T('this seminar comes \\textbf{before} Lecture 4: the section ``What You Need for Today\'\' gives every definition the tasks use',
-        'seminarul are loc \\textbf{înaintea} Cursului 4: secțiunea „Ce vă trebuie azi” dă toate definițiile folosite în cerințe')]),
+        'seminarul are loc \\textbf{înaintea} Cursului 4: secțiunea „Noțiuni necesare azi” conține toate definițiile folosite în cerințe')]),
     (T('Route', 'Traseul'),
      [T('Part A: moments, joint tables, conditioning, binomial trees, AR(1), inverse transform and GBM on paper',
         'Partea A: momente, tabele comune, condiționare, arbori binomiali, AR(1), transformare inversă și GBM pe hîrtie'),
       T('Part B: dependence in real returns, Monte Carlo, random number generators and GBM against data, each with an interpretation question',
-        'Partea B: dependența în randamente reale, Monte Carlo, generatoare de numere aleatoare și GBM față de date, fiecare cu o întrebare de interpretare'),
+        'Partea B: dependența în randamente reale, Monte Carlo, generatoare de numere aleatoare și GBM comparat cu datele, fiecare cu o întrebare de interpretare'),
       T('Part C: an open question for a project and an AI answer to audit', 'Partea C: o întrebare deschisă pentru proiect și un răspuns AI de verificat')]),
     T('Notebook for today: \\href{\\nb}{open the seminar notebook in Google Colab}; each task names its notebook section',
       'Notebook-ul de azi: \\href{\\nb}{deschideți notebook-ul seminarului în Google Colab}; fiecare cerință indică secțiunea din notebook'),
@@ -180,10 +180,10 @@ D.frame(T('Exercise Map', 'Harta exercițiilor'), table(
      'A3, A4 & ' + T('portfolio volatility; a two-regime model and the law of total variance', 'volatilitatea unui portofoliu; un model cu două regimuri și legea varianței totale') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A3',
      'A5, A6 & ' + T('a binomial tree; random walk, martingale and AR(1)', 'un arbore binomial; mers aleator, martingal și AR(1)') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A5',
      'A7, A8 & ' + T('inverse transform by hand; GBM and the Wiener process', 'transformarea inversă pas cu pas; GBM și procesul Wiener') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A7',
-     'B1, B2 & ' + T('are returns independent? conditional mean and variance', 'sînt randamentele independente? media și varianța condiționată') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B1',
+     'B1, B2 & ' + T('are returns independent? conditional mean and variance', 'sînt randamentele independente? media și varianța condiționate') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B1',
      'B3, B4 & ' + T('a loss probability by Monte Carlo; testing a random number generator', 'probabilitatea unei pierderi prin Monte Carlo; testarea unui generator de numere aleatoare') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B3',
      'B5, B6 & ' + T('GBM against the BET; does variance grow linearly with the horizon?', 'GBM față de BET; crește varianța liniar cu orizontul?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B5',
-     'C1, C2 & ' + T('how often is there a bad year? what is wrong in an AI answer?', 'cît de des apare un an prost? ce este greșit într-un răspuns AI?') + ' & ' + T('Proposed', 'Propus') + ' & B3, B5'],
+     'C1, C2 & ' + T('how often is there a bad year? what is wrong in an AI answer?', 'cît de des apare un an nefavorabil? ce este greșit într-un răspuns AI?') + ' & ' + T('Proposed', 'Propus') + ' & B3, B5'],
     size='footnotesize') + items(
     T('\\textbf{[Solved]}: full solution in the slides and in the notebook, a model to follow; \\textbf{[Proposed]}: you solve it, following the model',
       '\\textbf{[Rezolvat]}: rezolvarea completă în slide-uri și în notebook, un model de urmat; \\textbf{[Propus]}: îl rezolvați voi, după model')))
@@ -195,18 +195,18 @@ D.frame(T('Data Used', 'Datele folosite'), table(
     size='footnotesize') + items(
     T('Daily log returns in \\%: $r_t = 100\\,(\\ln P_t - \\ln P_{t-1})$', 'Randamente logaritmice zilnice în \\%: $r_t = 100\\,(\\ln P_t - \\ln P_{t-1})$'),
     T('Weekends and repeated holiday closes are dropped (except Bitcoin); each series on its own calendar',
-      'Weekendurile și închiderile repetate din zilele libere se elimină (cu excepția Bitcoin); fiecare serie pe calendarul ei'),
+      'Weekendurile și închiderile repetate din zilele libere se elimină (cu excepția Bitcoin); fiecare serie își păstrează propriul calendar'),
     T('Simulations use NumPy\'s default generator with fixed seeds, so every number can be reproduced',
-      'Simulările folosesc generatorul implicit din NumPy cu semințe fixe, astfel încît fiecare cifră poate fi reprodusă')))
+      'Simulările folosesc generatorul implicit din NumPy cu semințe fixe, astfel încît fiecare rezultat numeric poate fi reprodus')))
 
 # =============================================================================
 # CE VĂ TREBUIE AZI
 # =============================================================================
-D.section('What You Need for Today', 'Ce vă trebuie azi')
+D.section('What You Need for Today', 'Noțiuni necesare azi')
 
-D.frame(T('What You Need for Today (1/4): Random Variables and Moments', 'Ce vă trebuie azi (1/4): variabile aleatoare și momente'), items(
+D.frame(T('What You Need for Today (1/4): Random Variables and Moments', 'Noțiuni necesare azi (1/4): variabile aleatoare și momente'), items(
     (T('Discrete $X$: \\textbf{PMF} (probability mass function) $p(x_i) = P(X = x_i)$; continuous $X$: \\textbf{PDF} (probability density function) $f$',
-       '$X$ discretă: \\textbf{PMF} (probability mass function, funcția de masă de probabilitate) $p(x_i) = P(X = x_i)$; $X$ continuă: \\textbf{PDF} (probability density function, densitatea) $f$'),
+       '$X$ discretă: \\textbf{PMF} (probability mass function, funcția de masă de probabilitate) $p(x_i) = P(X = x_i)$; $X$ continuă: \\textbf{PDF} (probability density function, densitatea de probabilitate) $f$'),
      [T('\\textbf{CDF} (cumulative distribution function): $F(x) = P(X \\le x)$; quantile $q_\\alpha = F^{-1}(\\alpha)$',
         '\\textbf{CDF} (cumulative distribution function, funcția de repartiție): $F(x) = P(X \\le x)$; cuantila $q_\\alpha = F^{-1}(\\alpha)$')]),
     T('$E[X] = \\sum x_i p(x_i)$ or $\\int x f(x)\\,dx$; $\\text{Var}(X) = E[X^2] - (E[X])^2$', '$E[X] = \\sum x_i p(x_i)$ sau $\\int x f(x)\\,dx$; $\\text{Var}(X) = E[X^2] - (E[X])^2$'),
@@ -214,19 +214,19 @@ D.frame(T('What You Need for Today (1/4): Random Variables and Moments', 'Ce vă
       '$\\text{Cov}(X, Y) = E[XY] - E[X]E[Y]$; $\\rho = \\text{Cov}/(\\sigma_X\\sigma_Y)$; $\\text{Var}(aX + bY) = a^2\\sigma_X^2 + b^2\\sigma_Y^2 + 2ab\\,\\text{Cov}$'),
     (T('\\textbf{Independent}: $P(X = x, Y = y) = P(X = x)P(Y = y)$ for every cell; independent $\\Rightarrow$ uncorrelated, not conversely',
        '\\textbf{Independente}: $P(X = x, Y = y) = P(X = x)P(Y = y)$ pentru fiecare celulă; independente $\\Rightarrow$ necorelate, nu și invers'),
-     [T('the i.i.d. band for a sample correlation: $\\pm 1.96/\\sqrt{n}$', 'banda i.i.d. pentru o corelație de selecție: $\\pm 1.96/\\sqrt{n}$')])), 'footnotesize')
+     [T('the i.i.d. band for a sample correlation: $\\pm 1.96/\\sqrt{n}$', 'banda de 95\\% pentru o corelație de selecție, în ipoteza i.i.d.: $\\pm 1.96/\\sqrt{n}$')])), 'footnotesize')
 
-D.frame(T('What You Need for Today (2/4): Conditioning', 'Ce vă trebuie azi (2/4): condiționare'), items(
+D.frame(T('What You Need for Today (2/4): Conditioning', 'Noțiuni necesare azi (2/4): condiționare'), items(
     T('$P(A \\mid B) = P(A \\cap B)/P(B)$; $E[Y \\mid X]$: the mean of $Y$ once $X$ is known, the best forecast of $Y$ from $X$',
       '$P(A \\mid B) = P(A \\cap B)/P(B)$; $E[Y \\mid X]$: media lui $Y$ după ce aflăm $X$, cea mai bună prognoză a lui $Y$ pe baza lui $X$'),
     T('\\textbf{Tower property}: $E[E[Y \\mid X]] = E[Y]$', '\\textbf{Proprietatea turnului}: $E[E[Y \\mid X]] = E[Y]$'),
     T('\\textbf{Law of total variance}: $\\text{Var}(Y) = E[\\text{Var}(Y \\mid X)] + \\text{Var}(E[Y \\mid X])$', '\\textbf{Legea varianței totale}: $\\text{Var}(Y) = E[\\text{Var}(Y \\mid X)] + \\text{Var}(E[Y \\mid X])$'),
     (T('For returns: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$ and $\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$, with $\\mathcal{F}_{t-1}$ the information up to yesterday',
        'Pentru randamente: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$ și $\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$, cu $\\mathcal{F}_{t-1}$ informația pînă ieri'),
-     [T('a changing $\\sigma_t$ is what GARCH models (Chapter 9)', 'un $\\sigma_t$ schimbător este ceea ce modelează GARCH (Capitolul 9)')]),
+     [T('a changing $\\sigma_t$ is what GARCH models (Chapter 9)', 'GARCH modelează tocmai variația în timp a lui $\\sigma_t$ (Capitolul 9)')]),
     T('A mixture of Normals with different variances has kurtosis above 3: $E[X^4] = 3\\sigma^4$ for $N(0, \\sigma^2)$', 'Un amestec de distribuții Normale cu varianțe diferite are aplatizarea peste 3: $E[X^4] = 3\\sigma^4$ pentru $N(0, \\sigma^2)$')), 'footnotesize')
 
-D.frame(T('What You Need for Today (3/4): Processes', 'Ce vă trebuie azi (3/4): procese'), items(
+D.frame(T('What You Need for Today (3/4): Processes', 'Noțiuni necesare azi (3/4): procese'), items(
     T('\\textbf{White noise}: mean 0, variance $\\sigma^2$, uncorrelated over time; \\textbf{i.i.d.} noise: independent and identically distributed',
       '\\textbf{Zgomot alb}: media 0, varianța $\\sigma^2$, necorelat în timp; zgomot \\textbf{i.i.d.}: independent și identic distribuit'),
     T('\\textbf{Random walk}: $S_t = S_{t-1} + \\varepsilon_t$, $E[S_t] = S_0$, $\\text{Var}(S_t) = t\\sigma^2$', '\\textbf{Mers aleator}: $S_t = S_{t-1} + \\varepsilon_t$, $E[S_t] = S_0$, $\\text{Var}(S_t) = t\\sigma^2$'),
@@ -234,10 +234,10 @@ D.frame(T('What You Need for Today (3/4): Processes', 'Ce vă trebuie azi (3/4):
     T('\\textbf{AR(1)}: $X_t = c + \\phi X_{t-1} + \\varepsilon_t$, $|\\phi| < 1$: mean $c/(1 - \\phi)$, variance $\\sigma^2/(1 - \\phi^2)$, $\\rho(h) = \\phi^h$',
       '\\textbf{AR(1)}: $X_t = c + \\phi X_{t-1} + \\varepsilon_t$, $|\\phi| < 1$: media $c/(1 - \\phi)$, varianța $\\sigma^2/(1 - \\phi^2)$, $\\rho(h) = \\phi^h$'),
     (T('\\textbf{Binomial tree}: up by $u$ with probability $p$, down by $d$; after $n$ steps $S_n = S_0u^Kd^{n-K}$, $K \\sim B(n, p)$',
-       '\\textbf{Arbore binomial}: sus cu $u$ cu probabilitatea $p$, jos cu $d$; după $n$ pași $S_n = S_0u^Kd^{n-K}$, $K \\sim B(n, p)$'),
+       '\\textbf{Arbore binomial}: prețul se înmulțește cu $u$ cu probabilitatea $p$ și cu $d$ în rest; după $n$ pași $S_n = S_0u^Kd^{n-K}$, $K \\sim B(n, p)$'),
      [T('$E[S_n] = S_0(pu + (1 - p)d)^n$; fair game for $p^* = (1 - d)/(u - d)$', '$E[S_n] = S_0(pu + (1 - p)d)^n$; joc echitabil pentru $p^* = (1 - d)/(u - d)$')])), 'footnotesize')
 
-D.frame(T('What You Need for Today (4/4): Simulation, Wiener and GBM', 'Ce vă trebuie azi (4/4): simulare, Wiener și GBM'), items(
+D.frame(T('What You Need for Today (4/4): Simulation, Wiener and GBM', 'Noțiuni necesare azi (4/4): simulare, Wiener și GBM'), items(
     T('\\textbf{Inverse transform}: $U \\sim U(0, 1)$ $\\Rightarrow$ $F^{-1}(U)$ has CDF $F$; exponential: $-\\ln(1 - U)/\\lambda$; Normal: $\\mu + \\sigma\\Phi^{-1}(U)$',
       '\\textbf{Transformarea inversă}: $U \\sim U(0, 1)$ $\\Rightarrow$ $F^{-1}(U)$ are CDF $F$; exponențiala: $-\\ln(1 - U)/\\lambda$; distribuția Normală: $\\mu + \\sigma\\Phi^{-1}(U)$'),
     T('\\textbf{LCG} (linear congruential generator): $x_{k+1} = (ax_k + c) \\bmod M$, $u_k = x_k/M$', '\\textbf{LCG} (linear congruential generator, generator congruențial liniar): $x_{k+1} = (ax_k + c) \\bmod M$, $u_k = x_k/M$'),
@@ -246,7 +246,7 @@ D.frame(T('What You Need for Today (4/4): Simulation, Wiener and GBM', 'Ce vă t
       '\\textbf{Procesul Wiener}: $W(0) = 0$, creșteri independente, $W(t) - W(s) \\sim N(0, t - s)$; $\\text{Cov}(W(s), W(t)) = \\min(s, t)$'),
     (T('\\textbf{GBM} (geometric Brownian motion): $S_T = S_0\\exp((\\mu - \\sigma^2/2)T + \\sigma W_T)$', '\\textbf{GBM} (geometric Brownian motion, mișcarea browniană geometrică): $S_T = S_0\\exp((\\mu - \\sigma^2/2)T + \\sigma W_T)$'),
      [T('mean $S_0e^{\\mu T}$, median $S_0e^{(\\mu - \\sigma^2/2)T}$; daily log returns i.i.d. Normal', 'media $S_0e^{\\mu T}$, mediana $S_0e^{(\\mu - \\sigma^2/2)T}$; randamente logaritmice zilnice Normale i.i.d.'),
-      T('maximum drawdown: $\\min_t(P_t/\\max_{s \\le t}P_s - 1)$, the largest fall from a running peak', 'drawdown-ul maxim: $\\min_t(P_t/\\max_{s \\le t}P_s - 1)$, cea mai mare cădere de la un vîrf curent')])), 'footnotesize')
+      T('maximum drawdown: $\\min_t(P_t/\\max_{s \\le t}P_s - 1)$, the largest fall from a running peak', 'drawdown-ul maxim: $\\min_t(P_t/\\max_{s \\le t}P_s - 1)$, cea mai mare scădere față de maximul anterior')])), 'footnotesize')
 
 # =============================================================================
 # PARTEA A
@@ -259,9 +259,9 @@ D.solved(T('A1: Moments of a Discrete Return', 'A1: momentele unui randament dis
                T('1. Compute $E[X]$, $E[X^2]$, $\\text{Var}(X)$ and the standard deviation.', '1. Calculați $E[X]$, $E[X^2]$, $\\text{Var}(X)$ și abaterea standard.'),
                T('2. Write the CDF $F(x)$ for every $x$.', '2. Scrieți CDF $F(x)$ pentru orice $x$.'),
                T('3. Compute $P(X < 0)$ and the median.', '3. Calculați $P(X < 0)$ și mediana.'),
-               T('Report: four moments, the CDF and two numbers.', 'Raportați: patru momente, CDF și două cifre.')),
+               T('Report: four moments, the CDF and two numbers.', 'Raportați: patru momente, CDF și două valori.')),
          items(T('1. $E[X] = -0.6 + 0 + 1 = @{a1.mean}$; $E[X^2] = 1.8 + 2 = @{a1.m2}$; $\\text{Var} = @{a1.m2} - @{a1.mean}^2 = @{a1.var}$; s.d. $@{a1.sd}$',
-                 '1. $E[X] = -0.6 + 0 + 1 = @{a1.mean}$; $E[X^2] = 1.8 + 2 = @{a1.m2}$; $\\text{Var} = @{a1.m2} - @{a1.mean}^2 = @{a1.var}$; abaterea std. $@{a1.sd}$'),
+                 '1. $E[X] = -0.6 + 0 + 1 = @{a1.mean}$; $E[X^2] = 1.8 + 2 = @{a1.m2}$; $\\text{Var} = @{a1.m2} - @{a1.mean}^2 = @{a1.var}$; abaterea standard $@{a1.sd}$'),
                T('2. $F(x) = 0$ for $x < -3$; $0.2$ on $[-3, 0)$; $0.5$ on $[0, 2)$; $1$ for $x \\ge 2$', '2. $F(x) = 0$ pentru $x < -3$; $0.2$ pe $[-3, 0)$; $0.5$ pe $[0, 2)$; $1$ pentru $x \\ge 2$'),
                T('3. $P(X < 0) = 0.2$; median $= \\inf\\{x : F(x) \\ge 0.5\\} = 0$', '3. $P(X < 0) = 0.2$; mediana $= \\inf\\{x : F(x) \\ge 0.5\\} = 0$'),
                T('The mean is positive although a loss is possible: risk and expected return are different questions.', 'Media este pozitivă deși o pierdere este posibilă: riscul și randamentul așteptat sînt întrebări diferite.')),
@@ -269,17 +269,17 @@ D.solved(T('A1: Moments of a Discrete Return', 'A1: momentele unui randament dis
 
 D.proposed(T('A2: Uncorrelated but Dependent', 'A2: necorelate, dar dependente'),
            items(T('$X$ = market move ($-1$ fall, $0$ flat, $+1$ rise); $Y = 1$ if the day is ``large\'\'. Joint probabilities: $P(-1, 1) = 0.25$, $P(0, 0) = 0.5$, $P(1, 1) = 0.25$, all other cells 0. Model: A1.',
-                   '$X$ = mișcarea pieței ($-1$ scădere, $0$ stagnare, $+1$ creștere); $Y = 1$ dacă ziua este „mare”. Probabilitățile comune: $P(-1, 1) = 0.25$, $P(0, 0) = 0.5$, $P(1, 1) = 0.25$, celelalte celule 0. Model: A1.'),
+                   '$X$ = mișcarea pieței ($-1$ scădere, $0$ stagnare, $+1$ creștere); $Y = 1$ dacă ziua este „mare”. Probabilitățile comune: $P(-1, 1) = 0.25$, $P(0, 0) = 0.5$, $P(1, 1) = 0.25$, celelalte celule au probabilitatea 0. Model: A1.'),
                  T('1. Compute the marginal distributions of $X$ and $Y$ and their means.', '1. Calculați distribuțiile marginale ale lui $X$ și $Y$ și mediile lor.'),
                  T('2. Compute $\\text{Cov}(X, Y)$ and $\\rho$.', '2. Calculați $\\text{Cov}(X, Y)$ și $\\rho$.'),
                  T('3. Decide whether $X$ and $Y$ are independent, using one cell of the table.', '3. Decideți dacă $X$ și $Y$ sînt independente, folosind o celulă a tabelului.'),
                  T('4. Compute $\\text{Var}(X + Y)$.', '4. Calculați $\\text{Var}(X + Y)$.'),
-                 T('Report: two marginals, $\\rho$, a verdict and a variance.', 'Raportați: două marginale, $\\rho$, un verdict și o varianță.')),
+                 T('Report: two marginals, $\\rho$, a verdict and a variance.', 'Raportați: două distribuții marginale, $\\rho$, o concluzie și o varianță.')),
            items(T('1. $X$: $0.25, 0.5, 0.25$, $E[X] = @{a2.ex}$; $Y$: $0.5, 0.5$, $E[Y] = @{a2.ey}$', '1. $X$: $0.25, 0.5, 0.25$, $E[X] = @{a2.ex}$; $Y$: $0.5, 0.5$, $E[Y] = @{a2.ey}$'),
                  T('2. $E[XY] = -0.25 + 0.25 = @{a2.exy}$, $\\text{Cov} = @{a2.cov}$, $\\rho = 0$', '2. $E[XY] = -0.25 + 0.25 = @{a2.exy}$, $\\text{Cov} = @{a2.cov}$, $\\rho = 0$'),
                  T('3. $P(X = 0, Y = 0) = 0.5 \\ne P(X = 0)P(Y = 0) = 0.25$: dependent ($Y = |X|$)', '3. $P(X = 0, Y = 0) = 0.5 \\ne P(X = 0)P(Y = 0) = 0.25$: dependente ($Y = |X|$)'),
                  T('4. $\\text{Var}(X) + \\text{Var}(Y) + 2\\,\\text{Cov} = @{a2.vx} + @{a2.vy} + 0 = @{a2.var_sum}$', '4. $\\text{Var}(X) + \\text{Var}(Y) + 2\\,\\text{Cov} = @{a2.vx} + @{a2.vy} + 0 = @{a2.var_sum}$'),
-                 T('The same structure as returns and their absolute values.', 'Aceeași structură ca randamentele și valorile lor absolute.')),
+                 T('The same structure as returns and their absolute values.', 'Aceeași structură o au randamentele și valorile lor absolute.')),
            size='scriptsize')
 
 D.solved(T('A3: Volatility of a Two-Asset Portfolio', 'A3: volatilitatea unui portofoliu cu două active'),
@@ -291,7 +291,7 @@ D.solved(T('A3: Volatility of a Two-Asset Portfolio', 'A3: volatilitatea unui po
          items(T('1. $\\sigma_p^2 = 0.36 \\times 400 + 0.16 \\times 900 + 2 \\times 0.24 \\times 0.3 \\times 600 = @{a3.v}$; $\\sigma_p = @{a3.p3}\\%$',
                  '1. $\\sigma_p^2 = 0.36 \\times 400 + 0.16 \\times 900 + 2 \\times 0.24 \\times 0.3 \\times 600 = @{a3.v}$; $\\sigma_p = @{a3.p3}\\%$'),
                T('2. $\\rho = 0$: $@{a3.z}\\%$; $\\rho = -0.5$: $@{a3.m5}\\%$; $\\rho = 1$: $@{a3.one}\\%$', '2. $\\rho = 0$: $@{a3.z}\\%$; $\\rho = -0.5$: $@{a3.m5}\\%$; $\\rho = 1$: $@{a3.one}\\%$'),
-               T('3. Only $\\rho = 1$ gives the weighted average $0.6 \\times 20 + 0.4 \\times 30 = 24\\%$; every $\\rho < 1$ diversifies.', '3. Doar $\\rho = 1$ dă media ponderată $0.6 \\times 20 + 0.4 \\times 30 = 24\\%$; orice $\\rho < 1$ diversifică.')),
+               T('3. Only $\\rho = 1$ gives the weighted average $0.6 \\times 20 + 0.4 \\times 30 = 24\\%$; every $\\rho < 1$ diversifies.', '3. Doar $\\rho = 1$ dă media ponderată $0.6 \\times 20 + 0.4 \\times 30 = 24\\%$; orice $\\rho < 1$ aduce un cîștig din diversificare.')),
          size='footnotesize')
 
 D.proposed(T('A4: Two Regimes and the Law of Total Variance', 'A4: două regimuri și legea varianței totale'),
@@ -301,9 +301,9 @@ D.proposed(T('A4: Two Regimes and the Law of Total Variance', 'A4: două regimur
                  T('2. Compute $E[r^4]$ with $E[Z^4] = 3\\sigma^4$ in each regime, then the kurtosis $E[r^4]/\\text{Var}(r)^2$.', '2. Calculați $E[r^4]$ cu $E[Z^4] = 3\\sigma^4$ în fiecare regim, apoi aplatizarea $E[r^4]/\\text{Var}(r)^2$.'),
                  T('3. Explain why the mixture has heavy tails although each regime is Normal.', '3. Explicați de ce amestecul are cozi groase, deși fiecare regim este Normal.'),
                  T('Report: a variance, a kurtosis and one sentence.', 'Raportați: o varianță, o aplatizare și o frază.')),
-           items(T('1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; s.d. $@{a4.sd}\\%$', '1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; abaterea std. $@{a4.sd}\\%$'),
+           items(T('1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; s.d. $@{a4.sd}\\%$', '1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; abaterea standard $@{a4.sd}\\%$'),
                  T('2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; kurtosis $@{a4.kurt}$, excess $@{a4.exkurt}$', '2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; aplatizarea $@{a4.kurt}$, excesul $@{a4.exkurt}$'),
-                 T('3. Large moves come almost only from the turbulent regime; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ vs $0.006\\%$ for one Normal', '3. Mișcările mari vin aproape doar din regimul agitat; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ față de $0.006\\%$ pentru o singură distribuție Normală'),
+                 T('3. Large moves come almost only from the turbulent regime; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ vs $0.006\\%$ for one Normal', '3. Mișcările mari provin aproape numai din regimul agitat; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ față de $0.006\\%$ pentru o singură distribuție Normală'),
                  T('This is the GARCH mechanism in its simplest form.', 'Acesta este mecanismul GARCH în forma lui cea mai simplă.')),
            size='scriptsize')
 
@@ -328,16 +328,16 @@ D.proposed(T('A6: Random Walk, Martingale and AR(1)', 'A6: mers aleator, marting
                  T('2. Show that $S_t^2 - t\\sigma^2$ is also a martingale.', '2. Arătați că și $S_t^2 - t\\sigma^2$ este un martingal.'),
                  T('3. Compute the mean, the variance and $\\rho(1), \\rho(2), \\rho(5)$ of the stationary $X_t$.', '3. Calculați media, varianța și $\\rho(1), \\rho(2), \\rho(5)$ pentru $X_t$ staționar.'),
                  T('4. Compute $E[X_{t+1} \\mid X_t = 2]$ and $\\text{Var}(X_{t+1} \\mid X_t = 2)$.', '4. Calculați $E[X_{t+1} \\mid X_t = 2]$ și $\\text{Var}(X_{t+1} \\mid X_t = 2)$.'),
-                 T('Report: two derivations, five moments, a forecast.', 'Raportați: două derivări, cinci momente, o prognoză.')),
+                 T('Report: two derivations, five moments, a forecast.', 'Raportați: două demonstrații, cinci momente, o prognoză.')),
            items(T('1. $E[S_t] = S_0$, $\\text{Var}(S_t) = t\\sigma^2$; $E[S_{t+1} \\mid \\mathcal{F}_t] = S_t + E[\\varepsilon_{t+1}] = S_t$', '1. $E[S_t] = S_0$, $\\text{Var}(S_t) = t\\sigma^2$; $E[S_{t+1} \\mid \\mathcal{F}_t] = S_t + E[\\varepsilon_{t+1}] = S_t$'),
                  T('2. $E[(S_t + \\varepsilon_{t+1})^2 \\mid \\mathcal{F}_t] = S_t^2 + \\sigma^2$, so $E[S_{t+1}^2 - (t+1)\\sigma^2 \\mid \\mathcal{F}_t] = S_t^2 - t\\sigma^2$', '2. $E[(S_t + \\varepsilon_{t+1})^2 \\mid \\mathcal{F}_t] = S_t^2 + \\sigma^2$, deci $E[S_{t+1}^2 - (t+1)\\sigma^2 \\mid \\mathcal{F}_t] = S_t^2 - t\\sigma^2$'),
                  T('3. Mean $0.2/0.4 = @{a6.mean}$; variance $1/0.64 = @{a6.var}$; $\\rho = @{a6.r1}, @{a6.r2}, @{a6.r5}$', '3. Media $0.2/0.4 = @{a6.mean}$; varianța $1/0.64 = @{a6.var}$; $\\rho = @{a6.r1}, @{a6.r2}, @{a6.r5}$'),
-                 T('4. $0.2 + 0.6 \\times 2 = @{a6.cm}$, conditional variance 1: the forecast is pulled back towards the mean @{a6.mean}', '4. $0.2 + 0.6 \\times 2 = @{a6.cm}$, varianța condiționată 1: prognoza este trasă înapoi spre media @{a6.mean}')),
+                 T('4. $0.2 + 0.6 \\times 2 = @{a6.cm}$, conditional variance 1: the forecast is pulled back towards the mean @{a6.mean}', '4. $0.2 + 0.6 \\times 2 = @{a6.cm}$, varianța condiționată 1: prognoza revine spre media @{a6.mean}')),
            size='scriptsize')
 
 D.solved(T('A7: The Inverse Transform Step by Step', 'A7: transformarea inversă pas cu pas'),
-         items(T('You have the uniform numbers $u = 0.3$ and $u = 0.9$ (and $u = 0.15, 0.45, 0.8$ for question 2).', 'Aveți numerele uniforme $u = 0.3$ și $u = 0.9$ (și $u = 0.15, 0.45, 0.8$ pentru întrebarea 2).'),
-               T('1. Turn $u = 0.3$ and $u = 0.9$ into exponential draws with rate $\\lambda = 0.5$.', '1. Transformați $u = 0.3$ și $u = 0.9$ în extrageri exponențiale cu rata $\\lambda = 0.5$.'),
+         items(T('You have the uniform numbers $u = 0.3$ and $u = 0.9$ (and $u = 0.15, 0.45, 0.8$ for question 2).', 'Aveți numerele uniforme $u = 0.3$ și $u = 0.9$ (și $u = 0.15, 0.45, 0.8$ pentru punctul 2).'),
+               T('1. Turn $u = 0.3$ and $u = 0.9$ into exponential draws with rate $\\lambda = 0.5$.', '1. Transformați $u = 0.3$ și $u = 0.9$ în extrageri din distribuția exponențială cu rata $\\lambda = 0.5$.'),
                T('2. Turn $u = 0.15, 0.45, 0.8$ into draws of the return $X$ of A1.', '2. Transformați $u = 0.15, 0.45, 0.8$ în extrageri ale randamentului $X$ din A1.'),
                T('3. Turn $u = 0.01$ into a draw of $N(0.05, 1.2^2)$.', '3. Transformați $u = 0.01$ într-o extragere din $N(0.05, 1.2^2)$.'),
                T('Report: six simulated values.', 'Raportați: șase valori simulate.')),
@@ -353,7 +353,7 @@ D.proposed(T('A8: GBM and the Wiener Process', 'A8: GBM și procesul Wiener'),
                  T('2. Compute $P(S_T < 100)$ for $T = 1$ and $T = 5$.', '2. Calculați $P(S_T < 100)$ pentru $T = 1$ și $T = 5$.'),
                  T('3. Compute the 5\\% quantile of $S_1$ and of $S_5$.', '3. Calculați cuantila de 5\\% a lui $S_1$ și a lui $S_5$.'),
                  T('4. Compute $\\text{Var}(W(2) - W(0.5))$ and $\\text{Cov}(W(1), W(3))$.', '4. Calculați $\\text{Var}(W(2) - W(0.5))$ și $\\text{Cov}(W(1), W(3))$.'),
-                 T('Report: eight GBM numbers and two Wiener moments.', 'Raportați: opt cifre GBM și două momente Wiener.')),
+                 T('Report: eight GBM numbers and two Wiener moments.', 'Raportați: opt valori pentru GBM și două momente ale procesului Wiener.')),
            items(T('1. $T = 1$: mean $100e^{0.08} = @{a8.T1.mean}$, median $100e^{0.06} = @{a8.T1.median}$; $T = 5$: @{a8.T5.mean} and @{a8.T5.median}', '1. $T = 1$: media $100e^{0.08} = @{a8.T1.mean}$, mediana $100e^{0.06} = @{a8.T1.median}$; $T = 5$: @{a8.T5.mean} și @{a8.T5.median}'),
                  T('2. $\\Phi(-0.06/0.2) = \\Phi(@{a8.T1.z}) = @{a8.T1.pl}\\%$; $\\Phi(-0.3/@{a8.T5.s}) = @{a8.T5.pl}\\%$', '2. $\\Phi(-0.06/0.2) = \\Phi(@{a8.T1.z}) = @{a8.T1.pl}\\%$; $\\Phi(-0.3/@{a8.T5.s}) = @{a8.T5.pl}\\%$'),
                  T('3. $100e^{0.06 - 1.645 \\times 0.2} = @{a8.T1.q}$; $100e^{0.3 - 1.645 \\times @{a8.T5.s}} = @{a8.T5.q}$', '3. $100e^{0.06 - 1.645 \\times 0.2} = @{a8.T1.q}$; $100e^{0.3 - 1.645 \\times @{a8.T5.s}} = @{a8.T5.q}$'),
@@ -377,13 +377,13 @@ D.task(T('B1: Are S\\&P 500 Returns Independent? [Solved]', 'B1: sînt independe
 D.frame(T('B1: Solution [Solved]', 'B1: rezolvare [Rezolvat]'), cols(fig('ch4_sem_b1', h='0.52', w='1.0'), items(
     T('$n = @{b1.n}$, band $\\pm @{b1.band}$; $\\text{Corr}(r_t, r_{t-1}) = @{b1.r}$; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{b1.r2}$', '$n = @{b1.n}$, banda $\\pm @{b1.band}$; $\\text{Corr}(r_t, r_{t-1}) = @{b1.r}$; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{b1.r2}$'),
     T('Conditional means Q1--Q5: $@{b1.m1}, @{b1.m2}, @{b1.m3}, @{b1.m4}, @{b1.m5}$ (\\%)', 'Mediile condiționate Q1--Q5: $@{b1.m1}, @{b1.m2}, @{b1.m3}, @{b1.m4}, @{b1.m5}$ (\\%)'),
-    T('Conditional s.d.: $@{b1.s1}, @{b1.s2}, @{b1.s3}, @{b1.s4}, @{b1.s5}$; Q5/Q1 $= @{b1.ratio}$', 'Abaterile std. condiționate: $@{b1.s1}, @{b1.s2}, @{b1.s3}, @{b1.s4}, @{b1.s5}$; Q5/Q1 $= @{b1.ratio}$'),
-    T('Total variance $@{b1.total} = @{b1.within}$ (within) $+ @{b1.between}$ (between, @{b1.share}\\%)', 'Varianța totală $@{b1.total} = @{b1.within}$ (în grupuri) $+ @{b1.between}$ (între grupuri, @{b1.share}\\%)'),
+    T('Conditional s.d.: $@{b1.s1}, @{b1.s2}, @{b1.s3}, @{b1.s4}, @{b1.s5}$; Q5/Q1 $= @{b1.ratio}$', 'Abaterile standard condiționate: $@{b1.s1}, @{b1.s2}, @{b1.s3}, @{b1.s4}, @{b1.s5}$; Q5/Q1 $= @{b1.ratio}$'),
+    T('Total variance $@{b1.total} = @{b1.within}$ (within) $+ @{b1.between}$ (between, @{b1.share}\\%)', 'Varianța totală $@{b1.total} = @{b1.within}$ (în interiorul grupurilor) $+ @{b1.between}$ (între grupuri, @{b1.share}\\%)'),
     T('Interpretation: the variance is predictable, the mean almost not; the negative lag-1 correlation comes from crisis days with large reversals, so returns are not independent',
       'Interpretare: varianța este previzibilă, media aproape deloc; corelația negativă la decalajul 1 vine din zilele de criză cu reveniri mari, deci randamentele nu sînt independente')),
     wl='0.48', wr='0.50') + qlsem(), 'scriptsize')
 
-D.task(T('B2: The Same for DAX, BET and Bitcoin [Proposed]', 'B2: același lucru pentru DAX, BET și Bitcoin [Propus]'),
+D.task(T('B2: The Same for DAX, BET and Bitcoin [Proposed]', 'B2: aceeași analiză pentru DAX, BET și Bitcoin [Propus]'),
        T('do the DAX, the BET and Bitcoin show the same pattern as the S\\&P 500?', 'arată DAX, BET și Bitcoin același tipar ca S\\&P 500?'),
        T('daily log returns, 2000--2026 (Bitcoin from 2014); model: B1', 'randamente logaritmice zilnice, 2000--2026 (Bitcoin din 2014); model: B1'),
        [T('Compute both lag-1 correlations and the band for each series.', 'Calculați ambele corelații la decalajul 1 și banda pentru fiecare serie.'),
@@ -397,7 +397,7 @@ D.frame(T('B2: Solution [Proposed]', 'B2: rezolvare [Propus]'), table(
     [f'{lab} & $@{{b2.{k}.r}}$ & $@{{b2.{k}.r2}}$ & $@{{b2.{k}.band}}$ & $@{{b2.{k}.sd1}}$ & $@{{b2.{k}.sd5}}$ & $@{{b2.{k}.ratio}}$ & $@{{b2.{k}.bs}}$'
      for lab, k in [('DAX', 'dax'), ('BET', 'bet'), ('Bitcoin', 'btc')]], size='footnotesize') + items(
     T('All three: squared returns correlated far beyond the band, variance larger after large moves, quintile means explain almost nothing',
-      'Toate trei: pătratele randamentelor corelate mult peste bandă, varianța mai mare după mișcări mari, mediile chintilelor nu explică aproape nimic'),
+      'Toate cele trei serii: corelația pătratelor randamentelor depășește mult banda, varianța este mai mare după mișcări mari, iar mediile chintilelor nu explică aproape nimic'),
     T('BET: the strongest volatility dependence (Q5/Q1 = @{b2.bet.ratio})', 'BET: cea mai puternică dependență a volatilității (Q5/Q1 = @{b2.bet.ratio})'),
     T('Interpretation: positive $\\rho(r)$ for the BET reflects thin trading: prices of illiquid stocks react with a delay, so the index inherits yesterday\'s news',
       'Interpretare: $\\rho(r)$ pozitivă pentru BET reflectă lichiditatea redusă: prețurile acțiunilor nelichide reacționează cu întîrziere, deci indicele preia știrile de ieri')) + qlsem(),
@@ -407,23 +407,23 @@ D.task(T('B3: A Monthly Loss Probability by Monte Carlo [Solved]', 'B3: probabil
        T('how likely is a 21-day loss of more than 10\\% for the S\\&P 500, and does the answer depend on the model?', 'cît de probabilă este o pierdere de peste 10\\% în 21 de zile pentru S\\&P 500 și depinde răspunsul de model?'),
        T('S\\&P 500 daily log returns, 2000--2026; 100\\,000 simulated months', 'randamentele logaritmice zilnice ale S\\&P 500, 2000--2026; 100\\,000 de luni simulate'),
        [T('Compute the exact probability under i.i.d. Normal daily returns with the sample mean and standard deviation.', 'Calculați probabilitatea exactă în ipoteza unor randamente zilnice Normale i.i.d., cu media și abaterea standard de selecție.'),
-        T('Estimate it by Monte Carlo under the same model and give the standard error.', 'Estimați-o prin Monte Carlo în același model și dați eroarea standard.'),
+        T('Estimate it by Monte Carlo under the same model and give the standard error.', 'Estimați-o prin Monte Carlo în același model și raportați eroarea standard.'),
         T('Estimate it by resampling 21 observed days with replacement (the empirical inverse transform).', 'Estimați-o prin reeșantionarea cu întoarcere a 21 de zile observate (transformarea inversă empirică).'),
         T('Compute the share of overlapping 21-day windows in the data with a loss beyond 10\\%.', 'Calculați ponderea ferestrelor de 21 de zile suprapuse din date cu o pierdere de peste 10\\%.'),
-        T('Interpretation: which differences are simulation error and which are model error?', 'Interpretare: care diferențe sînt eroare de simulare și care sînt eroare de model?')],
+        T('Interpretation: which differences are simulation error and which are model error?', 'Interpretare: care diferențe se datorează erorii de simulare și care erorii de model?')],
        T('four probabilities, two standard errors, one sentence', 'patru probabilități, două erori standard, o frază'), size='footnotesize', nb='B3')
 
 D.frame(T('B3: Solution [Solved]', 'B3: rezolvare [Rezolvat]'), fig('ch4_sem_b3', h='0.40') + items(
-    T('Exact Normal: @{b3.exact}\\%; Monte Carlo Normal: @{b3.norm}\\% (s.e. @{b3.se}\\%); bootstrap: @{b3.boot}\\% (s.e. @{b3.seb}\\%)', 'Normal exact: @{b3.exact}\\%; Monte Carlo Normal: @{b3.norm}\\% (eroare std. @{b3.se}\\%); bootstrap: @{b3.boot}\\% (eroare std. @{b3.seb}\\%)'),
-    T('Data: @{b3.emp}\\% of @{b3.nover} overlapping windows (@{b3.hits} windows, from a few episodes); non-overlapping months: @{b3.nonover}\\% of @{b3.nn}', 'Date: @{b3.emp}\\% din @{b3.nover} ferestre suprapuse (@{b3.hits} ferestre, din cîteva episoade); luni care nu se suprapun: @{b3.nonover}\\% din @{b3.nn}'),
+    T('Exact Normal: @{b3.exact}\\%; Monte Carlo Normal: @{b3.norm}\\% (s.e. @{b3.se}\\%); bootstrap: @{b3.boot}\\% (s.e. @{b3.seb}\\%)', 'Distribuția Normală, exact: @{b3.exact}\\%; Monte Carlo cu distribuția Normală: @{b3.norm}\\% (eroarea standard @{b3.se}\\%); bootstrap: @{b3.boot}\\% (eroarea standard @{b3.seb}\\%)'),
+    T('Data: @{b3.emp}\\% of @{b3.nover} overlapping windows (@{b3.hits} windows, from a few episodes); non-overlapping months: @{b3.nonover}\\% of @{b3.nn}', 'În date: @{b3.emp}\\% din cele @{b3.nover} ferestre suprapuse (@{b3.hits} ferestre, concentrate în cîteva episoade); luni care nu se suprapun: @{b3.nonover}\\% din @{b3.nn}'),
     T('Interpretation: Monte Carlo vs exact differs by less than one s.e. (simulation error); bootstrap vs Normal differs by about @{b3.zb} s.e. (model error: heavier daily tails); the data are noisy because overlapping windows are dependent',
-      'Interpretare: Monte Carlo față de exact diferă cu mai puțin de o eroare std. (eroare de simulare); bootstrap față de Normal diferă cu circa @{b3.zb} erori std. (eroare de model: cozi zilnice mai groase); datele sînt zgomotoase pentru că ferestrele suprapuse sînt dependente')) + qlsem(),
+      'Interpretare: Monte Carlo și valoarea exactă diferă cu mai puțin de o eroare standard (eroare de simulare); bootstrap-ul și modelul Normal diferă cu circa @{b3.zb} erori standard (eroare de model: cozi zilnice mai groase); datele sînt zgomotoase pentru că ferestrele suprapuse sînt dependente')) + qlsem(),
     'scriptsize')
 
 D.task(T('B4: Test a Random Number Generator [Proposed]', 'B4: testați un generator de numere aleatoare [Propus]'),
        T('can a generator pass simple tests and still be unusable?', 'poate un generator să treacă testele simple și să fie totuși inutilizabil?'),
        T('RANDU, $x_{k+1} = 65539\\,x_k \\bmod 2^{31}$, seed 1, 100\\,000 numbers; NumPy PCG64 with the same seed; model: B3', 'RANDU, $x_{k+1} = 65539\\,x_k \\bmod 2^{31}$, sămînța 1, 100\\,000 de numere; NumPy PCG64 cu aceeași sămînță; model: B3'),
-       [T('Compute the mean, the variance and the lag-1 correlation of both sequences and compare with $1/2$, $1/12$ and 0.', 'Calculați media, varianța și corelația la decalajul 1 pentru ambele șiruri și comparați cu $1/2$, $1/12$ și 0.'),
+       [T('Compute the mean, the variance and the lag-1 correlation of both sequences and compare with $1/2$, $1/12$ and 0.', 'Calculați media, varianța și corelația la decalajul 1 pentru ambele șiruri și comparați-le cu $1/2$, $1/12$ și 0.'),
         T('Count the distinct values of $9u_k - 6u_{k+1} + u_{k+2}$ for both generators.', 'Numărați valorile distincte ale lui $9u_k - 6u_{k+1} + u_{k+2}$ pentru ambele generatoare.'),
         T('Find the period of the LCGs $(a, c, M) = (5, 1, 16)$, $(5, 0, 16)$ and $(4, 1, 16)$ started at 7.', 'Găsiți perioada generatoarelor LCG $(a, c, M) = (5, 1, 16)$, $(5, 0, 16)$ și $(4, 1, 16)$ pornite din 7.'),
         T('Interpretation: why do one-dimensional tests not detect the flaw of RANDU?', 'Interpretare: de ce nu detectează testele unidimensionale defectul RANDU?')],
@@ -433,10 +433,10 @@ D.frame(T('B4: Solution [Proposed]', 'B4: rezolvare [Propus]'), table(
     'lrrrr', T('Generator', 'Generator') + ' & ' + T('mean', 'media') + ' & ' + T('variance', 'varianța') + ' & $\\rho(1)$ & ' + T('distinct values', 'valori distincte'),
     ['RANDU & $@{b4.randu_mean}$ & $@{b4.randu_var}$ & $@{b4.randu_rho}$ & @{b4.rd}',
      'PCG64 & $@{b4.pcg_mean}$ & $@{b4.pcg_var}$ & $@{b4.pcg_rho}$ & @{b4.pd}'], size='footnotesize') + items(
-    T('Both pass the moment and lag-1 tests ($1/12 = 0.0833$); RANDU\'s combination takes only @{b4.rd} values: its triples lie on @{b4.rd} planes', 'Ambele trec testele momentelor și al corelației la decalajul 1 ($1/12 = 0.0833$); combinația RANDU ia doar @{b4.rd} valori: tripletele lui stau pe @{b4.rd} plane'),
+    T('Both pass the moment and lag-1 tests ($1/12 = 0.0833$); RANDU\'s combination takes only @{b4.rd} values: its triples lie on @{b4.rd} planes', 'Ambele trec testele pentru momente și pentru corelația la decalajul 1 ($1/12 = 0.0833$); combinația RANDU ia doar @{b4.rd} valori: tripletele lui stau pe @{b4.rd} plane'),
     T('Periods: (5, 1, 16): @{b4.period_good}; (5, 0, 16): @{b4.period_mid}; (4, 1, 16): @{b4.period_bad}', 'Perioade: (5, 1, 16): @{b4.period_good}; (5, 0, 16): @{b4.period_mid}; (4, 1, 16): @{b4.period_bad}'),
     T('Interpretation: the flaw is in the joint distribution of consecutive numbers; tests of the marginal distribution or of a single lag cannot see it; any 3-dimensional simulation with RANDU is biased',
-      'Interpretare: defectul este în distribuția comună a numerelor consecutive; testele distribuției marginale sau ale unui singur decalaj nu îl pot vedea; orice simulare tridimensională cu RANDU este deformată')) + qlsem(),
+      'Interpretare: defectul este în distribuția comună a numerelor consecutive; testele distribuției marginale sau ale unui singur decalaj nu îl pot detecta; orice simulare tridimensională cu RANDU este deformată')) + qlsem(),
     'footnotesize', instructor_only=True)
 
 D.task(T('B5: Is the BET a Geometric Brownian Motion? [Solved]', 'B5: este BET o mișcare browniană geometrică? [Rezolvat]'),
@@ -445,35 +445,35 @@ D.task(T('B5: Is the BET a Geometric Brownian Motion? [Solved]', 'B5: este BET o
        [T('Calibrate GBM: annual log drift and volatility from the daily log returns.', 'Calibrați GBM: tendința logaritmică anuală și volatilitatea din randamentele logaritmice zilnice.'),
         T('Simulate 500 paths and compute, for each, the excess kurtosis, $\\text{Corr}(r_t^2, r_{t-1}^2)$ and the maximum drawdown.', 'Simulați 500 de traiectorii și calculați, pentru fiecare, excesul de aplatizare, $\\text{Corr}(r_t^2, r_{t-1}^2)$ și drawdown-ul maxim.'),
         T('Locate the real values in the simulated distributions (5\\% and 95\\% quantiles).', 'Plasați valorile reale în distribuțiile simulate (cuantilele de 5\\% și 95\\%).'),
-        T('Interpretation: which stylised facts does GBM miss, and which risk number is most affected?', 'Interpretare: ce fapte stilizate ratează GBM și care cifră de risc este cea mai afectată?')],
+        T('Interpretation: which stylised facts does GBM miss, and which risk number is most affected?', 'Interpretare: ce fapte stilizate ratează GBM și care indicator de risc este cel mai afectat?')],
        T('two parameters, three comparisons, one sentence', 'doi parametri, trei comparații, o frază'), size='footnotesize', nb='B5')
 
 D.frame(T('B5: Solution [Solved]', 'B5: rezolvare [Rezolvat]'), fig('ch4_sem_b5', h='0.36') + items(
     T('$n = @{b5.n}$ days; $\\sigma = @{b5.sigma}\\%$, log drift @{b5.mulog}\\% a year', '$n = @{b5.n}$ zile; $\\sigma = @{b5.sigma}\\%$, tendința logaritmică @{b5.mulog}\\% pe an'),
     T('Excess kurtosis: real $@{b5.k}$, GBM 90\\% range $[@{b5.klo}, @{b5.khi}]$; $\\text{Corr}(r_t^2, r_{t-1}^2)$: real $@{b5.a}$, GBM $[@{b5.alo}, @{b5.ahi}]$',
       'Excesul de aplatizare: real $@{b5.k}$, intervalul GBM de 90\\% $[@{b5.klo}, @{b5.khi}]$; $\\text{Corr}(r_t^2, r_{t-1}^2)$: real $@{b5.a}$, GBM $[@{b5.alo}, @{b5.ahi}]$'),
-    T('Maximum drawdown: real $@{b5.dd}\\%$, GBM median $@{b5.ddmed}\\%$, range $[@{b5.ddlo}\\%, @{b5.ddhi}\\%]$', 'Drawdown-ul maxim: real $@{b5.dd}\\%$, mediana GBM $@{b5.ddmed}\\%$, intervalul $[@{b5.ddlo}\\%, @{b5.ddhi}\\%]$'),
+    T('Maximum drawdown: real $@{b5.dd}\\%$, GBM median $@{b5.ddmed}\\%$, range $[@{b5.ddlo}\\%, @{b5.ddhi}\\%]$', 'Drawdown-ul maxim: real $@{b5.dd}\\%$, mediana GBM $@{b5.ddmed}\\%$, intervalul $[@{b5.ddlo}\\%; @{b5.ddhi}\\%]$'),
     T('Interpretation: GBM misses heavy tails and volatility clustering completely; the 2008 crash makes the real drawdown deeper than every simulated path, so a GBM-based risk limit would have been far too loose',
-      'Interpretare: GBM ratează complet cozile groase și volatility clustering; crahul din 2008 face drawdown-ul real mai adînc decît al oricărei traiectorii simulate, deci o limită de risc bazată pe GBM ar fi fost mult prea largă')) + qlsem(),
+      'Interpretare: GBM nu reproduce deloc cozile groase și volatility clustering; crahul din 2008 face drawdown-ul real mai adînc decît al oricărei traiectorii simulate, deci o limită de risc calculată cu GBM ar fi fost mult prea largă')) + qlsem(),
     'scriptsize')
 
 D.task(T('B6: Does Variance Grow Linearly with the Horizon? [Proposed]', 'B6: crește varianța liniar cu orizontul? [Propus]'),
-       T('does $\\text{Var}(h\\text{-day return}) = h\\,\\text{Var}(1\\text{-day return})$ hold, as a random walk with i.i.d. increments predicts?', 'este valabilă relația $\\text{Var}(\\text{randament pe } h \\text{ zile}) = h\\,\\text{Var}(\\text{randament zilnic})$, cum prezice un mers aleator cu creșteri i.i.d.?'),
-       T('S\\&P 500, BET, Bitcoin daily log returns; non-overlapping blocks of $h = 5, 21, 63$ days; model: B5', 'randamentele logaritmice zilnice ale S\\&P 500, BET, Bitcoin; blocuri care nu se suprapun de $h = 5, 21, 63$ de zile; model: B5'),
+       T('does $\\text{Var}(h\\text{-day return}) = h\\,\\text{Var}(1\\text{-day return})$ hold, as a random walk with i.i.d. increments predicts?', 'este valabilă relația $\\text{Var}(\\text{randament pe } h \\text{ zile}) = h\\,\\text{Var}(\\text{randament zilnic})$, așa cum implică un mers aleator cu creșteri i.i.d.?'),
+       T('S\\&P 500, BET, Bitcoin daily log returns; non-overlapping blocks of $h = 5, 21, 63$ days; model: B5', 'randamentele logaritmice zilnice ale S\\&P 500, BET, Bitcoin; blocuri disjuncte de $h = 5$, 21 și 63 de zile; model: B5'),
        [T('Compute the ratio $\\text{Var}(h\\text{-day})/(h\\,\\text{Var}(1\\text{-day}))$ for each series and horizon.', 'Calculați raportul $\\text{Var}(h \\text{ zile})/(h\\,\\text{Var}(1 \\text{ zi}))$ pentru fiecare serie și orizont.'),
-        T('Use the approximate standard error $\\sqrt{2/(m - 1)}$ of a variance ratio with $m$ blocks to judge the distance from 1.', 'Folosiți eroarea standard aproximativă $\\sqrt{2/(m - 1)}$ a unui raport de varianțe cu $m$ blocuri pentru a judeca distanța față de 1.'),
+        T('Use the approximate standard error $\\sqrt{2/(m - 1)}$ of a variance ratio with $m$ blocks to judge the distance from 1.', 'Folosiți eroarea standard aproximativă $\\sqrt{2/(m - 1)}$ a unui raport de varianțe cu $m$ blocuri pentru a evalua cît de departe este raportul de 1.'),
         T('Interpretation: what does a ratio above 1 or below 1 say about the autocorrelation of returns?', 'Interpretare: ce spune un raport peste 1 sau sub 1 despre autocorelația randamentelor?')],
        T('a $3 \\times 3$ table and two sentences', 'un tabel $3 \\times 3$ și două fraze'), size='footnotesize', nb='B6')
 
 D.frame(T('B6: Solution [Proposed]', 'B6: rezolvare [Propus]'), table(
     'lrrr', T('Series', 'Seria') + ' & $h = 5$ & $h = 21$ & $h = 63$',
     [f'{lab} & $@{{b6.{k}.5}}$ & $@{{b6.{k}.21}}$ & $@{{b6.{k}.63}}$' for lab, k in [('S\\&P 500', 'sp500'), ('BET', 'bet'), ('Bitcoin', 'btc')]]
-    + [T('approx. s.e. (S\\&P 500)', 'eroare std. aprox. (S\\&P 500)') + ' & $@{b6.sp500.5.se}$ & $@{b6.sp500.21.se}$ & $@{b6.sp500.63.se}$'], size='footnotesize') + items(
+    + [T('approx. s.e. (S\\&P 500)', 'eroarea standard aprox. (S\\&P 500)') + ' & $@{b6.sp500.5.se}$ & $@{b6.sp500.21.se}$ & $@{b6.sp500.63.se}$'], size='footnotesize') + items(
     T('S\\&P 500 below 1 (mean reversion over weeks, mostly from crisis rebounds); BET above 1 and growing (positive autocorrelation, thin trading); Bitcoin within about two s.e. of 1',
-      'S\\&P 500 sub 1 (revenire la medie pe cîteva săptămîni, mai ales din revenirile de după crize); BET peste 1 și în creștere (autocorelație pozitivă, lichiditate redusă); Bitcoin la circa două erori std. de 1'),
+      'S\\&P 500 sub 1 (revenire la medie pe cîteva săptămîni, mai ales din revenirile de după crize); BET peste 1 și în creștere (autocorelație pozitivă, lichiditate redusă); Bitcoin, la circa două erori standard de 1'),
     T('Interpretation: $\\text{Var}(\\sum r) = h\\sigma^2 + 2\\sum_{i<j}\\text{Cov}(r_i, r_j)$; positive autocorrelations push the ratio above 1, negative ones below 1',
       'Interpretare: $\\text{Var}(\\sum r) = h\\sigma^2 + 2\\sum_{i<j}\\text{Cov}(r_i, r_j)$; autocorelațiile pozitive împing raportul peste 1, cele negative sub 1'),
-    T('This is the variance-ratio test of Chapter 7, with its proper standard errors', 'Acesta este testul raportului varianțelor din Capitolul 7, cu erorile standard corecte')) + qlsem(),
+    T('This is the variance-ratio test of Chapter 7, with its proper standard errors', 'Acesta este testul raportului varianțelor din Capitolul 7, unde se folosesc erorile standard exacte ale testului')) + qlsem(),
     'footnotesize', instructor_only=True)
 
 # =============================================================================
@@ -481,13 +481,13 @@ D.frame(T('B6: Solution [Proposed]', 'B6: rezolvare [Propus]'), table(
 # =============================================================================
 D.section('Part C: Open Questions and AI Critique', 'Partea C: întrebări deschise și critica unui răspuns AI')
 
-D.task(T('C1: How Often Is There a Bad Year? [Proposed]', 'C1: cît de des apare un an prost? [Propus]'),
+D.task(T('C1: How Often Is There a Bad Year? [Proposed]', 'C1: cît de des apare un an nefavorabil? [Propus]'),
        T('does GBM give the right probability of a drawdown beyond 20\\% (or 40\\%) within one calendar year?', 'dă GBM probabilitatea corectă a unui drawdown de peste 20\\% (sau 40\\%) în cursul unui an calendaristic?'),
        T('S\\&P 500, DAX, BET, Bitcoin, complete calendar years 2000--2025 (Bitcoin 2015--2025); models: B3, B5', 'S\\&P 500, DAX, BET, Bitcoin, ani calendaristici compleți 2000--2025 (Bitcoin 2015--2025); modele: B3, B5'),
        [T('Compute the maximum drawdown within each calendar year and the share of years beyond 20\\% and beyond 40\\%.', 'Calculați drawdown-ul maxim din fiecare an calendaristic și ponderea anilor cu peste 20\\% și cu peste 40\\%.'),
         T('Simulate 10\\,000 one-year paths under GBM and under the i.i.d. bootstrap of the daily returns and compute the same two probabilities.', 'Simulați 10\\,000 de traiectorii de un an în GBM și în bootstrap-ul i.i.d. al randamentelor zilnice și calculați aceleași două probabilități.'),
         T('Compare data and models with a binomial test.', 'Comparați datele și modelele cu un test binomial.'),
-        T('Propose one model that could reproduce both numbers.', 'Propuneți un model care ar putea reproduce ambele cifre.'),
+        T('Propose one model that could reproduce both numbers.', 'Propuneți un model care ar putea reproduce ambele probabilități.'),
         T('Interpretation: what does the gap between the bootstrap and the data say about volatility clustering?', 'Interpretare: ce spune diferența dintre bootstrap și date despre volatility clustering?')],
        T('a table, two binomial $p$-values, a short project plan', 'un tabel, două valori $p$ binomiale, un scurt plan de proiect'), size='footnotesize', nb='C1')
 
@@ -495,9 +495,9 @@ D.frame(T('C1: Reference Analysis [Proposed]', 'C1: analiză de referință [Pro
     'lrrrrrrr', T('Series', 'Seria') + ' & ' + T('years', 'ani') + ' & ' + T('data 20\\%', 'date 20\\%') + ' & GBM & boot. & ' + T('data 40\\%', 'date 40\\%') + ' & GBM & boot.',
     [f'{lab} & @{{c1.{k}.ny}} & @{{c1.{k}.real20}} & @{{c1.{k}.gbm20}} & @{{c1.{k}.boot20}} & @{{c1.{k}.real40}} & @{{c1.{k}.gbm40}} & @{{c1.{k}.boot40}}'
      for lab, k in [('S\\&P 500', 'sp500'), ('DAX', 'dax'), ('BET', 'bet'), ('Bitcoin', 'btc')]], size='footnotesize') + items(
-    T('20\\%: GBM and bootstrap agree with each other; the S\\&P 500 had fewer bad years than both, the BET more', '20\\%: GBM și bootstrap-ul sînt de acord între ele; S\\&P 500 a avut mai puțini ani proști decît ambele, BET mai mulți'),
+    T('20\\%: GBM and bootstrap agree with each other; the S\\&P 500 had fewer bad years than both, the BET more', '20\\%: GBM și bootstrap-ul dau rezultate apropiate; S\\&P 500 a avut mai puțini ani nefavorabili decît prevăd ambele modele, BET mai mulți'),
     T('40\\%: both models give well under 3\\% for the indices, but 2008 (and for the DAX 2001--2002) happened: deep drawdowns need clustered volatility, not only heavy tails',
-      '40\\%: ambele modele dau mult sub 3\\% pentru indici, dar 2008 (și, pentru DAX, 2001--2002) a avut loc: drawdown-urile adînci cer volatilitate în grupuri, nu doar cozi groase'),
+      '40\\%: ambele modele dau probabilități mult sub 3\\% pentru indici, totuși 2008 (și, pentru DAX, 2001--2002) s-a produs: drawdown-urile adînci cer volatility clustering, nu doar cozi groase'),
     T('Project directions: GARCH(1,1) and regime-switching simulations, block bootstrap, more indices, a formal test on 26 years', 'Direcții de proiect: simulări GARCH(1,1) și cu schimbare de regim, block bootstrap, mai mulți indici, un test formal pe 26 de ani')) + qlsem(),
     'footnotesize', instructor_only=True)
 
@@ -509,24 +509,24 @@ D.frame(T('C2: Audit an AI Answer [Proposed]', 'C2: verificați un răspuns AI [
     T('\\aiprompt{(b) The log price is a random walk, so its variance is the same at every date and the process is stationary.}',
       '\\aiprompt{(b) Prețul logaritmic este un mers aleator, deci varianța lui este aceeași la fiecare dată și procesul este staționar.}'),
     T('\\aiprompt{(c) Under GBM with mu = @{c2.mu}\\% and sigma = @{c2.sigma}\\%, the median value of 100 after 10 years is 100 exp(0.8) = @{c2.mean10}.}',
-      '\\aiprompt{(c) În GBM cu mu = @{c2.mu}\\% și sigma = @{c2.sigma}\\%, valoarea mediană a 100 după 10 ani este 100 exp(0,8) = @{c2.mean10}.}'),
+      '\\aiprompt{(c) În GBM cu mu = @{c2.mu}\\% și sigma = @{c2.sigma}\\%, valoarea mediană a unei investiții de 100 după 10 ani este 100 exp(0,8) = @{c2.mean10}.}'),
     T('\\aiprompt{(d) A Monte Carlo probability of about 3\\% from 10,000 paths has a standard error of about @{c2.se}.}',
       '\\aiprompt{(d) O probabilitate Monte Carlo de circa 3\\% din 10.000 de traiectorii are o eroare standard de circa @{c2.se}.}'),
     T('\\aiprompt{(e) A 50/50 portfolio of S\\&P 500 and DAX has daily volatility sqrt(0.25 x @{c2.sdsp}\\textasciicircum 2 + 0.25 x @{c2.sddax}\\textasciicircum 2) = @{c2.sdw}\\%.}',
       '\\aiprompt{(e) Un portofoliu 50/50 din S\\&P 500 și DAX are volatilitatea zilnică sqrt(0,25 x @{c2.sdsp}\\textasciicircum 2 + 0,25 x @{c2.sddax}\\textasciicircum 2) = @{c2.sdw}\\%.}'),
     (T('Tasks', 'Cerințe'),
      [T('1. For each statement, say whether it is correct; if not, give the correct statement and the correct number from the notebook (section C2).',
-        '1. Pentru fiecare afirmație spuneți dacă este corectă; dacă nu, dați afirmația corectă și cifra corectă din notebook (secțiunea C2).'),
+        '1. Pentru fiecare afirmație stabiliți dacă este corectă; dacă nu este, formulați afirmația corectă și dați valoarea corectă din notebook (secțiunea C2).'),
       T('2. Report: a list of five verdicts with one line of justification each.', '2. Raportați: o listă de cinci verdicte, fiecare cu un rînd de justificare.')])),
     'scriptsize')
 
 D.frame(T('C2: Solution [Proposed]', 'C2: rezolvare [Propus]'), items(
     T('(a) Wrong: uncorrelated is not independent; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{c2.r2}$ and the conditional s.d. after the most turbulent days is @{c2.ratio} times that after the calmest',
-      '(a) Greșit: necorelat nu înseamnă independent; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{c2.r2}$, iar abaterea std. condiționată după zilele cele mai agitate este de @{c2.ratio} ori cea de după zilele cele mai calme'),
+      '(a) Greșit: necorelat nu înseamnă independent; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{c2.r2}$, iar abaterea standard condiționată după zilele cele mai agitate este de @{c2.ratio} ori mai mare decît cea de după zilele cele mai calme'),
     T('(b) Wrong: $\\text{Var}(S_t) = t\\sigma^2$ grows with $t$; a random walk is not stationary (its increments are)', '(b) Greșit: $\\text{Var}(S_t) = t\\sigma^2$ crește cu $t$; un mers aleator nu este staționar (creșterile lui sînt)'),
     T('(c) Wrong: $100e^{\\mu T} = @{c2.mean10}$ is the mean; the median is $100e^{(\\mu - \\sigma^2/2)T} = @{c2.median10}$', '(c) Greșit: $100e^{\\mu T} = @{c2.mean10}$ este media; mediana este $100e^{(\\mu - \\sigma^2/2)T} = @{c2.median10}$'),
     T('(d) Correct: $\\sqrt{0.03 \\times 0.97/10\\,000} = @{c2.se}$; the error falls like $1/\\sqrt{N}$, not $1/N$', '(d) Corect: $\\sqrt{0.03 \\times 0.97/10\\,000} = @{c2.se}$; eroarea scade ca $1/\\sqrt{N}$, nu ca $1/N$'),
-    T('(e) Wrong: the covariance term is missing; with $\\rho = @{c2.corr}$ the volatility is $@{c2.sdp}\\%$, not $@{c2.sdw}\\%$: the AI understates the risk', '(e) Greșit: lipsește termenul de covarianță; cu $\\rho = @{c2.corr}$ volatilitatea este $@{c2.sdp}\\%$, nu $@{c2.sdw}\\%$: AI subestimează riscul')) + qlsem(),
+    T('(e) Wrong: the covariance term is missing; with $\\rho = @{c2.corr}$ the volatility is $@{c2.sdp}\\%$, not $@{c2.sdw}\\%$: the AI understates the risk', '(e) Greșit: lipsește termenul de covarianță; cu $\\rho = @{c2.corr}$ volatilitatea este $@{c2.sdp}\\%$, nu $@{c2.sdw}\\%$: răspunsul AI subestimează riscul')) + qlsem(),
     'footnotesize', instructor_only=True)
 
 # =============================================================================
@@ -534,13 +534,13 @@ D.frame(T('C2: Solution [Proposed]', 'C2: rezolvare [Propus]'), items(
 # =============================================================================
 D.section('Wrap-Up', 'Încheiere')
 
-D.frame(T('What You Should Take from Today', 'Ce rămîne de azi'), items(
+D.frame(T('What You Should Take from Today', 'Idei de reținut'), items(
     T('Zero correlation does not mean independence: check squares or absolute values too', 'Corelația zero nu înseamnă independență: verificați și pătratele sau valorile absolute'),
-    T('The conditional variance of returns moves with yesterday\'s news; the conditional mean hardly moves', 'Varianța condiționată a randamentelor se mișcă după știrile de ieri; media condiționată abia se mișcă'),
+    T('The conditional variance of returns moves with yesterday\'s news; the conditional mean hardly moves', 'Varianța condiționată a randamentelor reacționează la știrile de ieri; media condiționată aproape deloc'),
     T('Mixtures of Normal regimes give heavy tails', 'Amestecurile de regimuri Normale dau cozi groase'),
     T('Monte Carlo: report the standard error; separate simulation error from model error', 'Monte Carlo: raportați eroarea standard; separați eroarea de simulare de eroarea de model'),
-    T('GBM reproduces the path of an index roughly, but not its tails, clusters or deepest drawdowns', 'GBM reproduce aproximativ traiectoria unui indice, dar nu cozile, grupurile de volatilitate sau cele mai adînci drawdown-uri'),
-    T('An AI answer is a draft: check every definition, model and number', 'Un răspuns AI este o ciornă: verificați fiecare definiție, model și cifră')))
+    T('GBM reproduces the path of an index roughly, but not its tails, clusters or deepest drawdowns', 'GBM reproduce aproximativ traiectoria unui indice, dar nu și cozile, volatility clustering sau cele mai adînci drawdown-uri'),
+    T('An AI answer is a draft: check every definition, model and number', 'Un răspuns AI este o ciornă: verificați fiecare definiție, fiecare model și fiecare valoare numerică')))
 
 D.frame(T('After the Seminar', 'După seminar'), items(
     T('Lecture 4 develops each topic of today: distributions, dependence, conditioning, Monte Carlo, binomial trees, random walks, Wiener process and GBM',

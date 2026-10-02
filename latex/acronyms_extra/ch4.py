@@ -16,4 +16,5 @@ EXTRA = {
 }
 OVERRIDE_CH = {
     'AR': ('AutoRegressive (model)', 'en', 'model autoregresiv', None),
+    'GBM': ('Geometric Brownian Motion', 'en', 'mișcarea browniană geometrică', None),
 }

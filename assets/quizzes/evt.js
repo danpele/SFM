@@ -32,7 +32,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "$1 - x$ pentru $0 \\le x \\le 1$"
                 ],
                 "correctExplanation": "O lege putere $Cx^{-\\alpha}$ scade mult mai încet decît orice exponențială: este o coadă groasă cu indicele $\\alpha = 3$.",
-                "incorrectExplanation": "Cozile exponențiale și gaussiene sînt subțiri; o lege mărginită nu are deloc coadă. Doar $Cx^{-3}$ este o lege putere."
+                "incorrectExplanation": "Cozile exponențiale și cea a distribuției Normale sînt subțiri; o distribuție mărginită nu are coadă. Doar $Cx^{-3}$ este o lege putere."
             }
         },
         {
@@ -59,7 +59,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Este aceeași"
                 ],
                 "correctExplanation": "$P(L > 2x)/P(L > x) = 2^{-\\alpha} = 2^{-3} = 1/8$.",
-                "incorrectExplanation": "Pentru o coadă putere raportul este $2^{-\\alpha}$, aici $1/8$, oricare ar fi nivelul $x$."
+                "incorrectExplanation": "Pentru o coadă de tip putere raportul este $2^{-\\alpha}$, aici $1/8$, oricare ar fi nivelul $x$."
             }
         },
         {
@@ -81,12 +81,12 @@ window.SFM_DATA.quizzes['evt'] = {
                 "text": "O distribuție a pierderilor are indicele de coadă $\\alpha = 3$. Ce afirmație este adevărată?",
                 "options": [
                     "Varianța este infinită",
-                    "Varianța este finită, kurtosis-ul este infinit",
+                    "Varianța este finită, aplatizarea este infinită",
                     "Toate momentele sînt finite",
                     "Media este infinită"
                 ],
                 "correctExplanation": "Momentele de ordin $m < \\alpha$ există: $m = 2$ da, $m = 4$ nu.",
-                "incorrectExplanation": "$E|L|^m$ este finit doar pentru $m < \\alpha = 3$: media și varianța există, kurtosis-ul (momentul de ordin patru) nu."
+                "incorrectExplanation": "$E|L|^m$ este finit doar pentru $m < \\alpha = 3$: media și varianța există, aplatizarea (momentul de ordin patru) nu."
             }
         },
         {
@@ -193,8 +193,8 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Nimic: un $k$ mai mare este întotdeauna mai bun",
                     "Estimatorul nu se poate calcula"
                 ],
-                "correctExplanation": "Un $k$ mare reduce varianța, dar folosește pierderi unde legea putere nu mai este valabilă: deplasare. Citim $\\hat\\alpha$ acolo unde graficul Hill este plat.",
-                "incorrectExplanation": "Un $k$ mic înseamnă varianță mare; un $k$ mare lasă corpul să intre și creează deplasare."
+                "correctExplanation": "Un $k$ mare reduce varianța, dar folosește pierderi unde legea putere nu mai este valabilă: deplasare. Alegem $\\hat\\alpha$ din zona în care graficul Hill este aproximativ orizontal.",
+                "incorrectExplanation": "Un $k$ mic înseamnă varianță mare; un $k$ mare include corpul distribuției și creează deplasare."
             }
         },
         {
@@ -215,13 +215,13 @@ window.SFM_DATA.quizzes['evt'] = {
                 "title": "Bootstrap pe blocuri",
                 "text": "De ce folosim un bootstrap pe blocuri mobile pentru eroarea standard a estimatorului Hill pe randamente zilnice?",
                 "options": [
-                    "Pierderile mari vin în grupuri; blocurile păstrează dependența",
+                    "Pierderile mari apar grupat; blocurile păstrează dependența",
                     "Pentru a mări $\\hat\\alpha$",
                     "Pentru că estimatorul Hill cere date Normale",
                     "Pentru a elimina cele mai mari pierderi"
                 ],
-                "correctExplanation": "Gruparea volatilității face randamentele dependente; reeșantionarea unor blocuri de zile consecutive păstrează această dependență în eșantioanele bootstrap.",
-                "incorrectExplanation": "Formula i.i.d. ignoră gruparea; blocurile de zile consecutive o păstrează."
+                "correctExplanation": "Volatility clustering face randamentele dependente; reeșantionarea unor blocuri de zile consecutive păstrează această dependență în eșantioanele bootstrap.",
+                "incorrectExplanation": "Formula i.i.d. ignoră această dependență; blocurile de zile consecutive o păstrează."
             }
         },
         {
@@ -247,8 +247,8 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Varianță finită și moment de ordin patru infinit",
                     "O distribuție mărginită"
                 ],
-                "correctExplanation": "Un indice de coadă în jur de 3 (legea cubică inversă) dă o varianță finită, dar niciun kurtosis finit.",
-                "incorrectExplanation": "Cu $\\hat\\alpha \\approx 3$: există momentele de ordin sub 3; varianța este finită, kurtosis-ul nu."
+                "correctExplanation": "Un indice de coadă în jur de 3 (legea cubică inversă) implică o varianță finită, dar o aplatizare infinită.",
+                "incorrectExplanation": "Cu $\\hat\\alpha \\approx 3$: există momentele de ordin mai mic decît 3; varianța este finită, aplatizarea nu."
             }
         },
         {
@@ -270,12 +270,12 @@ window.SFM_DATA.quizzes['evt'] = {
                 "text": "Funcția mean excess empirică a pierderilor zilnice crește aproximativ liniar peste un prag. Aceasta indică",
                 "options": [
                     "O coadă exponențială",
-                    "O coadă Normală",
+                    "Coada distribuției Normale",
                     "O distribuție mărginită",
                     "O coadă groasă, de tip Pareto ($\\xi > 0$)"
                 ],
                 "correctExplanation": "Pentru o GPD cu $0 < \\xi < 1$, $e(u)$ este o dreaptă crescătoare cu panta $\\xi/(1 - \\xi)$.",
-                "incorrectExplanation": "Exponențială: $e(u)$ constant; Normală: $e(u)$ descrescător; o dreaptă crescătoare înseamnă o coadă putere."
+                "incorrectExplanation": "Distribuția exponențială: $e(u)$ constantă; distribuția Normală: $e(u)$ descrescătoare; o dreaptă crescătoare indică o coadă de tip putere."
             }
         },
         {
@@ -321,12 +321,12 @@ window.SFM_DATA.quizzes['evt'] = {
             },
             "ro": {
                 "title": "Fisher–Tippett–Gnedenko",
-                "text": "Dacă maximele normalizate ale unor variabile i.i.d. converg către o lege nedegenerată, acea lege este",
+                "text": "Dacă maximele normalizate ale unor variabile i.i.d. converg către o distribuție nedegenerată, acea distribuție este",
                 "options": [
                     "Întotdeauna distribuția Normală",
-                    "O lege generalizată a valorilor extreme (GEV)",
-                    "Întotdeauna legea Gumbel",
-                    "O lege Pareto generalizată"
+                    "O distribuție generalizată a valorilor extreme (GEV)",
+                    "Întotdeauna distribuția Gumbel",
+                    "O distribuție Pareto generalizată"
                 ],
                 "correctExplanation": "Teorema spune că singurele limite posibile ale maximelor normalizate formează familia GEV (Fréchet, Gumbel, Weibull).",
                 "incorrectExplanation": "GPD descrie excesele peste un prag; limita maximelor este o GEV, de unul dintre cele trei tipuri."
@@ -348,15 +348,15 @@ window.SFM_DATA.quizzes['evt'] = {
             },
             "ro": {
                 "title": "Domeniul de atracție",
-                "text": "Maximele lunare ale pierderilor zilnice cu indicele de coadă $\\alpha \\approx 3$ urmează aproximativ ce lege?",
+                "text": "Maximele lunare ale pierderilor zilnice cu indicele de coadă $\\alpha \\approx 3$ urmează aproximativ ce distribuție?",
                 "options": [
                     "Gumbel, cu $\\xi = 0$",
                     "Weibull, cu $\\xi = -1/3$",
-                    "Normală",
+                    "Distribuția Normală",
                     "Fréchet, cu $\\xi \\approx 1/3$"
                 ],
-                "correctExplanation": "Cozile putere duc la tipul Fréchet cu $\\xi = 1/\\alpha$.",
-                "incorrectExplanation": "Gumbel este limita pentru cozi subțiri, Weibull pentru variabile mărginite; cozile putere dau Fréchet cu $\\xi = 1/\\alpha$."
+                "correctExplanation": "Cozile de tip putere duc la tipul Fréchet cu $\\xi = 1/\\alpha$.",
+                "incorrectExplanation": "Gumbel este limita pentru cozi subțiri, Weibull pentru variabile mărginite; cozile de tip putere duc la Fréchet cu $\\xi = 1/\\alpha$."
             }
         },
         {
@@ -382,8 +382,8 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Gumbel",
                     "Nu converg"
                 ],
-                "correctExplanation": "Legea Normală este în domeniul de atracție Gumbel ($\\xi = 0$), ca Exponențiala și lognormala.",
-                "incorrectExplanation": "Cozile subțiri, nemărginite, dau tipul Gumbel; Fréchet cere cozi putere, Weibull un capăt finit."
+                "correctExplanation": "Distribuția Normală este în domeniul de atracție Gumbel ($\\xi = 0$), ca și distribuțiile exponențială și lognormală.",
+                "incorrectExplanation": "Cozile subțiri, nemărginite, dau tipul Gumbel; Fréchet cere cozi de tip putere, Weibull un capăt finit."
             }
         },
         {
@@ -410,7 +410,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Pierderea depășită în 10% dintre zile"
                 ],
                 "correctExplanation": "$z = H^{-1}(1 - 1/120)$: nivelul depășit, în medie, o dată la 120 de blocuri.",
-                "incorrectExplanation": "Un return level este o cuantilă a legii maximului pe bloc, $H^{-1}(1 - 1/m)$ cu $m = 12T$ luni; nu este o valoare observată."
+                "incorrectExplanation": "Un return level este o cuantilă a distribuției maximului pe bloc, $H^{-1}(1 - 1/m)$ cu $m = 12T$ luni; nu este o valoare observată."
             }
         },
         {
@@ -429,14 +429,14 @@ window.SFM_DATA.quizzes['evt'] = {
             },
             "ro": {
                 "title": "Return levels în date",
-                "text": "O ajustare GEV pe maximele lunare ale pierderilor S&P 500 dă un return level de 10 ani de circa 7,4%. Cea mai mare pierdere din 1990 a fost de 12,8%. Ce înseamnă?",
+                "text": "O ajustare GEV la maximele lunare ale pierderilor S&P 500 dă un return level de 10 ani de circa 7,4%. Cea mai mare pierdere din 1990 a fost de 12,8%. Ce înseamnă?",
                 "options": [
                     "Modelul este greșit, pentru că s-a observat o pierdere mai mare",
                     "Pierderile peste nivelul de 10 ani apar de cîteva ori în 36 de ani, cum era de așteptat",
                     "Nicio pierdere nu poate depăși nivelul de 10 ani",
                     "Nivelul de 10 ani este egal cu cea mai mare pierdere"
                 ],
-                "correctExplanation": "În 36 de ani ne așteptăm la circa 3–4 luni peste nivelul de 10 ani; depășirea lui este normală.",
+                "correctExplanation": "În 36 de ani ne așteptăm la circa 3–4 luni peste nivelul de 10 ani; depășirea lui nu este surprinzătoare.",
                 "incorrectExplanation": "Un nivel de 10 ani este depășit în medie o dată la 10 ani, deci cîteva depășiri în 36 de ani sînt compatibile cu modelul."
             }
         },
@@ -545,7 +545,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "$\\beta/(1 - \\xi)$"
                 ],
                 "correctExplanation": "Rezolvînd $(N_u/n)(1 + \\xi(x - u)/\\beta)^{-1/\\xi} = p$ în raport cu $x$ obținem formula cu exponentul $-\\xi$.",
-                "incorrectExplanation": "Exponentul trebuie să fie $-\\xi$: cu $+\\xi$, VaR coboară sub $u$ pentru $p < N_u/n$; $\\beta/(1 - \\xi)$ este mean excess-ul la $u$."
+                "incorrectExplanation": "Exponentul trebuie să fie $-\\xi$: cu $+\\xi$, VaR coboară sub $u$ pentru $p < N_u/n$; $\\beta/(1 - \\xi)$ este valoarea funcției mean excess în $u$."
             }
         },
         {
@@ -617,16 +617,16 @@ window.SFM_DATA.quizzes['evt'] = {
                 "incorrectExplanation": "Quantiles always exist; the gap comes from the thin Normal tail, not from the data or from EVT."
             },
             "ro": {
-                "title": "EVT vs Normală în date",
+                "title": "EVT și distribuția Normală în date",
                 "text": "Pentru pierderile S&P 500 din 1990, VaR 0,1% este 6,37% prin EVT și 3,47% prin distribuția Normală. De ce diferența?",
                 "options": [
-                    "Coada Normală este prea subțire departe în coadă",
+                    "Distribuția Normală are o coadă prea subțire în zona extremă",
                     "EVT supraestimează orice cuantilă",
                     "Cele două metode folosesc date diferite",
                     "VaR 0,1% nu există pentru cozi groase"
                 ],
-                "correctExplanation": "Pierderile reale au o coadă putere; legea Normală o ignoră și subestimează cuantilele îndepărtate de circa două ori.",
-                "incorrectExplanation": "Cuantilele există întotdeauna; diferența vine din coada subțire a legii Normale, nu din date sau din EVT."
+                "correctExplanation": "Pierderile reale au o coadă putere; distribuția Normală o ignoră și subestimează cuantilele îndepărtate de circa două ori.",
+                "incorrectExplanation": "Cuantilele există întotdeauna; diferența vine din coada subțire a distribuției Normale, nu din date sau din EVT."
             }
         },
         {
@@ -650,10 +650,10 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Formula VaR are un semn greșit",
                     "VaR 1% nu trebuie depășit niciodată",
                     "Perioada de test este prea lungă",
-                    "Gruparea volatilității: crahul din 2020 a concentrat multe pierderi mari"
+                    "Volatility clustering: crahul din 2020 a concentrat multe pierderi mari"
                 ],
-                "correctExplanation": "Un VaR necondiționat ignoră regimul de volatilitate; într-o perioadă agitată depășirile se grupează peste țintă.",
-                "incorrectExplanation": "VaR 1% ar trebui depășit în circa 1% dintre zile; prea multe depășiri într-o perioadă indică o volatilitate variabilă (EVT condiționată, Capitolele 9 și 10)."
+                "correctExplanation": "Un VaR necondiționat ignoră regimul de volatilitate; într-o perioadă agitată depășirile se acumulează peste valoarea așteptată.",
+                "incorrectExplanation": "VaR 1% ar trebui depășit în circa 1% dintre zile; prea multe depășiri într-o perioadă indică variația volatilității în timp (EVT condiționată, Capitolele 9 și 10)."
             }
         }
     ]
