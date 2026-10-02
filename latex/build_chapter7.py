@@ -236,7 +236,7 @@ TB = '>{\\raggedright\\arraybackslash}'
 D.frame(T('Three Forms of Efficiency', 'Trei forme ale eficienței'), table(
     TB + 'p{1.8cm}' + TB + 'p{3.2cm}' + TB + 'p{3.0cm}' + TB + 'p{2.9cm}',
     T('\\textbf{Form}', '\\textbf{Forma}') + ' & ' + T('\\textbf{Information set $\\Omega_t$}', '\\textbf{Mulțimea de informații $\\Omega_t$}') + ' & '
-    + T('\\textbf{What cannot earn excess returns}', '\\textbf{Ce nu poate aduce randamente în exces}') + ' & ' + T('\\textbf{Typical test}', '\\textbf{Testul tipic}'),
+    + T('\\textbf{What cannot earn excess returns}', '\\textbf{Strategii fără randamente în exces}') + ' & ' + T('\\textbf{Typical test}', '\\textbf{Testul tipic}'),
     [T('Weak', 'Slabă') + ' & ' + T('past prices and returns', 'prețurile și randamentele trecute') + ' & ' + T('technical analysis, chart patterns', 'analiza tehnică, tiparele grafice') + ' & '
      + T('autocorrelation, runs, variance ratio', 'autocorelație, runs, variance ratio'),
      T('Semi-strong', 'Semi-tare') + ' & ' + T('all public information', 'toată informația publică') + ' & ' + T('fundamental analysis of public data', 'analiza fundamentală a datelor publice') + ' & '
