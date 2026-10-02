@@ -94,22 +94,22 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
      [T('Mandelbrot and the cotton prices: where the idea comes from', 'Mandelbrot și prețurile bumbacului: de unde vine ideea'),
       T('stability under summation and the generalised central limit theorem', 'stabilitatea la adunare și teorema limită centrală generalizată'),
       T('parameters, characteristic function, tails and moments', 'parametri, funcția caracteristică, cozi și momente'),
-      T('simulation and estimation; fits to BET, S\\&P 500, DAX and Bitcoin', 'simulare și estimare; ajustări pe BET, S\\&P 500, DAX și Bitcoin'),
+      T('simulation and estimation; fits to BET, S\\&P 500, DAX and Bitcoin', 'simulare și estimare; aplicații pe BET, S\\&P 500, DAX și Bitcoin'),
       T('the critique: do returns really have infinite variance?', 'critica: au randamentele chiar varianță infinită?')])))
 
-D.frame(T('Learning Outcomes', 'Ce veți ști la final'), items(
+D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
     T('State the stability property and compute the scale of a sum of stable variables',
       'Enunțați proprietatea de stabilitate și calculați scala unei sume de variabile stabile'),
     T('Explain the generalised central limit theorem and when sums do not approach the Normal distribution',
       'Explicați teorema limită centrală generalizată și cînd sumele nu se apropie de distribuția Normală'),
     T('Read the four parameters $(\\alpha, \\beta, \\gamma, \\delta)$ and convert between the S0 and S1 parameterisations',
-      'Interpretați cei patru parametri $(\\alpha, \\beta, \\gamma, \\delta)$ și treceți între parametrizările S0 și S1'),
+      'Interpretați cei patru parametri $(\\alpha, \\beta, \\gamma, \\delta)$ și faceți conversia între parametrizările S0 și S1'),
     T('Say which moments exist for a given $\\alpha$ and compare tail probabilities with the Normal distribution',
-      'Spuneți ce momente există pentru un $\\alpha$ dat și comparați probabilitățile din cozi cu distribuția Normală'),
+      'Stabiliți ce momente există pentru un $\\alpha$ dat și comparați probabilitățile din cozi cu cele ale distribuției Normale'),
     T('Simulate stable variables and estimate their parameters by quantiles and by maximum likelihood',
       'Simulați variabile stabile și estimați parametrii prin cuantile și prin verosimilitate maximă'),
     T('Judge, on real returns, where the stable model works and where it fails',
-      'Judecați, pe randamente reale, unde funcționează modelul stabil și unde eșuează')))
+      'Evaluați, pe randamente reale, unde funcționează modelul stabil și unde eșuează')))
 
 D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Main reference: \\refNolan, Ch.~1 (definitions, parameterisations, tails) and Ch.~4 (estimation)',
@@ -121,7 +121,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Python Quantlets of this chapter: \\href{' + QLURL + '}{Quantlets/Ch\\_03}',
        'Quantlet-urile Python ale capitolului: \\href{' + QLURL + '}{Quantlets/Ch\\_03}'),
      [T('ported from the Quantlet sim\\_stable; each chart links to the Quantlet that draws it',
-        'portate din Quantlet-ul sim\\_stable; fiecare grafic are legătură către Quantlet-ul care îl desenează')]),
+        'adaptate după Quantlet-ul sim\\_stable; fiecare grafic are un link către Quantlet-ul care îl generează')]),
     T('Lecture notebook: \\href{\\colaburl{notebooks/EN/chapter3_lecture_notebook.ipynb}}{open in Google Colab}',
       'Notebook-ul cursului: \\href{\\colaburl{notebooks/EN/chapter3_lecture_notebook.ipynb}}{deschideți în Google Colab}'),
     T('Video course: \\quantinar{Stable Distribution}{https://quantinar.com/course/980/stable-distribution}',
@@ -150,7 +150,7 @@ D.frame(T('Cotton: an Old Market with Long Price Records', 'Bumbacul: o piață 
         'Image: Edgar Degas (1873); public domain; Wikimedia Commons', 'Imagine: Edgar Degas (1873); domeniu public; Wikimedia Commons',
         h='0.42\\textheight'), wl='0.52', wr='0.44'))
 
-D.frame(T('What Mandelbrot Saw', 'Ce a observat Mandelbrot'), cols(items(
+D.frame(T('What Mandelbrot Saw', 'Observația lui Mandelbrot'), cols(items(
     (T('\\textbf{Too many large changes}: far more big moves than the Normal distribution allows',
        '\\textbf{Prea multe variații mari}: mult mai multe mișcări mari decît permite distribuția Normală'),
      [T('the sample variance did not settle as the sample grew', 'varianța de selecție nu se stabiliza pe măsură ce creștea eșantionul')]),
@@ -174,9 +174,9 @@ D.frame(T('Fama Tests the Idea on Stocks', 'Fama testează ideea pe acțiuni'), 
         'mai multe randamente mari decît permite distribuția Normală, pentru fiecare acțiune'),
       T('estimates of $\\alpha$ below 2: support for Mandelbrot\'s hypothesis', 'estimări ale lui $\\alpha$ sub 2: sprijin pentru ipoteza lui Mandelbrot')]),
     (T('Estimation methods for symmetric stable laws followed', 'Au urmat metode de estimare pentru legile stabile simetrice'),
-     [T('\\refFamaRoll, \\refFamaRollB: quantile-based estimates and tables', '\\refFamaRoll, \\refFamaRollB: estimări bazate pe cuantile și tabele')]),
+     [T('\\refFamaRoll, \\refFamaRollB: quantile-based estimates and tables', '\\refFamaRoll, \\refFamaRollB: estimări pe baza cuantilelor și tabele')]),
     T('Within ten years the evidence started to turn: see the critique at the end of the chapter',
-      'În zece ani, dovezile au început să se schimbe: vedeți critica de la finalul capitolului')),
+      'În mai puțin de zece ani, dovezile au început să se schimbe: vedeți critica de la finalul capitolului')),
     pic('ch3_fama.jpg', 'Eugene Fama at the Nobel Prize ceremony, 2013', 'Eugene Fama la ceremonia Premiului Nobel, 2013',
         'https://commons.wikimedia.org/wiki/File:Eugene_Fama_at_Nobel_Prize,_2013.jpg',
         'Photo: Bengt Nyman (2013); CC BY 2.0; Wikimedia Commons', 'Foto: Bengt Nyman (2013); CC BY 2.0; Wikimedia Commons',
@@ -194,7 +194,7 @@ D.frame(T('Why the Law of a Sum Matters', 'De ce contează legea unei sume'), it
      [T('no: the Student-t family is not closed under summation', 'nu: familia Student-t nu este închisă la adunare'),
       T('if its variance is finite, the sum moves towards the Normal distribution (the central limit theorem)',
         'dacă varianța ei este finită, suma se apropie de distribuția Normală (teorema limită centrală)')]),
-    T('\\textbf{Goal}: find every law whose sums keep the same shape', '\\textbf{Obiectivul}: găsim toate legile ale căror sume își păstrează forma')))
+    T('\\textbf{Goal}: find every law whose sums keep the same shape', '\\textbf{Obiectivul}: identificarea tuturor legilor ale căror sume își păstrează forma')))
 
 # =============================================================================
 # 2. STABILITATEA LA ADUNARE
@@ -207,17 +207,17 @@ D.frame(T('Definition: Stable Laws', 'Definiție: legile stabile'), items(
      [T('$aX_1 + bX_2 \\overset{d}{=} cX + d$, where $\\overset{d}{=}$ means ``has the same distribution as\'\'',
         '$aX_1 + bX_2 \\overset{d}{=} cX + d$, unde $\\overset{d}{=}$ înseamnă „are aceeași distribuție ca”'),
       T('\\textbf{strictly stable} if $d = 0$ for all $a, b$', '\\textbf{strict stabilă} dacă $d = 0$ pentru orice $a, b$')]),
-    (T('In words: a weighted sum of two copies has the same shape as one copy', 'În cuvinte: o sumă ponderată a două copii are aceeași formă ca o copie'),
-     [T('only the scale ($c$) and the location ($d$) change', 'se schimbă doar scala ($c$) și locația ($d$)')]),
+    (T('In words: a weighted sum of two copies has the same shape as one copy', 'Altfel spus: o sumă ponderată a două copii are aceeași formă ca o copie'),
+     [T('only the scale ($c$) and the location ($d$) change', 'se schimbă doar scala ($c$) și poziția ($d$)')]),
     (T('By induction, for $n$ independent copies: $X_1 + \\dots + X_n \\overset{d}{=} c_n X + d_n$',
        'Prin inducție, pentru $n$ copii independente: $X_1 + \\dots + X_n \\overset{d}{=} c_n X + d_n$'),
      [T('the only possible scale factor is $c_n = n^{1/\\alpha}$ with $0 < \\alpha \\le 2$ \\refNolan',
         'singurul factor de scală posibil este $c_n = n^{1/\\alpha}$, cu $0 < \\alpha \\le 2$ \\refNolan')]),
     T('$\\alpha$ is called the \\textbf{index of stability} (also: characteristic exponent, tail index)',
-      '$\\alpha$ se numește \\textbf{indicele de stabilitate} (și: exponentul caracteristic, indicele de coadă)')))
+      '$\\alpha$ se numește \\textbf{indicele de stabilitate} (sau exponentul caracteristic, sau indicele de coadă)')))
 
-D.frame(T('Two Examples: Normal and Cauchy', 'Două exemple: Normală și Cauchy'), cols(items(
-    (T('\\textbf{Normal}: $X_1, X_2 \\sim N(0, \\sigma^2)$ independent', '\\textbf{Normală}: $X_1, X_2 \\sim N(0, \\sigma^2)$ independente'),
+D.frame(T('Two Examples: Normal and Cauchy', 'Două exemple: distribuția Normală și distribuția Cauchy'), cols(items(
+    (T('\\textbf{Normal}: $X_1, X_2 \\sim N(0, \\sigma^2)$ independent', '\\textbf{Distribuția Normală}: $X_1, X_2 \\sim N(0, \\sigma^2)$ independente'),
      [T('$aX_1 + bX_2 \\sim N(0, (a^2 + b^2)\\sigma^2)$, so $c = \\sqrt{a^2 + b^2}$', '$aX_1 + bX_2 \\sim N(0, (a^2 + b^2)\\sigma^2)$, deci $c = \\sqrt{a^2 + b^2}$'),
       T('variances add: $c^2 = a^2 + b^2$, the case $\\alpha = 2$', 'varianțele se adună: $c^2 = a^2 + b^2$, cazul $\\alpha = 2$')]),
     (T('\\textbf{Cauchy}: density $f(x) = \\dfrac{1}{\\pi(1 + x^2)}$', '\\textbf{Cauchy}: densitatea $f(x) = \\dfrac{1}{\\pi(1 + x^2)}$'),
@@ -247,22 +247,22 @@ D.frame(T('The General Rule and a Worked Example', 'Regula generală și un exem
 
 chart(T('Stability in a Simulation', 'Stabilitatea într-o simulare'), 'sfm_ch3_stability_qq', 'SFM_ch3_stability_gclt', [
     T('Blue: sums of 10 draws of $S(1.7, 0, 1, 0)$ divided by $10^{1/1.7} = @{stab.factor}$ lie on the 45-degree line: same law as one draw',
-      'Albastru: sumele a 10 extrageri din $S(1.7, 0, 1, 0)$ împărțite la $10^{1/1.7} = @{stab.factor}$ stau pe dreapta de 45 de grade: aceeași lege ca o extragere'),
+      'Albastru: sumele a 10 extrageri din $S(1.7, 0, 1, 0)$ împărțite la $10^{1/1.7} = @{stab.factor}$ se află pe prima bisectoare: aceeași lege ca o singură extragere'),
     T('Red: dividing by $\\sqrt{10} = @{stab.sqrtn}$ (the Normal rule) leaves the tails too wide: 99\\% quantile $@{stab.q99_sqrt}$ vs $@{stab.q99_one}$',
-      'Roșu: împărțirea la $\\sqrt{10} = @{stab.sqrtn}$ (regula distribuției Normale) lasă cozile prea largi: cuantila de 99\\% $@{stab.q99_sqrt}$ vs $@{stab.q99_one}$')])
+      'Roșu: împărțirea la $\\sqrt{10} = @{stab.sqrtn}$ (regula distribuției Normale) lasă cozile prea largi: cuantila de 99\\% este $@{stab.q99_sqrt}$, față de $@{stab.q99_one}$')])
 
 D.frame(T('Consequences: Horizons and Diversification', 'Consecințe: orizonturi și diversificare'), items(
     (T('\\textbf{Horizon}: if daily returns are i.i.d.\\ (independent, identically distributed) $S(\\alpha, 0, \\gamma, 0)$, the 20-day sum has scale $20^{1/\\alpha}\\gamma$',
        '\\textbf{Orizontul}: dacă randamentele zilnice sînt i.i.d.\\ (independente și identic distribuite) $S(\\alpha, 0, \\gamma, 0)$, suma pe 20 de zile are scala $20^{1/\\alpha}\\gamma$'),
      [T('$\\alpha = 2$: $@{ex.h.2}\\,\\gamma$ (the square-root-of-time rule); $\\alpha = 1.7$: $@{ex.h.1.7}\\,\\gamma$; $\\alpha = 1.5$: $@{ex.h.1.5}\\,\\gamma$',
-        '$\\alpha = 2$: $@{ex.h.2}\\,\\gamma$ (regula rădăcinii timpului); $\\alpha = 1.7$: $@{ex.h.1.7}\\,\\gamma$; $\\alpha = 1.5$: $@{ex.h.1.5}\\,\\gamma$'),
+        '$\\alpha = 2$: $@{ex.h.2}\\,\\gamma$ (regula rădăcinii pătrate a timpului); $\\alpha = 1.7$: $@{ex.h.1.7}\\,\\gamma$; $\\alpha = 1.5$: $@{ex.h.1.5}\\,\\gamma$'),
       T('with $\\alpha < 2$, the risk of long horizons grows faster than $\\sqrt{n}$', 'cu $\\alpha < 2$, riscul pe orizonturi lungi crește mai repede decît $\\sqrt{n}$')]),
     (T('\\textbf{Diversification}: an equally weighted portfolio of $N$ i.i.d.\\ stable assets has scale $N^{1/\\alpha - 1}\\gamma$',
        '\\textbf{Diversificarea}: un portofoliu cu ponderi egale din $N$ active stabile i.i.d.\\ are scala $N^{1/\\alpha - 1}\\gamma$'),
      [T('$N = 10$: $\\alpha = 2$ gives $@{ex.pf.2}\\,\\gamma$; $\\alpha = 1.5$ gives $@{ex.pf.1.5}\\,\\gamma$; $\\alpha = 1$ gives $@{ex.pf.1}\\,\\gamma$',
         '$N = 10$: $\\alpha = 2$ dă $@{ex.pf.2}\\,\\gamma$; $\\alpha = 1.5$ dă $@{ex.pf.1.5}\\,\\gamma$; $\\alpha = 1$ dă $@{ex.pf.1}\\,\\gamma$'),
       T('with $\\alpha = 1$ diversification does not reduce the scale at all; \\refFama\\ discussed this point',
-        'cu $\\alpha = 1$, diversificarea nu reduce deloc scala; \\refFama\\ a discutat acest punct')])))
+        'cu $\\alpha = 1$, diversificarea nu reduce deloc scala; \\refFama\\ a discutat această consecință')])))
 
 D.recap(('Stability', 'Stabilitatea'), [
     T('Stable law: a sum of independent copies has the same shape, only rescaled and shifted',
@@ -283,7 +283,7 @@ D.frame(T('From the Classical to the Generalised CLT', 'De la CLT clasică la ce
        '\\textbf{CLT clasică} (teorema limită centrală, Capitolul 2): $X_i$ i.i.d.\\ cu media $\\mu$ și varianța finită $\\sigma^2$'),
      [T('$\\dfrac{X_1 + \\dots + X_n - n\\mu}{\\sigma\\sqrt{n}} \\to N(0, 1)$ in distribution', '$\\dfrac{X_1 + \\dots + X_n - n\\mu}{\\sigma\\sqrt{n}} \\to N(0, 1)$ în distribuție')]),
     T('What if the variance is infinite? The normalisation $\\sqrt{n}$ is then wrong',
-      'Ce se întîmplă dacă varianța este infinită? Normalizarea $\\sqrt{n}$ este atunci greșită'),
+      'Ce se întîmplă dacă varianța este infinită? Normalizarea cu $\\sqrt{n}$ nu mai este potrivită'),
     (T('\\textbf{GCLT} (generalised central limit theorem) \\refGK: if $(X_1 + \\dots + X_n - b_n)/a_n$ converges to a non-degenerate law, that law is stable',
        '\\textbf{GCLT} (teorema limită centrală generalizată) \\refGK: dacă $(X_1 + \\dots + X_n - b_n)/a_n$ converge către o lege nedegenerată, acea lege este stabilă'),
      [T('stable laws are the \\textbf{only} possible limits of normalised sums of i.i.d.\\ variables',
@@ -297,9 +297,9 @@ D.frame(T('Domains of Attraction', 'Domenii de atracție'), cols(items(
         'varianță finită: domeniul de atracție al distribuției Normale, $a_n \\propto \\sqrt{n}$'),
       T('power-law tails $P(|X| > x) \\approx C x^{-\\alpha}$ with $0 < \\alpha < 2$: the stable law with the same $\\alpha$, $a_n \\propto n^{1/\\alpha}$',
         'cozi de tip putere $P(|X| > x) \\approx C x^{-\\alpha}$ cu $0 < \\alpha < 2$: legea stabilă cu același $\\alpha$, $a_n \\propto n^{1/\\alpha}$')]),
-    T('So the \\textbf{tail} of one return decides the law of long sums', 'Deci \\textbf{coada} unui randament decide legea sumelor lungi'),
+    T('So the \\textbf{tail} of one return decides the law of long sums', 'Prin urmare, \\textbf{coada} distribuției unui randament determină legea sumelor cu mulți termeni'),
     T('Paul Lévy characterised the stable laws in the 1920s; the full theory is in \\refGK',
-      'Paul Lévy a caracterizat legile stabile în anii 1920; teoria completă este în \\refGK')),
+      'Paul Lévy a caracterizat legile stabile în anii 1920; teoria completă se găsește în \\refGK')),
     pic('ch3_levy.jpg', 'Paul Lévy (1886--1971)', 'Paul Lévy (1886--1971)',
         'https://commons.wikimedia.org/wiki/File:Paul_Pierre_Levy_1886-1971.jpg',
         'Photo: Konrad Jacobs, Oberwolfach Photo Collection; CC BY-SA 2.0 de; Wikimedia Commons',
@@ -311,16 +311,16 @@ chart(T('The GCLT in a Simulation', 'GCLT într-o simulare'), 'sfm_ch3_gclt', 'S
     T('$n = 1, 10, 100$: the histograms approach the stable limit $S(1.5, 0, @{gclt.gamma}, 0)$; $P(|\\cdot| > 10)$: $@{gclt.n100_tail}\\%$ for $n = 100$, $@{gclt.tail_stable}\\%$ in the limit',
       '$n = 1, 10, 100$: histogramele se apropie de limita stabilă $S(1.5, 0, @{gclt.gamma}, 0)$; $P(|\\cdot| > 10)$: $@{gclt.n100_tail}\\%$ pentru $n = 100$, $@{gclt.tail_stable}\\%$ la limită'),
     T('A Normal law with the same interquartile range gives $@{gclt.tail_normal}\\%$: it misses the tails completely',
-      'O lege Normală cu același interval intercuartilic dă $@{gclt.tail_normal}\\%$: ratează complet cozile')])
+      'O distribuție Normală cu același interval intercuartilic dă $@{gclt.tail_normal}\\%$: nu surprinde deloc cozile')])
 
-D.frame(T('What the GCLT Means for Returns', 'Ce înseamnă GCLT pentru randamente'), items(
+D.frame(T('What the GCLT Means for Returns', 'Implicațiile GCLT pentru randamente'), items(
     (T('Two possible worlds for daily returns', 'Două lumi posibile pentru randamentele zilnice'),
      [T('\\textbf{tail index below 2} (infinite variance): monthly returns are stable with the \\textbf{same} $\\alpha$',
         '\\textbf{indice de coadă sub 2} (varianță infinită): randamentele lunare sînt stabile cu \\textbf{același} $\\alpha$'),
       T('\\textbf{tail index above 2} (finite variance): monthly returns move towards the Normal distribution',
         '\\textbf{indice de coadă peste 2} (varianță finită): randamentele lunare se apropie de distribuția Normală')]),
     T('The two worlds give different testable predictions about returns at longer horizons',
-      'Cele două lumi dau predicții diferite, testabile, despre randamentele pe orizonturi mai lungi'),
+      'Cele două lumi conduc la predicții diferite și testabile despre randamentele pe orizonturi mai lungi'),
     T('\\textbf{Question for the room}: in which world do the S\\&P 500 returns live?',
       '\\textbf{Întrebare pentru sală}: în care lume trăiesc randamentele S\\&P 500?'),
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
@@ -332,12 +332,12 @@ D.recap(('The Generalised CLT', 'Teorema limită centrală generalizată'), [
     T('GCLT: stable laws are the only limits of normalised sums', 'GCLT: legile stabile sînt singurele limite ale sumelor normalizate'),
     T('Power-law tails with index $\\alpha < 2$: normalisation $n^{1/\\alpha}$, stable limit with the same $\\alpha$',
       'Cozi de tip putere cu indicele $\\alpha < 2$: normalizare $n^{1/\\alpha}$, limită stabilă cu același $\\alpha$'),
-    T('The tail of a single return decides the law of long sums', 'Coada unui singur randament decide legea sumelor lungi')])
+    T('The tail of a single return decides the law of long sums', 'Coada distribuției unui singur randament determină legea sumelor cu mulți termeni')])
 
 # =============================================================================
 # 4. PARAMETRI ȘI FUNCȚIA CARACTERISTICĂ
 # =============================================================================
-D.section('Parameters and the Characteristic Function', 'Parametri și funcția caracteristică')
+D.section('Parameters and the Characteristic Function', 'Parametrii și funcția caracteristică')
 
 D.frame(T('The Characteristic Function', 'Funcția caracteristică'), items(
     (T('\\textbf{Characteristic function} of $X$: $\\varphi_X(t) = E[e^{itX}] = E[\\cos(tX)] + i\\,E[\\sin(tX)]$, $t \\in \\mathbb{R}$',
@@ -349,7 +349,7 @@ D.frame(T('The Characteristic Function', 'Funcția caracteristică'), items(
       T('$\\varphi_{aX+b}(t) = e^{ibt}\\varphi_X(at)$', '$\\varphi_{aX+b}(t) = e^{ibt}\\varphi_X(at)$')]),
     T('Normal $N(\\mu, \\sigma^2)$: $\\varphi(t) = \\exp(i\\mu t - \\sigma^2 t^2/2)$', 'Normală $N(\\mu, \\sigma^2)$: $\\varphi(t) = \\exp(i\\mu t - \\sigma^2 t^2/2)$'),
     T('Why we need it: apart from three cases, stable laws have \\textbf{no closed-form density}; they are defined by $\\varphi$',
-      'De ce avem nevoie de ea: în afară de trei cazuri, legile stabile \\textbf{nu au densitate în formă închisă}; sînt definite prin $\\varphi$')))
+      'De ce avem nevoie de ea: cu excepția a trei cazuri, legile stabile \\textbf{nu au densitate în formă închisă}; sînt definite prin $\\varphi$')))
 
 D.frame(T('The Stable Characteristic Function (S1)', 'Funcția caracteristică stabilă (S1)'), items(
     (T('$X \\sim S(\\alpha, \\beta, \\gamma, \\delta; 1)$ if, for $\\alpha \\ne 1$, \\refST, \\refNolan:',
@@ -363,9 +363,9 @@ D.frame(T('The Stable Characteristic Function (S1)', 'Funcția caracteristică s
       T('$\\beta \\in [-1, 1]$: \\textbf{skewness}; $\\beta > 0$ heavier right tail, $\\beta < 0$ heavier left tail',
         '$\\beta \\in [-1, 1]$: \\textbf{asimetria}; $\\beta > 0$ coada dreaptă mai groasă, $\\beta < 0$ coada stîngă mai groasă'),
       T('$\\gamma > 0$: \\textbf{scale} (it plays the role of $\\sigma$); $\\delta \\in \\mathbb{R}$: \\textbf{location}',
-        '$\\gamma > 0$: \\textbf{scala} (joacă rolul lui $\\sigma$); $\\delta \\in \\mathbb{R}$: \\textbf{locația}')]),
+        '$\\gamma > 0$: \\textbf{scala} (joacă rolul lui $\\sigma$); $\\delta \\in \\mathbb{R}$: \\textbf{poziția}')]),
     T('Stability is visible: $\\varphi(t)^n$ has the same form, with $\\gamma^\\alpha$ replaced by $n\\gamma^\\alpha$',
-      'Stabilitatea se vede: $\\varphi(t)^n$ are aceeași formă, cu $\\gamma^\\alpha$ înlocuit de $n\\gamma^\\alpha$')))
+      'Stabilitatea este vizibilă: $\\varphi(t)^n$ are aceeași formă, cu $\\gamma^\\alpha$ înlocuit de $n\\gamma^\\alpha$')))
 
 chart(T('The Effect of $\\alpha$', 'Efectul lui $\\alpha$'), 'sfm_ch3_density_alpha', 'SFM_ch3_densities', [
     T('Symmetric laws $S(\\alpha, 0, 1, 0)$: smaller $\\alpha$ gives a taller, narrower peak and much heavier tails',
@@ -375,7 +375,7 @@ chart(T('The Effect of $\\alpha$', 'Efectul lui $\\alpha$'), 'sfm_ch3_density_al
 
 chart(T('The Effect of $\\beta$ and $\\gamma$', 'Efectul lui $\\beta$ și $\\gamma$'), 'sfm_ch3_density_beta', 'SFM_ch3_densities', [
     T('$\\beta$ moves weight between the tails: $\\beta = 1$ (green) has the heavier right tail, $\\beta = -1$ (red) the heavier left tail',
-      '$\\beta$ mută masa între cozi: $\\beta = 1$ (verde) are coada dreaptă mai groasă, $\\beta = -1$ (roșu) coada stîngă mai groasă'),
+      '$\\beta$ redistribuie masa între cozi: $\\beta = 1$ (verde) are coada dreaptă mai groasă, $\\beta = -1$ (roșu) coada stîngă mai groasă'),
     T('$\\gamma$ stretches the density: doubling $\\gamma$ doubles every quantile around $\\delta$',
       '$\\gamma$ întinde densitatea: dublarea lui $\\gamma$ dublează fiecare cuantilă în jurul lui $\\delta$')])
 
@@ -384,7 +384,7 @@ D.frame(T('Two Parameterisations: S0 and S1', 'Două parametrizări: S0 și S1')
      [T('$\\varphi(t) = \\exp\\Big\\{-\\gamma^\\alpha |t|^\\alpha \\big[1 + i\\beta\\,\\mathrm{sign}(t)\\tan\\frac{\\pi\\alpha}{2}\\big(|\\gamma t|^{1-\\alpha} - 1\\big)\\big] + i\\delta_0 t\\Big\\}$',
         '$\\varphi(t) = \\exp\\Big\\{-\\gamma^\\alpha |t|^\\alpha \\big[1 + i\\beta\\,\\mathrm{sign}(t)\\tan\\frac{\\pi\\alpha}{2}\\big(|\\gamma t|^{1-\\alpha} - 1\\big)\\big] + i\\delta_0 t\\Big\\}$')]),
     (T('Only the location differs: $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$ ($\\alpha \\ne 1$)',
-       'Diferă doar locația: $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$ ($\\alpha \\ne 1$)'),
+       'Diferă doar poziția: $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$ ($\\alpha \\ne 1$)'),
      [T('$\\alpha$, $\\beta$ and $\\gamma$ are the same in both', '$\\alpha$, $\\beta$ și $\\gamma$ sînt aceleași în ambele'),
       T('for $\\beta = 0$ the two coincide', 'pentru $\\beta = 0$ cele două coincid')]),
     (T('Why two?', 'De ce două?'),
@@ -392,9 +392,9 @@ D.frame(T('Two Parameterisations: S0 and S1', 'Două parametrizări: S0 și S1')
       T('S0: the density changes continuously with $\\alpha$ and $\\beta$; better for estimation and plots \\refNolan',
         'S0: densitatea se schimbă continuu cu $\\alpha$ și $\\beta$; mai bună pentru estimare și grafice \\refNolan')])))
 
-chart(T('S1 vs S0 near $\\alpha = 1$', 'S1 vs S0 lîngă $\\alpha = 1$'), 'sfm_ch3_s0_s1', 'SFM_ch3_densities', [
+chart(T('S1 vs S0 near $\\alpha = 1$', 'S1 și S0 în apropiere de $\\alpha = 1$'), 'sfm_ch3_s0_s1', 'SFM_ch3_densities', [
     T('S1 (left): with $\\beta = 0.8$, the density runs away to $+\\infty$ as $\\alpha \\uparrow 1$ and comes back from $-\\infty$ as $\\alpha \\downarrow 1$, because $\\tan\\frac{\\pi\\alpha}{2}$ explodes',
-      'S1 (stînga): cu $\\beta = 0.8$, densitatea fuge spre $+\\infty$ cînd $\\alpha \\uparrow 1$ și revine dinspre $-\\infty$ cînd $\\alpha \\downarrow 1$, pentru că $\\tan\\frac{\\pi\\alpha}{2}$ explodează'),
+      'S1 (stînga): cu $\\beta = 0.8$, densitatea se deplasează spre $+\\infty$ cînd $\\alpha \\uparrow 1$ și revine dinspre $-\\infty$ cînd $\\alpha \\downarrow 1$, pentru că $\\tan\\frac{\\pi\\alpha}{2}$ tinde la infinit'),
     T('S0 (right): the same four laws, shifted; the mode stays near 0 and changes smoothly',
       'S0 (dreapta): aceleași patru legi, deplasate; modul rămîne lîngă 0 și se schimbă lin')])
 
@@ -403,13 +403,13 @@ D.frame(T('Mind the Parameterisation in Software', 'Atenție la parametrizare î
      [T('switch with \\texttt{levy\\_stable.parameterization = \'S0\'}', 'se schimbă cu \\texttt{levy\\_stable.parameterization = \'S0\'}'),
       T('arguments: \\texttt{levy\\_stable.pdf(x, alpha, beta, loc=delta, scale=gamma)}', 'argumente: \\texttt{levy\\_stable.pdf(x, alpha, beta, loc=delta, scale=gamma)}')]),
     T('Papers and programs report $\\delta$ in S0, in S1 or in other parameterisations: check which one before comparing',
-      'Lucrările și programele raportează $\\delta$ în S0, în S1 sau în alte parametrizări: verificați care înainte de a compara'),
+      'Lucrările și programele raportează $\\delta$ în S0, în S1 sau în alte parametrizări: verificați parametrizarea înainte de a compara rezultatele'),
     (T('Scale trap: $S(2, 0, \\gamma, \\delta)$ is $N(\\delta, 2\\gamma^2)$, not $N(\\delta, \\gamma^2)$', 'Capcana scalei: $S(2, 0, \\gamma, \\delta)$ este $N(\\delta, 2\\gamma^2)$, nu $N(\\delta, \\gamma^2)$'),
      [T('so $\\gamma = \\sigma/\\sqrt{2}$ for the Normal distribution', 'deci $\\gamma = \\sigma/\\sqrt{2}$ pentru distribuția Normală')]),
-    T('In this course: estimates in S0, with $\\delta_1$ also reported', 'În acest curs: estimări în S0, raportînd și $\\delta_1$')))
+    T('In this course: estimates in S0, with $\\delta_1$ also reported', 'În acest curs: estimările sînt în S0, iar $\\delta_1$ este raportat separat')))
 
 D.frame(T('Three Laws with a Closed-Form Density', 'Trei legi cu densitate în formă închisă'), items(
-    (T('\\textbf{Normal}: $\\alpha = 2$ ($\\beta$ plays no role)', '\\textbf{Normală}: $\\alpha = 2$ ($\\beta$ nu mai contează)'),
+    (T('\\textbf{Normal}: $\\alpha = 2$ ($\\beta$ plays no role)', '\\textbf{Distribuția Normală}: $\\alpha = 2$ ($\\beta$ nu mai contează)'),
      [T('$\\varphi(t) = \\exp(-\\gamma^2 t^2 + i\\delta t)$, i.e.\\ $N(\\delta, 2\\gamma^2)$', '$\\varphi(t) = \\exp(-\\gamma^2 t^2 + i\\delta t)$, adică $N(\\delta, 2\\gamma^2)$')]),
     (T('\\textbf{Cauchy}: $\\alpha = 1$, $\\beta = 0$', '\\textbf{Cauchy}: $\\alpha = 1$, $\\beta = 0$'),
      [T('$f(x) = \\dfrac{\\gamma}{\\pi\\,(\\gamma^2 + (x - \\delta)^2)}$; $\\varphi(t) = \\exp(-\\gamma|t| + i\\delta t)$',
@@ -421,11 +421,11 @@ D.frame(T('Three Laws with a Closed-Form Density', 'Trei legi cu densitate în f
     T('All other stable densities are computed numerically from $\\varphi$ \\refNolanA, \\refMDC',
       'Toate celelalte densități stabile se calculează numeric din $\\varphi$ \\refNolanA, \\refMDC')))
 
-chart(T('Normal, Cauchy and Lévy', 'Normală, Cauchy și Lévy'), 'sfm_ch3_special_cases', 'SFM_ch3_densities', [
+chart(T('Normal, Cauchy and Lévy', 'Distribuțiile Normală, Cauchy și Lévy'), 'sfm_ch3_special_cases', 'SFM_ch3_densities', [
     T('Cauchy: lower peak, much heavier tails than the Normal distribution with variance 1', 'Cauchy: vîrf mai jos, cozi mult mai groase decît distribuția Normală cu varianța 1'),
     T('Lévy: only positive values, a long right tail; its mean is infinite', 'Lévy: doar valori pozitive, o coadă dreaptă lungă; media ei este infinită')], h='0.60\\textheight')
 
-D.frame(T('Worked Example: S1 vs S0 at $t = 1$', 'Exemplu lucrat: S1 vs S0 în $t = 1$'), items(
+D.frame(T('Worked Example: S1 vs S0 at $t = 1$', 'Exemplu lucrat: S1 și S0 în $t = 1$'), items(
     T('$X$ with $\\alpha = 1.5$, $\\beta = 0.3$, $\\gamma = 1$, $\\delta = 0$; note $\\tan\\frac{3\\pi}{4} = -1$',
       '$X$ cu $\\alpha = 1.5$, $\\beta = 0.3$, $\\gamma = 1$, $\\delta = 0$; observați că $\\tan\\frac{3\\pi}{4} = -1$'),
     (T('\\textbf{S1}: $\\ln\\varphi(1) = -1\\cdot[1 - i \\cdot 0.3 \\cdot (-1)] = -1 - 0.3i$', '\\textbf{S1}: $\\ln\\varphi(1) = -1\\cdot[1 - i \\cdot 0.3 \\cdot (-1)] = -1 - 0.3i$'),
@@ -437,11 +437,11 @@ D.frame(T('Worked Example: S1 vs S0 at $t = 1$', 'Exemplu lucrat: S1 vs S0 în $
       T('shift $= \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2} = @{cf.shift}$: the S1 law with $\\delta_1 = 0$ is the S0 law with $\\delta_0 = @{cf.shift}$',
         'deplasarea $= \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2} = @{cf.shift}$: legea S1 cu $\\delta_1 = 0$ este legea S0 cu $\\delta_0 = @{cf.shift}$')])))
 
-D.recap(('Parameters and the Characteristic Function', 'Parametri și funcția caracteristică'), [
+D.recap(('Parameters and the Characteristic Function', 'Parametrii și funcția caracteristică'), [
     T('Stable laws are defined by $\\varphi(t)$; the density is computed numerically', 'Legile stabile se definesc prin $\\varphi(t)$; densitatea se calculează numeric'),
-    T('$\\alpha$ tails, $\\beta$ skewness, $\\gamma$ scale, $\\delta$ location', '$\\alpha$ cozi, $\\beta$ asimetrie, $\\gamma$ scală, $\\delta$ locație'),
+    T('$\\alpha$ tails, $\\beta$ skewness, $\\gamma$ scale, $\\delta$ location', '$\\alpha$ cozi, $\\beta$ asimetrie, $\\gamma$ scală, $\\delta$ poziție'),
     T('S0 vs S1: only $\\delta$ differs, $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$; scipy uses S1 by default',
-      'S0 vs S1: diferă doar $\\delta$, $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$; scipy folosește implicit S1'),
+      'S0 și S1: diferă doar $\\delta$, $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$; scipy folosește implicit S1'),
     T('Closed forms: Normal ($\\alpha = 2$, variance $2\\gamma^2$), Cauchy, Lévy', 'Forme închise: Normală ($\\alpha = 2$, varianța $2\\gamma^2$), Cauchy, Lévy')])
 
 # =============================================================================
@@ -459,13 +459,13 @@ D.frame(T('Power-Law Tails', 'Cozi de tip putere'), items(
      [T('doubling the threshold divides the tail probability by $2^\\alpha$: $\\times @{tr.17}$ for $\\alpha = 1.7$',
         'dublarea pragului împarte probabilitatea din coadă la $2^\\alpha$: $\\times @{tr.17}$ pentru $\\alpha = 1.7$')]),
     T('The Normal tail falls like $e^{-x^2/(4\\gamma^2)}$: doubling the threshold makes it vanish',
-      'Coada distribuției Normale scade ca $e^{-x^2/(4\\gamma^2)}$: dublarea pragului o face să dispară'),
+      'Coada distribuției Normale scade ca $e^{-x^2/(4\\gamma^2)}$: dublarea pragului o face practic nulă'),
     T('$\\beta = \\pm 1$ with $\\alpha < 1$: one tail is missing (the law lives on a half-line)',
-      '$\\beta = \\pm 1$ cu $\\alpha < 1$: una dintre cozi lipsește (legea trăiește pe o semidreaptă)')))
+      '$\\beta = \\pm 1$ cu $\\alpha < 1$: una dintre cozi lipsește (suportul legii este o semidreaptă)')))
 
 chart(T('Tails on Log-Log Axes', 'Cozile pe axe log-log'), 'sfm_ch3_tails_loglog', 'SFM_ch3_tails_moments', [
     T('Solid: $P(X > x)$ of $S(\\alpha, 0, 1, 0)$; dotted: the power law $c_\\alpha x^{-\\alpha}$, reached already near $x = 5$',
-      'Linie continuă: $P(X > x)$ pentru $S(\\alpha, 0, 1, 0)$; punctat: legea putere $c_\\alpha x^{-\\alpha}$, atinsă deja în jurul lui $x = 5$'),
+      'Linie continuă: $P(X > x)$ pentru $S(\\alpha, 0, 1, 0)$; linie punctată: legea de tip putere $c_\\alpha x^{-\\alpha}$, atinsă deja în jurul lui $x = 5$'),
     T('$P(X > 10)$: $@{tl.1.7.sf10}\\%$ for $\\alpha = 1.7$, $@{tl.1.5.sf10}\\%$ for $\\alpha = 1.5$, about $@{tl.2.sf10}\\%$ for the Normal distribution',
       '$P(X > 10)$: $@{tl.1.7.sf10}\\%$ pentru $\\alpha = 1.7$, $@{tl.1.5.sf10}\\%$ pentru $\\alpha = 1.5$, circa $@{tl.2.sf10}\\%$ pentru distribuția Normală')])
 
@@ -484,42 +484,42 @@ D.frame(T('Which Moments Exist?', 'Ce momente există?'), items(
      [T('yes, because $1 < 1.7$; but the variance does not, because $2 > 1.7$', 'da, pentru că $1 < 1.7$; dar varianța nu există, pentru că $2 > 1.7$')])))
 
 chart(T('The Sample Variance Does Not Settle', 'Varianța de selecție nu se stabilizează'), 'sfm_ch3_running_var_sim', 'SFM_ch3_tails_moments', [
-    T('Normal (blue): the sample variance converges to the true value 2', 'Normală (albastru): varianța de selecție converge la valoarea adevărată 2'),
+    T('Normal (blue): the sample variance converges to the true value 2', 'Distribuția Normală (albastru): varianța de selecție converge la valoarea adevărată 2'),
     T('Stable $\\alpha = 1.7$: each large draw makes the variance jump; after 20\\,000 draws the three paths end at $@{rv.path1.vend}$, $@{rv.path2.vend}$, $@{rv.path3.vend}$',
-      'Stabilă $\\alpha = 1.7$: fiecare extragere mare face varianța să sară; după 20\\,000 de extrageri, cele trei traiectorii se opresc la $@{rv.path1.vend}$, $@{rv.path2.vend}$, $@{rv.path3.vend}$'),
-    T('Mandelbrot saw exactly this in cotton prices', 'Exact asta a văzut Mandelbrot în prețurile bumbacului')])
+      'Stabilă $\\alpha = 1.7$: fiecare extragere mare face varianța să sară; după 20\\,000 de extrageri, cele trei traiectorii ajung la $@{rv.path1.vend}$, $@{rv.path2.vend}$, $@{rv.path3.vend}$'),
+    T('Mandelbrot saw exactly this in cotton prices', 'Același fenomen l-a observat Mandelbrot în prețurile bumbacului')])
 
 
 def ttrow(k):
     return f'${k}$ & $@{{tt.{k}.n}}$ & $@{{tt.{k}.s}}$ & $@{{tt.{k}.r}}$'
 
 
-D.frame(T('Tail Probabilities: Stable vs Normal', 'Probabilități în cozi: stabilă vs Normală'), table(
+D.frame(T('Tail Probabilities: Stable vs Normal', 'Probabilitățile din cozi: distribuția stabilă și distribuția Normală'), table(
     'rrrr', T('$k$ & $P(|X| > k)$, Normal \\% & $P(|X| > k)$, $\\alpha = 1.7$ \\% & ratio', '$k$ & $P(|X| > k)$, Normală \\% & $P(|X| > k)$, $\\alpha = 1.7$ \\% & raport'),
     [ttrow(2), ttrow(3), ttrow(5), f'$10$ & $@{{tt.10.n.sci}}$ & $@{{tt.10.s}}$ & $@{{tt.10.r}}$'], size='footnotesize') + items(
-    T('Both laws with $\\beta = 0$, $\\gamma = 1$, $\\delta = 0$: the Normal law is $N(0, 2)$', 'Ambele legi cu $\\beta = 0$, $\\gamma = 1$, $\\delta = 0$: cea Normală este $N(0, 2)$'),
+    T('Both laws with $\\beta = 0$, $\\gamma = 1$, $\\delta = 0$: the Normal law is $N(0, 2)$', 'Ambele legi au $\\beta = 0$, $\\gamma = 1$, $\\delta = 0$; legea Normală este deci $N(0, 2)$'),
     T('Near the centre the two laws are close; far in the tails they differ by orders of magnitude',
-      'Lîngă centru, cele două legi sînt apropiate; departe în cozi diferă prin ordine de mărime'),
+      'În jurul centrului, cele două legi sînt apropiate; departe în cozi, diferă prin ordine de mărime'),
     T('A risk model is judged in the tails, where the choice of law matters most', 'Un model de risc se judecă în cozi, unde alegerea legii contează cel mai mult')) + ql('SFM_ch3_tails_moments'))
 
 D.frame(T('Infinite Variance and Risk Measures', 'Varianța infinită și măsurile de risc'), items(
     (T('Tools that need a finite variance', 'Instrumente care au nevoie de varianță finită'),
-     [T('volatility, the Sharpe ratio and its standard error (Chapter 1); mean--variance portfolios; the CLT-based CI',
-        'volatilitatea, Sharpe ratio și eroarea lui standard (Capitolul 1); portofoliile medie--varianță; CI bazate pe CLT'),
-      T('with $\\alpha < 2$ these numbers exist in every sample but estimate nothing', 'cu $\\alpha < 2$, aceste cifre există în orice eșantion, dar nu estimează nimic')]),
+     [T('volatility, the Sharpe ratio and its standard error (Chapter 1); mean--variance portfolios; confidence intervals based on the CLT',
+        'volatilitatea, raportul Sharpe și eroarea lui standard (Capitolul 1); portofoliile medie--varianță; intervalele de încredere obținute din CLT'),
+      T('with $\\alpha < 2$ these numbers exist in every sample but estimate nothing', 'cu $\\alpha < 2$, aceste mărimi se pot calcula pe orice eșantion, dar nu estimează nimic')]),
     (T('Tools that survive', 'Instrumente care rămîn valabile'),
      [T('quantiles always exist: $\\mathrm{VaR}_{1\\%} = -q_{1\\%}$, the loss exceeded with probability 1\\%',
         'cuantilele există întotdeauna: $\\mathrm{VaR}_{1\\%} = -q_{1\\%}$, pierderea depășită cu probabilitatea 1\\%'),
       T('$\\mathrm{ES}_{2.5\\%}$ (expected shortfall, the mean loss beyond the VaR) exists only if $\\alpha > 1$',
         '$\\mathrm{ES}_{2.5\\%}$ (expected shortfall, pierderea medie dincolo de VaR) există doar dacă $\\alpha > 1$'),
       T('the scale $\\gamma$ and the interquartile range replace the standard deviation', 'scala $\\gamma$ și intervalul intercuartilic înlocuiesc abaterea standard')]),
-    T('VaR and ES are developed in Chapter 10', 'VaR și ES sînt dezvoltate în Capitolul 10')))
+    T('VaR and ES are developed in Chapter 10', 'VaR și ES sînt tratate pe larg în Capitolul 10')))
 
 D.recap(('Tails and Moments', 'Cozi și momente'), [
     T('Tails: $P(|X| > x) \\propto x^{-\\alpha}$; a straight line on log-log axes', 'Cozi: $P(|X| > x) \\propto x^{-\\alpha}$; o dreaptă pe axe log-log'),
     T('Moments: $E|X|^p < \\infty$ iff $p < \\alpha$; $\\alpha < 2$ means infinite variance', 'Momente: $E|X|^p < \\infty$ dacă și numai dacă $p < \\alpha$; $\\alpha < 2$ înseamnă varianță infinită'),
     T('The sample variance of a stable sample jumps and does not settle', 'Varianța de selecție a unui eșantion stabil sare și nu se stabilizează'),
-    T('Quantiles, VaR and the scale $\\gamma$ remain meaningful', 'Cuantilele, VaR și scala $\\gamma$ rămîn cu sens')])
+    T('Quantiles, VaR and the scale $\\gamma$ remain meaningful', 'Cuantilele, VaR și scala $\\gamma$ își păstrează sensul')])
 
 # =============================================================================
 # 6. SIMULARE
@@ -577,17 +577,17 @@ D.recap(('Simulation', 'Simularea'), [
 D.section('Estimation', 'Estimare')
 
 D.frame(T('Three Families of Estimators', 'Trei familii de estimatori'), items(
-    (T('\\textbf{Quantile methods}: match sample quantiles to those of the stable law', '\\textbf{Metode bazate pe cuantile}: potrivesc cuantilele de selecție cu cele ale legii stabile'),
+    (T('\\textbf{Quantile methods}: match sample quantiles to those of the stable law', '\\textbf{Metodele cuantilelor}: potrivesc cuantilele de selecție cu cele ale legii stabile'),
      [T('\\refFamaRollB\\ for symmetric laws; \\refMcCulloch\\ for all four parameters', '\\refFamaRollB\\ pentru legi simetrice; \\refMcCulloch\\ pentru toți cei patru parametri')]),
     (T('\\textbf{Characteristic-function methods}: regress the empirical $\\ln(-\\ln|\\hat\\varphi(t)|^2)$ on $\\ln|t|$',
-       '\\textbf{Metode bazate pe funcția caracteristică}: regresia lui $\\ln(-\\ln|\\hat\\varphi(t)|^2)$ empiric pe $\\ln|t|$'),
+       '\\textbf{Metodele funcției caracteristice}: regresia lui $\\ln(-\\ln|\\hat\\varphi(t)|^2)$ empiric pe $\\ln|t|$'),
      [T('\\refKoutrouvelis; the slope estimates $\\alpha$', '\\refKoutrouvelis; panta estimează $\\alpha$')]),
-    (T('\\textbf{Maximum likelihood} (ML): the most precise, once the density can be computed', '\\textbf{Verosimilitatea maximă} (ML): cea mai precisă, odată ce densitatea se poate calcula'),
+    (T('\\textbf{Maximum likelihood} (ML): the most precise, once the density can be computed', '\\textbf{Verosimilitatea maximă} (ML): cea mai precisă, dacă densitatea poate fi calculată'),
      [T('\\refNolanML, \\refMRDC', '\\refNolanML, \\refMRDC')]),
     T('A SAS implementation of these estimators is described in \\refPele', 'O implementare SAS a acestor estimatori este descrisă în \\refPele')))
 
 D.frame(T("McCulloch's Quantile Method", 'Metoda cuantilelor a lui McCulloch'), items(
-    (T('Two ratios of sample quantiles $\\hat q_p$, free of location and scale \\refMcCulloch:', 'Două rapoarte de cuantile de selecție $\\hat q_p$, independente de locație și scală \\refMcCulloch:'),
+    (T('Two ratios of sample quantiles $\\hat q_p$, free of location and scale \\refMcCulloch:', 'Două rapoarte de cuantile de selecție $\\hat q_p$, independente de poziție și de scală \\refMcCulloch:'),
      [T('$\\nu_\\alpha = \\dfrac{\\hat q_{0.95} - \\hat q_{0.05}}{\\hat q_{0.75} - \\hat q_{0.25}}$ (tail width relative to the body)',
         '$\\nu_\\alpha = \\dfrac{\\hat q_{0.95} - \\hat q_{0.05}}{\\hat q_{0.75} - \\hat q_{0.25}}$ (lățimea cozilor față de corp)'),
       T('$\\nu_\\beta = \\dfrac{\\hat q_{0.95} + \\hat q_{0.05} - 2\\hat q_{0.5}}{\\hat q_{0.95} - \\hat q_{0.05}}$ (asymmetry)',
@@ -599,7 +599,7 @@ D.frame(T("McCulloch's Quantile Method", 'Metoda cuantilelor a lui McCulloch'), 
     T('Fast, consistent, valid for $0.6 \\le \\alpha \\le 2$; less precise than ML; a good starting point for ML',
       'Rapidă, consistentă, valabilă pentru $0.6 \\le \\alpha \\le 2$; mai puțin precisă decît ML; un bun punct de plecare pentru ML')))
 
-side(T("McCulloch's Map from $\\nu_\\alpha$ to $\\alpha$", 'Harta lui McCulloch de la $\\nu_\\alpha$ la $\\alpha$'), 'sfm_ch3_mcculloch_map', 'SFM_ch3_estimation', [
+side(T("McCulloch's Map from $\\nu_\\alpha$ to $\\alpha$", 'Corespondența McCulloch între $\\nu_\\alpha$ și $\\alpha$'), 'sfm_ch3_mcculloch_map', 'SFM_ch3_estimation', [
     T('Line: Table III for a symmetric sample ($\\nu_\\beta = 0$)', 'Linia: Tabelul III pentru un eșantion simetric ($\\nu_\\beta = 0$)'),
     T('Stars: daily log returns since @{f.bet.y0} (Bitcoin since @{f.btc.y0})', 'Stelele: randamente logaritmice zilnice din @{f.bet.y0} (Bitcoin din @{f.btc.y0})'),
     T('$\\nu_\\alpha$: BET $@{f.bet.m.nu_alpha}$, S\\&P 500 $@{f.sp500.m.nu_alpha}$, DAX $@{f.dax.m.nu_alpha}$, Bitcoin $@{f.btc.m.nu_alpha}$',
@@ -629,15 +629,15 @@ D.frame(T('Maximum Likelihood', 'Verosimilitatea maximă'), items(
      [T('$f(x) = \\frac{1}{2\\pi}\\int e^{-itx}\\varphi(t)\\,dt$, evaluated on a grid with the FFT (fast Fourier transform) \\refMDC',
         '$f(x) = \\frac{1}{2\\pi}\\int e^{-itx}\\varphi(t)\\,dt$, evaluată pe o grilă cu FFT (fast Fourier transform, transformata Fourier rapidă) \\refMDC'),
       T('or by direct integration \\refNolanA; \\texttt{levy\\_stable.fit} does this and needs minutes for a few thousand returns',
-        'sau prin integrare directă \\refNolanA; \\texttt{levy\\_stable.fit} face asta și are nevoie de minute pentru cîteva mii de randamente')]),
+        'sau prin integrare directă \\refNolanA; \\texttt{levy\\_stable.fit} face acest calcul și durează cîteva minute pentru cîteva mii de randamente')]),
     T('ML in S0 is regular for $\\alpha \\in (0, 2)$: standard errors shrink like $1/\\sqrt{n}$ \\refNolanML',
-      'ML în S0 este regulată pentru $\\alpha \\in (0, 2)$: erorile standard scad ca $1/\\sqrt{n}$ \\refNolanML')))
+      'Estimarea ML în S0 este regulată pentru $\\alpha \\in (0, 2)$: erorile standard scad ca $1/\\sqrt{n}$ \\refNolanML')))
 
-chart(T('McCulloch vs ML in a Monte Carlo Study', 'McCulloch vs ML într-un studiu Monte Carlo'), 'sfm_ch3_estimators_mc', 'SFM_ch3_estimation', [
+chart(T('McCulloch vs ML in a Monte Carlo Study', 'McCulloch și ML într-un studiu Monte Carlo'), 'sfm_ch3_estimators_mc', 'SFM_ch3_estimation', [
     T('200 samples of $S(1.7, 0, 1, 0)$ for each size; both estimators are centred on 1.7',
       '200 de eșantioane din $S(1.7, 0, 1, 0)$ pentru fiecare mărime; ambii estimatori sînt centrați pe 1,7'),
     T('Standard deviation of $\\hat\\alpha$: $n = 500$: McCulloch $@{mc.500.mcculloch.sd}$, ML $@{mc.500.ml.sd}$; $n = 2500$: $@{mc.2500.mcculloch.sd}$ vs $@{mc.2500.ml.sd}$',
-      'Abaterea standard a lui $\\hat\\alpha$: $n = 500$: McCulloch $@{mc.500.mcculloch.sd}$, ML $@{mc.500.ml.sd}$; $n = 2500$: $@{mc.2500.mcculloch.sd}$ vs $@{mc.2500.ml.sd}$'),
+      'Abaterea standard a lui $\\hat\\alpha$: $n = 500$: McCulloch $@{mc.500.mcculloch.sd}$, ML $@{mc.500.ml.sd}$; $n = 2500$: $@{mc.2500.mcculloch.sd}$ față de $@{mc.2500.ml.sd}$'),
     T('ML is about $@{mc.ratio500}$ times more precise for the same data', 'ML este de circa $@{mc.ratio500}$ ori mai precisă pe aceleași date')], h='0.60\\textheight')
 
 D.recap(('Estimation', 'Estimarea'), [
@@ -648,7 +648,7 @@ D.recap(('Estimation', 'Estimarea'), [
 # =============================================================================
 # 8. AJUSTARE PE RANDAMENTE REALE
 # =============================================================================
-D.section('Fitting Real Returns', 'Ajustarea pe randamente reale')
+D.section('Fitting Real Returns', 'Estimarea pe randamente reale')
 
 
 def frow(k):
@@ -656,7 +656,7 @@ def frow(k):
             f'$@{{f.{k}.s.beta}}$ ($@{{f.{k}.s.se_beta}}$) & $@{{f.{k}.s.gamma}}$ & $@{{f.{k}.s.delta0}}$ & $@{{f.{k}.s.delta1}}$')
 
 
-D.frame(T('Stable Fits of Daily Log Returns', 'Ajustări stabile ale randamentelor logaritmice zilnice'), table(
+D.frame(T('Stable Fits of Daily Log Returns', 'Legi stabile estimate pe randamentele logaritmice zilnice'), table(
     'lrrrrrrr', T('& $n$ & $\\hat\\alpha$ McC. & $\\hat\\alpha$ ML (SE) & $\\hat\\beta$ ML (SE) & $\\hat\\gamma$ & $\\hat\\delta_0$ & $\\hat\\delta_1$',
                   '& $n$ & $\\hat\\alpha$ McC. & $\\hat\\alpha$ ML (SE) & $\\hat\\beta$ ML (SE) & $\\hat\\gamma$ & $\\hat\\delta_0$ & $\\hat\\delta_1$'),
     [frow(k) for k in ASSETS], size='footnotesize') + items(
@@ -665,7 +665,7 @@ D.frame(T('Stable Fits of Daily Log Returns', 'Ajustări stabile ale randamentel
     T('McC.: McCulloch; ML in S0 with standard errors; $\\hat\\gamma$, $\\hat\\delta_0$, $\\hat\\delta_1$ in \\% a day',
       'McC.: McCulloch; ML în S0, cu erori standard; $\\hat\\gamma$, $\\hat\\delta_0$, $\\hat\\delta_1$ în \\% pe zi')) + ql('SFM_ch3_fit_returns'))
 
-D.frame(T('Reading the Estimates', 'Cum citim estimările'), items(
+D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
     (T('$\\hat\\alpha$ well below 2 for all four series', '$\\hat\\alpha$ mult sub 2 pentru toate cele patru serii'),
      [T('S\\&P 500: $(2 - @{f.sp500.s.alpha})/@{f.sp500.s.se_alpha} \\approx @{f.sp500.s.z}$ standard errors from the Normal case',
         'S\\&P 500: $(2 - @{f.sp500.s.alpha})/@{f.sp500.s.se_alpha} \\approx @{f.sp500.s.z}$ erori standard față de cazul Normal'),
@@ -673,26 +673,26 @@ D.frame(T('Reading the Estimates', 'Cum citim estimările'), items(
     (T('$\\hat\\beta < 0$ for the S\\&P 500 and the DAX: the left tail is heavier (crashes)', '$\\hat\\beta < 0$ pentru S\\&P 500 și DAX: coada stîngă este mai groasă (crahuri)'),
      [T('BET and Bitcoin: $\\hat\\beta$ within two standard errors of 0', 'BET și Bitcoin: $\\hat\\beta$ la mai puțin de două erori standard de 0')]),
     T('$\\hat\\gamma$: Bitcoin $@{f.btc.s.gamma}\\%$ vs S\\&P 500 $@{f.sp500.s.gamma}\\%$ a day; compare the sample standard deviations $@{f.btc.sd}\\%$ and $@{f.sp500.sd}\\%$',
-      '$\\hat\\gamma$: Bitcoin $@{f.btc.s.gamma}\\%$ vs S\\&P 500 $@{f.sp500.s.gamma}\\%$ pe zi; comparați abaterile standard de selecție $@{f.btc.sd}\\%$ și $@{f.sp500.sd}\\%$'),
+      '$\\hat\\gamma$: Bitcoin $@{f.btc.s.gamma}\\%$ pe zi, față de $@{f.sp500.s.gamma}\\%$ pentru S\\&P 500; comparați abaterile standard de selecție $@{f.btc.sd}\\%$ și $@{f.sp500.sd}\\%$'),
     T('McCulloch gives lower $\\hat\\alpha$ than ML for every series: the two methods weigh the tails differently',
       'McCulloch dă un $\\hat\\alpha$ mai mic decît ML pentru fiecare serie: cele două metode ponderează diferit cozile')))
 
-chart(T('Fitted Densities on a Log Scale', 'Densități ajustate pe scară logaritmică'), 'sfm_ch3_fit_density', 'SFM_ch3_fit_returns', [
+chart(T('Fitted Densities on a Log Scale', 'Densități estimate, pe scară logaritmică'), 'sfm_ch3_fit_density', 'SFM_ch3_fit_returns', [
     T('Normal (red): far too few large returns; Student-t (green) and stable (blue) both follow the body',
-      'Normală (roșu): mult prea puține randamente mari; Student-t (verde) și stabilă (albastru) urmează amîndouă corpul'),
-    T('Far tails: the stable density stays above the data points; the Student-t is closer', 'Cozile îndepărtate: densitatea stabilă rămîne deasupra punctelor; Student-t este mai aproape')],
+      'Distribuția Normală (roșu): mult prea puține randamente mari; distribuțiile Student-t (verde) și stabilă (albastru) descriu bine corpul'),
+    T('Far tails: the stable density stays above the data points; the Student-t is closer', 'Cozile îndepărtate: densitatea stabilă rămîne deasupra punctelor; distribuția Student-t este mai aproape de ele')],
     h='0.66\\textheight')
 
-chart(T('QQ Plots against the Three Models', 'Grafice QQ față de cele trei modele'), 'sfm_ch3_qq_real', 'SFM_ch3_fit_returns', [
+chart(T('QQ Plots against the Three Models', 'QQ plots față de cele trei modele'), 'sfm_ch3_qq_real', 'SFM_ch3_fit_returns', [
     T('A QQ (quantile--quantile) plot puts the empirical quantiles against the model quantiles; a good model lies on the 45-degree line',
-      'Un grafic QQ (cuantilă--cuantilă) pune cuantilele empirice față de cele ale modelului; un model bun stă pe dreapta de 45 de grade'),
+      'Un QQ plot (graficul cuantilă--cuantilă) reprezintă cuantilele empirice în funcție de cele ale modelului; pentru un model bun, punctele se află pe prima bisectoare'),
     T('Normal: too-short tails (steep ends); stable: too-long tails (flat ends, model quantiles far beyond the data); Student-t: the closest',
-      'Normală: cozi prea scurte (capete abrupte); stabilă: cozi prea lungi (capete plate, cuantile ale modelului mult dincolo de date); Student-t: cea mai apropiată')],
+      'Distribuția Normală: cozi prea scurte (capete abrupte); distribuția stabilă: cozi prea lungi (capete plate, cuantile ale modelului mult dincolo de date); Student-t: cea mai apropiată')],
     h='0.62\\textheight')
 
 chart(T('The Left Tail on Log-Log Axes', 'Coada stîngă pe axe log-log'), 'sfm_ch3_tails_real', 'SFM_ch3_fit_returns', [
     T('Points: share of days with a loss above $x$; lines: the same probability under each fitted model',
-      'Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate în fiecare model ajustat'),
+      'Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate conform fiecărui model estimat'),
     T('The empirical tail bends down faster than the stable line: the tail index of the data is larger than $\\hat\\alpha$',
       'Coada empirică se curbează în jos mai repede decît dreapta stabilă: indicele de coadă al datelor este mai mare decît $\\hat\\alpha$')],
     h='0.66\\textheight')
@@ -703,13 +703,13 @@ def tcrow(k, x):
 
 
 D.frame(T('Counting Large Losses', 'Numărarea pierderilor mari'), table(
-    'lrrrrr', T('& loss above & observed & Normal & Student-t & stable', '& pierdere peste & observat & Normală & Student-t & stabilă'),
+    'lrrrrr', T('& loss above & observed & Normal & Student-t & stable', '& pierdere peste & observate & Normală & Student-t & stabilă'),
     [tcrow('sp500', 5), tcrow('sp500', 10), tcrow('sp500', 15), tcrow('bet', 10), tcrow('btc', 10), tcrow('btc', 20)], size='footnotesize') + items(
-    T('Expected number of days $= n \\times P(r < -x)$ under each fitted model', 'Numărul așteptat de zile $= n \\times P(r < -x)$ în fiecare model ajustat'),
+    T('Expected number of days $= n \\times P(r < -x)$ under each fitted model', 'Numărul așteptat de zile $= n \\times P(r < -x)$ conform fiecărui model estimat'),
     T('Normal: almost no large losses; stable: too many, and the gap grows with the threshold; Student-t: closest to the counts',
-      'Normală: aproape nicio pierdere mare; stabilă: prea multe, iar diferența crește odată cu pragul; Student-t: cea mai apropiată de numărători'),
+      'Distribuția Normală: aproape nicio pierdere mare; distribuția stabilă: prea multe, iar diferența crește odată cu pragul; Student-t: cea mai apropiată de valorile observate'),
     T('S\\&P 500: @{tc.sp500.obs10} day below $-10\\%$ in @{f.sp500.n} days; the stable fit expects $@{tc.sp500.s10}$',
-      'S\\&P 500: @{tc.sp500.obs10} zi sub $-10\\%$ în @{f.sp500.n} zile; ajustarea stabilă se așteaptă la $@{tc.sp500.s10}$')) + ql('SFM_ch3_fit_returns'))
+      'S\\&P 500, @{f.sp500.n} zile: zile sub $-10\\%$ observate @{tc.sp500.obs10}, prevăzute de legea stabilă estimată $@{tc.sp500.s10}$')) + ql('SFM_ch3_fit_returns'))
 
 
 def varrow(k):
@@ -717,14 +717,14 @@ def varrow(k):
             f'$@{{tc.{k}.var01.e}}$ & $@{{tc.{k}.var01.n}}$ & $@{{tc.{k}.var01.t}}$ & $@{{tc.{k}.var01.s}}$')
 
 
-D.frame(T('VaR 1\\% and VaR 0.1\\% under the Three Models', 'VaR 1\\% și VaR 0,1\\% în cele trei modele'), table(
+D.frame(T('VaR 1\\% and VaR 0.1\\% under the Three Models', 'VaR 1\\% și VaR 0,1\\% conform celor trei modele'), table(
     'l|rrrr|rrrr', T('& \\multicolumn{4}{c|}{VaR 1\\% (\\%)} & \\multicolumn{4}{c}{VaR 0.1\\% (\\%)} \\\\ & data & Normal & t & stable & data & Normal & t & stable',
                      '& \\multicolumn{4}{c|}{VaR 1\\% (\\%)} & \\multicolumn{4}{c}{VaR 0,1\\% (\\%)} \\\\ & date & Normală & t & stabilă & date & Normală & t & stabilă'),
     [varrow(k) for k in ASSETS], size='footnotesize') + items(
     T('VaR at level $p$: $\\mathrm{VaR}_p = -q_p$, the daily loss exceeded with probability $p$ (Chapter 10); here $p$, because $\\alpha$ is the stable index',
-      'VaR la nivelul $p$: $\\mathrm{VaR}_p = -q_p$, pierderea zilnică depășită cu probabilitatea $p$ (Capitolul 10); aici $p$, pentru că $\\alpha$ este indicele stabil'),
-    T('VaR 1\\%: the Normal model is too low, the stable model too high', 'VaR 1\\%: modelul Normal este prea jos, modelul stabil prea sus'),
-    T('VaR 0.1\\%: the stable model is two to four times the empirical quantile', 'VaR 0,1\\%: modelul stabil este de două pînă la patru ori cuantila empirică')) + ql('SFM_ch3_fit_returns'))
+      'VaR la nivelul $p$: $\\mathrm{VaR}_p = -q_p$, pierderea zilnică depășită cu probabilitatea $p$ (Capitolul 10); aici notăm nivelul cu $p$, deoarece $\\alpha$ desemnează indicele de stabilitate'),
+    T('VaR 1\\%: the Normal model is too low, the stable model too high', 'VaR 1\\%: modelul Normal dă valori prea mici, modelul stabil valori prea mari'),
+    T('VaR 0.1\\%: the stable model gives roughly two to four times the empirical quantile', 'VaR 0,1\\%: modelul stabil dă valori de aproximativ două pînă la patru ori mai mari decît cuantila empirică')) + ql('SFM_ch3_fit_returns'))
 
 
 def aicrow(k):
@@ -735,17 +735,17 @@ D.frame(T('Which Model Fits Best?', 'Care model se potrivește cel mai bine?'), 
     'lrrrr', T('& AIC Normal & AIC Student-t & AIC stable & $\\hat\\nu$ (Student-t)', '& AIC Normală & AIC Student-t & AIC stabilă & $\\hat\\nu$ (Student-t)'),
     [aicrow(k) for k in ASSETS], size='footnotesize') + items(
     T('AIC (Akaike information criterion) $= 2k - 2\\ell(\\hat\\theta)$, with $k$ the number of parameters; lower is better',
-      'AIC (Akaike information criterion, criteriul informațional Akaike) $= 2k - 2\\ell(\\hat\\theta)$, cu $k$ numărul de parametri; mai mic este mai bine'),
-    T('Both heavy-tailed models beat the Normal distribution by thousands of AIC points', 'Ambele modele cu cozi groase bat distribuția Normală la mii de puncte AIC'),
+      'AIC (Akaike information criterion, criteriul informațional Akaike) $= 2k - 2\\ell(\\hat\\theta)$, cu $k$ numărul de parametri; se preferă valoarea mai mică'),
+    T('Both heavy-tailed models beat the Normal distribution by thousands of AIC points', 'Ambele modele cu cozi groase sînt preferate distribuției Normale, cu diferențe de mii de puncte AIC'),
     T('Student-t wins for every series, with fewer parameters; S\\&P 500: by @{f.sp500.aic.ts} points',
-      'Student-t cîștigă pentru fiecare serie, cu mai puțini parametri; S\\&P 500: la @{f.sp500.aic.ts} de puncte'),
-    T('$\\hat\\nu$ between 2 and 3.1: finite variance, but few finite moments beyond it', '$\\hat\\nu$ între 2 și 3,1: varianță finită, dar puține momente finite dincolo de ea')) + ql('SFM_ch3_fit_returns'))
+      'Student-t este preferată pentru fiecare serie, deși are mai puțini parametri; la S\\&P 500, diferența este de @{f.sp500.aic.ts} de puncte'),
+    T('$\\hat\\nu$ between 2 and 3.1: finite variance, but few finite moments beyond it', '$\\hat\\nu$ între 2 și 3,1: varianță finită, dar aproape niciun moment finit de ordin superior')) + ql('SFM_ch3_fit_returns'))
 
-D.recap(('Fitting Real Returns', 'Ajustarea pe randamente reale'), [
+D.recap(('Fitting Real Returns', 'Estimarea pe randamente reale'), [
     T('All four series: $\\hat\\alpha$ between @{f.btc.s.alpha} and @{f.dax.s.alpha}, far from 2', 'Toate cele patru serii: $\\hat\\alpha$ între @{f.btc.s.alpha} și @{f.dax.s.alpha}, departe de 2'),
-    T('The stable law fits the body much better than the Normal distribution', 'Legea stabilă se potrivește corpului mult mai bine decît distribuția Normală'),
+    T('The stable law fits the body much better than the Normal distribution', 'Legea stabilă descrie corpul distribuției mult mai bine decît distribuția Normală'),
     T('It overstates the far tails: too many extreme losses, VaR 0.1\\% too high', 'Supraestimează cozile îndepărtate: prea multe pierderi extreme, VaR 0,1\\% prea mare'),
-    T('By AIC, the Student-t distribution fits better', 'După AIC, distribuția Student-t se potrivește mai bine')])
+    T('By AIC, the Student-t distribution fits better', 'După AIC, distribuția Student-t este preferată')])
 
 # =============================================================================
 # 9. CRITICA
@@ -758,21 +758,21 @@ chart(T('Test 1: Does $\\alpha$ Stay the Same When Returns Are Summed?', 'Testul
     T('ML estimates: S\\&P 500 $@{ag.sp500.daily} \\to @{ag.sp500.weekly} \\to @{ag.sp500.monthly}$; Bitcoin $@{ag.btc.daily} \\to @{ag.btc.weekly} \\to @{ag.btc.monthly}$ (at the bound 2)',
       'Estimări ML: S\\&P 500 $@{ag.sp500.daily} \\to @{ag.sp500.weekly} \\to @{ag.sp500.monthly}$; Bitcoin $@{ag.btc.daily} \\to @{ag.btc.weekly} \\to @{ag.btc.monthly}$ (la limita 2)')])
 
-D.frame(T('Reading the Aggregation Test', 'Cum citim testul agregării'), items(
+D.frame(T('Reading the Aggregation Test', 'Interpretarea testului de agregare'), items(
     (T('$\\hat\\alpha$ rises with the horizon for the S\\&P 500, DAX and Bitcoin', '$\\hat\\alpha$ crește cu orizontul pentru S\\&P 500, DAX și Bitcoin'),
      [T('DAX: $@{ag.dax.daily} \\to @{ag.dax.weekly} \\to @{ag.dax.monthly}$; the daily and monthly intervals do not overlap for the S\\&P 500',
-        'DAX: $@{ag.dax.daily} \\to @{ag.dax.weekly} \\to @{ag.dax.monthly}$; intervalele zilnic și lunar nu se suprapun pentru S\\&P 500')]),
+        'DAX: $@{ag.dax.daily} \\to @{ag.dax.weekly} \\to @{ag.dax.monthly}$; pentru S\\&P 500, intervalele de încredere ale orizontului zilnic și lunar nu se suprapun')]),
     (T('BET: $@{ag.bet.daily} \\to @{ag.bet.weekly} \\to @{ag.bet.monthly}$, no clear rise', 'BET: $@{ag.bet.daily} \\to @{ag.bet.weekly} \\to @{ag.bet.monthly}$, fără o creștere clară'),
      [T('monthly samples are short (@{ag.bet.monthly.n} months): wide intervals', 'eșantioanele lunare sînt scurte (@{ag.bet.monthly.n} de luni): intervale largi')]),
     T('The same pattern in the classic studies: \\refOfficer, \\refAB', 'Același tipar în studiile clasice: \\refOfficer, \\refAB'),
     T('A rising $\\alpha$ is what the GCLT predicts for sums of finite-variance returns that converge slowly to the Normal distribution',
-      'Un $\\alpha$ crescător este exact ce prevede GCLT pentru sume de randamente cu varianță finită care converg lent la distribuția Normală')))
+      'Un $\\alpha$ crescător este exact ceea ce prevede GCLT pentru sume de randamente cu varianță finită care converg lent la distribuția Normală')))
 
 chart(T('Test 2: Does the Sample Variance Settle?', 'Testul 2: se stabilizează varianța de selecție?'), 'sfm_ch3_running_var_real', 'SFM_ch3_aggregation', [
     T('S\\&P 500 (blue): after the jumps of 2008 and 2020 the running variance settles near $@{rvr.data}$',
       'S\\&P 500 (albastru): după salturile din 2008 și 2020, varianța cumulată se stabilizează în jur de $@{rvr.data}$'),
     T('Paths simulated from the fitted stable law, same length: final variances between $@{rvr.simmin}$ and $@{rvr.simmax}$, far above the data',
-      'Traiectorii simulate din legea stabilă ajustată, aceeași lungime: varianțe finale între $@{rvr.simmin}$ și $@{rvr.simmax}$, mult peste date')])
+      'Traiectorii de aceeași lungime simulate din legea stabilă estimată: varianțe finale între $@{rvr.simmin}$ și $@{rvr.simmax}$, mult peste date')])
 
 D.frame(T('Test 3: How Heavy Is the Far Tail?', 'Testul 3: cît de groasă este coada îndepărtată?'), items(
     (T('The stable $\\alpha$ is driven by the whole distribution, mostly by the body', '$\\alpha$ stabil este determinat de întreaga distribuție, mai ales de corp'),
@@ -781,18 +781,18 @@ D.frame(T('Test 3: How Heavy Is the Far Tail?', 'Testul 3: cît de groasă este 
     (T('For stock indices the far tail decays roughly like $x^{-3}$, the ``inverse cubic law\'\' \\refGopi',
        'Pentru indicii bursieri, coada îndepărtată scade aproximativ ca $x^{-3}$, „legea cubică inversă” \\refGopi'),
      [T('a tail index near 3 means finite variance, and no stable law has it', 'un indice de coadă în jur de 3 înseamnă varianță finită, iar nicio lege stabilă nu îl are')]),
-    T('Our counts agree: the stable fits expect many more losses beyond $10\\%$ than observed', 'Numărătorile noastre confirmă: ajustările stabile așteaptă mult mai multe pierderi peste $10\\%$ decît s-au observat'),
+    T('Our counts agree: the stable fits expect many more losses beyond $10\\%$ than observed', 'Numărul pierderilor observate confirmă: legile stabile estimate prevăd mult mai multe pierderi peste $10\\%$ decît s-au observat'),
     T('\\refLLW: further evidence against the stable model from the behaviour of sample moments',
       '\\refLLW: alte dovezi împotriva modelului stabil, din comportamentul momentelor de selecție')))
 
 D.frame(T('Why Do Daily Returns Look Stable?', 'De ce par stabile randamentele zilnice?'), items(
-    (T('\\textbf{Volatility clustering} (Chapters 2 and 9): calm and turbulent periods alternate', '\\textbf{Gruparea volatilității} (Capitolele 2 și 9): perioadele calme și cele agitate alternează'),
+    (T('\\textbf{Volatility clustering} (Chapters 2 and 9): calm and turbulent periods alternate', '\\textbf{Volatility clustering} (Capitolele 2 și 9): perioadele calme și cele agitate alternează'),
      [T('a mixture of Normal laws with changing variance has heavy tails and a finite variance \\refBG',
         'un amestec de legi Normale cu varianță variabilă are cozi groase și varianță finită \\refBG'),
-      T('fitted to one stable law, the mixture gives $\\hat\\alpha < 2$', 'ajustat cu o singură lege stabilă, amestecul dă $\\hat\\alpha < 2$')]),
+      T('fitted to one stable law, the mixture gives $\\hat\\alpha < 2$', 'dacă amestecului i se ajustează o singură lege stabilă, se obține $\\hat\\alpha < 2$')]),
     (T('\\textbf{Truncated and tempered stable laws}: stable at moderate scales, lighter tails far out',
-       '\\textbf{Legi stabile trunchiate și temperate}: stabile la scări moderate, cozi mai subțiri în extrem'),
-     [T('\\refMS\\ fitted a truncated Lévy flight to the S\\&P 500', '\\refMS\\ au ajustat un zbor Lévy trunchiat pe S\\&P 500'),
+       '\\textbf{Legi stabile trunchiate și temperate}: stabile la scări moderate, cu cozi mai subțiri în zona extremă'),
+     [T('\\refMS\\ fitted a truncated Lévy flight to the S\\&P 500', '\\refMS\\ au ajustat un zbor Lévy trunchiat (truncated Lévy flight) pentru S\\&P 500'),
       T('\\refGS: such laws explain why returns look stable at short horizons and Normal at long ones',
         '\\refGS: astfel de legi explică de ce randamentele par stabile pe orizonturi scurte și Normale pe orizonturi lungi')])))
 
@@ -811,7 +811,7 @@ D.frame(T('Verdict', 'Verdictul'), items(
 D.recap(('The Critique', 'Critica'), [
     T('Stability predicts the same $\\alpha$ at every horizon: the data show a rising $\\alpha$', 'Stabilitatea implică același $\\alpha$ la orice orizont: datele arată un $\\alpha$ crescător'),
     T('The sample variance of real returns settles; that of stable samples does not', 'Varianța de selecție a randamentelor reale se stabilizează; cea a eșantioanelor stabile, nu'),
-    T('Volatility clustering and tempered tails explain the apparent $\\alpha < 2$', 'Gruparea volatilității și cozile temperate explică aparentul $\\alpha < 2$'),
+    T('Volatility clustering and tempered tails explain the apparent $\\alpha < 2$', 'Volatility clustering și cozile temperate explică valoarea aparentă $\\alpha < 2$'),
     T('Heavy tails: yes; infinite variance: no', 'Cozi groase: da; varianță infinită: nu')])
 
 # =============================================================================
@@ -821,34 +821,34 @@ D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
 D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     (T('\\textbf{Have the tails of Bitcoin become lighter as the market matured?}', '\\textbf{Au devenit mai subțiri cozile Bitcoin pe măsură ce piața s-a maturizat?}'),
-     [T('more participants, futures and ETFs (exchange-traded funds) since 2017--2024', 'mai mulți participanți, contracte futures și ETF-uri (exchange-traded funds, fonduri tranzacționate la bursă) din 2017--2024'),
-      T('if the tails got lighter, risk models fitted on old data overstate today\'s risk', 'dacă cozile au devenit mai subțiri, modelele de risc ajustate pe date vechi supraestimează riscul de azi')]),
-    T('Why it is open: $\\hat\\alpha$ moves with volatility regimes, and yearly samples are short', 'De ce este deschisă: $\\hat\\alpha$ se mișcă odată cu regimurile de volatilitate, iar eșantioanele anuale sînt scurte'),
+     [T('more participants, futures and ETFs (exchange-traded funds) since 2017--2024', 'mai mulți participanți, contracte futures și ETF-uri (exchange-traded funds, fonduri tranzacționate la bursă) în perioada 2017--2024'),
+      T('if the tails got lighter, risk models fitted on old data overstate today\'s risk', 'dacă cozile au devenit mai subțiri, modelele de risc estimate pe date vechi supraestimează riscul de azi')]),
+    T('Why it is open: $\\hat\\alpha$ moves with volatility regimes, and yearly samples are short', 'De ce rămîne deschisă: $\\hat\\alpha$ variază odată cu regimurile de volatilitate, iar eșantioanele anuale sînt scurte'),
     T('Full sample: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), the lowest of our four series', 'Eșantionul complet: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), cel mai mic dintre cele patru serii'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
 D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
     T('\\textbf{Literature}: list papers on tail estimates for crypto assets and summarise their methods',
-      '\\textbf{Literatura}: lista lucrărilor despre estimarea cozilor la activele cripto și rezumarea metodelor'),
+      '\\textbf{Literatura}: inventarierea lucrărilor despre estimarea cozilor activelor cripto și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft a rolling-window McCulloch estimator with bootstrap intervals', '\\textbf{Cod}: o primă versiune a unui estimator McCulloch pe ferestre mobile, cu intervale bootstrap'),
-    T('\\textbf{Robustness}: propose other windows, ML instead of quantiles, Student-t $\\nu$ instead of $\\alpha$', '\\textbf{Robustețe}: alte ferestre, ML în loc de cuantile, $\\nu$ din Student-t în loc de $\\alpha$'),
+    T('\\textbf{Robustness}: propose other windows, ML instead of quantiles, Student-t $\\nu$ instead of $\\alpha$', '\\textbf{Robustețe}: propunerea altor ferestre, ML în loc de cuantile, $\\nu$ din Student-t în loc de $\\alpha$'),
     T('\\textbf{Explanation}: a first draft of the interpretation of a table of yearly estimates', '\\textbf{Explicație}: o primă versiune a interpretării unui tabel de estimări anuale'),
     (T('Example prompt', 'Exemplu de prompt'),
      [T('\\aiprompt{Write a Python function that estimates the stable alpha of daily log returns on rolling 365-day windows with McCulloch (1986), and adds 95\\% bootstrap intervals.}',
         '\\aiprompt{Write a Python function that estimates the stable alpha of daily log returns on rolling 365-day windows with McCulloch (1986), and adds 95\\% bootstrap intervals.}')])))
 
-D.frame(T('What to Check', 'Ce trebuie verificat'), items(
-    T('Parameterisation: S0 or S1? scipy uses S1 by default; the location differs by $\\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$',
-      'Parametrizarea: S0 sau S1? scipy folosește implicit S1; locația diferă cu $\\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$'),
+D.frame(T('What to Check', 'Verificări necesare'), items(
+    T('Parameterisation: S0 or S1; scipy uses S1 by default; the location differs by $\\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$',
+      'Parametrizarea: S0 sau S1; scipy folosește implicit S1; poziția diferă cu $\\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$'),
     T('Units: returns in \\% or in decimals; $\\gamma$ and $\\delta$ change, $\\alpha$ and $\\beta$ do not', 'Unitățile: randamente în \\% sau în zecimale; $\\gamma$ și $\\delta$ se schimbă, $\\alpha$ și $\\beta$ nu'),
     T('Overlapping windows are not independent: do not read the rolling estimates as separate tests',
       'Ferestrele suprapuse nu sînt independente: nu citiți estimările mobile ca teste separate'),
-    T('Numbers: recompute one window with a second method (ML or the quantile tables)', 'Cifrele: recalculați o fereastră cu o a doua metodă (ML sau tabelele de cuantile)'),
+    T('Numbers: recompute one window with a second method (ML or the quantile tables)', 'Rezultatele numerice: recalculați o fereastră cu o a doua metodă (ML sau tabelele de cuantile)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
 D.frame(T('Project Seed', 'Sămînță de proiect'), items(
     (T('\\textbf{Question}: is the tail of Bitcoin returns lighter now than in 2014--2018?', '\\textbf{Întrebarea}: este coada randamentelor Bitcoin mai subțire acum decît în 2014--2018?'),
-     [T('data: Bitcoin daily closes from the course data (EODHD), 2014--2026', 'date: închiderile zilnice Bitcoin din datele cursului (EODHD), 2014--2026')]),
+     [T('data: Bitcoin daily closes from the course data (EODHD), 2014--2026', 'date: prețurile de închidere zilnice ale Bitcoin din datele cursului (EODHD), 2014--2026')]),
     (T('Steps', 'Pași'),
      [T('estimate $\\alpha$ by McCulloch and by ML for each calendar year, with bootstrap intervals', 'estimați $\\alpha$ prin McCulloch și prin ML pentru fiecare an calendaristic, cu intervale bootstrap'),
       T('repeat on returns divided by a rolling volatility: does the trend survive?', 'repetați pe randamente împărțite la o volatilitate mobilă: rezistă tendința?'),
@@ -866,10 +866,10 @@ D.frame(T('Key Takeaways', 'Idei principale'), items(
     T('Stable laws are the only laws whose sums keep the same shape, and the only limits of normalised sums (GCLT)',
       'Legile stabile sînt singurele legi ale căror sume își păstrează forma și singurele limite ale sumelor normalizate (GCLT)'),
     T('Four parameters: $\\alpha$ tails, $\\beta$ skewness, $\\gamma$ scale, $\\delta$ location; know your parameterisation (S0 or S1)',
-      'Patru parametri: $\\alpha$ cozi, $\\beta$ asimetrie, $\\gamma$ scală, $\\delta$ locație; cunoașteți-vă parametrizarea (S0 sau S1)'),
+      'Patru parametri: $\\alpha$ cozi, $\\beta$ asimetrie, $\\gamma$ scală, $\\delta$ poziție; precizați întotdeauna parametrizarea (S0 sau S1)'),
     T('$\\alpha < 2$: power-law tails and infinite variance; $\\alpha \\le 1$: no mean', '$\\alpha < 2$: cozi de tip putere și varianță infinită; $\\alpha \\le 1$: nu există media'),
     T('Simulate with CMS; estimate with McCulloch quantiles or ML', 'Simulați cu CMS; estimați cu cuantilele McCulloch sau cu ML'),
-    T('Daily returns: $\\hat\\alpha \\approx 1.4$--$1.6$, much better than the Normal distribution in the body', 'Randamentele zilnice: $\\hat\\alpha \\approx 1{,}4$--$1{,}6$, mult mai bine decît distribuția Normală în corp'),
+    T('Daily returns: $\\hat\\alpha \\approx 1.4$--$1.6$, much better than the Normal distribution in the body', 'Randamentele zilnice: $\\hat\\alpha \\approx 1{,}4$--$1{,}6$; legea stabilă descrie corpul distribuției mult mai bine decît distribuția Normală'),
     T('But $\\hat\\alpha$ rises with aggregation and the variance settles: heavy tails, finite variance',
       'Dar $\\hat\\alpha$ crește prin agregare, iar varianța se stabilizează: cozi groase, varianță finită')))
 
@@ -878,7 +878,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
     [T('Stability', 'Stabilitate') + ' & $aX_1 + bX_2 \\overset{d}{=} cX + d$, \\quad $c^\\alpha = a^\\alpha + b^\\alpha$',
      T('Sum of $n$ copies', 'Suma a $n$ copii') + ' & $X_1 + \\dots + X_n \\overset{d}{=} n^{1/\\alpha}X + d_n$',
      T('Characteristic function (S1)', 'Funcția caracteristică (S1)') + ' & $\\exp\\{-\\gamma^\\alpha|t|^\\alpha[1 - i\\beta\\,\\mathrm{sign}(t)\\tan\\frac{\\pi\\alpha}{2}] + i\\delta_1 t\\}$',
-     'S0 vs S1 & $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$',
+     T('S0 vs S1', 'S0 și S1') + ' & $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan\\frac{\\pi\\alpha}{2}$',
      T('Normal case', 'Cazul Normal') + ' & $S(2, \\beta, \\gamma, \\delta) = N(\\delta, 2\\gamma^2)$',
      T('Tails', 'Cozi') + ' & $P(X > x) \\sim \\gamma^\\alpha c_\\alpha(1 + \\beta)x^{-\\alpha}$',
      T('Moments', 'Momente') + ' & $E|X|^p < \\infty \\iff p < \\alpha$ \\quad ($\\alpha < 2$)',
@@ -890,8 +890,8 @@ D.frame(T('Check Yourself', 'Verificați-vă'), items(
     (T('\\textbf{Question}: daily returns are i.i.d.\\ $S(1.5, 0, \\gamma, 0)$; by what factor does the scale grow from 1 day to 20 days?',
        '\\textbf{Întrebare}: randamentele zilnice sînt i.i.d.\\ $S(1.5, 0, \\gamma, 0)$; de cîte ori crește scala de la 1 zi la 20 de zile?'),
      [T('\\textbf{Answer}: $20^{1/1.5} = @{ex.h.1.5}$, i.e.\\ $@{chk.h}$ times the square-root-of-time factor $\\sqrt{20}$',
-        '\\textbf{Răspuns}: $20^{1/1.5} = @{ex.h.1.5}$, adică de $@{chk.h}$ ori factorul rădăcinii timpului $\\sqrt{20}$')]),
-    (T('\\textbf{Question}: a fitted law has $\\alpha = 1.2$; do the mean and the variance exist?', '\\textbf{Întrebare}: o lege ajustată are $\\alpha = 1.2$; există media și varianța?'),
+        '\\textbf{Răspuns}: $20^{1/1.5} = @{ex.h.1.5}$, adică de $@{chk.h}$ ori mai mult decît factorul $\\sqrt{20}$ al regulii rădăcinii pătrate a timpului')]),
+    (T('\\textbf{Question}: a fitted law has $\\alpha = 1.2$; do the mean and the variance exist?', '\\textbf{Întrebare}: o lege estimată are $\\alpha = 1.2$; există media și varianța?'),
      [T('\\textbf{Answer}: the mean exists ($1 < 1.2$), the variance does not ($2 > 1.2$)', '\\textbf{Răspuns}: media există ($1 < 1.2$), varianța nu ($2 > 1.2$)')]),
     (T('\\textbf{Question}: scipy reports $\\delta = 0.05$ with $\\alpha = 1.7$, $\\beta = -0.2$, $\\gamma = 0.6$; what is $\\delta_0$?',
        '\\textbf{Întrebare}: scipy raportează $\\delta = 0.05$ cu $\\alpha = 1.7$, $\\beta = -0.2$, $\\gamma = 0.6$; cît este $\\delta_0$?'),

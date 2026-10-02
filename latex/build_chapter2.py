@@ -116,6 +116,7 @@ for T_ in [1, 10]:
     V.put(f'ln.{T_}.ploss', 100 * stats.norm.cdf(-mT / sT), 1)
     V.put(f'ln.{T_}.q05', 100 * math.exp(mT + sT * stats.norm.ppf(0.05)), 1)
 V.put('ln.drag', 100 * s_y ** 2 / 2, 2)
+Q05_10 = 100 * math.exp(10 * mu_y + s_y * math.sqrt(10) * stats.norm.ppf(0.05))   # cuantila de 5% după 10 ani
 V.put('ln.ppy', bet['ppy'], 0)
 LN = N['lognormal']
 for s_, key in [('0.25', 'a'), ('0.5', 'b'), ('1.0', 'c')]:
@@ -297,16 +298,16 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
      [T('the answer decides how we measure risk, price options and test hypotheses',
         'răspunsul decide cum măsurăm riscul, cum evaluăm opțiunile și cum testăm ipoteze')]),
     (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
-     [T('the Normal and the lognormal distributions, the CLT', 'distribuția Normală, distribuția lognormală, CLT'),
+     [T('the Normal and the lognormal distributions, the central limit theorem (CLT)', 'distribuția Normală, distribuția lognormală și teorema limită centrală (CLT, central limit theorem)'),
       T('moments, the Jarque--Bera test and QQ plots', 'momente, testul Jarque--Bera și QQ plots'),
       T('the Student-$t$ distribution as a first heavy-tailed alternative', 'distribuția Student-$t$ ca primă alternativă cu cozi groase'),
       T('six stylised facts of returns \\refCont', 'șase fapte stilizate ale randamentelor \\refCont')]),
     T('Real data, @{y0}--@{y1}: S\\&P 500, DAX, BET, Bitcoin and four BVB stocks (SNP, BRD, SNN, SNG)',
       'Date reale, @{y0}--@{y1}: S\\&P 500, DAX, BET, Bitcoin și patru acțiuni BVB (SNP, BRD, SNN, SNG)')))
 
-D.frame(T('Learning Outcomes', 'Ce veți ști la final'), items(
-    T('Compute probabilities and quantiles of the Normal distribution and lognormal distributions', 'Calculați probabilități și cuantile ale distribuțiilor Normală și lognormală'),
-    T('State the CLT and say when the Normal approximation works', 'Enunțați CLT și spuneți cînd funcționează aproximarea Normală'),
+D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
+    T('Compute probabilities and quantiles of the Normal and lognormal distributions', 'Calculați probabilități și cuantile ale distribuțiilor Normală și lognormală'),
+    T('State the CLT and say when the Normal approximation works', 'Enunțați CLT și precizați cînd funcționează aproximarea Normală'),
     T('Estimate skewness and excess kurtosis and test normality with the Jarque--Bera test', 'Estimați asimetria și excesul de aplatizare și testați normalitatea cu testul Jarque--Bera'),
     T('Read a QQ plot and fit a Student-$t$ distribution by maximum likelihood', 'Citiți un QQ plot și estimați o distribuție Student-$t$ prin metoda verosimilității maxime'),
     T('Check six stylised facts on a return series and explain what each means for a model', 'Verificați șase fapte stilizate pe o serie de randamente și explicați ce înseamnă fiecare pentru un model')))
@@ -319,8 +320,8 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Python Quantlets of this chapter: \\href{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_02}{Quantlets/Ch\\_02}',
        'Quantlet-urile Python ale capitolului: \\href{https://github.com/danpele/SFM/tree/main/Quantlets/Ch_02}{Quantlets/Ch\\_02}'),
      [T('ported from the SFE Quantlets of the textbook (SFEDaxReturnDistribution, SFElognormal, SFEclt, SFENormalApprox1--4)',
-        'portate din Quantlet-urile SFE ale manualului (SFEDaxReturnDistribution, SFElognormal, SFEclt, SFENormalApprox1--4)'),
-      T('each chart in these slides links to the Quantlet that draws it', 'fiecare grafic din aceste slide-uri are legătură către Quantlet-ul care îl desenează')]),
+        'adaptate după Quantlet-urile SFE ale manualului (SFEDaxReturnDistribution, SFElognormal, SFEclt, SFENormalApprox1--4)'),
+      T('each chart in these slides links to the Quantlet that draws it', 'fiecare grafic din aceste slide-uri are un link către Quantlet-ul care îl generează')]),
     T('Lecture notebook: \\href{\\colaburl{notebooks/EN/chapter2_lecture_notebook.ipynb}}{open in Google Colab}',
       'Notebook-ul cursului: \\href{\\colaburl{notebooks/EN/chapter2_lecture_notebook.ipynb}}{deschideți în Google Colab}'),
     T("Video course: \\quantinar{Tukey's g- and h- transformations}{https://quantinar.com/course/144/tukeys-g-and-h-transformations}",
@@ -337,7 +338,7 @@ D.frame(T('A Day That Should Not Happen', 'O zi care n-ar trebui să existe'), i
     (T('Daily standard deviation @{y0}--@{y1}: $@{m.sp500.sd}\\%$, so the fall was $@{m.sp500.zmin}$ standard deviations',
        'Abaterea standard zilnică @{y0}--@{y1}: $@{m.sp500.sd}\\%$, deci căderea a fost de $@{m.sp500.zmin}$ abateri standard'),
      [T('under the Normal distribution, the probability of such a day is about $@{sp.pmin}$',
-        'în distribuția Normală, probabilitatea unei asemenea zile este de circa $@{sp.pmin}$'),
+        'dacă randamentele ar urma distribuția Normală, probabilitatea unei asemenea zile ar fi de circa $@{sp.pmin}$'),
       T('that is, less than once in $10^{@{sp.pmin.exp}}$ years of trading', 'adică mai rar de o dată la $10^{@{sp.pmin.exp}}$ ani de tranzacționare')]),
     T('Yet such days happen: 19 October 1987, October 2008, March 2020, April 2025', 'Totuși, asemenea zile au loc: 19 octombrie 1987, octombrie 2008, martie 2020, aprilie 2025'),
     T('Conclusion: the model, not the market, is wrong', 'Concluzia: greșit este modelul, nu piața')))
@@ -363,7 +364,7 @@ D.frame(T('What a Distribution Is Used For', 'La ce folosește o distribuție'),
      [T('heavier tails make deep out-of-the-money options more valuable', 'cozile mai groase fac mai valoroase opțiunile mult în afara banilor')]),
     (T('\\textbf{Inference}: $t$-tests and confidence intervals assume (approximate) normality', '\\textbf{Inferență}: testele $t$ și intervalele de încredere presupun normalitate (aproximativă)'),
      [T('heavy tails make standard errors unreliable in small samples', 'cozile groase fac erorile standard nesigure în eșantioane mici')]),
-    T('A wrong distribution gives wrong numbers, even with perfect data', 'O distribuție greșită dă cifre greșite, chiar cu date perfecte')))
+    T('A wrong distribution gives wrong numbers, even with perfect data', 'O distribuție greșită produce rezultate greșite, chiar și cu date perfecte')))
 
 D.frame(T('The Benchmark Model of This Chapter', 'Modelul de referință al capitolului'), items(
     (T('Price $P_t$, log return $r_t = \\ln(P_t/P_{t-1})$, so $P_t = P_{t-1}e^{r_t} = P_0 e^{r_1 + \\dots + r_t}$',
@@ -372,8 +373,8 @@ D.frame(T('The Benchmark Model of This Chapter', 'Modelul de referință al capi
     (T('\\textbf{Benchmark}: $r_t$ i.i.d. $N(\\mu, \\sigma^2)$', '\\textbf{Modelul de referință}: $r_t$ i.i.d. $N(\\mu, \\sigma^2)$'),
      [T('prices follow a geometric random walk; $P_t$ is lognormal \\refOsborne', 'prețurile urmează un mers aleator geometric; $P_t$ este lognormal \\refOsborne'),
       T('the first model of this kind, for arithmetic price changes: \\refBachelier', 'primul model de acest fel, pentru variațiile aritmetice ale prețurilor: \\refBachelier')]),
-    T('This chapter tests each part of the benchmark: Normal? identically distributed? independent?',
-      'Capitolul testează fiecare parte a modelului de referință: Normală? identic distribuite? independente?'),
+    T('This chapter tests each assumption of the benchmark in turn: normality, identical distribution and independence',
+      'Capitolul verifică pe rînd ipotezele modelului de referință: normalitatea, distribuția identică și independența'),
     T('Textbook: \\refFHH, Sec.~3.3 and Sec.~11.2', 'Manual: \\refFHH, secț.~3.3 și secț.~11.2')))
 
 # =============================================================================
@@ -382,7 +383,7 @@ D.frame(T('The Benchmark Model of This Chapter', 'Modelul de referință al capi
 D.section('The Normal Distribution', 'Distribuția Normală')
 
 D.frame(T('Carl Friedrich Gauss and the Normal Distribution', 'Carl Friedrich Gauss și distribuția Normală'), cols(items(
-    T('De Moivre (1733) found the bell curve as the limit of binomial probabilities', 'De Moivre (1733) a găsit curba clopot ca limită a probabilităților binomiale'),
+    T('De Moivre (1733) found the bell curve as the limit of binomial probabilities', 'De Moivre (1733) a obținut curba în formă de clopot ca limită a probabilităților binomiale'),
     T('Gauss (1809) used it for the errors of astronomical observations and derived least squares from it',
       'Gauss (1809) a folosit-o pentru erorile observațiilor astronomice și a dedus din ea metoda celor mai mici pătrate'),
     T('Laplace (1810) proved a first version of the central limit theorem', 'Laplace (1810) a demonstrat o primă versiune a teoremei limită centrale'),
@@ -398,8 +399,8 @@ D.frame(T('Definition', 'Definiție'), items(
       T('two parameters: the mean $\\mu$ (location) and the variance $\\sigma^2$ (spread)', 'doi parametri: media $\\mu$ (poziția) și varianța $\\sigma^2$ (împrăștierea)')]),
     (T('\\textbf{Standard Normal distribution}: $Z = (X - \\mu)/\\sigma \\sim N(0, 1)$', '\\textbf{Distribuția Normală standard}: $Z = (X - \\mu)/\\sigma \\sim N(0, 1)$'),
      [T('its \\textbf{CDF} (cumulative distribution function) is $\\Phi(z) = P(Z \\le z)$, with no closed form; tables or software',
-        '\\textbf{CDF} (cumulative distribution function, funcția de repartiție) este $\\Phi(z) = P(Z \\le z)$, fără formă închisă; tabele sau software')]),
-    T('Probabilities of $X$ come from $Z$: $P(X \\le x) = \\Phi\\big((x - \\mu)/\\sigma\\big)$', 'Probabilitățile lui $X$ vin din $Z$: $P(X \\le x) = \\Phi\\big((x - \\mu)/\\sigma\\big)$'),
+        '\\textbf{CDF} (cumulative distribution function, funcția de repartiție) este $\\Phi(z) = P(Z \\le z)$, fără formă închisă; se calculează cu tabele sau cu software')]),
+    T('Probabilities of $X$ come from $Z$: $P(X \\le x) = \\Phi\\big((x - \\mu)/\\sigma\\big)$', 'Probabilitățile lui $X$ se obțin din $Z$: $P(X \\le x) = \\Phi\\big((x - \\mu)/\\sigma\\big)$'),
     T('Quantile of order $\\alpha$: $x_\\alpha = \\mu + \\sigma z_\\alpha$, with $z_{0.01} = -2.33$, $z_{0.05} = -1.64$', 'Cuantila de ordin $\\alpha$: $x_\\alpha = \\mu + \\sigma z_\\alpha$, cu $z_{0.01} = -2.33$, $z_{0.05} = -1.64$')))
 
 D.frame(T('Properties Used in Finance', 'Proprietăți folosite în finanțe'), items(
@@ -409,32 +410,32 @@ D.frame(T('Properties Used in Finance', 'Proprietăți folosite în finanțe'), 
        '\\textbf{Închisă la adunare}: dacă $X \\sim N(\\mu_1, \\sigma_1^2)$ și $Y \\sim N(\\mu_2, \\sigma_2^2)$ sînt independente, atunci $X + Y \\sim N(\\mu_1 + \\mu_2, \\sigma_1^2 + \\sigma_2^2)$'),
      [T('$h$-day log return under the benchmark: $r_t(h) \\sim N(h\\mu, h\\sigma^2)$', 'randamentul logaritmic pe $h$ zile în modelul de referință: $r_t(h) \\sim N(h\\mu, h\\sigma^2)$'),
       T('volatility grows with $\\sqrt{h}$: the square-root-of-time rule used in Chapter 1', 'volatilitatea crește cu $\\sqrt{h}$: regula rădăcinii pătrate a timpului din Capitolul 1')]),
-    T('Linear combinations of jointly Normal returns are Normal, so portfolio returns stay Normal', 'Combinațiile liniare ale unor randamente comun Normale sînt Normale: randamentele portofoliilor rămîn Normale'),
-    T('Fully described by two numbers: once $\\mu$ and $\\sigma$ are known, every probability is known', 'Complet descrisă de două cifre: cunoscînd $\\mu$ și $\\sigma$, cunoaștem orice probabilitate')))
+    T('Linear combinations of jointly Normal returns are Normal, so portfolio returns stay Normal', 'Orice combinație liniară de randamente cu distribuție Normală multivariată este Normală: randamentele portofoliilor rămîn Normale'),
+    T('Fully described by two numbers: once $\\mu$ and $\\sigma$ are known, every probability is known', 'Complet determinată de doi parametri: dacă știm $\\mu$ și $\\sigma$, putem calcula orice probabilitate')))
 
 chart(T('The 68--95--99.7 Rule', 'Regula 68--95--99,7'), 'sfm_ch2_normal_pdf', 'SFM_ch2_normal_lognormal', [
     T('Within 1, 2 and 3 standard deviations: @{nt.1.in}\\%, @{nt.2.in}\\% and @{nt.3.in}\\% of the probability',
-      'În 1, 2 și 3 abateri standard: @{nt.1.in}\\%, @{nt.2.in}\\% și @{nt.3.in}\\% din probabilitate'),
+      'La cel mult 1, 2 și 3 abateri standard de medie: @{nt.1.in}\\%, @{nt.2.in}\\% și @{nt.3.in}\\% din probabilitate'),
     T('Outside 3 standard deviations: one day in @{nt.3.days.r}; the tails of the Normal distribution fall off like $e^{-z^2/2}$, very fast',
-      'În afara a 3 abateri standard: o zi din @{nt.3.days.r}; cozile distribuției Normale scad ca $e^{-z^2/2}$, foarte repede')], h='0.62\\textheight')
+      'Dincolo de 3 abateri standard: o zi din @{nt.3.days.r}; cozile distribuției Normale scad ca $e^{-z^2/2}$, foarte repede')], h='0.62\\textheight')
 
-D.frame(T('How Rare Are Large Moves under the Normal Distribution?', 'Cît de rare sînt mișcările mari în distribuția Normală?'), table(
+D.frame(T('How Rare Are Large Moves under the Normal Distribution?', 'Cît de rare sînt mișcările mari în cazul distribuției Normale?'), table(
     'crrr', '$k$ & $P(|Z| > k)$ & ' + T('once every \\dots\\ trading days', 'o dată la \\dots\\ zile de tranzacționare') + ' & ' + T('once every \\dots\\ years', 'o dată la \\dots\\ ani'),
     [f'{k} & ${{@{{nt.{k}.p}}}}$ & @{{nt.{k}.days}} & @{{nt.{k}.years}}' for k in range(1, 7)], size='footnotesize') + items(
     T('Years computed with 252 trading days a year', 'Anii sînt calculați cu 252 de zile de tranzacționare pe an'),
-    T('Each extra standard deviation makes a move @{nt.rmin} to @{nt.rmax} times rarer', 'Fiecare abatere standard în plus face o mișcare mai rară, cu un factor între @{nt.rmin} și @{nt.rmax}'),
+    T('Each extra standard deviation makes a move @{nt.rmin} to @{nt.rmax} times rarer', 'Fiecare abatere standard în plus face o mișcare de @{nt.rmin} pînă la @{nt.rmax} de ori mai rară'),
     T('A 6-sigma day should not happen in the whole history of stock markets', 'O zi de 6 sigma n-ar trebui să apară în toată istoria burselor')) + ql('SFM_ch2_normal_lognormal'))
 
 D.frame(T('Worked Example: Large Losses of the S\\&P 500', 'Exemplu lucrat: pierderile mari ale S\\&P 500'), items(
     T('S\\&P 500, @{y0}--@{y1}: $n = @{m.sp500.n}$ daily log returns, mean $@{m.sp500.mean}\\%$, standard deviation $@{m.sp500.sd}\\%$',
       'S\\&P 500, @{y0}--@{y1}: $n = @{m.sp500.n}$ randamente logaritmice zilnice, media $@{m.sp500.mean}\\%$, abaterea standard $@{m.sp500.sd}\\%$'),
     (T('A loss larger than 3\\%: $z = (-3 - @{m.sp500.mean})/@{m.sp500.sd} = @{loss.sp500.3.z}$', 'O pierdere mai mare de 3\\%: $z = (-3 - @{m.sp500.mean})/@{m.sp500.sd} = @{loss.sp500.3.z}$'),
-     [T('Normal distribution: $\\Phi(@{loss.sp500.3.z}) = @{sp.p3}\\%$, so $@{loss.sp500.3.exp}$ days expected', 'distribuția Normală: $\\Phi(@{loss.sp500.3.z}) = @{sp.p3}\\%$, deci $@{loss.sp500.3.exp}$ zile așteptate'),
-      T('observed: @{loss.sp500.3.obs} days', 'observat: @{loss.sp500.3.obs} zile')]),
+     [T('Normal distribution: $\\Phi(@{loss.sp500.3.z}) = @{sp.p3}\\%$, so $@{loss.sp500.3.exp}$ days expected', 'distribuția Normală: $\\Phi(@{loss.sp500.3.z}) = @{sp.p3}\\%$, deci numărul așteptat de zile este $@{loss.sp500.3.exp}$'),
+      T('observed: @{loss.sp500.3.obs} days', 'numărul observat: @{loss.sp500.3.obs} zile')]),
     (T('A loss larger than 5\\%: $z = @{loss.sp500.5.z}$', 'O pierdere mai mare de 5\\%: $z = @{loss.sp500.5.z}$'),
-     [T('Normal distribution: $@{loss.sp500.5.exp}$ days expected; observed: @{loss.sp500.5.obs} days', 'distribuția Normală: $@{loss.sp500.5.exp}$ zile așteptate; observat: @{loss.sp500.5.obs} zile')]),
+     [T('Normal distribution: $@{loss.sp500.5.exp}$ days expected; observed: @{loss.sp500.5.obs} days', 'distribuția Normală: $@{loss.sp500.5.exp}$ zile așteptate; zile observate: @{loss.sp500.5.obs}')]),
     T('BET: @{loss.bet.5.obs} days below $-5\\%$ against $@{loss.bet.5.exp}$ expected', 'BET: @{loss.bet.5.obs} zile sub $-5\\%$, față de $@{loss.bet.5.exp}$ așteptate'),
-    T('The Normal distribution underestimates large losses by orders of magnitude', 'Distribuția Normală subestimează pierderile mari cu ordine de mărime')), 'footnotesize')
+    T('The Normal distribution underestimates the frequency of large losses by orders of magnitude', 'Distribuția Normală subestimează frecvența pierderilor mari cu cîteva ordine de mărime')), 'footnotesize')
 
 D.recap(('The Normal Distribution', 'Distribuția Normală'), [
     T('Two parameters, symmetric, closed under addition, volatility scales with $\\sqrt{h}$', 'Doi parametri, simetrică, închisă la adunare, volatilitatea crește cu $\\sqrt{h}$'),
@@ -453,7 +454,7 @@ D.frame(T('From Normal Log Returns to Lognormal Prices', 'De la randamente logar
     (T('Under the benchmark, $\\ln(P_T/P_0) = r_1 + \\dots + r_T \\sim N(T\\mu, T\\sigma^2)$', 'În modelul de referință, $\\ln(P_T/P_0) = r_1 + \\dots + r_T \\sim N(T\\mu, T\\sigma^2)$'),
      [T('so $P_T/P_0 \\sim LN(T\\mu, T\\sigma^2)$ \\refOsborne', 'deci $P_T/P_0 \\sim LN(T\\mu, T\\sigma^2)$ \\refOsborne')]),
     (T('Why lognormal and not Normal prices?', 'De ce prețuri lognormale și nu Normale?'),
-     [T('prices cannot be negative; a Normal price could be', 'prețurile nu pot fi negative; un preț Normal ar putea fi'),
+     [T('prices cannot be negative; a Normal price could be', 'prețurile nu pot fi negative; un preț cu distribuție Normală ar putea fi negativ'),
       T('the simple return $R = e^r - 1 > -1$: you cannot lose more than you invested', 'randamentul simplu $R = e^r - 1 > -1$: nu puteți pierde mai mult decît ați investit')]),
     T('Textbook: \\refFHH, Sec.~3.3; the Black--Scholes model is built on it', 'Manual: \\refFHH, secț.~3.3; modelul Black--Scholes se bazează pe ea')))
 
@@ -463,10 +464,10 @@ D.frame(T('Mean, Median and Mode', 'Media, mediana și modul'), items(
      [T('always mode $<$ median $<$ mean: a long right tail (positive skewness)', 'întotdeauna modul $<$ mediana $<$ media: o coadă dreaptă lungă (asimetrie pozitivă)')]),
     T('Variance: $\\text{Var}(Y) = (e^{s^2} - 1)\\,e^{2m + s^2}$', 'Varianța: $\\text{Var}(Y) = (e^{s^2} - 1)\\,e^{2m + s^2}$'),
     (T('The mean comes from $E[e^X] = e^{m + s^2/2}$ for $X \\sim N(m, s^2)$ (Seminar 2 derives it)',
-       'Media vine din $E[e^X] = e^{m + s^2/2}$ pentru $X \\sim N(m, s^2)$ (Seminarul 2 o deduce)'),
-     [T('the extra $s^2/2$ is the volatility drag of Chapter 1, seen from the other side', 'termenul $s^2/2$ în plus este volatility drag din Capitolul 1, văzut din partea cealaltă')]),
+       'Media rezultă din $E[e^X] = e^{m + s^2/2}$ pentru $X \\sim N(m, s^2)$ (Seminarul 2 o deduce)'),
+     [T('the extra $s^2/2$ is the volatility drag of Chapter 1, seen from the other side', 'termenul suplimentar $s^2/2$ este volatility drag din Capitolul 1, privit din cealaltă direcție')]),
     T('Which one matters? The median is the outcome of a typical investor; the mean is pulled up by a few very good paths',
-      'Care contează? Mediana este rezultatul unui investitor tipic; media este trasă în sus de cîteva traiectorii foarte bune')))
+      'Care dintre ele contează? Mediana este rezultatul unui investitor tipic; media este trasă în sus de cîteva traiectorii foarte bune')))
 
 chart(T('Lognormal Densities (SFElognormal)', 'Densități lognormale (SFElognormal)'), 'sfm_ch2_lognormal', 'SFM_ch2_normal_lognormal', [
     T('$m = 0$: the median is 1 for all three curves; the dashed lines mark the means', '$m = 0$: mediana este 1 pentru toate cele trei curbe; liniile punctate marchează mediile'),
@@ -484,8 +485,8 @@ D.frame(T('Worked Example: 100 Lei in the BET', 'Exemplu lucrat: 100 de lei în 
     (T('After 10 years, $P_{10}/P_0 \\sim LN(10\\mu, 10\\sigma^2)$', 'După 10 ani, $P_{10}/P_0 \\sim LN(10\\mu, 10\\sigma^2)$'),
      [T('median @{ln.10.med}; mean @{ln.10.mean}; probability of a loss @{ln.10.ploss}\\%; 5\\% quantile @{ln.10.q05}',
         'mediana @{ln.10.med}; media @{ln.10.mean}; probabilitatea unei pierderi @{ln.10.ploss}\\%; cuantila de 5\\% @{ln.10.q05}')]),
-    T('The probability of a loss falls with the horizon, but the 5\\% worst case stays far below 100', 'Probabilitatea unei pierderi scade cu orizontul, dar cel mai prost caz de 5\\% rămîne mult sub 100'),
-    T('Caveat: these numbers inherit every weakness of the Normal model of log returns', 'Atenție: aceste cifre moștenesc toate slăbiciunile modelului Normal al randamentelor logaritmice')), 'footnotesize')
+    (T('The probability of a loss falls with the horizon; after 10 years even the 5\\% quantile is above 100, but only if the historical mean persists', 'Probabilitatea unei pierderi scade cu orizontul; după 10 ani, chiar și cuantila de 5\\% depășește 100, dar numai dacă media istorică se menține') if Q05_10 > 100 else T('The probability of a loss falls with the horizon, but the 5\\% quantile stays below 100 even after 10 years', 'Probabilitatea unei pierderi scade cu orizontul, dar cuantila de 5\\% rămîne sub 100 chiar și după 10 ani')),
+    T('Caveat: these numbers inherit every weakness of the Normal model of log returns', 'Atenție: aceste rezultate moștenesc toate slăbiciunile modelului Normal al randamentelor logaritmice')), 'footnotesize')
 
 D.recap(('The Lognormal Distribution', 'Distribuția lognormală'), [
     T('Normal log returns $\\Rightarrow$ lognormal prices: positive, right-skewed', 'Randamente logaritmice Normale $\\Rightarrow$ prețuri lognormale: pozitive, asimetrice la dreapta'),
@@ -512,13 +513,13 @@ D.frame(T('The Central Limit Theorem', 'Teorema limită centrală'), items(
      [T('$\\dfrac{\\sqrt{n}\\,(\\bar X_n - \\mu)}{\\sigma} \\xrightarrow{d} N(0, 1)$ as $n \\to \\infty$', '$\\dfrac{\\sqrt{n}\\,(\\bar X_n - \\mu)}{\\sigma} \\xrightarrow{d} N(0, 1)$ cînd $n \\to \\infty$'),
       T('equivalently, the sum $X_1 + \\dots + X_n$ is approximately $N(n\\mu, n\\sigma^2)$', 'echivalent, suma $X_1 + \\dots + X_n$ este aproximativ $N(n\\mu, n\\sigma^2)$')]),
     (T('Three conditions', 'Trei condiții'),
-     [T('independence; identical distribution; finite variance', 'independență; aceeași distribuție; varianță finită')]),
+     [T('independence; identical distribution; finite variance', 'independență; distribuție identică; varianță finită')]),
     T('How fast? The error falls like $1/\\sqrt{n}$ and grows with the skewness of $X$ (Berry--Esseen bound)',
       'Cît de repede? Eroarea scade ca $1/\\sqrt{n}$ și crește cu asimetria lui $X$ (marginea Berry--Esseen)'),
     T('It explains why the Normal distribution is everywhere, and why sample means have Normal confidence intervals',
-      'Explică de ce distribuția Normală apare peste tot și de ce mediile de selecție au intervale de încredere Normale')))
+      'Explică de ce distribuția Normală apare peste tot și de ce intervalele de încredere pentru medie se construiesc cu distribuția Normală')))
 
-chart(T('The CLT at Work (SFEclt)', 'CLT la lucru (SFEclt)'), 'sfm_ch2_clt', 'SFM_ch2_clt_normal_approx', [
+chart(T('The CLT at Work (SFEclt)', 'CLT în practică (SFEclt)'), 'sfm_ch2_clt', 'SFM_ch2_clt_normal_approx', [
     T('Standardised mean of $n$ Bernoulli($0.2$) draws (a skewed variable), 20\\,000 simulations', 'Media standardizată a $n$ extrageri Bernoulli($0.2$) (o variabilă asimetrică), 20\\,000 de simulări'),
     T('Share above $1.96$: @{clt.5.tail}\\% for $n = 5$, @{clt.30.tail}\\% for $n = 30$, @{clt.300.tail}\\% for $n = 300$; Normal distribution: @{clt.ntail}\\%',
       'Ponderea peste $1.96$: @{clt.5.tail}\\% pentru $n = 5$, @{clt.30.tail}\\% pentru $n = 30$, @{clt.300.tail}\\% pentru $n = 300$; distribuția Normală: @{clt.ntail}\\%'),
@@ -534,7 +535,7 @@ chart(T('The Normal Approximation of the Binomial (SFENormalApprox)', 'Aproximar
           T('Rule of thumb: the approximation is good when $np(1-p)$ is large (at least about 9)', 'Regulă practică: aproximarea este bună cînd $np(1-p)$ este mare (cel puțin circa 9)')],
       h='0.60\\textheight')
 
-D.frame(T('Question for the Room: Does the CLT Make Daily Returns Normal?', 'Întrebare pentru sală: face CLT randamentele zilnice Normale?'), items(
+D.frame(T('Question for the Room: Does the CLT Make Daily Returns Normal?', 'Întrebare pentru sală: devin randamentele zilnice Normale datorită CLT?'), items(
     T('A daily log return is the sum of thousands of intraday log returns', 'Un randament logaritmic zilnic este suma a mii de randamente logaritmice din timpul zilei'),
     T('\\textbf{What do you think?} Should daily returns then be close to the Normal distribution?', '\\textbf{Ce credeți?} Ar trebui atunci randamentele zilnice să fie aproape Normale?'),
     (T('\\textbf{Answer}: not necessarily; each condition of the CLT can fail', '\\textbf{Răspuns}: nu neapărat; fiecare condiție a CLT poate fi încălcată'),
@@ -547,7 +548,7 @@ D.frame(T('Question for the Room: Does the CLT Make Daily Returns Normal?', 'În
 D.recap(('The Central Limit Theorem', 'Teorema limită centrală'), [
     T('Sums of many i.i.d. terms with finite variance are approximately Normal', 'Sumele multor termeni i.i.d. cu varianță finită sînt aproximativ Normale'),
     T('Convergence is slower for skewed variables; $np(1-p) \\ge 9$ for the binomial', 'Convergența este mai lentă pentru variabile asimetrice; $np(1-p) \\ge 9$ pentru distribuția binomială'),
-    T('Returns may violate independence, identical distribution or finite variance', 'Randamentele pot încălca independența, identitatea distribuției sau varianța finită')])
+    T('Returns may violate independence, identical distribution or finite variance', 'Randamentele pot încălca independența, distribuția identică sau varianța finită')])
 
 # =============================================================================
 # 5. MOMENTE ȘI FORMĂ
@@ -561,7 +562,7 @@ D.frame(T('Four Moments', 'Patru momente'), items(
     (T('\\textbf{Kurtosis}: $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; Normal distribution: $\\gamma_2 = 3$', '\\textbf{Aplatizarea} (kurtosis): $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; distribuția Normală: $\\gamma_2 = 3$'),
      [T('\\textbf{excess kurtosis} $\\gamma_2 - 3$: positive means heavy tails and a tall, narrow centre (\\textbf{leptokurtic})',
         '\\textbf{excesul de aplatizare} $\\gamma_2 - 3$: pozitiv înseamnă cozi groase și un centru înalt și îngust (distribuție \\textbf{leptocurtică})')]),
-    T('Both are free of units: they describe the shape, not the location or the scale', 'Ambele sînt fără unitate de măsură: descriu forma, nu poziția sau scara'),
+    T('Both are free of units: they describe the shape, not the location or the scale', 'Ambele sînt adimensionale: descriu forma, nu poziția sau scala'),
     T('Fourth powers make the kurtosis very sensitive to a few extreme days', 'Puterile a patra fac aplatizarea foarte sensibilă la cîteva zile extreme')))
 
 chart(T('What Skewness and Kurtosis Look Like', 'Cum arată asimetria și aplatizarea'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
@@ -572,7 +573,7 @@ chart(T('What Skewness and Kurtosis Look Like', 'Cum arată asimetria și aplati
 D.frame(T('Sample Moments', 'Momentele de selecție'), items(
     T('Central sample moments: $m_k = \\frac1n \\sum_{t=1}^n (r_t - \\bar r)^k$', 'Momentele centrate de selecție: $m_k = \\frac1n \\sum_{t=1}^n (r_t - \\bar r)^k$'),
     T('Sample skewness $S = m_3/m_2^{3/2}$; sample excess kurtosis $K = m_4/m_2^2 - 3$', 'Asimetria de selecție $S = m_3/m_2^{3/2}$; excesul de aplatizare de selecție $K = m_4/m_2^2 - 3$'),
-    (T('If the data are i.i.d. Normal distribution: $S \\approx N(0, 6/n)$ and $K \\approx N(0, 24/n)$', 'Dacă datele sînt i.i.d. Normale: $S \\approx N(0, 6/n)$ și $K \\approx N(0, 24/n)$'),
+    (T('If the data are i.i.d. Normal: $S \\approx N(0, 6/n)$ and $K \\approx N(0, 24/n)$', 'Dacă datele sînt i.i.d. Normale: $S \\approx N(0, 6/n)$ și $K \\approx N(0, 24/n)$'),
      [T('with $n = @{m.sp500.n}$: standard errors $\\sqrt{6/n} = @{m.sp500.sesk}$ and $\\sqrt{24/n} = @{m.sp500.seku}$', 'cu $n = @{m.sp500.n}$: erorile standard $\\sqrt{6/n} = @{m.sp500.sesk}$ și $\\sqrt{24/n} = @{m.sp500.seku}$')]),
     T('These standard errors hold only under normality; for heavy-tailed data they are far too small (Seminar 2, B1)',
       'Aceste erori standard sînt valabile doar în ipoteza de normalitate; pentru date cu cozi groase sînt mult prea mici (Seminarul 2, B1)'),
@@ -587,18 +588,18 @@ D.frame(T('Daily Log Returns: Moments, @{y0}--@{y1}', 'Randamente logaritmice zi
               'Cele mai proaste zile: S\\&P 500 pe @{m.sp500.mindate}, BET pe @{m.bet.mindate} (OUG 114, taxa pe activele bancare), Bitcoin pe @{m.btc.mindate}')) + ql('SFM_ch2_moments_jarque_bera'),
         'footnotesize')
 
-chart(T('DAX Returns vs the Normal Density (SFEDaxReturnDistribution)', 'Randamentele DAX vs densitatea Normală (SFEDaxReturnDistribution)'), 'sfm_ch2_dax_density',
+chart(T('DAX Returns vs the Normal Density (SFEDaxReturnDistribution)', 'Randamentele DAX față de densitatea Normală (SFEDaxReturnDistribution)'), 'sfm_ch2_dax_density',
       'SFM_ch2_moments_jarque_bera', [
           T('Kernel density estimate (a smoothed histogram) against the Normal density with the same mean and standard deviation',
             'Estimatorul nucleu al densității (o histogramă netezită) față de densitatea Normală cu aceeași medie și abatere standard'),
           T('Centre: peak @{dax.peak} vs @{dax.npeak}; @{dax.in1}\\% of days within one standard deviation, vs @{dax.nin1}\\% for the Normal distribution',
-            'Centrul: vîrf @{dax.peak} față de @{dax.npeak}; @{dax.in1}\\% din zile în interiorul unei abateri standard, față de @{dax.nin1}\\% pentru distribuția Normală'),
-          T('Tails (log scale): at $-6\\%$ the estimated density is @{dax.ratio6} times the Normal one', 'Cozile (scară logaritmică): la $-6\\%$ densitatea estimată este de @{dax.ratio6} de ori densitatea Normală')],
+            'Centrul: vîrful densității @{dax.peak} față de @{dax.npeak}; @{dax.in1}\\% din zile în interiorul unei abateri standard, față de @{dax.nin1}\\% pentru distribuția Normală'),
+          T('Tails (log scale): at $-6\\%$ the estimated density is @{dax.ratio6} times the Normal one', 'Cozile (scară logaritmică): la $-6\\%$ densitatea estimată este de @{dax.ratio6} de ori mai mare decît densitatea Normală')],
       h='0.60\\textheight')
 
 D.frame(T('Check the Data Before Measuring Tails', 'Verificați datele înainte de a măsura cozile'), items(
     T('Banca Transilvania (TLV), 27--31 May 2016: the close falls from @{tlv.c0} to @{tlv.c1} lei, the ex-date of a bonus share issue',
-      'Banca Transilvania (TLV), 27--31 mai 2016: prețul de închidere scade de la @{tlv.c0} la @{tlv.c1} lei, data ex a unei emisiuni de acțiuni gratuite'),
+      'Banca Transilvania (TLV), 27--31 mai 2016: prețul de închidere scade de la @{tlv.c0} la @{tlv.c1} lei, data ex a unei distribuiri de acțiuni gratuite'),
     (T('The adjusted close in our data: @{tlv.a0}, then @{tlv.a1}, then @{tlv.a2}', 'Prețul ajustat din datele noastre: @{tlv.a0}, apoi @{tlv.a1}, apoi @{tlv.a2}'),
      [T('log returns $@{tlv.r1}\\%$ and $+@{tlv.r2}\\%$ on two consecutive days: the adjustment was applied one day late',
         'randamente logaritmice $@{tlv.r1}\\%$ și $+@{tlv.r2}\\%$ în două zile consecutive: ajustarea a fost aplicată cu o zi mai tîrziu')]),
@@ -611,7 +612,7 @@ D.frame(T('Check the Data Before Measuring Tails', 'Verificați datele înainte 
 D.recap(('Moments', 'Momente'), [
     T('Skewness measures asymmetry, excess kurtosis measures tail weight relative to the Normal distribution', 'Asimetria măsoară lipsa simetriei, excesul de aplatizare măsoară greutatea cozilor față de distribuția Normală'),
     T('Daily returns: mostly negative skewness and excess kurtosis between @{ku.min0} and @{ku.max0}', 'Randamentele zilnice: în general asimetrie negativă și exces de aplatizare între @{ku.min0} și @{ku.max0}'),
-    T('Kurtosis is driven by a few days: check them before trusting it', 'Aplatizarea este determinată de cîteva zile: verificați-le înainte de a o crede')])
+    T('Kurtosis is driven by a few days: check them before trusting it', 'Aplatizarea este determinată de cîteva zile: verificați-le înainte de a avea încredere în ea')])
 
 # =============================================================================
 # 6. TESTAREA NORMALITĂȚII
@@ -623,23 +624,23 @@ D.frame(T('The Jarque--Bera Test', 'Testul Jarque--Bera'), items(
     (T('\\textbf{JB} statistic \\refJBa, \\refJBb: $\\text{JB} = \\dfrac{n}{6}\\Big(S^2 + \\dfrac{K^2}{4}\\Big)$', 'Statistica \\textbf{JB} \\refJBa, \\refJBb: $\\text{JB} = \\dfrac{n}{6}\\Big(S^2 + \\dfrac{K^2}{4}\\Big)$'),
      [T('the sum of two squared standardised statistics: $(S/\\sqrt{6/n})^2 + (K/\\sqrt{24/n})^2$', 'suma a două statistici standardizate la pătrat: $(S/\\sqrt{6/n})^2 + (K/\\sqrt{24/n})^2$')]),
     T('Under $H_0$ and for large $n$: $\\text{JB} \\sim \\chi^2(2)$; reject at 5\\% if $\\text{JB} > @{jb.crit}$', 'În ipoteza $H_0$ și pentru $n$ mare: $\\text{JB} \\sim \\chi^2(2)$; respingem la 5\\% dacă $\\text{JB} > @{jb.crit}$'),
-    T('Simple, uses only two moments, and is the standard test reported in empirical finance', 'Simplu, folosește doar două momente și este testul standard raportat în finanțele empirice')))
+    T('Simple, uses only two moments, and is the standard test reported in empirical finance', 'Este simplu, folosește doar două momente și este testul raportat de regulă în finanțele empirice')))
 
 D.frame(T('Worked Example: Jarque--Bera for the S\\&P 500', 'Exemplu lucrat: Jarque--Bera pentru S\\&P 500'), items(
     T('$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$', '$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$'),
     T('$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$', '$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$'),
-    T('Critical value @{jb.crit}: normality is rejected; the $p$-value is zero to any number of decimals', 'Valoarea critică @{jb.crit}: normalitatea este respinsă; valoarea $p$ este zero la orice număr de zecimale'),
-    T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul aplatizării domină: aproape tot JB vine din $K^2/4$'),
+    T('Critical value @{jb.crit}: normality is rejected; the $p$-value is zero to any number of decimals', 'Valoarea critică @{jb.crit}: normalitatea este respinsă; valoarea $p$ este practic zero'),
+    T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul de aplatizare domină: aproape toată valoarea JB provine din $K^2/4$'),
     (T('JB for the other series: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}', 'JB pentru celelalte serii: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}'),
      [T('all rejected at any usual level', 'toate respinse la orice nivel uzual')])))
 
-D.frame(T('What Jarque--Bera Does Not Tell You', 'Ce nu vă spune Jarque--Bera'), items(
+D.frame(T('What Jarque--Bera Does Not Tell You', 'Limitele testului Jarque--Bera'), items(
     (T('With thousands of observations it rejects even tiny departures', 'Cu mii de observații respinge chiar și abateri foarte mici'),
      [T('report the size of $S$ and $K$, not only the $p$-value', 'raportați mărimea lui $S$ și $K$, nu doar valoarea $p$')]),
-    (T('It assumes i.i.d. data; with volatility clustering its standard errors are too small', 'Presupune date i.i.d.; cu volatility clustering erorile lui standard sînt prea mici'),
+    (T('It assumes i.i.d. data; with volatility clustering its standard errors are too small', 'Testul presupune date i.i.d.; cu volatility clustering, erorile standard ale lui $S$ și $K$ sînt prea mici'),
      [T('S\\&P 500: Normal-theory 95\\% interval for $K$: $[@{bs.nlo}, @{bs.nhi}]$; bootstrap interval: $[@{bs.klo}, @{bs.khi}]$ (Seminar 2, B1)',
         'S\\&P 500: intervalul de 95\\% pentru $K$ în ipoteza de normalitate: $[@{bs.nlo}, @{bs.nhi}]$; intervalul bootstrap: $[@{bs.klo}, @{bs.khi}]$ (Seminarul 2, B1)')]),
-    T('A rejection says the data are not Normal; it does not say which distribution they follow', 'O respingere spune că datele nu sînt Normale; nu spune ce distribuție urmează'),
+    T('A rejection says the data are not Normal; it does not say which distribution they follow', 'Respingerea arată că datele nu sînt Normale, dar nu indică ce distribuție urmează'),
     T('Other tests (Kolmogorov--Smirnov, Anderson--Darling) compare the whole CDF: Chapter 6', 'Alte teste (Kolmogorov--Smirnov, Anderson--Darling) compară întreaga CDF: Capitolul 6')))
 
 D.frame(T('QQ Plots', 'QQ plots'), items(
@@ -650,8 +651,8 @@ D.frame(T('QQ Plots', 'QQ plots'), items(
     (T('How to read it', 'Cum se citește'),
      [T('points on the 45-degree line: the model fits', 'puncte pe prima bisectoare: modelul se potrivește'),
       T('an S-shape, low end below and high end above the line: heavier tails than the model', 'o formă de S, capătul de jos sub dreaptă și cel de sus deasupra: cozi mai groase decît ale modelului'),
-      T('only one end bent away: skewness', 'doar un capăt curbat: asimetrie')]),
-    T('Unlike JB, it shows \\textbf{where} the model fails: centre, shoulders or tails', 'Spre deosebire de JB, arată \\textbf{unde} greșește modelul: centru, umeri sau cozi')))
+      T('only one end bent away: skewness', 'un singur capăt se îndepărtează de dreaptă: asimetrie')]),
+    T('Unlike JB, it shows \\textbf{where} the model fails: centre, shoulders or tails', 'Spre deosebire de JB, arată \\textbf{unde} greșește modelul: în centru, în umeri sau în cozi')))
 
 chart(T('QQ Plots against the Normal Distribution', 'QQ plots față de distribuția Normală'), 'sfm_ch2_qq_normal', 'SFM_ch2_qq_plots', [
     T('Standardised returns against $N(0,1)$ quantiles: all three bend away from the line at both ends', 'Randamente standardizate față de cuantilele $N(0,1)$: toate trei se depărtează de dreaptă la ambele capete'),
@@ -683,7 +684,7 @@ D.frame(T('Definition', 'Definiție'), items(
      [T('$\\nu > 0$: the \\textbf{degrees of freedom}, which control the tails', '$\\nu > 0$: \\textbf{gradele de libertate}, care controlează cozile')]),
     T('Density: $f(x) = \\dfrac{\\Gamma\\big((\\nu+1)/2\\big)}{\\sqrt{\\nu\\pi}\\,\\Gamma(\\nu/2)} \\Big(1 + \\dfrac{x^2}{\\nu}\\Big)^{-(\\nu+1)/2}$',
       'Densitatea: $f(x) = \\dfrac{\\Gamma\\big((\\nu+1)/2\\big)}{\\sqrt{\\nu\\pi}\\,\\Gamma(\\nu/2)} \\Big(1 + \\dfrac{x^2}{\\nu}\\Big)^{-(\\nu+1)/2}$'),
-    T('Location--scale version for returns: $r = m + s\\,T$, with location $m$, scale $s$ and $\\nu$', 'Versiunea cu poziție și scară pentru randamente: $r = m + s\\,T$, cu poziția $m$, scara $s$ și $\\nu$'),
+    T('Location--scale version for returns: $r = m + s\\,T$, with location $m$, scale $s$ and $\\nu$', 'Versiunea cu parametri de poziție și de scală pentru randamente: $r = m + s\\,T$, cu poziția $m$, scala $s$ și $\\nu$'),
     T('As $\\nu \\to \\infty$, $t(\\nu) \\to N(0,1)$: the Normal distribution is a limiting case', 'Cînd $\\nu \\to \\infty$, $t(\\nu) \\to N(0,1)$: distribuția Normală este un caz limită')))
 
 D.frame(T('Moments and Tails', 'Momente și cozi'), items(
@@ -699,7 +700,7 @@ chart(T('Student-$t$ Densities with Unit Variance', 'Densități Student-$t$ cu 
     T('Smaller $\\nu$: a taller centre and heavier tails; on the log scale the Normal tails drop like a parabola', '$\\nu$ mai mic: centru mai înalt și cozi mai groase; pe scara logaritmică, cozile Normale scad ca o parabolă'),
     T('$P(|X| > 4)$ at unit variance: $t(3)$ @{td.3.p4}\\%, $t(5)$ @{td.5.p4}\\%, $t(10)$ @{td.10.p4}\\%, Normal distribution @{td.n.p4}\\%',
       '$P(|X| > 4)$ la varianța 1: $t(3)$ @{td.3.p4}\\%, $t(5)$ @{td.5.p4}\\%, $t(10)$ @{td.10.p4}\\%, distribuția Normală @{td.n.p4}\\%'),
-    T('With $\\nu = 5$, a 4-sigma day is @{td.ratio5} times more likely than under the Normal distribution', 'Cu $\\nu = 5$, o zi de 4 sigma este de @{td.ratio5} de ori mai probabilă decît în distribuția Normală')], h='0.60\\textheight')
+    T('With $\\nu = 5$, a 4-sigma day is @{td.ratio5} times more likely than under the Normal distribution', 'Cu $\\nu = 5$, o zi de 4 sigma este de @{td.ratio5} de ori mai probabilă decît în cazul distribuției Normale')], h='0.60\\textheight')
 
 D.frame(T('Fitting a Student-$t$ by Maximum Likelihood', 'Estimarea unei distribuții Student-$t$ prin verosimilitate maximă'), items(
     (T('\\textbf{MLE} (maximum likelihood estimation): choose $(\\nu, m, s)$ that maximise the log-likelihood',
@@ -707,30 +708,30 @@ D.frame(T('Fitting a Student-$t$ by Maximum Likelihood', 'Estimarea unei distrib
      [T('$\\ell(\\nu, m, s) = \\sum_{t=1}^n \\ln f\\big((r_t - m)/s; \\nu\\big) - n \\ln s$', '$\\ell(\\nu, m, s) = \\sum_{t=1}^n \\ln f\\big((r_t - m)/s; \\nu\\big) - n \\ln s$'),
       T('no closed form: a numerical optimiser (\\texttt{scipy.stats.t.fit} in the notebook)', 'fără formă închisă: un optimizator numeric (\\texttt{scipy.stats.t.fit} în notebook)')]),
     (T('\\textbf{AIC} (Akaike information criterion) \\refAkaike: $\\text{AIC} = 2k - 2\\ell$', '\\textbf{AIC} (Akaike information criterion, criteriul informațional Akaike) \\refAkaike: $\\text{AIC} = 2k - 2\\ell$'),
-     [T('$k$ = number of parameters (2 for the Normal distribution, 3 for the $t$); the lower AIC wins', '$k$ = numărul de parametri (2 pentru distribuția Normală, 3 pentru $t$); cîștigă AIC mai mic'),
+     [T('$k$ = number of parameters (2 for the Normal distribution, 3 for the $t$); the lower AIC wins', '$k$ = numărul de parametri (2 pentru distribuția Normală, 3 pentru $t$); se preferă modelul cu AIC mai mic'),
       T('$\\Delta\\text{AIC} = \\text{AIC}_{\\text{Normal}} - \\text{AIC}_{t} > 0$ favours the $t$', '$\\Delta\\text{AIC} = \\text{AIC}_{\\text{Normal}} - \\text{AIC}_{t} > 0$ favorizează $t$')]),
-    T('Early evidence for stock prices: \\refPraetz, \\refBG', 'Primele dovezi pentru prețurile acțiunilor: \\refPraetz, \\refBG')))
+    T('Early evidence for stock prices: \\refPraetz, \\refBG', 'Primele rezultate empirice pentru prețurile acțiunilor: \\refPraetz, \\refBG')))
 
-D.frame(T('Fitted Student-$t$: Degrees of Freedom, @{y0}--@{y1}', 'Student-$t$ estimată: gradele de libertate, @{y0}--@{y1}'),
+D.frame(T('Fitted Student-$t$: Degrees of Freedom, @{y0}--@{y1}', 'Distribuția Student-$t$ estimată: gradele de libertate, @{y0}--@{y1}'),
         cols(table('lrrr', T('Series', 'Seria') + ' & $\\hat\\nu$ & JB & $\\Delta$AIC', [trow(k) for k in ASSETS], size='footnotesize'), items(
             T('All $\\hat\\nu$ between @{nu.min} (@{nu.min.name}) and @{nu.max} (@{nu.max.name})', 'Toate valorile $\\hat\\nu$ între @{nu.min} (@{nu.min.name}) și @{nu.max} (@{nu.max.name})'),
             T('$\\hat\\nu < 4$ for @{nu.below4} of the @{nassets} series: the fitted model has infinite kurtosis', '$\\hat\\nu < 4$ pentru @{nu.below4} din cele @{nassets} serii: modelul estimat are aplatizare infinită'),
-            T('$\\Delta$AIC is at least @{daic.min}: the $t$ beats the Normal distribution everywhere', '$\\Delta$AIC este cel puțin @{daic.min}: $t$ învinge distribuția Normală peste tot')), wl='0.55', wr='0.41') + ql('SFM_ch2_student_t_fit'),
+            T('$\\Delta$AIC is at least @{daic.min}: the $t$ beats the Normal distribution everywhere', '$\\Delta$AIC este cel puțin @{daic.min}: distribuția $t$ este preferată distribuției Normale pentru toate seriile')), wl='0.55', wr='0.41') + ql('SFM_ch2_student_t_fit'),
         'footnotesize')
 
-chart(T('S\\&P 500: Normal vs Student-$t$ Fit', 'S\\&P 500: distribuția Normală vs Student-$t$'), 'sfm_ch2_t_fit_sp500', 'SFM_ch2_student_t_fit', [
-    T('Linear scale: the $t$ ($\\hat\\nu = @{m.sp500.nu}$) follows the tall centre that the Normal distribution misses', 'Scara liniară: $t$ ($\\hat\\nu = @{m.sp500.nu}$) urmează centrul înalt pe care distribuția Normală îl ratează'),
-    T('Log scale: the Normal density collapses beyond $\\pm 4\\%$; the $t$ follows the observed tails', 'Scara logaritmică: densitatea Normală se prăbușește dincolo de $\\pm 4\\%$; $t$ urmează cozile observate')], h='0.62\\textheight')
+chart(T('S\\&P 500: Normal vs Student-$t$ Fit', 'S\\&P 500: distribuția Normală și distribuția Student-$t$ estimate'), 'sfm_ch2_t_fit_sp500', 'SFM_ch2_student_t_fit', [
+    T('Linear scale: the $t$ ($\\hat\\nu = @{m.sp500.nu}$) follows the tall centre that the Normal distribution misses', 'Scara liniară: distribuția $t$ ($\\hat\\nu = @{m.sp500.nu}$) reproduce centrul înalt, pe care distribuția Normală nu îl reproduce'),
+    T('Log scale: the Normal density collapses beyond $\\pm 4\\%$; the $t$ follows the observed tails', 'Scara logaritmică: densitatea Normală scade abrupt dincolo de $\\pm 4\\%$; distribuția $t$ urmează cozile observate')], h='0.62\\textheight')
 
-chart(T('QQ Plots against the Fitted Student-$t$', 'QQ plots față de Student-$t$ estimată'), 'sfm_ch2_qq_t', 'SFM_ch2_qq_plots', [
+chart(T('QQ Plots against the Fitted Student-$t$', 'QQ plots față de distribuția Student-$t$ estimată'), 'sfm_ch2_qq_t', 'SFM_ch2_qq_plots', [
     T('The centre and the moderate tails now lie on the line', 'Centrul și cozile moderate se află acum pe dreaptă'),
     T('Extremes: the fitted $t$ expects lower minima than observed: S\\&P 500 $@{qqt.sp.tmin}\\%$ vs $@{qqt.sp.min}\\%$; Bitcoin $@{qqt.btc.tmin}\\%$ vs $@{qqt.btc.min}\\%$',
-      'Extremele: $t$ estimată așteaptă minime mai mici decît cele observate: S\\&P 500 $@{qqt.sp.tmin}\\%$ față de $@{qqt.sp.min}\\%$; Bitcoin $@{qqt.btc.tmin}\\%$ față de $@{qqt.btc.min}\\%$'),
-    T('With $\\hat\\nu$ close to 2 the model overshoots the most extreme quantiles', 'Cu $\\hat\\nu$ apropiat de 2, modelul depășește cuantilele cele mai extreme')], h='0.60\\textheight')
+      'Extremele: distribuția $t$ estimată prevede minime mai mici decît cele observate: S\\&P 500 $@{qqt.sp.tmin}\\%$ față de $@{qqt.sp.min}\\%$; Bitcoin $@{qqt.btc.tmin}\\%$ față de $@{qqt.btc.min}\\%$'),
+    T('With $\\hat\\nu$ close to 2 the model overshoots the most extreme quantiles', 'Cu $\\hat\\nu$ apropiat de 2, modelul supraestimează cuantilele cele mai extreme')], h='0.60\\textheight')
 
-D.frame(T('What the Student-$t$ Still Misses', 'Ce ratează încă distribuția Student-$t$'), items(
+D.frame(T('What the Student-$t$ Still Misses', 'Limitele distribuției Student-$t$'), items(
     (T('\\textbf{Symmetry}: the $t$ cannot reproduce the negative skewness', '\\textbf{Simetria}: $t$ nu poate reproduce asimetria negativă'),
-     [T('skewed $t$ distributions exist; they are beyond this chapter', 'există distribuții $t$ asimetrice; depășesc acest capitol')]),
+     [T('skewed $t$ distributions exist; they are beyond this chapter', 'există distribuții $t$ asimetrice, dar depășesc cadrul acestui capitol')]),
     (T('\\textbf{Independence}: an i.i.d. $t$ model has no volatility clustering', '\\textbf{Independența}: un model $t$ i.i.d. nu are volatility clustering'),
      [T('GARCH models with $t$ errors combine both \\refBollerslev{} (Chapter 9)', 'modelele GARCH cu erori $t$ le combină pe amîndouă \\refBollerslev{} (Capitolul 9)')]),
     (T('\\textbf{Single tail index}: one $\\nu$ for both tails and for the centre', '\\textbf{Un singur indice de coadă}: un singur $\\nu$ pentru ambele cozi și pentru centru'),
@@ -740,7 +741,7 @@ D.frame(T('What the Student-$t$ Still Misses', 'Ce ratează încă distribuția 
 D.recap(('Student-$t$', 'Student-$t$'), [
     T('One extra parameter $\\nu$ controls the tails; power-law tails, the Normal distribution as $\\nu \\to \\infty$', 'Un parametru în plus, $\\nu$, controlează cozile; cozi de tip putere, distribuția Normală cînd $\\nu \\to \\infty$'),
     T('Fitted $\\hat\\nu$ between @{nu.min0} and @{nu.max0} for daily returns; AIC strongly prefers the $t$', '$\\hat\\nu$ estimat între @{nu.min0} și @{nu.max0} pentru randamentele zilnice; AIC preferă clar $t$'),
-    T('It misses skewness and volatility clustering', 'Ratează asimetria și volatility clustering')])
+    T('It misses skewness and volatility clustering', 'Nu surprinde asimetria și volatility clustering')])
 
 # =============================================================================
 # 8. FAPTELE STILIZATE
@@ -753,44 +754,44 @@ D.frame(T('What Is a Stylised Fact?', 'Ce este un fapt stilizat?'), cols(items(
     T('Qualitative, not exact: ``heavy tails\'\', not ``$\\nu = 3.2$\'\'', 'Calitativ, nu exact: „cozi groase”, nu „$\\nu = 3.2$”'),
     T('Rama Cont lists eleven; we check six on our data', 'Rama Cont enumeră unsprezece; noi verificăm șase pe datele noastre'),
     T('A good model of returns must reproduce them; the benchmark i.i.d. Normal model fails most of them',
-      'Un model bun al randamentelor trebuie să le reproducă; modelul de referință i.i.d. Normal le ratează pe cele mai multe'),
-    T('Earlier evidence: \\refMandelbrot, \\refFama', 'Dovezi mai vechi: \\refMandelbrot, \\refFama')),
+      'Un model bun al randamentelor trebuie să le reproducă; modelul de referință i.i.d. Normal nu reproduce majoritatea lor'),
+    T('Earlier evidence: \\refMandelbrot, \\refFama', 'Primele rezultate empirice: \\refMandelbrot, \\refFama')),
     ph('cont', 'Rama Cont', h='0.42\\textheight'), wl='0.60', wr='0.36'))
 
 D.frame(T('Six Stylised Facts', 'Șase fapte stilizate'), items(
-    T('\\textbf{1. Heavy tails}: large moves are far more frequent than under the Normal distribution', '\\textbf{1. Cozi groase}: mișcările mari sînt mult mai frecvente decît în distribuția Normală'),
+    T('\\textbf{1. Heavy tails}: large moves are far more frequent than under the Normal distribution', '\\textbf{1. Cozi groase}: mișcările mari sînt mult mai frecvente decît prevede distribuția Normală'),
     T('\\textbf{2. Aggregational Gaussianity}: returns over longer horizons are closer to the Normal distribution', '\\textbf{2. Gaussianitate agregată} (aggregational Gaussianity): randamentele pe orizonturi mai lungi sînt mai apropiate de distribuția Normală'),
-    T('\\textbf{3. Absence of linear autocorrelation}: past returns barely predict future returns', '\\textbf{3. Absența autocorelației liniare}: randamentele trecute aproape nu prezic randamentele viitoare'),
+    T('\\textbf{3. Absence of linear autocorrelation}: past returns barely predict future returns', '\\textbf{3. Absența autocorelației liniare}: randamentele trecute aproape nu au putere de predicție pentru cele viitoare'),
     T('\\textbf{4. Volatility clustering}: large moves follow large moves, of either sign', '\\textbf{4. Volatility clustering}: mișcările mari urmează mișcărilor mari, de orice semn'),
     T('\\textbf{5. Leverage effect}: falls raise future volatility more than rises', '\\textbf{5. Efectul de levier} (leverage effect): scăderile cresc volatilitatea viitoare mai mult decît creșterile'),
     T('\\textbf{6. Gain/loss asymmetry}: large losses are larger and more frequent than large gains', '\\textbf{6. Asimetria cîștig/pierdere}: pierderile mari sînt mai mari și mai frecvente decît cîștigurile mari')))
 
-D.frame(T('Fact 1: Heavy Tails, Counted', 'Faptul 1: cozi groase, numărate'), table(
+D.frame(T('Fact 1: Heavy Tails, Counted', 'Faptul 1: cozile groase în cifre'), table(
     'lrrrrrr', T('Series', 'Seria') + ' & $n$ & $>3\\sigma$ & $>4\\sigma$ & $>5\\sigma$ & $>6\\sigma$ & $p$ (Poisson, $4\\sigma$)',
     [f'{NAMES[k]} & @{{m.{k}.n}} & @{{sg.{k}.3.obs}} & @{{sg.{k}.4.obs}} & @{{sg.{k}.5.obs}} & @{{sg.{k}.6.obs}} & ${{@{{sg.{k}.4.pp}}}}$' for k in INDICES]
-    + [T('Normal distribution, $n = @{m.sp500.n}$', 'Normală, $n = @{m.sp500.n}$') + ' & & $@{sg.sp500.3.exp}$ & $@{sg.sp500.4.exp}$ & $@{sg.sp500.5.exp}$ & $@{sg.sp500.6.exp}$ & '],
+    + [T('Normal distribution, $n = @{m.sp500.n}$', 'Distribuția Normală, $n = @{m.sp500.n}$') + ' & & $@{sg.sp500.3.exp}$ & $@{sg.sp500.4.exp}$ & $@{sg.sp500.5.exp}$ & $@{sg.sp500.6.exp}$ & '],
     size='footnotesize') + items(
-    T('$>k\\sigma$: number of days with $|r_t - \\bar r| > k\\,s$; last row: number expected under the Normal distribution', '$>k\\sigma$: numărul zilelor cu $|r_t - \\bar r| > k\\,s$; ultimul rînd: numărul așteptat în distribuția Normală'),
-    T('$p$: probability of at least that many 4-sigma days if the Normal count is Poisson with mean $n \\times @{nt.4.p}$', '$p$: probabilitatea a cel puțin atîtea zile de 4 sigma dacă numărul Normal este Poisson cu media $n \\times @{nt.4.p}$'),
+    T('$>k\\sigma$: number of days with $|r_t - \\bar r| > k\\,s$; last row: number expected under the Normal distribution', '$>k\\sigma$: numărul zilelor cu $|r_t - \\bar r| > k\\,s$; ultimul rînd: numărul așteptat conform distribuției Normale'),
+    T('$p$: probability of at least that many 4-sigma days if the Normal count is Poisson with mean $n \\times @{nt.4.p}$', '$p$: probabilitatea de a observa cel puțin atîtea zile de 4 sigma, dacă numărul lor urmează distribuția Poisson cu media $n \\times @{nt.4.p}$ (ipoteza de normalitate)'),
     T('S\\&P 500: @{sg.sp.ratio} times more 4-sigma days than the Normal distribution allows', 'S\\&P 500: de @{sg.sp.ratio} de ori mai multe zile de 4 sigma decît permite distribuția Normală')) + ql('SFM_ch2_sigma_days'),
     'footnotesize')
 
 chart(T('Fact 1: 4-Sigma Days in Every Market', 'Faptul 1: zile de 4 sigma pe toate piețele'), 'sfm_ch2_sigma_days', 'SFM_ch2_sigma_days', [
     T('Observed days beyond 4 standard deviations (log scale) against the Normal expectation of $@{ex4.min}$--$@{ex4.max}$ days',
-      'Zilele observate dincolo de 4 abateri standard (scară logaritmică) față de așteptarea Normală de $@{ex4.min}$--$@{ex4.max}$ zile'),
+      'Zilele observate dincolo de 4 abateri standard (scară logaritmică), față de numărul așteptat conform distribuției Normale, între $@{ex4.min}$ și $@{ex4.max}$ zile'),
     T('Indices and Bitcoin: one 4-sigma day every @{ev.min}--@{ev.max} days; BVB stocks: @{stk.min}--@{stk.max} days in total',
-      'Indici și Bitcoin: o zi de 4 sigma la fiecare @{ev.min}--@{ev.max} zile; acțiunile BVB: între @{stk.min} și @{stk.max} zile în total'),
+      'Indicii și Bitcoin: o zi de 4 sigma la fiecare @{ev.min}--@{ev.max} zile; acțiunile BVB: între @{stk.min} și @{stk.max} zile în total'),
     T('Under a fitted Student-$t$, the expected numbers are close to the observed ones: S\\&P 500 @{b4.sp500.expt}, BET @{b4.bet.expt} (Seminar 2, B4)',
       'Cu o distribuție Student-$t$ estimată, numerele așteptate sînt apropiate de cele observate: S\\&P 500 @{b4.sp500.expt}, BET @{b4.bet.expt} (Seminarul 2, B4)')],
       h='0.60\\textheight')
 
 D.frame(T('Fact 2: Aggregational Gaussianity', 'Faptul 2: gaussianitatea agregată'), items(
-    (T('$h$-day log return: $r_t(h) = r_t + r_{t-1} + \\dots + r_{t-h+1}$, taken on non-overlapping blocks', 'Randamentul logaritmic pe $h$ zile: $r_t(h) = r_t + r_{t-1} + \\dots + r_{t-h+1}$, luat pe blocuri care nu se suprapun'),
+    (T('$h$-day log return: $r_t(h) = r_t + r_{t-1} + \\dots + r_{t-h+1}$, taken on non-overlapping blocks', 'Randamentul logaritmic pe $h$ zile: $r_t(h) = r_t + r_{t-1} + \\dots + r_{t-h+1}$, calculat pe blocuri disjuncte'),
      [T('if the CLT applies, the distribution of $r_t(h)$ approaches the Normal distribution as $h$ grows', 'dacă se aplică CLT, distribuția lui $r_t(h)$ se apropie de distribuția Normală cînd $h$ crește')]),
     T('The stylised fact: the shape changes with the horizon; it is not the same at all time scales \\refCont', 'Faptul stilizat: forma se schimbă cu orizontul; nu este aceeași la toate scările de timp \\refCont'),
     (T('Price to pay: fewer observations', 'Prețul plătit: mai puține observații'),
      [T('S\\&P 500, @{years.span} years: @{ag.n1} daily, @{ag.n21} monthly and @{ag.n63} quarterly returns', 'S\\&P 500, @{years.span} ani: @{ag.n1} randamente zilnice, @{ag.n21} randamente lunare și @{ag.n63} randamente trimestriale'),
-      T('estimates of kurtosis at long horizons are very noisy', 'estimările aplatizării pe orizonturi lungi sînt foarte zgomotoase')])))
+      T('estimates of kurtosis at long horizons are very noisy', 'estimările aplatizării pe orizonturi lungi sînt foarte imprecise')])))
 
 chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: aplatizarea scade cu orizontul'), 'sfm_ch2_aggregation', 'SFM_ch2_cont_stylised_facts', [
     T('Excess kurtosis, daily $\\to$ monthly $\\to$ quarterly: S\\&P 500 @{ag.sp500.1} $\\to$ @{ag.sp500.21} $\\to$ @{ag.sp500.63}; BET @{ag.bet.1} $\\to$ @{ag.bet.21} $\\to$ @{ag.bet.63}; Bitcoin @{ag.btc.1} $\\to$ @{ag.btc.21} $\\to$ @{ag.btc.63}',
@@ -799,11 +800,11 @@ chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: aplatizarea scade 
     T('Quarterly returns: JB no longer rejects normality for the BET ($p = @{ag.bet.63.p}$) and Bitcoin ($p = @{ag.btc.63.p}$)', 'Randamentele trimestriale: JB nu mai respinge normalitatea pentru BET ($p = @{ag.bet.63.p}$) și Bitcoin ($p = @{ag.btc.63.p}$)')],
       h='0.60\\textheight')
 
-chart(T('Fact 2: S\\&P 500, Daily vs Monthly QQ Plots', 'Faptul 2: S\\&P 500, QQ plots zilnice vs lunare'), 'sfm_ch2_qq_horizons', 'SFM_ch2_cont_stylised_facts', [
+chart(T('Fact 2: S\\&P 500, Daily vs Monthly QQ Plots', 'Faptul 2: S\\&P 500, QQ plots pentru randamentele zilnice și lunare'), 'sfm_ch2_qq_horizons', 'SFM_ch2_cont_stylised_facts', [
     T('Monthly returns lie much closer to the line than daily returns', 'Randamentele lunare sînt mult mai aproape de dreaptă decît cele zilnice'),
-    T('But monthly returns are not Normal distribution: skewness $@{qh.21.skew}$, excess kurtosis $@{qh.21.k}$, $n = @{qh.21.n}$; the lowest point is March 2020',
+    T('But monthly returns are not Normal: skewness $@{qh.21.skew}$, excess kurtosis $@{qh.21.k}$, $n = @{qh.21.n}$; the lowest point is March 2020',
       'Dar randamentele lunare nu sînt Normale: asimetria $@{qh.21.skew}$, excesul de aplatizare $@{qh.21.k}$, $n = @{qh.21.n}$; punctul cel mai de jos este martie 2020'),
-    T('Why so slow? Volatility clustering makes daily returns dependent, which slows the CLT', 'De ce atît de lent? Volatility clustering face randamentele zilnice dependente, ceea ce încetinește CLT')], h='0.60\\textheight')
+    T('Why so slow? Volatility clustering makes daily returns dependent, which slows the CLT', 'De ce atît de lent? Volatility clustering face randamentele zilnice dependente, ceea ce încetinește convergența din CLT')], h='0.60\\textheight')
 
 D.frame(T('Fact 3: Absence of Linear Autocorrelation', 'Faptul 3: absența autocorelației liniare'), items(
     (T('\\textbf{ACF} (autocorrelation function): $\\rho(h) = \\text{Corr}(r_t, r_{t-h})$, $h = 1, 2, \\dots$', '\\textbf{ACF} (autocorrelation function, funcția de autocorelație): $\\rho(h) = \\text{Corr}(r_t, r_{t-h})$, $h = 1, 2, \\dots$'),
@@ -821,16 +822,16 @@ chart(T('Facts 3 and 4: ACF of Returns and of Absolute Returns', 'Faptele 3 și 
       'Dreapta: randamentele absolute; toate pozitive, cu scădere lentă: S\\&P 500 $@{acf.sp500.a1}$ la decalajul 1, $@{acf.sp500.a10}$ la decalajul 10, $@{acf.sp500.a50}$ la decalajul 50')],
       h='0.60\\textheight')
 
-D.frame(T('Fact 3: Small but Not Always Zero', 'Faptul 3: mică, dar nu întotdeauna zero'), items(
+D.frame(T('Fact 3: Small but Not Always Zero', 'Faptul 3: autocorelație mică, dar nu întotdeauna nulă'), items(
     (T('Ljung--Box $Q(10)$ for returns: S\\&P 500 @{acf.sp500.lbr}, BET @{acf.bet.lbr}, Bitcoin @{acf.btc.lbr}; critical value @{lb.crit}',
        'Ljung--Box $Q(10)$ pentru randamente: S\\&P 500 @{acf.sp500.lbr}, BET @{acf.bet.lbr}, Bitcoin @{acf.btc.lbr}; valoarea critică @{lb.crit}'),
-     [T('formally, some autocorrelation is significant', 'formal, o parte din autocorelație este semnificativă')]),
-    (T('Two reasons not to over-read this', 'Două motive să nu supra-interpretăm'),
-     [T('the values are economically small: $|\\hat\\rho(h)| \\le @{acf.maxabs}$, so at most @{acf.r2}\\% of the variance is explained', 'valorile sînt mici economic: $|\\hat\\rho(h)| \\le @{acf.maxabs}$, deci se explică cel mult @{acf.r2}\\% din varianță'),
+     [T('formally, some autocorrelation is significant', 'formal, unele autocorelații sînt semnificative')]),
+    (T('Two reasons not to over-read this', 'Două motive pentru a nu supra-interpreta rezultatul'),
+     [T('the values are economically small: $|\\hat\\rho(h)| \\le @{acf.maxabs}$, so at most @{acf.r2}\\% of the variance is explained', 'valorile sînt mici din punct de vedere economic: $|\\hat\\rho(h)| \\le @{acf.maxabs}$, deci se explică cel mult @{acf.r2}\\% din varianță'),
       T('the band $\\pm 1.96/\\sqrt{n}$ assumes i.i.d. returns; with volatility clustering it is too narrow, so ``significant\'\' is found too often',
         'banda $\\pm 1.96/\\sqrt{n}$ presupune randamente i.i.d.; cu volatility clustering este prea îngustă, deci „semnificativ” apare prea des')]),
-    T('The S\\&P 500 value at lag 1 comes mostly from March 2020, when large falls and rebounds alternated: without 20 February--30 April 2020, $\\hat\\rho(1) = @{acf.sp500.ex}$', 'Valoarea S\\&P 500 la decalajul 1 vine mai ales din martie 2020, cînd căderile mari și revenirile au alternat: fără 20 februarie--30 aprilie 2020, $\\hat\\rho(1) = @{acf.sp500.ex}$'),
-    T('Robust tests of predictability (variance ratios): Chapter 7', 'Teste robuste ale previzibilității (rapoarte ale varianțelor): Capitolul 7')))
+    T('The S\\&P 500 value at lag 1 comes mostly from March 2020, when large falls and rebounds alternated: without 20 February--30 April 2020, $\\hat\\rho(1) = @{acf.sp500.ex}$', 'Valoarea S\\&P 500 la decalajul 1 provine mai ales din martie 2020, cînd căderile mari și revenirile au alternat: fără 20 februarie--30 aprilie 2020, $\\hat\\rho(1) = @{acf.sp500.ex}$'),
+    T('Robust tests of predictability (variance ratios): Chapter 7', 'Teste robuste ale previzibilității (testele raportului varianțelor): Capitolul 7')))
 
 D.frame(T('Fact 4: Volatility Clustering', 'Faptul 4: volatility clustering'), cols(items(
     T('``Large changes tend to be followed by large changes, of either sign, and small changes tend to be followed by small changes\'\' \\refMandelbrot',
@@ -850,8 +851,8 @@ D.frame(T('Fact 5: The Leverage Effect', 'Faptul 5: efectul de levier'), items(
     (T('Measure: $L(k) = \\text{Corr}(r_t, |r_{t+k}|)$, $k = 1, 2, \\dots$', 'Măsura: $L(k) = \\text{Corr}(r_t, |r_{t+k}|)$, $k = 1, 2, \\dots$'),
      [T('$L(k) < 0$: a fall today is followed by larger moves than a rise of the same size', '$L(k) < 0$: o scădere azi este urmată de mișcări mai mari decît o creștere de aceeași mărime')]),
     (T('Explanation by financial leverage \\refChristie', 'Explicația prin efectul de levier financiar \\refChristie'),
-     [T('when the share price falls, the debt-to-equity ratio rises, so equity becomes riskier', 'cînd prețul acțiunii scade, raportul datorii/capital propriu crește, deci capitalul devine mai riscant')]),
-    T('A second explanation, volatility feedback: higher expected volatility raises required returns and lowers prices', 'O a doua explicație, volatility feedback: o volatilitate așteptată mai mare crește randamentul cerut și scade prețurile'),
+     [T('when the share price falls, the debt-to-equity ratio rises, so equity becomes riskier', 'cînd prețul acțiunii scade, raportul datorii/capital propriu crește, deci capitalul propriu devine mai riscant')]),
+    T('A second explanation, volatility feedback: higher expected volatility raises required returns and lowers prices', 'O a doua explicație, volatility feedback: o volatilitate așteptată mai mare mărește randamentul cerut și reduce prețurile'),
     T('Models with an asymmetric response (EGARCH, GJR-GARCH): Chapter 9', 'Modele cu răspuns asimetric (EGARCH, GJR-GARCH): Capitolul 9')))
 
 chart(T('Fact 5: Leverage Correlations', 'Faptul 5: corelațiile de levier'), 'sfm_ch2_leverage', 'SFM_ch2_cont_stylised_facts', [
@@ -862,7 +863,7 @@ chart(T('Fact 5: Leverage Correlations', 'Faptul 5: corelațiile de levier'), 's
 
 chart(T('Fact 6: Gain/Loss Asymmetry', 'Faptul 6: asimetria cîștig/pierdere'), 'sfm_ch2_gain_loss', 'SFM_ch2_sigma_days', [
     T('Left: a 1-in-100 loss is larger than a 1-in-100 gain for the indices: BET @{gl.bet.q01}\\% vs @{gl.bet.q99}\\%, S\\&P 500 @{gl.sp500.q01}\\% vs @{gl.sp500.q99}\\%',
-      'Stînga: o pierdere de 1 din 100 este mai mare decît un cîștig de 1 din 100 pentru indici: BET @{gl.bet.q01}\\% față de @{gl.bet.q99}\\%, S\\&P 500 @{gl.sp500.q01}\\% față de @{gl.sp500.q99}\\%'),
+      'Stînga: la indici, pierderea depășită într-o zi din 100 este mai mare decît cîștigul depășit într-o zi din 100: BET @{gl.bet.q01}\\% față de @{gl.bet.q99}\\%, S\\&P 500 @{gl.sp500.q01}\\% față de @{gl.sp500.q99}\\%'),
     T('Right: days below $-4\\sigma$ vs above $+4\\sigma$: BET @{gl.bet.d} vs @{gl.bet.u}, S\\&P 500 @{gl.sp500.d} vs @{gl.sp500.u}, Bitcoin @{gl.btc.d} vs @{gl.btc.u}',
       'Dreapta: zile sub $-4\\sigma$ față de peste $+4\\sigma$: BET @{gl.bet.d} față de @{gl.bet.u}, S\\&P 500 @{gl.sp500.d} față de @{gl.sp500.u}, Bitcoin @{gl.btc.d} față de @{gl.btc.u}'),
     T('Exception: SNN, with positive skewness and a larger right quantile', 'Excepție: SNN, cu asimetrie pozitivă și cuantila din dreapta mai mare')], h='0.60\\textheight')
@@ -880,11 +881,11 @@ D.frame(T('Six Facts, Eight Series', 'Șase fapte, opt serii'), table(
     [f'{NAMES[k]} & $@{{m.{k}.exkurt}}$ & $@{{ft.{k}.km}}$ & $@{{ft.{k}.r1}}$ & $@{{ft.{k}.a10}}$ & $@{{ft.{k}.lev}}$ & $@{{ft.{k}.gl}}$' for k in ASSETS],
     size='scriptsize') + items(
     T('Facts 1, 3 and 4 hold for every series; fact 2 holds with noise; facts 5 and 6 hold for the indices and most BVB stocks, weakly or not for Bitcoin and SNN',
-      'Faptele 1, 3 și 4 sînt valabile pentru toate seriile; faptul 2, cu zgomot; faptele 5 și 6, pentru indici și majoritatea acțiunilor BVB, slab sau deloc pentru Bitcoin și SNN'),
-    T('A comparison of the return distributions of cryptocurrencies and traditional assets: \\refPeleCrypto', 'O comparație a distribuțiilor randamentelor criptomonedelor și ale activelor tradiționale: \\refPeleCrypto')) + ql('SFM_ch2_cont_stylised_facts'),
+      'Faptele 1, 3 și 4 sînt valabile pentru toate seriile; faptul 2, cu estimări imprecise; faptele 5 și 6, pentru indici și majoritatea acțiunilor BVB, slab sau deloc pentru Bitcoin și SNN'),
+    T('A comparison of the return distributions of cryptocurrencies and traditional assets: \\refPeleCrypto', 'O comparație între distribuțiile randamentelor criptomonedelor și cele ale activelor tradiționale: \\refPeleCrypto')) + ql('SFM_ch2_cont_stylised_facts'),
     'footnotesize')
 
-D.frame(T('What the Facts Mean for Models', 'Ce înseamnă faptele pentru modele'), table(
+D.frame(T('What the Facts Mean for Models', 'Implicațiile faptelor stilizate pentru modele'), table(
     'lcccccc', T('Model', 'Model') + ' & 1 & 2 & 3 & 4 & 5 & 6',
     [T('i.i.d. Normal', 'i.i.d. Normal') + ' & -- & ' + T('trivially', 'trivial') + ' & \\checkmark & -- & -- & --',
      T('i.i.d. Student-$t$', 'i.i.d. Student-$t$') + ' & \\checkmark & \\checkmark & \\checkmark & -- & -- & --',
@@ -897,9 +898,9 @@ D.frame(T('What the Facts Mean for Models', 'Ce înseamnă faptele pentru modele
     T('A related summary of tail risk, information entropy: \\refPeleEntropy', 'O măsură înrudită a riscului de coadă, entropia informațională: \\refPeleEntropy')))
 
 D.recap(('Stylised Facts', 'Fapte stilizate'), [
-    T('Heavy tails: 4-sigma days every few months instead of once in decades', 'Cozi groase: zile de 4 sigma la cîteva luni, în loc de o dată la cîteva decenii'),
+    T('Heavy tails: 4-sigma days every few months instead of once in decades', 'Cozi groase: o zi de 4 sigma la fiecare cîteva luni, în loc de una la cîteva decenii'),
     T('Returns are nearly uncorrelated, but their size is strongly autocorrelated', 'Randamentele sînt aproape necorelate, dar mărimea lor este puternic autocorelată'),
-    T('Longer horizons are closer to the Normal distribution, slowly', 'Orizonturile mai lungi sînt mai aproape de distribuția Normală, încet'),
+    T('Longer horizons are closer to the Normal distribution, slowly', 'Pe orizonturi mai lungi, randamentele se apropie lent de distribuția Normală'),
     T('Stock indices: falls raise volatility, and losses are larger than gains', 'Indicii bursieri: scăderile cresc volatilitatea, iar pierderile sînt mai mari decît cîștigurile')])
 
 # =============================================================================
@@ -911,7 +912,7 @@ side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare 
     T('As a market matures (more traders, futures, ETFs), its tails might thin out', 'Pe măsură ce o piață se maturizează (mai mulți participanți, futures, ETF-uri), cozile ei s-ar putea subția'),
     T('Bitcoin, @{yr.first}--@{yr.last}: yearly $\\hat\\nu$ between @{yr.numin} and @{yr.numax}; rank correlation with the year $@{yr.rho}$ ($p = @{yr.p}$)',
       'Bitcoin, @{yr.first}--@{yr.last}: $\\hat\\nu$ anual între @{yr.numin} și @{yr.numax}; corelația rangurilor cu anul $@{yr.rho}$ ($p = @{yr.p}$)'),
-    T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce este deschisă: @{yr.n} estimări anuale zgomotoase, un an (2020, exces de aplatizare @{yr.k2020}) dominat de o singură zi'),
+    T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de aplatizare @{yr.k2020}) dominat de o singură zi'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.52)
 
 D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
@@ -922,10 +923,10 @@ D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
      [T('\\aiprompt{Write a Python function that fits a Student-t distribution to daily Bitcoin log returns on rolling 365-day windows and returns the degrees of freedom with a bootstrap 95\\% interval.}',
         '\\aiprompt{Write a Python function that fits a Student-t distribution to daily Bitcoin log returns on rolling 365-day windows and returns the degrees of freedom with a bootstrap 95\\% interval.}')])))
 
-D.frame(T('What to Check', 'Ce trebuie verificat'), items(
-    T('Data: the same price column and calendar for every year? errors among the largest moves?', 'Datele: aceeași coloană de preț și același calendar pentru fiecare an? erori printre cele mai mari mișcări?'),
-    T('Estimation: did the optimiser converge? $\\hat\\nu$ near 2 or above 30 needs a second look', 'Estimarea: a convers optimizatorul? $\\hat\\nu$ aproape de 2 sau peste 30 trebuie privit de două ori'),
-    T('Inference: one $\\hat\\nu$ per year is noisy; report intervals, not only point estimates', 'Inferența: un $\\hat\\nu$ pe an este zgomotos; raportați intervale, nu doar estimări punctuale'),
+D.frame(T('What to Check', 'Verificări necesare'), items(
+    T('Data: the same price column and calendar for every year; errors among the largest moves', 'Datele: aceeași coloană de preț și același calendar pentru fiecare an; erori printre cele mai mari mișcări'),
+    T('Estimation: did the optimiser converge? $\\hat\\nu$ near 2 or above 30 needs a second look', 'Estimarea: a convers optimizatorul? $\\hat\\nu$ aproape de 2 sau peste 30 trebuie reverificat'),
+    T('Inference: one $\\hat\\nu$ per year is noisy; report intervals, not only point estimates', 'Inferența: o singură estimare $\\hat\\nu$ pe an este imprecisă; raportați intervale, nu doar estimări punctuale'),
     T('Volatility clustering: thinner yearly tails may only mean calmer years (Chapter 9)', 'Volatility clustering: cozi anuale mai subțiri pot însemna doar ani mai calmi (Capitolul 9)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
@@ -946,10 +947,10 @@ D.section('Summary', 'Rezumat')
 
 D.frame(T('Key Takeaways', 'Idei principale'), items(
     T('The Normal distribution: two parameters, thin tails, closed under addition', 'Distribuția Normală: doi parametri, cozi subțiri, închisă la adunare'),
-    T('Normal log returns give lognormal prices; mean above median by the volatility drag', 'Randamentele logaritmice Normale dau prețuri lognormale; media peste mediană cu volatility drag'),
-    T('The CLT needs independence, identical distribution and finite variance', 'CLT are nevoie de independență, aceeași distribuție și varianță finită'),
+    T('Normal log returns give lognormal prices; mean above median by the volatility drag', 'Randamentele logaritmice Normale dau prețuri lognormale; media depășește mediana prin volatility drag'),
+    T('The CLT needs independence, identical distribution and finite variance', 'CLT cere independență, distribuție identică și varianță finită'),
     T('Daily returns: mostly negative skewness, excess kurtosis @{ku.min0}--@{ku.max0}, JB rejects, QQ plots bend at both ends', 'Randamentele zilnice: în general asimetrie negativă, exces de aplatizare @{ku.min0}--@{ku.max0}, JB respinge, QQ plots se curbează la ambele capete'),
-    T('The Student-$t$ with $\\hat\\nu$ between @{nu.min0} and @{nu.max0} fits the tails much better, but is symmetric and i.i.d.', 'Student-$t$ cu $\\hat\\nu$ între @{nu.min0} și @{nu.max0} se potrivește mult mai bine cozilor, dar este simetrică și i.i.d.'),
+    T('The Student-$t$ with $\\hat\\nu$ between @{nu.min0} and @{nu.max0} fits the tails much better, but is symmetric and i.i.d.', 'Student-$t$ cu $\\hat\\nu$ între @{nu.min0} și @{nu.max0} descrie mult mai bine cozile, dar este simetrică și i.i.d.'),
     T('Six stylised facts: heavy tails, aggregational Gaussianity, no linear autocorrelation, volatility clustering, leverage, gain/loss asymmetry',
       'Șase fapte stilizate: cozi groase, gaussianitate agregată, fără autocorelație liniară, volatility clustering, efect de levier, asimetrie cîștig/pierdere')))
 
@@ -973,7 +974,7 @@ D.frame(T('Check Yourself', 'Verificați-vă'), items(
     (T('\\textbf{Question}: $n = 2500$, $S = -0.5$, $K = 6$; what is JB?', '\\textbf{Întrebare}: $n = 2500$, $S = -0.5$, $K = 6$; cît este JB?'),
      [T('\\textbf{Answer}: $\\frac{2500}{6}(0.25 + 9) = @{cy.jb}$; normality is rejected', '\\textbf{Răspuns}: $\\frac{2500}{6}(0.25 + 9) = @{cy.jb}$; normalitatea este respinsă')]),
     (T('\\textbf{Question}: an annual log return is $N(5\\%, 20\\%^2)$; what are the median and the mean of 100 invested after one year?',
-       '\\textbf{Întrebare}: un randament logaritmic anual este $N(5\\%, 20\\%^2)$; care sînt mediana și media valorii a 100 investiți după un an?'),
+       '\\textbf{Întrebare}: un randament logaritmic anual este $N(5\\%, 20\\%^2)$; care sînt mediana și media valorii unei investiții de 100 după un an?'),
      [T('\\textbf{Answer}: median $100e^{0.05} = @{cy.med}$, mean $100e^{0.05 + 0.02} = @{cy.mean}$', '\\textbf{Răspuns}: mediana $100e^{0.05} = @{cy.med}$, media $100e^{0.05 + 0.02} = @{cy.mean}$')]),
     T('Next: Chapter 3, $\\alpha$-stable distributions', 'Urmează: Capitolul 3, distribuții $\\alpha$-stabile')))
 

@@ -31,8 +31,8 @@ window.SFM_DATA.quizzes['stable'] = {
                     "$aX_1 + bX_2$ are aceeași distribuție ca $cX + d$ pentru un $c > 0$ și un $d$",
                     "$aX_1 + bX_2$ urmează întotdeauna distribuția Normală"
                 ],
-                "correctExplanation": "Stabilitatea înseamnă că o combinație liniară de copii i.i.d. își păstrează forma, cu o schimbare de scală $c$ și de locație $d$.",
-                "incorrectExplanation": "Stabilitatea înseamnă $aX_1 + bX_2 \\overset{d}{=} cX + d$: suma păstrează forma distribuției, se schimbă doar scala și locația."
+                "correctExplanation": "Stabilitatea înseamnă că o combinație liniară de copii i.i.d. își păstrează forma, cu o schimbare de scală $c$ și de poziție $d$.",
+                "incorrectExplanation": "Stabilitatea înseamnă $aX_1 + bX_2 \\overset{d}{=} cX + d$: suma păstrează forma distribuției, se schimbă doar scala și poziția."
             }
         },
         {
@@ -245,10 +245,10 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Doar prin scală: $\\gamma_0 = \\sqrt{2}\\,\\gamma_1$",
                     "Semnul lui $\\beta$ este inversat",
                     "S1 permite $\\alpha > 2$",
-                    "Doar prin locație: $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan(\\pi\\alpha/2)$"
+                    "Doar prin parametrul de poziție: $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan(\\pi\\alpha/2)$"
                 ],
-                "correctExplanation": "$\\alpha$, $\\beta$ și $\\gamma$ sînt aceiași; doar locația se deplasează cu $\\beta\\gamma\\tan(\\pi\\alpha/2)$.",
-                "incorrectExplanation": "Cele două parametrizări au aceiași $\\alpha$, $\\beta$, $\\gamma$; locația diferă cu $\\beta\\gamma\\tan(\\pi\\alpha/2)$, care este zero pentru legile simetrice."
+                "correctExplanation": "$\\alpha$, $\\beta$ și $\\gamma$ sînt aceiași; doar parametrul de poziție se deplasează cu $\\beta\\gamma\\tan(\\pi\\alpha/2)$.",
+                "incorrectExplanation": "Cele două parametrizări au aceiași $\\alpha$, $\\beta$, $\\gamma$; parametrul de poziție diferă cu $\\beta\\gamma\\tan(\\pi\\alpha/2)$, care este zero pentru legile simetrice."
             }
         },
         {
@@ -267,15 +267,15 @@ window.SFM_DATA.quizzes['stable'] = {
             },
             "ro": {
                 "title": "Parametrizarea din scipy",
-                "text": "Estimați cu `scipy.stats.levy_stable` cu setările implicite și vreți să raportați locația S0 a lui Nolan. Ce trebuie să faceți?",
+                "text": "Estimați cu `scipy.stats.levy_stable` cu setările implicite și vreți să raportați parametrul de poziție S0 al lui Nolan. Ce trebuie să faceți?",
                 "options": [
                     "Nimic: implicit este deja S0",
-                    "Convertiți: implicit este S1, deci adunați $\\beta\\gamma\\tan(\\pi\\alpha/2)$ la locația estimată",
+                    "Convertiți: implicit este S1, deci adunați $\\beta\\gamma\\tan(\\pi\\alpha/2)$ la poziția estimată",
                     "Împărțiți scala la $\\sqrt{2}$",
                     "Schimbați semnul lui $\\alpha$"
                 ],
                 "correctExplanation": "Valoarea implicită `levy_stable.parameterization` este `'S1'`; fie o setați la `'S0'`, fie convertiți $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan(\\pi\\alpha/2)$.",
-                "incorrectExplanation": "scipy folosește implicit S1; conversia schimbă doar locația, $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan(\\pi\\alpha/2)$."
+                "incorrectExplanation": "scipy folosește implicit S1; conversia schimbă doar parametrul de poziție, $\\delta_0 = \\delta_1 + \\beta\\gamma\\tan(\\pi\\alpha/2)$."
             }
         },
         {
@@ -347,15 +347,15 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "With $\\alpha < 2$ there is no finite variance to converge to; $2\\gamma^2$ is the variance only in the Normal case $\\alpha = 2$."
             },
             "ro": {
-                "title": "Varianța de eșantion cînd varianța este infinită",
-                "text": "Calculați varianța de eșantion pe un eșantion tot mai mare dintr-o lege stabilă cu $\\alpha = 1{,}6$. Ce observați?",
+                "title": "Varianța de selecție cînd varianța este infinită",
+                "text": "Calculați varianța de selecție pe un eșantion tot mai mare dintr-o lege stabilă cu $\\alpha = 1{,}6$. Ce observați?",
                 "options": [
                     "Nu se stabilizează: sare în sus de fiecare dată cînd apare o valoare extremă nouă",
                     "Converge rapid la $2\\gamma^2$",
                     "Scade spre zero",
                     "Converge la $\\alpha$"
                 ],
-                "correctExplanation": "Varianța teoretică este infinită, deci varianța de eșantion nu are limită; fiecare observație mare produce un salt.",
+                "correctExplanation": "Varianța teoretică este infinită, deci varianța de selecție nu are limită; fiecare observație mare produce un salt.",
                 "incorrectExplanation": "Cu $\\alpha < 2$ nu există o varianță finită către care să conveargă; $2\\gamma^2$ este varianța doar în cazul Normal, $\\alpha = 2$."
             }
         },
@@ -390,27 +390,27 @@ window.SFM_DATA.quizzes['stable'] = {
             "correct": 2,
             "en": {
                 "title": "McCulloch's ratio",
-                "text": "McCulloch's estimator uses $v_\\alpha = (q_{0.95} - q_{0.05})/(q_{0.75} - q_{0.25})$. What value does $v_\\alpha$ take for the Normal distribution?",
+                "text": "McCulloch's estimator uses $\\nu_\\alpha = (q_{0.95} - q_{0.05})/(q_{0.75} - q_{0.25})$. What value does $\\nu_\\alpha$ take for the Normal distribution?",
                 "options": [
                     "About 1.0",
                     "About 6.31",
                     "About 2.439",
                     "It is infinite"
                 ],
-                "correctExplanation": "For the Normal distribution $v_\\alpha = (2 \\times 1.645)/(2 \\times 0.674) \\approx 2.439$; larger values mean heavier tails and $\\alpha < 2$.",
-                "incorrectExplanation": "$v_\\alpha = 1.645/0.674 \\approx 2.439$ for the Normal distribution; 6.31 is the Cauchy value; heavier tails raise $v_\\alpha$."
+                "correctExplanation": "For the Normal distribution $\\nu_\\alpha = (2 \\times 1.645)/(2 \\times 0.674) \\approx 2.439$; larger values mean heavier tails and $\\alpha < 2$.",
+                "incorrectExplanation": "$\\nu_\\alpha = 1.645/0.674 \\approx 2.439$ for the Normal distribution; 6.31 is the Cauchy value; heavier tails raise $\\nu_\\alpha$."
             },
             "ro": {
                 "title": "Raportul lui McCulloch",
-                "text": "Estimatorul lui McCulloch folosește $v_\\alpha = (q_{0,95} - q_{0,05})/(q_{0,75} - q_{0,25})$. Ce valoare ia $v_\\alpha$ pentru distribuția Normală?",
+                "text": "Estimatorul lui McCulloch folosește $\\nu_\\alpha = (q_{0,95} - q_{0,05})/(q_{0,75} - q_{0,25})$. Ce valoare ia $\\nu_\\alpha$ pentru distribuția Normală?",
                 "options": [
                     "Aproximativ 1,0",
                     "Aproximativ 6,31",
                     "Aproximativ 2,439",
                     "Este infinit"
                 ],
-                "correctExplanation": "Pentru distribuția Normală $v_\\alpha = (2 \\times 1{,}645)/(2 \\times 0{,}674) \\approx 2{,}439$; valorile mai mari înseamnă cozi mai groase și $\\alpha < 2$.",
-                "incorrectExplanation": "$v_\\alpha = 1{,}645/0{,}674 \\approx 2{,}439$ pentru distribuția Normală; 6,31 este valoarea pentru Cauchy; cozile mai groase cresc $v_\\alpha$."
+                "correctExplanation": "Pentru distribuția Normală $\\nu_\\alpha = (2 \\times 1{,}645)/(2 \\times 0{,}674) \\approx 2{,}439$; valorile mai mari înseamnă cozi mai groase și $\\alpha < 2$.",
+                "incorrectExplanation": "$\\nu_\\alpha = 1{,}645/0{,}674 \\approx 2{,}439$ pentru distribuția Normală; 6,31 este valoarea pentru Cauchy; cozile mai groase cresc $\\nu_\\alpha$."
             }
         },
         {
@@ -436,7 +436,7 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Are nevoie de densitatea în formă închisă",
                     "Funcționează doar pentru $\\alpha = 2$"
                 ],
-                "correctExplanation": "McCulloch folosește cinci cuantile de eșantion și tabele: rapidă și consistentă, dar cu erori standard mai mari decît ML, care folosește întreaga densitate.",
+                "correctExplanation": "McCulloch folosește cinci cuantile de selecție și tabele: rapidă și consistentă, dar cu erori standard mai mari decît ML, care folosește întreaga densitate.",
                 "incorrectExplanation": "Metoda cuantilelor nu are nevoie de densitate și este rapidă, dar folosește doar cîteva cuantile, deci ML este mai eficientă; ML pornește de obicei de la valorile McCulloch."
             }
         },
@@ -455,8 +455,8 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "Points below the line on the left and above it on the right mean more extreme returns than the Normal model allows: heavy tails."
             },
             "ro": {
-                "title": "Citirea unui grafic QQ",
-                "text": "Într-un grafic QQ al randamentelor zilnice față de o distribuție Normală ajustată, punctele se depărtează de dreaptă la ambele capete. Ce arată aceasta?",
+                "title": "Citirea unui QQ plot",
+                "text": "Într-un QQ plot al randamentelor zilnice față de o distribuție Normală estimată, punctele se depărtează de dreaptă la ambele capete. Ce arată aceasta?",
                 "options": [
                     "Randamentele au cozi mai subțiri decît distribuția Normală",
                     "Media este estimată greșit",
@@ -482,12 +482,12 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "The heavier the tail, the larger the probability of an extreme loss: the stable law (tail exponent below 2) gives the most, the Normal distribution by far the least."
             },
             "ro": {
-                "title": "Probabilități în coadă comparate",
-                "text": "Ajustate pe aceleași randamente zilnice, cum se ordonează de obicei probabilitățile unei pierderi de peste 5 unități de scală?",
+                "title": "Compararea probabilităților din coadă",
+                "text": "Pentru trei modele estimate pe aceleași randamente zilnice, cum se ordonează de obicei probabilitățile unei pierderi de peste 5 unități de scală?",
                 "options": [
-                    "Normală cea mai mică; stabilă cea mai mare; Student-t între ele",
+                    "Distribuția Normală: cea mai mică; legea stabilă: cea mai mare; Student-t: între ele",
                     "Toate trei modelele dau aproximativ aceeași probabilitate",
-                    "Normală cea mai mare; stabilă cea mai mică",
+                    "Distribuția Normală: cea mai mare; legea stabilă: cea mai mică",
                     "Student-t întotdeauna cea mai mare"
                 ],
                 "correctExplanation": "Coada distribuției Normale descrește ca $e^{-x^2/2}$, coada Student-t ca $x^{-\\nu}$ cu $\\nu$ în jur de 3–5, coada stabilă ca $x^{-\\alpha}$ cu $\\alpha < 2$.",
@@ -509,15 +509,15 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "A quantile exists for every distribution, including stable laws with infinite variance; the Normal model, with the thinnest tail, gives the smallest VaR 1%."
             },
             "ro": {
-                "title": "VaR sub trei modele",
-                "text": "Un manager de risc calculează VaR 1% zilnic al unui portofoliu sub un model Normal, unul Student-t și unul stabil, ajustate pe aceleași randamente. Care este rezultatul obișnuit?",
+                "title": "VaR conform a trei modele",
+                "text": "Un manager de risc calculează VaR 1% zilnic al unui portofoliu cu un model Normal, unul Student-t și unul stabil, estimate pe aceleași randamente. Care este rezultatul obișnuit?",
                 "options": [
                     "VaR 1% din modelul Normal este cel mai mare, deci este cel mai prudent",
                     "VaR 1% din modelul Normal este cel mai mic, deci subestimează riscul din coadă",
                     "Cele trei valori sînt identice",
                     "VaR 1% stabil nu există pentru că varianța este infinită"
                 ],
-                "correctExplanation": "Modelele cu cozi groase pun mai multă masă în coada stîngă, deci cuantila de 1% este mai departe; modelul Normal dă cifra cea mai puțin prudentă.",
+                "correctExplanation": "Modelele cu cozi groase pun mai multă masă în coada stîngă, deci cuantila de 1% este mai departe; modelul Normal dă valoarea cea mai puțin prudentă.",
                 "incorrectExplanation": "O cuantilă există pentru orice distribuție, inclusiv pentru legile stabile cu varianță infinită; modelul Normal, cu coada cea mai subțire, dă cel mai mic VaR 1%."
             }
         },
@@ -572,7 +572,7 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Varianța este probabil finită, ceea ce favorizează modele ca Student-t în fața legilor stabile cu $\\alpha < 2$"
                 ],
                 "correctExplanation": "Un exponent al cozii în jur de 3 înseamnă $E|X|^p < \\infty$ pentru $p < 3$, deci varianța există; o lege stabilă cu $\\alpha < 2$ nu poate avea astfel de cozi.",
-                "incorrectExplanation": "Legile stabile cu $\\alpha < 2$ au exponentul cozii $\\alpha$ sub 2; un exponent în jur de 3 dă o varianță finită, ca la o Student-t cu circa 3 grade de libertate. O coadă de tip putere exclude totuși distribuția Normală."
+                "incorrectExplanation": "Legile stabile cu $\\alpha < 2$ au exponentul cozii $\\alpha$ sub 2; un exponent în jur de 3 dă o varianță finită, ca la o distribuție Student-t cu circa 3 grade de libertate. O coadă de tip putere exclude totuși distribuția Normală."
             }
         },
         {
@@ -598,8 +598,8 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Variațiile de preț urmează legi stabile cu $\\alpha < 2$, deci varianța lor este infinită și modelul Normal nu se potrivește",
                     "Prețurile bumbacului sînt un ciclu determinist"
                 ],
-                "correctExplanation": "Mandelbrot a observat că cozile variațiilor de preț ale bumbacului descresc ca o lege de tip putere cu $\\alpha \\approx 1{,}7$ și a propus legile stabile Paretiene.",
-                "incorrectExplanation": "Ideea lui Mandelbrot a fost opusul normalității: cozi groase de tip putere, cu varianțe de eșantion care nu se stabilizează, modelate prin legi stabile cu $\\alpha < 2$."
+                "correctExplanation": "Mandelbrot a observat că cozile variațiilor de preț ale bumbacului descresc ca o lege de tip putere cu $\\alpha \\approx 1{,}7$ și a propus legile stabile de tip Pareto.",
+                "incorrectExplanation": "Ideea lui Mandelbrot contrazicea ipoteza de normalitate: cozi groase de tip putere, cu varianțe de selecție care nu se stabilizează, modelate prin legi stabile cu $\\alpha < 2$."
             }
         },
         {
@@ -622,11 +622,11 @@ window.SFM_DATA.quizzes['stable'] = {
                 "options": [
                     "Randamente care se potrivesc bine cu distribuția Normală",
                     "Cozi groase compatibile cu legi stabile cu $\\alpha < 2$, în sprijinul lui Mandelbrot",
-                    "O predictibilitate puternică a randamentelor zilnice",
+                    "O previzibilitate puternică a randamentelor zilnice",
                     "Un indice de coadă mult peste 4"
                 ],
                 "correctExplanation": "Fama a găsit mai multe randamente extreme decît permite distribuția Normală și exponenți caracteristici sub 2, în acord cu ipoteza lui Mandelbrot.",
-                "incorrectExplanation": "Fama (1965) a susținut ipoteza stabilă Paretiană cu $\\alpha < 2$; critica ulterioară (varianță finită, $\\alpha$ care crește cu agregarea) a venit din alte studii."
+                "incorrectExplanation": "Fama (1965) a susținut ipoteza legilor stabile de tip Pareto, cu $\\alpha < 2$; critica ulterioară (varianță finită, $\\alpha$ care crește cu agregarea) a venit din alte studii."
             }
         },
         {
@@ -645,7 +645,7 @@ window.SFM_DATA.quizzes['stable'] = {
             },
             "ro": {
                 "title": "Student-t față de stabilă",
-                "text": "Ce proprietate deosebește o Student-t cu $\\nu = 4$ de o lege stabilă cu $\\alpha = 1{,}7$?",
+                "text": "Ce proprietate deosebește o distribuție Student-t cu $\\nu = 4$ de o lege stabilă cu $\\alpha = 1{,}7$?",
                 "options": [
                     "Student-t are varianță finită; legea stabilă nu are",
                     "Doar legea stabilă are cozi groase",

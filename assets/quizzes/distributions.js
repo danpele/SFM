@@ -23,7 +23,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "$P(|Z| > 4) \\approx 6.3 \\times 10^{-5}$: one day in about 15,800; once every 370 days is the 3-sigma frequency."
             },
             "ro": {
-                "title": "Zile de 4 sigma în distribuția Normală",
+                "title": "Zile de 4 sigma conform distribuției Normale",
                 "text": "Dacă randamentele zilnice ar fi Normale, cît de des ar apărea o zi aflată la peste 4 abateri standard (de orice semn)?",
                 "options": [
                     "Cam o dată pe lună",
@@ -51,7 +51,7 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Zile de 4 sigma în datele reale",
-                "text": "S&P 500 a avut circa 4 200 de randamente zilnice în 2010–2026. Cîte zile de 4 sigma a avut, față de așteptarea Normală?",
+                "text": "S&P 500 a avut circa 4 200 de randamente zilnice în 2010–2026. Cîte zile de 4 sigma a avut, față de numărul așteptat conform distribuției Normale?",
                 "options": [
                     "Circa 28 observate, față de circa 0,3 așteptate",
                     "Circa 0,3 observate, cum era de așteptat",
@@ -59,7 +59,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Niciuna, cum prezice distribuția Normală"
                 ],
                 "correctExplanation": "28 de zile dincolo de 4 abateri standard, față de 0,27 așteptate: de circa 100 de ori mai multe decît permite distribuția Normală.",
-                "incorrectExplanation": "Numărul este circa 28, de circa 100 de ori așteptarea Normală de 0,27: acesta este faptul stilizat al cozilor groase."
+                "incorrectExplanation": "Numărul este circa 28, de circa 100 de ori mai mare decît numărul așteptat conform distribuției Normale, 0,27: acesta este faptul stilizat al cozilor groase."
             }
         },
         {
@@ -140,7 +140,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Prețurile sînt sume de șocuri independente"
                 ],
                 "correctExplanation": "Dacă $\\ln(P_T/P_0)$ este Normal, $P_T = P_0 e^{\\text{Normal}} > 0$: un investitor nu poate pierde mai mult decît a investit.",
-                "incorrectExplanation": "Un preț Normal ar putea deveni negativ; modelul lognormal păstrează prețurile pozitive și este asimetric la dreapta, nu simetric."
+                "incorrectExplanation": "Un preț cu distribuție Normală ar putea deveni negativ; modelul lognormal păstrează prețurile pozitive și este asimetric la dreapta, nu simetric."
             }
         },
         {
@@ -167,7 +167,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Termeni independenți, identic distribuiți, cu varianță finită"
                 ],
                 "correctExplanation": "Termeni i.i.d. cu varianță finită: atunci $\\sqrt n(\\bar X - \\mu)/\\sigma \\to N(0, 1)$.",
-                "incorrectExplanation": "Termenii nu trebuie să fie Normali, dar trebuie să fie i.i.d. și cu varianță finită; necorelați nu este suficient."
+                "incorrectExplanation": "Termenii nu trebuie să fie Normali, dar trebuie să fie i.i.d. și cu varianță finită; simpla lipsă a corelației nu este suficientă."
             }
         },
         {
@@ -220,7 +220,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Aplatizarea 3, excesul 0",
                     "Aplatizarea 3, excesul 3"
                 ],
-                "correctExplanation": "$E[(X - \\mu)^4]/\\sigma^4 = 3$ pentru distribuția Normală; excesul scade 3.",
+                "correctExplanation": "$E[(X - \\mu)^4]/\\sigma^4 = 3$ pentru distribuția Normală; excesul de aplatizare se obține scăzînd 3.",
                 "incorrectExplanation": "Aplatizarea Normală este 3; excesul = aplatizarea − 3 = 0."
             }
         },
@@ -274,7 +274,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$\\frac{n}{6}(S^2 + K^2/4)$, aproximativ $\\chi^2(2)$",
                     "$\\frac{n}{24}(S^2 + K^2)$, aproximativ $t(2)$"
                 ],
-                "correctExplanation": "JB adună asimetria standardizată la pătrat $S^2/(6/n)$ și aplatizarea $K^2/(24/n)$; în ipoteza de normalitate este $\\chi^2(2)$, valoarea critică 5,99 la 5%.",
+                "correctExplanation": "JB adună asimetria standardizată la pătrat, $S^2/(6/n)$, și excesul de aplatizare standardizat la pătrat, $K^2/(24/n)$; în ipoteza de normalitate este $\\chi^2(2)$, valoarea critică 5,99 la 5%.",
                 "incorrectExplanation": "JB $= \\frac{n}{6}(S^2 + K^2/4) \\sim \\chi^2(2)$: două statistici standardizate la pătrat."
             }
         },
@@ -293,7 +293,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "JB tests normality only; the alternative distribution must be chosen and checked separately (QQ plots, AIC)."
             },
             "ro": {
-                "title": "Ce înseamnă o respingere JB",
+                "title": "Interpretarea unei respingeri JB",
                 "text": "JB respinge normalitatea randamentelor S&P 500 cu $p \\approx 0$. Ce puteți concluziona?",
                 "options": [
                     "Randamentele urmează o distribuție Student-t",
@@ -301,7 +301,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Randamentele sînt independente",
                     "Randamentul mediu diferă semnificativ de zero"
                 ],
-                "correctExplanation": "O respingere spune doar că asimetria și aplatizarea nu sînt cele ale unei distribuții Normale.",
+                "correctExplanation": "Respingerea arată doar că asimetria și aplatizarea nu sînt cele ale unei distribuții Normale.",
                 "incorrectExplanation": "JB testează doar normalitatea; distribuția alternativă trebuie aleasă și verificată separat (QQ plots, AIC)."
             }
         },
@@ -328,8 +328,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Eșantionul este prea mic pentru bootstrap",
                     "Aplatizarea nu este definită pentru randamente"
                 ],
-                "correctExplanation": "Eroarea standard din teoria Normală este valabilă doar sub normalitate; cozile groase fac aplatizarea foarte instabilă.",
-                "incorrectExplanation": "Reeșantionarea arată cît se mișcă aplatizarea cînd cîteva zile extreme sînt sau nu extrase: mult mai mult decît $\\sqrt{24/n}$."
+                "correctExplanation": "Eroarea standard din teoria Normală este valabilă doar în ipoteza de normalitate; cozile groase fac aplatizarea foarte instabilă.",
+                "incorrectExplanation": "Reeșantionarea arată cît variază aplatizarea cînd cîteva zile extreme sînt sau nu extrase: mult mai mult decît $\\sqrt{24/n}$."
             }
         },
         {
@@ -352,7 +352,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "options": [
                     "Cozi mai groase decît ale distribuției Normale",
                     "Cozi mai subțiri decît ale distribuției Normale",
-                    "O potrivire Normală perfectă",
+                    "O ajustare perfectă la distribuția Normală",
                     "O medie diferită de zero"
                 ],
                 "correctExplanation": "Cuantilele empirice extreme sînt mai departe decît cele Normale la ambele capete: cozi groase.",
@@ -382,8 +382,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$i/n$",
                     "$F^{-1}(r_{(i)})$"
                 ],
-                "correctExplanation": "Cuantila modelului în poziția $(i - 0{,}5)/n$ este pusă în pereche cu statistica de ordine $i$.",
-                "incorrectExplanation": "Un QQ plot compară cuantile: empirica $r_{(i)}$ față de teoretica $F^{-1}((i - 0{,}5)/n)$."
+                "correctExplanation": "Cuantila modelului de ordin $(i - 0{,}5)/n$ este asociată statisticii de ordine $i$.",
+                "incorrectExplanation": "Un QQ plot compară cuantile: cuantila empirică $r_{(i)}$ față de cuantila teoretică $F^{-1}((i - 0{,}5)/n)$."
             }
         },
         {
@@ -461,10 +461,10 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Ca $e^{-x^2/2}$, ca la distribuția Normală",
                     "Exponențial, ca $e^{-x}$",
                     "Ca o putere, $P(|T| > x) \\approx c\\,x^{-\\nu}$; momentele de ordin $\\nu$ și mai mare sînt infinite",
-                    "Nu scad: t are suport mărginit"
+                    "Nu scad: distribuția t are suport mărginit"
                 ],
                 "correctExplanation": "Cozi de tip putere: probabilitatea valorilor extreme scade polinomial, mult mai lent decît coada Normală.",
-                "incorrectExplanation": "Coada Normală scade ca $e^{-x^2/2}$; coada t ca $x^{-\\nu}$, deci momentele mari nu există."
+                "incorrectExplanation": "Coada Normală scade ca $e^{-x^2/2}$; coada distribuției t scade ca $x^{-\\nu}$, deci momentele de ordin mare nu există."
             }
         },
         {
@@ -490,8 +490,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Preferați modelul cu $k$ mai mare",
                     "Preferați modelul cu AIC mai mic; $k$ penalizează parametrul în plus al distribuției t"
                 ],
-                "correctExplanation": "AIC pune în balanță potrivirea ($\\ell$) și complexitatea ($k$); cîștigă valoarea mai mică. Pentru randamentele zilnice t cîștigă cu sute de unități.",
-                "incorrectExplanation": "AIC mai mic este mai bun; penalizarea $2k$ face comparația corectă între 2 (Normală) și 3 (t) parametri."
+                "correctExplanation": "AIC pune în balanță calitatea ajustării ($\\ell$) și complexitatea ($k$); se preferă valoarea mai mică. Pentru randamentele zilnice, distribuția t este preferată, cu diferențe de sute de unități sau mai mult.",
+                "incorrectExplanation": "Se preferă AIC mai mic; penalizarea $2k$ face comparația corectă între 2 (Normală) și 3 (t) parametri."
             }
         },
         {
@@ -544,7 +544,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Prețurile sînt Normale pe orizonturi lungi",
                     "Volatilitatea randamentelor pe orizonturi lungi este zero"
                 ],
-                "correctExplanation": "Adunarea randamentelor logaritmice zilnice împinge distribuția spre cea Normală (CLT), lent din cauza volatility clustering.",
+                "correctExplanation": "Adunarea randamentelor logaritmice zilnice apropie distribuția de cea Normală (CLT), dar lent, din cauza volatility clustering.",
                 "incorrectExplanation": "Se referă la forma randamentelor pe $h$ zile: excesul de aplatizare scade cînd $h$ crește, deși randamentele lunare tot nu sînt exact Normale."
             }
         },
@@ -564,7 +564,7 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Efectul de levier",
-                "text": "Ce măsurătoare arată efectul de levier (leverage effect)?",
+                "text": "Ce măsură evidențiază efectul de levier (leverage effect)?",
                 "options": [
                     "$\\text{Corr}(r_t, r_{t+1}) > 0$",
                     "$\\text{Corr}(|r_t|, |r_{t+k}|) > 0$",
@@ -572,7 +572,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$\\text{Corr}(r_t, |r_{t+k}|) < 0$: scăderile sînt urmate de o volatilitate mai mare decît creșterile"
                 ],
                 "correctExplanation": "Corelație negativă între randamentul de azi și randamentele absolute viitoare: pentru S&P 500, DAX și BET circa $-0{,}1$.",
-                "incorrectExplanation": "$\\text{Corr}(|r_t|, |r_{t+k}|) > 0$ este volatility clustering; efectul de levier are nevoie de semnul randamentului de azi."
+                "incorrectExplanation": "$\\text{Corr}(|r_t|, |r_{t+k}|) > 0$ este volatility clustering; efectul de levier implică semnul randamentului de azi."
             }
         },
         {
@@ -598,8 +598,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Volatility clustering",
                     "Absența autocorelației liniare"
                 ],
-                "correctExplanation": "Bitcoin are cozi groase și clustering, dar $\\text{Corr}(r_t, |r_{t+k}|)$ este aproape zero după decalajul 1: în spatele lui nu există o firmă cu datorii.",
-                "incorrectExplanation": "Cozile groase, clustering-ul și autocorelația aproape nulă sînt valabile pentru Bitcoin; corelația de levier este aproape de banda de zgomot."
+                "correctExplanation": "Bitcoin are cozi groase și volatility clustering, dar $\\text{Corr}(r_t, |r_{t+k}|)$ este aproape zero după decalajul 1: în spatele lui nu există o firmă cu datorii.",
+                "incorrectExplanation": "Cozile groase, volatility clustering și autocorelația aproape nulă sînt valabile pentru Bitcoin; corelația de levier este aproape de marginea benzii de încredere."
             }
         },
         {
@@ -644,8 +644,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "Extreme returns must be checked against corporate actions and news before computing tail statistics; the raw close jumps even more."
             },
             "ro": {
-                "title": "Verificați datele înaintea cozilor",
-                "text": "Prețul ajustat al unei acțiuni dă randamente de $-15\\%$ și $+20{,}5\\%$ în două zile consecutive, la data ex a unei emisiuni de acțiuni gratuite. Ce faceți întîi?",
+                "title": "Verificarea datelor înaintea analizei cozilor",
+                "text": "Prețul ajustat al unei acțiuni dă randamente de $-15\\%$ și $+20{,}5\\%$ în două zile consecutive, la data ex a unei distribuiri de acțiuni gratuite. Care este primul pas?",
                 "options": [
                     "Le păstrați: dovedesc cozile groase",
                     "Verificați evenimentul corporativ: o ajustare plasată greșit creează două randamente extreme false care umflă aplatizarea",
