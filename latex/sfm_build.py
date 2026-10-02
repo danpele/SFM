@@ -43,7 +43,7 @@ sys.path.insert(0, HERE)
 from sfm_chapters import COURSE, TITLES, deck, paths, new_decks   # noqa: E402
 
 MARK = re.compile(r'⟦(.*?)\|\|(.*?)⟧', flags=re.S)
-TOKEN = re.compile(r'@\{([\w.]+)\}')
+TOKEN = re.compile(r'@\{([\w.-]+)\}')
 QL_REPO = 'https://github.com/danpele/SFM/tree/main/Quantlets'
 
 AUTHOR_LECTURE = r'\author[D.T. Pele]{Daniel Traian PELE}'
@@ -399,7 +399,7 @@ def compile_tex(path, runs=2):
     log = open(os.path.join(d, f[:-4] + '.log'), encoding='latin-1').read()
     errors = len(re.findall(r'^! ', log, flags=re.M))
     vbox = len(re.findall(r'Overfull \\vbox', log))
-    m = re.search(r'Output written on .*?\((\d+) pages?', log, flags=re.S)
+    m = re.search(r'Output written on .*?\((\d+) pages?', log.replace('\n', ''), flags=re.S)
     return errors, vbox, int(m.group(1)) if m else 0
 
 
