@@ -70,3 +70,20 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch5_frechet.jpg | https://commons.wikimedia.org/wiki/File:Frechet.jpeg | Unknown author (via MacTutor) | Public domain | — |
 | ch5_dehaan_1987.jpg | https://commons.wikimedia.org/wiki/File:Laurens_de_haan.jpg | Konrad Jacobs (Oberwolfach Photo Collection) | CC BY-SA 2.0 de | 1987 |
 | ch5_bvb_palace_2019.jpg | https://commons.wikimedia.org/wiki/File:Stock_Exchange_Palace_(Bucharest).jpg | Neoclassicism Enthusiast | CC BY-SA 4.0 | 2019-03-26 |
+
+## Chapter 6 — Model selection and risk management
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch6_akaike.jpg | https://commons.wikimedia.org/wiki/File:Akaike.jpg | The Institute of Statistical Mathematics | CC BY-SA 4.0 | 2017-11-27 (upload) |
+| ch6_box.jpg | https://commons.wikimedia.org/wiki/File:GeorgeEPBox.jpg | DavidMCEddy | CC BY-SA 3.0 | 2011 |
+| ch6_cramer.jpg | https://commons.wikimedia.org/wiki/File:Harald_Cramér.jpg | Unknown photographer | Public domain | 1951-11-22 |
+| ch6_pearson.jpg | https://commons.wikimedia.org/wiki/File:Karl_Pearson.jpg | Unknown author (photogravure) | Public domain | 1910 |
+
+## Chapter 7 — Efficient markets, random walk and variance ratio
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch7_samuelson.jpg | https://commons.wikimedia.org/wiki/File:Paul_A._Samuelson,_economist.jpg | Bernard Gotfryd | Public domain | 1970–1975 |
+| ch7_lo_2012.jpg | https://commons.wikimedia.org/wiki/File:Andrew_Lo_2012_Shankbone_2.JPG | David Shankbone | CC BY 3.0 | 2012-04-24 |
+| ch7_shiller_2013.jpg | https://commons.wikimedia.org/wiki/File:Robert_J._Shiller_(50372668186).jpg | Bengt Nyman | CC BY 2.0 | 2013-12-07 |

@@ -316,28 +316,29 @@
                 id: 'model-selection', num: 6,
                 title: { en: 'Model selection and risk management', ro: 'Selecția modelului și managementul riscului' },
                 topics: {
-                    en: ['Likelihood, AIC and BIC, likelihood-ratio tests', 'Goodness of fit: QQ plots, Kolmogorov–Smirnov and Anderson–Darling tests', 'From the fitted distribution to risk measures'],
-                    ro: ['Verosimilitate, AIC și BIC, teste ale raportului de verosimilitate', 'Concordanța: grafice QQ, testele Kolmogorov–Smirnov și Anderson–Darling', 'De la distribuția ajustată la măsurile de risc']
+                    en: ['Seven candidate distributions fitted by maximum likelihood; likelihood-ratio and Vuong tests, AIC, BIC and Akaike weights', 'Goodness of fit: Kolmogorov–Smirnov (Lilliefors), Cramér–von Mises, Anderson–Darling, PP and QQ plots', 'Which model estimates VaR 1% correctly: exceedances, out-of-sample validation, overfitting and model uncertainty'],
+                    ro: ['Șapte distribuții candidate estimate prin verosimilitate maximă; testul raportului de verosimilitate, testul Vuong, criteriile AIC și BIC, ponderile Akaike', 'Calitatea ajustării: testele Kolmogorov–Smirnov (Lilliefors), Cramér–von Mises și Anderson–Darling, grafice PP și QQ', 'Alegerea modelului care estimează corect VaR 1%: depășiri, validare în afara eșantionului, supraajustare și incertitudinea modelului']
                 },
                 links: {
-                    en: [soon('slides'), soon('seminar'),
-                         nb('Quantlets/Ch_02/SFM_ch2_risk_management/SFM_ch2_risk_management.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_risk_management')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter6_selectia_modelului_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar5_selectia_modelului_ro.pdf'),
-                         nb('Quantlets/Ch_02/SFM_ch2_risk_management/SFM_ch2_risk_management.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_risk_management')]
-                }
+                    en: [pdf('slides', 'EN/Courses/chapter6_model_selection_risk_management.pdf'), pdf('seminar', 'EN/Seminars/seminar6_model_selection_risk_management.pdf'),
+                         nb('notebooks/EN/chapter6_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter6_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_06')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf'), pdf('seminar', 'RO/Seminarii/seminar6_selectia_modelului_managementul_riscului_ro.pdf'),
+                         nb('notebooks/EN/chapter6_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter6_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_06')]
+                },
+                quantinar: q('statRisk')
             },
             {
                 id: 'emh', num: 7,
                 title: { en: 'Efficient markets, random walk and variance-ratio tests', ro: 'Ipoteza piețelor eficiente, mersul aleator și testele VR' },
                 topics: {
-                    en: ['The three forms of efficiency (Fama, 1970) and the random walk hypotheses', 'Autocorrelation, Ljung–Box and runs tests', 'Variance-ratio tests (Lo and MacKinlay, 1988) and event studies'],
-                    ro: ['Cele trei forme de eficiență (Fama, 1970) și ipotezele mersului aleator', 'Autocorelare, testul Ljung–Box și testul runs', 'Testele variance ratio (Lo și MacKinlay, 1988) și studiile de eveniment']
+                    en: ['Efficient markets: the three forms (Fama, 1970), the joint-hypothesis problem, random walks RW1–RW3 and the martingale', 'White noise and the ACF; Ljung–Box, robust portmanteau and runs tests; unit roots: ADF, Phillips–Perron and KPSS on prices and returns', 'Variance-ratio tests (Lo–MacKinlay, Chow–Denning, automatic VR); efficiency across markets and over time (adaptive markets); calendar anomalies'],
+                    ro: ['Piețele eficiente: cele trei forme (Fama, 1970), problema ipotezei comune, mersul aleator RW1–RW3 și martingala', 'Zgomotul alb și funcția de autocorelație; testele Ljung–Box, portmanteau robust și testul secvențelor; rădăcini unitare: testele ADF, Phillips–Perron și KPSS pe prețuri și randamente', 'Testele variance ratio (Lo–MacKinlay, Chow–Denning, VR automat); eficiența pe piețe diferite și în timp (piețe adaptive); anomalii calendaristice']
                 },
                 links: {
-                    en: [pdf('slides', 'EN/Courses/chapter4_efficient_market_hypothesis.pdf'), soon('seminar'),
-                         nb('Quantlets/Ch_04/SFM_ch4_full_pipeline/SFM_ch4_full_pipeline.ipynb'), ql('Quantlets/Ch_04')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter4_emh_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar_emh_complet_ro.pdf'),
-                         nb('Quantlets/Ch_04/SFM_ch4_full_pipeline/SFM_ch4_full_pipeline.ipynb'), ql('Quantlets/Ch_04')]
+                    en: [pdf('slides', 'EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf'), pdf('seminar', 'EN/Seminars/seminar7_efficient_markets_random_walk_vr.pdf'),
+                         nb('notebooks/EN/chapter7_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter7_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_07')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf'), pdf('seminar', 'RO/Seminarii/seminar7_piete_eficiente_mers_aleator_vr_ro.pdf'),
+                         nb('notebooks/EN/chapter7_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter7_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_07')]
                 },
                 quantinar: q('cryptoEfficiency')
             },
