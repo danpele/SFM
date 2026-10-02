@@ -58,6 +58,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgb
+from scipy import optimize
 from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')"""

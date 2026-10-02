@@ -301,17 +301,14 @@
                 id: 'evt', num: 5,
                 title: { en: 'Heavy tails and extreme value theory', ro: 'Cozi groase și teoria valorilor extreme' },
                 topics: {
-                    en: ['Tail index, Hill estimator and mean-excess plots', 'Block maxima (GEV) and peaks over threshold (GPD)', 'Copulas and tail dependence'],
-                    ro: ['Indicele de coadă, estimatorul Hill și graficul mean excess', 'Block maxima (GEV) și peaks over threshold (GPD)', 'Copule și dependența în cozi']
+                    en: ['Why tails matter: the crashes of 1987, 2008 and 2020; heavy and light tails, regular variation and the tail index', 'The Hill estimator, the Hill plot and its standard errors; the mean excess function', 'Block maxima and the GEV, peaks over threshold and the GPD, return levels; VaR 1%, ES 2.5% and VaR 0.1% by EVT on the S&P 500, DAX, BET, Bitcoin and BVB stocks'],
+                    ro: ['De ce contează cozile: crahurile din 1987, 2008 și 2020; cozi groase și cozi subțiri, variația regulată și indicele de coadă', 'Estimatorul Hill, graficul Hill și erorile standard; funcția mean excess', 'Block maxima și distribuția GEV, peaks over threshold și distribuția GPD, return levels; VaR 1%, ES 2,5% și VaR 0,1% prin EVT pe S&P 500, DAX, BET, Bitcoin și acțiuni BVB']
                 },
                 links: {
-                    en: [soon('slides'), soon('seminar'),
-                         nb('Quantlets/Ch_02/SFM_ch2_extreme_value/SFM_ch2_extreme_value.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_extreme_value')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter5_cozi_grele_ro.pdf'),
-                         pdf('slidesExtra', 'RO/Courses/20260310_chapter4_evt_copule_risc_ro.pdf', { en: 'Slides: EVT and copulas', ro: 'Slide-uri: EVT și copule' }),
-                         pdf('seminar', 'RO/Seminars/seminar4_cozi_grele_ro.pdf'),
-                         pdf('seminarExtra', 'RO/Seminars/seminar4_evt_copule_risc_ro.pdf', { en: 'Seminar: EVT and copulas', ro: 'Seminar: EVT și copule' }),
-                         nb('Quantlets/Ch_02/SFM_ch2_extreme_value/SFM_ch2_extreme_value.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_extreme_value')]
+                    en: [pdf('slides', 'EN/Courses/chapter5_heavy_tails_evt.pdf'), pdf('seminar', 'EN/Seminars/seminar5_heavy_tails_evt.pdf'),
+                         nb('notebooks/EN/chapter5_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter5_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_05')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol5_cozi_groase_evt.pdf'), pdf('seminar', 'RO/Seminarii/seminar5_cozi_groase_evt_ro.pdf'),
+                         nb('notebooks/EN/chapter5_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter5_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_05')]
                 },
                 quantinar: q('statRisk')
             },

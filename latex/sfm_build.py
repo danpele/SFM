@@ -122,6 +122,9 @@ def render(tex, lang, values=None):
     tex = TOKEN.sub(tok, tex)
     tex = MARK.sub(lambda m: m.group(1) if lang == 'en' else m.group(2), tex)
     if lang == 'ro':
+        # the comma becomes the decimal mark: two numbers separated by a comma ([1.23, 1.45]) get a semicolon
+        tex = re.sub(r'(⁅[^⁆]*⁆),(\s*)(?=⁅)', lambda m: m.group(1) + (';' if '.' in m.group(1) else ',') + m.group(2), tex)
+        tex = re.sub(r'(⁅[^⁆]*⁆),(\s*)(⁅[^⁆]*\.[^⁆]*⁆)', r'\1;\2\3', tex)
         tex = re.sub(r'⁅([^⁆]*)⁆', lambda m: re.sub(r'(\d)\.(\d)', r'\1{,}\2', m.group(1)), tex)
         tex = re.sub(r'(?<!\\)\$(.+?)(?<!\\)\$', lambda m: '$' + re.sub(r'(\d)\.(\d)', r'\1{,}\2', m.group(1)) + '$', tex)
         tex = ro_de(tex)

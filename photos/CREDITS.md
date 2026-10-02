@@ -57,3 +57,16 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch4_kolmogorov_1963.jpg | https://commons.wikimedia.org/wiki/File:Математик_Андрей_Колмогоров_в_аудитории.jpg | Vsevolod Tarasevich | CC BY 4.0 | 1963–1964 |
 | ch4_brown_1855.jpg | https://commons.wikimedia.org/wiki/File:Robert_Brown_(botanist).jpg | Maull & Polyblank | Public domain | 1855 |
 | ch4_wiener.jpg | https://commons.wikimedia.org/wiki/File:Norbert_wiener.jpg | Konrad Jacobs (Oberwolfach) | CC BY-SA 2.0 DE | — |
+
+## Chapter 5 — Heavy tails and extreme value theory
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch5_sp500_1987_fed.png | https://commons.wikimedia.org/wiki/File:S%26P_500_index_around_the_time_of_the_crash.png | Mark Carlson, Federal Reserve Board | Public domain | 2006-11 |
+| ch5_lehman_2007.jpg | https://commons.wikimedia.org/wiki/File:Lehman_Brothers_Times_Square_by_David_Shankbone.jpg | David Shankbone | CC BY-SA 3.0 | 2007-08-12 |
+| ch5_fidi_2020.jpg | https://commons.wikimedia.org/wiki/File:Solitude_(50073346382).jpg | Billie Grace Ward | CC BY 2.0 | 2020-03-29 |
+| ch5_gumbel_1931.jpg | https://commons.wikimedia.org/wiki/File:Emil_Julius_Gumbel.jpg | Unknown author (Das Gesicht der Demokratie, 1931) | Public domain | c. 1931 |
+| ch5_fisher_1913.jpg | https://commons.wikimedia.org/wiki/File:Youngronaldfisher2.JPG | Unknown author | Public domain | 1913 |
+| ch5_frechet.jpg | https://commons.wikimedia.org/wiki/File:Frechet.jpeg | Unknown author (via MacTutor) | Public domain | — |
+| ch5_dehaan_1987.jpg | https://commons.wikimedia.org/wiki/File:Laurens_de_haan.jpg | Konrad Jacobs (Oberwolfach Photo Collection) | CC BY-SA 2.0 de | 1987 |
+| ch5_bvb_palace_2019.jpg | https://commons.wikimedia.org/wiki/File:Stock_Exchange_Palace_(Bucharest).jpg | Neoclassicism Enthusiast | CC BY-SA 4.0 | 2019-03-26 |
