@@ -224,7 +224,7 @@ D.frame(T('How Rare Are the Worst Days under the Normal Law?', 'Cît de rare ar 
     T('Losses beyond $4\\sigma$: the Normal law expects fewer than one day per series; we see between @{n4.min} and @{n4.max}',
       'Pierderi dincolo de $4\\sigma$: distribuția Normală prevede mai puțin de o zi pe serie; observăm între @{n4.min} și @{n4.max}')) + ql('SFM_ch5_crashes'), 'footnotesize')
 
-D.frame(T('Where Extreme Value Theory Comes From', 'De unde vine teoria valorilor extreme'), cols(items(
+D.frame(T('Where Extreme Value Theory Comes From', 'Originile teoriei valorilor extreme'), cols(items(
     (T('\\textbf{EVT} (extreme value theory): the statistics of the largest values of a sample', '\\textbf{EVT} (extreme value theory, teoria valorilor extreme): statistica celor mai mari valori dintr-un eșantion'),
      [T('first used for floods, storms and the strength of materials', 'folosită întîi pentru inundații, furtuni și rezistența materialelor'),
       T('\\refGumbel: the yearly maximum of a river decides the height of a dam', '\\refGumbel: nivelul maxim anual al unui rîu determină înălțimea unui baraj')]),
@@ -311,7 +311,7 @@ chart(T('Real Losses on Log-Log Axes', 'Pierderi reale pe axe log-log'), 'sfm_ch
     T('Slopes: S\\&P 500 $-@{ls.sp500}$, DAX $-@{ls.dax}$, BET $-@{ls.bet}$, Bitcoin $-@{ls.btc}$: straight lines, power tails',
       'Pante: S\\&P 500 $-@{ls.sp500}$, DAX $-@{ls.dax}$, BET $-@{ls.bet}$, Bitcoin $-@{ls.btc}$: drepte, deci cozi de tip putere')], h='0.64\\textheight')
 
-D.frame(T('Reading a Log-Log Tail Plot', 'Cum citim un grafic log-log al cozii'), items(
+D.frame(T('Reading a Log-Log Tail Plot', 'Interpretarea graficului log-log al cozii'), items(
     (T('If $\\bar F(x) \\approx C x^{-\\alpha}$, then $\\ln \\bar F(x) \\approx \\ln C - \\alpha \\ln x$: a line with slope $-\\alpha$',
        'Dacă $\\bar F(x) \\approx C x^{-\\alpha}$, atunci $\\ln \\bar F(x) \\approx \\ln C - \\alpha \\ln x$: o dreaptă cu panta $-\\alpha$'),
      [T('\\textbf{least-squares estimator}: regress $\\ln(i/n)$ on $\\ln L_{(i)}$ for the $k$ largest losses $L_{(1)} \\ge \\dots \\ge L_{(k)}$',
@@ -470,7 +470,7 @@ chart(T('Empirical Mean Excess of Daily Losses', 'Mean excess empiric al pierder
       'Toate cele patru funcții cresc peste cuantila de 90\\% $u$ (punctat): o coadă groasă, de tip Pareto; negru: dreapta implicată de GPD ajustată peste $u$'),
     T('The last points rest on very few losses and jump around: do not read them literally', 'Ultimele puncte se bazează pe foarte puține pierderi și sînt instabile: nu le interpretați literal')], h='0.62\\textheight')
 
-D.frame(T('Reading the Mean Excess Plot', 'Cum citim graficul mean excess'), items(
+D.frame(T('Reading the Mean Excess Plot', 'Interpretarea graficului mean excess'), items(
     (T('Look for the threshold above which $e(u)$ becomes roughly a straight line', 'Căutăm pragul peste care $e(u)$ devine aproximativ o dreaptă'),
      [T('a rising line means a heavy tail; its slope gives a first guess of the shape of the tail', 'o dreaptă crescătoare înseamnă o coadă groasă; panta ei dă o primă idee despre forma cozii')]),
     (T('At the 90\\% quantile: $e(u)$ is $@{me.sp500.e}\\%$ for the S\\&P 500 ($u = @{me.sp500.u}\\%$) and $@{me.bet.e}\\%$ for the BET ($u = @{me.bet.u}\\%$)',
@@ -822,7 +822,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       'De ce rămîne deschisă: pragul a scăzut de la $@{bp.before.u}\\%$ la $@{bp.after.u}\\%$ odată cu volatilitatea; schimbarea este în coadă sau în volatilitate?'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')) + ql('SFM_ch5_hill'))
 
-D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
+D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies of tail indices in emerging markets and summarise their methods',
       '\\textbf{Literatura}: lista studiilor despre indicii de coadă pe piețele emergente și rezumatul metodelor lor'),
     T('\\textbf{Code}: a first draft of a Hill and POT analysis on rolling windows, with block-bootstrap intervals',

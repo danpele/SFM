@@ -565,7 +565,7 @@ D.frame(T('Four Moments', 'Patru momente'), items(
     T('Both are free of units: they describe the shape, not the location or the scale', 'Ambele sînt adimensionale: descriu forma, nu poziția sau scala'),
     T('Fourth powers make the kurtosis very sensitive to a few extreme days', 'Puterile a patra fac aplatizarea foarte sensibilă la cîteva zile extreme')))
 
-chart(T('What Skewness and Kurtosis Look Like', 'Cum arată asimetria și aplatizarea'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
+chart(T('What Skewness and Kurtosis Look Like', 'Asimetria și aplatizarea în grafice'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
     T('Left: same mean and variance; the Student-$t(5)$ curve (Section 7) has excess kurtosis 6: more mass in the centre and in the tails, less in the shoulders',
       'Stînga: aceeași medie și varianță; curba Student-$t(5)$ (secțiunea 7) are exces de aplatizare 6: mai multă masă în centru și în cozi, mai puțină în umeri'),
     T('Right: skew-Normal densities with skewness $\\pm 0.85$; the dashed curve is the Normal distribution', 'Dreapta: densități skew-Normal cu asimetria $\\pm 0.85$; curba punctată este distribuția Normală')], h='0.62\\textheight')
@@ -915,7 +915,7 @@ side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare 
     T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de aplatizare @{yr.k2020}) dominat de o singură zi'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.52)
 
-D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
+D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: find studies of tail indices of crypto assets and summarise their methods', '\\textbf{Literatura}: găsirea studiilor despre indicii de coadă ai activelor cripto și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft rolling-window estimates of $\\nu$ and of the excess kurtosis', '\\textbf{Cod}: o primă versiune a estimărilor pe ferestre mobile pentru $\\nu$ și excesul de aplatizare'),
     T('\\textbf{Robustness}: propose other windows, other tail measures (Chapter 5), other crypto assets', '\\textbf{Robustețe}: propunerea altor ferestre, altor măsuri ale cozilor (Capitolul 5), altor active cripto'),
@@ -930,7 +930,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Volatility clustering: thinner yearly tails may only mean calmer years (Chapter 9)', 'Volatility clustering: cozi anuale mai subțiri pot însemna doar ani mai calmi (Capitolul 9)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Sămînță de proiect'), items(
+D.frame(T('Project Seed', 'Idee de proiect'), items(
     (T('\\textbf{Question}: do the tails of crypto assets thin out as their markets mature?', '\\textbf{Întrebarea}: se subțiază cozile activelor cripto pe măsură ce piețele lor se maturizează?'),
      [T('data: Bitcoin, Ethereum and Solana from the course data; S\\&P 500 as a benchmark', 'date: Bitcoin, Ethereum și Solana din datele cursului; S\\&P 500 ca reper')]),
     (T('Steps', 'Pași'),

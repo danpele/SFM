@@ -827,7 +827,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Full sample: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), the lowest of our four series', 'Eșantionul complet: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), cel mai mic dintre cele patru serii'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
+D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list papers on tail estimates for crypto assets and summarise their methods',
       '\\textbf{Literatura}: inventarierea lucrărilor despre estimarea cozilor activelor cripto și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft a rolling-window McCulloch estimator with bootstrap intervals', '\\textbf{Cod}: o primă versiune a unui estimator McCulloch pe ferestre mobile, cu intervale bootstrap'),
@@ -846,7 +846,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Numbers: recompute one window with a second method (ML or the quantile tables)', 'Rezultatele numerice: recalculați o fereastră cu o a doua metodă (ML sau tabelele de cuantile)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Sămînță de proiect'), items(
+D.frame(T('Project Seed', 'Idee de proiect'), items(
     (T('\\textbf{Question}: is the tail of Bitcoin returns lighter now than in 2014--2018?', '\\textbf{Întrebarea}: este coada randamentelor Bitcoin mai subțire acum decît în 2014--2018?'),
      [T('data: Bitcoin daily closes from the course data (EODHD), 2014--2026', 'date: prețurile de închidere zilnice ale Bitcoin din datele cursului (EODHD), 2014--2026')]),
     (T('Steps', 'Pași'),

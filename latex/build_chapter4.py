@@ -821,7 +821,7 @@ chart(T('An Open Question: Does GBM Get Drawdown Risk Right?', 'O întrebare des
       'Peste 40\\%: GBM prevede, în medie, @{dd.sp500.e40} asemenea ani pentru S\\&P 500 și @{dd.bet.e40} pentru BET; fiecare indice a avut @{dd.sp500.n40} (2008: $@{dd.sp500.w}\\%$ și $@{dd.bet.w}\\%$)'),
     T('Open: does GBM overstate moderate drawdowns and understate extreme ones because calm and crisis years cluster?', 'Întrebare deschisă: supraestimează GBM drawdown-urile moderate și le subestimează pe cele extreme pentru că anii calmi și cei de criză apar grupat?')], h='0.48\\textheight')
 
-D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
+D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: find studies of drawdown distributions and of their link to volatility clustering, and summarise them', '\\textbf{Literatura}: identificarea și rezumarea studiilor despre distribuția drawdown-urilor și legătura lor cu volatility clustering'),
     T('\\textbf{Code}: draft simulations of yearly drawdowns under GBM, the i.i.d. bootstrap and a GARCH model', '\\textbf{Cod}: o primă versiune a simulărilor drawdown-urilor anuale în GBM, în bootstrap i.i.d. și într-un model GARCH'),
     T('\\textbf{Design}: propose a test that compares the observed number of bad years with the model probability', '\\textbf{Design}: propunerea unui test care compară numărul observat de ani nefavorabili cu probabilitatea din model'),

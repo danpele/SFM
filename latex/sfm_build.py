@@ -246,7 +246,11 @@ class Deck:
         self.frame(title, body, size)
 
     def recap(self, title, bullets):
-        self.frame(f'⟦Recap: {title[0]}||Recapitulare: {title[1]}⟧', items(*bullets))
+        ro = title[1]
+        w = ro.split(' ')[0]
+        if w[1:].isalpha() and w[1:].islower() and not w.startswith('Student'):   # RO: lower case after the colon, except names and acronyms
+            ro = ro[0].lower() + ro[1:]
+        self.frame(f'⟦Recap: {title[0]}||Recapitulare: {ro}⟧', items(*bullets))
 
     # ---- seminar: probleme rezolvate / propuse (formatul A/B/C din MFM)
     def solved(self, title, task, solution, size='small'):

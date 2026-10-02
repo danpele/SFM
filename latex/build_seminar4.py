@@ -170,7 +170,7 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
     T('Notebook for today: \\href{\\nb}{open the seminar notebook in Google Colab}; each task names its notebook section',
       'Notebook-ul de azi: \\href{\\nb}{deschideți notebook-ul seminarului în Google Colab}; fiecare cerință indică secțiunea din notebook'),
     T('Nothing is handed in: the seminar is for practice; the solutions of [Proposed] tasks are discussed in class',
-      'Nu se predă nimic: seminarul este pentru exercițiu; rezolvările cerințelor [Propus] se discută la seminar')))
+      'Seminarul are rol de exercițiu și nu se notează; rezolvările cerințelor [Propus] se discută la seminar')))
 
 TB = '>{\\raggedright\\arraybackslash}'
 D.frame(T('Exercise Map', 'Harta exercițiilor'), table(

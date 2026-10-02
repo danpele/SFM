@@ -26,7 +26,7 @@ ROOT = os.path.dirname(HERE)
 # acronim: (forma de origine, limba de origine, traducere RO, traducere EN)
 A = {
     # --- statistica si econometrie
-    'ACF': ('AutoCorrelation Function', 'en', 'funcția de autocorelație', None),
+    'ACF': ('Autocorrelation Function', 'en', 'funcția de autocorelație', None),
     'ADF': ('Augmented Dickey–Fuller (test)', 'en', 'testul Dickey–Fuller augmentat', None),
     'VAR': ('Vector AutoRegression', 'en', 'model vector autoregresiv', None),
     'AR': ('AutoRegressive (model); in event studies: Abnormal Return', 'en', 'model autoregresiv; în studiile de eveniment: randament anormal', None),
@@ -118,7 +118,7 @@ A = {
     'FN': ('False Negative', 'en', 'fals negativ', None),
     'GAN': ('Generative Adversarial Network', 'en', 'rețea generativă adversarială', None),
     'GB': ('Gradient Boosting', 'en', 'boosting pe gradient', None),
-    'GBM': ('Gradient Boosting Machine', 'en', 'model de boosting pe gradient', None),
+    'GBM': ('Geometric Brownian Motion', 'en', 'mișcarea browniană geometrică', None),
     'GRU': ('Gated Recurrent Unit', 'en', 'unitate recurentă cu porți', None),
     'IS': ('In-Sample', 'en', 'în eșantion', None),
     'LASSO': ('Least Absolute Shrinkage and Selection Operator', 'en', 'regresie penalizată L1 cu selecția variabilelor', None),

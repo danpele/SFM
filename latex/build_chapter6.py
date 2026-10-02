@@ -455,7 +455,7 @@ D.frame(T('Numerical ML for the Other Candidates (S\\&P 500)', 'Estimarea ML num
       'Algoritmul de optimizare: Nelder--Mead aplicat parametrilor transformați (de exemplu $\\ln\\sigma$, $\\ln(\\nu - 2)$); amestecul Normal prin algoritmul EM (expectation--maximisation); densitatea stabilă prin FFT (Capitolul 3)'),
     T('Skewed-t: $\\mu$ and $\\sigma$ are the mean and the standard deviation (Hansen\'s parameterisation)', 'Skewed-t: $\\mu$ și $\\sigma$ sînt media și abaterea standard (parametrizarea lui Hansen)')) + ql('SFM_ch6_ml_fits'), size='footnotesize')
 
-D.frame(T('Reading the Estimates', 'Cum citim estimările'), items(
+D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
     (T('Student-t $\\hat\\nu = @{sp.t.nu}$: tails like $x^{-@{sp.t.nu}}$; the variance exists ($\\nu > 2$), the kurtosis does not ($\\nu < 4$)',
        'Student-t $\\hat\\nu = @{sp.t.nu}$: cozi de tip $x^{-@{sp.t.nu}}$; varianța există ($\\nu > 2$), aplatizarea nu există ($\\nu < 4$)'),
      [T('the sample kurtosis $@{ds.sp500.kurt}$ estimates a quantity that the fitted model says is infinite',
@@ -609,7 +609,7 @@ chart(T('$\\Delta$AIC across Seven Series', '$\\Delta$AIC pentru șapte serii'),
     T('Each row: one series; 0 marks the best model; darker cells: worse models (log colour scale)', 'Fiecare rînd: o serie; 0 marchează cel mai bun model; celule mai închise: modele mai slabe (scară logaritmică a culorii)')],
     h='0.62\\textheight')
 
-D.frame(T('Reading the $\\Delta$AIC Map', 'Cum citim harta $\\Delta$AIC'), items(
+D.frame(T('Reading the $\\Delta$AIC Map', 'Interpretarea hărții $\\Delta$AIC'), items(
     (T('No single winner: the best model depends on the market', 'Niciun cîștigător unic: cel mai bun model depinde de piață'),
      [T('indices (BET, S\\&P 500, DAX): NIG; Bitcoin: GED; BVB stocks: Student-t (TLV, SNP) and skewed-t (BRD)', 'indicii (BET, S\\&P 500, DAX): NIG; Bitcoin: GED; acțiunile BVB: Student-t (TLV, SNP) și skewed-t (BRD)')]),
     (T('Robust conclusions', 'Concluzii robuste'),
@@ -863,7 +863,7 @@ def oosrow(k):
             f'@{{o.{k}.Stable.x}} & @{{o.{k}.Historical.x}} & @{{o.{k}.baic}} & @{{o.{k}.bls}}')
 
 
-D.frame(T('Reading the Out-of-Sample Table', 'Cum citim tabelul din afara eșantionului'), table(
+D.frame(T('Reading the Out-of-Sample Table', 'Interpretarea tabelului din afara eșantionului'), table(
     'lrrrrrrrll', T('& exp. & Normal & t & skew-t & NIG & stable & hist. & best AIC & best log score',
                     '& aștept. & Normală & t & skew-t & NIG & stabilă & ist. & cel mai bun AIC & cel mai bun scor'),
     [oosrow(k) for k in ASSETS], size='scriptsize') + items(
@@ -981,7 +981,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Raw daily returns: NIG wins for the three indices, GED for Bitcoin, Student-t for BVB stocks (this chapter)', 'Randamentele zilnice brute: NIG cîștigă pentru cei trei indici, GED pentru Bitcoin, Student-t pentru acțiunile BVB (acest capitol)'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Cum ar putea ajuta AI'), items(
+D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies that compare return distributions after GARCH filtering, with their samples and criteria',
       '\\textbf{Literatura}: lista studiilor care compară distribuțiile randamentelor după filtrarea GARCH, cu eșantioanele și criteriile lor'),
     T('\\textbf{Code}: draft the loop ``standardise, fit seven models, rank by AIC and BIC, test out of sample\'\'', '\\textbf{Cod}: o primă versiune a buclei „standardizează, ajustează șapte modele, ordonează după AIC și BIC, testează în afara eșantionului”'),
@@ -999,7 +999,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Parameterisations: scale vs standard deviation in the Student-t; S0 vs S1 for the stable law', 'Parametrizările: scală sau abatere standard la Student-t; S0 sau S1 la distribuția stabilă'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Sămînță de proiect'), items(
+D.frame(T('Project Seed', 'Idee de proiect'), items(
     (T('\\textbf{Question}: does the best distribution for standardised returns differ from the best one for raw returns?',
        '\\textbf{Întrebarea}: diferă cea mai bună distribuție pentru randamentele standardizate de cea pentru randamentele brute?'),
      [T('data: BET, S\\&P 500, DAX, Bitcoin and BVB stocks from the course data (EODHD)', 'date: BET, S\\&P 500, DAX, Bitcoin și acțiunile BVB din datele cursului (EODHD)')]),
