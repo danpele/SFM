@@ -74,10 +74,9 @@ MSCA Digital Finance}
     \item \textbf{BNR}: Banca Națională a României
     \item \textbf{BVB}: Bursa de Valori București
     \item \textbf{CAGR}: Compound Annual Growth Rate (rata anuală compusă de creștere)
-    \item \textbf{CI}: Confidence Interval (interval de încredere)
     \item \textbf{EODHD}: EOD Historical Data (market-data provider) (furnizor de date de piață)
-    \item \textbf{MDD}: Maximum DrawDown (scăderea maximă de la vîrf)
-    \item \textbf{OMV}: Österreichische Mineralölverwaltung (Administrația austriacă a uleiurilor minerale (grupul OMV))
+    \item \textbf{MDD}: Maximum DrawDown (drawdown maxim)
+    \item \textbf{OMV}: Österreichische Mineralölverwaltung (Administrația austriacă a uleiurilor minerale, grupul OMV)
     \item \textbf{SE}: Standard Error (eroare standard)
     \item \textbf{SR}: Sharpe Ratio (raportul Sharpe)
 \end{itemize}
@@ -93,16 +92,16 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{Întrebarea}: cum măsurăm, din date reale, cît a crescut o investiție și cît de riscantă a fost?
     \begin{itemize}
-        \item seminarul are loc \textbf{înaintea} Cursului 1: secțiunea „Ce vă trebuie azi” dă toate definițiile folosite în cerințe
+        \item seminarul are loc \textbf{înaintea} Cursului 1: secțiunea „Noțiuni necesare azi” conține toate definițiile folosite în cerințe
     \end{itemize}
     \item Traseul
     \begin{itemize}
         \item Partea A: randamente, prețuri ajustate, anualizare și indicatori pe hîrtie
         \item Partea B: aceleași mărimi pe date reale, fiecare cu o măsură a preciziei și o întrebare de interpretare
-        \item Partea C: o întrebare deschisă pentru proiect și un răspuns AI de verificat
+        \item Partea C: o întrebare deschisă pentru proiect și un răspuns generat de AI, de verificat
     \end{itemize}
     \item Notebook-ul de azi: \href{\nb}{deschideți notebook-ul seminarului în Google Colab}; fiecare cerință indică secțiunea din notebook
-    \item Nu se predă nimic: seminarul este pentru exercițiu; rezolvările cerințelor [Propus] se discută la seminar
+    \item Temele nu se notează: seminarul servește drept exercițiu; rezolvările cerințelor [Propus] se discută la seminar
 \end{itemize}
 \end{frame}
 
@@ -116,13 +115,14 @@ MSCA Digital Finance}
 \midrule
 A1, A2 & se adună în timp randamentele simple și cele logaritmice? & Rezolvat, Propus & A1 \\
 A3, A4 & cum schimbă un dividend, un split și o consolidare prețurile trecute? & Rezolvat, Propus & A3 \\
-A5 & de la momentele zilnice la media anuală, volatilitate, CAGR și drag & Rezolvat & -- \\
+A5 & de la momentele zilnice la media anuală, volatilitatea anuală, CAGR și volatility drag & Rezolvat & -- \\
 A6, A7 & Sharpe, Sortino, MDD și Calmar dintr-o traiectorie scurtă de prețuri & Rezolvat, Propus & A6 \\
 B1 & ne putem baza pe o serie EUR/RON? & Rezolvat & -- \\
 B2, B3 & este randamentul mediu al BET (și al altor piețe) semnificativ pozitiv? & Rezolvat, Propus & B2 \\
-B4, B5 & cît de precis este un Sharpe ratio? este TLV mai bună decît BET? & Rezolvat, Propus & B4 \\
-B6, B7 & cît de adînci și cît de lungi sînt drawdown-urile? funcționează formula drag-ului? & Rezolvat, Propus & B6 \\
-C1, C2 & persistă Sharpe ratio? ce este greșit într-un răspuns AI? & Propus & B4, B6 \\
+B4, B5 & este semnificativă diferența dintre rapoartele Sharpe ale TLV și BET? & Rezolvat, Propus & B4 \\
+B6, B7 & ce arată drawdown-urile și volatility drag pe date reale? & Rezolvat, Propus & B6 \\
+C1 & persistă rapoartele Sharpe? & Propus & B4, B6 \\
+C2 & ce greșeli conține un răspuns generat de AI? & Propus & -- \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -149,17 +149,17 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Weekendurile și închiderile repetate din zilele libere se elimină (cu excepția Bitcoin); fiecare serie pe calendarul ei, analizele comune pe zilele comune
+    \item Weekendurile și închiderile repetate din zilele libere se elimină (cu excepția Bitcoin); fiecare serie se analizează pe propriul calendar, iar analizele comune, pe zilele comune
     \item În notebook: \texttt{load\_close('bet')}, \texttt{log\_returns('sp500')}; nu este nevoie de cont sau de cheie
 \end{itemize}
 \end{frame}
 
 
 %=============================================================================
-\section{Ce vă trebuie azi}
+\section{Noțiuni necesare azi}
 %=============================================================================
 
-\begin{frame}{Ce vă trebuie azi (1/4): prețuri și prețuri ajustate}
+\begin{frame}{Noțiuni necesare azi (1/4): prețuri și prețuri ajustate}
 \itemsize{\small}
 \begin{itemize}
     \item Bara zilnică: deschiderea, maximul, minimul, închiderea și volumul unei zile; $P_t$ = închiderea (indici, valută, cripto) sau închiderea ajustată (acțiuni)
@@ -173,11 +173,11 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ce vă trebuie azi (2/4): randamente simple și logaritmice}
+\begin{frame}{Noțiuni necesare azi (2/4): randamente simple și logaritmice}
 \itemsize{\small}
 \begin{itemize}
     \item \textbf{Randamentul simplu}: $R_t = P_t/P_{t-1} - 1$; \textbf{randamentul logaritmic}: $r_t = \ln(P_t/P_{t-1}) = \ln(1 + R_t)$, deci $R_t = e^{r_t} - 1$
-    \item Întotdeauna $r_t < R_t$ (pentru $R_t \neq 0$); $r_t \approx R_t - R_t^2/2$, deci cele două sînt apropiate pentru mișcări zilnice
+    \item Întotdeauna $r_t < R_t$ (pentru $R_t \neq 0$); $r_t \approx R_t - R_t^2/2$, deci cele două sînt apropiate pentru variații zilnice
     \item Pe $k$ perioade
     \begin{itemize}
         \item randamentele simple se compun: $1 + R_t(k) = \prod_{j=0}^{k-1}(1 + R_{t-j}) = P_t/P_{t-k}$
@@ -187,31 +187,31 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ce vă trebuie azi (3/4): anualizare și precizie}
+\begin{frame}{Noțiuni necesare azi (3/4): anualizare și precizie}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item $q$ = observații pe an: aproximativ 250 pentru o bursă, 365 pentru Bitcoin, 12 pentru date lunare
     \item Media anuală $= q \times$ media; \textbf{volatilitatea} anuală (abaterea standard) $= \sqrt{q} \times$ abaterea standard
     \item \textbf{CAGR} (compound annual growth rate, rata anuală compusă de creștere) $= (P_T/P_0)^{1/Y} - 1$, cu $Y$ ani; egală cu $e^{\text{media anuală logaritmică}} - 1$
     \item \textbf{Volatility drag}: media anuală a randamentelor simple $\approx$ media anuală a randamentelor logaritmice $+\, \sigma^2/2$
-    \item Precizia mediei anuale: $\text{SE} = \sigma_{\text{an}}/\sqrt{Y}$; CI 95\% (confidence interval, interval de încredere): estimarea $\pm 1{,}96\,\text{SE}$
+    \item Precizia mediei anuale: $\text{SE} = \sigma_{\text{an}}/\sqrt{Y}$; intervalul de încredere 95\%: estimarea $\pm 1{,}96\,\text{SE}$
     \begin{itemize}
-        \item testul $H_0$: media $= 0$: $z = \text{estimarea}/\text{SE}$, respingem la 5\% dacă $|z| > 1{,}96$
+        \item testul ipotezei $H_0$: media $= 0$: $z = \text{estimarea}/\text{SE}$, respingem la 5\% dacă $|z| > 1{,}96$
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ce vă trebuie azi (4/4): indicatori de performanță}
+\begin{frame}{Noțiuni necesare azi (4/4): indicatori de performanță}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item \textbf{Sharpe ratio} \refSharpeB: $\text{SR} = (\mu - r_f)/\sigma$; aici $r_f = 0$; SR anual $= \sqrt{q} \times$ SR zilnic
+    \item \textbf{Raportul Sharpe} (Sharpe ratio) \refSharpeB: $\text{SR} = (\mu - r_f)/\sigma$; aici $r_f = 0$; SR anual $= \sqrt{q} \times$ SR zilnic
     \begin{itemize}
         \item eroarea standard pentru randamente i.i.d. \refLo: $\text{SE} = \sqrt{(1 + \text{SR}^2/2)/n}$ pe perioadă, înmulțită cu $\sqrt{q}$ pentru SR anual
         \item \textbf{bootstrap}: reeșantionăm zilele cu întoarcere de multe ori, recalculăm SR de fiecare dată, luăm percentilele 2,5\% și 97,5\%
     \end{itemize}
-    \item \textbf{Sortino ratio} \refSortino: $\mu/\sigma_D$, cu abaterea negativă $\sigma_D = \sqrt{\frac1n\sum_t \min(R_t, 0)^2}$
-    \item \textbf{Drawdown} $\text{DD}_t = P_t/\max_{s \le t} P_s - 1$; \textbf{MDD} (maximum drawdown) $= \min_t \text{DD}_t$; o pierdere $x$ cere un cîștig $x/(1-x)$
-    \item \textbf{Calmar ratio} $= \text{CAGR}/|\text{MDD}|$
+    \item \textbf{Raportul Sortino} (Sortino ratio) \refSortino: $\mu/\sigma_D$, cu abaterea negativă $\sigma_D = \sqrt{\frac1n\sum_t \min(R_t, 0)^2}$
+    \item \textbf{Drawdown} $\text{DD}_t = P_t/\max_{s \le t} P_s - 1$; \textbf{MDD} (maximum drawdown, drawdown maxim) $= \min_t \text{DD}_t$; o pierdere $x$ cere un cîștig $x/(1-x)$
+    \item \textbf{Raportul Calmar} (Calmar ratio) $= \text{CAGR}/|\text{MDD}|$
 \end{itemize}
 \end{frame}
 
@@ -226,11 +226,11 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{column}{0.47\textwidth}
 \begin{block}{Cerință}
 \begin{itemize}
-    \item O acțiune se închide la 50, 55 și 48 de lei în trei zile consecutive.
+    \item Prețurile de închidere ale unei acțiuni în trei zile consecutive sînt 50, 55 și 48 de lei.
     \item 1. Calculați cele două randamente simple zilnice și cele două randamente logaritmice zilnice.
     \item 2. Calculați randamentul simplu pe două zile din prețuri și prin compunere.
     \item 3. Verificați dacă suma randamentelor simple și suma randamentelor logaritmice sînt egale cu randamentele pe două zile.
-    \item Raportați: patru randamente zilnice, două randamente pe două zile, o frază despre care randamente se adună.
+    \item Raportați: patru randamente zilnice, două randamente pe două zile, o frază care precizează ce randamente se adună.
 \end{itemize}
 \end{block}
 \end{column}
@@ -238,7 +238,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{exampleblock}{Rezolvare}
 \begin{itemize}
     \item 1. $R_1 = 55/50 - 1 = 10{,}00\%$, $R_2 = 48/55 - 1 = -12{,}73\%$; $r_1 = \ln(55/50) = 9{,}53\%$, $r_2 = \ln(48/55) = -13{,}61\%$
-    \item 2. $48/50 - 1 = -4{,}00\%$; $(1 + R_1)(1 + R_2) - 1 = -4{,}00\%$, același
+    \item 2. $48/50 - 1 = -4{,}00\%$; $(1 + R_1)(1 + R_2) - 1 = -4{,}00\%$, același rezultat
     \item 3. $R_1 + R_2 = -2{,}73\% \neq -4{,}00\%$; $r_1 + r_2 = -4{,}08\% = \ln(48/50)$
     \item Randamentele logaritmice se adună în timp; cele simple trebuie compuse.
 \end{itemize}
@@ -254,11 +254,11 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{column}{\taskw}
 \begin{block}{Cerință}
 \begin{itemize}
-    \item O acțiune se închide la 80, 100, 75 și 90 de lei în patru zile consecutive. Model: A1.
+    \item Prețurile de închidere ale unei acțiuni în patru zile consecutive sînt 80, 100, 75 și 90 de lei. Model: A1.
     \item 1. Calculați cele trei randamente simple zilnice și cele trei randamente logaritmice zilnice.
     \item 2. Calculați randamentul simplu pe trei zile în două moduri: din primul și ultimul preț și prin compunere.
     \item 3. Explicați de ce suma randamentelor simple supraestimează randamentul pe trei zile.
-    \item Raportați: șase randamente zilnice, randamentele simplu și logaritmic pe trei zile, o frază de explicație.
+    \item Raportați: șase randamente zilnice, randamentul simplu și randamentul logaritmic pe trei zile, o frază de explicație.
 \end{itemize}
 \end{block}
 \end{column}
@@ -285,7 +285,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item Închideri în zilele 0--6: 30; 31; 30,5; 29,2; 29,8; 10,1; 10,3 lei. În ziua 3 se plătește un dividend de 1,5 lei; în ziua 5 are loc un split 3-la-1.
     \item 1. Calculați factorul de ajustare al fiecărui eveniment.
     \item 2. Calculați prețurile ajustate din zilele 0--6.
-    \item 3. Comparați randamentul brut și cel ajustat din ziua 5.
+    \item 3. Comparați randamentul neajustat și cel ajustat din ziua 5.
     \item Raportați: doi factori, șapte prețuri ajustate, două randamente pentru ziua 5.
 \end{itemize}
 \end{block}
@@ -295,7 +295,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{itemize}
     \item 1. Dividend: $A = 1 - 1{,}5/30{,}5 = 0{,}9508$; split: $A = 1/3 = 0{,}3333$
     \item 2. Zilele 0--2 se înmulțesc cu ambii factori, $0{,}3169$: $9{,}51$, $9{,}83$, $9{,}67$; zilele 3--4 cu $1/3$: $9{,}73$, $9{,}93$; zilele 5--6 neschimbate: $10{,}10$, $10{,}30$
-    \item 3. Brut: $10{,}1/29{,}8 - 1 = -66{,}1\%$, o scădere care nu a avut loc; ajustat: $10{,}10/9{,}93 - 1 = 1{,}7\%$
+    \item 3. Neajustat: $10{,}1/29{,}8 - 1 = -66{,}1\%$, o scădere care nu a avut loc; ajustat: $10{,}10/9{,}93 - 1 = 1{,}7\%$
 \end{itemize}
 \end{exampleblock}
 \end{column}
@@ -312,7 +312,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item Închideri în zilele 0--5: 2,05; 2,10; 1,95; 1,98; 19,90; 20,40 lei. În ziua 2 se plătește un dividend de 0,18 lei; în ziua 4, zece acțiuni vechi se consolidează într-una. Model: A3.
     \item 1. Calculați factorul de ajustare al fiecărui eveniment.
     \item 2. Calculați prețurile ajustate din zilele 0--5.
-    \item 3. Calculați randamentul logaritmic brut din ziua 4 și spuneți cum ar arăta o estimare a volatilității care l-ar păstra.
+    \item 3. Calculați randamentul logaritmic neajustat din ziua 4 și explicați ce efect ar avea asupra estimării volatilității dacă ar fi păstrat.
     \item Raportați: doi factori, șase prețuri ajustate, un randament și o frază.
 \end{itemize}
 \end{block}
@@ -340,8 +340,8 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item O acțiune are randamente logaritmice zilnice cu media $0{,}06\%$ și abaterea standard $1{,}5\%$; se tranzacționează 250 de zile pe an; aveți 10 ani de date.
     \item 1. Calculați media anuală a randamentelor logaritmice și volatilitatea anuală.
     \item 2. Calculați CAGR și media anuală a randamentelor simple implicată de volatility drag.
-    \item 3. Calculați eroarea standard și CI 95\% pentru media anuală a randamentelor logaritmice.
-    \item Raportați: cinci cifre și o frază despre lățimea intervalului.
+    \item 3. Calculați eroarea standard și intervalul de încredere 95\% pentru media anuală a randamentelor logaritmice.
+    \item Raportați: cinci valori și o frază despre lățimea intervalului.
 \end{itemize}
 \end{block}
 \end{column}
@@ -350,7 +350,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{itemize}
     \item 1. $250 \times 0{,}06\% = 15{,}0\%$; $\sqrt{250} \times 1{,}5\% = 23{,}7\%$
     \item 2. CAGR $= e^{0{,}15} - 1 = 16{,}2\%$; $\sigma^2/2 = 0{,}0563/2 = 2{,}81\%$, deci media aritmetică este $15{,}0\% + 2{,}81\% \approx 17{,}8\%$
-    \item 3. $\text{SE} = 23{,}7\%/\sqrt{10} = 7{,}5\%$; CI $[0{,}3\%, 29{,}7\%]$
+    \item 3. $\text{SE} = 23{,}7\%/\sqrt{10} = 7{,}5\%$; intervalul de încredere $[0{,}3\%; 29{,}7\%]$
     \item Zece ani de date abia exclud zero: randamentele medii sînt imprecise.
 \end{itemize}
 \end{exampleblock}
@@ -366,9 +366,9 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{itemize}
     \item Valorile unui fond la sfîrșit de lună: 100, 104, 101, 107, 99, 103, 110 (șase luni, $q = 12$, $r_f = 0$).
     \item 1. Calculați cele șase randamente simple lunare, media și abaterea lor standard.
-    \item 2. Calculați Sharpe ratio și Sortino ratio anualizate.
-    \item 3. Calculați MDD, CAGR și Calmar ratio.
-    \item Raportați: un tabel cu randamente, cinci indicatori, o frază despre de ce Sortino depășește Sharpe.
+    \item 2. Calculați rapoartele Sharpe și Sortino anualizate.
+    \item 3. Calculați MDD, CAGR și raportul Calmar.
+    \item Raportați: un tabel cu randamente, cinci indicatori, o frază care explică de ce raportul Sortino depășește raportul Sharpe.
 \end{itemize}
 \end{block}
 \end{column}
@@ -394,8 +394,8 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{itemize}
     \item Valori la sfîrșit de lună: 200, 190, 205, 215, 180, 196, 210, 222 (șapte luni, $q = 12$, $r_f = 0$). Model: A6.
     \item 1. Calculați randamentele simple lunare, media și abaterea lor standard.
-    \item 2. Calculați Sharpe ratio și Sortino ratio anualizate.
-    \item 3. Calculați MDD, CAGR și Calmar ratio.
+    \item 2. Calculați rapoartele Sharpe și Sortino anualizate.
+    \item 3. Calculați MDD, CAGR și raportul Calmar.
     \item 4. Comparați cu fondul din A6: ce indicatori clasează diferit cele două fonduri?
     \item Raportați: cinci indicatori și o frază care compară cele două fonduri.
 \end{itemize}
@@ -408,7 +408,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item 1. Randamente (\%): $-5{,}00$; $+7{,}89$; $+4{,}88$; $-16{,}28$; $+8{,}89$; $+7{,}14$; $+5{,}71$; media $1{,}89\%$, abaterea std. $9{,}25\%$
     \item 2. SR $= 0{,}71$; $\sigma_D = 6{,}44\%$, Sortino $= 1{,}02$
     \item 3. MDD $= 180/215 - 1 = -16{,}28\%$; CAGR $= 1{,}11^{12/7} - 1 = 19{,}6\%$; Calmar $= 1{,}20$
-    \item 4. A7 are media lunară mai mare, dar volatilitate mai mare și un drawdown mai adînc: A6 cîștigă la Sharpe, Sortino, CAGR și Calmar
+    \item 4. A7 are media lunară mai mare, dar volatilitate mai mare și un drawdown mai adînc: A6 este superior după Sharpe, Sortino, CAGR și Calmar
 \end{itemize}
 \end{exampleblock}
 }
@@ -431,7 +431,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item Calculați randamentele logaritmice zilnice ale ambelor serii în zilele comune.
     \item Numărați zilele în care cele două randamente diferă cu mai mult de un punct procentual.
     \item Calculați volatilitatea anualizată a fiecărei serii și a seriei EODHD fără acele zile.
-    \item Interpretare: ce serie ați folosi pentru a măsura riscul valutar al unui credit în euro și de ce?
+    \item Interpretare: ce serie este potrivită pentru a măsura riscul valutar al unui credit în euro? Justificați alegerea.
 \end{enumerate}
 \item \textbf{Raportați}: numărul de zile, trei volatilități și o frază de interpretare
 \item Notebook: secțiunea B1
@@ -448,7 +448,7 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
     \item 5\,154 de zile comune; în 412 dintre ele (8{,}0\%) diferența depășește un punct procentual; cele mai multe în 2011 (107 zile)
     \item Cele mai mari diferențe: 13 august 2025 (EODHD $15{,}4\%$, BNR $-0{,}10\%$), 14 august 2025 (EODHD $-15{,}4\%$, BNR $-0{,}01\%$)
     \item Volatilitatea: BNR 4{,}5\%, EODHD 13{,}4\%, EODHD fără zilele eronate 4{,}7\%
-    \item Interpretare: cursul BNR, proprietarul oficial al cifrei; seria EODHD ar înmulți riscul valutar măsurat cu 3{,}0
+    \item Interpretare: cursul BNR, sursa primară a cifrei; seria EODHD ar multiplica de 3{,}0 ori riscul valutar măsurat
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 
@@ -461,10 +461,11 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{enumerate}
     \item Calculați media, abaterea standard, asimetria, excesul de aplatizare, minimul (cu data lui) și maximul randamentelor logaritmice zilnice.
     \item Anualizați media și abaterea standard cu numărul real de observații pe an.
-    \item Calculați eroarea standard a mediei anuale, CI 95\% și statistica $z$ pentru $H_0$: media $= 0$.
-    \item Interpretare: seamănă histograma cu distribuția Normală și ce îi spune intervalul unui investitor?
+    \item Calculați eroarea standard a mediei anuale, intervalul de încredere 95\% și statistica $z$ pentru $H_0$: media $= 0$.
+    \item Interpretare: seamănă histograma cu distribuția Normală?
+    \item Interpretare: ce informație îi oferă intervalul de încredere unui investitor?
 \end{enumerate}
-\item \textbf{Raportați}: un tabel de statistici, CI, $z$ și $p$, două fraze de interpretare
+\item \textbf{Raportați}: un tabel de statistici, intervalul de încredere, $z$ și $p$, două fraze de interpretare
 \item Notebook: secțiunea B2
 \end{itemize}
 \end{frame}
@@ -482,10 +483,10 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \begin{column}{0.48\textwidth}
 \begin{itemize}
     \item $n = 2\,925$ zile, 250 pe an; media $0{,}053\%$, abaterea std. $0{,}98\%$
-    \item Asimetria $-1{,}41$, excesul de aplatizare $17{,}8$; cea mai proastă zi $-11{,}9\%$ pe 19 decembrie 2018, cea mai bună $6{,}8\%$
+    \item Asimetria $-1{,}41$, excesul de aplatizare $17{,}8$; cea mai slabă zi $-11{,}9\%$ pe 19 decembrie 2018, cea mai bună $6{,}8\%$
     \item Anual: media 13{,}2\%, volatilitatea 15{,}5\%; SE $= 15{,}5/\sqrt{11{,}7} = 4{,}5\%$
-    \item CI 95\% [4{,}3\%, 22{,}1\%]; $z = 2{,}91$, $p = 0{,}004$: respingem media zero la 5\%
-    \item Interpretare: centru mai înalt și cozi mai groase decît distribuția Normală; media este pozitivă, dar oriunde între 4{,}3\% și 22{,}1\% pe an
+    \item Intervalul de încredere 95\%: [4{,}3\%; 22{,}1\%]; $z = 2{,}91$, $p = 0{,}004$: respingem ipoteza mediei zero la 5\%
+    \item Interpretare: centru mai înalt și cozi mai groase decît distribuția Normală; media este pozitivă, dar se poate afla oriunde între 4{,}3\% și 22{,}1\% pe an
 \end{itemize}
 \end{column}
 \end{columns}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
@@ -495,11 +496,11 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \itemsize{\footnotesize}
 \begin{itemize}
 \item \textbf{Întrebarea}: care dintre S\&P 500, DAX, Bitcoin și Banca Transilvania au un randament mediu semnificativ peste zero?
-\item \textbf{Date}: randamente logaritmice zilnice, 2015--2026, fiecare pe calendarul ei; model: B2
+\item \textbf{Date}: randamente logaritmice zilnice, 2015--2026, fiecare serie pe propriul calendar; model: B2
 \item \textbf{Cerințe}
 \begin{enumerate}
     \item Repetați pașii 1--3 din B2 pentru fiecare dintre cele patru serii.
-    \item Puneți media anuală, volatilitatea, CI și $p$ pentru toate cele cinci serii (cu BET) într-un tabel.
+    \item Reuniți într-un tabel media anuală, volatilitatea, intervalul de încredere și valoarea $p$ pentru toate cele cinci serii (inclusiv BET).
     \item Interpretare: de ce intervalul Bitcoin este mult mai larg decît cel al S\&P 500, deși ambele acoperă aceiași ani?
 \end{enumerate}
 \item \textbf{Raportați}: un tabel și două fraze
@@ -514,36 +515,36 @@ Seria EUR/RON (doar B1) & EODHD & close & 2005--2026 \\
 \footnotesize
 \begin{tabular}{lrrrrr}
 \toprule
-Seria & Media \% & Vol. \% & SE \% & CI 95\% & $p$ \\
+Seria & Media \% & Vol. \% & SE \% & Interval 95\% & $p$ \\
 \midrule
-BET & $13{,}2$ & $15{,}5$ & $4{,}5$ & [$4{,}3$, $22{,}1$] & $0{,}004$ \\
-S\&P 500 & $11{,}2$ & $17{,}7$ & $5{,}2$ & [$1{,}1$, $21{,}4$] & $0{,}030$ \\
-DAX & $8{,}1$ & $19{,}1$ & $5{,}6$ & [$-2{,}8$, $19{,}1$] & $0{,}144$ \\
-Bitcoin & $47{,}4$ & $66{,}7$ & $19{,}5$ & [$9{,}2$, $85{,}6$] & $0{,}015$ \\
-Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}001$ \\
+BET & $13{,}2$ & $15{,}5$ & $4{,}5$ & [$4{,}3$; $22{,}1$] & $0{,}004$ \\
+S\&P 500 & $11{,}2$ & $17{,}7$ & $5{,}2$ & [$1{,}1$; $21{,}4$] & $0{,}030$ \\
+DAX & $8{,}1$ & $19{,}1$ & $5{,}6$ & [$-2{,}8$; $19{,}1$] & $0{,}144$ \\
+Bitcoin & $47{,}4$ & $66{,}7$ & $19{,}5$ & [$9{,}2$; $85{,}6$] & $0{,}015$ \\
+Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$; $38{,}8$] & $0{,}001$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
     \item Semnificative la 5\%: toate seriile al căror interval exclude zero; intervalul DAX conține zero
-    \item Interpretare: SE $= \sigma_{\text{an}}/\sqrt{Y}$ cu același $Y$; volatilitatea Bitcoin este de 3{,}8 ori cea a S\&P 500, la fel și lățimea intervalului
+    \item Interpretare: SE $= \sigma_{\text{an}}/\sqrt{Y}$ cu același $Y$; volatilitatea Bitcoin este de 3{,}8 ori mai mare decît cea a S\&P 500, iar intervalul este de tot atîtea ori mai larg
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 \fi
 
-\begin{frame}{B4: cît de precis este un Sharpe ratio? [Rezolvat]}
+\begin{frame}{B4: cît de precis este raportul Sharpe? [Rezolvat]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: cît de precis se estimează Sharpe ratio al S\&P 500 din datele 2015--2026?
+\item \textbf{Întrebarea}: cît de precis se estimează raportul Sharpe al S\&P 500 din datele 2015--2026?
 \item \textbf{Date}: închiderile S\&P 500, randamente simple zilnice, $r_f = 0$
 \item \textbf{Cerințe}
 \begin{enumerate}
-    \item Calculați media zilnică, abaterea standard și Sharpe ratio și anualizați Sharpe ratio.
-    \item Calculați eroarea standard după \refLo{} și CI 95\%.
-    \item Faceți bootstrap pentru Sharpe ratio cu 2000 de reeșantionări ale zilelor și luați percentilele 2,5\% și 97,5\%.
-    \item Interpretare: ar putea Sharpe ratio adevărat al S\&P 500 să fie sub 0,25?
+    \item Calculați media zilnică, abaterea standard și raportul Sharpe zilnic, apoi anualizați raportul Sharpe.
+    \item Calculați eroarea standard după \refLo{} și intervalul de încredere 95\%.
+    \item Aplicați bootstrap raportului Sharpe, cu 2000 de reeșantionări ale zilelor, și calculați percentilele 2,5\% și 97,5\%.
+    \item Interpretare: ar putea raportul Sharpe adevărat al S\&P 500 să fie sub 0,25?
 \end{enumerate}
-\item \textbf{Raportați}: Sharpe ratio, două intervale și o frază
+\item \textbf{Raportați}: raportul Sharpe, două intervale și o frază
 \item Notebook: secțiunea B4
 \end{itemize}
 \end{frame}
@@ -562,8 +563,8 @@ Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}
 \begin{itemize}
     \item $n = 2\,943$, $q = 251{,}5$; media zilnică $0{,}0508\%$, abaterea std. $1{,}113\%$, SR zilnic $0{,}0457$
     \item SR anual $= 0{,}0457 \times 15{,}86 = 0{,}72$
-    \item Lo: SE $= \sqrt{(1 + 0{,}0457^2/2)/2\,943} \times 15{,}86 = 0{,}29$; CI [$0{,}15$, $1{,}30$]
-    \item Bootstrap: [$0{,}17$, $1{,}26$], foarte apropiat
+    \item Lo: SE $= \sqrt{(1 + 0{,}0457^2/2)/2\,943} \times 15{,}86 = 0{,}29$; intervalul de încredere [$0{,}15$; $1{,}30$]
+    \item Bootstrap: [$0{,}17$; $1{,}26$], foarte apropiat
     \item Interpretare: da; orice valoare de la $0{,}17$ la $1{,}26$ este compatibilă cu datele
 \end{itemize}
 \end{column}
@@ -573,16 +574,16 @@ Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}
 \begin{frame}{B5: este Banca Transilvania mai bună decît BET? [Propus]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: este Sharpe ratio al TLV semnificativ mai mare decît al indicelui BET?
-\item \textbf{Date}: închiderea BET și închiderea ajustată TLV, 2015--2026, unite întîi pe zilele comune; model: B4
+\item \textbf{Întrebarea}: este raportul Sharpe al TLV semnificativ mai mare decît cel al indicelui BET?
+\item \textbf{Date}: închiderea BET și închiderea ajustată TLV, 2015--2026, aliniate întîi pe zilele comune; model: B4
 \item \textbf{Cerințe}
 \begin{enumerate}
-    \item Uniți cele două serii de prețuri pe zilele lor comune, apoi calculați randamentele simple zilnice.
-    \item Calculați ambele Sharpe ratio anualizate, cu erorile lor standard Lo.
-    \item Faceți bootstrap pentru diferența celor două Sharpe ratio, reeșantionînd aceleași zile pentru ambele serii.
+    \item Aliniați cele două serii de prețuri pe zilele lor comune, apoi calculați randamentele simple zilnice.
+    \item Calculați cele două rapoarte Sharpe anualizate, cu erorile standard Lo.
+    \item Aplicați bootstrap diferenței dintre cele două rapoarte Sharpe, reeșantionînd aceleași zile pentru ambele serii.
     \item Interpretare: de ce trebuie reeșantionate zilele în perechi?
 \end{enumerate}
-\item \textbf{Raportați}: două Sharpe ratio, diferența cu intervalul ei, o frază
+\item \textbf{Raportați}: cele două rapoarte Sharpe, diferența cu intervalul ei, o frază
 \item Notebook: secțiunea B5
 \end{itemize}
 \end{frame}
@@ -592,7 +593,7 @@ Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item 2\,674 de zile comune; SR BET $0{,}93$ (SE $0{,}29$), SR TLV $1{,}08$ (SE $0{,}29$)
-    \item Diferența TLV $-$ BET $= 0{,}15$; interval bootstrap pe perechi 95\% [$-0{,}24$, $0{,}53$], conține zero
+    \item Diferența TLV $-$ BET $= 0{,}15$; intervalul bootstrap 95\% pe perechi, [$-0{,}24$; $0{,}53$], conține zero
     \item Nicio diferență semnificativă
     \item Interpretare: cele două serii de randamente sînt corelate ($\rho = 0{,}76$); reeșantionarea zilelor în perechi păstrează corelația, ceea ce face diferența mai precisă decît sugerează două intervale separate
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
@@ -602,13 +603,13 @@ Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}
 \begin{frame}{B6: cea mai adîncă cădere a BET [Rezolvat]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: cît de adîncă a fost cea mai mare cădere a BET de la lansare și cît a durat recuperarea?
-\item \textbf{Date}: închiderile oficiale BET din 19 septembrie 1997; pentru Calmar ratio, 2015--2026
+\item \textbf{Întrebarea}: care au fost adîncimea și durata celei mai mari căderi a BET de la lansare?
+\item \textbf{Date}: închiderile oficiale BET din 19 septembrie 1997; pentru raportul Calmar, 2015--2026
 \item \textbf{Cerințe}
 \begin{enumerate}
-    \item Calculați seria drawdown-urilor și maximum drawdown, cu datele vîrfului, minimului și recuperării.
-    \item Calculați cîștigul necesar pentru recuperare de la minim și ponderea zilelor petrecute cu peste 20\% sub vîrf.
-    \item Calculați CAGR, MDD și Calmar ratio pentru 2015--2026.
+    \item Calculați seria drawdown-urilor și drawdown-ul maxim, cu datele vîrfului, minimului și revenirii.
+    \item Calculați cîștigul necesar pentru revenirea de la minim și ponderea zilelor petrecute cu peste 20\% sub vîrf.
+    \item Calculați CAGR, MDD și raportul Calmar pentru 2015--2026.
     \item Interpretare: ce adaugă drawdown-ul la ceea ce ne spune deja volatilitatea?
 \end{enumerate}
 \item \textbf{Raportați}: MDD cu trei date, două procente, trei indicatori, o frază
@@ -623,27 +624,27 @@ Banca Transilvania & $24{,}2$ & $25{,}5$ & $7{,}5$ & [$9{,}6$, $38{,}8$] & $0{,}
 \end{center}
 \vspace{-2mm}
 \begin{itemize}
-    \item MDD $-82{,}5\%$: de la 10814 puncte pe 24 iulie 2007 la 1887 pe 25 februarie 2009; vechiul vîrf a fost regăsit pe 16 martie 2021, după 13{,}6 ani
+    \item MDD $-82{,}5\%$: de la 10\,814 puncte pe 24 iulie 2007 la 1\,887 pe 25 februarie 2009; vechiul vîrf a fost atins din nou pe 16 martie 2021, după 13{,}6 ani
     \item De la minim era nevoie de un cîștig de $473\%$; 56\% din toate zilele au fost cu peste 20\% sub vîrf
     \item 2015--2026: CAGR 14{,}1\%, MDD $-31{,}1\%$ (23 ianuarie 2020 -- 23 martie 2020), Calmar $= 14{,}1/31{,}1 = 0{,}45$
-    \item Interpretare: volatilitatea ignoră ordinea randamentelor; drawdown-ul arată cît timp stă investitorul sub nivelul de pornire
+    \item Interpretare: volatilitatea ignoră ordinea randamentelor; drawdown-ul arată cît timp rămîne investitorul sub vîrful anterior (underwater)
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 
 \begin{frame}{B7: Bitcoin, OMV Petrom și volatility drag [Propus]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: cît de adînci sînt drawdown-urile Bitcoin și SNP și funcționează pentru ele formula volatility drag?
+\item \textbf{Întrebarea}: ce arată drawdown-urile și volatility drag pentru Bitcoin și SNP?
 \item \textbf{Date}: închiderea Bitcoin și închiderea ajustată SNP, 2015--2026; model: B6
 \item \textbf{Cerințe}
 \begin{enumerate}
-    \item Calculați MDD pentru fiecare serie, cu datele vîrfului, minimului și recuperării.
-    \item Calculați CAGR și Calmar ratio pentru fiecare serie.
+    \item Calculați MDD pentru fiecare serie, cu datele vîrfului, minimului și revenirii.
+    \item Calculați CAGR și raportul Calmar pentru fiecare serie.
     \item Calculați media anuală aritmetică a randamentelor simple, media anuală a randamentelor logaritmice și diferența lor.
     \item Comparați diferența cu $\sigma^2/2$, folosind volatilitatea anuală a randamentelor simple.
-    \item Interpretare: pentru care activ contează drag-ul pentru un investitor pe termen lung?
+    \item Interpretare: pentru care dintre cele două active este volatility drag important pentru un investitor pe termen lung?
 \end{enumerate}
-\item \textbf{Raportați}: un tabel cu MDD, date, CAGR, Calmar, cele două medii, drag-ul și $\sigma^2/2$, o frază
+\item \textbf{Raportați}: un tabel cu MDD, date, CAGR, Calmar, cele două medii, volatility drag și $\sigma^2/2$, o frază
 \item Notebook: secțiunea B7
 \end{itemize}
 \end{frame}
@@ -663,28 +664,28 @@ OMV Petrom & $-45{,}4$ & $19{,}7$ & $0{,}43$ & $20{,}8$ & $18{,}0$ & $2{,}73$ & 
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Bitcoin: 16 decembrie 2017 -- 15 decembrie 2018, recuperat pe 30 noiembrie 2020; SNP: 1 ianuarie 2015 -- 12 februarie 2016, recuperat pe 20 septembrie 2018
-    \item Drag-ul și $\sigma^2/2$ diferă cu cel mult 0{,}20 puncte procentuale
-    \item Interpretare: pentru Bitcoin drag-ul elimină 32\% din media aritmetică; pentru SNP este mic
+    \item Bitcoin: 16 decembrie 2017 -- 15 decembrie 2018, cu revenire pe 30 noiembrie 2020; SNP: 1 ianuarie 2015 -- 12 februarie 2016, cu revenire pe 20 septembrie 2018
+    \item Volatility drag și $\sigma^2/2$ diferă cu cel mult 0{,}20 puncte procentuale
+    \item Interpretare: pentru Bitcoin, volatility drag reprezintă 32\% din media aritmetică; pentru SNP este mic
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 \fi
 
 
 %=============================================================================
-\section{Partea C: întrebări deschise și critica unui răspuns AI}
+\section{Partea C: întrebări deschise și critica unui răspuns generat de AI}
 %=============================================================================
 
-\begin{frame}{C1: persistă Sharpe ratio? [Propus]}
+\begin{frame}{C1: persistă rapoartele Sharpe? [Propus]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: are o acțiune BVB cu Sharpe ratio mare în 2015--2020 un Sharpe ratio mare și în 2021--2026?
+\item \textbf{Întrebarea}: are o acțiune BVB cu un raport Sharpe mare în 2015--2020 un raport Sharpe mare și în 2021--2026?
 \item \textbf{Date}: închiderile ajustate TLV, SNP, BRD, TGN, SNG, SNN, 2015--2026; modele: B4, B6
 \item \textbf{Cerințe}
 \begin{enumerate}
-    \item Calculați Sharpe ratio anualizat și eroarea lui standard pentru fiecare acțiune în fiecare jumătate.
-    \item Calculați corelația rangurilor Spearman între Sharpe ratio din cele două jumătăți.
-    \item Propuneți o cale de a face răspunsul mai sigur (mai multe acțiuni, alți indicatori, alte ferestre).
+    \item Calculați raportul Sharpe anualizat și eroarea lui standard pentru fiecare acțiune în fiecare jumătate.
+    \item Calculați corelația rangurilor Spearman între rapoartele Sharpe din cele două jumătăți.
+    \item Propuneți o modalitate de a face răspunsul mai robust (mai multe acțiuni, alți indicatori, alte ferestre).
     \item Interpretare: ce ne pot spune șase acțiuni despre persistență?
 \end{enumerate}
 \item \textbf{Raportați}: un tabel, corelația rangurilor cu valoarea $p$, un scurt plan de proiect
@@ -712,24 +713,24 @@ Nuclearelectrica & $1{,}31$ & $0{,}41$ & $1{,}23$ & $0{,}42$ \\
 \end{center}
 \begin{itemize}
     \item Corelația rangurilor Spearman $-0{,}71$ ($p = 0{,}11$, $n = 6$): nicio dovadă de persistență; mai degrabă o inversare
-    \item Fiecare Sharpe ratio pe jumătate de eșantion are o eroare standard de circa $0{,}41$: clasamentele sînt în mare parte zgomot
+    \item Fiecare raport Sharpe estimat pe o jumătate de eșantion are o eroare standard de circa $0{,}41$: clasamentele sînt în mare parte zgomot
     \item Direcții de proiect: toate acțiunile lichide BVB, ferestre mobile de trei ani, Sortino și Calmar, comparație cu \refHLZ
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 \fi
 
-\begin{frame}{C2: verificați un răspuns AI [Propus]}
+\begin{frame}{C2: verificarea unui răspuns generat de AI [Propus]}
 \itemsize{\scriptsize}
 \begin{itemize}
     \item Un student a întrebat un asistent AI: „Compară riscul și performanța Bitcoin și ale BET în 2015--2026.” Răspunsul:
     \item \aiprompt{(a) Volatilitatea zilnică a Bitcoin este 3{,}49\%, deci volatilitatea anuală este 3{,}49\% x sqrt(252) = 55{,}4\%.}
-    \item \aiprompt{(b) Sharpe ratio al Bitcoin (1{,}05) este mai mare decît al BET (0{,}93), ceea ce dovedește că Bitcoin este investiția mai bună.}
-    \item \aiprompt{(c) Maximum drawdown al Bitcoin este cel mai prost randament zilnic, -46{,}5\%.}
+    \item \aiprompt{(b) Raportul Sharpe al Bitcoin (1{,}05) este mai mare decît al BET (0{,}93), ceea ce dovedește că Bitcoin este investiția mai bună.}
+    \item \aiprompt{(c) Drawdown-ul maxim al Bitcoin este cel mai slab randament zilnic, -46{,}5\%.}
     \item \aiprompt{(d) Pentru un portofoliu 50/50, randamentul logaritmic este exact media celor două randamente logaritmice.}
     \item \aiprompt{(e) Pentru acțiunile BVB, ca TLV, am folosit coloana close, care este prețul oficial.}
     \item Cerințe
     \begin{itemize}
-        \item 1. Pentru fiecare afirmație spuneți dacă este corectă; dacă nu, dați afirmația corectă și, unde se poate, cifra corectă din notebook (secțiunea C2).
+        \item 1. Pentru fiecare afirmație, precizați dacă este corectă; dacă nu este, formulați afirmația corectă și, unde este posibil, dați cifra corectă din notebook (secțiunea C2).
         \item 2. Raportați: o listă de cinci verdicte, fiecare cu un rînd de justificare.
     \end{itemize}
 \end{itemize}
@@ -740,10 +741,10 @@ Nuclearelectrica & $1{,}31$ & $0{,}41$ & $1{,}23$ & $0{,}42$ \\
 \itemsize{\footnotesize}
 \begin{itemize}
     \item (a) Factor greșit: Bitcoin se tranzacționează aproximativ 365 de zile pe an; $3{,}49\% \times \sqrt{365} = 66{,}7\%$, nu 55{,}4\%
-    \item (b) Nu este dovedit: SE $\approx 0{,}29$ pentru fiecare Sharpe ratio, deci diferența celor două estimări este mult sub zgomot; iar Sharpe ratio din trecut nu garantează viitorul
-    \item (c) Definiție greșită: MDD este cea mai mare cădere de la vîrf la minim, $-83{,}4\%$; cea mai proastă zi a fost $-46{,}5\%$ (randament logaritmic)
+    \item (b) Nu este dovedit: SE $\approx 0{,}29$ pentru fiecare raport Sharpe, deci diferența dintre cele două estimări se încadrează în zgomot; iar rapoartele Sharpe din trecut nu le garantează pe cele viitoare
+    \item (c) Definiție greșită: MDD este cea mai mare cădere de la vîrf la minim, $-83{,}4\%$; cea mai slabă zi a fost $-46{,}5\%$ (randament logaritmic)
     \item (d) Greșit: $R_p = \sum_i w_i R_i$ este exact; $r_p = \ln(\sum_i w_i e^{r_i})$ diferă de $\sum_i w_i r_i$
-    \item (e) Coloană greșită: prețul de închidere TLV sare cu $+230\%$ (logaritmic) pe 16 august 2022, o consolidare a acțiunilor; volatilitatea din close 73{,}1\% vs 25{,}5\% din prețul ajustat
+    \item (e) Coloană greșită: prețul de închidere TLV crește brusc cu $+230\%$ (logaritmic) pe 16 august 2022, din cauza unei consolidări a acțiunilor; volatilitatea calculată din close este 73{,}1\%, față de 25{,}5\% din prețul ajustat
 \end{itemize}\quantlet{SFM\_ch1\_seminar}{\qlurl{SFM_ch1_seminar}}
 \end{frame}
 \fi
@@ -753,14 +754,14 @@ Nuclearelectrica & $1{,}31$ & $0{,}41$ & $1{,}23$ & $0{,}42$ \\
 \section{Încheiere}
 %=============================================================================
 
-\begin{frame}{Ce rămîne de azi}
+\begin{frame}{Idei de reținut}
 \itemsize{\small}
 \begin{itemize}
     \item Verificați datele înainte de calcule: sursa, prețurile ajustate, o a doua serie
     \item Randamentele logaritmice se adună în timp; cele simple se adună între active
-    \item Randamentele medii și Sharpe ratio vin cu intervale largi: raportați-le
-    \item Drawdown-ul și volatility drag arată ce ascunde volatilitatea singură
-    \item Un răspuns AI este o ciornă: verificați fiecare factor, definiție și coloană
+    \item Randamentele medii și rapoartele Sharpe au intervale de încredere largi: raportați-le
+    \item Drawdown-ul și volatility drag arată ceea ce volatilitatea singură nu arată
+    \item Un răspuns generat de AI este o ciornă: verificați fiecare factor, definiție și coloană
 \end{itemize}
 \end{frame}
 

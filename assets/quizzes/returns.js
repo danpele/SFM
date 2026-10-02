@@ -50,7 +50,7 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "Since $\\ln(1 + x) < x$ for every $x > -1$, $x \\neq 0$, the log return is always smaller, for gains and for losses."
             },
             "ro": {
-                "title": "Randament logaritmic vs simplu",
+                "title": "Randamentul logaritmic și randamentul simplu",
                 "text": "Pentru orice mișcare de preț cu $R_t \\neq 0$, cum se compară randamentul logaritmic $r_t = \\ln(1 + R_t)$ cu $R_t$?",
                 "options": [
                     "$r_t < R_t$",
@@ -105,7 +105,7 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "Recuperarea unei pierderi",
-                "text": "O acțiune pierde 50%. Ce cîștig îi trebuie ca să revină la prețul anterior?",
+                "text": "O acțiune pierde 50%. Ce cîștig este necesar pentru ca prețul să revină la nivelul anterior?",
                 "options": [
                     "50%",
                     "100%",
@@ -166,8 +166,8 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Ambele sînt exacte",
                     "Niciuna nu este exactă"
                 ],
-                "correctExplanation": "Valoarea portofoliului este suma ponderată a valorilor componentelor, deci randamentele simple se agregă exact între active.",
-                "incorrectExplanation": "Între active, randamentele simple se agregă exact; suma ponderată a randamentelor logaritmice este doar o aproximare a lui $r_p = \\ln(\\sum_i w_i e^{r_i})$."
+                "correctExplanation": "Valoarea portofoliului este suma ponderată a valorilor componentelor, deci randamentele simple se agregă exact la nivelul portofoliului.",
+                "incorrectExplanation": "La nivelul portofoliului, randamentele simple se agregă exact; suma ponderată a randamentelor logaritmice este doar o aproximare a lui $r_p = \\ln(\\sum_i w_i e^{r_i})$."
             }
         },
         {
@@ -186,15 +186,15 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "Prețul ajustat",
-                "text": "De ce se calculează randamentele acțiunilor din prețul ajustat, nu din prețul de închidere?",
+                "text": "De ce se calculează randamentele acțiunilor pe baza prețului de închidere ajustat, nu a prețului de închidere?",
                 "options": [
                     "Prețul ajustat este întotdeauna mai mare",
                     "Prețul ajustat elimină weekendurile",
-                    "Elimină salturile artificiale de la splituri și consolidări și include dividendele",
+                    "Elimină salturile artificiale cauzate de splituri și consolidări și include dividendele",
                     "Bursele publică doar prețuri ajustate"
                 ],
-                "correctExplanation": "Evenimentele corporative schimbă prețul de tranzacționare, dar nu și valoarea deținerii; prețul ajustat corectează toate prețurile anterioare.",
-                "incorrectExplanation": "Prețul ajustat înmulțește prețurile anterioare cu factorii evenimentelor ulterioare, astfel că randamentele nu au salturi artificiale și includ dividendele."
+                "correctExplanation": "Evenimentele corporative schimbă prețul de tranzacționare, dar nu și valoarea deținerilor; prețul ajustat corectează pentru ele toate prețurile anterioare.",
+                "incorrectExplanation": "Prețul ajustat înmulțește prețurile anterioare cu factorii de ajustare ai evenimentelor corporative ulterioare, astfel că randamentele nu au salturi artificiale și includ dividendele."
             }
         },
         {
@@ -221,7 +221,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Este aproximativ $+230\\%$, aproape de $\\ln 10$"
                 ],
                 "correctExplanation": "Prețul de tranzacționare se înmulțește cu aproximativ zece, deci $\\ln(P_t/P_{t-1}) \\approx \\ln 10 \\approx 2{,}30$: un cîștig artificial de circa 230%.",
-                "incorrectExplanation": "După o consolidare 10-la-1 prețul este de circa zece ori mai mare, ceea ce dă un randament logaritmic artificial aproape de $\\ln 10$."
+                "incorrectExplanation": "După o consolidare 10:1, prețul este de circa zece ori mai mare, ceea ce dă un randament logaritmic artificial aproape de $\\ln 10$."
             }
         },
         {
@@ -267,15 +267,15 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "Surse de date în conflict",
-                "text": "Două surse dau cursuri EUR/RON diferite pentru aceeași zi. Care este referința?",
+                "text": "Două surse dau cursuri EUR/RON diferite pentru aceeași zi. Care dintre ele este sursa de referință?",
                 "options": [
-                    "Cursul de referință BNR, publicat de proprietarul cifrei",
+                    "Cursul de referință BNR, publicat de instituția care produce indicatorul",
                     "Cea cu volatilitatea mai mare",
                     "Media celor două",
                     "Cea cu mai multe observații"
                 ],
                 "correctExplanation": "Banca centrală publică cursul oficial de referință; un furnizor doar îl colectează, uneori cu erori.",
-                "incorrectExplanation": "Cînd sursele diferă, folosiți proprietarul cifrei: pentru cursul de referință EUR/RON, BNR."
+                "incorrectExplanation": "Cînd sursele diferă, folosiți sursa primară: pentru cursul de referință EUR/RON, aceasta este BNR."
             }
         },
         {
@@ -302,7 +302,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Folosirea unui eșantion prea scurt"
                 ],
                 "correctExplanation": "Firmele falimentare sau delistate dispar din eșantion; supraviețuitoarele au avut în medie randamente mai bune.",
-                "incorrectExplanation": "Survivorship bias provine din eliminarea firmelor sau fondurilor dispărute, care sînt în mare parte perdante."
+                "incorrectExplanation": "Survivorship bias provine din eliminarea firmelor sau fondurilor dispărute, care au avut în majoritate performanțe slabe."
             }
         },
         {
@@ -321,7 +321,7 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "Anualizarea volatilității",
-                "text": "O acțiune are abaterea standard zilnică 1% și se tranzacționează 252 de zile pe an. Care este volatilitatea anualizată (randamente necorelate)?",
+                "text": "O acțiune are abaterea standard zilnică de 1% și se tranzacționează 252 de zile pe an. Care este volatilitatea anualizată (randamente necorelate)?",
                 "options": [
                     "252%",
                     "aproximativ 15,9%",
@@ -348,7 +348,7 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "CAGR",
-                "text": "Un preț crește de la 100 la 400 în 10 ani. Ce formulă dă CAGR?",
+                "text": "Un preț crește de la 100 la 400 în 10 ani. Ce formulă dă rata anuală compusă de creștere (CAGR)?",
                 "options": [
                     "$(400/100)^{1/10} - 1$",
                     "$(400/100 - 1)/10$",
@@ -356,7 +356,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "$400/100 - 1$"
                 ],
                 "correctExplanation": "CAGR este rata anuală constantă care transformă 100 în 400 în 10 ani: $4^{1/10} - 1 \\approx 14{,}9\\%$.",
-                "incorrectExplanation": "CAGR compune: $(P_T/P_0)^{1/Y} - 1$; împărțirea cîștigului total la numărul de ani ignoră compunerea."
+                "incorrectExplanation": "CAGR ține cont de compunere: $(P_T/P_0)^{1/Y} - 1$; împărțirea cîștigului total la numărul de ani ignoră compunerea."
             }
         },
         {
@@ -383,7 +383,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Folosind mai mulți ani de date"
                 ],
                 "correctExplanation": "Eroarea standard a mediei anuale este $\\sigma_{an}/\\sqrt{Y}$: doar mai mulți ani ajută.",
-                "incorrectExplanation": "Pe aceiași ani, o frecvență mai mare nu schimbă media, care depinde de primul și ultimul preț; SE scade ca $1/\\sqrt{Y}$."
+                "incorrectExplanation": "Pentru aceiași ani, o frecvență mai mare nu schimbă media, care depinde doar de primul și de ultimul preț; eroarea standard scade proporțional cu $1/\\sqrt{Y}$."
             }
         },
         {
@@ -433,11 +433,11 @@ window.SFM_DATA.quizzes['returns'] = {
                 "options": [
                     "3; cozi subțiri",
                     "0; cozi subțiri",
-                    "0; cozi groase, zile extreme mai frecvente decît sub distribuția Normală",
+                    "0; cozi groase, zile extreme mai frecvente decît în cazul distribuției Normale",
                     "1; o distribuție asimetrică"
                 ],
                 "correctExplanation": "Excesul de aplatizare este $K - 3$, zero pentru distribuția Normală; valorile pozitive indică cozi groase.",
-                "incorrectExplanation": "Distribuția Normală are aplatizarea 3, deci exces 0; randamentele au de obicei exces mare pozitiv (cozi groase)."
+                "incorrectExplanation": "Distribuția Normală are aplatizarea 3, deci exces 0; randamentele au de obicei un exces de aplatizare mare și pozitiv (cozi groase)."
             }
         },
         {
@@ -455,16 +455,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "Return per unit of downside deviation is the Sortino ratio; per unit of maximum drawdown, the Calmar ratio."
             },
             "ro": {
-                "title": "Sharpe ratio",
-                "text": "Ce măsoară Sharpe ratio?",
+                "title": "Raportul Sharpe",
+                "text": "Ce măsoară raportul Sharpe?",
                 "options": [
                     "Randamentul în exces pe unitatea de volatilitate totală",
-                    "Randamentul pe unitatea de maximum drawdown",
+                    "Randamentul pe unitatea de drawdown maxim",
                     "Randamentul pe unitatea de abatere negativă",
                     "Randamentul pe unitatea de risc sistematic"
                 ],
                 "correctExplanation": "$\\text{SR} = (\\mu - r_f)/\\sigma$: randamentul în exces pe unitatea de risc total.",
-                "incorrectExplanation": "Randamentul pe unitatea de abatere negativă este Sortino ratio; pe unitatea de maximum drawdown, Calmar ratio."
+                "incorrectExplanation": "Randamentul pe unitatea de abatere negativă este raportul Sortino; pe unitatea de drawdown maxim, raportul Calmar."
             }
         },
         {
@@ -482,15 +482,15 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "Annual SR $= \\sqrt{q} \\times$ daily SR $= \\sqrt{252} \\times 0.05 \\approx 0.79$."
             },
             "ro": {
-                "title": "Anualizarea Sharpe ratio",
-                "text": "Sharpe ratio zilnic este 0,05 pentru o acțiune tranzacționată 252 de zile pe an. Care este Sharpe ratio anual (randamente necorelate)?",
+                "title": "Anualizarea raportului Sharpe",
+                "text": "Raportul Sharpe zilnic este 0,05 pentru o acțiune tranzacționată 252 de zile pe an. Care este raportul Sharpe anual (randamente necorelate)?",
                 "options": [
                     "$0{,}05 \\times 252 = 12{,}6$",
                     "0,05",
                     "$0{,}05 \\times \\sqrt{252} \\approx 0{,}79$",
                     "$0{,}05/\\sqrt{252}$"
                 ],
-                "correctExplanation": "Media crește cu $q$, iar volatilitatea cu $\\sqrt{q}$, deci Sharpe ratio crește cu $\\sqrt{q}$.",
+                "correctExplanation": "Media crește proporțional cu $q$, iar volatilitatea cu $\\sqrt{q}$, deci raportul Sharpe crește proporțional cu $\\sqrt{q}$.",
                 "incorrectExplanation": "SR anual $= \\sqrt{q} \\times$ SR zilnic $= \\sqrt{252} \\times 0{,}05 \\approx 0{,}79$."
             }
         },
@@ -509,13 +509,13 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "Compare the difference with the standard errors: a gap of 0.12 is much smaller than the estimation error."
             },
             "ro": {
-                "title": "Compararea Sharpe ratio",
-                "text": "Două active au Sharpe ratio anual 1,05 și 0,93, fiecare estimat din circa 12 ani de date, cu eroare standard de aproximativ 0,3. Ce putem concluziona?",
+                "title": "Compararea rapoartelor Sharpe",
+                "text": "Două active au rapoarte Sharpe anuale de 1,05 și 0,93, fiecare estimat din circa 12 ani de date, cu eroare standard de aproximativ 0,3. Ce putem concluziona?",
                 "options": [
                     "Primul activ este semnificativ mai bun",
                     "Diferența este mult sub eroarea de estimare",
                     "Al doilea activ este semnificativ mai bun",
-                    "Ambele Sharpe ratio sînt zero"
+                    "Ambele rapoarte Sharpe sînt zero"
                 ],
                 "correctExplanation": "Cu erori standard de circa 0,3, o diferență de 0,12 este departe de a fi semnificativă.",
                 "incorrectExplanation": "Comparați diferența cu erorile standard: o diferență de 0,12 este mult mai mică decît eroarea de estimare."
@@ -536,16 +536,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "Only the returns below the target enter the denominator of the Sortino ratio."
             },
             "ro": {
-                "title": "Sortino ratio",
-                "text": "Prin ce diferă Sortino ratio de Sharpe ratio?",
+                "title": "Raportul Sortino",
+                "text": "Prin ce diferă raportul Sortino de raportul Sharpe?",
                 "options": [
-                    "Folosește maximum drawdown la numitor",
+                    "Folosește drawdown-ul maxim la numitor",
                     "Folosește mediana în locul mediei",
                     "Folosește riscul sistematic (beta)",
                     "Folosește în măsura riscului doar randamentele sub un prag (abaterea negativă)"
                 ],
-                "correctExplanation": "Sortino ratio împarte la abaterea negativă $\\sigma_D = \\sqrt{\\frac1n \\sum \\min(R_t - \\tau, 0)^2}$.",
-                "incorrectExplanation": "La numitorul Sortino ratio intră doar randamentele de sub prag."
+                "correctExplanation": "Raportul Sortino împarte la abaterea negativă $\\sigma_D = \\sqrt{\\frac1n \\sum \\min(R_t - \\tau, 0)^2}$.",
+                "incorrectExplanation": "La numitorul raportului Sortino intră doar randamentele de sub prag."
             }
         },
         {
@@ -563,16 +563,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "The MDD is measured from a previous peak to a later trough; it is usually much larger than the worst single day."
             },
             "ro": {
-                "title": "Maximum drawdown",
-                "text": "Ce este maximum drawdown (MDD)?",
+                "title": "Drawdown maxim",
+                "text": "Ce este drawdown-ul maxim (MDD, maximum drawdown)?",
                 "options": [
                     "Cea mai mare cădere de la un vîrf anterior la un minim ulterior",
-                    "Cel mai prost randament zilnic",
+                    "Cel mai slab randament zilnic",
                     "Cea mai mare pierdere anuală",
                     "Diferența dintre cel mai mare și cel mai mic preț"
                 ],
                 "correctExplanation": "$\\text{MDD} = \\min_t \\big(P_t/\\max_{s \\le t} P_s - 1\\big)$: cea mai mare cădere de la vîrf la minim.",
-                "incorrectExplanation": "MDD se măsoară de la un vîrf anterior la un minim ulterior; de obicei este mult mai mare decît cea mai proastă zi."
+                "incorrectExplanation": "MDD se măsoară de la un vîrf anterior la un minim ulterior; de obicei este mult mai mare decît pierderea din cea mai slabă zi."
             }
         },
         {
@@ -590,16 +590,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "The Calmar ratio puts the maximum drawdown in the denominator: CAGR$/|$MDD$|$."
             },
             "ro": {
-                "title": "Calmar ratio",
-                "text": "Cum se definește Calmar ratio?",
+                "title": "Raportul Calmar",
+                "text": "Cum se definește raportul Calmar?",
                 "options": [
                     "Randamentul mediu împărțit la volatilitate",
-                    "CAGR împărțit la valoarea absolută a maximum drawdown",
-                    "Maximum drawdown împărțit la volatilitate",
+                    "CAGR împărțit la valoarea absolută a drawdown-ului maxim",
+                    "Drawdown-ul maxim împărțit la volatilitate",
                     "CAGR împărțit la abaterea negativă"
                 ],
                 "correctExplanation": "Calmar $= \\text{CAGR}/|\\text{MDD}|$: creșterea pe unitatea celei mai mari căderi.",
-                "incorrectExplanation": "Calmar ratio are la numitor maximum drawdown: CAGR$/|$MDD$|$."
+                "incorrectExplanation": "Raportul Calmar are la numitor drawdown-ul maxim: CAGR$/|$MDD$|$."
             }
         },
         {
@@ -613,7 +613,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "The 5% volatility asset",
                     "It cannot be determined"
                 ],
-                "correctExplanation": "Growth $\\approx$ arithmetic mean $- \\sigma^2/2$: about 9.9% vs 5.5% a year.",
+                "correctExplanation": "Growth $\\approx$ arithmetic mean $- \\sigma^2/2$: about 9.9% against 5.5% a year.",
                 "incorrectExplanation": "The volatility drag $\\sigma^2/2$ is 0.125% for the first asset and 4.5% for the second, so the low-volatility asset grows faster."
             },
             "ro": {
@@ -625,7 +625,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Activul cu volatilitate de 5%",
                     "Nu se poate stabili"
                 ],
-                "correctExplanation": "Creșterea $\\approx$ media aritmetică $- \\sigma^2/2$: aproximativ 9,9% vs 5,5% pe an.",
+                "correctExplanation": "Creșterea $\\approx$ media aritmetică $- \\sigma^2/2$: aproximativ 9,9% pe an, față de 5,5%.",
                 "incorrectExplanation": "Volatility drag $\\sigma^2/2$ este 0,125% pentru primul activ și 4,5% pentru al doilea, deci activul cu volatilitate mică crește mai repede."
             }
         },
@@ -644,16 +644,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "The ADF test does not reject a unit root for log prices but rejects it for returns: returns are the stationary object."
             },
             "ro": {
-                "title": "Prețuri vs randamente",
+                "title": "Prețuri sau randamente",
                 "text": "De ce se estimează modelele statistice de obicei pe randamente, nu pe prețuri?",
                 "options": [
-                    "Randamentele sînt întotdeauna normal distribuite",
+                    "Randamentele urmează întotdeauna distribuția Normală",
                     "Prețurile nu se observă zilnic",
                     "Randamentele nu au valori extreme",
-                    "Prețurile au trend și rătăcesc (rădăcină unitară), iar randamentele oscilează în jurul unui nivel stabil"
+                    "Prețurile au trend și nu revin la un nivel fix (rădăcină unitară), iar randamentele oscilează în jurul unui nivel stabil"
                 ],
                 "correctExplanation": "Logaritmul prețului se comportă ca un mers aleator (nestaționar); randamentele sînt aproximativ staționare, cum cer majoritatea metodelor.",
-                "incorrectExplanation": "Testul ADF nu respinge rădăcina unitară pentru logaritmul prețului, dar o respinge pentru randamente: randamentele sînt obiectul staționar."
+                "incorrectExplanation": "Testul ADF nu respinge rădăcina unitară pentru logaritmul prețului, dar o respinge pentru randamente: seria staționară este cea a randamentelor."
             }
         }
     ]

@@ -112,13 +112,13 @@
             ro: {
                 pageTitle: 'Statistica piețelor financiare - Site-ul cursului',
                 courseTitle: 'Statistica piețelor financiare',
-                subtitle: 'Licență, Statistică și Data Science, anul III, semestrul 2 | Facultatea de Cibernetică, Statistică și Informatică Economică | Academia de Studii Economice din București',
+                subtitle: 'Programul de licență Statistică și Data Science, anul III, semestrul 2 | Facultatea de Cibernetică, Statistică și Informatică Economică | Academia de Studii Economice din București',
                 nav: { home: 'Acasă', chapters: 'Capitole', project: 'Proiect', quizzes: 'Quiz-uri', resources: 'Resurse', contact: 'Contact' },
                 overview: 'Prezentarea cursului',
                 objectives: 'Obiective de învățare',
-                heroTag: 'Randamente, distribuții, risc extrem, eficiența pieței și volatilitate, estimate și testate pe date reale de piață, în Python.',
+                heroTag: 'Randamente, distribuții, riscul din cozi, eficiența pieței și volatilitatea, studiate pe date reale de piață, cu estimări și teste în Python.',
                 heroCta1: 'Explorați capitolele',
-                heroCta2: 'Proiectul de echipă',
+                heroCta2: 'Proiect de echipă',
                 heroCta3: 'Formular de prezență',
                 qrTeachers: 'Pentru cadre didactice: cod QR de prezență',
                 qrLecture: 'curs',
@@ -127,7 +127,7 @@
                 teacherPrompt: 'Autentificați-vă cu contul Google de cadru didactic pentru a vedea codul QR de prezență.',
                 teacherDenied: 'Acest cont nu are acces de cadru didactic.',
                 close: 'Închide',
-                formulas: 'Formule cheie',
+                formulas: 'Formule-cheie',
                 chapters: 'Capitolele cursului',
                 chapter: 'Capitolul',
                 chapterShort: 'Cap.',
@@ -137,23 +137,23 @@
                 selfStudy: 'Studiu individual',
                 quantinar: 'Aprofundare pe Quantinar',
                 links: {
-                    slides: 'Slide-uri curs', slidesExtra: 'Slide-uri suplimentare', seminar: 'Seminar', seminarExtra: 'Seminar suplimentar',
+                    slides: 'Slide-urile cursului', slidesExtra: 'Slide-uri suplimentare', seminar: 'Seminar', seminarExtra: 'Seminar suplimentar',
                     notebook: 'Notebook', quantlets: 'Quantlets', colab: 'Deschide în Colab'
                 },
-                projectTitle: 'Proiectul de echipă',
-                aiTitle: 'Utilizarea AI în acest curs',
+                projectTitle: 'Proiect de echipă',
+                aiTitle: 'Utilizarea instrumentelor AI',
                 quizzes: 'Quiz-uri de autoevaluare',
-                quizIntro: 'La fiecare încercare se extrag aleator cel mult 20 de întrebări din banca de întrebări a capitolului, iar variantele de răspuns sînt amestecate. Răspunsul se blochează după selectare.',
+                quizIntro: 'La fiecare încercare se extrag aleator cel mult 20 de întrebări din banca de întrebări a capitolului, iar ordinea variantelor de răspuns se schimbă. Un răspuns ales nu mai poate fi modificat.',
                 loginPrompt: 'Autentificați-vă cu contul Google ASE (@ase.ro sau @stud.ase.ro) pentru a rezolva quiz-urile.',
                 loginRequired: 'Autentificați-vă mai sus cu contul Google ASE pentru a vedea acest quiz.',
                 loginWrongDomain: 'Folosiți contul ASE (@ase.ro sau @stud.ase.ro).',
                 saving: 'Se salvează scorul...',
                 saved: 'Scorul a fost înregistrat.',
-                saveExpired: 'Sesiunea a expirat: ieșiți, autentificați-vă din nou și recalculați scorul.',
-                saveFailed: 'Scorul nu a putut fi salvat. Încercați din nou sau anunțați titularul.',
+                saveExpired: 'Sesiunea a expirat: deconectați-vă, autentificați-vă din nou și recalculați scorul.',
+                saveFailed: 'Scorul nu a putut fi salvat. Încercați din nou sau anunțați titularul de curs.',
                 loggedAs: 'Autentificat ca',
-                logout: 'Ieșire',
-                quizSoon: 'Quiz-ul acestui capitol va fi publicat împreună cu materialele sale.',
+                logout: 'Deconectare',
+                quizSoon: 'Quiz-ul acestui capitol va fi publicat odată cu materialele capitolului.',
                 question: 'Întrebarea',
                 correct: 'Corect!',
                 incorrect: 'Greșit.',
@@ -162,18 +162,18 @@
                 reset: 'Încercare nouă',
                 score: 'Scor',
                 unanswered: 'întrebări fără răspuns',
-                verdicts: ['Mai exersează!', 'Mai studiază!', 'Bine!', 'Excelent!'],
+                verdicts: ['Mai exersați!', 'Mai studiați!', 'Bine!', 'Excelent!'],
                 detailed: 'Rezultate detaliate',
-                colQ: 'Nr.', colQuestion: 'Întrebare', colCorrect: 'Răspuns corect', colYours: 'Răspunsul tău', colResult: 'Rezultat',
+                colQ: 'Nr.', colQuestion: 'Întrebare', colCorrect: 'Răspuns corect', colYours: 'Răspunsul ales', colResult: 'Rezultat',
                 resources: 'Resurse',
                 bibliography: 'Bibliografie',
                 dataSources: 'Surse de date',
                 contact: 'Contact',
-                instructor: 'Titular curs',
+                instructor: 'Titular de curs',
                 seminarCard: 'Seminar',
-                seminarRole: 'Titular seminar',
+                seminarRole: 'Titular de seminar',
                 office: 'Program de consultații',
-                officeText: 'Cu programare',
+                officeText: 'Pe bază de programare',
                 footer: 'Statistica piețelor financiare | Facultatea de Cibernetică, Statistică și Informatică Economică | Academia de Studii Economice din București'
             }
         },
@@ -190,10 +190,10 @@
                 { h: 'Tools', p: ['Python, Jupyter / Google Colab', 'GitHub, Quantlet, Quantinar'] }
             ],
             ro: [
-                { h: 'Curs', p: ['Statistica piețelor financiare', 'Licență, programul Statistică și Data Science', 'Anul III, semestrul 2, anul universitar 2026/2027'] },
-                { h: 'Cunoștințe necesare', p: ['Probabilități și statistică', 'Algebră liniară', 'Programare în Python'] },
-                { h: 'Evaluare', p: ['Examen scris: 70%', 'Proiect în echipă: 20%', 'Prezență: 10%'] },
-                { h: 'Manual de bază', p: ['Franke, Härdle și Hafner, <a href="https://doi.org/10.1007/978-3-030-13751-9" target="_blank" rel="noopener"><em>Statistics of Financial Markets</em></a>, ediția a 5-a, Springer, 2019', 'Împreună cu volumul de <a href="https://doi.org/10.1007/978-3-642-33929-5" target="_blank" rel="noopener"><em>Exercises and Solutions</em></a>'] },
+                { h: 'Curs', p: ['Statistica piețelor financiare', 'Programul de licență Statistică și Data Science', 'Anul III, semestrul 2, anul universitar 2026/2027'] },
+                { h: 'Cunoștințe prealabile', p: ['Probabilități și statistică', 'Algebră liniară', 'Programare în Python'] },
+                { h: 'Evaluare', p: ['Examen scris: 70%', 'Proiect de echipă: 20%', 'Prezență: 10%'] },
+                { h: 'Manual de bază', p: ['Franke, Härdle și Hafner, <a href="https://doi.org/10.1007/978-3-030-13751-9" target="_blank" rel="noopener"><em>Statistics of Financial Markets</em></a>, ediția a 5-a, Springer, 2019', 'Cu volumul însoțitor <a href="https://doi.org/10.1007/978-3-642-33929-5" target="_blank" rel="noopener"><em>Exercises and Solutions</em></a>'] },
                 { h: 'Instrumente', p: ['Python, Jupyter / Google Colab', 'GitHub, Quantlet, Quantinar'] }
             ]
         },
@@ -208,12 +208,12 @@
                 'Deliver a reproducible analysis in Python and GitHub, documented as Quantlets'
             ],
             ro: [
-                'Calculul randamentelor și al indicatorilor de performanță (volatilitate, raport Sharpe, drawdown) din prețurile de piață și interpretarea lor corectă',
-                'Descrierea faptelor stilizate ale randamentelor și ajustarea distribuției Normale, a distribuției Student-t și a distribuțiilor α-stabile',
-                'Măsurarea riscului din cozi cu teoria valorilor extreme și alegerea între modele concurente cu criterii informaționale și teste de concordanță',
+                'Calculul randamentelor și al indicatorilor de performanță (volatilitate, raportul Sharpe, drawdown) pe baza prețurilor de piață și interpretarea lor corectă',
+                'Descrierea faptelor stilizate ale randamentelor și ajustarea pe date a distribuției Normale, a distribuției Student-t și a distribuțiilor α-stabile',
+                'Măsurarea riscului din cozi cu teoria valorilor extreme și alegerea între modele concurente pe baza criteriilor informaționale și a testelor de concordanță',
                 'Testarea eficienței pieței (mers aleator, autocorelare, teste variance ratio) și a memoriei lungi (exponentul Hurst)',
-                'Estimarea volatilității cu estimatori bazați pe amplitudine și cu modele GARCH, calculul VaR și al Expected Shortfall și backtesting-ul lor',
-                'Realizarea unei analize reproductibile în Python și GitHub, documentată ca Quantlets'
+                'Estimarea volatilității cu estimatori range-based și cu modele GARCH; calculul VaR și al Expected Shortfall și backtesting-ul acestora',
+                'Elaborarea unei analize reproductibile în Python, publicate pe GitHub și documentate sub formă de Quantlets'
             ]
         },
 
@@ -242,7 +242,7 @@
                 title: { en: 'Data, returns and indicators', ro: 'Date, randamente și indicatori' },
                 topics: {
                     en: ['Data sources and data quality: adjusted prices, total return indices, checking a series', 'Simple and log returns, multi-period and portfolio returns, annualisation', 'Descriptive statistics and performance indicators: CAGR, Sharpe, Sortino, maximum drawdown, Calmar, volatility drag'],
-                    ro: ['Surse de date și calitatea datelor: prețuri ajustate, indici de randament total, verificarea unei serii', 'Randamente simple și logaritmice, pe mai multe perioade și ale portofoliilor, anualizare', 'Statistici descriptive și indicatori de performanță: CAGR, Sharpe, Sortino, maximum drawdown, Calmar, volatility drag']
+                    ro: ['Surse de date și calitatea datelor: prețuri ajustate, indici de randament total, verificarea unei serii', 'Randamente simple și logaritmice, randamente pe mai multe perioade, randamentul unui portofoliu, anualizarea', 'Statistici descriptive și indicatori de performanță: CAGR, Sharpe, Sortino, drawdown maxim, Calmar, volatility drag']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter1_data_returns_indicators.pdf'), pdf('seminar', 'EN/Seminars/seminar1_data_returns_indicators.pdf'),
@@ -257,7 +257,7 @@
                 title: { en: 'Classical distributions and stylised facts', ro: 'Distribuții clasice și fapte stilizate' },
                 topics: {
                     en: ['The Normal and lognormal distributions, the central limit theorem and the Normal approximation', 'Moments, the Jarque–Bera test, QQ plots and the Student-t distribution', 'Stylised facts of returns (Cont, 2001) on real data: heavy tails, aggregational Gaussianity, volatility clustering, leverage effect, gain/loss asymmetry'],
-                    ro: ['Distribuția Normală și distribuția lognormală, teorema limită centrală și aproximarea Normală', 'Momente, testul Jarque–Bera, QQ plots și distribuția Student-t', 'Fapte stilizate ale randamentelor (Cont, 2001) pe date reale: cozi groase, aggregational Gaussianity, volatility clustering, leverage effect, asimetria cîștig/pierdere']
+                    ro: ['Distribuția Normală și distribuția lognormală, teorema limită centrală și aproximarea prin distribuția Normală', 'Momente, testul Jarque–Bera, QQ plots și distribuția Student-t', 'Fapte stilizate ale randamentelor (Cont, 2001) pe date reale: cozi groase, aggregational Gaussianity, volatility clustering, leverage effect, asimetria cîștig/pierdere']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter2_classical_distributions_stylised_facts.pdf'), pdf('seminar', 'EN/Seminars/seminar2_classical_distributions_stylised_facts.pdf'),
@@ -272,7 +272,7 @@
                 title: { en: 'α-stable distributions', ro: 'Distribuții α-stabile' },
                 topics: {
                     en: ['Stability under summation and the generalised central limit theorem', 'Parameters α, β, γ, δ, the S0/S1 parameterisations, power-law tails and infinite variance', 'Simulation (Chambers–Mallows–Stuck), estimation (McCulloch, maximum likelihood) and fits to BET, S&P 500, DAX and Bitcoin; the critique (Mandelbrot, 1963; Nolan, 2020)'],
-                    ro: ['Stabilitatea la adunare și teorema limită centrală generalizată', 'Parametrii α, β, γ, δ, parametrizările S0/S1, cozile de tip putere și varianța infinită', 'Simulare (Chambers–Mallows–Stuck), estimare (McCulloch, verosimilitate maximă) și ajustări pe BET, S&P 500, DAX și Bitcoin; critica (Mandelbrot, 1963; Nolan, 2020)']
+                    ro: ['Stabilitatea la adunare și teorema limită centrală generalizată', 'Parametrii α, β, γ, δ, parametrizările S0/S1, cozile de tip lege de putere și varianța infinită', 'Simulare (Chambers–Mallows–Stuck), estimare (McCulloch, verosimilitate maximă) și ajustarea pe BET, S&P 500, DAX și Bitcoin; critica (Mandelbrot, 1963; Nolan, 2020)']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter3_alpha_stable_distributions.pdf'), pdf('seminar', 'EN/Seminars/seminar3_alpha_stable_distributions.pdf'),
@@ -287,7 +287,7 @@
                 title: { en: 'Probability', ro: 'Probabilitate' },
                 topics: {
                     en: ['Random variables, distributions, moments, covariance and correlation (SFM, ch. 3)', 'Independence vs uncorrelatedness, conditional expectation and conditional variance', 'Random numbers and Monte Carlo; binomial model, random walk, martingale, AR(1), Wiener process and GBM against real data'],
-                    ro: ['Variabile aleatoare, distribuții, momente, covarianță și corelație (SFM, cap. 3)', 'Independență și necorelare, speranța condiționată și varianța condiționată', 'Numere aleatoare și Monte Carlo; modelul binomial, mersul aleator, martingala, AR(1), procesul Wiener și GBM comparate cu date reale']
+                    ro: ['Variabile aleatoare, distribuții, momente, covarianță și corelație (SFM, cap. 3)', 'Independență și necorelare, media condiționată și varianța condiționată', 'Numere aleatoare și metoda Monte Carlo; modelul binomial, mersul aleator, martingala, procesul AR(1), procesul Wiener și mișcarea browniană geometrică (GBM), comparate cu datele reale']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter4_probability.pdf'), pdf('seminar', 'EN/Seminars/seminar4_probability.pdf'),
@@ -302,7 +302,7 @@
                 title: { en: 'Heavy tails and extreme value theory', ro: 'Cozi groase și teoria valorilor extreme' },
                 topics: {
                     en: ['Why tails matter: the crashes of 1987, 2008 and 2020; heavy and light tails, regular variation and the tail index', 'The Hill estimator, the Hill plot and its standard errors; the mean excess function', 'Block maxima and the GEV, peaks over threshold and the GPD, return levels; VaR 1%, ES 2.5% and VaR 0.1% by EVT on the S&P 500, DAX, BET, Bitcoin and BVB stocks'],
-                    ro: ['De ce contează cozile: crahurile din 1987, 2008 și 2020; cozi groase și cozi subțiri, variația regulată și indicele de coadă', 'Estimatorul Hill, graficul Hill și erorile standard; funcția mean excess', 'Block maxima și distribuția GEV, peaks over threshold și distribuția GPD, return levels; VaR 1%, ES 2,5% și VaR 0,1% prin EVT pe S&P 500, DAX, BET, Bitcoin și acțiuni BVB']
+                    ro: ['De ce contează cozile: crahurile din 1987, 2008 și 2020; cozi groase și cozi subțiri, variația regulată și indicele de coadă', 'Estimatorul Hill, Hill plot și erorile standard ale estimatorului; funcția mean excess', 'Block maxima și distribuția GEV, peaks over threshold și distribuția GPD, return levels; VaR 1%, ES 2,5% și VaR 0,1% prin EVT pe S&P 500, DAX, BET, Bitcoin și acțiuni BVB']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter5_heavy_tails_evt.pdf'), pdf('seminar', 'EN/Seminars/seminar5_heavy_tails_evt.pdf'),
@@ -346,7 +346,7 @@
                 title: { en: 'Volatility estimators', ro: 'Estimatori de volatilitate' },
                 topics: {
                     en: ['Historical volatility and EWMA', 'Range-based estimators: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang', 'Volatility clustering: ACF of squared returns'],
-                    ro: ['Volatilitatea istorică și EWMA', 'Estimatori bazați pe amplitudine: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang', 'Gruparea volatilității: ACF a randamentelor la pătrat']
+                    ro: ['Volatilitatea istorică și EWMA', 'Estimatori range-based: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang', 'Volatility clustering: funcția de autocorelație (ACF) a pătratelor randamentelor']
                 },
                 links: {
                     en: [soon('slides'), soon('seminar'),
@@ -385,7 +385,7 @@
                 title: { en: 'Fractal markets hypothesis and long memory', ro: 'Ipoteza piețelor fractale și memoria lungă' },
                 topics: {
                     en: ['The fractal markets hypothesis versus the EMH', 'Hurst exponent: R/S analysis and DFA', 'Long memory, fractional Brownian motion and ARFIMA'],
-                    ro: ['Ipoteza piețelor fractale față de EMH', 'Exponentul Hurst: analiza R/S și DFA', 'Memorie lungă, mișcarea browniană fracționară și ARFIMA']
+                    ro: ['Ipoteza piețelor fractale față de EMH', 'Exponentul Hurst: analiza R/S și DFA', 'Memoria lungă, mișcarea browniană fracționară și modelele ARFIMA']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter14_fractal_market_hypothesis.pdf'), soon('seminar'),
@@ -409,7 +409,7 @@
                 title: { en: 'Machine learning', ro: 'Învățare automată' },
                 topics: {
                     en: ['Neural networks for financial time series (SFM, ch. 19)', 'Trees and random forests', 'Validation without look-ahead bias'],
-                    ro: ['Rețele neuronale pentru serii de timp financiare (SFM, cap. 19)', 'Arbori de decizie și random forests', 'Validare fără look-ahead bias']
+                    ro: ['Rețele neuronale pentru serii de timp financiare (SFM, cap. 19)', 'Arbori de decizie și păduri aleatoare (random forests)', 'Validare fără look-ahead bias']
                 },
                 links: { en: [], ro: [] },
                 quantinar: q('mlRisk', 'rf')
@@ -461,13 +461,13 @@
             ],
             ro: [
                 { h: 'Conținut', p: ['O analiză în echipă a unor date reale de piață cu metodele cursului: randamente și indicatori, distribuții și cozi, teste de eficiență, volatilitate și măsuri de risc.', 'Proiectul reprezintă 20% din nota finală.'] },
-                { h: 'Livrabile', p: ['Un repository GitHub al cărui cod reproduce fiecare cifră și fiecare grafic din datele salvate.', 'Un raport scurt și o prezentare a rezultatelor.'] },
-                { h: 'Criterii de evaluare', p: ['O întrebare clară, metode și verificări corecte și interpretarea rezultatelor.', 'Fiecare membru trebuie să poată explica codul și rezultatele.'] }
+                { h: 'Livrabile', p: ['Un repository GitHub cu codul care reproduce, din datele salvate, fiecare rezultat numeric și fiecare grafic.', 'Un raport scurt și o prezentare a rezultatelor.'] },
+                { h: 'Criterii de evaluare', p: ['Claritatea întrebării de cercetare, corectitudinea metodelor și a verificărilor, interpretarea rezultatelor.', 'Fiecare membru trebuie să poată explica codul și rezultatele.'] }
             ]
         },
         aiPolicy: {
             en: ['AI tools are allowed and must be declared in AI_USE.md (tool, prompts, what was kept)', 'Every number and every reference produced with AI is checked by the team', 'The oral defence of the project checks that each member understands the code and the results'],
-            ro: ['Instrumentele AI sînt permise și se declară în AI_USE.md (instrument, prompturi, ce s-a păstrat)', 'Fiecare număr și fiecare referință obținute cu AI sînt verificate de echipă', 'Susținerea orală a proiectului verifică dacă fiecare membru înțelege codul și rezultatele']
+            ro: ['Instrumentele AI sînt permise și se declară în AI_USE.md (instrument, prompturi, ce s-a păstrat)', 'Fiecare rezultat numeric și fiecare referință obținute cu AI sînt verificate de echipă', 'Susținerea orală a proiectului verifică dacă fiecare membru înțelege codul și rezultatele']
         },
 
         // ---------------------------------------------------------------

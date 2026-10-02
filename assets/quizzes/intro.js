@@ -26,12 +26,12 @@ window.SFM_DATA.quizzes['intro'] = {
                 "text": "Cum se formează nota finală a cursului?",
                 "options": [
                     "50% examen, 50% proiect",
-                    "70% examen scris, 20% proiect în echipă, 10% prezență",
+                    "70% examen scris, 20% proiect de echipă, 10% prezență",
                     "60% examen, 40% proiect",
                     "100% examen scris"
                 ],
-                "correctExplanation": "Nota este formată din 70% examen scris, 20% proiect în echipă și 10% prezență.",
-                "incorrectExplanation": "Nota combină examenul scris (70%), proiectul în echipă (20%) și prezența (10%)."
+                "correctExplanation": "Nota finală se compune din examenul scris (70%), proiectul de echipă (20%) și prezență (10%).",
+                "incorrectExplanation": "Nota finală combină examenul scris (70%), proiectul de echipă (20%) și prezența (10%)."
             }
         },
         {
@@ -55,10 +55,10 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Instrumentele AI sînt interzise",
                     "Instrumentele AI sînt permise fără nicio declarație",
                     "Doar referințele generate de AI pot fi folosite fără verificare",
-                    "Instrumentele AI sînt permise, fiecare folosire se declară în AI_USE.md, iar echipa își susține oral lucrarea"
+                    "Instrumentele AI sînt permise, fiecare utilizare se declară în AI_USE.md, iar echipa își susține oral proiectul"
                 ],
-                "correctExplanation": "AI este permis și declarat; susținerea orală verifică faptul că fiecare membru înțelege codul și rezultatele.",
-                "incorrectExplanation": "Instrumentele AI sînt permise, dar se declară în AI_USE.md; fiecare cifră și referință se verifică, iar susținerea orală testează înțelegerea."
+                "correctExplanation": "Utilizarea AI este permisă și se declară; susținerea orală verifică dacă fiecare membru înțelege codul și rezultatele.",
+                "incorrectExplanation": "Instrumentele AI sînt permise, dar se declară în AI_USE.md; fiecare rezultat numeric și fiecare referință se verifică, iar susținerea orală verifică înțelegerea."
             }
         },
         {
@@ -79,13 +79,13 @@ window.SFM_DATA.quizzes['intro'] = {
                 "title": "Seminarii",
                 "text": "Care afirmație despre seminarii este corectă?",
                 "options": [
-                    "Fiecare seminar are loc înaintea cursului său și nu se predă nimic",
+                    "Fiecare seminar are loc înaintea cursului corespunzător, iar studenții nu au nimic de trimis",
                     "Temele de seminar se notează în fiecare săptămînă",
-                    "Seminarele repetă cursul după ce a fost predat",
+                    "Seminariile repetă cursul după ce a fost predat",
                     "Exercițiile propuse trebuie încărcate pe GitHub"
                 ],
-                "correctExplanation": "Seminarele preced cursurile, încep cu o scurtă introducere, iar temele sînt doar exercițiu.",
-                "incorrectExplanation": "Fiecare seminar are loc înaintea cursului său, cu o scurtă introducere; nu se predă nimic, temele sînt exercițiu."
+                "correctExplanation": "Seminariile preced cursurile și încep cu o scurtă introducere; temele servesc doar ca exercițiu.",
+                "incorrectExplanation": "Fiecare seminar are loc înaintea cursului corespunzător și începe cu o scurtă introducere; studenții nu trimit nimic, iar temele servesc doar ca exercițiu."
             }
         },
         {
@@ -111,7 +111,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Franke, Härdle și Hafner, Statistics of Financial Markets, ediția a 5-a",
                     "McNeil, Frey și Embrechts, Quantitative Risk Management"
                 ],
-                "correctExplanation": "Manualul de bază este Franke, Härdle și Hafner (2019); seminarele folosesc volumul Exercises and Solutions.",
+                "correctExplanation": "Manualul de bază este Franke, Härdle și Hafner (2019); seminariile folosesc volumul însoțitor Exercises and Solutions.",
                 "incorrectExplanation": "Cursul urmează Franke, Härdle și Hafner, Statistics of Financial Markets (ediția a 5-a, Springer, 2019)."
             }
         },
@@ -131,15 +131,15 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Descoperirea prețului",
-                "text": "Ce înseamnă funcția numită descoperirea prețului?",
+                "text": "Ce înseamnă funcția de descoperire a prețului (price discovery)?",
                 "options": [
                     "Bursele publică în fiecare dimineață o listă de prețuri fixe",
-                    "Prețurile adună informația împrăștiată între mulți participanți",
+                    "Prețurile agregă informația dispersată între mulți participanți la piață",
                     "Statul stabilește prețul acțiunilor",
                     "Brokerii găsesc cea mai ieftină acțiune"
                 ],
                 "correctExplanation": "Prin tranzacționare, prețurile agregă informația dispersată între participanții la piață.",
-                "incorrectExplanation": "Descoperirea prețului înseamnă că prețurile adună informația împrăștiată între mulți participanți."
+                "incorrectExplanation": "Descoperirea prețului înseamnă că prețurile agregă informația dispersată între mulți participanți la piață."
             }
         },
         {
@@ -193,7 +193,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "100,015"
                 ],
                 "correctExplanation": "2 unități la 100,01 și 3 la 100,02: (2 × 100,01 + 3 × 100,02) / 5 = 100,016.",
-                "incorrectExplanation": "Ordinul consumă registrul: 2 unități la 100,01, apoi 3 la 100,02, în medie 100,016."
+                "incorrectExplanation": "Ordinul parcurge registrul de ordine: 2 unități la 100,01, apoi 3 la 100,02, deci un preț mediu de 100,016."
             }
         },
         {
@@ -273,7 +273,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Randamentele logaritmice",
                     "Ambele"
                 ],
-                "correctExplanation": "Randamentele logaritmice se reduc telescopic: suma lor zilnică este ln(PT/P0). Randamentele simple se compun.",
+                "correctExplanation": "Suma randamentelor logaritmice zilnice este telescopică și dă ln(PT/P0). Randamentele simple se compun.",
                 "incorrectExplanation": "Randamentele logaritmice se adună în timp; randamentele simple trebuie compuse."
             }
         },
@@ -293,7 +293,7 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Randamentul pe două zile",
-                "text": "Un preț evoluează 100 → 110 → 99. Cît este randamentul simplu pe două zile?",
+                "text": "Prețul evoluează astfel: 100 → 110 → 99. Cît este randamentul simplu pe două zile?",
                 "options": [
                     "-1%",
                     "0%",
@@ -382,7 +382,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "-30%"
                 ],
                 "correctExplanation": "Cea mai mare scădere față de un vîrf anterior este de la 120 la 90: 90/120 - 1 = -25%.",
-                "incorrectExplanation": "Drawdown-ul se măsoară față de vîrful curent; cel mai adînc este 90/120 - 1 = -25%."
+                "incorrectExplanation": "Drawdown-ul se măsoară față de maximul atins pînă la acel moment; cel mai adînc este 90/120 - 1 = -25%."
             }
         },
         {
@@ -403,13 +403,13 @@ window.SFM_DATA.quizzes['intro'] = {
                 "title": "BET-TR",
                 "text": "Prin ce diferă indicele BET-TR de indicele BET?",
                 "options": [
-                    "BET-TR include dividendele, reinvestite",
+                    "BET-TR include dividendele reinvestite",
                     "BET-TR conține doar bănci",
                     "BET-TR este cotat în euro",
                     "BET-TR se calculează săptămînal"
                 ],
-                "correctExplanation": "BET-TR (total return) reinvestește dividendele, importante pentru firmele românești.",
-                "incorrectExplanation": "BET-TR este varianta total return a BET: dividendele sînt reinvestite."
+                "correctExplanation": "BET-TR (total return) reinvestește dividendele, care au o pondere mare în randamentul acțiunilor românești.",
+                "incorrectExplanation": "BET-TR este varianta de randament total (total return) a indicelui BET: dividendele sînt reinvestite."
             }
         },
         {
@@ -443,26 +443,26 @@ window.SFM_DATA.quizzes['intro'] = {
             "correct": 1,
             "en": {
                 "title": "BET after 2008",
-                "text": "What was the maximum drawdown of the BET index in 2008-2009, and when did it regain its 2007 peak?",
+                "text": "What were the maximum drawdown of the BET index in 2008-2009 and the year in which it regained its 2007 peak?",
                 "options": [
                     "About -30%, in 2010",
                     "About -82.5%, only in 2021",
                     "About -50%, in 2013",
                     "It never fell below -20%"
                 ],
-                "correctExplanation": "BET fell -82.5% by February 2009 and regained its July 2007 peak only in March 2021.",
+                "correctExplanation": "BET fell by 82.5% until February 2009 and regained its July 2007 peak only in March 2021.",
                 "incorrectExplanation": "The BET drawdown reached -82.5% and lasted more than 13 years."
             },
             "ro": {
                 "title": "BET după 2008",
-                "text": "Cît a fost drawdown-ul maxim al indicelui BET în 2008-2009 și cînd și-a recuperat vîrful din 2007?",
+                "text": "Care au fost drawdown-ul maxim al indicelui BET în 2008–2009 și anul în care indicele și-a recuperat vîrful din 2007?",
                 "options": [
                     "Aproximativ -30%, în 2010",
                     "Aproximativ -82,5%, abia în 2021",
                     "Aproximativ -50%, în 2013",
                     "Nu a scăzut niciodată sub -20%"
                 ],
-                "correctExplanation": "BET a scăzut cu -82,5% pînă în februarie 2009 și și-a recuperat vîrful din iulie 2007 abia în martie 2021.",
+                "correctExplanation": "BET a scăzut cu 82,5% pînă în februarie 2009 și și-a recuperat vîrful din iulie 2007 abia în martie 2021.",
                 "incorrectExplanation": "Drawdown-ul BET a ajuns la -82,5% și a durat peste 13 ani."
             }
         },
@@ -482,15 +482,15 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Cozi groase",
-                "text": "Kurtosis-ul randamentelor zilnice ale S&P 500 din 2000 este aproximativ 13,7. Ce arată aceasta?",
+                "text": "Coeficientul de aplatizare (kurtosis) al randamentelor zilnice ale S&P 500 din 2000 încoace este aproximativ 13,7. Ce arată această valoare?",
                 "options": [
                     "Randamentele urmează distribuția Normală",
                     "Randamentele nu depășesc niciodată 1%",
-                    "Cozile sînt mult mai groase decît în distribuția Normală, al cărei kurtosis este 3",
+                    "Cozile sînt mult mai groase decît în distribuția Normală, al cărei coeficient de aplatizare este 3",
                     "Volatilitatea este constantă"
                 ],
-                "correctExplanation": "Distribuția Normală are kurtosis 3; o valoare mult mai mare înseamnă mult mai multe zile extreme.",
-                "incorrectExplanation": "Kurtosis 13,7 față de 3 în distribuția Normală: cozi groase."
+                "correctExplanation": "Distribuția Normală are coeficientul de aplatizare 3; o valoare mult mai mare înseamnă mult mai multe zile extreme.",
+                "incorrectExplanation": "Un coeficient de aplatizare de 13,7, față de 3 pentru distribuția Normală, indică cozi groase."
             }
         },
         {
@@ -538,20 +538,20 @@ window.SFM_DATA.quizzes['intro'] = {
                 "title": "Mandelbrot",
                 "text": "Ce a arătat Benoit Mandelbrot în 1963 despre prețurile bumbacului?",
                 "options": [
-                    "Variațiile lor sînt independente și Normale",
+                    "Variațiile lor sînt independente și urmează distribuția Normală",
                     "Urmează un ciclu determinist",
                     "Sînt perfect previzibile",
                     "Variațiile lor au cozi mult mai groase decît distribuția Normală"
                 ],
                 "correctExplanation": "Mandelbrot (1963) a găsit cozi groase și a propus distribuțiile α-stabile.",
-                "incorrectExplanation": "Mandelbrot a arătat că variațiile prețurilor au cozi groase, spre deosebire de modelul Normal."
+                "incorrectExplanation": "Mandelbrot a arătat că variațiile prețurilor au cozi groase, contrar ipotezei distribuției Normale."
             }
         },
         {
             "correct": 1,
             "en": {
                 "title": "Bucharest Stock Exchange",
-                "text": "When did the Bucharest exchange first open, and when was the BVB re-established?",
+                "text": "In which years did the Bucharest exchange first open and the BVB re-open?",
                 "options": [
                     "1900 and 1990",
                     "1882 and 1995",
@@ -563,7 +563,7 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Bursa de Valori București",
-                "text": "Cînd s-a deschis prima dată bursa din București și cînd a fost reînființată BVB?",
+                "text": "În ce ani s-a deschis prima dată bursa din București și a fost reînființată BVB?",
                 "options": [
                     "1900 și 1990",
                     "1882 și 1995",
@@ -571,7 +571,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "1948 și 1997"
                 ],
                 "correctExplanation": "Bursa s-a deschis la 1 decembrie 1882, a fost închisă în 1948 și și-a reluat activitatea cu prima ședință la 20 noiembrie 1995.",
-                "incorrectExplanation": "București: 1882–1948, apoi din nou din 1995; indicele BET a pornit în 1997."
+                "incorrectExplanation": "Bursa din București a funcționat între 1882 și 1948, apoi din nou din 1995; indicele BET se calculează din 1997."
             }
         },
         {
@@ -594,11 +594,11 @@ window.SFM_DATA.quizzes['intro'] = {
                 "options": [
                     "A ruinat economia olandeză",
                     "Nu a avut loc niciodată",
-                    "A fost un episod mai mic decît legenda, cu puține falimente",
+                    "A fost un episod de amploare mai mică decît sugerează legenda, cu puține falimente",
                     "A durat peste zece ani"
                 ],
-                "correctExplanation": "Cercetarea de arhivă arată un episod scurt, cu pagube limitate, mult mai mic decît povestea populară.",
-                "incorrectExplanation": "Cercetările ulterioare au găsit un episod mai mic decît legenda, cu puține falimente."
+                "correctExplanation": "Cercetarea de arhivă arată un episod scurt, cu pagube limitate, de amploare mult mai mică decît în versiunea populară.",
+                "incorrectExplanation": "Cercetările ulterioare au găsit un episod de amploare mai mică decît sugerează legenda, cu puține falimente."
             }
         },
         {
@@ -632,7 +632,7 @@ window.SFM_DATA.quizzes['intro'] = {
             "correct": 3,
             "en": {
                 "title": "Data check",
-                "text": "A EUR/RON quote jumps 15% and returns to its previous level the next day, while the BNR rate barely moves. What is it most likely?",
+                "text": "A EUR/RON quote jumps 15% and returns to its previous level the next day, while the BNR rate barely moves. What is the most likely explanation?",
                 "options": [
                     "A currency crisis",
                     "A devaluation by the BNR",
@@ -644,7 +644,7 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Verificarea datelor",
-                "text": "O cotație EUR/RON sare cu 15% și revine a doua zi la nivelul anterior, iar cursul BNR aproape nu se mișcă. Ce este cel mai probabil?",
+                "text": "O cotație EUR/RON sare cu 15% și revine a doua zi la nivelul anterior, iar cursul BNR aproape nu se mișcă. Care este explicația cea mai probabilă?",
                 "options": [
                     "O criză valutară",
                     "O devalorizare decisă de BNR",
