@@ -15,5 +15,6 @@ EXTRA = {
     'SVJ': ('Stochastic Volatility with Jumps (model)', 'en', 'volatilitate stocastică cu salturi în preț', None),
     'TFLOPS': ('Tera FLoating-point Operations Per Second', 'en', 'mii de miliarde de operații în virgulă mobilă pe secundă', None),
     'TGARCH': ('Threshold GARCH', 'en', 'GARCH cu prag (asimetric)', None),
+    'VOC': ('Vereenigde Oostindische Compagnie', 'nl', 'Compania Olandeză a Indiilor de Est', 'the Dutch East India Company'),
 }
 OVERRIDE_CH = {}
