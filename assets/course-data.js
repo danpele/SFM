@@ -22,7 +22,8 @@
         blockchainIntro: ['Introduction to Blockchain and Cryptocurrencies', 'https://quantinar.com/course/134/introduction-to-blockchain-and-cryptocurrencies'],
         cryptoAsset: ['Cryptocurrency as an Asset Class', 'https://quantinar.com/course/55/cryptoasset'],
         frm: ['Financial Risk Meter for Emerging Markets', 'https://quantinar.com/course/52/FRM'],
-        cryptoNetworks: ['Dynamic Crypto Networks', 'https://quantinar.com/course/50/cryptonetworks']
+        cryptoNetworks: ['Dynamic Crypto Networks', 'https://quantinar.com/course/50/cryptonetworks'],
+        stable: ['Stable Distribution', 'https://quantinar.com/course/980/stable-distribution']
     };
     const q = (...keys) => keys.map(k => ({ title: Q[k][0], url: Q[k][1] }));
 
@@ -270,15 +271,16 @@
                 id: 'stable', num: 3,
                 title: { en: 'α-stable distributions', ro: 'Distribuții α-stabile' },
                 topics: {
-                    en: ['Stability under addition and the generalised central limit theorem', 'Parameters α, β, γ, δ and the moments that exist', 'Estimating the tail index on market data (Mandelbrot, 1963; Nolan, 2020)'],
-                    ro: ['Stabilitatea la adunare și teorema limită centrală generalizată', 'Parametrii α, β, γ, δ și momentele care există', 'Estimarea indicelui de coadă pe date de piață (Mandelbrot, 1963; Nolan, 2020)']
+                    en: ['Stability under summation and the generalised central limit theorem', 'Parameters α, β, γ, δ, the S0/S1 parameterisations, power-law tails and infinite variance', 'Simulation (Chambers–Mallows–Stuck), estimation (McCulloch, maximum likelihood) and fits to BET, S&P 500, DAX and Bitcoin; the critique (Mandelbrot, 1963; Nolan, 2020)'],
+                    ro: ['Stabilitatea la adunare și teorema limită centrală generalizată', 'Parametrii α, β, γ, δ, parametrizările S0/S1, cozile de tip putere și varianța infinită', 'Simulare (Chambers–Mallows–Stuck), estimare (McCulloch, verosimilitate maximă) și ajustări pe BET, S&P 500, DAX și Bitcoin; critica (Mandelbrot, 1963; Nolan, 2020)']
                 },
                 links: {
-                    en: [soon('slides'), pdf('seminar', 'EN/Seminars/seminar3_stable_distributions_en.pdf'),
-                         nb('Quantlets/Ch_02/SFM_ch2_stable_distributions/SFM_ch2_stable_distributions.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_stable_distributions')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter3_stable_distributions_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar3_distributii_stabile_ro.pdf'),
-                         nb('Quantlets/Ch_02/SFM_ch2_stable_distributions/SFM_ch2_stable_distributions.ipynb'), ql('Quantlets/Ch_02/SFM_ch2_stable_distributions')]
-                }
+                    en: [pdf('slides', 'EN/Courses/chapter3_alpha_stable_distributions.pdf'), pdf('seminar', 'EN/Seminars/seminar3_alpha_stable_distributions.pdf'),
+                         nb('notebooks/EN/chapter3_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter3_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_03')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol3_distributii_alfa_stabile.pdf'), pdf('seminar', 'RO/Seminarii/seminar3_distributii_alfa_stabile_ro.pdf'),
+                         nb('notebooks/EN/chapter3_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter3_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_03')]
+                },
+                quantinar: q('stable')
             },
             {
                 id: 'probability', num: 4,

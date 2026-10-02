@@ -37,3 +37,13 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch2_galton_board.jpg | https://commons.wikimedia.org/wiki/File:Galton_box_2.jpg | Klaus-Dieter Keller | Public domain | 2010-06-10 |
 | ch2_gosset_1908.jpg | https://commons.wikimedia.org/wiki/File:William_Sealy_Gosset.jpg | Unknown author (scan from Gosset's obituary, Annals of Eugenics) | Public domain | 1908 |
 | ch2_cont_2012.jpg | https://commons.wikimedia.org/wiki/File:Rama_Cont_Oberwolfach_2012.jpg | Renate Schmid | CC BY-SA 2.0 DE | 2012 |
+
+## Chapter 3 — α-stable distributions
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch3_mandelbrot.jpg | https://commons.wikimedia.org/wiki/File:Benoit_Mandelbrot_mg_1804-d.jpg | Rama | CC BY-SA 2.0 fr | 2007-03-14 |
+| ch3_levy.jpg | https://commons.wikimedia.org/wiki/File:Paul_Pierre_Levy_1886-1971.jpg | Konrad Jacobs, Erlangen (Oberwolfach Photo Collection) | CC BY-SA 2.0 de | — |
+| ch3_cotton_office.jpg | https://commons.wikimedia.org/wiki/File:Edgar_Germain_Hilaire_Degas_016.jpg | Edgar Degas | Public domain | 1873 |
+| ch3_cauchy.jpg | https://commons.wikimedia.org/wiki/File:Augstin_Louis,_Baron_Cauchy._Lithograph_by_J._Boilly,_1821._Wellcome_V0001034.jpg | J. Boilly (Wellcome Collection) | CC BY 2.0 | 1821 |
+| ch3_fama.jpg | https://commons.wikimedia.org/wiki/File:Eugene_Fama_at_Nobel_Prize,_2013.jpg | Bengt Nyman | CC BY 2.0 | 2013-12-07 |
