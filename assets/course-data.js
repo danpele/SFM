@@ -29,7 +29,9 @@
     // helpers for chapter links
     const pdf = (type, href, label) => (label ? { type, href, label } : { type, href });
     const soon = type => ({ type, soon: true });
-    const nb = path => ({ type: 'notebook', href: REPO + '/blob/main/' + path, colab: COLAB + path });
+    const nb = (path, label) => Object.assign({ type: 'notebook', href: REPO + '/blob/main/' + path, colab: COLAB + path }, label ? { label } : {});
+    const NB_LECT = { en: 'Lecture notebook', ro: 'Notebook curs' };
+    const NB_SEM = { en: 'Seminar notebook', ro: 'Notebook seminar' };
     const ql = path => ({ type: 'quantlets', href: TREE + path });
 
     window.SFM_DATA = {
@@ -227,8 +229,10 @@
                     ro: ['Ce studiază statistica piețelor financiare și de ce datele financiare cer metode proprii', 'Piețe, prețuri și datele folosite în curs', 'Organizare, evaluare și instrumente']
                 },
                 links: {
-                    en: [pdf('slides', 'EN/Courses/chapter0_introduction.pdf')],
-                    ro: [pdf('slides', 'RO/Cursuri/capitol0_introducere.pdf')]
+                    en: [pdf('slides', 'EN/Courses/chapter0_introduction.pdf'), pdf('seminar', 'EN/Seminars/seminar0_introduction.pdf'),
+                         nb('notebooks/EN/chapter0_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter0_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_00')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol0_introducere.pdf'), pdf('seminar', 'RO/Seminarii/seminar0_introducere_ro.pdf'),
+                         nb('notebooks/EN/chapter0_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter0_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_00')]
                 },
                 quantinar: q('sfm')
             },
@@ -456,7 +460,10 @@
                 { h: 'Ce notăm', p: ['O întrebare clară, metode și verificări corecte și interpretarea rezultatelor.', 'Fiecare membru trebuie să poată explica codul și rezultatele.'] }
             ]
         },
-        aiPolicy: { en: [], ro: [] },
+        aiPolicy: {
+            en: ['AI tools are allowed and must be declared in AI_USE.md (tool, prompts, what was kept)', 'Every number and every reference produced with AI is checked by the team', 'The oral defence of the project checks that each member understands the code and the results'],
+            ro: ['Instrumentele AI sînt permise și se declară în AI_USE.md (instrument, prompturi, ce s-a păstrat)', 'Fiecare număr și fiecare referință obținute cu AI sînt verificate de echipă', 'Susținerea orală a proiectului verifică dacă fiecare membru înțelege codul și rezultatele']
+        },
 
         // ---------------------------------------------------------------
         // Resources
