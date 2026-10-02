@@ -234,7 +234,7 @@ def entry(key, lang, chap=None):
         tr = ro if olang != 'ro' else None
     else:
         tr = en if olang != 'en' else None
-    tex = origin if not tr else f'{origin} ({tr})'
+    tex = origin if not tr else (f'{origin} — {tr}' if origin.endswith(')') else f'{origin} ({tr})')   # no doubled parentheses
     return r'\item \textbf{' + key + '}: ' + tex.replace('&', r'\&')
 
 
