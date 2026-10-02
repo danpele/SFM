@@ -299,7 +299,7 @@ D.frame(T('Data Frequency', 'Frecvența datelor'), items(
 
 D.frame(T('Where the Data Come From', 'De unde vin datele'), table(
     TBL + 'p{3.4cm}' + TBL + 'p{5.6cm}' + TBL + 'p{3.4cm}',
-    T('\\textbf{Source}', '\\textbf{Sursa}') + ' & ' + T('\\textbf{What it provides}', '\\textbf{Ce oferă}') + ' & ' + T('\\textbf{Access}', '\\textbf{Acces}'),
+    T('\\textbf{Source}', '\\textbf{Sursa}') + ' & ' + T('\\textbf{What it provides}', '\\textbf{Date disponibile}') + ' & ' + T('\\textbf{Access}', '\\textbf{Acces}'),
     [T('Exchanges (BVB, Deutsche Börse, NYSE)', 'Burse (BVB, Deutsche Börse, NYSE)') + ' & ' + T('official prices, volumes, index levels', 'prețuri oficiale, volume, niveluri ale indicilor') + ' & ' + T('website, paid feeds', 'site, fluxuri contra cost'),
      T('Data vendors (Bloomberg, LSEG, EODHD)', 'Furnizori de date (Bloomberg, LSEG, EODHD)') + ' & ' + T('prices from many venues, adjusted prices, fundamentals', 'prețuri de pe multe piețe, prețuri ajustate, date fundamentale') + ' & ' + T('subscription', 'abonament'),
      T('Central banks (BNR, ECB, Federal Reserve)', 'Bănci centrale (BNR, BCE, Rezerva Federală)') + ' & ' + T('reference exchange rates, interest rates', 'cursuri de referință, rate ale dobînzii') + ' & ' + T('free', 'gratuit'),
