@@ -460,9 +460,9 @@
                 { h: 'What we grade', p: ['A clear question, correct methods and checks, and the interpretation of the results.', 'Each member must be able to explain the code and the results.'] }
             ],
             ro: [
-                { h: 'Ce', p: ['O analiză în echipă a unor date reale de piață cu metodele cursului: randamente și indicatori, distribuții și cozi, teste de eficiență, volatilitate și măsuri de risc.', 'Proiectul reprezintă 20% din nota finală.'] },
-                { h: 'Ce predați', p: ['Un repository GitHub al cărui cod reproduce fiecare cifră și fiecare grafic din datele salvate.', 'Un raport scurt și o prezentare a rezultatelor.'] },
-                { h: 'Ce notăm', p: ['O întrebare clară, metode și verificări corecte și interpretarea rezultatelor.', 'Fiecare membru trebuie să poată explica codul și rezultatele.'] }
+                { h: 'Conținut', p: ['O analiză în echipă a unor date reale de piață cu metodele cursului: randamente și indicatori, distribuții și cozi, teste de eficiență, volatilitate și măsuri de risc.', 'Proiectul reprezintă 20% din nota finală.'] },
+                { h: 'Livrabile', p: ['Un repository GitHub al cărui cod reproduce fiecare cifră și fiecare grafic din datele salvate.', 'Un raport scurt și o prezentare a rezultatelor.'] },
+                { h: 'Criterii de evaluare', p: ['O întrebare clară, metode și verificări corecte și interpretarea rezultatelor.', 'Fiecare membru trebuie să poată explica codul și rezultatele.'] }
             ]
         },
         aiPolicy: {

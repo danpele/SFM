@@ -300,11 +300,11 @@ D.frame('⟦Seminars||Seminarii⟧', items(
 
 D.frame('⟦The Team Project||Proiectul în echipă⟧', items(
     '⟦\\textbf{Question}: one research question about real market data, chosen by the team||\\textbf{Întrebarea}: o întrebare de cercetare despre date reale de piață, aleasă de echipă⟧',
-    ('⟦\\textbf{Deliverables}||\\textbf{Ce predați}⟧',
+    ('⟦\\textbf{Deliverables}||\\textbf{Livrabile}⟧',
      ['⟦a GitHub repository whose code reproduces every number and every chart from the saved data||un repository GitHub al cărui cod reproduce fiecare cifră și fiecare grafic din datele salvate⟧',
       '⟦a short report and a presentation of the results||un raport scurt și o prezentare a rezultatelor⟧',
       '⟦a file \\texttt{AI\\_USE.md} that declares every use of AI tools||un fișier \\texttt{AI\\_USE.md} care declară fiecare folosire a instrumentelor AI⟧']),
-    ('⟦\\textbf{What we grade}||\\textbf{Ce notăm}⟧',
+    ('⟦\\textbf{What we grade}||\\textbf{Criterii de evaluare}⟧',
      ['⟦a clear question, correct methods and checks, an honest interpretation||o întrebare clară, metode și verificări corecte, o interpretare onestă⟧',
       '⟦\\textbf{oral defence}: each member explains the code and the results||\\textbf{susținere orală}: fiecare membru explică codul și rezultatele⟧']),
     '⟦Project seeds appear at the end of every chapter, in the section \\emph{AI for scientific discovery}||Idei de proiect apar la finalul fiecărui capitol, în secțiunea \\emph{AI pentru descoperire științifică}⟧'))
