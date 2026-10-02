@@ -238,7 +238,7 @@ D.frame(T('Data Used', 'Datele folosite'), table(
 # =============================================================================
 D.section('What You Need for Today', 'Ce vă trebuie azi')
 
-D.frame(T('What You Need for Today (1/4): the Normal distribution Distribution', 'Ce vă trebuie azi (1/4): distribuția Normală'), items(
+D.frame(T('What You Need for Today (1/4): the Normal Distribution', 'Ce vă trebuie azi (1/4): distribuția Normală'), items(
     T('$X \\sim N(\\mu, \\sigma^2)$: density $f(x) = (\\sigma\\sqrt{2\\pi})^{-1}\\exp\\big(-(x-\\mu)^2/(2\\sigma^2)\\big)$, mean $\\mu$, variance $\\sigma^2$',
       '$X \\sim N(\\mu, \\sigma^2)$: densitatea $f(x) = (\\sigma\\sqrt{2\\pi})^{-1}\\exp\\big(-(x-\\mu)^2/(2\\sigma^2)\\big)$, media $\\mu$, varianța $\\sigma^2$'),
     (T('Standardise: $Z = (X - \\mu)/\\sigma \\sim N(0,1)$; $P(X \\le x) = \\Phi\\big((x - \\mu)/\\sigma\\big)$, $\\Phi$ = standard Normal CDF (cumulative distribution function)',
@@ -292,7 +292,7 @@ D.frame(T('What You Need for Today (4/4): Stylised Facts', 'Ce vă trebuie azi (
 # =============================================================================
 D.section('Part A: Computations and Derivations on Paper', 'Partea A: calcule și derivări pe hîrtie')
 
-D.solved(T('A1: A Large Daily Loss under the Normal distribution Distribution', 'A1: o pierdere zilnică mare în distribuția Normală'),
+D.solved(T('A1: A Large Daily Loss under the Normal Distribution', 'A1: o pierdere zilnică mare în distribuția Normală'),
          items(T('Daily log returns of an index are $N(\\mu, \\sigma^2)$ with $\\mu = 0.05\\%$ and $\\sigma = 1.1\\%$; there are 252 trading days a year.',
                  'Randamentele logaritmice zilnice ale unui indice sînt $N(\\mu, \\sigma^2)$, cu $\\mu = 0.05\\%$ și $\\sigma = 1.1\\%$; un an are 252 de zile de tranzacționare.'),
                T('1. Compute the probability of a daily loss larger than 2\\% and the expected number of such days per year.', '1. Calculați probabilitatea unei pierderi zilnice mai mari de 2\\% și numărul așteptat de asemenea zile pe an.'),

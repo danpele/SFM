@@ -381,7 +381,7 @@ D.frame(T('The Benchmark Model of This Chapter', 'Modelul de referință al capi
 # =============================================================================
 D.section('The Normal Distribution', 'Distribuția Normală')
 
-D.frame(T('Carl Friedrich Gauss and the Normal distribution Distribution', 'Carl Friedrich Gauss și distribuția Normală'), cols(items(
+D.frame(T('Carl Friedrich Gauss and the Normal Distribution', 'Carl Friedrich Gauss și distribuția Normală'), cols(items(
     T('De Moivre (1733) found the bell curve as the limit of binomial probabilities', 'De Moivre (1733) a găsit curba clopot ca limită a probabilităților binomiale'),
     T('Gauss (1809) used it for the errors of astronomical observations and derived least squares from it',
       'Gauss (1809) a folosit-o pentru erorile observațiilor astronomice și a dedus din ea metoda celor mai mici pătrate'),
@@ -418,7 +418,7 @@ chart(T('The 68--95--99.7 Rule', 'Regula 68--95--99,7'), 'sfm_ch2_normal_pdf', '
     T('Outside 3 standard deviations: one day in @{nt.3.days.r}; the tails of the Normal distribution fall off like $e^{-z^2/2}$, very fast',
       'În afara a 3 abateri standard: o zi din @{nt.3.days.r}; cozile distribuției Normale scad ca $e^{-z^2/2}$, foarte repede')], h='0.62\\textheight')
 
-D.frame(T('How Rare Are Large Moves under the Normal distribution Distribution?', 'Cît de rare sînt mișcările mari în distribuția Normală?'), table(
+D.frame(T('How Rare Are Large Moves under the Normal Distribution?', 'Cît de rare sînt mișcările mari în distribuția Normală?'), table(
     'crrr', '$k$ & $P(|Z| > k)$ & ' + T('once every \\dots\\ trading days', 'o dată la \\dots\\ zile de tranzacționare') + ' & ' + T('once every \\dots\\ years', 'o dată la \\dots\\ ani'),
     [f'{k} & ${{@{{nt.{k}.p}}}}$ & @{{nt.{k}.days}} & @{{nt.{k}.years}}' for k in range(1, 7)], size='footnotesize') + items(
     T('Years computed with 252 trading days a year', 'Anii sînt calculați cu 252 de zile de tranzacționare pe an'),
@@ -587,13 +587,13 @@ D.frame(T('Daily Log Returns: Moments, @{y0}--@{y1}', 'Randamente logaritmice zi
               'Cele mai proaste zile: S\\&P 500 pe @{m.sp500.mindate}, BET pe @{m.bet.mindate} (OUG 114, taxa pe activele bancare), Bitcoin pe @{m.btc.mindate}')) + ql('SFM_ch2_moments_jarque_bera'),
         'footnotesize')
 
-chart(T('DAX Returns vs the Normal distribution Density (SFEDaxReturnDistribution)', 'Randamentele DAX vs densitatea Normală (SFEDaxReturnDistribution)'), 'sfm_ch2_dax_density',
+chart(T('DAX Returns vs the Normal Density (SFEDaxReturnDistribution)', 'Randamentele DAX vs densitatea Normală (SFEDaxReturnDistribution)'), 'sfm_ch2_dax_density',
       'SFM_ch2_moments_jarque_bera', [
           T('Kernel density estimate (a smoothed histogram) against the Normal density with the same mean and standard deviation',
             'Estimatorul nucleu al densității (o histogramă netezită) față de densitatea Normală cu aceeași medie și abatere standard'),
           T('Centre: peak @{dax.peak} vs @{dax.npeak}; @{dax.in1}\\% of days within one standard deviation, vs @{dax.nin1}\\% for the Normal distribution',
             'Centrul: vîrf @{dax.peak} față de @{dax.npeak}; @{dax.in1}\\% din zile în interiorul unei abateri standard, față de @{dax.nin1}\\% pentru distribuția Normală'),
-          T('Tails (log scale): at $-6\\%$ the estimated density is @{dax.ratio6} times the Normal distribution one', 'Cozile (scară logaritmică): la $-6\\%$ densitatea estimată este de @{dax.ratio6} de ori densitatea Normală')],
+          T('Tails (log scale): at $-6\\%$ the estimated density is @{dax.ratio6} times the Normal one', 'Cozile (scară logaritmică): la $-6\\%$ densitatea estimată este de @{dax.ratio6} de ori densitatea Normală')],
       h='0.60\\textheight')
 
 D.frame(T('Check the Data Before Measuring Tails', 'Verificați datele înainte de a măsura cozile'), items(
@@ -653,7 +653,7 @@ D.frame(T('QQ Plots', 'QQ plots'), items(
       T('only one end bent away: skewness', 'doar un capăt curbat: asimetrie')]),
     T('Unlike JB, it shows \\textbf{where} the model fails: centre, shoulders or tails', 'Spre deosebire de JB, arată \\textbf{unde} greșește modelul: centru, umeri sau cozi')))
 
-chart(T('QQ Plots against the Normal distribution Distribution', 'QQ plots față de distribuția Normală'), 'sfm_ch2_qq_normal', 'SFM_ch2_qq_plots', [
+chart(T('QQ Plots against the Normal Distribution', 'QQ plots față de distribuția Normală'), 'sfm_ch2_qq_normal', 'SFM_ch2_qq_plots', [
     T('Standardised returns against $N(0,1)$ quantiles: all three bend away from the line at both ends', 'Randamente standardizate față de cuantilele $N(0,1)$: toate trei se depărtează de dreaptă la ambele capete'),
     T('S\\&P 500: lowest standardised return $@{qq.sp500.min}$ where the Normal quantile is $@{qq.sp500.tmin}$; BET: $@{qq.bet.min}$ vs $@{qq.bet.tmin}$',
       'S\\&P 500: cel mai mic randament standardizat $@{qq.sp500.min}$, unde cuantila Normală este $@{qq.sp500.tmin}$; BET: $@{qq.bet.min}$ față de $@{qq.bet.tmin}$'),

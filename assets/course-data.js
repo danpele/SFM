@@ -286,10 +286,16 @@
                 id: 'probability', num: 4,
                 title: { en: 'Probability', ro: 'Probabilitate' },
                 topics: {
-                    en: ['Random variables, distributions and moments (SFM, ch. 3)', 'Conditional expectation and martingales', 'Discrete-time stochastic processes: random walk, binomial model'],
-                    ro: ['Variabile aleatoare, distribuții și momente (SFM, cap. 3)', 'Speranța condiționată și martingale', 'Procese stochastice în timp discret: mersul aleator, modelul binomial']
+                    en: ['Random variables, distributions, moments, covariance and correlation (SFM, ch. 3)', 'Independence vs uncorrelatedness, conditional expectation and conditional variance', 'Random numbers and Monte Carlo; binomial model, random walk, martingale, AR(1), Wiener process and GBM against real data'],
+                    ro: ['Variabile aleatoare, distribuții, momente, covarianță și corelație (SFM, cap. 3)', 'Independență și necorelare, speranța condiționată și varianța condiționată', 'Numere aleatoare și Monte Carlo; modelul binomial, mersul aleator, martingala, AR(1), procesul Wiener și GBM comparate cu date reale']
                 },
-                links: { en: [], ro: [] }
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter4_probability.pdf'), pdf('seminar', 'EN/Seminars/seminar4_probability.pdf'),
+                         nb('notebooks/EN/chapter4_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter4_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_04')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol4_probabilitate.pdf'), pdf('seminar', 'RO/Seminarii/seminar4_probabilitate_ro.pdf'),
+                         nb('notebooks/EN/chapter4_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter4_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_04')]
+                },
+                quantinar: q('sfm')
             },
             {
                 id: 'evt', num: 5,

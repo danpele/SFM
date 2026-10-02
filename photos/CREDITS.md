@@ -47,3 +47,13 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch3_cotton_office.jpg | https://commons.wikimedia.org/wiki/File:Edgar_Germain_Hilaire_Degas_016.jpg | Edgar Degas | Public domain | 1873 |
 | ch3_cauchy.jpg | https://commons.wikimedia.org/wiki/File:Augstin_Louis,_Baron_Cauchy._Lithograph_by_J._Boilly,_1821._Wellcome_V0001034.jpg | J. Boilly (Wellcome Collection) | CC BY 2.0 | 1821 |
 | ch3_fama.jpg | https://commons.wikimedia.org/wiki/File:Eugene_Fama_at_Nobel_Prize,_2013.jpg | Bengt Nyman | CC BY 2.0 | 2013-12-07 |
+
+## Chapter 4 — Probability
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch4_pascal.jpg | https://commons.wikimedia.org/wiki/File:Blaise_Pascal_Versailles.JPG | Unknown author, after François II Quesnel | Public domain | c. 1690 |
+| ch4_kolmogorov_grundbegriffe.jpg | https://commons.wikimedia.org/wiki/File:Kolmogoroff_Grundbegriffe.png | KurtSchwitters | CC BY-SA 3.0 | 2012-05-16 |
+| ch4_kolmogorov_1963.jpg | https://commons.wikimedia.org/wiki/File:Математик_Андрей_Колмогоров_в_аудитории.jpg | Vsevolod Tarasevich | CC BY 4.0 | 1963–1964 |
+| ch4_brown_1855.jpg | https://commons.wikimedia.org/wiki/File:Robert_Brown_(botanist).jpg | Maull & Polyblank | Public domain | 1855 |
+| ch4_wiener.jpg | https://commons.wikimedia.org/wiki/File:Norbert_wiener.jpg | Konrad Jacobs (Oberwolfach) | CC BY-SA 2.0 DE | — |
