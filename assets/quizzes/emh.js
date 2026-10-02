@@ -51,7 +51,7 @@ window.SFM_DATA.quizzes['emh'] = {
             },
             "ro": {
                 "title": "Problema ipotezei comune",
-                "text": "De ce eficiența pieței nu poate fi respinsă niciodată singură?",
+                "text": "De ce eficiența pieței, luată separat, nu poate fi respinsă niciodată?",
                 "options": [
                     "Orice test presupune și un model al randamentelor așteptate de echilibru",
                     "Prețurile nu sînt observate suficient de des",
@@ -104,8 +104,8 @@ window.SFM_DATA.quizzes['emh'] = {
                 "incorrectExplanation": "Under RW1 and RW2 the increments are independent, so large moves cannot predict large moves; only RW3 (and the martingale) allows it."
             },
             "ro": {
-                "title": "Gruparea volatilității",
-                "text": "Ce ipoteză de mers aleator permite gruparea volatilității?",
+                "title": "Volatility clustering",
+                "text": "Ce ipoteză de mers aleator admite volatility clustering?",
                 "options": [
                     "RW1 (creșteri i.i.d.)",
                     "RW3 (creșteri necorelate)",
@@ -159,7 +159,7 @@ window.SFM_DATA.quizzes['emh'] = {
             },
             "ro": {
                 "title": "Regula rădăcinii pătrate a timpului",
-                "text": "Randamentele zilnice urmează un mers aleator cu abaterea standard 1,2%. Cît este abaterea standard a randamentului pe 25 de zile?",
+                "text": "Randamentele zilnice urmează un mers aleator cu abaterea standard de 1,2%. Cît este abaterea standard a randamentului pe 25 de zile?",
                 "options": [
                     "1,2%",
                     "30%",
@@ -275,7 +275,7 @@ window.SFM_DATA.quizzes['emh'] = {
                     "$\\pm 0{,}05$"
                 ],
                 "correctExplanation": "$\\pm 1{,}96/\\sqrt{T} = \\pm 1{,}96/50 = \\pm 0{,}039$.",
-                "incorrectExplanation": "Pentru randamente i.i.d., $\\mathrm{Var}(\\hat\\rho(k)) \\approx 1/T$, deci banda este $\\pm 1{,}96/\\sqrt{2500} = \\pm 0{,}039$; cu gruparea volatilității banda robustă este mai largă."
+                "incorrectExplanation": "Pentru randamente i.i.d., $\\mathrm{Var}(\\hat\\rho(k)) \\approx 1/T$, deci banda este $\\pm 1{,}96/\\sqrt{2500} = \\pm 0{,}039$; în prezența volatility clustering, banda robustă este mai largă."
             }
         },
         {
@@ -326,9 +326,9 @@ window.SFM_DATA.quizzes['emh'] = {
                     "DAX are o rădăcină unitară în randamente",
                     "Eșantionul este prea scurt",
                     "Testul robust folosește mai puține decalaje",
-                    "Gruparea volatilității face ca $\\mathrm{Var}(\\hat\\rho(k))$ să fie mai mare decît $1/T$"
+                    "Volatility clustering face ca $\\mathrm{Var}(\\hat\\rho(k))$ să fie mai mare decît $1/T$"
                 ],
-                "correctExplanation": "Cînd volatilitatea se grupează, testul clasic folosește o varianță prea mică și respinge prea des; statistica robustă corectează acest lucru.",
+                "correctExplanation": "În prezența volatility clustering, testul clasic folosește o varianță prea mică și respinge prea des; statistica robustă corectează acest lucru.",
                 "incorrectExplanation": "Ambele teste folosesc aceleași 10 decalaje și același eșantion lung; diferența vine din varianța autocorelațiilor, pe care testul clasic o fixează la $1/T$."
             }
         },
@@ -348,7 +348,7 @@ window.SFM_DATA.quizzes['emh'] = {
             },
             "ro": {
                 "title": "Testul runs",
-                "text": "Semnele randamentelor zilnice ale unui indice arată mult mai puține secvențe decît în cazul independenței. Ce sugerează acest lucru?",
+                "text": "Semnele randamentelor zilnice ale unui indice arată mult mai puține secvențe decît ar fi de așteptat în ipoteza de independență. Ce sugerează acest lucru?",
                 "options": [
                     "Autocorelație negativă (reveniri)",
                     "Cozi groase",
@@ -405,7 +405,7 @@ window.SFM_DATA.quizzes['emh'] = {
                 "text": "În $\\Delta p_t = c + \\gamma\\,p_{t-1} + \\varepsilon_t$, care este ipoteza nulă a testului Dickey–Fuller?",
                 "options": [
                     "$\\gamma < 0$: seria este staționară",
-                    "$c = 0$: fără tendință",
+                    "$c = 0$: fără drift",
                     "$\\gamma = 0$: rădăcină unitară",
                     "$\\gamma = 1$: rădăcină unitară"
                 ],
@@ -641,7 +641,7 @@ window.SFM_DATA.quizzes['emh'] = {
                     "Reject if all four $|Z^*(q)| > 1.96$"
                 ],
                 "correctExplanation": "The maximum of four statistics needs a larger critical value: $(2\\Phi(c) - 1)^4 = 0.95$ gives $c \\approx 2.49$.",
-                "incorrectExplanation": "Using 1.96 for each of four horizons raises the chance of a false rejection to about 18.5%; the Chow–Denning rule controls it at 5%."
+                "incorrectExplanation": "Using 1.96 for each of four horizons raises the chance of at least one false rejection to about 18.5%; the Chow–Denning rule controls it at 5%."
             },
             "ro": {
                 "title": "Testul Chow–Denning",
@@ -653,7 +653,7 @@ window.SFM_DATA.quizzes['emh'] = {
                     "Respingem dacă toate cele patru $|Z^*(q)| > 1{,}96$"
                 ],
                 "correctExplanation": "Maximul a patru statistici cere o valoare critică mai mare: $(2\\Phi(c) - 1)^4 = 0{,}95$ dă $c \\approx 2{,}49$.",
-                "incorrectExplanation": "Folosind 1,96 pentru fiecare dintre cele patru orizonturi, șansa unei respingeri false crește la circa 18,5%; regula Chow–Denning o menține la 5%."
+                "incorrectExplanation": "Folosind 1,96 pentru fiecare dintre cele patru orizonturi, probabilitatea de a obține cel puțin o respingere falsă crește la circa 18,5%; regula Chow–Denning o menține la 5%."
             }
         }
     ]

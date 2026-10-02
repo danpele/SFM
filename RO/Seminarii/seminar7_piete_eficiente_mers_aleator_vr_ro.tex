@@ -98,7 +98,7 @@ MSCA Digital Finance}
 \begin{columns}[T]
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{ACF}: AutoCorrelation Function (funcția de autocorelație)
+    \item \textbf{ACF}: Autocorrelation Function (funcția de autocorelație)
     \item \textbf{ADF}: Augmented Dickey–Fuller (test) (testul Dickey–Fuller augmentat)
     \item \textbf{AI}: Artificial Intelligence (inteligență artificială)
     \item \textbf{AIC}: Akaike Information Criterion (criteriul informațional Akaike)
@@ -144,7 +144,7 @@ MSCA Digital Finance}
         \item Partea C: o întrebare deschisă pentru proiect și un răspuns AI de verificat
     \end{itemize}
     \item Notebook-ul de azi: \href{\nb}{deschideți notebook-ul seminarului în Google Colab}; fiecare cerință indică secțiunea din notebook
-    \item Nu se predă nimic: seminarul este pentru exercițiu; rezolvările cerințelor [Propus] se discută la seminar
+    \item Seminarul are rol de exercițiu și nu se notează; rezolvările cerințelor [Propus] se discută la seminar
 \end{itemize}
 \end{frame}
 
@@ -180,11 +180,11 @@ C1, C2 & a devenit BET mai eficient? ce este greșit într-un răspuns AI? & Pro
 \toprule
 \textbf{Seria} & \textbf{Sursa} & \textbf{Prețul folosit} & \textbf{Perioada} \\
 \midrule
-S\&P 500, DAX & EODHD & close & 1990--2026 \\
-BET & EODHD & close & 1997--2026 \\
-Bitcoin & EODHD & close, 7 zile pe săptămînă & 2014--2026 \\
-Banca Transilvania (TLV), OMV Petrom (SNP) & EODHD & adjusted close & 2010--2026 \\
-WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
+S\&P 500, DAX & EODHD & închidere & 1990--2026 \\
+BET & EODHD & închidere & 1997--2026 \\
+Bitcoin & EODHD & închidere, 7 zile pe săptămînă & 2014--2026 \\
+Banca Transilvania (TLV), OMV Petrom (SNP) & EODHD & închidere ajustată & 2010--2026 \\
+WIG20, BUX, PX, BIST 100 & EODHD & închidere & ultimii zece ani \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -203,14 +203,14 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{frame}{Noțiuni necesare azi (1/5): eficiență și mers aleator}
 \itemsize{\small}
 \begin{itemize}
-    \item \textbf{Eficiența în formă slabă} \refFamaA: prețurile trecute nu pot fi folosite pentru a obține randamente peste randamentul care plătește riscul
+    \item \textbf{Eficiența în formă slabă} \refFamaA: prețurile trecute nu pot fi folosite pentru a obține randamente peste randamentul care remunerează riscul
     \begin{itemize}
         \item randamentele în exces sînt o \textbf{diferență de martingal}: $E[r_{t+1} - \mu \mid \text{trecut}] = 0$
     \end{itemize}
     \item Prețul logaritmic $p_t = \ln P_t$, \textbf{mers aleator}: $p_t = \mu + p_{t-1} + \varepsilon_t$, deci $r_t = \mu + \varepsilon_t$ \refCLM
     \begin{itemize}
         \item \textbf{RW1}: $\varepsilon_t$ i.i.d.\ (independente și identic distribuite); \textbf{RW2}: independente; \textbf{RW3}: necorelate
-        \item RW1 $\Rightarrow$ RW2 $\Rightarrow$ RW3; gruparea volatilității este permisă doar de RW3 și de martingal
+        \item RW1 $\Rightarrow$ RW2 $\Rightarrow$ RW3; doar RW3 și martingalul admit volatility clustering
     \end{itemize}
     \item În oricare dintre ele, $\mathrm{Var}(r_t(q)) = q\sigma^2$ pentru randamentul pe $q$ zile $r_t(q) = r_t + \dots + r_{t-q+1}$
     \begin{itemize}
@@ -225,12 +225,12 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
     \item \textbf{ACF} (autocorrelation function, funcția de autocorelație) de selecție, cu $e_t = r_t - \bar r$: $\hat\rho(k) = \sum_{t>k} e_te_{t-k}\big/\sum_t e_t^2$
     \begin{itemize}
         \item randamente i.i.d.: $\mathrm{Var}(\hat\rho(k)) \approx 1/T$, banda de 95\% $\pm 1{,}96/\sqrt{T}$
-        \item robust (gruparea volatilității): $\mathrm{Var}(\hat\rho(k)) \approx \hat\delta(k)/T$, $\hat\delta(k) = T\sum_t e_t^2e_{t-k}^2/(\sum_t e_t^2)^2$ \refLM
+        \item robust (cu volatility clustering): $\mathrm{Var}(\hat\rho(k)) \approx \hat\delta(k)/T$, $\hat\delta(k) = T\sum_t e_t^2e_{t-k}^2/(\sum_t e_t^2)^2$ \refLM
     \end{itemize}
     \item $H_0$: $\rho(1) = \dots = \rho(m) = 0$; trei statistici, fiecare $\approx \chi^2(m)$ în ipoteza ei nulă
     \begin{itemize}
-        \item Box--Pierce $Q_{BP} = T\sum_{k=1}^m \hat\rho(k)^2$ \refBP; \textbf{LB} (Ljung--Box, testul Ljung--Box) $Q_{LB} = T(T+2)\sum_{k=1}^m \hat\rho(k)^2/(T-k)$ \refLjung
-        \item $\tilde Q$ robust $= \sum_{k=1}^m T\hat\rho(k)^2/\hat\delta(k)$ \refEL: valabil pentru un martingal cu gruparea volatilității
+        \item Box--Pierce $Q_{BP} = T\sum_{k=1}^m \hat\rho(k)^2$ \refBP; \textbf{LB} (Ljung--Box) $Q_{LB} = T(T+2)\sum_{k=1}^m \hat\rho(k)^2/(T-k)$ \refLjung
+        \item $\tilde Q$ robust $= \sum_{k=1}^m T\hat\rho(k)^2/\hat\delta(k)$ \refEL: valabil pentru un martingal cu volatility clustering
     \end{itemize}
     \item Valori critice de 5\%: $\chi^2_{0{,}95}(3) = 7{,}81$, $\chi^2_{0{,}95}(5) = 11{,}07$, $\chi^2_{0{,}95}(10) = 18{,}31$
 \end{itemize}
@@ -279,7 +279,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{itemize}
     \item \textbf{VR} (variance ratio, raportul varianțelor): $\mathrm{VR}(q) = \dfrac{\mathrm{Var}(r_t(q))}{q\,\mathrm{Var}(r_t)} = 1 + 2\sum_{k=1}^{q-1}\Big(1 - \dfrac{k}{q}\Big)\rho(k)$ \refLM
     \begin{itemize}
-        \item $= 1$: mers aleator; $> 1$: momentum (autocorelație pozitivă); $< 1$: mean reversion (revenire la medie, negativă)
+        \item $= 1$: mers aleator; $> 1$: momentum (autocorelație pozitivă); $< 1$: mean reversion (revenire la medie; autocorelație negativă)
     \end{itemize}
     \item Teste cu $T$ randamente
     \begin{itemize}
@@ -306,9 +306,9 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{block}{Cerință}
 \begin{itemize}
     \item Randamentele zilnice au abaterea standard $\sigma = 1{,}2\%$.
-    \item 1. Pentru RW1, calculați abaterea standard a randamentului pe 5 zile și pe 20 de zile.
+    \item 1. În ipoteza RW1, calculați abaterea standard a randamentului pe 5 zile și pe 20 de zile.
     \item 2. Presupunem $\rho(1) = 0{,}10$, $\rho(2) = 0{,}05$ și $\rho(k) = 0$ pentru $k \ge 3$; calculați VR(2) și VR(5).
-    \item 3. Tratați-le ca estimări din $T = 2500$ de randamente i.i.d.\ și calculați $Z(2)$ și $Z(5)$.
+    \item 3. Considerați că acestea sînt estimări obținute din $T = 2500$ de randamente i.i.d.\ și calculați $Z(2)$ și $Z(5)$.
     \item 4. Calculați abaterea standard pe 5 zile implicată de VR(5).
     \item Raportați: două abateri standard, două VR, două $Z$ și o frază.
 \end{itemize}
@@ -366,7 +366,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
     \item 1. Calculați $Q_{BP}(5)$.
     \item 2. Calculați $Q_{LB}(5)$.
     \item 3. Comparați cu $\chi^2_{0{,}95}(5) = 11{,}07$ și decideți.
-    \item 4. Spuneți ce decalaj determină rezultatul.
+    \item 4. Precizați ce decalaj determină rezultatul.
     \item Raportați: două statistici, o decizie și o frază.
 \end{itemize}
 \end{block}
@@ -393,8 +393,8 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{itemize}
     \item $T = 750$; ACF-ul randamentelor \textbf{la pătrat}: $0{,}25;\ 0{,}20;\ 0{,}18;\ 0{,}15;\ 0{,}12$ la decalajele 1--5. Model: A3.
     \item 1. Calculați $Q_{LB}(5)$ și decideți la 5\%.
-    \item 2. Spuneți pe care dintre RW1, RW3 și martingal îl respinge.
-    \item 3. Spuneți dacă eficiența în formă slabă este respinsă.
+    \item 2. Precizați care dintre ipotezele RW1, RW3 și martingal este respinsă de acest rezultat.
+    \item 3. Precizați dacă eficiența în formă slabă este respinsă.
     \item Raportați: o statistică și două fraze.
 \end{itemize}
 \end{block}
@@ -404,7 +404,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{exampleblock}{Rezolvare}
 \begin{itemize}
     \item 1. Termenii $47{,}06$; $30{,}16$; $24{,}46$; $17{,}01$; $10{,}90$: $Q_{LB}(5) = 129{,}60 \gg 11{,}07$: respingem
-    \item 2. Randamentele la pătrat sînt corelate: gruparea volatilității; RW1 (și RW2) este respins; RW3 și martingalul nu sînt testate
+    \item 2. Randamentele la pătrat sînt corelate (volatility clustering): RW1 și RW2 sînt respinse; RW3 și martingalul nu sînt testate
     \item 3. Nu: o varianță previzibilă nu dă un randament previzibil.
 \end{itemize}
 \end{exampleblock}
@@ -450,7 +450,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
     \item Semnele a 24 de randamente zilnice: $+ + + - - - + + + - - - + + + + - - - - + + - -$. Model: A5.
     \item 1. Numărați $n_1$, $n_2$ și $R$.
     \item 2. Calculați $E[R]$, $\mathrm{Var}(R)$ și $z$.
-    \item 3. Decideți la 5\% și spuneți ce fel de dependență arată semnele.
+    \item 3. Decideți la 5\% și precizați ce fel de dependență arată semnele.
     \item Raportați: $R$, $E[R]$, $z$ și o frază.
 \end{itemize}
 \end{block}
@@ -461,7 +461,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{itemize}
     \item 1. $n_1 = 12$, $n_2 = 12$, $R = 8$
     \item 2. $E[R] = 13{,}00$, $\mathrm{Var}(R) = 5{,}74$, $z = -2{,}09$
-    \item 3. p = 0{,}037: respingem la 5\%; prea puține secvențe: semnele persistă, semn de tendințe (dependență pozitivă).
+    \item 3. p = 0{,}037: respingem la 5\%; prea puține secvențe: semnele persistă, ceea ce indică tendințe (dependență pozitivă).
 \end{itemize}
 \end{exampleblock}
 }
@@ -479,8 +479,8 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
     \item Randamente: $\Delta r_t = 0{,}03 - 0{,}92\,r_{t-1} + e_t$, $\mathrm{SE}(\hat\gamma) = 0{,}020$; KPSS (constantă) $= 0{,}09$.
     \item 1. Calculați $\tau$ pentru preț și pentru randamente.
     \item 2. Decideți cu valoarea critică de 5\% pentru constantă.
-    \item 3. Decideți cu KPSS și dați ordinul de integrare al fiecărei serii.
-    \item Raportați: doi $\tau$, patru decizii și o frază.
+    \item 3. Decideți cu KPSS și precizați ordinul de integrare al fiecărei serii.
+    \item Raportați: două valori $\tau$, patru decizii și o frază.
 \end{itemize}
 \end{block}
 \end{column}
@@ -507,7 +507,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
     \item Prețul logaritmic al unei acțiuni, $T = 1500$, constantă și tendință: $\hat\gamma = -0{,}0105$, $\mathrm{SE}(\hat\gamma) = 0{,}0029$; KPSS (tendință) $= 0{,}21$. Model: A7.
     \item 1. Calculați $\tau$ și decideți cu valoarea critică de 5\% pentru constantă și tendință.
     \item 2. Decideți cu KPSS.
-    \item 3. Combinați cele două decizii și dați două motive posibile pentru conflict.
+    \item 3. Combinați cele două decizii și indicați două motive posibile pentru contradicția dintre ele.
     \item Raportați: $\tau$, două decizii și două fraze.
 \end{itemize}
 \end{block}
@@ -518,7 +518,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{itemize}
     \item 1. $\tau = -0{,}0105/0{,}0029 = -3{,}62 < -3{,}41$: respingem rădăcina unitară la 5\%
     \item 2. KPSS $0{,}21 > 0{,}146$: respingem staționaritatea în jurul tendinței
-    \item 3. Ambele resping: neconcludent. Motive: o ruptură structurală (o schimbare bruscă de nivel), un $\phi$ apropiat de 1 dar sub 1, heteroscedasticitate sau o respingere falsă de 5\% a unuia dintre teste.
+    \item 3. Ambele resping: neconcludent. Motive: o ruptură structurală (o schimbare bruscă de nivel), un $\phi$ apropiat de 1 dar sub 1, heteroscedasticitate sau o respingere falsă (cu probabilitatea de 5\%) a unuia dintre teste.
 \end{itemize}
 \end{exampleblock}
 }
@@ -534,14 +534,14 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{frame}{B1: autocorelația S\&P 500 [Rezolvat]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: depinde concluzia privind autocorelația randamentelor zilnice S\&P 500 de faptul că ținem cont sau nu de gruparea volatilității?
+\item \textbf{Întrebarea}: depinde concluzia privind autocorelația randamentelor zilnice S\&P 500 de faptul că ținem cont sau nu de volatility clustering?
 \item \textbf{Date}: închiderile S\&P 500 din 1990, randamente logaritmice zilnice în \%
 \item \textbf{Cerințe}
 \begin{enumerate}
     \item Desenați ACF-ul randamentelor (decalajele 1--20) cu benzile de 95\% i.i.d.\ și robustă, și ACF-ul randamentelor la pătrat.
     \item Raportați $\hat\rho(1), \dots, \hat\rho(5)$ pentru randamente și pentru randamentele la pătrat.
     \item Calculați $Q_{LB}(10)$ și $\tilde Q(10)$ robust, cu p-valori, pentru randamente și pentru randamentele la pătrat.
-    \item Spuneți ce ipoteză de mers aleator respinge fiecare test.
+    \item Precizați ce ipoteză de mers aleator respinge fiecare test.
     \item Interpretare: este respinsă eficiența în formă slabă?
 \end{enumerate}
 \item \textbf{Raportați}: graficul, zece autocorelații, patru statistici cu p-valori și două fraze
@@ -558,7 +558,7 @@ WIG20, BUX, PX, BIST 100 & EODHD & close & ultimii zece ani \\
 \begin{itemize}
     \item $\hat\rho(1..5)$, randamente: $-0{,}079$; $-0{,}004$; $-0{,}006$; $-0{,}022$; $-0{,}016$; la pătrat: $0{,}311$; $0{,}408$; $0{,}250$; $0{,}298$; $0{,}308$; $T = 9\,240$
     \item Randamente: $Q_{LB}(10) = 90{,}8$ (p $<$\,0{,}001), $\tilde Q(10) = 18{,}8$ (p = 0{,}043); la pătrat: $Q_{LB}(10) = 8015$, $\tilde Q(10) = 189{,}4$ (ambele p $<$\,0{,}001)
-    \item Interpretare: randamentele la pătrat resping RW1 (gruparea volatilității); testul robust respinge RW3 doar la limită, din cauza unui $\hat\rho(1)$ negativ mic: o revenire slabă, de scurtă durată
+    \item Interpretare: randamentele la pătrat resping RW1 și RW2 (volatility clustering); testul robust respinge RW3 doar la limită, din cauza unui $\hat\rho(1)$ negativ mic: o revenire slabă, de scurtă durată
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
 
@@ -597,8 +597,8 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & 0{,}023 & $9{,}9$ & 0{,}446 & ${1{,}72}
 \end{center}
 \begin{itemize}
     \item LB clasic respinge pentru toate patru; testul robust doar pentru BET: verdictul se schimbă pentru Bitcoin, TLV și SNP
-    \item Runs: BET are mult prea puține secvențe ($z = -7{,}75$); Bitcoin are prea multe ($z = 2{,}68$): semnele alternează puțin mai des decît în cazul independenței
-    \item Interpretare: BET este un indice de acțiuni tranzacționate inegal: prețurile de închidere vechi creează autocorelație pozitivă (thin trading); acțiunile individuale și Bitcoin nu o arată
+    \item Runs: BET are mult prea puține secvențe ($z = -7{,}75$); Bitcoin are prea multe ($z = 2{,}68$): semnele alternează puțin mai des decît sub ipoteza de independență
+    \item Interpretare: BET este un indice de acțiuni tranzacționate inegal: prețurile de închidere neactualizate creează autocorelație pozitivă (thin trading); acțiunile individuale și Bitcoin nu o arată
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
 \fi
@@ -639,7 +639,7 @@ randamente (constantă) & $-23{,}30$ (p $<$\,0{,}001) & $-97{,}40$ (p $<$\,0{,}0
 \end{center}
 \begin{itemize}
     \item ADF a folosit 30 de decalaje pentru preț (AIC); PP și KPSS folosesc 38 de decalaje Bartlett; $T = 9\,288$
-    \item Prețul: nicio respingere ADF sau PP, respingere KPSS: $I(1)$; randamentele: invers: $I(0)$
+    \item Prețul: nicio respingere ADF sau PP, respingere KPSS, deci $I(1)$; randamentele: situația inversă, deci $I(0)$
     \item Interpretare: nu; rădăcina unitară este necesară pentru un mers aleator, dar permite creșteri previzibile; eficiența se testează pe randamente (B1, B5)
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
@@ -647,7 +647,7 @@ randamente (constantă) & $-23{,}30$ (p $<$\,0{,}001) & $-97{,}40$ (p $<$\,0{,}0
 \begin{frame}{B4: BET, Bitcoin și TLV [Propus]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: sînt de acord cele trei teste de rădăcină unitară pentru BET, Bitcoin și Banca Transilvania? Model: B3.
+\item \textbf{Întrebarea}: dau cele trei teste de rădăcină unitară același verdict pentru BET, Bitcoin și Banca Transilvania? Model: B3.
 \item \textbf{Date}: BET din 1997, Bitcoin din 2014, TLV din 2010 (fără 30--31 mai 2016)
 \item \textbf{Cerințe}
 \begin{enumerate}
@@ -678,7 +678,7 @@ TLV & ${-3{,}46}$ (0{,}044) & ${-3{,}35}$ (0{,}058) & $0{,}57$ ($<$\,0{,}01) & $
 \end{center}
 \begin{itemize}
     \item BET și Bitcoin: preț logaritmic $I(1)$, randamente $I(0)$
-    \item Prețul TLV: ADF respinge la 5\% (p = 0{,}044), PP nu (p = 0{,}058), KPSS respinge staționaritatea: neconcludent; verificare: testați o ruptură structurală sau împărțiți eșantionul
+    \item Prețul TLV: ADF respinge la 5\% (p = 0{,}044), PP nu (p = 0{,}058), KPSS respinge staționaritatea: neconcludent; verificare: testați existența unei rupturi structurale sau împărțiți eșantionul
     \item Interpretare: nu; o p-valoare la limită, contrazisă de alte două teste, pentru una dintre multe serii testate, nu este un semnal de tranzacționare
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
@@ -687,7 +687,7 @@ TLV & ${-3{,}46}$ (0{,}044) & ${-3{,}35}$ (0{,}058) & $0{,}57$ ($<$\,0{,}01) & $
 \begin{frame}{B5: rapoartele varianțelor pentru S\&P 500 [Rezolvat]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: revine S\&P 500 la medie pe orizonturi de 2--20 de zile, dacă ținem cont de gruparea volatilității?
+\item \textbf{Întrebarea}: revine S\&P 500 la medie pe orizonturi de 2--20 de zile, dacă ținem cont de volatility clustering?
 \item \textbf{Date}: închiderile S\&P 500 din 1990, randamente logaritmice zilnice în \%
 \item \textbf{Cerințe}
 \begin{enumerate}
@@ -696,7 +696,7 @@ TLV & ${-3{,}46}$ (0{,}044) & ${-3{,}35}$ (0{,}058) & $0{,}57$ ($<$\,0{,}01) & $
     \item Desenați VR($q$) pentru $q = 2, \dots, 40$ cu benzile de 95\% i.i.d.\ și robustă.
     \item Interpretare: este revenirea la medie suficient de mare pentru a conta pentru un investitor?
 \end{enumerate}
-\item \textbf{Raportați}: un tabel cu douăsprezece cifre, o statistică, graficul și două fraze
+\item \textbf{Raportați}: un tabel cu douăsprezece valori, o statistică, graficul și două fraze
 \item Notebook: secțiunea B5
 \end{itemize}
 \end{frame}
@@ -721,8 +721,8 @@ $Z^*(q)$ & ${-3{,}37}$ & ${-2{,}76}$ & ${-2{,}73}$ & ${-2{,}06}$ \\
 \end{center}
 \begin{itemize}
     \item $T = 9\,240$; Chow--Denning: $\max|Z^*| = 3{,}37 > 2{,}49$ (p = 0{,}003): respingem mersul aleator
-    \item $Z(2)$ este de circa 2{,}2 ori $Z^*(2)$: ignorarea grupării volatilității exagerează dovezile
-    \item Interpretare: semnificativă, dar mică: varianța săptămînală este circa 86\% din cinci varianțe zilnice; după costurile de tranzacționare, cu greu un profit
+    \item $Z(2)$ este de circa 2{,}2 ori mai mare decît $Z^*(2)$: ignorarea volatility clustering exagerează dovezile
+    \item Interpretare: semnificativă, dar mică: varianța săptămînală reprezintă circa 86\% din suma a cinci varianțe zilnice; după costurile de tranzacționare, rămîne cu greu un profit
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
 
@@ -761,7 +761,7 @@ BIST 100 & 2\,507 & $1{,}086$ & ${1{,}34}$ & 0{,}180 & 0{,}549 & ${0{,}04}$ & 0{
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Šidák: fiecare test la $1 - 0{,}95^{1/5} = 1{,}02\%$, valoarea critică $2{,}57$; cu cinci teste independente la 5\%, șansa a cel puțin unei respingeri false este 22{,}6\%
+    \item Šidák: fiecare test la $1 - 0{,}95^{1/5} = 1{,}02\%$, valoarea critică $2{,}57$; cu cinci teste independente la 5\%, probabilitatea de a obține cel puțin o respingere falsă este 22{,}6\%
     \item PX și BET: $Z^*(5)$ puțin peste 1,96, sub $2{,}57$; Chow--Denning nu respinge; doar VR automat respinge pentru BET
     \item Interpretare: nicio piață nu este clar ineficientă; BET arată un momentum slab, care depinde de test
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
@@ -776,7 +776,7 @@ BIST 100 & 2\,507 & $1{,}086$ & ${1{,}34}$ & 0{,}180 & 0{,}549 & ${0{,}04}$ & 0{
 \begin{frame}{C1: a devenit BET mai eficient? [Propus]}
 \itemsize{\footnotesize}
 \begin{itemize}
-\item \textbf{Întrebarea}: cum a evoluat previzibilitatea BET din 1997 pînă azi, inclusiv în jurul trecerii la Secondary Emerging de către FTSE Russell în septembrie 2020?
+\item \textbf{Întrebarea}: cum a evoluat previzibilitatea BET din 1997 pînă azi, inclusiv în jurul reclasificării României de către FTSE Russell la statutul Secondary Emerging, în septembrie 2020?
 \item \textbf{Date}: randamentele logaritmice zilnice BET din 1997; modele: B1, B5
 \item \textbf{Cerințe}
 \begin{enumerate}
@@ -808,8 +808,8 @@ Perioada & $T$ & $\hat\rho(1)$ & VR(5) & $Z^*(5)$ & CD p \\
 \end{center}
 \begin{itemize}
     \item Ferestre mobile care resping la 5\%: 89\% în primii cinci ani, 15\% în ultimii cinci ani
-    \item Cinci ani înainte și după: VR(5) $1{,}12$ ($Z^* = 0{,}80$) și $1{,}18$ ($Z^* = 1{,}78$); diferența $z = 0{,}34$: nicio dovadă
-    \item Factori care se suprapun: COVID-19 (2020), listarea Hidroelectrica (2023), volumele, componența indicelui; variante: același test pe acțiunile BVB, WIG20 și BUX drept comparație
+    \item În cei cinci ani dinainte și de după reclasificare: VR(5) $1{,}12$ ($Z^* = 0{,}80$) și $1{,}18$ ($Z^* = 1{,}78$); diferența $z = 0{,}34$: nicio dovadă
+    \item Factori de confuzie: pandemia COVID-19 (2020), listarea Hidroelectrica (2023), volumele, componența indicelui; abordări posibile: același test pe acțiunile BVB, cu WIG20 și BUX drept termeni de comparație
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
 \end{frame}
 \fi
@@ -817,7 +817,7 @@ Perioada & $T$ & $\hat\rho(1)$ & VR(5) & $Z^*(5)$ & CD p \\
 \begin{frame}{C2: verificați un răspuns AI [Propus]}
 \itemsize{\scriptsize}
 \begin{itemize}
-    \item Un student a cerut unui asistent AI să spună dacă DAX (zilnic, din 1990) este eficient în formă slabă. Răspunsul:
+    \item Un student a întrebat un asistent AI dacă DAX (date zilnice, din 1990) este eficient în formă slabă. Răspunsul:
     \item \aiprompt{(a) ADF pe prețul logaritmic DAX dă tau = -2{,}69, p = 0{,}24: rădăcina unitară nu este respinsă, deci DAX este eficient în formă slabă.}
     \item \aiprompt{(b) Ljung-Box Q(10) = 21{,}83, p = 0{,}016: randamentele DAX sînt previzibile, deci DAX nu este eficient.}
     \item \aiprompt{(c) Pentru randamentele la pătrat Q(10) = 3747: randamentele DAX nu sînt un martingal.}
@@ -825,7 +825,7 @@ Perioada & $T$ & $\hat\rho(1)$ & VR(5) & $Z^*(5)$ & CD p \\
     \item \aiprompt{(e) Pentru RW1, VR(q) = 1 la orice orizont, iar varianța randamentelor pe q zile este de q ori varianța zilnică.}
     \item Cerințe
     \begin{itemize}
-        \item 1. Pentru fiecare afirmație spuneți dacă este corectă; dacă nu, dați afirmația corectă și, unde se poate, cifra corectă din notebook (secțiunea C2).
+        \item 1. Pentru fiecare afirmație, precizați dacă este corectă; dacă nu este, formulați afirmația corectă și, acolo unde se poate, dați valoarea corectă din notebook (secțiunea C2).
         \item 2. Raportați: o listă de cinci verdicte, fiecare cu un rînd de justificare.
     \end{itemize}
 \end{itemize}
@@ -837,7 +837,7 @@ Perioada & $T$ & $\hat\rho(1)$ & VR(5) & $Z^*(5)$ & CD p \\
 \begin{itemize}
     \item (a) Greșit: rădăcina unitară este necesară, nu suficientă; prețurile $I(1)$ pot avea creșteri previzibile; testați randamentele
     \item (b) Greșit: $Q_{LB}$ presupune randamente i.i.d.; $\tilde Q(10)$ robust $= 8{,}59$ (p = 0{,}571) nu respinge
-    \item (c) Greșit: randamentele la pătrat corelate înseamnă gruparea volatilității; resping RW1, nu martingalul ($\tilde Q$ robust al pătratelor: $334{,}3$, tot doar RW1)
+    \item (c) Greșit: corelația randamentelor la pătrat reflectă volatility clustering, care respinge RW1 și RW2, nu martingalul ($\tilde Q$ robust al pătratelor, $334{,}3$, duce la aceeași concluzie)
     \item (d) Greșit: VR $< 1$ înseamnă autocorelație negativă (revenire la medie), iar $Z^*(10) = -1{,}21$ nu este semnificativ ($Z(10) = -1{,}95$)
     \item (e) Corect: $\mathrm{Var}(r_t(q)) = q\sigma^2$ pentru RW1 (de fapt și pentru RW3)
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_seminar}
@@ -853,8 +853,8 @@ Perioada & $T$ & $\hat\rho(1)$ & VR(5) & $Z^*(5)$ & CD p \\
 \itemsize{\small}
 \begin{itemize}
     \item O rădăcină unitară în prețuri este punctul de plecare, nu răspunsul: eficiența privește randamentele
-    \item Testați martingalul cu statistici robuste ($\tilde Q$, $Z^*$): testele clasice confundă gruparea volatilității cu previzibilitatea
-    \item VR $> 1$: momentum; VR $< 1$: revenire la medie; S\&P 500 revine ușor, vechiul BET urma tendința
+    \item Testați martingalul cu statistici robuste ($\tilde Q$, $Z^*$): testele clasice confundă volatility clustering cu previzibilitatea
+    \item VR $> 1$: momentum; VR $< 1$: revenire la medie; S\&P 500 revine ușor la medie, BET avea momentum în primii ani
     \item Multe orizonturi sau multe piețe: folosiți Chow--Denning sau o corecție Šidák
     \item Un răspuns AI este o ciornă: verificați ipoteza nulă a fiecărui test, semnul lui VR $- 1$ și versiunea robustă
 \end{itemize}
