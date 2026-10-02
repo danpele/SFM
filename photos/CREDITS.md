@@ -28,3 +28,12 @@ Every image used on the slides has a free licence verified through the Wikimedia
 |---|---|---|---|---|
 | ch1_sharpe_2007.jpg | https://commons.wikimedia.org/wiki/File:William_sharpe_2007.jpg | Larry D. Moore | CC BY 4.0 | 2007-10-30 |
 | ch1_reuters_ticker.jpg | https://commons.wikimedia.org/wiki/File:Reuters_News_Ticker.jpg | bgilliard | CC BY-SA 2.0 | 2005-10-29 |
+
+## Chapter 2 — Classical distributions and stylised facts
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch2_gauss_1840.jpg | https://commons.wikimedia.org/wiki/File:Carl_Friedrich_Gauss_1840_by_Jensen.jpg | Christian Albrecht Jensen | Public domain | 1840 |
+| ch2_galton_board.jpg | https://commons.wikimedia.org/wiki/File:Galton_box_2.jpg | Klaus-Dieter Keller | Public domain | 2010-06-10 |
+| ch2_gosset_1908.jpg | https://commons.wikimedia.org/wiki/File:William_Sealy_Gosset.jpg | Unknown author (scan from Gosset's obituary, Annals of Eugenics) | Public domain | 1908 |
+| ch2_cont_2012.jpg | https://commons.wikimedia.org/wiki/File:Rama_Cont_Oberwolfach_2012.jpg | Renate Schmid | CC BY-SA 2.0 DE | 2012 |

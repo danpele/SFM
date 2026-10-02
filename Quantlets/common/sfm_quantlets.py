@@ -95,7 +95,8 @@ def save_fig(name, out_dir=None, show=True):
 apply()
 # the chapter scripts call the style as st.<name> (import sfm_style as st): the same names here
 import types
-st = types.SimpleNamespace(COL=COL, PALETTE=PALETTE, apply=apply, legend_outside_bottom=legend_outside_bottom,
+st = types.SimpleNamespace(COL=COL, PALETTE=PALETTE, MainBlue=MainBlue, IDAred=IDAred, Forest=Forest, Amber=Amber,
+                           Orange=Orange, Purple=Purple, Teal=Teal, Crimson=Crimson, DarkText=DarkText, apply=apply, legend_outside_bottom=legend_outside_bottom,
                            fig_legend_bottom=fig_legend_bottom, save_fig=save_fig, check_no_grey=check_no_grey)''')
 
 

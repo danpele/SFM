@@ -396,7 +396,7 @@ def compile_tex(path, runs=2):
     log = open(os.path.join(d, f[:-4] + '.log'), encoding='latin-1').read()
     errors = len(re.findall(r'^! ', log, flags=re.M))
     vbox = len(re.findall(r'Overfull \\vbox', log))
-    m = re.search(r'Output written on .*?\((\d+) pages?', log)
+    m = re.search(r'Output written on .*?\((\d+) pages?', log, flags=re.S)
     return errors, vbox, int(m.group(1)) if m else 0
 
 

@@ -255,14 +255,14 @@
                 id: 'distributions', num: 2,
                 title: { en: 'Classical distributions and stylised facts', ro: 'Distribuții clasice și fapte stilizate' },
                 topics: {
-                    en: ['The Normal distribution, the central limit theorem and the Jarque–Bera test', 'Student-t, skewed and Pareto-type distributions', 'Stylised facts of returns (Cont, 2001)'],
-                    ro: ['Distribuția Normală, teorema limită centrală și testul Jarque–Bera', 'Distribuția Student-t, distribuții asimetrice și de tip Pareto', 'Faptele stilizate ale randamentelor (Cont, 2001)']
+                    en: ['The Normal and lognormal distributions, the central limit theorem and the Normal approximation', 'Moments, the Jarque–Bera test, QQ plots and the Student-t distribution', 'Stylised facts of returns (Cont, 2001) on real data: heavy tails, aggregational Gaussianity, volatility clustering, leverage effect, gain/loss asymmetry'],
+                    ro: ['Distribuția Normală și distribuția lognormală, teorema limită centrală și aproximarea Normală', 'Momente, testul Jarque–Bera, QQ plots și distribuția Student-t', 'Fapte stilizate ale randamentelor (Cont, 2001) pe date reale: cozi groase, aggregational Gaussianity, volatility clustering, leverage effect, asimetria cîștig/pierdere']
                 },
                 links: {
-                    en: [pdf('slides', 'EN/Courses/chapter2_statistical_distributions.pdf'), pdf('seminar', 'EN/Seminars/seminar2_classical_distributions_en.pdf'),
-                         nb('Quantlets/Ch_02/SFM_ch2_normal_distribution/SFM_ch2_normal_distribution.ipynb'), ql('Quantlets/Ch_02')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter2_distributii_clasice_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar2_distributii_clasice_ro.pdf'),
-                         nb('Quantlets/Ch_02/SFM_ch2_normal_distribution/SFM_ch2_normal_distribution.ipynb'), ql('Quantlets/Ch_02')]
+                    en: [pdf('slides', 'EN/Courses/chapter2_classical_distributions_stylised_facts.pdf'), pdf('seminar', 'EN/Seminars/seminar2_classical_distributions_stylised_facts.pdf'),
+                         nb('notebooks/EN/chapter2_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter2_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_02')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf'), pdf('seminar', 'RO/Seminarii/seminar2_distributii_clasice_fapte_stilizate_ro.pdf'),
+                         nb('notebooks/EN/chapter2_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter2_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_02')]
                 },
                 quantinar: q('tukeyGH')
             },
