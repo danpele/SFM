@@ -421,10 +421,15 @@
                 id: 'ml', num: 13,
                 title: { en: 'Machine learning', ro: 'Învățare automată' },
                 topics: {
-                    en: ['Neural networks for financial time series (SFM, ch. 19)', 'Trees and random forests', 'Validation without look-ahead bias'],
-                    ro: ['Rețele neuronale pentru serii de timp financiare (SFM, cap. 19)', 'Arbori de decizie și păduri aleatoare (random forests)', 'Validare fără look-ahead bias']
+                    en: ['Prediction and inference; bias–variance; walk-forward validation with purging, look-ahead bias and leakage', 'Ridge and lasso, trees, random forest, gradient boosting, small neural networks and neural-network ARCH (SFEnnarch, SFEnnjpyusd)', 'Realised volatility (HAR against machine learning), the sign of returns against the right baseline, VaR 1% by quantile regression; the deflated Sharpe ratio; Gu, Kelly and Xiu (2020)'],
+                    ro: ['Predicție și inferență; compromisul deplasare–varianță; validarea walk-forward cu purging, look-ahead bias și scurgerea de informație', 'Ridge și lasso, arbori de decizie, random forest, gradient boosting, rețele neuronale mici și ARCH cu rețea neuronală (SFEnnarch, SFEnnjpyusd)', 'Volatilitatea realizată (HAR comparat cu machine learning), semnul randamentelor față de reperul corect, VaR 1% prin regresie cuantilică; raportul Sharpe deflatat; Gu, Kelly și Xiu (2020)']
                 },
-                links: { en: [], ro: [] },
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter13_machine_learning.pdf'), pdf('seminar', 'EN/Seminars/seminar13_machine_learning.pdf'),
+                         nb('notebooks/EN/chapter13_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter13_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_13')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol13_invatare_automata.pdf'), pdf('seminar', 'RO/Seminarii/seminar13_invatare_automata_ro.pdf'),
+                         nb('notebooks/EN/chapter13_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter13_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_13')]
+                },
                 quantinar: q('mlRisk', 'rf')
             },
             {

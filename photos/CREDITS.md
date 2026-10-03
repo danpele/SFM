@@ -133,3 +133,14 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch12_iris_versicolor.jpg | https://commons.wikimedia.org/wiki/File:Iris_versicolor_-20200620-RM-100933.jpg | Ermell | CC BY-SA 4.0 | 2020-06-20 |
 | ch12_merton_2010.jpg | https://commons.wikimedia.org/wiki/File:Robert_Merton_November_2010_(2x3_cropped).jpg | Massachusetts Institute of Technology | CC BY-SA 4.0 | 2010-11-30 |
 | ch12_nyu_stern_2019.jpg | https://commons.wikimedia.org/wiki/File:NYU_Stern_School_of_Business_-_Henry_Kaufman_Management_Center_(48072761732).jpg | Ajay Suresh | CC BY 2.0 | 2019-06-15 |
+
+## Chapter 13 — Machine learning
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch13_mark1_perceptron_1960.png | https://commons.wikimedia.org/wiki/File:Mark_I_Perceptron,_Figure_2_of_operator%27s_manual.png | John C. Hay, Albert E. Murray (operator's manual, DTIC AD0236965) | Public domain | 1960-02-15 |
+| ch13_evans_hall_2021.jpg | https://commons.wikimedia.org/wiki/File:Evans_Hall_(UC_Berkeley).jpg | Gabriel Classon | CC BY 2.0 | 2021-09-01 |
+| ch13_tibshirani_2012.jpg | https://commons.wikimedia.org/wiki/File:Robert_tibshirani.jpg | Robert Tibshirani | CC BY-SA 3.0 | 2012-01-03 |
+| ch13_deep_blue_2011.jpg | https://commons.wikimedia.org/wiki/File:IBM_Deep_Blue_at_Computer_History_Museum_(9361685537).jpg | Anton Chiang | CC BY 2.0 | 2011-05-07 |
+| ch13_hinton_2024.jpg | https://commons.wikimedia.org/wiki/File:Geoffrey_E._Hinton,_2024_Nobel_Prize_Laureate_in_Physics_(cropped1).jpg | Arthur Petron | CC BY-SA 4.0 | 2024-12-08 |
+| ch13_harper_center_2013.jpg | https://commons.wikimedia.org/wiki/File:University_of_Chicago_July_2013_01_(Charles_M._Harper_Center).jpg | Michael Barera | CC BY-SA 4.0 | 2013-07-11 |
