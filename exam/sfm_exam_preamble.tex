@@ -1,0 +1,109 @@
+% ===== Preambul comun pentru examen, banca de probleme și setul de exerciții (XeLaTeX) =====
+% Statistica piețelor financiare / Statistics of Financial Markets -- Daniel Traian Pele
+% Folosire: \documentclass[10.5pt]{article}  \def\examlang{ro} (sau en)  \input{../sfm_exam_preamble}
+% Fișierele se compilează din exam/<subfolder>/, deci logo-urile sînt în ../../logos/.
+\usepackage{fontspec}
+\setmainfont{Helvetica Neue}
+\usepackage{amsmath,amssymb}
+\usepackage[a4paper,margin=1.9cm,top=2.4cm,headsep=0.5cm,headheight=14pt]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+\definecolor{spfblue}{RGB}{26,58,110}
+\definecolor{spfred}{RGB}{205,0,0}
+\graphicspath{{../../logos/}{figs/}{../bank/figs/}{../practice/figs/}}
+
+\providecommand{\examlang}{ro}
+\newif\ifen
+\def\tmpen{en}\ifx\examlang\tmpen\entrue\else\enfalse\fi
+
+% etichete
+\ifen
+  \renewcommand{\figurename}{Figure}\renewcommand{\tablename}{Table}
+  \newcommand{\coursetitle}{Statistics of Financial Markets}
+  \newcommand{\subjword}{Problem}
+  \newcommand{\rezword}{Solution.}
+  \newcommand{\baremword}{Grading:}
+\else
+  \renewcommand{\figurename}{Figura}\renewcommand{\tablename}{Tabelul}
+  \newcommand{\coursetitle}{Statistica piețelor financiare}
+  \newcommand{\subjword}{Subiectul}
+  \newcommand{\rezword}{Rezolvare.}
+  \newcommand{\baremword}{Barem:}
+\fi
+
+% comutator: barem/rezolvare (true) sau subiecte (false)
+\newif\ifrez \rezfalse
+
+% antet / subsol
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\small\itshape \coursetitle}
+\providecommand{\headyear}{2026}
+\rhead{\small\bfseries \headyear}
+\cfoot{\small\thepage/\pageref{LastPage}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.42ex}
+\setlength{\emergencystretch}{3em}
+
+% numerotare automată, continuă, a cerințelor (1, 2, 3, ...)
+\newcounter{qq}
+\newcommand{\Q}{\refstepcounter{qq}\textbf{\theqq.}~}
+% punctaj aliniat la dreapta, pe ultima linie a cerinței
+\newcommand{\pts}[1]{\nobreak\hfill\textnormal{\itshape (#1)}\par}
+
+% titlu de subiect: "Subiectul I • Titlu ........ puncte" + linie
+\newcommand{\subiect}[3]{%
+  \vspace{1.05ex}%
+  {\color{spfblue}\bfseries \subjword\ #1 \textbullet\ #2}\hfill{\bfseries #3}\par
+  \vspace{0.2ex}{\color{spfblue}\hrule height0.8pt}\vspace{0.7ex}}
+% subiect numerotat automat (I, II, ...); argumentul opțional = identificatorul din bancă (vizibil doar în barem)
+\newcounter{subj}
+\newcommand{\problem}[3][]{%
+  \stepcounter{subj}%
+  \subiect{\Roman{subj}}{#2\ifrez\if\relax\detokenize{#1}\relax\else\ {\normalfont\footnotesize\color{spfred}[#1]}\fi\fi}{#3}}
+
+% blocul de rezolvare (doar în barem)
+\newcommand{\Rez}{\par\vspace{0.2ex}\textit{\rezword}\par\nopagebreak}
+\newcommand{\barem}[1]{\par\textit{\baremword\ #1}\par}
+
+% bloc de titlu cu sigle
+\newcommand{\titlublock}[1]{%
+\begin{center}
+  \begin{minipage}[c]{0.16\textwidth}\includegraphics[height=1.15cm]{ase_logo.png}\end{minipage}%
+  \begin{minipage}[c]{0.68\textwidth}\centering
+  \ifen
+    {\bfseries Bucharest University of Economic Studies}\\[0.2ex]
+    Faculty of Cybernetics, Statistics and Economic Informatics\\[0.2ex]
+    Course: Statistics of Financial Markets
+  \else
+    {\bfseries Academia de Studii Economice din București}\\[0.2ex]
+    Facultatea de Cibernetică, Statistică și Informatică Economică\\[0.2ex]
+    Disciplina: Statistica piețelor financiare
+  \fi
+  \end{minipage}%
+  \begin{minipage}[c]{0.16\textwidth}\raggedleft\includegraphics[height=0.95cm]{ida_logo.png}\end{minipage}\\[1.2ex]
+  {\large\bfseries #1}
+\end{center}}
+
+% valori utile generale (z_alpha = cuantila de ordin alpha a distribuției Normale standard)
+\newcommand{\valoriutilegen}{%
+\ifen Useful values: $z_{0.05}=-1.645$, $z_{0.025}=-1.960$, $z_{0.01}=-2.326$, $\varphi(1.960)=0.0584$,
+$\varphi(2.326)=0.0267$, $\ln 2=0.693$, $\sqrt{252}\approx 15.87$, $\sqrt{365}\approx 19.10$,
+$\chi^2_{0.95}(1)=3.84$, $\chi^2_{0.95}(2)=5.99$, $\chi^2_{0.95}(10)=18.31$
+($z_p$ and $\chi^2_p$ are quantiles of order $p$; $\varphi$ is the standard Normal density).
+\else Valori utile: $z_{0,05}=-1{,}645$; $z_{0,025}=-1{,}960$; $z_{0,01}=-2{,}326$; $\varphi(1{,}960)=0{,}0584$;
+$\varphi(2{,}326)=0{,}0267$; $\ln 2=0{,}693$; $\sqrt{252}\approx 15{,}87$; $\sqrt{365}\approx 19{,}10$;
+$\chi^2_{0,95}(1)=3{,}84$; $\chi^2_{0,95}(2)=5{,}99$; $\chi^2_{0,95}(10)=18{,}31$
+($z_p$ și $\chi^2_p$ sînt cuantile de ordin $p$; $\varphi$ este densitatea distribuției Normale standard).\fi}
+
+% titlul capitolului într-un fișier din bancă (folosit doar ca etichetă de build_variant.py)
+\newcommand{\banktitle}[2]{}
