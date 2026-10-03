@@ -391,15 +391,16 @@
                 id: 'fmh', num: 11,
                 title: { en: 'Fractal markets hypothesis and long memory', ro: 'Ipoteza piețelor fractale și memoria lungă' },
                 topics: {
-                    en: ['The fractal markets hypothesis versus the EMH', 'Hurst exponent: R/S analysis and DFA', 'Long memory, fractional Brownian motion and ARFIMA'],
-                    ro: ['Ipoteza piețelor fractale față de EMH', 'Exponentul Hurst: analiza R/S și DFA', 'Memoria lungă, mișcarea browniană fracționară și modelele ARFIMA']
+                    en: ['The fractal market hypothesis (Peters): investment horizons and liquidity; EMH and AMH', 'Self-similarity, fBm, fGn and ARFIMA; the Hurst exponent by R/S, Lo\'s modified R/S, DFA and GPH with Monte Carlo bands', 'Spurious long memory (breaks, GARCH); long memory in volatility; rolling Hurst exponents for the S&P 500, BET and Bitcoin'],
+                    ro: ['Ipoteza pieței fractale (Peters): orizonturi investiționale și lichiditate; EMH și AMH', 'Autosimilaritate, fBm, fGn și ARFIMA; exponentul Hurst prin R/S, R/S modificat (Lo), DFA și GPH, cu benzi Monte Carlo', 'Memorie lungă aparentă (rupturi structurale, GARCH); memoria lungă a volatilității; exponenți Hurst pe ferestre mobile pentru S&P 500, BET și Bitcoin']
                 },
                 links: {
-                    en: [pdf('slides', 'EN/Courses/chapter14_fractal_market_hypothesis.pdf'), soon('seminar'),
-                         nb('Quantlets/SFM_ch_fmh/SFM_ch_fmh_fractals/SFM_ch_fmh_fractals.ipynb'), ql('Quantlets/SFM_ch_fmh')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter10_fmh_ro_v2.pdf'), pdf('seminar', 'RO/Seminars/seminar_fmh_ro.pdf'),
-                         nb('Quantlets/SFM_ch_fmh/SFM_ch_fmh_fractals/SFM_ch_fmh_fractals.ipynb'), ql('Quantlets/SFM_ch_fmh')]
-                }
+                    en: [pdf('slides', 'EN/Courses/chapter11_fractal_markets_long_memory.pdf'), pdf('seminar', 'EN/Seminars/seminar11_fractal_markets_long_memory.pdf'),
+                         nb('notebooks/EN/chapter11_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter11_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_11')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf'), pdf('seminar', 'RO/Seminarii/seminar11_piete_fractale_memorie_lunga_ro.pdf'),
+                         nb('notebooks/EN/chapter11_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter11_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_11')]
+                },
+                quantinar: q('cryptoEfficiency')
             },
             {
                 id: 'scoring', num: 12,

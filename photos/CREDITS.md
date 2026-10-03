@@ -111,3 +111,15 @@ Every image used on the slides has a free licence verified through the Wikimedia
 |---|---|---|---|---|
 | ch10_bis_tower_2014.jpg | https://commons.wikimedia.org/wiki/File:Basel_Committee_on_Banking_Supervision_-_BCBS.jpg | Taxiarchos228 | CC BY-SA 4.0 | 2014-09-16 |
 | ch10_delbaen_1997.jpg | https://commons.wikimedia.org/wiki/File:ETH-BIB-Delbaen,_Freddy_(1946-)-Portr_16468.tif | ETH-Bibliothek Zürich, Bildarchiv (unknown photographer) | CC BY-SA 4.0 | 1997 |
+
+## Chapter 11 — Fractal market hypothesis and long memory
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch11_hurst_1953.jpg | https://commons.wikimedia.org/wiki/File:Harold_Edwin_Hurst_in_1953.jpg | Elliott & Fry | Public domain | 1953-03-17 |
+| ch11_nilometer_roda.jpg | https://commons.wikimedia.org/wiki/File:Nilometer_(8590204613).jpg | David Stanley | CC BY 2.0 | 2013-01-30 |
+| ch11_aswan_low_dam.jpg | https://commons.wikimedia.org/wiki/File:Aswan_Low_Dam_Egypt_1.jpg | Karelj | Public domain | 2010-04 |
+| ch11_mandelbrot_2006.jpg | https://commons.wikimedia.org/wiki/File:Mandelbrot_p1130876.jpg | David Monniaux | CC BY-SA 3.0 | 2006-09-11 |
+| ch11_mandelbrot_set.jpg | https://commons.wikimedia.org/wiki/File:Mandel_zoom_00_mandelbrot_set.jpg | Wolfgang Beyer | CC BY-SA 3.0 | — |
+| ch11_bitcoin_atm_prague.jpg | https://commons.wikimedia.org/wiki/File:Bitcoin_ATM_Prague.jpg | Perituss | CC0 | 2016-12-28 |
+| ch11_sp500_1987_fed.png | https://commons.wikimedia.org/wiki/File:S%26P_500_index_around_the_time_of_the_crash.png | Mark Carlson, Federal Reserve Board | Public domain | 2006-11 |
