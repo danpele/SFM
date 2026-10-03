@@ -87,3 +87,11 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch7_samuelson.jpg | https://commons.wikimedia.org/wiki/File:Paul_A._Samuelson,_economist.jpg | Bernard Gotfryd | Public domain | 1970–1975 |
 | ch7_lo_2012.jpg | https://commons.wikimedia.org/wiki/File:Andrew_Lo_2012_Shankbone_2.JPG | David Shankbone | CC BY 3.0 | 2012-04-24 |
 | ch7_shiller_2013.jpg | https://commons.wikimedia.org/wiki/File:Robert_J._Shiller_(50372668186).jpg | Bengt Nyman | CC BY 2.0 | 2013-12-07 |
+
+## Chapter 9 — ARCH and GARCH models
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch9_engle_2022.jpg | https://commons.wikimedia.org/wiki/File:0603-Kraneshares_KRBN-RobertEngle-JonDemske-16_(cropped).jpg | Jon Demske | CC BY-SA 4.0 | 2022-06-03 |
+| ch9_stockholm_concert_hall.jpg | https://commons.wikimedia.org/wiki/File:Konserthuset_Stockholm_(Stockholm_Concert_Hall).jpg | Karen Zhou | CC BY-SA 4.0 | 2025-12-05 |
+| ch9_ucsd_geisel_2010.jpg | https://commons.wikimedia.org/wiki/File:Geisel_Library,_UC_San_Diego.jpg | Stephen Bay | CC BY 4.0 | 2010-06-24 |

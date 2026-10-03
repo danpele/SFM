@@ -360,10 +360,15 @@
                 id: 'garch', num: 9,
                 title: { en: 'ARCH and GARCH models', ro: 'Modele ARCH și GARCH' },
                 topics: {
-                    en: ['ARCH(q) and GARCH(1,1): structure, stationarity, persistence', 'Maximum-likelihood estimation with Normal and Student-t innovations', 'Asymmetry: EGARCH, GJR-GARCH and the news impact curve'],
-                    ro: ['ARCH(q) și GARCH(1,1): structură, staționaritate, persistență', 'Estimarea prin verosimilitate maximă, cu inovații din distribuția Normală sau Student-t', 'Asimetrie: EGARCH, GJR-GARCH și curba de impact a știrilor']
+                    en: ['ARCH(q) and GARCH(1,1): persistence, long-run variance, half-life; IGARCH and the EWMA link', 'Maximum-likelihood estimation (step by step and with the arch package), robust standard errors, Student-t and skewed-t innovations on six markets', 'Asymmetry (GJR-GARCH, EGARCH, news impact curve), diagnostics, AIC/BIC, volatility forecasts (QLIKE against EWMA) and VaR 1%'],
+                    ro: ['ARCH(q) și GARCH(1,1): persistența, varianța pe termen lung, timpul de înjumătățire; IGARCH și legătura cu EWMA', 'Estimarea prin verosimilitate maximă (pas cu pas și cu pachetul arch), erori standard robuste, inovații Student-t și skewed-t pe șase piețe', 'Asimetrie (GJR-GARCH, EGARCH, curba de impact a știrilor), diagnosticare, AIC/BIC, prognoza volatilității (QLIKE comparat cu EWMA) și VaR 1%']
                 },
-                links: { en: [], ro: [] },
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter9_arch_garch_models.pdf'), pdf('seminar', 'EN/Seminars/seminar9_arch_garch_models.pdf'),
+                         nb('notebooks/EN/chapter9_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter9_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_09')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol9_modele_arch_garch.pdf'), pdf('seminar', 'RO/Seminarii/seminar9_modele_arch_garch_ro.pdf'),
+                         nb('notebooks/EN/chapter9_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter9_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_09')]
+                },
                 quantinar: q('tsaPython')
             },
             {
