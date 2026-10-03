@@ -466,20 +466,20 @@
                 id: 'review', num: 16,
                 title: { en: 'Review', ro: 'Recapitulare' },
                 topics: {
-                    en: ['Solved problems across all chapters', 'Exam-style problems with step-by-step solutions'],
-                    ro: ['Probleme rezolvate din toate capitolele', 'Probleme de tip examen, rezolvate pas cu pas']
+                    en: ['The course map: from returns and their distribution to tested risk measures; one recap per chapter with key formulas, facts on the BET, the S&P 500 and Bitcoin, and common mistakes', 'The toolbox: which test or model answers which question; the exam format, grading criteria and eight exam-type problems solved step by step', 'The team project, its oral defence and AI_USE.md; how AI could help in your own research'],
+                    ro: ['Harta cursului: de la randamente și distribuția lor la măsuri de risc testate; cîte o recapitulare pentru fiecare capitol, cu formule-cheie, fapte despre BET, S&P 500 și Bitcoin și greșeli frecvente', 'Trusa de instrumente: testul sau modelul potrivit pentru fiecare întrebare; formatul examenului, criteriile de notare și opt probleme de tip examen rezolvate pas cu pas', 'Proiectul de echipă, susținerea orală și AI_USE.md; contribuția posibilă a AI în propria cercetare']
                 },
                 links: {
-                    en: [soon('seminar'), ql('Quantlets/Sem_recap')],
-                    ro: [pdf('seminar', 'RO/Seminars/seminar_probleme_examen_ro.pdf', { en: 'Exam problems', ro: 'Probleme de examen' }),
-                         pdf('seminarExtra', 'RO/Seminars/seminar_exercitii.pdf', { en: 'Review exercises', ro: 'Exerciții de recapitulare' }),
-                         ql('Quantlets/Sem_recap')]
+                    en: [pdf('slides', 'EN/Courses/chapter16_review.pdf'), pdf('seminar', 'EN/Seminars/seminar16_review.pdf'), pdf('seminarExtra', 'exam/practice/exam_problems_en.pdf', { en: 'Exam practice problems', ro: 'Probleme de examen' }),
+                         nb('notebooks/EN/chapter16_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter16_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_16')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol16_recapitulare.pdf'), pdf('seminar', 'RO/Seminarii/seminar16_recapitulare_ro.pdf'), pdf('seminarExtra', 'exam/practice/probleme_examen_ro.pdf', { en: 'Exam practice problems', ro: 'Probleme de examen' }),
+                         nb('notebooks/EN/chapter16_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter16_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_16')]
                 }
             }
         ],
 
         // ---------------------------------------------------------------
-        // Team project (section #project); aiPolicy left empty until the policy is set
+        // Team project (section #project) and AI policy
         // ---------------------------------------------------------------
         project: {
             en: [
