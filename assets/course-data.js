@@ -436,10 +436,15 @@
                 id: 'crypto', num: 14,
                 title: { en: 'Crypto assets', ro: 'Active cripto' },
                 topics: {
-                    en: ['Bitcoin, Ethereum and stablecoins: how they work (SFM, ch. 23)', 'Statistical properties of crypto returns', 'Crypto indices: CRIX'],
-                    ro: ['Bitcoin, Ethereum și stablecoins: cum funcționează (SFM, cap. 23)', 'Proprietățile statistice ale randamentelor cripto', 'Indici cripto: CRIX']
+                    en: ['Bitcoin and Ethereum: blockchain, proof of work and proof of stake, the halving; crypto as an asset class: annualisation with 365 days, heavy tails, GARCH, weekend effect, variance-ratio tests', 'Correlation with equities and gold (COVID-19, Terra/Luna, FTX), safe haven, drawdowns and bubbles, the spot Bitcoin ETFs of 2024', 'Stablecoins: types, supply, peg deviations in basis points, the USDC depeg of March 2023, the collapse of TerraUSD, MiCA and the GENIUS Act; VaR 1% and ES 2.5% of a crypto position'],
+                    ro: ['Bitcoin și Ethereum: blockchain, proof of work și proof of stake, halving-ul; criptoactivele ca clasă de active: anualizarea cu 365 de zile, cozi groase, GARCH, efectul de weekend, testele variance ratio', 'Corelația cu acțiunile și aurul (COVID-19, Terra/Luna, FTX), activ de refugiu, drawdown-uri și bule, ETF-urile spot pe Bitcoin din 2024', 'Stablecoins: tipuri, ofertă, abateri de la paritate în puncte de bază, depeg-ul USDC din martie 2023, prăbușirea TerraUSD, MiCA și GENIUS Act; VaR 1% și ES 2,5% pentru o poziție cripto']
                 },
-                links: { en: [], ro: [] },
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter14_crypto_assets.pdf'), pdf('seminar', 'EN/Seminars/seminar14_crypto_assets.pdf'),
+                         nb('notebooks/EN/chapter14_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter14_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_14')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol14_active_cripto.pdf'), pdf('seminar', 'RO/Seminarii/seminar14_active_cripto_ro.pdf'),
+                         nb('notebooks/EN/chapter14_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter14_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_14')]
+                },
                 quantinar: q('blockchainIntro', 'cryptoAsset')
             },
             {

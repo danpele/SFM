@@ -144,3 +144,16 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch13_deep_blue_2011.jpg | https://commons.wikimedia.org/wiki/File:IBM_Deep_Blue_at_Computer_History_Museum_(9361685537).jpg | Anton Chiang | CC BY 2.0 | 2011-05-07 |
 | ch13_hinton_2024.jpg | https://commons.wikimedia.org/wiki/File:Geoffrey_E._Hinton,_2024_Nobel_Prize_Laureate_in_Physics_(cropped1).jpg | Arthur Petron | CC BY-SA 4.0 | 2024-12-08 |
 | ch13_harper_center_2013.jpg | https://commons.wikimedia.org/wiki/File:University_of_Chicago_July_2013_01_(Charles_M._Harper_Center).jpg | Michael Barera | CC BY-SA 4.0 | 2013-07-11 |
+
+## Chapter 14 — Crypto assets
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch14_satoshi_bust_2021.jpg | https://commons.wikimedia.org/wiki/File:Bust_of_Satoshi_Nakamoto_in_Budapest.jpg | Fekist | CC BY-SA 4.0 | 2021-09-19 |
+| ch14_mining_farm_2014.jpg | https://commons.wikimedia.org/wiki/File:Bitcoin_mining_farm.jpg | Marko Ahtisaari | CC BY 2.0 | 2014-06-14 |
+| ch14_buterin_2015.jpg | https://commons.wikimedia.org/wiki/File:Vitalik_Buterin_TechCrunch_London_2015_(cropped).jpg | John Phillips | CC BY 2.0 | 2015-12-08 |
+| ch14_sec_hq_2008.jpg | https://commons.wikimedia.org/wiki/File:Facade_of_the_U.S._Securities_and_Exchange_Commission_headquarters,_Washington,_D.C.jpg | David (Flickr user dbking) | CC BY 2.0 | 2008-10-04 |
+| ch14_svb_hq_2023.jpg | https://commons.wikimedia.org/wiki/File:3003_West_Tasman_Drive_entrance_2,_Santa_Clara,_California.jpg | Minh Nguyen | CC BY-SA 4.0 | 2023-03-13 |
+| ch14_eu_parliament_2010.jpg | https://commons.wikimedia.org/wiki/File:Hemicycle_of_Louise_Weiss_building_of_the_European_Parliament,_Strasbourg.jpg | jeffowenphotos | CC BY 2.0 | 2010-05-18 |
+| ch14_us_capitol.jpg | https://commons.wikimedia.org/wiki/File:United_States_Capitol_-_west_front.jpg | Architect of the Capitol | Public domain | 1997 |
+| ch14_sornette_2012.jpg | https://commons.wikimedia.org/wiki/File:Didier_Sornette.jpg | Didier Sornette | CC BY-SA 3.0 DE | 2012-03-09 |
