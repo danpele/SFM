@@ -474,7 +474,7 @@ D.frame(T('Which Moments Exist?', 'Ce momente există?'), items(
      [T('reason: $|x|^p$ times a density of order $|x|^{-\\alpha-1}$ is integrable only if $p < \\alpha$',
         'motivul: $|x|^p$ înmulțit cu o densitate de ordinul $|x|^{-\\alpha-1}$ este integrabil doar dacă $p < \\alpha$')]),
     (T('Consequences', 'Consecințe'),
-     [T('$\\alpha < 2$: \\textbf{infinite variance}; skewness and kurtosis are not defined', '$\\alpha < 2$: \\textbf{varianță infinită}; asimetria și aplatizarea nu sînt definite'),
+     [T('$\\alpha < 2$: \\textbf{infinite variance}; skewness and kurtosis are not defined', '$\\alpha < 2$: \\textbf{varianță infinită}; asimetria și boltirea nu sînt definite'),
       T('$1 < \\alpha < 2$: the mean exists; in S1 it equals $\\delta_1$', '$1 < \\alpha < 2$: media există; în S1 este egală cu $\\delta_1$'),
       T('$\\alpha \\le 1$: not even the mean exists (Cauchy, Lévy)', '$\\alpha \\le 1$: nici media nu există (Cauchy, Lévy)'),
       T('$\\alpha = 2$: all moments exist', '$\\alpha = 2$: toate momentele există')]),

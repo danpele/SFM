@@ -326,10 +326,10 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Și media, și varianța sînt finite",
                     "Nu există nici media, nici varianța",
                     "Media există, varianța este infinită",
-                    "Varianța există, dar aplatizarea nu"
+                    "Varianța există, dar boltirea nu"
                 ],
                 "correctExplanation": "$E|X|^p < \\infty$ dacă și numai dacă $p < \\alpha$: $p = 1 < 1{,}7$ este finit, $p = 2 > 1{,}7$ este infinit.",
-                "incorrectExplanation": "Regula $E|X|^p < \\infty \\iff p < \\alpha$ dă o medie finită ($1 < 1{,}7$) și o varianță infinită ($2 > 1{,}7$); nici aplatizarea nu există."
+                "incorrectExplanation": "Regula $E|X|^p < \\infty \\iff p < \\alpha$ dă o medie finită ($1 < 1{,}7$) și o varianță infinită ($2 > 1{,}7$); nici boltirea nu există."
             }
         },
         {

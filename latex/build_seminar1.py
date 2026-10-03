@@ -396,7 +396,7 @@ D.task(T('B2: Is the Mean Return of the BET Positive? [Solved]', 'B2: este pozit
        T('is the mean daily return of the BET significantly different from zero over 2015--2026?', 'este randamentul zilnic mediu al BET semnificativ diferit de zero în 2015--2026?'),
        T('BET closes, 2015--2026, daily log returns in \\%', 'închiderile BET, 2015--2026, randamente logaritmice zilnice în \\%'),
        [T('Compute the mean, standard deviation, skewness, excess kurtosis, minimum (with its date) and maximum of the daily log returns.',
-          'Calculați media, abaterea standard, asimetria, excesul de aplatizare, minimul (cu data lui) și maximul randamentelor logaritmice zilnice.'),
+          'Calculați media, abaterea standard, asimetria, excesul de boltire, minimul (cu data lui) și maximul randamentelor logaritmice zilnice.'),
         T('Annualise the mean and the standard deviation with the actual number of observations per year.', 'Anualizați media și abaterea standard cu numărul real de observații pe an.'),
         T('Compute the standard error of the annual mean, its 95\\% CI and the $z$ statistic of $H_0$: mean $= 0$.',
           'Calculați eroarea standard a mediei anuale, intervalul de încredere 95\\% și statistica $z$ pentru $H_0$: media $= 0$.'),
@@ -409,7 +409,7 @@ D.task(T('B2: Is the Mean Return of the BET Positive? [Solved]', 'B2: este pozit
 D.frame(T('B2: Solution [Solved]', 'B2: rezolvare [Rezolvat]'), cols(fig('ch1_sem_b2', h='0.55', w='1.0'), items(
     T('$n = @{b2.n}$ days, @{b2.ppy} a year; mean $@{b2.mean}\\%$, s.d. $@{b2.sd}\\%$', '$n = @{b2.n}$ zile, @{b2.ppy} pe an; media $@{b2.mean}\\%$, abaterea std. $@{b2.sd}\\%$'),
     T('Skewness $@{b2.skew}$, excess kurtosis $@{b2.exkurt}$; worst day $@{b2.min}\\%$ on @{b2.mindate}, best $@{b2.max}\\%$',
-      'Asimetria $@{b2.skew}$, excesul de aplatizare $@{b2.exkurt}$; cea mai slabă zi $@{b2.min}\\%$ pe @{b2.mindate}, cea mai bună $@{b2.max}\\%$'),
+      'Asimetria $@{b2.skew}$, excesul de boltire $@{b2.exkurt}$; cea mai slabă zi $@{b2.min}\\%$ pe @{b2.mindate}, cea mai bună $@{b2.max}\\%$'),
     T('Annual: mean @{b2.annmean}\\%, volatility @{b2.annvol}\\%; SE $= @{b2.annvol}/\\sqrt{@{b2.years}} = @{b2.se}\\%$',
       'Anual: media @{b2.annmean}\\%, volatilitatea @{b2.annvol}\\%; SE $= @{b2.annvol}/\\sqrt{@{b2.years}} = @{b2.se}\\%$'),
     T('95\\% CI [@{b2.lo}\\%, @{b2.hi}\\%]; $z = @{b2.t}$, $p = @{b2.p}$: we reject a zero mean at 5\\%', 'Intervalul de încredere 95\\%: [@{b2.lo}\\%; @{b2.hi}\\%]; $z = @{b2.t}$, $p = @{b2.p}$: respingem ipoteza mediei zero la 5\\%'),

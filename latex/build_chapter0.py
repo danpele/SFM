@@ -704,7 +704,7 @@ D.frame('⟦Heavy Tails: Interpretation||Cozi groase: interpretare⟧', items(
      ['⟦days with a move larger than 4 standard deviations: @{sp_beyond4} observed||zile cu o variație mai mare de 4 abateri standard: @{sp_beyond4} observate⟧',
       '⟦expected under the Normal distribution with the same mean and variance: @{sp_beyond4_normal}||număr așteptat dacă randamentele ar urma distribuția Normală cu aceeași medie și varianță: @{sp_beyond4_normal}⟧',
       '⟦the worst day, @{sp_min_date}, lies @{sp_min_z} standard deviations from the mean||cea mai slabă zi, @{sp_min_date}, se află la @{sp_min_z} abateri standard de medie⟧']),
-    ('⟦\\textbf{Kurtosis}: $\\frac{1}{n}\\sum (r_t - \\bar r)^4 / s^4$, a measure of tail weight||\\textbf{Coeficientul de aplatizare} (kurtosis): $\\frac{1}{n}\\sum (r_t - \\bar r)^4 / s^4$, o măsură a greutății cozilor⟧',
+    ('⟦\\textbf{Kurtosis}: $\\frac{1}{n}\\sum (r_t - \\bar r)^4 / s^4$, a measure of tail weight||\\textbf{Coeficientul de boltire} (kurtosis): $\\frac{1}{n}\\sum (r_t - \\bar r)^4 / s^4$, o măsură a greutății cozilor⟧',
      ['⟦Normal distribution: 3; S\\&P 500 since 2000: @{sp_kurt}||distribuția Normală: 3; S\\&P 500 din 2000: @{sp_kurt}⟧']),
     ('⟦\\textbf{Also more quiet days}: the histogram is taller in the centre||\\textbf{Și mai multe zile liniștite}: histograma este mai înaltă în centru⟧',
      ['⟦risk measured with the Normal distribution is too low in the tails (Chapters 2, 5 and 10)||riscul măsurat pe baza distribuției Normale este subestimat în cozi (Capitolele 2, 5 și 10)⟧'])))
@@ -724,7 +724,7 @@ D.frame('⟦Drawdown, Step by Step||Drawdown-ul, pas cu pas⟧', cols(
 D.recap(('from prices to returns', 'de la prețuri la randamente'), [
     '⟦$R_t = P_t/P_{t-1} - 1$ compounds; $r_t = \\ln(P_t/P_{t-1})$ adds up over time||$R_t = P_t/P_{t-1} - 1$ se compune; $r_t = \\ln(P_t/P_{t-1})$ se adună în timp⟧',
     '⟦Annualise the mean with $q$ and the volatility with $\\sqrt{q}$; $q = 365$ for Bitcoin||Anualizăm media cu $q$ și volatilitatea cu $\\sqrt{q}$; $q = 365$ pentru Bitcoin⟧',
-    '⟦Daily returns: volatility clustering and heavy tails (kurtosis @{sp_kurt} against 3)||Randamentele zilnice: volatility clustering și cozi groase (coeficient de aplatizare @{sp_kurt}, față de 3)⟧',
+    '⟦Daily returns: volatility clustering and heavy tails (kurtosis @{sp_kurt} against 3)||Randamentele zilnice: volatility clustering și cozi groase (coeficient de boltire @{sp_kurt}, față de 3)⟧',
     '⟦Drawdown: the loss from the previous peak; the maximum drawdown summarises the worst episode||Drawdown: pierderea față de vîrful anterior; drawdown-ul maxim rezumă cel mai sever episod⟧'])
 
 # ===============================================================================================================

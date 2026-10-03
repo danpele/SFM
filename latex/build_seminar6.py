@@ -519,7 +519,7 @@ D.task(T('B4: Crash or Data Error? Banca Transilvania [Proposed]', 'B4: crah sau
         T('For each, compare the close and the adjusted close around the date, and the BET return of the same day.', 'Pentru fiecare, comparați prețul de închidere și prețul ajustat în jurul datei, precum și randamentul BET din aceeași zi.'),
         T('Decide which days are data errors and remove only those.', 'Decideți care zile sînt erori de date și eliminați doar acele zile.'),
         T('Refit five candidates; compare the kurtosis, the Student-t $\\hat\\nu$, the AD statistic and the AIC winner before and after.',
-          'Reestimați cinci candidați; comparați aplatizarea, $\\hat\\nu$ Student-t, statistica AD și cîștigătorul AIC înainte și după.'),
+          'Reestimați cinci candidați; comparați boltirea, $\\hat\\nu$ Student-t, statistica AD și cîștigătorul AIC înainte și după.'),
         T('Interpretation: what would have happened if you had removed all three days?', 'Interpretare: ce s-ar fi întîmplat dacă ați fi eliminat toate cele trei zile?')],
        T('a table of three days with your verdict, a before/after table and two sentences', 'un tabel cu trei zile și verdictul vostru, un tabel înainte/după și două fraze'), size='scriptsize', nb='B4')
 
@@ -532,7 +532,7 @@ D.frame(T('B4: Solution [Proposed]', 'B4: rezolvare [Propus]'), items(
         '19 decembrie 2018: prețul de închidere și cel ajustat scad amîndouă cu circa $20\\%$, iar BET scade cu $@{b4.bet}\\%$ în aceeași zi (taxa pe active bancare anunțată în decembrie 2018): un \\textbf{crah real}, îl păstrăm')]),
     (T('Before $\\to$ after removing the two May 2016 days', 'Înainte $\\to$ după eliminarea celor două zile din mai 2016'),
      [T('kurtosis $@{b4.raw.kurt} \\to @{b4.clean.kurt}$; standard deviation $@{b4.raw.sd} \\to @{b4.clean.sd}$; Student-t $\\hat\\nu$ $@{b4.raw.nu} \\to @{b4.clean.nu}$; AD $@{b4.raw.ad} \\to @{b4.clean.ad}$; AIC winner @{b4.raw.best} $\\to$ @{b4.clean.best}',
-        'aplatizarea $@{b4.raw.kurt} \\to @{b4.clean.kurt}$; abaterea standard $@{b4.raw.sd} \\to @{b4.clean.sd}$; $\\hat\\nu$ Student-t $@{b4.raw.nu} \\to @{b4.clean.nu}$; AD $@{b4.raw.ad} \\to @{b4.clean.ad}$; cîștigătorul AIC @{b4.raw.best} $\\to$ @{b4.clean.best}')]),
+        'boltirea $@{b4.raw.kurt} \\to @{b4.clean.kurt}$; abaterea standard $@{b4.raw.sd} \\to @{b4.clean.sd}$; $\\hat\\nu$ Student-t $@{b4.raw.nu} \\to @{b4.clean.nu}$; AD $@{b4.raw.ad} \\to @{b4.clean.ad}$; cîștigătorul AIC @{b4.raw.best} $\\to$ @{b4.clean.best}')]),
     T('Interpretation: removing the real crash too would hide the risk the model is built for; clean only proven errors',
       'Interpretare: eliminarea și a crahului real ar ascunde exact riscul pentru care este construit modelul; curățați doar erorile dovedite')) + qlsem(),
     'scriptsize', instructor_only=True)

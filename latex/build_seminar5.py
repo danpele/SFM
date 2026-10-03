@@ -220,7 +220,7 @@ D.frame(T('What You Need for Today (1/5): Heavy Tails', 'Noțiuni necesare azi (
      [T('VaR at level $p < p_0$: $\\mathrm{VaR}_p = x_0\\,(p_0/p)^{1/\\alpha}$; $\\mathrm{ES}_p = \\mathrm{VaR}_p\\,\\alpha/(\\alpha - 1)$ for $\\alpha > 1$',
         'VaR la nivelul $p < p_0$: $\\mathrm{VaR}_p = x_0\\,(p_0/p)^{1/\\alpha}$; $\\mathrm{ES}_p = \\mathrm{VaR}_p\\,\\alpha/(\\alpha - 1)$ pentru $\\alpha > 1$')]),
     T('Moments: $E|L|^m < \\infty$ only for $m < \\alpha$ ($\\alpha \\le 2$: no variance; $\\alpha \\le 4$: no kurtosis)',
-      'Momente: $E|L|^m < \\infty$ doar pentru $m < \\alpha$ ($\\alpha \\le 2$: fără varianță; $\\alpha \\le 4$: aplatizarea nu există)')))
+      'Momente: $E|L|^m < \\infty$ doar pentru $m < \\alpha$ ($\\alpha \\le 2$: fără varianță; $\\alpha \\le 4$: boltirea nu există)')))
 
 D.frame(T('What You Need for Today (2/5): the Hill Estimator', 'Noțiuni necesare azi (2/5): estimatorul Hill'), items(
     (T('Order the losses $L_{(1)} \\ge L_{(2)} \\ge \\dots$; use the $k$ largest: $\\hat\\alpha_k = \\Big[\\dfrac1k\\sum_{i=1}^{k}\\ln\\dfrac{L_{(i)}}{L_{(k+1)}}\\Big]^{-1}$ \\refHill',
@@ -286,7 +286,7 @@ D.solved(T('A1: Hill from Eight Losses', 'A1: Hill din opt pierderi'),
                T('2. $\\mathrm{SE} = @{a1.alpha}/\\sqrt7 = @{a1.se}$; interval $[@{a1.lo}, @{a1.hi}]$: very wide with $k = 7$', '2. $\\mathrm{SE} = @{a1.alpha}/\\sqrt7 = @{a1.se}$; interval $[@{a1.lo}; @{a1.hi}]$: foarte larg cu $k = 7$'),
                T('3. $k/(np) = 7/2.5 = @{a1.ratio}$; $@{a1.ratio}^{1/@{a1.alpha}} = @{a1.factor}$; $\\hat x_{0.001} = 5.5 \\times @{a1.factor} = @{a1.xp}\\%$',
                  '3. $k/(np) = 7/2.5 = @{a1.ratio}$; $@{a1.ratio}^{1/@{a1.alpha}} = @{a1.factor}$; $\\hat x_{0.001} = 5.5 \\times @{a1.factor} = @{a1.xp}\\%$'),
-               T('$\\hat\\alpha \\approx 2.8$: variance finite, kurtosis infinite; but the interval also allows $\\alpha < 2$.', '$\\hat\\alpha \\approx 2{,}8$: varianță finită, aplatizare infinită; dar intervalul permite și $\\alpha < 2$.')),
+               T('$\\hat\\alpha \\approx 2.8$: variance finite, kurtosis infinite; but the interval also allows $\\alpha < 2$.', '$\\hat\\alpha \\approx 2{,}8$: varianță finită, boltire infinită; dar intervalul permite și $\\alpha < 2$.')),
          size='scriptsize')
 
 D.proposed(T('A2: Hill for a Crypto Asset', 'A2: Hill pentru un activ cripto'),
@@ -326,7 +326,7 @@ D.proposed(T('A4: A Heavier Pareto Tail', 'A4: o coadă Pareto mai groasă'),
                    '1. $@{a4.p6}\\%$ și $@{a4.p12}\\%$ (distribuția Normală cu același $P(L > 3\\%)$: $@{a4.np6}\\%$ și $@{a4.np12}\\%$)'),
                  T('2. VaR 0.5\\% $= 3 \\times 3^{0.4} = @{a4.var0.005}\\%$; VaR 0.1\\% $= @{a4.var0.001}\\%$; ES 0.5\\% $= @{a4.var0.005} \\times 2.5/1.5 = @{a4.es0.005}\\%$; $e(5) = 5/1.5 = @{a4.eu}\\%$',
                    '2. VaR 0,5\\% $= 3 \\times 3^{0.4} = @{a4.var0.005}\\%$; VaR 0,1\\% $= @{a4.var0.001}\\%$; ES 0,5\\% $= @{a4.var0.005} \\times 2.5/1.5 = @{a4.es0.005}\\%$; $e(5) = 5/1.5 = @{a4.eu}\\%$'),
-                 T('3. $\\alpha = 2.5$: mean and variance exist; skewness ($m = 3$) and kurtosis do not.', '3. $\\alpha = 2{,}5$: media și varianța există; asimetria ($m = 3$) și aplatizarea nu.')),
+                 T('3. $\\alpha = 2.5$: mean and variance exist; skewness ($m = 3$) and kurtosis do not.', '3. $\\alpha = 2{,}5$: media și varianța există; asimetria ($m = 3$) și boltirea nu.')),
            size='scriptsize')
 
 D.solved(T('A5: A GEV Return Level', 'A5: un return level GEV'),
@@ -365,7 +365,7 @@ D.solved(T('A7: POT Risk Measures, Step by Step', 'A7: măsuri de risc POT, pas 
          items(T('1. $\\beta/\\xi = @{a7.boxi}$; $p = 1\\%$: $np/N_u = @{a7.r0.01}$, $@{a7.r0.01}^{-0.2} = @{a7.pow0.01}$, VaR $= 2 + 4(@{a7.pow0.01} - 1) = @{a7.var0.01}\\%$; $p = 0.1\\%$: $@{a7.pow0.001}$, VaR $= @{a7.var0.001}\\%$',
                  '1. $\\beta/\\xi = @{a7.boxi}$; $p = 1\\%$: $np/N_u = @{a7.r0.01}$, $@{a7.r0.01}^{-0.2} = @{a7.pow0.01}$, VaR $= 2 + 4(@{a7.pow0.01} - 1) = @{a7.var0.01}\\%$; $p = 0{,}1\\%$: $@{a7.pow0.001}$, VaR $= @{a7.var0.001}\\%$'),
                T('2. $np/N_u = @{a7.r0.025}$, VaR 2.5\\% $= @{a7.var0.025}\\%$; ES $= (@{a7.var0.025} + 0.8 - 0.4)/0.8 = @{a7.es0.025}\\%$', '2. $np/N_u = @{a7.r0.025}$, VaR 2,5\\% $= @{a7.var0.025}\\%$; ES $= (@{a7.var0.025} + 0.8 - 0.4)/0.8 = @{a7.es0.025}\\%$'),
-               T('3. $e(u) = \\beta/(1 - \\xi) = @{a7.eu}\\%$; $\\alpha = 1/\\xi = 5$: a heavy tail, yet with a finite kurtosis.', '3. $e(u) = \\beta/(1 - \\xi) = @{a7.eu}\\%$; $\\alpha = 1/\\xi = 5$: o coadă groasă, dar cu aplatizare finită.')),
+               T('3. $e(u) = \\beta/(1 - \\xi) = @{a7.eu}\\%$; $\\alpha = 1/\\xi = 5$: a heavy tail, yet with a finite kurtosis.', '3. $e(u) = \\beta/(1 - \\xi) = @{a7.eu}\\%$; $\\alpha = 1/\\xi = 5$: o coadă groasă, dar cu boltire finită.')),
          size='scriptsize')
 
 D.proposed(T('A8: POT for a Crypto Asset', 'A8: POT pentru un activ cripto'),
@@ -387,13 +387,13 @@ D.section('Part B: Real Data, Precision and Interpretation', 'Partea B: date rea
 
 D.task(T('B1: How Heavy Is the Tail of DAX Losses? [Solved]', 'B1: cît de groasă este coada pierderilor DAX? [Rezolvat]'),
        T('what is the tail index of daily DAX losses, how precise is it, and does the kurtosis of DAX returns exist?',
-         'care este indicele de coadă al pierderilor zilnice DAX, cît de precis este și există aplatizarea (kurtosis) randamentelor DAX?'),
+         'care este indicele de coadă al pierderilor zilnice DAX, cît de precis este și există boltirea (kurtosis) randamentelor DAX?'),
        T('DAX closes, @{b1.y0}--@{b1.y1}, daily losses $L_t = -r_t$ in \\%', 'închiderile DAX, @{b1.y0}--@{b1.y1}, pierderi zilnice $L_t = -r_t$ în \\%'),
        [T('Draw the Hill plot of the losses for $k$ between 0.5\\% and 10\\% of $n$, with the i.i.d.\\ 95\\% band.', 'Desenați graficul Hill al pierderilor pentru $k$ între 0,5\\% și 10\\% din $n$, cu banda i.i.d.\\ de 95\\%.'),
         T('Compute $\\hat\\alpha$ at $k = 2.5\\%$ of $n$ with the i.i.d.\\ SE, the 95\\% interval and the moving-block bootstrap SE (blocks of 20 days, 500 samples).',
           'Calculați $\\hat\\alpha$ la $k = 2.5\\%$ din $n$ cu SE i.i.d., intervalul de 95\\% și SE din bootstrap pe blocuri mobile (blocuri de 20 de zile, 500 de eșantioane).'),
         T('Compute the Hill estimate of the gains with the same $k$.', 'Calculați estimarea Hill a cîștigurilor cu același $k$.'),
-        T('Interpretation: is $\\alpha > 4$ (a finite kurtosis) compatible with the data?', 'Interpretare: este $\\alpha > 4$ (aplatizare finită) compatibil cu datele?')],
+        T('Interpretation: is $\\alpha > 4$ (a finite kurtosis) compatible with the data?', 'Interpretare: este $\\alpha > 4$ (boltire finită) compatibil cu datele?')],
        T('the chart, four numbers and one sentence', 'graficul, patru valori și o frază'), size='footnotesize', nb='B1')
 
 D.frame(T('B1: Solution [Solved]', 'B1: rezolvare [Rezolvat]'), fig('ch5_sem_b1', h='0.42') + items(
@@ -402,7 +402,7 @@ D.frame(T('B1: Solution [Solved]', 'B1: rezolvare [Rezolvat]'), fig('ch5_sem_b1'
     T('Between $k = 1\\%$ and $5\\%$ of $n$ the estimate falls slowly, from $@{b1.alpha_1}$ to $@{b1.alpha_5}$; the gains have a lighter tail',
       'Între $k = 1\\%$ și $5\\%$ din $n$, estimarea scade lent, de la $@{b1.alpha_1}$ la $@{b1.alpha_5}$; cîștigurile au o coadă mai subțire'),
     T('Interpretation: $\\alpha = 4$ is $@{b1.tz}$ block SE away: the kurtosis of DAX returns does not exist, so the sample kurtosis ($@{b1.kurt}$) is not a stable number',
-      'Interpretare: pentru $\\alpha = 4$, statistica $z$ (cu SE pe blocuri) este $@{b1.tz}$: aplatizarea randamentelor DAX nu există, deci aplatizarea de selecție ($@{b1.kurt}$) nu este o mărime stabilă')) + qlsem(), 'footnotesize')
+      'Interpretare: pentru $\\alpha = 4$, statistica $z$ (cu SE pe blocuri) este $@{b1.tz}$: boltirea randamentelor DAX nu există, deci boltirea de selecție ($@{b1.kurt}$) nu este o mărime stabilă')) + qlsem(), 'footnotesize')
 
 D.task(T('B2: BET, Bitcoin and Two BVB Stocks [Proposed]', 'B2: BET, Bitcoin și două acțiuni BVB [Propus]'),
        T('which of the BET, Bitcoin, OMV Petrom and Banca Transilvania has the heaviest tail of losses? Model: B1.',
@@ -576,7 +576,7 @@ D.frame(T('C2: Solution [Proposed]', 'C2: rezolvare [Propus]'), items(
 D.section('Wrap-Up', 'Încheiere')
 
 D.frame(T('What You Should Take from Today', 'Idei de reținut'), items(
-    T('Daily losses have power tails with $\\alpha$ between 2.5 and 3.5: finite variance, no finite kurtosis', 'Pierderile zilnice au cozi de tip putere cu $\\alpha$ între 2,5 și 3,5: varianță finită, aplatizare infinită'),
+    T('Daily losses have power tails with $\\alpha$ between 2.5 and 3.5: finite variance, no finite kurtosis', 'Pierderile zilnice au cozi de tip putere cu $\\alpha$ între 2,5 și 3,5: varianță finită, boltire infinită'),
     T('Hill: fix $k$ in a flat region of the Hill plot; report a standard error that allows for clustering', 'Hill: fixați $k$ într-o zonă plată a graficului Hill; raportați o eroare standard care ține seama de volatility clustering'),
     T('POT: $u$ at a high quantile, GPD for the excesses, VaR and ES by closed formulas; check with mean excess and QQ plots',
       'POT: $u$ la o cuantilă înaltă, GPD pentru excese, VaR și ES prin formule explicite; verificați cu mean excess și grafice QQ'),

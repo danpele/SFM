@@ -386,13 +386,13 @@ chart(T('What Every Model Must Reproduce: the SFESumm Statistics', 'Statisticile
     T('Even monthly returns are skewed and heavy-tailed: the next slide gives the numbers', 'Chiar și randamentele lunare sînt asimetrice și au cozi groase: cifrele sînt pe slide-ul următor')], h='0.56\\textheight')
 
 D.frame(T('Summary Statistics: Monthly DAX and Daily Returns', 'Statistici descriptive: DAX lunar și randamente zilnice'), table(
-    'lrrrrrrr', T('& $n$ & min & max & st.\\ dev. & ann.\\ vol. & skew. & kurt.', '& $n$ & min & max & ab.\\ std. & vol.\\ anuală & asim. & aplatizare'),
+    'lrrrrrrr', T('& $n$ & min & max & st.\\ dev. & ann.\\ vol. & skew. & kurt.', '& $n$ & min & max & ab.\\ std. & vol.\\ anuală & asim. & boltire'),
     ['DAX 2004--2014 & @{dm.book.n} & $@{dm.book.min}$ & $@{dm.book.max}$ & $@{dm.book.sd}$ & $@{dm.book.ann_vol}$ & $@{dm.book.skew}$ & $@{dm.book.kurt}$',
      'DAX 2004--@{y1} & @{dm.full.n} & $@{dm.full.min}$ & $@{dm.full.max}$ & $@{dm.full.sd}$ & $@{dm.full.ann_vol}$ & $@{dm.full.skew}$ & $@{dm.full.kurt}$'],
     size='footnotesize') + items(
     T('Monthly, in \\%; kurtosis $= E(X - \\mu)^4/\\sigma^4$, equal to 3 for the Normal distribution; Jarque--Bera (Chapter 2) $p$-value $@{dm.full.jbp}$',
-      'Lunar, în \\%; aplatizarea (kurtosis) $= E(X - \\mu)^4/\\sigma^4$, egală cu 3 pentru distribuția Normală; valoarea $p$ Jarque--Bera (Capitolul 2) $@{dm.full.jbp}$'),
-    (T('Daily log returns since 2000 (Bitcoin since 2014, BVB stocks since 2010): kurtosis', 'Randamente logaritmice zilnice din 2000 (Bitcoin din 2014, acțiunile BVB din 2010): aplatizarea'),
+      'Lunar, în \\%; boltirea (kurtosis) $= E(X - \\mu)^4/\\sigma^4$, egală cu 3 pentru distribuția Normală; valoarea $p$ Jarque--Bera (Capitolul 2) $@{dm.full.jbp}$'),
+    (T('Daily log returns since 2000 (Bitcoin since 2014, BVB stocks since 2010): kurtosis', 'Randamente logaritmice zilnice din 2000 (Bitcoin din 2014, acțiunile BVB din 2010): boltirea'),
      [T('BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$',
         'BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$'),
       T('skewness: S\\&P 500 $@{ds.sp500.skew}$, BET $@{ds.bet.skew}$, Bitcoin $@{ds.btc.skew}$', 'asimetria: S\\&P 500 $@{ds.sp500.skew}$, BET $@{ds.bet.skew}$, Bitcoin $@{ds.btc.skew}$')])) + ql('SFM_ch6_summary'), size='footnotesize')
@@ -404,15 +404,15 @@ D.frame(T('Data Before Models: Two Bad Days', 'Datele înaintea modelelor: două
         'ajustarea pentru acțiunile gratuite este aplicată cu o zi întîrziere (Capitolul 2): un crah fals urmat de o creștere falsă')]),
     (T('Effect of the two days on the fitted model', 'Efectul celor două zile asupra modelului estimat'),
      [T('kurtosis $@{tlv.raw.kurt}$ with them, $@{tlv.clean.kurt}$ without; Student-t $\\hat\\nu$: $@{tlv.raw.nu}$ vs $@{tlv.clean.nu}$',
-        'aplatizarea $@{tlv.raw.kurt}$ cu ele, $@{tlv.clean.kurt}$ fără; $\\hat\\nu$ Student-t: $@{tlv.raw.nu}$ față de $@{tlv.clean.nu}$'),
+        'boltirea $@{tlv.raw.kurt}$ cu ele, $@{tlv.clean.kurt}$ fără; $\\hat\\nu$ Student-t: $@{tlv.raw.nu}$ față de $@{tlv.clean.nu}$'),
       T('the AIC ranking does not change here (best: @{tlv.clean.best}), but the moments do', 'clasamentul AIC nu se schimbă aici (cel mai bun: @{tlv.clean.best}), dar momentele se schimbă')]),
     T('Rule: check the largest returns against the close and the news before any model selection; the two days are removed in the rest of the chapter',
       'Regula: înainte de orice selecție de model, comparați cele mai mari randamente cu prețurile de închidere și cu știrile; în restul capitolului, cele două zile sînt eliminate')))
 
 D.recap(('The Candidates', 'Candidații'), [
     T('Seven candidates with 2 to 5 parameters; they agree in the centre and disagree in the tails', 'Șapte candidați cu 2 pînă la 5 parametri; aproape identici în centru, foarte diferiți în cozi'),
-    T('Any model must reproduce skewness and kurtosis well above 3, even for monthly returns', 'Orice model trebuie să reproducă asimetria și o aplatizare mult peste 3, chiar și pentru randamentele lunare'),
-    T('Clean the data first: two wrong prices raised the TLV kurtosis by about $@{tlv.kdrop}\\%$ of its value', 'Curățați întîi datele: fără cele două prețuri greșite, aplatizarea TLV scade cu circa $@{tlv.kdrop}\\%$')])
+    T('Any model must reproduce skewness and kurtosis well above 3, even for monthly returns', 'Orice model trebuie să reproducă asimetria și o boltire mult peste 3, chiar și pentru randamentele lunare'),
+    T('Clean the data first: two wrong prices raised the TLV kurtosis by about $@{tlv.kdrop}\\%$ of its value', 'Curățați întîi datele: fără cele două prețuri greșite, boltirea TLV scade cu circa $@{tlv.kdrop}\\%$')])
 
 # =============================================================================
 # 2. VEROSIMILITATEA MAXIMĂ
@@ -457,9 +457,9 @@ D.frame(T('Numerical ML for the Other Candidates (S\\&P 500)', 'Estimarea ML num
 
 D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
     (T('Student-t $\\hat\\nu = @{sp.t.nu}$: tails like $x^{-@{sp.t.nu}}$; the variance exists ($\\nu > 2$), the kurtosis does not ($\\nu < 4$)',
-       'Student-t $\\hat\\nu = @{sp.t.nu}$: cozi de tip $x^{-@{sp.t.nu}}$; varianța există ($\\nu > 2$), aplatizarea nu există ($\\nu < 4$)'),
+       'Student-t $\\hat\\nu = @{sp.t.nu}$: cozi de tip $x^{-@{sp.t.nu}}$; varianța există ($\\nu > 2$), boltirea nu există ($\\nu < 4$)'),
      [T('the sample kurtosis $@{ds.sp500.kurt}$ estimates a quantity that the fitted model says is infinite',
-        'aplatizarea de selecție $@{ds.sp500.kurt}$ estimează o mărime care, conform modelului estimat, este infinită')]),
+        'boltirea de selecție $@{ds.sp500.kurt}$ estimează o mărime care, conform modelului estimat, este infinită')]),
     T('Skewed-t $\\hat\\lambda = @{sp.skt.lam} < 0$: a slightly longer left tail (crashes)', 'Skewed-t $\\hat\\lambda = @{sp.skt.lam} < 0$: o coadă stîngă puțin mai lungă (crahuri)'),
     T('GED $\\hat\\beta = @{sp.ged.b}$: below 2 (Normal) and even below 1 (Laplace): a sharp peak', 'GED $\\hat\\beta = @{sp.ged.b}$: sub 2 (Normală) și chiar sub 1 (Laplace): un vîrf ascuțit'),
     T('Normal mixture: $@{sp.mix.w1}\\%$ calm days with standard deviation $@{sp.mix.s1}\\%$, $@{sp.mix.w2}\\%$ turbulent days with $@{sp.mix.s2}\\%$ and a negative mean',

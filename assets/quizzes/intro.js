@@ -482,15 +482,15 @@ window.SFM_DATA.quizzes['intro'] = {
             },
             "ro": {
                 "title": "Cozi groase",
-                "text": "Coeficientul de aplatizare (kurtosis) al randamentelor zilnice ale S&P 500 din 2000 încoace este aproximativ 13,7. Ce arată această valoare?",
+                "text": "Coeficientul de boltire (kurtosis) al randamentelor zilnice ale S&P 500 din 2000 încoace este aproximativ 13,7. Ce arată această valoare?",
                 "options": [
                     "Randamentele urmează distribuția Normală",
                     "Randamentele nu depășesc niciodată 1%",
-                    "Cozile sînt mult mai groase decît în distribuția Normală, al cărei coeficient de aplatizare este 3",
+                    "Cozile sînt mult mai groase decît în distribuția Normală, al cărei coeficient de boltire este 3",
                     "Volatilitatea este constantă"
                 ],
-                "correctExplanation": "Distribuția Normală are coeficientul de aplatizare 3; o valoare mult mai mare înseamnă mult mai multe zile extreme.",
-                "incorrectExplanation": "Un coeficient de aplatizare de 13,7, față de 3 pentru distribuția Normală, indică cozi groase."
+                "correctExplanation": "Distribuția Normală are coeficientul de boltire 3; o valoare mult mai mare înseamnă mult mai multe zile extreme.",
+                "incorrectExplanation": "Un coeficient de boltire de 13,7, față de 3 pentru distribuția Normală, indică cozi groase."
             }
         },
         {

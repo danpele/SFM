@@ -224,7 +224,7 @@ D.frame(T('What You Need for Today (2/4): Conditioning', 'Noțiuni necesare azi 
     (T('For returns: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$ and $\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$, with $\\mathcal{F}_{t-1}$ the information up to yesterday',
        'Pentru randamente: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$ și $\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$, cu $\\mathcal{F}_{t-1}$ informația pînă ieri'),
      [T('a changing $\\sigma_t$ is what GARCH models (Chapter 9)', 'GARCH modelează tocmai variația în timp a lui $\\sigma_t$ (Capitolul 9)')]),
-    T('A mixture of Normals with different variances has kurtosis above 3: $E[X^4] = 3\\sigma^4$ for $N(0, \\sigma^2)$', 'Un amestec de distribuții Normale cu varianțe diferite are aplatizarea peste 3: $E[X^4] = 3\\sigma^4$ pentru $N(0, \\sigma^2)$')), 'footnotesize')
+    T('A mixture of Normals with different variances has kurtosis above 3: $E[X^4] = 3\\sigma^4$ for $N(0, \\sigma^2)$', 'Un amestec de distribuții Normale cu varianțe diferite are boltirea peste 3: $E[X^4] = 3\\sigma^4$ pentru $N(0, \\sigma^2)$')), 'footnotesize')
 
 D.frame(T('What You Need for Today (3/4): Processes', 'Noțiuni necesare azi (3/4): procese'), items(
     T('\\textbf{White noise}: mean 0, variance $\\sigma^2$, uncorrelated over time; \\textbf{i.i.d.} noise: independent and identically distributed',
@@ -298,11 +298,11 @@ D.proposed(T('A4: Two Regimes and the Law of Total Variance', 'A4: două regimur
            items(T('A day is calm with probability $0.8$, $r \\mid \\text{calm} \\sim N(0, 0.8^2)$, and turbulent otherwise, $r \\mid \\text{turbulent} \\sim N(0, 2^2)$ (in \\%). Model: A3.',
                    'O zi este calmă cu probabilitatea $0.8$, $r \\mid \\text{calm} \\sim N(0, 0.8^2)$, și agitată în rest, $r \\mid \\text{agitat} \\sim N(0, 2^2)$ (în \\%). Model: A3.'),
                  T('1. Use the law of total variance to compute $\\text{Var}(r)$ and the standard deviation.', '1. Folosiți legea varianței totale pentru a calcula $\\text{Var}(r)$ și abaterea standard.'),
-                 T('2. Compute $E[r^4]$ with $E[Z^4] = 3\\sigma^4$ in each regime, then the kurtosis $E[r^4]/\\text{Var}(r)^2$.', '2. Calculați $E[r^4]$ cu $E[Z^4] = 3\\sigma^4$ în fiecare regim, apoi aplatizarea $E[r^4]/\\text{Var}(r)^2$.'),
+                 T('2. Compute $E[r^4]$ with $E[Z^4] = 3\\sigma^4$ in each regime, then the kurtosis $E[r^4]/\\text{Var}(r)^2$.', '2. Calculați $E[r^4]$ cu $E[Z^4] = 3\\sigma^4$ în fiecare regim, apoi boltirea $E[r^4]/\\text{Var}(r)^2$.'),
                  T('3. Explain why the mixture has heavy tails although each regime is Normal.', '3. Explicați de ce amestecul are cozi groase, deși fiecare regim este Normal.'),
-                 T('Report: a variance, a kurtosis and one sentence.', 'Raportați: o varianță, o aplatizare și o frază.')),
+                 T('Report: a variance, a kurtosis and one sentence.', 'Raportați: o varianță, o boltire și o frază.')),
            items(T('1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; s.d. $@{a4.sd}\\%$', '1. $E[\\text{Var}] = 0.8 \\times 0.64 + 0.2 \\times 4 = @{a4.var}$, $\\text{Var}(E) = 0$; abaterea standard $@{a4.sd}\\%$'),
-                 T('2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; kurtosis $@{a4.kurt}$, excess $@{a4.exkurt}$', '2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; aplatizarea $@{a4.kurt}$, excesul $@{a4.exkurt}$'),
+                 T('2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; kurtosis $@{a4.kurt}$, excess $@{a4.exkurt}$', '2. $E[r^4] = 3(0.8 \\times 0.8^4 + 0.2 \\times 2^4) = @{a4.m4}$; boltirea $@{a4.kurt}$, excesul $@{a4.exkurt}$'),
                  T('3. Large moves come almost only from the turbulent regime; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ vs $0.006\\%$ for one Normal', '3. Mișcările mari provin aproape numai din regimul agitat; $P(|r| > 4\\sigma) = @{a4.p4}\\%$ față de $0.006\\%$ pentru o singură distribuție Normală'),
                  T('This is the GARCH mechanism in its simplest form.', 'Acesta este mecanismul GARCH în forma lui cea mai simplă.')),
            size='scriptsize')
@@ -443,7 +443,7 @@ D.task(T('B5: Is the BET a Geometric Brownian Motion? [Solved]', 'B5: este BET o
        T('which features of the BET can a GBM with the same drift and volatility reproduce?', 'ce trăsături ale BET poate reproduce un GBM cu aceeași tendință și volatilitate?'),
        T('BET closes, 2000--2026; 500 GBM paths of the same length', 'închiderile BET, 2000--2026; 500 de traiectorii GBM de aceeași lungime'),
        [T('Calibrate GBM: annual log drift and volatility from the daily log returns.', 'Calibrați GBM: tendința logaritmică anuală și volatilitatea din randamentele logaritmice zilnice.'),
-        T('Simulate 500 paths and compute, for each, the excess kurtosis, $\\text{Corr}(r_t^2, r_{t-1}^2)$ and the maximum drawdown.', 'Simulați 500 de traiectorii și calculați, pentru fiecare, excesul de aplatizare, $\\text{Corr}(r_t^2, r_{t-1}^2)$ și drawdown-ul maxim.'),
+        T('Simulate 500 paths and compute, for each, the excess kurtosis, $\\text{Corr}(r_t^2, r_{t-1}^2)$ and the maximum drawdown.', 'Simulați 500 de traiectorii și calculați, pentru fiecare, excesul de boltire, $\\text{Corr}(r_t^2, r_{t-1}^2)$ și drawdown-ul maxim.'),
         T('Locate the real values in the simulated distributions (5\\% and 95\\% quantiles).', 'Plasați valorile reale în distribuțiile simulate (cuantilele de 5\\% și 95\\%).'),
         T('Interpretation: which stylised facts does GBM miss, and which risk number is most affected?', 'Interpretare: ce fapte stilizate ratează GBM și care indicator de risc este cel mai afectat?')],
        T('two parameters, three comparisons, one sentence', 'doi parametri, trei comparații, o frază'), size='footnotesize', nb='B5')
@@ -451,7 +451,7 @@ D.task(T('B5: Is the BET a Geometric Brownian Motion? [Solved]', 'B5: este BET o
 D.frame(T('B5: Solution [Solved]', 'B5: rezolvare [Rezolvat]'), fig('ch4_sem_b5', h='0.36') + items(
     T('$n = @{b5.n}$ days; $\\sigma = @{b5.sigma}\\%$, log drift @{b5.mulog}\\% a year', '$n = @{b5.n}$ zile; $\\sigma = @{b5.sigma}\\%$, tendința logaritmică @{b5.mulog}\\% pe an'),
     T('Excess kurtosis: real $@{b5.k}$, GBM 90\\% range $[@{b5.klo}, @{b5.khi}]$; $\\text{Corr}(r_t^2, r_{t-1}^2)$: real $@{b5.a}$, GBM $[@{b5.alo}, @{b5.ahi}]$',
-      'Excesul de aplatizare: real $@{b5.k}$, intervalul GBM de 90\\% $[@{b5.klo}, @{b5.khi}]$; $\\text{Corr}(r_t^2, r_{t-1}^2)$: real $@{b5.a}$, GBM $[@{b5.alo}, @{b5.ahi}]$'),
+      'Excesul de boltire: real $@{b5.k}$, intervalul GBM de 90\\% $[@{b5.klo}, @{b5.khi}]$; $\\text{Corr}(r_t^2, r_{t-1}^2)$: real $@{b5.a}$, GBM $[@{b5.alo}, @{b5.ahi}]$'),
     T('Maximum drawdown: real $@{b5.dd}\\%$, GBM median $@{b5.ddmed}\\%$, range $[@{b5.ddlo}\\%, @{b5.ddhi}\\%]$', 'Drawdown-ul maxim: real $@{b5.dd}\\%$, mediana GBM $@{b5.ddmed}\\%$, intervalul $[@{b5.ddlo}\\%; @{b5.ddhi}\\%]$'),
     T('Interpretation: GBM misses heavy tails and volatility clustering completely; the 2008 crash makes the real drawdown deeper than every simulated path, so a GBM-based risk limit would have been far too loose',
       'Interpretare: GBM nu reproduce deloc cozile groase și volatility clustering; crahul din 2008 face drawdown-ul real mai adînc decît al oricărei traiectorii simulate, deci o limită de risc calculată cu GBM ar fi fost mult prea largă')) + qlsem(),

@@ -121,10 +121,10 @@ window.SFM_DATA.quizzes['probability'] = {
             },
             "ro": {
                 "title": "Un amestec de două regimuri Normale",
-                "text": "Randamentele zilnice sînt $N(0, 0{,}8^2)$ în zilele calme (probabilitatea 0,8) și $N(0, 2^2)$ în zilele agitate. Cît este aplatizarea distribuției necondiționate?",
+                "text": "Randamentele zilnice sînt $N(0, 0{,}8^2)$ în zilele calme (probabilitatea 0,8) și $N(0, 2^2)$ în zilele agitate. Cît este boltirea distribuției necondiționate?",
                 "options": ["Circa 6,1, peste valoarea 3 a distribuției Normale", "Exact 3, pentru că fiecare regim este Normal", "Sub 3", "Nu se poate calcula"],
-                "correctExplanation": "$\\mathrm{Var} = 1{,}312$, $E[r^4] = 3(0{,}8 \\times 0{,}8^4 + 0{,}2 \\times 2^4) = 10{,}58$, aplatizarea $10{,}58/1{,}312^2 \\approx 6{,}1$: amestecarea varianțelor creează cozi groase.",
-                "incorrectExplanation": "Un amestec de distribuții Normale cu varianțe diferite nu este Normal: aplatizarea lui este circa 6,1, mecanismul din spatele cozilor GARCH."
+                "correctExplanation": "$\\mathrm{Var} = 1{,}312$, $E[r^4] = 3(0{,}8 \\times 0{,}8^4 + 0{,}2 \\times 2^4) = 10{,}58$, boltirea $10{,}58/1{,}312^2 \\approx 6{,}1$: amestecarea varianțelor creează cozi groase.",
+                "incorrectExplanation": "Un amestec de distribuții Normale cu varianțe diferite nu este Normal: boltirea lui este circa 6,1, mecanismul din spatele cozilor GARCH."
             }
         },
         {
@@ -410,9 +410,9 @@ window.SFM_DATA.quizzes['probability'] = {
             },
             "ro": {
                 "title": "Limitele modelului GBM",
-                "text": "S&P 500, 2000–2026, are excesul de aplatizare circa 10,7 și $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0{,}31$; 300 de simulări GBM de aceeași lungime rămîn în intervalele de circa $\\pm 0{,}1$ și $\\pm 0{,}02$. Ce nu reproduce GBM?",
+                "text": "S&P 500, 2000–2026, are excesul de boltire circa 10,7 și $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0{,}31$; 300 de simulări GBM de aceeași lungime rămîn în intervalele de circa $\\pm 0{,}1$ și $\\pm 0{,}02$. Ce nu reproduce GBM?",
                 "options": ["Randamentul mediu", "Volatilitatea totală", "Cozile groase și volatility clustering", "Nimic: diferențele sînt zgomot de eșantionare"],
-                "correctExplanation": "GBM are randamente logaritmice Normale i.i.d.: exces de aplatizare zero și nicio autocorelație a pătratelor randamentelor, departe de valorile reale.",
+                "correctExplanation": "GBM are randamente logaritmice Normale i.i.d.: exces de boltire zero și nicio autocorelație a pătratelor randamentelor, departe de valorile reale.",
                 "incorrectExplanation": "Valorile reale sînt mult în afara intervalului GBM: GBM nu poate genera cozi groase sau volatility clustering, deși reproduce media și volatilitatea."
             }
         }

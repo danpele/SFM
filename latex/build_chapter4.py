@@ -432,7 +432,7 @@ D.frame(T('Variance and Moments', 'Varianța și momentele'), items(
     T('\\textbf{Variance}: $\\text{Var}(X) = E[(X - \\mu)^2] = E[X^2] - \\mu^2$; standard deviation $\\sigma = \\sqrt{\\text{Var}(X)}$ (volatility)',
       '\\textbf{Varianța}: $\\text{Var}(X) = E[(X - \\mu)^2] = E[X^2] - \\mu^2$; abaterea standard $\\sigma = \\sqrt{\\text{Var}(X)}$ (volatilitatea)'),
     T('$\\text{Var}(aX + b) = a^2\\,\\text{Var}(X)$: a shift does not change risk, a scale does', '$\\text{Var}(aX + b) = a^2\\,\\text{Var}(X)$: o translație nu schimbă riscul, o scalare da'),
-    T('Moments $E[X^k]$; skewness and kurtosis use $k = 3, 4$ (Chapter 2)', 'Momentele $E[X^k]$; asimetria și aplatizarea folosesc $k = 3, 4$ (Capitolul 2)'),
+    T('Moments $E[X^k]$; skewness and kurtosis use $k = 3, 4$ (Chapter 2)', 'Momentele $E[X^k]$; asimetria și boltirea folosesc $k = 3, 4$ (Capitolul 2)'),
     (T('Worked example: S\\&P 500 daily mean $@{an.m}\\%$, s.d. $@{an.s}\\%$, @{an.ppy} days a year', 'Exemplu lucrat: S\\&P 500, media zilnică $@{an.m}\\%$, abaterea standard $@{an.s}\\%$, @{an.ppy} de zile pe an'),
      [T('for i.i.d. daily returns (independent and identically distributed): $E[\\sum r_t] = @{an.ppy} \\times @{an.m} = @{an.ma}\\%$ a year',
         'pentru randamente zilnice i.i.d. (independente și identic distribuite): $E[\\sum r_t] = @{an.ppy} \\times @{an.m} = @{an.ma}\\%$ pe an'),
@@ -724,7 +724,7 @@ D.frame(T('Answer: Column @{sp.real}', 'Răspuns: coloana @{sp.real}'), items(
     (T('Prices: hard to tell; random walks with drift produce booms and long falls too', 'Prețurile: greu de spus; mersurile aleatoare cu tendință produc și ele avînturi și căderi lungi'),
      [T('this is why \\refBachelier{} and \\refOsborne{} modelled prices as random walks', 'de aceea \\refBachelier{} și \\refOsborne{} au modelat prețurile ca mers aleator')]),
     (T('Returns: obvious; the real series has quiet years and violent clusters (2008, 2020)', 'Randamentele: diferența este evidentă; seria reală are ani liniștiți și episoade violente grupate (2008, 2020)'),
-     [T('excess kurtosis @{sp.kr} vs at most @{sp.ks} in the simulations; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{sp.ar}$ vs at most @{sp.as}', 'exces de aplatizare @{sp.kr} față de cel mult @{sp.ks} în simulări; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{sp.ar}$ față de cel mult @{sp.as}'),
+     [T('excess kurtosis @{sp.kr} vs at most @{sp.ks} in the simulations; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{sp.ar}$ vs at most @{sp.as}', 'exces de boltire @{sp.kr} față de cel mult @{sp.ks} în simulări; $\\text{Corr}(r_t^2, r_{t-1}^2) = @{sp.ar}$ față de cel mult @{sp.as}'),
       T('largest absolute daily move @{sp.mr}\\% vs @{sp.ms}\\%', 'cea mai mare mișcare zilnică în valoare absolută @{sp.mr}\\% față de @{sp.ms}\\%')]),
     T('Lesson: a model can fit the price path and still be wrong about risk', 'Lecția: un model poate reproduce traiectoria prețului și totuși să greșească în privința riscului')))
 
@@ -796,7 +796,7 @@ chart(T('Real Paths in the GBM Fan', 'Traiectorii reale în evantaiul GBM'), 'sf
 
 chart(T('What GBM Misses', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_ch4_wiener_gbm', [
     T('Excess kurtosis: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% of 300 GBM simulations lie within $[@{ck.sp500.klo}, @{ck.sp500.khi}]$',
-      'Excesul de aplatizare: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% din 300 de simulări GBM sînt în $[@{ck.sp500.klo}, @{ck.sp500.khi}]$'),
+      'Excesul de boltire: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% din 300 de simulări GBM sînt în $[@{ck.sp500.klo}, @{ck.sp500.khi}]$'),
     T('Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ vs at most $@{ck.btc.ahi}$ under GBM',
       'Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ față de cel mult $@{ck.btc.ahi}$ în GBM'),
     T('Maximum drawdown: S\\&P 500 @{ck.sp500.dd}\\% is ordinary for GBM; BET @{ck.bet.dd}\\% is beyond all but 5\\% of the paths (5\\% quantile @{ck.bet.ddlo}\\%)',

@@ -296,9 +296,9 @@ D.frame(T('Regular Variation and the Tail Index', 'Variația regulată și indic
 D.frame(T('The Tail Index Decides Which Moments Exist', 'Indicele de coadă determină momentele care există'), items(
     (T('For a regularly varying tail: $E|L|^m < \\infty$ if $m < \\alpha$ and $E|L|^m = \\infty$ if $m > \\alpha$',
        'Pentru o coadă cu variație regulată: $E|L|^m < \\infty$ dacă $m < \\alpha$ și $E|L|^m = \\infty$ dacă $m > \\alpha$'),
-     [T('$\\alpha \\le 1$: no mean; $\\alpha \\le 2$: no variance; $\\alpha \\le 4$: no kurtosis', '$\\alpha \\le 1$: nu există media; $\\alpha \\le 2$: nu există varianța; $\\alpha \\le 4$: nu există aplatizarea (kurtosis)')]),
+     [T('$\\alpha \\le 1$: no mean; $\\alpha \\le 2$: no variance; $\\alpha \\le 4$: no kurtosis', '$\\alpha \\le 1$: nu există media; $\\alpha \\le 2$: nu există varianța; $\\alpha \\le 4$: nu există boltirea (kurtosis)')]),
     (T('The ``inverse cubic law\'\' of stock returns: $\\alpha \\approx 3$ \\refGopi', '„Legea cubică inversă” a randamentelor acțiunilor: $\\alpha \\approx 3$ \\refGopi'),
-     [T('variance finite, kurtosis infinite: the sample kurtosis of Chapter 2 does not settle', 'varianța este finită, aplatizarea este infinită: aplatizarea de selecție din Capitolul 2 nu se stabilizează')]),
+     [T('variance finite, kurtosis infinite: the sample kurtosis of Chapter 2 does not settle', 'varianța este finită, boltirea este infinită: boltirea de selecție din Capitolul 2 nu se stabilizează')]),
     (T('Link to Chapter 3', 'Legătura cu Capitolul 3'),
      [T('the stable $\\alpha$ ($\\approx 1.5$) is fitted to the whole distribution; the tail index here uses only the tail',
         'parametrul $\\alpha$ al legii stabile ($\\approx 1{,}5$) se estimează din întreaga distribuție; indicele de coadă de aici folosește doar coada'),
@@ -404,7 +404,7 @@ D.frame(T('Hill Estimates for Four Markets', 'Estimări Hill pentru patru piețe
                    '& $n$ & $k$ & $\\hat\\alpha$ & CI 95\\% & SE i.i.d. & SE blocuri & $k = 1\\%$ / $5\\%$ & cîștiguri'),
     [hrow(k) for k in ASSETS], size='scriptsize') + items(
     T('Losses: $\\hat\\alpha$ between $@{h.min}$ and $@{h.max}$; the intervals exclude 2 (finite variance) and lie below 4 (no finite kurtosis)',
-      'Pierderi: $\\hat\\alpha$ între $@{h.min}$ și $@{h.max}$; intervalele exclud 2 (varianță finită) și sînt sub 4 (aplatizare infinită)'),
+      'Pierderi: $\\hat\\alpha$ între $@{h.min}$ și $@{h.max}$; intervalele exclud 2 (varianță finită) și sînt sub 4 (boltire infinită)'),
     T('The block-bootstrap SE is close to the i.i.d.\\ one here; the estimates move with $k$ by more than one SE',
       'SE din bootstrap pe blocuri este apropiată aici de cea i.i.d.; estimările variază cu $k$ cu mai mult de o SE'),
     T('Last column: the Hill index of gains ($r_t > 0$), same $k$', 'Ultima coloană: indicele Hill al cîștigurilor ($r_t > 0$), același $k$')) + ql('SFM_ch5_hill'), 'footnotesize')
@@ -446,7 +446,7 @@ D.recap(('The Hill Estimator', 'Estimatorul Hill'), [
     T('$\\hat\\alpha_k = [\\frac1k\\sum_{i \\le k}\\ln(L_{(i)}/L_{(k+1)})]^{-1}$, the ML estimator of a Pareto tail', '$\\hat\\alpha_k = [\\frac1k\\sum_{i \\le k}\\ln(L_{(i)}/L_{(k+1)})]^{-1}$, estimatorul ML al unei cozi Pareto'),
     T('Choose $k$ where the Hill plot is flat; fix the rule in advance', 'Alegeți $k$ acolo unde graficul Hill este plat; fixați regula dinainte'),
     T('SE $\\approx \\hat\\alpha/\\sqrt{k}$; block bootstrap for dependent returns', 'SE $\\approx \\hat\\alpha/\\sqrt{k}$; bootstrap pe blocuri pentru randamente dependente'),
-    T('Indices and BVB stocks: $\\hat\\alpha$ between $@{ha.min}$ and $@{ha.max}$, finite variance, infinite kurtosis', 'Indici și acțiuni BVB: $\\hat\\alpha$ între $@{ha.min}$ și $@{ha.max}$, varianță finită, aplatizare infinită')])
+    T('Indices and BVB stocks: $\\hat\\alpha$ between $@{ha.min}$ and $@{ha.max}$, finite variance, infinite kurtosis', 'Indici și acțiuni BVB: $\\hat\\alpha$ între $@{ha.min}$ și $@{ha.max}$, varianță finită, boltire infinită')])
 
 # =============================================================================
 # 4. FUNCȚIA MEAN EXCESS
@@ -857,7 +857,7 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
 D.section('Summary', 'Rezumat')
 
 D.frame(T('Key Takeaways', 'Idei principale'), items(
-    T('Daily losses have power-law tails with index $\\alpha \\approx 3$: finite variance, infinite kurtosis', 'Pierderile zilnice au cozi de tip putere cu indicele $\\alpha \\approx 3$: varianță finită, aplatizare infinită'),
+    T('Daily losses have power-law tails with index $\\alpha \\approx 3$: finite variance, infinite kurtosis', 'Pierderile zilnice au cozi de tip putere cu indicele $\\alpha \\approx 3$: varianță finită, boltire infinită'),
     T('Hill: the tail index from the $k$ largest losses; choose $k$ on the Hill plot; block-bootstrap SE', 'Hill: indicele de coadă din cele mai mari $k$ pierderi; $k$ ales cu ajutorul graficului Hill; SE prin bootstrap pe blocuri'),
     T('Block maxima $\\to$ GEV; excesses over a threshold $\\to$ GPD; the same shape $\\xi = 1/\\alpha$', 'Block maxima $\\to$ GEV; excesele peste un prag $\\to$ GPD; aceeași formă $\\xi = 1/\\alpha$'),
     T('Check every fit with mean excess, parameter stability, PP and QQ plots', 'Verificați fiecare ajustare cu mean excess, stabilitatea parametrilor, grafice PP și QQ'),
@@ -880,7 +880,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
 D.frame(T('Check Yourself', 'Verificați-vă'), items(
     (T('\\textbf{Question}: a GPD fit gives $\\hat\\xi = 0.25$; which moments of the losses exist?', '\\textbf{Întrebare}: o ajustare GPD dă $\\hat\\xi = 0{,}25$; ce momente ale pierderilor există?'),
      [T('\\textbf{Answer}: $\\alpha = 1/\\xi = 4$: mean, variance and skewness exist; the kurtosis does not ($m < 4$ only)',
-        '\\textbf{Răspuns}: $\\alpha = 1/\\xi = 4$: există media, varianța și asimetria; aplatizarea nu (doar $m < 4$)')]),
+        '\\textbf{Răspuns}: $\\alpha = 1/\\xi = 4$: există media, varianța și asimetria; boltirea nu (doar $m < 4$)')]),
     (T('\\textbf{Question}: why use the 2.5\\% largest losses and not all losses for the Hill estimator?', '\\textbf{Întrebare}: de ce folosim cele mai mari 2,5\\% dintre pierderi și nu toate pierderile pentru estimatorul Hill?'),
      [T('\\textbf{Answer}: the power law holds only in the tail; with the body included $\\hat\\alpha$ is biased', '\\textbf{Răspuns}: legea putere este valabilă doar în coadă; dacă includem corpul distribuției, $\\hat\\alpha$ este deplasat')]),
     (T('\\textbf{Question}: is VaR 0.1\\% by historical simulation reliable with 10 years of data?', '\\textbf{Întrebare}: este VaR 0,1\\% prin simulare istorică fiabil cu 10 ani de date?'),

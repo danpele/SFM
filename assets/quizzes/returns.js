@@ -428,16 +428,16 @@ window.SFM_DATA.quizzes['returns'] = {
                 "incorrectExplanation": "The Normal distribution has kurtosis 3, so excess kurtosis 0; returns typically have large positive excess kurtosis (heavy tails)."
             },
             "ro": {
-                "title": "Excesul de aplatizare",
-                "text": "Care este excesul de aplatizare al distribuției Normale și ce înseamnă o valoare pozitivă mare pentru randamente?",
+                "title": "Excesul de boltire",
+                "text": "Care este excesul de boltire al distribuției Normale și ce înseamnă o valoare pozitivă mare pentru randamente?",
                 "options": [
                     "3; cozi subțiri",
                     "0; cozi subțiri",
                     "0; cozi groase, zile extreme mai frecvente decît în cazul distribuției Normale",
                     "1; o distribuție asimetrică"
                 ],
-                "correctExplanation": "Excesul de aplatizare este $K - 3$, zero pentru distribuția Normală; valorile pozitive indică cozi groase.",
-                "incorrectExplanation": "Distribuția Normală are aplatizarea 3, deci exces 0; randamentele au de obicei un exces de aplatizare mare și pozitiv (cozi groase)."
+                "correctExplanation": "Excesul de boltire este $K - 3$, zero pentru distribuția Normală; valorile pozitive indică cozi groase.",
+                "incorrectExplanation": "Distribuția Normală are boltirea 3, deci exces 0; randamentele au de obicei un exces de boltire mare și pozitiv (cozi groase)."
             }
         },
         {

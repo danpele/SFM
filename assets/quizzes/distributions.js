@@ -212,16 +212,16 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "The Normal kurtosis is 3; excess kurtosis = kurtosis − 3 = 0."
             },
             "ro": {
-                "title": "Aplatizarea distribuției Normale",
-                "text": "Cît sînt aplatizarea și excesul de aplatizare ale distribuției Normale?",
+                "title": "Boltirea distribuției Normale",
+                "text": "Cît sînt boltirea și excesul de boltire ale distribuției Normale?",
                 "options": [
-                    "Aplatizarea 0, excesul $-3$",
-                    "Aplatizarea 1, excesul 0",
-                    "Aplatizarea 3, excesul 0",
-                    "Aplatizarea 3, excesul 3"
+                    "Boltirea 0, excesul $-3$",
+                    "Boltirea 1, excesul 0",
+                    "Boltirea 3, excesul 0",
+                    "Boltirea 3, excesul 3"
                 ],
-                "correctExplanation": "$E[(X - \\mu)^4]/\\sigma^4 = 3$ pentru distribuția Normală; excesul de aplatizare se obține scăzînd 3.",
-                "incorrectExplanation": "Aplatizarea Normală este 3; excesul = aplatizarea − 3 = 0."
+                "correctExplanation": "$E[(X - \\mu)^4]/\\sigma^4 = 3$ pentru distribuția Normală; excesul de boltire se obține scăzînd 3.",
+                "incorrectExplanation": "Boltirea Normală este 3; excesul = boltirea − 3 = 0."
             }
         },
         {
@@ -274,7 +274,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$\\frac{n}{6}(S^2 + K^2/4)$, aproximativ $\\chi^2(2)$",
                     "$\\frac{n}{24}(S^2 + K^2)$, aproximativ $t(2)$"
                 ],
-                "correctExplanation": "JB adună asimetria standardizată la pătrat, $S^2/(6/n)$, și excesul de aplatizare standardizat la pătrat, $K^2/(24/n)$; în ipoteza de normalitate este $\\chi^2(2)$, valoarea critică 5,99 la 5%.",
+                "correctExplanation": "JB adună asimetria standardizată la pătrat, $S^2/(6/n)$, și excesul de boltire standardizat la pătrat, $K^2/(24/n)$; în ipoteza de normalitate este $\\chi^2(2)$, valoarea critică 5,99 la 5%.",
                 "incorrectExplanation": "JB $= \\frac{n}{6}(S^2 + K^2/4) \\sim \\chi^2(2)$: două statistici standardizate la pătrat."
             }
         },
@@ -301,7 +301,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Randamentele sînt independente",
                     "Randamentul mediu diferă semnificativ de zero"
                 ],
-                "correctExplanation": "Respingerea arată doar că asimetria și aplatizarea nu sînt cele ale unei distribuții Normale.",
+                "correctExplanation": "Respingerea arată doar că asimetria și boltirea nu sînt cele ale unei distribuții Normale.",
                 "incorrectExplanation": "JB testează doar normalitatea; distribuția alternativă trebuie aleasă și verificată separat (QQ plots, AIC)."
             }
         },
@@ -321,15 +321,15 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Precizia aplatizării",
-                "text": "Pentru randamentele S&P 500, $\\sqrt{24/n} \\approx 0{,}08$, dar un interval bootstrap de 95% pentru excesul de aplatizare este circa [6,7; 20,6]. De ce?",
+                "text": "Pentru randamentele S&P 500, $\\sqrt{24/n} \\approx 0{,}08$, dar un interval bootstrap de 95% pentru excesul de boltire este circa [6,7; 20,6]. De ce?",
                 "options": [
-                    "$\\sqrt{24/n}$ presupune date Normale; cu cozi groase aplatizarea depinde de cîteva zile extreme",
+                    "$\\sqrt{24/n}$ presupune date Normale; cu cozi groase boltirea depinde de cîteva zile extreme",
                     "Bootstrap-ul este greșit pentru date financiare",
                     "Eșantionul este prea mic pentru bootstrap",
-                    "Aplatizarea nu este definită pentru randamente"
+                    "Boltirea nu este definită pentru randamente"
                 ],
-                "correctExplanation": "Eroarea standard din teoria Normală este valabilă doar în ipoteza de normalitate; cozile groase fac aplatizarea foarte instabilă.",
-                "incorrectExplanation": "Reeșantionarea arată cît variază aplatizarea cînd cîteva zile extreme sînt sau nu extrase: mult mai mult decît $\\sqrt{24/n}$."
+                "correctExplanation": "Eroarea standard din teoria Normală este valabilă doar în ipoteza de normalitate; cozile groase fac boltirea foarte instabilă.",
+                "incorrectExplanation": "Reeșantionarea arată cît variază boltirea cînd cîteva zile extreme sînt sau nu extrase: mult mai mult decît $\\sqrt{24/n}$."
             }
         },
         {
@@ -410,7 +410,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$6/(\\nu - 4)$"
                 ],
                 "correctExplanation": "$\\text{Var}(T) = \\nu/(\\nu - 2)$; pentru varianța 1 folosiți $T\\sqrt{(\\nu - 2)/\\nu}$.",
-                "incorrectExplanation": "$6/(\\nu - 4)$ este excesul de aplatizare; varianța este $\\nu/(\\nu - 2)$, mai mare decît 1."
+                "incorrectExplanation": "$6/(\\nu - 4)$ este excesul de boltire; varianța este $\\nu/(\\nu - 2)$, mai mare decît 1."
             }
         },
         {
@@ -428,8 +428,8 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "The excess kurtosis is $6/(\\nu - 4)$ for $\\nu > 4$; it equals 6 at $\\nu = 5$ and is infinite for $\\nu \\le 4$."
             },
             "ro": {
-                "title": "Excesul de aplatizare al distribuției Student-t",
-                "text": "Pentru ce $\\nu$ are o distribuție Student-t excesul de aplatizare 6?",
+                "title": "Excesul de boltire al distribuției Student-t",
+                "text": "Pentru ce $\\nu$ are o distribuție Student-t excesul de boltire 6?",
                 "options": [
                     "$\\nu = 6$",
                     "$\\nu = 10$",
@@ -437,7 +437,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "$\\nu = 5$"
                 ],
                 "correctExplanation": "$6/(\\nu - 4) = 6 \\Rightarrow \\nu = 5$.",
-                "incorrectExplanation": "Excesul de aplatizare este $6/(\\nu - 4)$ pentru $\\nu > 4$; este 6 la $\\nu = 5$ și infinit pentru $\\nu \\le 4$."
+                "incorrectExplanation": "Excesul de boltire este $6/(\\nu - 4)$ pentru $\\nu > 4$; este 6 la $\\nu = 5$ și infinit pentru $\\nu \\le 4$."
             }
         },
         {
@@ -545,7 +545,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Volatilitatea randamentelor pe orizonturi lungi este zero"
                 ],
                 "correctExplanation": "Adunarea randamentelor logaritmice zilnice apropie distribuția de cea Normală (CLT), dar lent, din cauza volatility clustering.",
-                "incorrectExplanation": "Se referă la forma randamentelor pe $h$ zile: excesul de aplatizare scade cînd $h$ crește, deși randamentele lunare tot nu sînt exact Normale."
+                "incorrectExplanation": "Se referă la forma randamentelor pe $h$ zile: excesul de boltire scade cînd $h$ crește, deși randamentele lunare tot nu sînt exact Normale."
             }
         },
         {
@@ -648,11 +648,11 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "text": "Prețul ajustat al unei acțiuni dă randamente de $-15\\%$ și $+20{,}5\\%$ în două zile consecutive, la data ex a unei distribuiri de acțiuni gratuite. Care este primul pas?",
                 "options": [
                     "Le păstrați: dovedesc cozile groase",
-                    "Verificați evenimentul corporativ: o ajustare plasată greșit creează două randamente extreme false care umflă aplatizarea",
+                    "Verificați evenimentul corporativ: o ajustare plasată greșit creează două randamente extreme false care umflă boltirea",
                     "Le înlocuiți cu zero fără verificare",
                     "Folosiți în schimb prețul de închidere brut, care nu are salturi"
                 ],
-                "correctExplanation": "O pereche de salturi de semn opus în jurul unui eveniment corporativ este o eroare tipică de ajustare; pentru TLV în mai 2016 ea crește excesul de aplatizare de la 13,5 la 17,5.",
+                "correctExplanation": "O pereche de salturi de semn opus în jurul unui eveniment corporativ este o eroare tipică de ajustare; pentru TLV în mai 2016 ea crește excesul de boltire de la 13,5 la 17,5.",
                 "incorrectExplanation": "Randamentele extreme se verifică față de evenimentele corporative și știri înainte de a calcula statisticile cozilor; prețul brut sare și mai mult."
             }
         }

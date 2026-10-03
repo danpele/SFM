@@ -81,12 +81,12 @@ window.SFM_DATA.quizzes['evt'] = {
                 "text": "O distribuție a pierderilor are indicele de coadă $\\alpha = 3$. Ce afirmație este adevărată?",
                 "options": [
                     "Varianța este infinită",
-                    "Varianța este finită, aplatizarea este infinită",
+                    "Varianța este finită, boltirea este infinită",
                     "Toate momentele sînt finite",
                     "Media este infinită"
                 ],
                 "correctExplanation": "Momentele de ordin $m < \\alpha$ există: $m = 2$ da, $m = 4$ nu.",
-                "incorrectExplanation": "$E|L|^m$ este finit doar pentru $m < \\alpha = 3$: media și varianța există, aplatizarea (momentul de ordin patru) nu."
+                "incorrectExplanation": "$E|L|^m$ este finit doar pentru $m < \\alpha = 3$: media și varianța există, boltirea (momentul de ordin patru) nu."
             }
         },
         {
@@ -247,8 +247,8 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Varianță finită și moment de ordin patru infinit",
                     "O distribuție mărginită"
                 ],
-                "correctExplanation": "Un indice de coadă în jur de 3 (legea cubică inversă) implică o varianță finită, dar o aplatizare infinită.",
-                "incorrectExplanation": "Cu $\\hat\\alpha \\approx 3$: există momentele de ordin mai mic decît 3; varianța este finită, aplatizarea nu."
+                "correctExplanation": "Un indice de coadă în jur de 3 (legea cubică inversă) implică o varianță finită, dar o boltire infinită.",
+                "incorrectExplanation": "Cu $\\hat\\alpha \\approx 3$: există momentele de ordin mai mic decît 3; varianța este finită, boltirea nu."
             }
         },
         {

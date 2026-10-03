@@ -308,7 +308,7 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
 D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
     T('Compute probabilities and quantiles of the Normal and lognormal distributions', 'Calculați probabilități și cuantile ale distribuțiilor Normală și lognormală'),
     T('State the CLT and say when the Normal approximation works', 'Enunțați CLT și precizați cînd funcționează aproximarea Normală'),
-    T('Estimate skewness and excess kurtosis and test normality with the Jarque--Bera test', 'Estimați asimetria și excesul de aplatizare și testați normalitatea cu testul Jarque--Bera'),
+    T('Estimate skewness and excess kurtosis and test normality with the Jarque--Bera test', 'Estimați asimetria și excesul de boltire și testați normalitatea cu testul Jarque--Bera'),
     T('Read a QQ plot and fit a Student-$t$ distribution by maximum likelihood', 'Citiți un QQ plot și estimați o distribuție Student-$t$ prin metoda verosimilității maxime'),
     T('Check six stylised facts on a return series and explain what each means for a model', 'Verificați șase fapte stilizate pe o serie de randamente și explicați ce înseamnă fiecare pentru un model')))
 
@@ -405,7 +405,7 @@ D.frame(T('Definition', 'Definiție'), items(
 
 D.frame(T('Properties Used in Finance', 'Proprietăți folosite în finanțe'), items(
     T('Symmetric around $\\mu$: mean = median = mode', 'Simetrică în jurul lui $\\mu$: media = mediana = modul'),
-    T('Skewness $0$ and kurtosis $3$ (defined in Section 5)', 'Asimetria $0$ și aplatizarea $3$ (definite în secțiunea 5)'),
+    T('Skewness $0$ and kurtosis $3$ (defined in Section 5)', 'Asimetria $0$ și boltirea $3$ (definite în secțiunea 5)'),
     (T('\\textbf{Closed under addition}: if $X \\sim N(\\mu_1, \\sigma_1^2)$ and $Y \\sim N(\\mu_2, \\sigma_2^2)$ are independent, then $X + Y \\sim N(\\mu_1 + \\mu_2, \\sigma_1^2 + \\sigma_2^2)$',
        '\\textbf{Închisă la adunare}: dacă $X \\sim N(\\mu_1, \\sigma_1^2)$ și $Y \\sim N(\\mu_2, \\sigma_2^2)$ sînt independente, atunci $X + Y \\sim N(\\mu_1 + \\mu_2, \\sigma_1^2 + \\sigma_2^2)$'),
      [T('$h$-day log return under the benchmark: $r_t(h) \\sim N(h\\mu, h\\sigma^2)$', 'randamentul logaritmic pe $h$ zile în modelul de referință: $r_t(h) \\sim N(h\\mu, h\\sigma^2)$'),
@@ -559,20 +559,20 @@ D.frame(T('Four Moments', 'Patru momente'), items(
     T('Mean $\\mu = E[X]$; variance $\\sigma^2 = E[(X - \\mu)^2]$', 'Media $\\mu = E[X]$; varianța $\\sigma^2 = E[(X - \\mu)^2]$'),
     (T('\\textbf{Skewness}: $\\gamma_1 = E[(X - \\mu)^3]/\\sigma^3$', '\\textbf{Asimetria} (skewness): $\\gamma_1 = E[(X - \\mu)^3]/\\sigma^3$'),
      [T('$\\gamma_1 < 0$: a longer left tail, large losses more frequent than large gains', '$\\gamma_1 < 0$: o coadă stîngă mai lungă, pierderile mari mai frecvente decît cîștigurile mari')]),
-    (T('\\textbf{Kurtosis}: $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; Normal distribution: $\\gamma_2 = 3$', '\\textbf{Aplatizarea} (kurtosis): $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; distribuția Normală: $\\gamma_2 = 3$'),
+    (T('\\textbf{Kurtosis}: $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; Normal distribution: $\\gamma_2 = 3$', '\\textbf{Boltirea} (kurtosis): $\\gamma_2 = E[(X - \\mu)^4]/\\sigma^4$; distribuția Normală: $\\gamma_2 = 3$'),
      [T('\\textbf{excess kurtosis} $\\gamma_2 - 3$: positive means heavy tails and a tall, narrow centre (\\textbf{leptokurtic})',
-        '\\textbf{excesul de aplatizare} $\\gamma_2 - 3$: pozitiv înseamnă cozi groase și un centru înalt și îngust (distribuție \\textbf{leptocurtică})')]),
+        '\\textbf{excesul de boltire} $\\gamma_2 - 3$: pozitiv înseamnă cozi groase și un centru înalt și îngust (distribuție \\textbf{leptocurtică})')]),
     T('Both are free of units: they describe the shape, not the location or the scale', 'Ambele sînt adimensionale: descriu forma, nu poziția sau scala'),
-    T('Fourth powers make the kurtosis very sensitive to a few extreme days', 'Puterile a patra fac aplatizarea foarte sensibilă la cîteva zile extreme')))
+    T('Fourth powers make the kurtosis very sensitive to a few extreme days', 'Puterile a patra fac boltirea foarte sensibilă la cîteva zile extreme')))
 
-chart(T('What Skewness and Kurtosis Look Like', 'Asimetria și aplatizarea în grafice'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
+chart(T('What Skewness and Kurtosis Look Like', 'Asimetria și boltirea în grafice'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
     T('Left: same mean and variance; the Student-$t(5)$ curve (Section 7) has excess kurtosis 6: more mass in the centre and in the tails, less in the shoulders',
-      'Stînga: aceeași medie și varianță; curba Student-$t(5)$ (secțiunea 7) are exces de aplatizare 6: mai multă masă în centru și în cozi, mai puțină în umeri'),
+      'Stînga: aceeași medie și varianță; curba Student-$t(5)$ (secțiunea 7) are exces de boltire 6: mai multă masă în centru și în cozi, mai puțină în umeri'),
     T('Right: skew-Normal densities with skewness $\\pm 0.85$; the dashed curve is the Normal distribution', 'Dreapta: densități skew-Normal cu asimetria $\\pm 0.85$; curba punctată este distribuția Normală')], h='0.62\\textheight')
 
 D.frame(T('Sample Moments', 'Momentele de selecție'), items(
     T('Central sample moments: $m_k = \\frac1n \\sum_{t=1}^n (r_t - \\bar r)^k$', 'Momentele centrate de selecție: $m_k = \\frac1n \\sum_{t=1}^n (r_t - \\bar r)^k$'),
-    T('Sample skewness $S = m_3/m_2^{3/2}$; sample excess kurtosis $K = m_4/m_2^2 - 3$', 'Asimetria de selecție $S = m_3/m_2^{3/2}$; excesul de aplatizare de selecție $K = m_4/m_2^2 - 3$'),
+    T('Sample skewness $S = m_3/m_2^{3/2}$; sample excess kurtosis $K = m_4/m_2^2 - 3$', 'Asimetria de selecție $S = m_3/m_2^{3/2}$; excesul de boltire de selecție $K = m_4/m_2^2 - 3$'),
     (T('If the data are i.i.d. Normal: $S \\approx N(0, 6/n)$ and $K \\approx N(0, 24/n)$', 'Dacă datele sînt i.i.d. Normale: $S \\approx N(0, 6/n)$ și $K \\approx N(0, 24/n)$'),
      [T('with $n = @{m.sp500.n}$: standard errors $\\sqrt{6/n} = @{m.sp500.sesk}$ and $\\sqrt{24/n} = @{m.sp500.seku}$', 'cu $n = @{m.sp500.n}$: erorile standard $\\sqrt{6/n} = @{m.sp500.sesk}$ și $\\sqrt{24/n} = @{m.sp500.seku}$')]),
     T('These standard errors hold only under normality; for heavy-tailed data they are far too small (Seminar 2, B1)',
@@ -582,7 +582,7 @@ D.frame(T('Sample Moments', 'Momentele de selecție'), items(
 D.frame(T('Daily Log Returns: Moments, @{y0}--@{y1}', 'Randamente logaritmice zilnice: momente, @{y0}--@{y1}'),
         table('lrrrrrrr', T('Series', 'Seria') + ' & ' + T('from', 'din') + ' & $n$ & ' + T('Mean \\%', 'Media \\%') + ' & ' + T('S.d. \\%', 'Ab. std. \\%') + ' & '
               + T('Skew.', 'Asim.') + ' & ' + T('Exc. kurt.', 'Exces apl.') + ' & Min \\%', [mrow(k) for k in ASSETS], size='footnotesize') + items(
-            T('Every series has excess kurtosis between @{ku.min} (@{ku.min.name}) and @{ku.max} (@{ku.max.name}): far from 0', 'Toate seriile au exces de aplatizare între @{ku.min} (@{ku.min.name}) și @{ku.max} (@{ku.max.name}): departe de 0'),
+            T('Every series has excess kurtosis between @{ku.min} (@{ku.min.name}) and @{ku.max} (@{ku.max.name}): far from 0', 'Toate seriile au exces de boltire între @{ku.min} (@{ku.min.name}) și @{ku.max} (@{ku.max.name}): departe de 0'),
             T('Every series except SNN has negative skewness', 'Toate seriile, cu excepția SNN, au asimetrie negativă'),
             T('Worst days: S\\&P 500 on @{m.sp500.mindate}, BET on @{m.bet.mindate} (OUG 114, a tax on bank assets), Bitcoin on @{m.btc.mindate}',
               'Cele mai proaste zile: S\\&P 500 pe @{m.sp500.mindate}, BET pe @{m.bet.mindate} (OUG 114, taxa pe activele bancare), Bitcoin pe @{m.btc.mindate}')) + ql('SFM_ch2_moments_jarque_bera'),
@@ -603,16 +603,16 @@ D.frame(T('Check the Data Before Measuring Tails', 'Verificați datele înainte 
     (T('The adjusted close in our data: @{tlv.a0}, then @{tlv.a1}, then @{tlv.a2}', 'Prețul ajustat din datele noastre: @{tlv.a0}, apoi @{tlv.a1}, apoi @{tlv.a2}'),
      [T('log returns $@{tlv.r1}\\%$ and $+@{tlv.r2}\\%$ on two consecutive days: the adjustment was applied one day late',
         'randamente logaritmice $@{tlv.r1}\\%$ și $+@{tlv.r2}\\%$ în două zile consecutive: ajustarea a fost aplicată cu o zi mai tîrziu')]),
-    T('Excess kurtosis of TLV, @{y0}--@{y1}: @{tlv.k} with these two days, @{tlv.kc} without them', 'Excesul de aplatizare al TLV, @{y0}--@{y1}: @{tlv.k} cu aceste două zile, @{tlv.kc} fără ele'),
+    T('Excess kurtosis of TLV, @{y0}--@{y1}: @{tlv.k} with these two days, @{tlv.kc} without them', 'Excesul de boltire al TLV, @{y0}--@{y1}: @{tlv.k} cu aceste două zile, @{tlv.kc} fără ele'),
     T('Two wrong days out of thousands change the kurtosis by a third: this is why TLV is not in the tables of this chapter',
-      'Două zile greșite din mii schimbă aplatizarea cu o treime: de aceea TLV nu apare în tabelele acestui capitol'),
+      'Două zile greșite din mii schimbă boltirea cu o treime: de aceea TLV nu apare în tabelele acestui capitol'),
     T('Rule from Chapter 1: list the largest moves and check each one, especially pairs of opposite jumps',
       'Regula din Capitolul 1: listați cele mai mari mișcări și verificați-le pe fiecare, mai ales perechile de salturi de semn opus')), 'footnotesize')
 
 D.recap(('Moments', 'Momente'), [
-    T('Skewness measures asymmetry, excess kurtosis measures tail weight relative to the Normal distribution', 'Asimetria măsoară lipsa simetriei, excesul de aplatizare măsoară greutatea cozilor față de distribuția Normală'),
-    T('Daily returns: mostly negative skewness and excess kurtosis between @{ku.min0} and @{ku.max0}', 'Randamentele zilnice: în general asimetrie negativă și exces de aplatizare între @{ku.min0} și @{ku.max0}'),
-    T('Kurtosis is driven by a few days: check them before trusting it', 'Aplatizarea este determinată de cîteva zile: verificați-le înainte de a avea încredere în ea')])
+    T('Skewness measures asymmetry, excess kurtosis measures tail weight relative to the Normal distribution', 'Asimetria măsoară lipsa simetriei, excesul de boltire măsoară greutatea cozilor față de distribuția Normală'),
+    T('Daily returns: mostly negative skewness and excess kurtosis between @{ku.min0} and @{ku.max0}', 'Randamentele zilnice: în general asimetrie negativă și exces de boltire între @{ku.min0} și @{ku.max0}'),
+    T('Kurtosis is driven by a few days: check them before trusting it', 'Boltirea este determinată de cîteva zile: verificați-le înainte de a avea încredere în ea')])
 
 # =============================================================================
 # 6. TESTAREA NORMALITĂȚII
@@ -620,7 +620,7 @@ D.recap(('Moments', 'Momente'), [
 D.section('Testing Normality: Jarque--Bera and QQ Plots', 'Testarea normalității: Jarque--Bera și QQ plots')
 
 D.frame(T('The Jarque--Bera Test', 'Testul Jarque--Bera'), items(
-    T('$H_0$: the data are Normal, so skewness $= 0$ and excess kurtosis $= 0$', '$H_0$: datele sînt Normale, deci asimetria $= 0$ și excesul de aplatizare $= 0$'),
+    T('$H_0$: the data are Normal, so skewness $= 0$ and excess kurtosis $= 0$', '$H_0$: datele sînt Normale, deci asimetria $= 0$ și excesul de boltire $= 0$'),
     (T('\\textbf{JB} statistic \\refJBa, \\refJBb: $\\text{JB} = \\dfrac{n}{6}\\Big(S^2 + \\dfrac{K^2}{4}\\Big)$', 'Statistica \\textbf{JB} \\refJBa, \\refJBb: $\\text{JB} = \\dfrac{n}{6}\\Big(S^2 + \\dfrac{K^2}{4}\\Big)$'),
      [T('the sum of two squared standardised statistics: $(S/\\sqrt{6/n})^2 + (K/\\sqrt{24/n})^2$', 'suma a două statistici standardizate la pătrat: $(S/\\sqrt{6/n})^2 + (K/\\sqrt{24/n})^2$')]),
     T('Under $H_0$ and for large $n$: $\\text{JB} \\sim \\chi^2(2)$; reject at 5\\% if $\\text{JB} > @{jb.crit}$', 'În ipoteza $H_0$ și pentru $n$ mare: $\\text{JB} \\sim \\chi^2(2)$; respingem la 5\\% dacă $\\text{JB} > @{jb.crit}$'),
@@ -630,7 +630,7 @@ D.frame(T('Worked Example: Jarque--Bera for the S\\&P 500', 'Exemplu lucrat: Jar
     T('$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$', '$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$'),
     T('$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$', '$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$'),
     T('Critical value @{jb.crit}: normality is rejected; the $p$-value is zero to any number of decimals', 'Valoarea critică @{jb.crit}: normalitatea este respinsă; valoarea $p$ este practic zero'),
-    T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul de aplatizare domină: aproape toată valoarea JB provine din $K^2/4$'),
+    T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul de boltire domină: aproape toată valoarea JB provine din $K^2/4$'),
     (T('JB for the other series: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}', 'JB pentru celelalte serii: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}'),
      [T('all rejected at any usual level', 'toate respinse la orice nivel uzual')])))
 
@@ -661,7 +661,7 @@ chart(T('QQ Plots against the Normal Distribution', 'QQ plots față de distribu
     T('The lower tail bends more than the upper one: negative skewness', 'Coada de jos se curbează mai mult decît cea de sus: asimetrie negativă')], h='0.62\\textheight')
 
 D.recap(('Testing Normality', 'Testarea normalității'), [
-    T('JB combines skewness and kurtosis; it rejects normality for every series', 'JB combină asimetria și aplatizarea; respinge normalitatea pentru toate seriile'),
+    T('JB combines skewness and kurtosis; it rejects normality for every series', 'JB combină asimetria și boltirea; respinge normalitatea pentru toate seriile'),
     T('Report the size of the departure; Normal-theory standard errors are too small', 'Raportați mărimea abaterii; erorile standard din teoria Normală sînt prea mici'),
     T('QQ plots show where the model fails: here, in both tails', 'QQ plots arată unde greșește modelul: aici, în ambele cozi')])
 
@@ -688,9 +688,9 @@ D.frame(T('Definition', 'Definiție'), items(
     T('As $\\nu \\to \\infty$, $t(\\nu) \\to N(0,1)$: the Normal distribution is a limiting case', 'Cînd $\\nu \\to \\infty$, $t(\\nu) \\to N(0,1)$: distribuția Normală este un caz limită')))
 
 D.frame(T('Moments and Tails', 'Momente și cozi'), items(
-    T('Mean $0$ if $\\nu > 1$; variance $\\nu/(\\nu - 2)$ if $\\nu > 2$; excess kurtosis $6/(\\nu - 4)$ if $\\nu > 4$', 'Media $0$ dacă $\\nu > 1$; varianța $\\nu/(\\nu - 2)$ dacă $\\nu > 2$; excesul de aplatizare $6/(\\nu - 4)$ dacă $\\nu > 4$'),
+    T('Mean $0$ if $\\nu > 1$; variance $\\nu/(\\nu - 2)$ if $\\nu > 2$; excess kurtosis $6/(\\nu - 4)$ if $\\nu > 4$', 'Media $0$ dacă $\\nu > 1$; varianța $\\nu/(\\nu - 2)$ dacă $\\nu > 2$; excesul de boltire $6/(\\nu - 4)$ dacă $\\nu > 4$'),
     (T('Moments of order $\\nu$ and higher are infinite', 'Momentele de ordin $\\nu$ și mai mare sînt infinite'),
-     [T('$\\nu \\le 4$: infinite kurtosis; $\\nu \\le 2$: infinite variance', '$\\nu \\le 4$: aplatizare infinită; $\\nu \\le 2$: varianță infinită')]),
+     [T('$\\nu \\le 4$: infinite kurtosis; $\\nu \\le 2$: infinite variance', '$\\nu \\le 4$: boltire infinită; $\\nu \\le 2$: varianță infinită')]),
     (T('\\textbf{Power-law tails}: $P(|T| > x) \\approx c\\,x^{-\\nu}$ for large $x$', '\\textbf{Cozi de tip putere}: $P(|T| > x) \\approx c\\,x^{-\\nu}$ pentru $x$ mare'),
      [T('the Normal tail falls like $e^{-x^2/2}$, much faster than any power', 'coada Normală scade ca $e^{-x^2/2}$, mult mai repede decît orice putere'),
       T('$\\nu$ is also the \\textbf{tail index}, estimated directly in Chapter 5', '$\\nu$ este și \\textbf{indicele de coadă}, estimat direct în Capitolul 5')]),
@@ -715,7 +715,7 @@ D.frame(T('Fitting a Student-$t$ by Maximum Likelihood', 'Estimarea unei distrib
 D.frame(T('Fitted Student-$t$: Degrees of Freedom, @{y0}--@{y1}', 'Distribuția Student-$t$ estimată: gradele de libertate, @{y0}--@{y1}'),
         cols(table('lrrr', T('Series', 'Seria') + ' & $\\hat\\nu$ & JB & $\\Delta$AIC', [trow(k) for k in ASSETS], size='footnotesize'), items(
             T('All $\\hat\\nu$ between @{nu.min} (@{nu.min.name}) and @{nu.max} (@{nu.max.name})', 'Toate valorile $\\hat\\nu$ între @{nu.min} (@{nu.min.name}) și @{nu.max} (@{nu.max.name})'),
-            T('$\\hat\\nu < 4$ for @{nu.below4} of the @{nassets} series: the fitted model has infinite kurtosis', '$\\hat\\nu < 4$ pentru @{nu.below4} din cele @{nassets} serii: modelul estimat are aplatizare infinită'),
+            T('$\\hat\\nu < 4$ for @{nu.below4} of the @{nassets} series: the fitted model has infinite kurtosis', '$\\hat\\nu < 4$ pentru @{nu.below4} din cele @{nassets} serii: modelul estimat are boltire infinită'),
             T('$\\Delta$AIC is at least @{daic.min}: the $t$ beats the Normal distribution everywhere', '$\\Delta$AIC este cel puțin @{daic.min}: distribuția $t$ este preferată distribuției Normale pentru toate seriile')), wl='0.55', wr='0.41') + ql('SFM_ch2_student_t_fit'),
         'footnotesize')
 
@@ -793,9 +793,9 @@ D.frame(T('Fact 2: Aggregational Gaussianity', 'Faptul 2: gaussianitatea agregat
      [T('S\\&P 500, @{years.span} years: @{ag.n1} daily, @{ag.n21} monthly and @{ag.n63} quarterly returns', 'S\\&P 500, @{years.span} ani: @{ag.n1} randamente zilnice, @{ag.n21} randamente lunare și @{ag.n63} randamente trimestriale'),
       T('estimates of kurtosis at long horizons are very noisy', 'estimările aplatizării pe orizonturi lungi sînt foarte imprecise')])))
 
-chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: aplatizarea scade cu orizontul'), 'sfm_ch2_aggregation', 'SFM_ch2_cont_stylised_facts', [
+chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: boltirea scade cu orizontul'), 'sfm_ch2_aggregation', 'SFM_ch2_cont_stylised_facts', [
     T('Excess kurtosis, daily $\\to$ monthly $\\to$ quarterly: S\\&P 500 @{ag.sp500.1} $\\to$ @{ag.sp500.21} $\\to$ @{ag.sp500.63}; BET @{ag.bet.1} $\\to$ @{ag.bet.21} $\\to$ @{ag.bet.63}; Bitcoin @{ag.btc.1} $\\to$ @{ag.btc.21} $\\to$ @{ag.btc.63}',
-      'Excesul de aplatizare, zilnic $\\to$ lunar $\\to$ trimestrial: S\\&P 500 @{ag.sp500.1} $\\to$ @{ag.sp500.21} $\\to$ @{ag.sp500.63}; BET @{ag.bet.1} $\\to$ @{ag.bet.21} $\\to$ @{ag.bet.63}; Bitcoin @{ag.btc.1} $\\to$ @{ag.btc.21} $\\to$ @{ag.btc.63}'),
+      'Excesul de boltire, zilnic $\\to$ lunar $\\to$ trimestrial: S\\&P 500 @{ag.sp500.1} $\\to$ @{ag.sp500.21} $\\to$ @{ag.sp500.63}; BET @{ag.bet.1} $\\to$ @{ag.bet.21} $\\to$ @{ag.bet.63}; Bitcoin @{ag.btc.1} $\\to$ @{ag.btc.21} $\\to$ @{ag.btc.63}'),
     T('The fall is slow and not monotone: one crash month (March 2020) dominates a sample of 200 months', 'Scăderea este lentă și nemonotonă: o singură lună de crah (martie 2020) domină un eșantion de 200 de luni'),
     T('Quarterly returns: JB no longer rejects normality for the BET ($p = @{ag.bet.63.p}$) and Bitcoin ($p = @{ag.btc.63.p}$)', 'Randamentele trimestriale: JB nu mai respinge normalitatea pentru BET ($p = @{ag.bet.63.p}$) și Bitcoin ($p = @{ag.btc.63.p}$)')],
       h='0.60\\textheight')
@@ -803,7 +803,7 @@ chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: aplatizarea scade 
 chart(T('Fact 2: S\\&P 500, Daily vs Monthly QQ Plots', 'Faptul 2: S\\&P 500, QQ plots pentru randamentele zilnice și lunare'), 'sfm_ch2_qq_horizons', 'SFM_ch2_cont_stylised_facts', [
     T('Monthly returns lie much closer to the line than daily returns', 'Randamentele lunare sînt mult mai aproape de dreaptă decît cele zilnice'),
     T('But monthly returns are not Normal: skewness $@{qh.21.skew}$, excess kurtosis $@{qh.21.k}$, $n = @{qh.21.n}$; the lowest point is March 2020',
-      'Dar randamentele lunare nu sînt Normale: asimetria $@{qh.21.skew}$, excesul de aplatizare $@{qh.21.k}$, $n = @{qh.21.n}$; punctul cel mai de jos este martie 2020'),
+      'Dar randamentele lunare nu sînt Normale: asimetria $@{qh.21.skew}$, excesul de boltire $@{qh.21.k}$, $n = @{qh.21.n}$; punctul cel mai de jos este martie 2020'),
     T('Why so slow? Volatility clustering makes daily returns dependent, which slows the CLT', 'De ce atît de lent? Volatility clustering face randamentele zilnice dependente, ceea ce încetinește convergența din CLT')], h='0.60\\textheight')
 
 D.frame(T('Fact 3: Absence of Linear Autocorrelation', 'Faptul 3: absența autocorelației liniare'), items(
@@ -912,12 +912,12 @@ side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare 
     T('As a market matures (more traders, futures, ETFs), its tails might thin out', 'Pe măsură ce o piață se maturizează (mai mulți participanți, futures, ETF-uri), cozile ei s-ar putea subția'),
     T('Bitcoin, @{yr.first}--@{yr.last}: yearly $\\hat\\nu$ between @{yr.numin} and @{yr.numax}; rank correlation with the year $@{yr.rho}$ ($p = @{yr.p}$)',
       'Bitcoin, @{yr.first}--@{yr.last}: $\\hat\\nu$ anual între @{yr.numin} și @{yr.numax}; corelația rangurilor cu anul $@{yr.rho}$ ($p = @{yr.p}$)'),
-    T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de aplatizare @{yr.k2020}) dominat de o singură zi'),
+    T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de boltire @{yr.k2020}) dominat de o singură zi'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.52)
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: find studies of tail indices of crypto assets and summarise their methods', '\\textbf{Literatura}: găsirea studiilor despre indicii de coadă ai activelor cripto și rezumarea metodelor lor'),
-    T('\\textbf{Code}: draft rolling-window estimates of $\\nu$ and of the excess kurtosis', '\\textbf{Cod}: o primă versiune a estimărilor pe ferestre mobile pentru $\\nu$ și excesul de aplatizare'),
+    T('\\textbf{Code}: draft rolling-window estimates of $\\nu$ and of the excess kurtosis', '\\textbf{Cod}: o primă versiune a estimărilor pe ferestre mobile pentru $\\nu$ și excesul de boltire'),
     T('\\textbf{Robustness}: propose other windows, other tail measures (Chapter 5), other crypto assets', '\\textbf{Robustețe}: propunerea altor ferestre, altor măsuri ale cozilor (Capitolul 5), altor active cripto'),
     (T('Example prompt', 'Exemplu de prompt'),
      [T('\\aiprompt{Write a Python function that fits a Student-t distribution to daily Bitcoin log returns on rolling 365-day windows and returns the degrees of freedom with a bootstrap 95\\% interval.}',
@@ -934,7 +934,7 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
     (T('\\textbf{Question}: do the tails of crypto assets thin out as their markets mature?', '\\textbf{Întrebarea}: se subțiază cozile activelor cripto pe măsură ce piețele lor se maturizează?'),
      [T('data: Bitcoin, Ethereum and Solana from the course data; S\\&P 500 as a benchmark', 'date: Bitcoin, Ethereum și Solana din datele cursului; S\\&P 500 ca reper')]),
     (T('Steps', 'Pași'),
-     [T('estimate $\\hat\\nu$ and the excess kurtosis on rolling one-year windows, with bootstrap intervals', 'estimați $\\hat\\nu$ și excesul de aplatizare pe ferestre mobile de un an, cu intervale bootstrap'),
+     [T('estimate $\\hat\\nu$ and the excess kurtosis on rolling one-year windows, with bootstrap intervals', 'estimați $\\hat\\nu$ și excesul de boltire pe ferestre mobile de un an, cu intervale bootstrap'),
       T('test for a trend; repeat on returns divided by a rolling volatility', 'testați existența unui trend; repetați pe randamente împărțite la o volatilitate mobilă'),
       T('compare the count of 4-sigma days per year with the S\\&P 500', 'comparați numărul zilelor de 4 sigma pe an cu S\\&P 500')]),
     T('Deliverable: one table, one chart, and a paragraph on what the data can and cannot show', 'Rezultat: un tabel, un grafic și un paragraf despre ce pot și ce nu pot arăta datele'),
@@ -949,7 +949,7 @@ D.frame(T('Key Takeaways', 'Idei principale'), items(
     T('The Normal distribution: two parameters, thin tails, closed under addition', 'Distribuția Normală: doi parametri, cozi subțiri, închisă la adunare'),
     T('Normal log returns give lognormal prices; mean above median by the volatility drag', 'Randamentele logaritmice Normale dau prețuri lognormale; media depășește mediana prin volatility drag'),
     T('The CLT needs independence, identical distribution and finite variance', 'CLT cere independență, distribuție identică și varianță finită'),
-    T('Daily returns: mostly negative skewness, excess kurtosis @{ku.min0}--@{ku.max0}, JB rejects, QQ plots bend at both ends', 'Randamentele zilnice: în general asimetrie negativă, exces de aplatizare @{ku.min0}--@{ku.max0}, JB respinge, QQ plots se curbează la ambele capete'),
+    T('Daily returns: mostly negative skewness, excess kurtosis @{ku.min0}--@{ku.max0}, JB rejects, QQ plots bend at both ends', 'Randamentele zilnice: în general asimetrie negativă, exces de boltire @{ku.min0}--@{ku.max0}, JB respinge, QQ plots se curbează la ambele capete'),
     T('The Student-$t$ with $\\hat\\nu$ between @{nu.min0} and @{nu.max0} fits the tails much better, but is symmetric and i.i.d.', 'Student-$t$ cu $\\hat\\nu$ între @{nu.min0} și @{nu.max0} descrie mult mai bine cozile, dar este simetrică și i.i.d.'),
     T('Six stylised facts: heavy tails, aggregational Gaussianity, no linear autocorrelation, volatility clustering, leverage, gain/loss asymmetry',
       'Șase fapte stilizate: cozi groase, gaussianitate agregată, fără autocorelație liniară, volatility clustering, efect de levier, asimetrie cîștig/pierdere')))
@@ -959,9 +959,9 @@ D.frame(T('Key Formulas', 'Formule de reținut'), table(
     [T('Normal PDF', 'Densitatea Normală') + ' & $f(x) = (\\sigma\\sqrt{2\\pi})^{-1}\\exp\\big(-(x - \\mu)^2/(2\\sigma^2)\\big)$',
      T('Lognormal moments', 'Momentele lognormale') + ' & ' + T('median $e^m$, mean $e^{m + s^2/2}$', 'mediana $e^m$, media $e^{m + s^2/2}$'),
      'CLT & $\\sqrt{n}(\\bar X_n - \\mu)/\\sigma \\xrightarrow{d} N(0,1)$',
-     T('Skewness, excess kurtosis', 'Asimetria, excesul de aplatizare') + ' & $S = m_3/m_2^{3/2}$, \\quad $K = m_4/m_2^2 - 3$',
+     T('Skewness, excess kurtosis', 'Asimetria, excesul de boltire') + ' & $S = m_3/m_2^{3/2}$, \\quad $K = m_4/m_2^2 - 3$',
      'Jarque--Bera & $\\text{JB} = \\frac{n}{6}(S^2 + K^2/4) \\sim \\chi^2(2)$',
-     'Student-$t(\\nu)$ & ' + T('variance $\\nu/(\\nu - 2)$, excess kurtosis $6/(\\nu - 4)$', 'varianța $\\nu/(\\nu - 2)$, excesul de aplatizare $6/(\\nu - 4)$'),
+     'Student-$t(\\nu)$ & ' + T('variance $\\nu/(\\nu - 2)$, excess kurtosis $6/(\\nu - 4)$', 'varianța $\\nu/(\\nu - 2)$, excesul de boltire $6/(\\nu - 4)$'),
      'AIC & $2k - 2\\ell$',
      'ACF, Ljung--Box & $\\hat\\rho(h)$, \\quad $Q(m) = n(n+2)\\sum_{h=1}^m \\hat\\rho(h)^2/(n - h)$',
      T('Leverage', 'Levier') + ' & $L(k) = \\text{Corr}(r_t, |r_{t+k}|)$'],

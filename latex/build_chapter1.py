@@ -677,15 +677,15 @@ D.frame(T('Location and Spread', 'Poziție și împrăștiere'), items(
      [T('median $q_{0.5}$; the 1\\% quantile $q_{0.01}$ is the basis of VaR 1\\% (Chapter 10)', 'mediana $q_{0.5}$; cuantila de 1\\% $q_{0.01}$ stă la baza VaR 1\\% (Capitolul 10)')]),
     T('\\textbf{Minimum} and \\textbf{maximum}: the worst and best day, always with their dates', '\\textbf{Minimul} și \\textbf{maximul}: cea mai slabă și cea mai bună zi, întotdeauna cu datele lor')))
 
-D.frame(T('Shape: Skewness and Kurtosis', 'Forma: asimetria și aplatizarea'), items(
+D.frame(T('Shape: Skewness and Kurtosis', 'Forma: asimetria și boltirea'), items(
     (T('\\textbf{Skewness}: $\\hat S = \\frac1n \\sum_t (r_t - \\bar r)^3 / \\hat\\sigma^3$', '\\textbf{Asimetria} (skewness): $\\hat S = \\frac1n \\sum_t (r_t - \\bar r)^3 / \\hat\\sigma^3$'),
      [T('$S = 0$: symmetric; $S < 0$: a longer left tail, large losses more frequent than large gains',
         '$S = 0$: simetrică; $S < 0$: coadă stîngă mai lungă, pierderile mari mai frecvente decît cîștigurile mari')]),
     (T('\\textbf{Kurtosis}: $\\hat K = \\frac1n \\sum_t (r_t - \\bar r)^4 / \\hat\\sigma^4$; \\textbf{excess kurtosis} $\\hat K - 3$',
-       '\\textbf{Aplatizarea} (kurtosis): $\\hat K = \\frac1n \\sum_t (r_t - \\bar r)^4 / \\hat\\sigma^4$; \\textbf{excesul de aplatizare} (excess kurtosis) $\\hat K - 3$'),
-     [T('the Normal distribution has $K = 3$, so excess kurtosis 0', 'distribuția Normală are $K = 3$, deci exces de aplatizare 0'),
+       '\\textbf{Boltirea} (kurtosis): $\\hat K = \\frac1n \\sum_t (r_t - \\bar r)^4 / \\hat\\sigma^4$; \\textbf{excesul de boltire} (excess kurtosis) $\\hat K - 3$'),
+     [T('the Normal distribution has $K = 3$, so excess kurtosis 0', 'distribuția Normală are $K = 3$, deci exces de boltire 0'),
       T('excess kurtosis $> 0$: \\textbf{heavy tails}, extreme days more frequent than under the Normal distribution',
-        'exces de aplatizare $> 0$: \\textbf{cozi groase}, zile extreme mai frecvente decît sub distribuția Normală')]),
+        'exces de boltire $> 0$: \\textbf{cozi groase}, zile extreme mai frecvente decît sub distribuția Normală')]),
     T('Both are sensitive to single extreme days: report them with the extremes', 'Ambele sînt sensibile la zile extreme izolate: raportați-le împreună cu extremele'),
     T('Heavy tails and asymmetry are \\textbf{stylised facts} of returns \\refCont; formal tests in Chapter 2',
       'Cozile groase și asimetria sînt \\textbf{fapte stilizate} ale randamentelor \\refCont; testele formale în Capitolul 2')))
@@ -701,9 +701,9 @@ DHEAD = (T('Series', 'Seria') + ' & ' + T('Mean', 'Media') + ' & ' + T('Std. dev
 
 D.frame(T('Daily Log Returns: Indices and Bitcoin, @{y0}--@{y1}', 'Randamente logaritmice zilnice: indici și Bitcoin, @{y0}--@{y1}'),
         table('lrrrrlr', DHEAD, [drow(k) for k in INDICES], size='footnotesize') + items(
-            T('All values in \\% except skewness and excess kurtosis; each series on its own calendar', 'Toate valorile în \\%, cu excepția asimetriei și a excesului de aplatizare; fiecare serie pe calendarul ei'),
+            T('All values in \\% except skewness and excess kurtosis; each series on its own calendar', 'Toate valorile în \\%, cu excepția asimetriei și a excesului de boltire; fiecare serie pe calendarul ei'),
             T('Bitcoin: daily standard deviation about three times that of the stock indices', 'Bitcoin: abaterea standard zilnică de aproximativ trei ori mai mare decît a indicilor bursieri'),
-            T('All series: negative skewness and large excess kurtosis', 'Toate seriile: asimetrie negativă și exces de aplatizare mare'),
+            T('All series: negative skewness and large excess kurtosis', 'Toate seriile: asimetrie negativă și exces de boltire mare'),
             T('The worst days cluster in March 2020 (COVID-19) and on 19 December 2018 for the BET',
               'Cele mai slabe zile se concentrează în martie 2020 (COVID-19) și, pentru BET, pe 19 decembrie 2018')) + ql('SFM_ch1_descriptive_stats'))
 
@@ -712,7 +712,7 @@ D.frame(T('Daily Log Returns: Five BVB Stocks, @{y0}--@{y1}', 'Randamente logari
             T('Single stocks are more volatile than the BET index: diversification at work', 'Acțiunile individuale sînt mai volatile decît indicele BET: efectul diversificării'),
             T('Banca Transilvania and BRD lost most on 19 December 2018, after the announcement of a tax on bank assets, adopted as OUG 114/2018',
               'Banca Transilvania și BRD au pierdut cel mai mult pe 19 decembrie 2018, după anunțarea taxei pe activele bancare, adoptată prin OUG 114/2018'),
-            T('Excess kurtosis differs widely between stocks: compare TLV with SNN', 'Excesul de aplatizare diferă mult între acțiuni: comparați TLV cu SNN'),
+            T('Excess kurtosis differs widely between stocks: compare TLV with SNN', 'Excesul de boltire diferă mult între acțiuni: comparați TLV cu SNN'),
             T('Crashes on the BVB have their own statistics \\refPele', 'Crahurile de la BVB au o statistică proprie \\refPele')) + ql('SFM_ch1_descriptive_stats'))
 
 chart(T('Histograms vs the Normal Distribution', 'Histogramele față de distribuția Normală'), 'sfm_ch1_hist_normal', 'SFM_ch1_descriptive_stats', [
@@ -731,7 +731,7 @@ chart(T('Volatility Changes over Time', 'Volatilitatea se schimbă în timp'), '
 
 D.recap(('Descriptive Statistics', 'statistici descriptive'), [
     T('Report mean, standard deviation, skewness, excess kurtosis, quantiles and extremes with dates',
-      'Raportați media, abaterea standard, asimetria, excesul de aplatizare, cuantilele și extremele cu datele lor'),
+      'Raportați media, abaterea standard, asimetria, excesul de boltire, cuantilele și extremele cu datele lor'),
     T('Daily returns: mean near 0, volatility 1--3\\% a day, heavy tails, often negative skewness',
       'Randamente zilnice: medie apropiată de 0, volatilitate 1--3\\% pe zi, cozi groase, adesea asimetrie negativă'),
     T('Extreme days are several times more frequent than under the Normal distribution', 'Zilele extreme sînt de cîteva ori mai frecvente decît sub distribuția Normală'),

@@ -213,7 +213,7 @@ D.frame(T('Exercise Map', 'Harta exercițiilor'), table(
      'A3, A4 & ' + T('what is the price after one and ten years under lognormal prices?', 'care este prețul după un an și după zece ani, dacă prețurile sînt lognormale?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A3',
      'A5, A6 & ' + T('when is a sum approximately Normal (CLT)?', 'cînd este o sumă aproximativ Normală (CLT)?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A5',
      'A7, A8 & ' + T('the Jarque--Bera statistic and the moments of a Student-$t$', 'statistica Jarque--Bera și momentele unei distribuții Student-$t$') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & A7',
-     'B1, B2 & ' + T('how non-Normal are daily returns, and how precise is the kurtosis?', 'cît de departe de normalitate sînt randamentele zilnice și cît de precis este estimată aplatizarea?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B1',
+     'B1, B2 & ' + T('how non-Normal are daily returns, and how precise is the kurtosis?', 'cît de departe de normalitate sînt randamentele zilnice și cît de precis este estimată boltirea?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B1',
      'B3, B4 & ' + T('does a Student-$t$ fit better? how many 4-sigma days?', 'se potrivește mai bine o distribuție Student-$t$? cîte zile de 4 sigma?') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B3',
      'B5--B7 & ' + T('aggregational Gaussianity, volatility clustering, leverage and asymmetry', 'gaussianitate agregată, volatility clustering, efect de levier și asimetrie') + ' & ' + T('Solved, Proposed', 'Rezolvat, Propus') + ' & B5',
      'C1, C2 & ' + T('are Bitcoin\'s tails getting thinner? what is wrong in an AI answer?', 'devin mai subțiri cozile Bitcoin? ce este greșit într-un răspuns AI?') + ' & ' + T('Proposed', 'Propus') + ' & B3, B5'],
@@ -262,14 +262,14 @@ D.frame(T('What You Need for Today (2/4): Lognormal Prices and the CLT', 'Noțiu
 
 D.frame(T('What You Need for Today (3/4): Shape, Tests and the Student-$t$', 'Noțiuni necesare azi (3/4): formă, teste și distribuția Student-$t$'), items(
     (T('Sample skewness $S = m_3/m_2^{3/2}$, sample excess kurtosis $K = m_4/m_2^2 - 3$, with $m_k = \\frac1n\\sum_t (r_t - \\bar r)^k$; Normal distribution: $S = K = 0$',
-       'Asimetria de selecție $S = m_3/m_2^{3/2}$, excesul de aplatizare $K = m_4/m_2^2 - 3$, cu $m_k = \\frac1n\\sum_t (r_t - \\bar r)^k$; distribuția Normală: $S = K = 0$'),
+       'Asimetria de selecție $S = m_3/m_2^{3/2}$, excesul de boltire $K = m_4/m_2^2 - 3$, cu $m_k = \\frac1n\\sum_t (r_t - \\bar r)^k$; distribuția Normală: $S = K = 0$'),
      [T('under normality, standard errors $\\sqrt{6/n}$ and $\\sqrt{24/n}$', 'în ipoteza de normalitate, erorile standard $\\sqrt{6/n}$ și $\\sqrt{24/n}$')]),
     T('\\textbf{Jarque--Bera}: $\\text{JB} = \\frac{n}{6}(S^2 + K^2/4)$; under normality $\\chi^2(2)$; reject at 5\\% if $\\text{JB} > 5.99$',
       '\\textbf{Jarque--Bera}: $\\text{JB} = \\frac{n}{6}(S^2 + K^2/4)$; în ipoteza de normalitate $\\chi^2(2)$; respingem la 5\\% dacă $\\text{JB} > 5.99$'),
     T('\\textbf{QQ plot}: sorted data $r_{(i)}$ against model quantiles $F^{-1}((i - 0.5)/n)$; an S-shape means heavier tails than the model',
       '\\textbf{QQ plot}: datele ordonate $r_{(i)}$ față de cuantilele modelului $F^{-1}((i - 0.5)/n)$; o formă de S înseamnă cozi mai groase decît ale modelului'),
     (T('\\textbf{Student-$t(\\nu)$}: variance $\\nu/(\\nu-2)$ for $\\nu > 2$, excess kurtosis $6/(\\nu - 4)$ for $\\nu > 4$; for returns $r = m + s\\,T$',
-       '\\textbf{Student-$t(\\nu)$}: varianța $\\nu/(\\nu-2)$ pentru $\\nu > 2$, excesul de aplatizare $6/(\\nu - 4)$ pentru $\\nu > 4$; pentru randamente $r = m + s\\,T$'),
+       '\\textbf{Student-$t(\\nu)$}: varianța $\\nu/(\\nu-2)$ pentru $\\nu > 2$, excesul de boltire $6/(\\nu - 4)$ pentru $\\nu > 4$; pentru randamente $r = m + s\\,T$'),
      [T('fitted by MLE (maximum likelihood estimation); compared with the Normal distribution by AIC $= 2k - 2\\ell$ (lower is better)',
         'estimată prin MLE (maximum likelihood estimation, estimarea prin verosimilitate maximă); comparată cu distribuția Normală prin AIC $= 2k - 2\\ell$ (se preferă valoarea mai mică)')])), 'footnotesize')
 
@@ -373,14 +373,14 @@ D.proposed(T('A6: Is a Monthly Return Normal?', 'A6: este Normal un randament lu
            items(T('1. $N(21 \\times 0.04, 21 \\times 1.2^2) = N(@{a6.h21.mean}, @{a6.h21.sd}^2)$', '1. $N(21 \\times 0.04, 21 \\times 1.2^2) = N(@{a6.h21.mean}, @{a6.h21.sd}^2)$'),
                  T('2. $z = @{a6.h21.z}$, $P = @{a6.h21.p}\\%$; 5 days: $N(@{a6.h5.mean}, @{a6.h5.sd}^2)$, $z = @{a6.h5.z}$, $P = @{a6.h5.p}$',
                    '2. $z = @{a6.h21.z}$, $P = @{a6.h21.p}\\%$; 5 zile: $N(@{a6.h5.mean}, @{a6.h5.sd}^2)$, $z = @{a6.h5.z}$, $P = @{a6.h5.p}$'),
-                 T('3. Yes: $t(3)$ has finite variance ($\\nu > 2$); convergence is slower because the kurtosis is infinite', '3. Da: $t(3)$ are varianță finită ($\\nu > 2$); convergența este mai lentă pentru că aplatizarea este infinită'),
+                 T('3. Yes: $t(3)$ has finite variance ($\\nu > 2$); convergence is slower because the kurtosis is infinite', '3. Da: $t(3)$ are varianță finită ($\\nu > 2$); convergența este mai lentă pentru că boltirea este infinită'),
                  T('4. No: with $\\nu \\le 2$ the variance is infinite; sums converge to an $\\alpha$-stable law (Chapter 3)', '4. Nu: cu $\\nu \\le 2$ varianța este infinită; sumele converg către o lege $\\alpha$-stabilă (Capitolul 3)')),
            size='scriptsize')
 
 D.solved(T('A7: Jarque--Bera on Paper', 'A7: Jarque--Bera pe hîrtie'),
-         items(T('A series of $n = 4000$ daily returns has sample skewness $S = -0.6$ and excess kurtosis $K = 12$.', 'O serie de $n = 4000$ de randamente zilnice are asimetria $S = -0.6$ și excesul de aplatizare $K = 12$.'),
+         items(T('A series of $n = 4000$ daily returns has sample skewness $S = -0.6$ and excess kurtosis $K = 12$.', 'O serie de $n = 4000$ de randamente zilnice are asimetria $S = -0.6$ și excesul de boltire $K = 12$.'),
                T('1. Compute the standard errors of $S$ and $K$ under normality and the two $z$ statistics.', '1. Calculați erorile standard ale lui $S$ și $K$ în ipoteza de normalitate și cele două statistici $z$.'),
-               T('2. Compute JB and the share of it that comes from the kurtosis.', '2. Calculați JB și ponderea care provine din aplatizare.'),
+               T('2. Compute JB and the share of it that comes from the kurtosis.', '2. Calculați JB și ponderea care provine din boltire.'),
                T('3. Decide at the 5\\% level.', '3. Decideți la nivelul de 5\\%.'),
                T('Report: two standard errors, two $z$ values, JB, the decision.', 'Raportați: două erori standard, două valori $z$, JB, decizia.')),
          items(T('1. $\\sqrt{6/4000} = @{a7.se_s}$, $\\sqrt{24/4000} = @{a7.se_k}$; $z_S = @{a7.z_s}$, $z_K = @{a7.z_k}$', '1. $\\sqrt{6/4000} = @{a7.se_s}$, $\\sqrt{24/4000} = @{a7.se_k}$; $z_S = @{a7.z_s}$, $z_K = @{a7.z_k}$'),
@@ -391,12 +391,12 @@ D.solved(T('A7: Jarque--Bera on Paper', 'A7: Jarque--Bera pe hîrtie'),
 
 D.proposed(T('A8: Moments of the Student-$t$', 'A8: momentele distribuției Student-$t$'),
            items(T('$T \\sim t(\\nu)$; a model for daily returns is $r = m + s\\,T$. Model: A7.', '$T \\sim t(\\nu)$; un model pentru randamentele zilnice este $r = m + s\\,T$. Model: A7.'),
-                 T('1. Compute the variance and the excess kurtosis of $t(5)$ and $t(10)$.', '1. Calculați varianța și excesul de aplatizare pentru $t(5)$ și $t(10)$.'),
-                 T('2. Find $\\nu$ such that the excess kurtosis is 3.', '2. Găsiți $\\nu$ pentru care excesul de aplatizare este 3.'),
+                 T('1. Compute the variance and the excess kurtosis of $t(5)$ and $t(10)$.', '1. Calculați varianța și excesul de boltire pentru $t(5)$ și $t(10)$.'),
+                 T('2. Find $\\nu$ such that the excess kurtosis is 3.', '2. Găsiți $\\nu$ pentru care excesul de boltire este 3.'),
                  T('3. Find the scale $s$ that gives a daily standard deviation of $1.2\\%$ for $\\nu = 5$ and for $\\nu = 6$.', '3. Găsiți scala $s$ care dă o abatere standard zilnică de $1.2\\%$ pentru $\\nu = 5$ și pentru $\\nu = 6$.'),
                  T('4. Compare $P(|X| > 4)$ for a unit-variance $t(5)$ (value in the notebook) with the Normal value.', '4. Comparați $P(|X| > 4)$ pentru o $t(5)$ cu varianța 1 (valoarea din notebook) cu valoarea Normală.'),
                  T('Report: four moments, one $\\nu$, two scales and one ratio.', 'Raportați: patru momente, o valoare $\\nu$, două valori ale scalei și un raport.')),
-           items(T('1. $t(5)$: variance $@{a8.t5.var}$, excess kurtosis $@{a8.t5.ek}$; $t(10)$: $@{a8.t10.var}$ and $@{a8.t10.ek}$', '1. $t(5)$: varianța $@{a8.t5.var}$, excesul de aplatizare $@{a8.t5.ek}$; $t(10)$: $@{a8.t10.var}$ și $@{a8.t10.ek}$'),
+           items(T('1. $t(5)$: variance $@{a8.t5.var}$, excess kurtosis $@{a8.t5.ek}$; $t(10)$: $@{a8.t10.var}$ and $@{a8.t10.ek}$', '1. $t(5)$: varianța $@{a8.t5.var}$, excesul de boltire $@{a8.t5.ek}$; $t(10)$: $@{a8.t10.var}$ și $@{a8.t10.ek}$'),
                  T('2. $6/(\\nu - 4) = 3 \\Rightarrow \\nu = @{a8.nu3}$', '2. $6/(\\nu - 4) = 3 \\Rightarrow \\nu = @{a8.nu3}$'),
                  T('3. $s = 1.2\\sqrt{(\\nu - 2)/\\nu}$: $@{a8.t5.scale}\\%$ for $\\nu = 5$, $@{a8.t6.scale}\\%$ for $\\nu = 6$', '3. $s = 1.2\\sqrt{(\\nu - 2)/\\nu}$: $@{a8.t5.scale}\\%$ pentru $\\nu = 5$, $@{a8.t6.scale}\\%$ pentru $\\nu = 6$'),
                  T('4. $@{a8.t5.p4}\\%$ vs $@{a8.normal.p4}\\%$: @{a8.ratio} times more likely', '4. $@{a8.t5.p4}\\%$ față de $@{a8.normal.p4}\\%$: de @{a8.ratio} de ori mai probabil')),
@@ -411,7 +411,7 @@ D.task(T('B1: How Non-Normal Is the S\\&P 500? [Solved]', 'B1: cît de departe d
        T('how precisely can we measure the distance of the daily log returns of the S\\&P 500 from the Normal distribution?',
          'cu ce precizie putem măsura cît de departe sînt randamentele logaritmice zilnice ale S\\&P 500 de distribuția Normală?'),
        T('S\\&P 500 closes, 2010--2026, daily log returns in \\%', 'închiderile S\\&P 500, 2010--2026, randamente logaritmice zilnice în \\%'),
-       [T('Compute the mean, standard deviation, skewness, excess kurtosis and the worst day with its date.', 'Calculați media, abaterea standard, asimetria, excesul de aplatizare și cea mai proastă zi, cu data ei.'),
+       [T('Compute the mean, standard deviation, skewness, excess kurtosis and the worst day with its date.', 'Calculați media, abaterea standard, asimetria, excesul de boltire și cea mai proastă zi, cu data ei.'),
         T('Compute the Normal-theory standard errors of $S$ and $K$, and the JB statistic.', 'Calculați erorile standard ale lui $S$ și $K$ în ipoteza de normalitate și statistica JB.'),
         T('Bootstrap $S$ and $K$ with 2000 resamples of the days and take the 2.5\\% and 97.5\\% percentiles.', 'Aplicați bootstrap pentru $S$ și $K$, cu 2000 de reeșantionări ale zilelor, și rețineți percentilele 2,5\\% și 97,5\\%.'),
         T('Interpretation: why is the bootstrap interval of $K$ so much wider than the Normal-theory one?', 'Interpretare: de ce este intervalul bootstrap al lui $K$ mult mai larg decît cel din teoria Normală?')],
@@ -434,7 +434,7 @@ D.task(T('B2: Three More Series [Proposed]', 'B2: încă trei serii [Propus]'),
        T('daily log returns, 2010--2026 (Bitcoin from 2014), each on its own calendar; model: B1', 'randamente logaritmice zilnice, 2010--2026 (Bitcoin din 2014), fiecare pe calendarul ei; model: B1'),
        [T('Compute $n$, mean, standard deviation, $S$, $K$ and JB for each series.', 'Calculați $n$, media, abaterea standard, $S$, $K$ și JB pentru fiecare serie.'),
         T('Remove the single largest absolute return of each series and recompute $K$.', 'Eliminați cel mai mare randament în valoare absolută din fiecare serie și recalculați $K$.'),
-        T('Interpretation: what does the change in $K$ tell you about kurtosis as a summary of risk?', 'Interpretare: ce vă spune schimbarea lui $K$ despre aplatizare ca rezumat al riscului?')],
+        T('Interpretation: what does the change in $K$ tell you about kurtosis as a summary of risk?', 'Interpretare: ce vă spune schimbarea lui $K$ despre boltire ca rezumat al riscului?')],
        T('one table and two sentences', 'un tabel și două fraze'), size='footnotesize', nb='B2')
 
 D.frame(T('B2: Solution [Proposed]', 'B2: rezolvare [Propus]'), table(
@@ -445,7 +445,7 @@ D.frame(T('B2: Solution [Proposed]', 'B2: rezolvare [Propus]'), table(
       'Zilele eliminate: BET @{b2.bet.drop} ($@{b2.bet.drop_r}\\%$), Bitcoin @{b2.btc.drop} ($@{b2.btc.drop_r}\\%$), SNP @{b2.snp.drop} ($@{b2.snp.drop_r}\\%$)'),
     T('Farthest from the Normal distribution by $K$ and JB: the BET; all three rejected', 'Cel mai departe de distribuția Normală după $K$ și JB: BET; toate trei respinse'),
     T('Interpretation: one day out of thousands moves the kurtosis of Bitcoin from @{b2.btc.exkurt} to @{b2.btc.exkurt_drop1}; $K$ is a fragile summary, report it with the extremes',
-      'Interpretare: o singură zi din mii modifică aplatizarea Bitcoin de la @{b2.btc.exkurt} la @{b2.btc.exkurt_drop1}; $K$ este un rezumat fragil, raportați-l împreună cu extremele')) + qlsem(),
+      'Interpretare: o singură zi din mii modifică boltirea Bitcoin de la @{b2.btc.exkurt} la @{b2.btc.exkurt_drop1}; $K$ este un rezumat fragil, raportați-l împreună cu extremele')) + qlsem(),
     'footnotesize', instructor_only=True)
 
 D.task(T('B3: Normal or Student-$t$ for the BET? [Solved]', 'B3: distribuția Normală sau Student-$t$ pentru BET? [Rezolvat]'),
@@ -560,7 +560,7 @@ D.section('Part C: Open Questions and AI Critique', 'Partea C: întrebări desch
 D.task(T('C1: Are Bitcoin\'s Tails Getting Thinner? [Proposed]', 'C1: devin mai subțiri cozile Bitcoin? [Propus]'),
        T('has the tail of Bitcoin\'s daily returns become thinner since 2015, as its market matured?', 'a devenit mai subțire coada randamentelor zilnice ale Bitcoin din 2015, pe măsură ce piața s-a maturizat?'),
        T('Bitcoin and S\\&P 500 daily log returns, 2015--2026; models: B3, B5', 'randamentele logaritmice zilnice ale Bitcoin și S\\&P 500, 2015--2026; modele: B3, B5'),
-       [T('Fit a Student-$t$ and compute the excess kurtosis for each calendar year and each series.', 'Estimați o distribuție Student-$t$ și calculați excesul de aplatizare pentru fiecare an calendaristic și fiecare serie.'),
+       [T('Fit a Student-$t$ and compute the excess kurtosis for each calendar year and each series.', 'Estimați o distribuție Student-$t$ și calculați excesul de boltire pentru fiecare an calendaristic și fiecare serie.'),
         T('Compute the Spearman rank correlation between the year and $\\hat\\nu$.', 'Calculați corelația rangurilor Spearman între an și $\\hat\\nu$.'),
         T('Fit one $t$ on 2015--2020 and one on 2021--2026 and compare $\\hat\\nu$.', 'Estimați o distribuție $t$ pe 2015--2020 și una pe 2021--2026 și comparați $\\hat\\nu$.'),
         T('Propose one way to make the answer more reliable (intervals, other windows, other crypto assets).', 'Propuneți o cale de a face răspunsul mai robust (intervale, alte ferestre, alte active cripto).'),
@@ -582,7 +582,7 @@ D.frame(T('C2: Audit an AI Answer [Proposed]', 'C2: verificați un răspuns AI [
     T('A student asked an AI assistant: ``Describe the distribution of daily S\\&P 500 returns in 2010--2026.\'\' The answer:',
       'Un student a întrebat un asistent AI: „Descrie distribuția randamentelor zilnice ale S\\&P 500 în 2010--2026.” Răspunsul:'),
     T('\\aiprompt{(a) The excess kurtosis is @{c2.exkurt}; since the Normal distribution has kurtosis 0, the kurtosis of the S\\&P 500 is @{c2.exkurt}.}',
-      '\\aiprompt{(a) Excesul de aplatizare este @{c2.exkurt}; cum distribuția Normală are aplatizarea 0, aplatizarea S\\&P 500 este @{c2.exkurt}.}'),
+      '\\aiprompt{(a) Excesul de boltire este @{c2.exkurt}; cum distribuția Normală are boltirea 0, boltirea S\\&P 500 este @{c2.exkurt}.}'),
     T('\\aiprompt{(b) JB = @{c2.jb} with p = 0.000, which proves that the returns follow a Student-t distribution.}',
       '\\aiprompt{(b) JB = @{c2.jb} cu p = 0,000, ceea ce dovedește că randamentele urmează o distribuție Student-t.}'),
     T('\\aiprompt{(c) A Normal 4-sigma day happens once every @{c2.every} days; the @{c2.obs4} such days in @{c2.n} days are just bad luck.}',
@@ -598,7 +598,7 @@ D.frame(T('C2: Audit an AI Answer [Proposed]', 'C2: verificați un răspuns AI [
     'scriptsize')
 
 D.frame(T('C2: Solution [Proposed]', 'C2: rezolvare [Propus]'), items(
-    T('(a) Wrong: the Normal kurtosis is 3 (excess 0); kurtosis $= @{c2.exkurt} + 3 = @{c2.kurt}$', '(a) Greșit: aplatizarea Normală este 3 (excesul 0); aplatizarea $= @{c2.exkurt} + 3 = @{c2.kurt}$'),
+    T('(a) Wrong: the Normal kurtosis is 3 (excess 0); kurtosis $= @{c2.exkurt} + 3 = @{c2.kurt}$', '(a) Greșit: boltirea Normală este 3 (excesul 0); boltirea $= @{c2.exkurt} + 3 = @{c2.kurt}$'),
     T('(b) Wrong: JB only rejects normality; the fitted $t$ ($\\hat\\nu = @{c2.nu}$) is better by AIC, but its QQ plot still misses the extremes and it is symmetric',
       '(b) Greșit: JB doar respinge normalitatea; $t$ estimată ($\\hat\\nu = @{c2.nu}$) este mai bună după AIC, dar QQ plot-ul arată că nu reproduce extremele, iar distribuția este simetrică'),
     T('(c) Wrong: the Normal expectation is $@{c2.exp4}$ days; seeing @{c2.obs4} has Poisson probability about $@{c2.pp}$: the model is wrong, not the luck',
@@ -616,7 +616,7 @@ D.section('Wrap-Up', 'Încheiere')
 D.frame(T('What You Should Take from Today', 'Idei de reținut'), items(
     T('The Normal distribution makes 4-sigma days almost impossible; real markets have them every few months', 'Distribuția Normală face zilele de 4 sigma aproape imposibile; piețele reale au o asemenea zi la fiecare cîteva luni'),
     T('Lognormal prices: the median is below the mean by the volatility drag', 'Prețuri lognormale: mediana este sub medie, iar diferența provine din volatility drag'),
-    T('Skewness and kurtosis are fragile: report bootstrap intervals and the extremes', 'Asimetria și aplatizarea sînt fragile: raportați intervale bootstrap și extremele'),
+    T('Skewness and kurtosis are fragile: report bootstrap intervals and the extremes', 'Asimetria și boltirea sînt fragile: raportați intervale bootstrap și extremele'),
     T('The Student-$t$ fits much better than the Normal distribution, but not perfectly', 'Distribuția Student-$t$ descrie datele mult mai bine decît distribuția Normală, dar nu perfect'),
     T('Returns are nearly uncorrelated but not independent: their size is predictable', 'Randamentele sînt aproape necorelate, dar nu independente: mărimea lor este previzibilă'),
     T('An AI answer is a draft: check every definition, model and number', 'Un răspuns AI este o ciornă: verificați fiecare definiție, fiecare model și fiecare valoare numerică')))
