@@ -104,3 +104,10 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch8_engle_2017.png | https://commons.wikimedia.org/wiki/File:Robert_Engle_SantiagoWEAI2017.png | Econterms | CC BY-SA 4.0 | 2017-01-06 |
 | ch8_jpmorgan_23wall.jpg | https://commons.wikimedia.org/wiki/File:J._P._Morgan_%26_Company_Building_23_Wall_Street.jpg | Beyond My Ken | CC BY-SA 4.0 | 2012-02-26 |
 | ch8_cbot_1973.jpg | https://commons.wikimedia.org/wiki/File:20120105-OC-AMW-0425_(7042322619).jpg | U.S. Department of Agriculture | Public domain | 1973-05-31 |
+
+## Chapter 10 — VaR, ES and backtesting
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch10_bis_tower_2014.jpg | https://commons.wikimedia.org/wiki/File:Basel_Committee_on_Banking_Supervision_-_BCBS.jpg | Taxiarchos228 | CC BY-SA 4.0 | 2014-09-16 |
+| ch10_delbaen_1997.jpg | https://commons.wikimedia.org/wiki/File:ETH-BIB-Delbaen,_Freddy_(1946-)-Portr_16468.tif | ETH-Bibliothek Zürich, Bildarchiv (unknown photographer) | CC BY-SA 4.0 | 1997 |

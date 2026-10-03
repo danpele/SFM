@@ -376,14 +376,14 @@
                 id: 'var-es', num: 10,
                 title: { en: 'VaR, ES and backtesting', ro: 'VaR, ES și backtesting' },
                 topics: {
-                    en: ['Value-at-Risk and Expected Shortfall: definitions and properties (coherence)', 'Historical, parametric, Monte Carlo and filtered historical simulation', 'Backtesting: Kupiec, Christoffersen, the Basel traffic light'],
-                    ro: ['Value-at-Risk și Expected Shortfall: definiții și proprietăți (coerență)', 'Simulare istorică, metode parametrice, Monte Carlo și simulare istorică filtrată', 'Backtesting: testele Kupiec și Christoffersen, semaforul Basel']
+                    en: ['VaR 1% and ES 2.5%: definitions, coherence and subadditivity, elicitability; historical simulation, Normal, Student-t, Cornish–Fisher and EVT on six markets', 'Conditional VaR (GARCH-t, filtered historical simulation) through 2008 and 2020; portfolio VaR, tail dependence and Gaussian and t copulas', 'Backtesting: Kupiec, Christoffersen, the Basel traffic light, the Acerbi–Székely test of ES'],
+                    ro: ['VaR 1% și ES 2,5%: definiții, coerență și subaditivitate, elicitabilitate; simulare istorică, distribuția Normală, Student-t, Cornish–Fisher și EVT pe șase piețe', 'VaR condiționat (GARCH-t, simulare istorică filtrată) în 2008 și 2020; VaR de portofoliu, dependența în cozi, copulele Gaussiană și t', 'Backtesting: testele Kupiec și Christoffersen, semaforul Basel, testul Acerbi–Székely pentru ES']
                 },
                 links: {
-                    en: [soon('slides'), soon('seminar'),
-                         nb('Quantlets/Ch_11/SFM_ch11_methods_comparison/SFM_ch11_methods_comparison.ipynb'), ql('Quantlets/Ch_11')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter11_var_es_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar_var_es_ro.pdf'),
-                         nb('Quantlets/Ch_11/SFM_ch11_methods_comparison/SFM_ch11_methods_comparison.ipynb'), ql('Quantlets/Ch_11')]
+                    en: [pdf('slides', 'EN/Courses/chapter10_var_es_backtesting.pdf'), pdf('seminar', 'EN/Seminars/seminar10_var_es_backtesting.pdf'),
+                         nb('notebooks/EN/chapter10_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter10_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_10')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol10_var_es_backtesting.pdf'), pdf('seminar', 'RO/Seminarii/seminar10_var_es_backtesting_ro.pdf'),
+                         nb('notebooks/EN/chapter10_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter10_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_10')]
                 },
                 quantinar: q('statRisk')
             },
