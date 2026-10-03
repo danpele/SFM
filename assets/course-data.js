@@ -451,10 +451,15 @@
                 id: 'systemic', num: 15,
                 title: { en: 'Systemic risk', ro: 'Risc sistemic' },
                 topics: {
-                    en: ['Contagion and interconnectedness', 'CoVaR and ΔCoVaR', 'Network measures of systemic risk'],
-                    ro: ['Contagiune și interconectare', 'CoVaR și ΔCoVaR', 'Măsuri de rețea pentru riscul sistemic']
+                    en: ['Channels of systemic risk: contagion, common exposures, fire sales, runs; too big and too interconnected to fail; 2008, the euro area 2011–2012, March 2020, SVB and Credit Suisse 2023', 'Correlation and tail dependence in crises (Forbes–Rigobon, t copula); CoVaR and ΔCoVaR by quantile regression; MES, LRMES and SRISK', 'Granger networks and Diebold–Yilmaz connectedness; macroprudential policy: Basel III buffers, ESRB, CNSM and BNR'],
+                    ro: ['Canalele riscului sistemic: contagiune, expuneri comune, vînzări forțate, retrageri masive de depozite; too big și too interconnected to fail; 2008, zona euro 2011–2012, martie 2020, SVB și Credit Suisse 2023', 'Corelația și dependența în cozi în crize (Forbes–Rigobon, copula t); CoVaR și ΔCoVaR prin regresie cuantilică; MES, LRMES și SRISK', 'Rețele Granger și conectivitatea Diebold–Yilmaz; politica macroprudențială: amortizoarele Basel III, ESRB, CNSM și BNR']
                 },
-                links: { en: [], ro: [] },
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter15_systemic_risk.pdf'), pdf('seminar', 'EN/Seminars/seminar15_systemic_risk.pdf'),
+                         nb('notebooks/EN/chapter15_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter15_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_15')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol15_risc_sistemic.pdf'), pdf('seminar', 'RO/Seminarii/seminar15_risc_sistemic_ro.pdf'),
+                         nb('notebooks/EN/chapter15_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter15_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_15')]
+                },
                 quantinar: q('frm', 'cryptoNetworks')
             },
             {

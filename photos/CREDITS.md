@@ -157,3 +157,16 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch14_eu_parliament_2010.jpg | https://commons.wikimedia.org/wiki/File:Hemicycle_of_Louise_Weiss_building_of_the_European_Parliament,_Strasbourg.jpg | jeffowenphotos | CC BY 2.0 | 2010-05-18 |
 | ch14_us_capitol.jpg | https://commons.wikimedia.org/wiki/File:United_States_Capitol_-_west_front.jpg | Architect of the Capitol | Public domain | 1997 |
 | ch14_sornette_2012.jpg | https://commons.wikimedia.org/wiki/File:Didier_Sornette.jpg | Didier Sornette | CC BY-SA 3.0 DE | 2012-03-09 |
+
+## Chapter 15 — Systemic risk
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch15_northern_rock_2007.jpg | https://commons.wikimedia.org/wiki/File:Northern_Rock_Queue.jpg | Dominic Alves | CC BY 2.0 | 2007-09-14 |
+| ch15_ecb_frankfurt_2015.jpg | https://commons.wikimedia.org/wiki/File:Seat_of_the_European_Central_Bank_and_Frankfurt_Skyline_at_dawn_20150422_1.jpg | DXR | CC BY-SA 4.0 | 2015-04-22 |
+| ch15_svb_hq_2023.jpg | https://commons.wikimedia.org/wiki/File:3003_West_Tasman_Drive_entrance_2,_Santa_Clara,_California.jpg | Minh Nguyen | CC BY-SA 4.0 | 2023-03-13 |
+| ch15_credit_suisse_zurich_2013.jpg | https://commons.wikimedia.org/wiki/File:Credit_Suisse_Z%C3%BCrich.jpg | Thomas Wolf, www.foto-tw.de | CC BY-SA 3.0 DE | 2013-07-24 |
+| ch15_adrian_2025.jpg | https://commons.wikimedia.org/wiki/File:Tobias_Adrian_2025.jpg | Chianoo Adrian | CC BY 4.0 | 2025-07-19 |
+| ch15_brunnermeier_2015.jpg | https://commons.wikimedia.org/wiki/File:Markus_Konrad_Brunnermeier.jpg | Iitkgpswapnil | CC BY-SA 4.0 | 2015-05-06 |
+| ch15_acharya_2014.jpg | https://commons.wikimedia.org/wiki/File:Viral_Acharya_(2014).jpg | MeJudice | CC BY 3.0 | 2014 |
+| ch15_bnr_palace_2018.jpg | https://commons.wikimedia.org/wiki/File:Bucuresti,_Romania._BANCA_NATIONALA_A_ROMANIEI_(2)_(B-II-m-A-19023).jpg | Britchi Mirela | CC BY-SA 4.0 | 2018-07-21 |

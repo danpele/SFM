@@ -13,6 +13,7 @@ def body(tex):
     s=re.sub(r'\\begin\{(equation|align|gather)\*?\}.*?\\end\{\1\*?\}','',s,flags=re.S)
     s=s.replace(r'\$',' ')  # dollar sign in text, not a math delimiter
     s=re.sub(r'\$[^$]*\$','',s)
+    s=re.sub(r'\\imgcredit\{[^}]*\}\{[^}]*\}','',s)  # imgcredit2: both arguments (author names are not acronyms)
     s=re.sub(r'\\(href|url|texttt|quantletleft|sfmquantlet|quantlet|imgcredit|includegraphics|citeAFML|colaburl|qlurl|cite|citep|citet|bibitem|label|ref|hyperlink|hypertarget|sfmapplink|sfmchlink|sfmchlinkt)(\[[^\]]*\])?\{[^}]*\}','',s)
     s=re.sub(r'\\[a-zA-Z]+\*?','',s)
     return s

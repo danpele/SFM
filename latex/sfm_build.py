@@ -127,6 +127,7 @@ def render(tex, lang, values=None):
         tex = re.sub(r'(⁅[^⁆]*⁆),(\s*)(⁅[^⁆]*\.[^⁆]*⁆)', r'\1;\2\3', tex)
         tex = re.sub(r'⁅([^⁆]*)⁆', lambda m: re.sub(r'(\d)\.(\d)', r'\1{,}\2', m.group(1)), tex)
         tex = re.sub(r'(?<!\\)\$(.+?)(?<!\\)\$', lambda m: '$' + re.sub(r'(\d)\.(\d)', r'\1{,}\2', m.group(1)) + '$', tex)
+        tex = re.sub(r'\b(ES|VaR|CoVaR|MES) (\d+)\.(\d+)\\%', r'\1 \2,\3\\%', tex)   # risk-measure levels in plain text: ES 2,5%
         tex = ro_de(tex)
     tex = re.sub(r'⁅([^⁆]*)⁆', r'\1', tex)
     leftover = MARK.search(tex) or re.search(r'⟦|⟧', tex)
