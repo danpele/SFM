@@ -188,7 +188,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. CE ESTE UN SCOR DE CREDIT
 # =============================================================================
-D.section('What a Credit Score Is', 'Ce este un scor de credit')
+D.section('What a Credit Score Is', 'Scorul de credit: definiție')
 
 D.frame(T('The Lending Decision', 'Decizia de creditare'), items(
     (T('An applicant asks for a loan; the bank must decide \\textbf{accept} or \\textbf{reject}, and at which interest rate',

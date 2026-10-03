@@ -569,7 +569,7 @@ window.SFM_DATA.quizzes['var-es'] = {
                     "O eroare în ponderi",
                     "Regula rădăcinii pătrate a timpului",
                     "Diversificarea: cu o corelație sub 1, sigma_p este sub suma ponderată a abaterilor standard",
-                    "Efectul de fantomă"
+                    "Ghost effect"
                 ],
                 "correctExplanation": "sigma_p^2 = w1^2 s1^2 + w2^2 s2^2 + 2 w1 w2 rho s1 s2 este mai mic decît (w1 s1 + w2 s2)^2 cînd rho < 1.",
                 "incorrectExplanation": "Ponderile sînt de 0,5 fiecare, orizontul este o zi și nu intervine nicio fereastră: diferența este beneficiul diversificării în modelul Normal."

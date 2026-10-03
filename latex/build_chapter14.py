@@ -374,7 +374,7 @@ chart(T('Efficiency Through Time', 'Eficiența în timp'), 'sfm_ch14_rolling_vr'
       'Interpretare: la Bitcoin, @{rvr.btc.rej}\\% din @{rvr.btc.n} de ferestre resping; cu statistica i.i.d.\\ $Z(5)$, proporția ar fi @{rvr.btc.iid}\\% pentru Bitcoin și @{rvr.sp500.iid}\\% pentru S\\&P 500: ignorarea volatility clustering produce respingeri false')],
     h='0.46\\textheight')
 
-D.frame(T('How Efficiency Evolved', 'Cum a evoluat eficiența'), items(
+D.frame(T('How Efficiency Evolved', 'Evoluția eficienței'), items(
     (T('\\refUrquhart: Bitcoin was inefficient in 2010--2016 as a whole, but moved towards efficiency after 2013', '\\refUrquhart: Bitcoin a fost ineficient în 2010--2016 ca întreg, dar s-a apropiat de eficiență după 2013'),
      [T('\\refNC: a power transformation of the same returns passes the tests: the early verdict was fragile', '\\refNC: o transformare de tip putere a acelorași randamente trece testele: verdictul inițial era fragil'),
       T('\\refTL: an adjusted measure of inefficiency; crypto markets became more efficient after 2017', '\\refTL: o măsură ajustată a ineficienței; piețele cripto au devenit mai eficiente după 2017')]),
@@ -571,7 +571,7 @@ D.frame(T('What Is a Stablecoin?', 'Ce este un stablecoin?'), table(
     (T('\\textbf{Stablecoin}: a crypto asset designed to keep a fixed price, usually 1 USD (the \\textbf{peg})', '\\textbf{Stablecoin}: un activ cripto conceput să păstreze un preț fix, de obicei 1 USD (\\textbf{paritatea}, peg)'),
      [T('used as cash on crypto exchanges and for payments across borders; DefiLlama classifies today @{sup.fiat}\\% of the supply as fiat-backed, @{sup.crypto}\\% as crypto-backed', 'folosit ca numerar pe exchange-uri și pentru plăți transfrontaliere; DefiLlama clasifică azi @{sup.fiat}\\% din ofertă ca garantată fiat și @{sup.crypto}\\% ca garantată cripto')])), 'footnotesize')
 
-D.frame(T('How a Peg Is Held: Arbitrage', 'Cum se menține paritatea: arbitrajul'), items(
+D.frame(T('How a Peg Is Held: Arbitrage', 'Menținerea parității: arbitrajul'), items(
     (T('Primary market: authorised traders create a coin for 1 USD at the issuer, or redeem it for 1 USD', 'Piața primară: tranzacționari autorizați creează o monedă pentru 1 USD la emitent sau o răscumpără pentru 1 USD'),
      [T('price 0.99 on exchanges: buy at 0.99, redeem at 1.00, profit 1 cent: demand pushes the price back up', 'prețul 0,99 pe exchange-uri: cumpărăm la 0,99, răscumpărăm la 1,00, profit 1 cent: cererea împinge prețul înapoi în sus'),
       T('price 1.01: create at 1.00, sell at 1.01: supply pushes the price down', 'prețul 1,01: creăm la 1,00, vindem la 1,01: oferta împinge prețul în jos')]),

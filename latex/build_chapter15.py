@@ -699,7 +699,7 @@ D.frame(T('Basel III Capital Buffers', 'Amortizoarele de capital din Basel III')
     ph('bis', T('The BIS tower in Basel', 'Turnul BIS din Basel'), h='0.36\\textheight'),
     wl='0.62', wr='0.34'), 'footnotesize')
 
-D.frame(T('Who Does It: the ESRB and the BNR', 'Cine aplică politica: ESRB și BNR'), cols(items(
+D.frame(T('Who Does It: the ESRB and the BNR', 'Autoritățile macroprudențiale: ESRB și BNR'), cols(items(
     (T('\\textbf{ESRB} (European Systemic Risk Board), set up in 2010 after the crisis, chaired by the President of the ECB \\refESRB', '\\textbf{ESRB} (European Systemic Risk Board, Comitetul European pentru Risc Sistemic), înființat în 2010, după criză, condus de președintele ECB \\refESRB'),
      [T('monitors systemic risk in the EU, issues warnings and recommendations to national authorities', 'urmărește riscul sistemic în UE și emite avertismente și recomandări către autoritățile naționale')]),
     (T('Romania: \\textbf{CNSM} (Comitetul Național pentru Supravegherea Macroprudențială), with the BNR, the ASF (financial supervisory authority) and the Government \\refCNSM',

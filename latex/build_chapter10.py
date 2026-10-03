@@ -423,7 +423,7 @@ D.frame(T('Worked Example: Historical Simulation on the S\\&P 500', 'Exemplu luc
       T('ES 2.5\\%: the average of the $\\lceil @{hs.n25} \\rceil = @{hs.k25}$ worst days: $@{m.sp500.hs.e}\\%$', 'ES 2,5\\%: media celor mai proaste $\\lceil @{hs.n25} \\rceil = @{hs.k25}$ zile: $@{m.sp500.hs.e}\\%$')]),
     (T('The window $n$ is a trade-off', 'Fereastra $n$ este un compromis'),
      [T('short (250 days): reacts, but VaR 1\\% rests on 3 observations; long (all data): stable, but blind to today\'s volatility', 'scurtă (250 de zile): reacționează, dar VaR 1\\% se bazează pe 3 observații; lungă (toate datele): stabilă, dar insensibilă la volatilitatea de azi'),
-      T('\\textbf{ghost effect}: a crash day changes VaR when it enters the window and again, abruptly, $n$ days later when it leaves', '\\textbf{efectul de fantomă}: o zi de crah schimbă VaR cînd intră în fereastră și din nou, brusc, după $n$ zile, cînd iese din ea')])), 'footnotesize')
+      T('\\textbf{ghost effect}: a crash day changes VaR when it enters the window and again, abruptly, $n$ days later when it leaves', '\\textbf{ghost effect}: o zi de crah schimbă VaR cînd intră în fereastră și din nou, brusc, după $n$ zile, cînd iese din ea')])), 'footnotesize')
 
 D.frame(T('How Precise Is a Historical VaR?', 'Precizia unui VaR istoric'), items(
     (T('A VaR estimate is a statistic: it has a sampling error; we measure it with the bootstrap (Chapter 2)', 'O estimare VaR este o statistică: are o eroare de eșantionare; o măsurăm prin bootstrap (Capitolul 2)'),
@@ -543,7 +543,7 @@ D.frame(T('Rolling Forecasts: the Design', 'Prognoze pe fereastră mobilă: desi
 chart(T('VaR 1\\% through 2008 and 2020', 'VaR 1\\% în 2008 și în 2020'), 'sfm_ch10_rolling_var', 'SFM_ch10_conditional_var', [
     T('S\\&P 500: daily returns and minus the VaR 1\\% forecasts of the four methods; dots: exceptions of the HS VaR', 'S\\&P 500: randamentele zilnice și minus prognozele VaR 1\\% ale celor patru metode; punctele: depășirile VaR HS'),
     T('HS and Normal react months late: the 500-day window changes slowly; GARCH-t and FHS jump within days', 'HS și metoda Normală reacționează cu luni de întîrziere: fereastra de 500 de zile se schimbă încet; GARCH-t și FHS cresc brusc în cîteva zile'),
-    T('Interpretation: after the crisis HS stays high for two years (the ghost effect), while GARCH-t returns to normal levels', 'Interpretare: după criză, HS rămîne ridicat timp de doi ani (efectul de fantomă), în timp ce GARCH-t revine la niveluri normale')],
+    T('Interpretation: after the crisis HS stays high for two years (the ghost effect), while GARCH-t returns to normal levels', 'Interpretare: după criză, HS rămîne ridicat timp de doi ani (ghost effect), în timp ce GARCH-t revine la niveluri normale')],
     h='0.52\\textheight')
 
 
@@ -576,7 +576,7 @@ D.frame(T('Which Method When?', 'Alegerea metodei'), table(
 
 D.recap(('Conditional VaR', 'VaR condiționat'), [
     T('$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: GARCH-t (parametric $z$) or FHS (empirical $z$)', '$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: GARCH-t ($z$ parametric) sau FHS ($z$ empiric)'),
-    T('Conditional VaR follows the storms; window-based VaR lags and keeps ghosts', 'VaR condiționat urmărește furtunile; VaR pe fereastră întîrzie și păstrează fantomele'),
+    T('Conditional VaR follows the storms; window-based VaR lags and keeps ghosts', 'VaR condiționat urmărește furtunile; VaR pe fereastră întîrzie și păstrează ghost effect-ul'),
     T('In 2008 and 2020 the conditional methods had a few times fewer exceptions', 'În 2008 și 2020, metodele condiționate au avut de cîteva ori mai puține depășiri')])
 
 # =============================================================================
