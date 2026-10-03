@@ -791,7 +791,7 @@ D.frame(T('Fact 2: Aggregational Gaussianity', 'Faptul 2: gaussianitatea agregat
     T('The stylised fact: the shape changes with the horizon; it is not the same at all time scales \\refCont', 'Faptul stilizat: forma se schimbă cu orizontul; nu este aceeași la toate scările de timp \\refCont'),
     (T('Price to pay: fewer observations', 'Prețul plătit: mai puține observații'),
      [T('S\\&P 500, @{years.span} years: @{ag.n1} daily, @{ag.n21} monthly and @{ag.n63} quarterly returns', 'S\\&P 500, @{years.span} ani: @{ag.n1} randamente zilnice, @{ag.n21} randamente lunare și @{ag.n63} randamente trimestriale'),
-      T('estimates of kurtosis at long horizons are very noisy', 'estimările aplatizării pe orizonturi lungi sînt foarte imprecise')])))
+      T('estimates of kurtosis at long horizons are very noisy', 'estimările boltirii pe orizonturi lungi sînt foarte imprecise')])))
 
 chart(T('Fact 2: Kurtosis Falls with the Horizon', 'Faptul 2: boltirea scade cu orizontul'), 'sfm_ch2_aggregation', 'SFM_ch2_cont_stylised_facts', [
     T('Excess kurtosis, daily $\\to$ monthly $\\to$ quarterly: S\\&P 500 @{ag.sp500.1} $\\to$ @{ag.sp500.21} $\\to$ @{ag.sp500.63}; BET @{ag.bet.1} $\\to$ @{ag.bet.21} $\\to$ @{ag.bet.63}; Bitcoin @{ag.btc.1} $\\to$ @{ag.btc.21} $\\to$ @{ag.btc.63}',

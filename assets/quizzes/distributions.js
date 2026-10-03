@@ -320,7 +320,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "Resampling shows how much the kurtosis moves when a few extreme days are or are not drawn: far more than $\\sqrt{24/n}$."
             },
             "ro": {
-                "title": "Precizia aplatizării",
+                "title": "Precizia boltirii",
                 "text": "Pentru randamentele S&P 500, $\\sqrt{24/n} \\approx 0{,}08$, dar un interval bootstrap de 95% pentru excesul de boltire este circa [6,7; 20,6]. De ce?",
                 "options": [
                     "$\\sqrt{24/n}$ presupune date Normale; cu cozi groase boltirea depinde de cîteva zile extreme",
