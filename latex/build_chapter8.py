@@ -344,19 +344,19 @@ D.frame(T('Worked Example: One EWMA Update', 'Exemplu rezolvat: o actualizare EW
      [T('the shock fades by 6\\% per day; it never drops out abruptly', 'șocul se atenuează cu 6\\% pe zi; nu dispare niciodată brusc')]),
     T('A 63-day window would add $9/63 = 0.14$ to the variance today and remove this contribution at once, 63 days later', 'O fereastră de 63 de zile ar adăuga azi $9/63 = 0{,}14$ la varianță și ar elimina dintr-odată această contribuție după 63 de zile')))
 
-chart(T('The Ghost Effect: March--June 2020', 'Efectul de fantomă: martie--iunie 2020'), 'sfm_ch8_ghost', 'SFM_ch8_ewma', [
+chart(T('The Ghost Effect: March--June 2020', 'Ghost effect: martie--iunie 2020'), 'sfm_ch8_ghost', 'SFM_ch8_ewma', [
     T('S\\&P 500: 63-day rolling volatility and EWMA volatility ($\\lambda = 0.94$), annualised; bars: $|r_t|$ on the same annual scale',
       'S\\&P 500: volatilitatea pe fereastra mobilă de 63 de zile și volatilitatea EWMA ($\\lambda = 0{,}94$), anualizate; barele: $|r_t|$ pe aceeași scală anuală'),
     T('\\textbf{Question for the room}: why does the blue line fall sharply in mid-June 2020, on a calm day?', '\\textbf{Întrebare pentru sală}: de ce scade brusc linia albastră la mijlocul lui iunie 2020, într-o zi liniștită?')],
     h='0.54\\textheight')
 
-D.frame(T('Interpretation: Ghosts and Fading Memory', 'Interpretarea efectului de fantomă'), items(
+D.frame(T('Interpretation: Ghosts and Fading Memory', 'Interpretarea ghost effect'), items(
     (T('\\textbf{Answer}: on @{gh.dropd} the return of @{gh.left} ($@{gh.leftr}\\%$) left the 63-day window', '\\textbf{Răspuns}: pe @{gh.dropd}, randamentul din @{gh.left} ($@{gh.leftr}\\%$) a ieșit din fereastra de 63 de zile'),
      [T('the rolling volatility fell from @{gh.before}\\% to @{gh.after}\\% in one day, with no news at all', 'volatilitatea pe fereastra mobilă a scăzut de la @{gh.before}\\% la @{gh.after}\\% într-o singură zi, fără nicio știre'),
-      T('this artefact is the \\textbf{ghost effect}: an old shock leaves the window abruptly', 'acest artefact este \\textbf{efectul de fantomă}: un șoc vechi iese brusc din fereastră')]),
+      T('this artefact is the \\textbf{ghost effect}: an old shock leaves the window abruptly', 'acest artefact este \\textbf{ghost effect}: un șoc vechi iese brusc din fereastră')]),
     (T('EWMA reacts faster and forgets smoothly', 'EWMA reacționează mai repede și uită treptat'),
      [T('EWMA peak: @{gh.epeak}\\% on @{gh.epeakd}; 63-day peak: @{gh.rpeak}\\% only on @{gh.rpeakd}', 'vîrful EWMA: @{gh.epeak}\\% pe @{gh.epeakd}; vîrful pe 63 de zile: @{gh.rpeak}\\% abia pe @{gh.rpeakd}'),
-      T('on the ghost day EWMA changed by only $@{gh.edrop}$ percentage points', 'în ziua efectului de fantomă, EWMA s-a modificat cu doar $@{gh.edrop}$ puncte procentuale')]),
+      T('on the ghost day EWMA changed by only $@{gh.edrop}$ percentage points', 'în ziua ghost effect, EWMA s-a modificat cu doar $@{gh.edrop}$ puncte procentuale')]),
     T('Price of the speed: EWMA is noisier than a long window and has no long-run level to return to', 'Prețul vitezei: EWMA este mai zgomotos decît o fereastră lungă și nu are un nivel de lungă durată spre care să revină')) + ql('SFM_ch8_ewma'))
 
 D.frame(T('EWMA and GARCH: a Pointer to Chapter 9', 'EWMA și GARCH: trimitere la Capitolul 9'), items(
@@ -372,7 +372,7 @@ D.frame(T('EWMA and GARCH: a Pointer to Chapter 9', 'EWMA și GARCH: trimitere l
 
 D.recap(('EWMA and RiskMetrics', 'EWMA și RiskMetrics'), [
     T('$\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1-\\lambda)r_{t-1}^2$; RiskMetrics: $\\lambda = 0.94$ for daily data', '$\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1-\\lambda)r_{t-1}^2$; RiskMetrics: $\\lambda = 0{,}94$ pentru date zilnice'),
-    T('Geometric weights: half-life @{ew.94.hl} days for $\\lambda = 0.94$; no ghost effect', 'Ponderi geometrice: timp de înjumătățire @{ew.94.hl} zile pentru $\\lambda = 0{,}94$; fără efect de fantomă'),
+    T('Geometric weights: half-life @{ew.94.hl} days for $\\lambda = 0.94$; no ghost effect', 'Ponderi geometrice: timp de înjumătățire @{ew.94.hl} zile pentru $\\lambda = 0{,}94$; fără ghost effect'),
     T('EWMA = IGARCH(1,1) without a constant: flat forecasts, no mean reversion', 'EWMA = IGARCH(1,1) fără constantă: prognoze constante, fără revenire la medie')])
 
 # =============================================================================
@@ -840,7 +840,7 @@ D.section('Summary', 'Rezumat')
 D.frame(T('Key Takeaways', 'Idei de reținut'), items(
     T('Volatility is the standard deviation of returns; it is latent and changes over time; annualise with the actual frequency',
       'Volatilitatea este abaterea standard a randamentelor; este latentă și variază în timp; se anualizează cu frecvența reală'),
-    T('Historical windows trade speed against noise; EWMA ($\\lambda = 0.94$) reacts fast and avoids ghosts', 'La ferestrele istorice, viteza de reacție se plătește cu zgomot; EWMA ($\\lambda = 0{,}94$) reacționează repede și evită efectul de fantomă'),
+    T('Historical windows trade speed against noise; EWMA ($\\lambda = 0.94$) reacts fast and avoids ghosts', 'La ferestrele istorice, viteza de reacție se plătește cu zgomot; EWMA ($\\lambda = 0{,}94$) reacționează repede și evită ghost effect'),
     T('Range estimators use the daily path: far more efficient, but biased by overnight jumps and thin trading; Yang--Zhang adds the night',
       'Estimatorii de amplitudine folosesc traiectoria zilei: mult mai eficienți, dar deplasați de salturile overnight și de tranzacționarea rară; Yang--Zhang adaugă noaptea'),
     T('Clustering: $|r_t|$ and $r_t^2$ are autocorrelated; detect it with Ljung--Box on $r_t^2$ and ARCH-LM', 'Volatility clustering: $|r_t|$ și $r_t^2$ sînt autocorelate; se detectează cu Ljung--Box pe $r_t^2$ și cu ARCH-LM'),

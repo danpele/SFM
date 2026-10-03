@@ -346,15 +346,16 @@
                 id: 'vol-estimators', num: 8,
                 title: { en: 'Volatility estimators', ro: 'Estimatori de volatilitate' },
                 topics: {
-                    en: ['Historical volatility and EWMA', 'Range-based estimators: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang', 'Volatility clustering: ACF of squared returns'],
-                    ro: ['Volatilitatea istorică și EWMA', 'Estimatori range-based: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang', 'Volatility clustering: funcția de autocorelație (ACF) a pătratelor randamentelor']
+                    en: ['Volatility as a latent quantity; historical windows, EWMA (RiskMetrics) and the ghost effect', 'Range-based estimators: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang; realised volatility', 'Volatility clustering (ACF of squared returns, Ljung–Box, ARCH-LM); VIX, leverage effect, forecast evaluation with QLIKE'],
+                    ro: ['Volatilitatea ca mărime latentă; ferestre istorice, EWMA (RiskMetrics) și ghost effect', 'Estimatori pe baza amplitudinii zilnice: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang; volatilitatea realizată', 'Volatility clustering (ACF al randamentelor la pătrat, Ljung–Box, ARCH-LM); VIX, leverage effect, evaluarea prognozelor cu QLIKE']
                 },
                 links: {
-                    en: [soon('slides'), soon('seminar'),
-                         nb('Quantlets/SFM_volatility_estimators/SFM_volatility_estimators.ipynb'), ql('Quantlets/SFM_volatility_estimators')],
-                    ro: [pdf('slides', 'RO/Courses/20260310_chapter7_volatility_estimators_ro.pdf'), pdf('seminar', 'RO/Seminars/seminar4_volatilitate_ro.pdf'),
-                         nb('Quantlets/SFM_volatility_estimators/SFM_volatility_estimators.ipynb'), ql('Quantlets/SFM_volatility_estimators')]
-                }
+                    en: [pdf('slides', 'EN/Courses/chapter8_volatility_estimators.pdf'), pdf('seminar', 'EN/Seminars/seminar8_volatility_estimators.pdf'),
+                         nb('notebooks/EN/chapter8_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter8_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_08')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol8_estimatori_volatilitate.pdf'), pdf('seminar', 'RO/Seminarii/seminar8_estimatori_volatilitate_ro.pdf'),
+                         nb('notebooks/EN/chapter8_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter8_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_08')]
+                },
+                quantinar: q('tsaPython')
             },
             {
                 id: 'garch', num: 9,

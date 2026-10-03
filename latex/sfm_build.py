@@ -329,6 +329,8 @@ class Deck:
         for lang in ('en', 'ro'):
             rel = deck(self.n, self.kind, lang)
             tex = self.head(lang) + render(src.replace('@@TITLE@@', self.title_block(lang), 1), lang, values)
+            # a citation macro followed by a space would swallow it (\refX text): add {} after it
+            tex = re.sub(r'(\\ref[A-Z][A-Za-z]*)(?= [^\s])', r'\1{}', tex)
             path = os.path.join(ROOT, rel)
             os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, 'w', encoding='utf-8') as f:

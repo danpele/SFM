@@ -95,3 +95,12 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch9_engle_2022.jpg | https://commons.wikimedia.org/wiki/File:0603-Kraneshares_KRBN-RobertEngle-JonDemske-16_(cropped).jpg | Jon Demske | CC BY-SA 4.0 | 2022-06-03 |
 | ch9_stockholm_concert_hall.jpg | https://commons.wikimedia.org/wiki/File:Konserthuset_Stockholm_(Stockholm_Concert_Hall).jpg | Karen Zhou | CC BY-SA 4.0 | 2025-12-05 |
 | ch9_ucsd_geisel_2010.jpg | https://commons.wikimedia.org/wiki/File:Geisel_Library,_UC_San_Diego.jpg | Stephen Bay | CC BY 4.0 | 2010-06-24 |
+
+## Chapter 8 — Volatility estimators and volatility clustering
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch8_amsterdam_1987.jpg | https://commons.wikimedia.org/wiki/File:Effectenbeurs_Amsterdam_na_koersval,_Bestanddeelnr_934-1094.jpg | Bart Molendijk / Anefo | CC0 | 1987-10-21 |
+| ch8_engle_2017.png | https://commons.wikimedia.org/wiki/File:Robert_Engle_SantiagoWEAI2017.png | Econterms | CC BY-SA 4.0 | 2017-01-06 |
+| ch8_jpmorgan_23wall.jpg | https://commons.wikimedia.org/wiki/File:J._P._Morgan_%26_Company_Building_23_Wall_Street.jpg | Beyond My Ken | CC BY-SA 4.0 | 2012-02-26 |
+| ch8_cbot_1973.jpg | https://commons.wikimedia.org/wiki/File:20120105-OC-AMW-0425_(7042322619).jpg | U.S. Department of Agriculture | Public domain | 1973-05-31 |

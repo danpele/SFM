@@ -286,7 +286,7 @@ D.frame(T('What You Need for Today (2/5): EWMA', 'Noțiuni necesare azi (2/5): E
      [T('\\textbf{half-life} $\\ln 0.5/\\ln\\lambda$: the lag at which the weight halves', '\\textbf{timpul de înjumătățire} $\\ln 0{,}5/\\ln\\lambda$: decalajul la care ponderea se înjumătățește'),
       T('days that carry 99\\% of the weight: $\\ln 0.01/\\ln\\lambda$', 'zilele care cumulează 99\\% din pondere: $\\ln 0{,}01/\\ln\\lambda$')]),
     T('A rolling window gives weight $1/n$ to each of the last $n$ days: when a big day leaves the window, the estimate drops abruptly (the \\textbf{ghost effect})',
-      'O fereastră mobilă dă ponderea $1/n$ fiecăreia dintre ultimele $n$ zile: cînd o zi cu o variație mare iese din fereastră, estimarea scade brusc (\\textbf{efectul de fantomă})')))
+      'O fereastră mobilă dă ponderea $1/n$ fiecăreia dintre ultimele $n$ zile: cînd o zi cu o variație mare iese din fereastră, estimarea scade brusc (\\textbf{ghost effect})')))
 
 D.frame(T('What You Need for Today (3/5): Range-Based Estimators', 'Noțiuni necesare azi (3/5): estimatorii de amplitudine'), items(
     (T('\\textbf{OHLC} prices of day $t$: open $O_t$, high $H_t$, low $L_t$, close $C_t$; logs in \\%:', 'Prețurile \\textbf{OHLC} ale zilei $t$: deschiderea $O_t$, maximul $H_t$, minimul $L_t$, închiderea $C_t$; logaritmi în \\%:'),
@@ -493,7 +493,7 @@ D.frame(T('B1: Solution [Solved]', 'B1: rezolvare [Rezolvat]'), fig('ch8_sem_b1'
       'Maximele din 2020: @{b1.max.w21}\\% (@{b1.maxd.w21}), @{b1.max.w63}\\% (@{b1.maxd.w63}), @{b1.max.w252}\\% (@{b1.maxd.w252}), EWMA @{b1.max.ewma}\\% (@{b1.maxd.ewma})'),
     T('On @{b1.ghost} the 63-day volatility fell from @{b1.g63b}\\% to @{b1.g63a}\\% (the crash day of 16 March left the window); EWMA moved from @{b1.geb}\\% to @{b1.gea}\\%',
       'Pe @{b1.ghost}, volatilitatea pe 63 de zile a scăzut de la @{b1.g63b}\\% la @{b1.g63a}\\% (ziua crahului din 16 martie a ieșit din fereastră); EWMA a trecut de la @{b1.geb}\\% la @{b1.gea}\\%'),
-    T('Interpretation: EWMA; the drop of the 63-day estimate is the ghost effect, not news; the 252-day value still reflects March', 'Interpretare: EWMA; scăderea estimării pe 63 de zile este efectul de fantomă, nu o știre; valoarea pe 252 de zile reflectă încă luna martie')) + qlsem(), 'scriptsize')
+    T('Interpretation: EWMA; the drop of the 63-day estimate is the ghost effect, not news; the 252-day value still reflects March', 'Interpretare: EWMA; scăderea estimării pe 63 de zile este ghost effect, nu o știre; valoarea pe 252 de zile reflectă încă luna martie')) + qlsem(), 'scriptsize')
 
 D.task(T('B2: BET and Bitcoin [Proposed]', 'B2: BET și Bitcoin [Propus]'),
        T('how volatile are the BET and Bitcoin compared with the S\\&P 500, today and at the end of 2017? Model: B1.',
@@ -703,7 +703,7 @@ D.section('Wrap-Up', 'Încheiere')
 
 D.frame(T('What You Should Take from Today', 'Idei de reținut'), items(
     T('Annualise with the actual frequency: 252 for stock markets, 365 for Bitcoin', 'Anualizați cu frecvența reală: 252 pentru piețele de acțiuni, 365 pentru Bitcoin'),
-    T('Short windows react fast, long windows smooth the estimate; EWMA reacts without ghost effects', 'Ferestrele scurte reacționează repede, cele lungi netezesc estimarea; EWMA reacționează fără efect de fantomă'),
+    T('Short windows react fast, long windows smooth the estimate; EWMA reacts without ghost effects', 'Ferestrele scurte reacționează repede, cele lungi netezesc estimarea; EWMA reacționează fără ghost effect'),
     T('Range-based estimators are precise but see only the session: use Yang--Zhang when the market closes at night', 'Estimatorii de amplitudine sînt preciși, dar văd doar ședința: folosiți Yang--Zhang cînd piața se închide noaptea'),
     T('Clustering is tested on $r_t^2$ (Ljung--Box, ARCH-LM), not on $r_t$', 'Volatility clustering se testează pe $r_t^2$ (Ljung--Box, ARCH-LM), nu pe $r_t$'),
     T('Compare forecasts with QLIKE and test the difference; an AI answer is a draft to check', 'Comparați prognozele cu QLIKE și testați diferența; un răspuns AI este o ciornă de verificat')))

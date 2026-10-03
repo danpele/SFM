@@ -131,7 +131,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                 "incorrectExplanation": "The rolling window gives equal weight to the last 63 days and zero to older ones; the drop comes from the data leaving the window, not from news."
             },
             "ro": {
-                "title": "Efectul de fantomă",
+                "title": "Ghost effect",
                 "text": "În iunie 2020, volatilitatea S&P 500 pe 63 de zile a scăzut brusc într-o zi liniștită. De ce?",
                 "options": [
                     "VIX a scăzut în acea zi",
@@ -139,7 +139,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                     "Indicele S&P 500 și-a schimbat componența",
                     "Prognozele EWMA au fost revizuite"
                 ],
-                "correctExplanation": "Este efectul de fantomă: ziua crahului din 16 martie 2020 a ieșit din fereastra de 63 de zile, deci estimarea a scăzut dintr-odată.",
+                "correctExplanation": "Este vorba de ghost effect: ziua crahului din 16 martie 2020 a ieșit din fereastra de 63 de zile, deci estimarea a scăzut dintr-odată.",
                 "incorrectExplanation": "Fereastra mobilă dă aceeași pondere ultimelor 63 de zile și pondere zero celor mai vechi; scăderea vine din datele care ies din fereastră, nu dintr-o știre."
             }
         },
