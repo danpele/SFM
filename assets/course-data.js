@@ -406,10 +406,15 @@
                 id: 'scoring', num: 12,
                 title: { en: 'Scoring models', ro: 'Modele de scoring' },
                 topics: {
-                    en: ['Probability of default: logit and probit (SFM, ch. 21)', 'Discriminant analysis', 'Validation: ROC curve, AUC, Gini coefficient'],
-                    ro: ['Probabilitatea de nerambursare: logit și probit (SFM, cap. 21)', 'Analiza discriminantă', 'Validare: curba ROC, AUC, coeficientul Gini']
+                    en: ['PD, LGD, EAD and expected loss; Basel IRB capital and the one-factor model; default data, class imbalance and oversampling', 'Weight of Evidence and Information Value; logistic regression and Fisher discriminant analysis; scorecard scaling', 'Validation: confusion matrix, ROC, AUC, Gini, CAP, KS, Brier score, calibration, cross-validation; reject inference, fairness, Altman Z-score and Merton distance to default'],
+                    ro: ['PD, LGD, EAD și pierderea așteptată; capitalul IRB din Basel și modelul cu un factor; datele de nerambursare, dezechilibrul claselor și suprareprezentarea', 'Weight of Evidence și Information Value; regresia logistică și analiza discriminantă Fisher; scalarea scorecard-ului', 'Validarea: matricea de confuzie, ROC, AUC, Gini, CAP, KS, scorul Brier, calibrarea, validarea încrucișată; reject inference, echitatea, scorul Z al lui Altman și distanța pînă la nerambursare a lui Merton']
                 },
-                links: { en: [], ro: [] },
+                links: {
+                    en: [pdf('slides', 'EN/Courses/chapter12_scoring_models.pdf'), pdf('seminar', 'EN/Seminars/seminar12_scoring_models.pdf'),
+                         nb('notebooks/EN/chapter12_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter12_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_12')],
+                    ro: [pdf('slides', 'RO/Cursuri/capitol12_modele_scoring.pdf'), pdf('seminar', 'RO/Seminarii/seminar12_modele_scoring_ro.pdf'),
+                         nb('notebooks/EN/chapter12_lecture_notebook.ipynb', NB_LECT), nb('notebooks/EN/chapter12_seminar_notebook.ipynb', NB_SEM), ql('Quantlets/Ch_12')]
+                },
                 quantinar: q('mva')
             },
             {

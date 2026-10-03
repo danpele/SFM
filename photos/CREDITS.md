@@ -123,3 +123,13 @@ Every image used on the slides has a free licence verified through the Wikimedia
 | ch11_mandelbrot_set.jpg | https://commons.wikimedia.org/wiki/File:Mandel_zoom_00_mandelbrot_set.jpg | Wolfgang Beyer | CC BY-SA 3.0 | — |
 | ch11_bitcoin_atm_prague.jpg | https://commons.wikimedia.org/wiki/File:Bitcoin_ATM_Prague.jpg | Perituss | CC0 | 2016-12-28 |
 | ch11_sp500_1987_fed.png | https://commons.wikimedia.org/wiki/File:S%26P_500_index_around_the_time_of_the_crash.png | Mark Carlson, Federal Reserve Board | Public domain | 2006-11 |
+
+## Chapter 12 — Scoring models
+
+| File | Source | Author | Licence | Date |
+|---|---|---|---|---|
+| ch12_fico_hq_2020.jpg | https://commons.wikimedia.org/wiki/File:Ficoheadquarters.jpg | Coolcaesar | CC BY-SA 4.0 | 2020-06-14 |
+| ch12_heckler_bill_1973.jpg | https://commons.wikimedia.org/wiki/File:A_Bill_to_amend_the_Consumer_Credit_Protection_Act.jpg | U.S. House of Representatives, H.R. 10162 | Public domain | 1973-09-11 |
+| ch12_iris_versicolor.jpg | https://commons.wikimedia.org/wiki/File:Iris_versicolor_-20200620-RM-100933.jpg | Ermell | CC BY-SA 4.0 | 2020-06-20 |
+| ch12_merton_2010.jpg | https://commons.wikimedia.org/wiki/File:Robert_Merton_November_2010_(2x3_cropped).jpg | Massachusetts Institute of Technology | CC BY-SA 4.0 | 2010-11-30 |
+| ch12_nyu_stern_2019.jpg | https://commons.wikimedia.org/wiki/File:NYU_Stern_School_of_Business_-_Henry_Kaufman_Management_Center_(48072761732).jpg | Ajay Suresh | CC BY 2.0 | 2019-06-15 |
