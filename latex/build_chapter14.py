@@ -470,7 +470,7 @@ D.section('Bubbles and Crashes', 'Bule și crahuri')
 D.frame(T('Drawdown', 'Drawdown-ul'), items(
     (T('\\textbf{Drawdown}: $D_t = P_t/\\max_{s \\le t} P_s - 1$, the loss from the last record high (Chapter 1)', '\\textbf{Drawdown}: $D_t = P_t/\\max_{s \\le t} P_s - 1$, pierderea față de ultimul maxim istoric (Capitolul 1)'),
      [T('\\textbf{maximum drawdown}: $\\min_t D_t$; \\textbf{time under water}: the days until a new record high', '\\textbf{drawdown maxim}: $\\min_t D_t$; \\textbf{timpul sub apă} (time under water): zilele pînă la un nou maxim istoric')]),
-    (T('A loss of $d$ needs a gain of $d/(1 - d)$ to recover', 'O pierdere $d$ cere un cîștig $d/(1 - d)$ pentru recuperare'),
+    (T('A loss of $d$ needs a gain of $d/(1 - d)$ to recover', 'O pierdere $d$ cere un cîștig $d/(1 - d)$ pentru recuperare, adică pentru revenirea la vîrful anterior'),
      [T('$d = 75\\%$: $0.75/0.25 = 300\\%$; $d = 80\\%$: @{dd.ex80}\\%', '$d = 75\\%$: $0{,}75/0{,}25 = 300\\%$; $d = 80\\%$: @{dd.ex80}\\%'),
       T('Bitcoin\'s deepest drawdown in our data: $@{dd.btc.mdd}\\%$ (@{dd.btc.mddd}); recovery needed a gain of @{dd.big.need}\\%', 'cel mai adînc drawdown al Bitcoin în datele noastre: $@{dd.btc.mdd}\\%$ (@{dd.btc.mddd}); recuperarea a cerut un cîștig de @{dd.big.need}\\%')]),
     T('Drawdowns depend on the path, not only on the distribution of returns: high volatility and clustering produce deep ones', 'Drawdown-urile depind de traiectorie, nu doar de distribuția randamentelor: volatilitatea mare și gruparea ei produc drawdown-uri adînci')))
