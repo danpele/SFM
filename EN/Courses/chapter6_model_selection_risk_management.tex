@@ -86,17 +86,18 @@ MSCA Digital Finance}
     \item \textbf{BET}: Bucharest Exchange Trading (index)
     \item \textbf{BIC}: Bayesian Information Criterion
     \item \textbf{BVB}: Bursa de Valori București (the Bucharest Stock Exchange)
+    \item \textbf{CDF}: Cumulative Distribution Function
     \item \textbf{COVID-19}: COronaVIrus Disease 2019
     \item \textbf{EDF}: Empirical Distribution Function
     \item \textbf{EM}: Expectation–Maximisation (algorithm)
     \item \textbf{EMA}: Exponential Moving Average
     \item \textbf{EODHD}: EOD Historical Data (market-data provider)
     \item \textbf{ES}: Expected Shortfall
-    \item \textbf{FFT}: Fast Fourier Transform
 \end{itemize}
 \end{column}
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{FFT}: Fast Fourier Transform
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity
     \item \textbf{GED}: Generalised Error Distribution
     \item \textbf{KS}: Kolmogorov–Smirnov (test)
@@ -272,7 +273,10 @@ DAX 2004--2026 & 267 & $-21.70$ & $17.12$ & $5.39$ & $18.66$ & $-0.72$ & $5.06$ 
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Monthly, in \%; kurtosis $= E(X - \mu)^4/\sigma^4$, equal to 3 for the Normal distribution; Jarque--Bera (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2}) $p$-value $<0.001$
+    \item Monthly, in \%; kurtosis $= E(X - \mu)^4/\sigma^4$, with $\mu$, $\sigma$ the mean and the standard deviation; equal to 3 for the Normal distribution
+    \begin{itemize}
+        \item Jarque--Bera test of Normality (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2}): $p$-value $<0.001$
+    \end{itemize}
     \item Daily log returns since 2000 (Bitcoin since 2014, BVB stocks since 2010): kurtosis
     \begin{itemize}
         \item BET $14.1$, S\&P 500 $13.7$, DAX $9.1$, Bitcoin $15.0$, TLV $16.5$, SNP $11.9$, BRD $10.3$
@@ -312,10 +316,11 @@ DAX 2004--2026 & 267 & $-21.70$ & $17.12$ & $5.39$ & $18.66$ & $-0.72$ & $5.06$ 
 %=============================================================================
 
 \begin{frame}{Likelihood and Log-Likelihood}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Data $r_1, \dots, r_n$, assumed i.i.d.\ (independent, identically distributed) with density $f(r; \theta)$
     \begin{itemize}
+        \item $\theta$: the vector of model parameters (for example $\mu, \sigma$); $f$: the density of the model
         \item \textbf{likelihood}: $L(\theta) = \prod_{t=1}^n f(r_t; \theta)$, the probability density of the observed sample as a function of $\theta$
         \item \textbf{log-likelihood}: $\ell(\theta) = \sum_{t=1}^n \ln f(r_t; \theta)$; sums are easier than products
     \end{itemize}
@@ -323,7 +328,11 @@ DAX 2004--2026 & 267 & $-21.70$ & $17.12$ & $5.39$ & $18.66$ & $-0.72$ & $5.06$ 
     \begin{itemize}
         \item $\ell(\hat\theta)$, the maximised log-likelihood, is the raw material of every comparison in this chapter
     \end{itemize}
-    \item Large $n$: $\hat\theta$ is approximately Normal around the true $\theta$, with covariance $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$ (the inverse of the observed information)
+    \item Large $n$: $\hat\theta$ is approximately Normal around the true $\theta$
+    \begin{itemize}
+        \item covariance $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$, the inverse of the observed information
+        \item a sharply curved $\ell$ (large second derivative) means a precise estimate
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -450,8 +459,13 @@ stable & $\hat\alpha = 1.540$, $\hat\beta = -0.181$, $\hat\gamma = 0.582$, $\hat
 \begin{itemize}
     \item $H_0$: model 0 (restricted) is true; $H_1$: model 1 (larger)
     \begin{itemize}
-        \item $LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \ge 0$
-        \item \textbf{Wilks' theorem} (\refWilks): under $H_0$, $LR \approx \chi^2(d)$, $d = k_1 - k_0$ restrictions, if the restricted values are inside the parameter space
+        \item $LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \ge 0$: twice the gain in maximised log-likelihood
+        \item $\ell_0, \ell_1$: the log-likelihoods of the two models; $k_0, k_1$: their numbers of parameters
+    \end{itemize}
+    \item \textbf{Wilks' theorem} (\refWilks): under $H_0$, $LR \approx \chi^2(d)$, with $d = k_1 - k_0$ restrictions
+    \begin{itemize}
+        \item $\chi^2(d)$: the chi-square distribution with $d$ degrees of freedom
+        \item valid if the restricted values are inside the parameter space
     \end{itemize}
     \item Decision at 5\%: reject $H_0$ if $LR > \chi^2_{0.95}(d)$
     \begin{itemize}
@@ -513,7 +527,10 @@ Bitcoin & $-3.80$ ($<0.001$) & $16.47$ ($<0.001$) & $-6.76$ ($<0.001$) \\
 \end{center}
 \begin{itemize}
     \item \refVuong: $m_t = \ln f_1(r_t) - \ln f_2(r_t)$, $V = \sqrt{n}\,\bar m / s_m \approx N(0, 1)$ if both models are equally close to the truth
-    \item $V > 1.96$: the first model is closer; $V < -1.96$: the second; ($p$-value) in brackets
+    \begin{itemize}
+        \item $f_1, f_2$: the two fitted densities; $m_t$: by how much model 1 explains day $t$ better; $\bar m$, $s_m$: mean and standard deviation of the $m_t$
+        \item $V > 1.96$: the first model is closer; $V < -1.96$: the second; ($p$-value) in brackets
+    \end{itemize}
     \item Student-t beats the stable law everywhere; NIG beats the skewed-t on the S\&P 500 and the DAX; Student-t vs GED splits by market
 \end{itemize}\quantlet{SFM\_ch6\_lr\_aic}{\qlurl{SFM_ch6_lr_aic}}
 \end{frame}
@@ -542,6 +559,7 @@ Bitcoin & $-3.80$ ($<0.001$) & $16.47$ ($<0.001$) & $-6.76$ ($<0.001$) \\
     \begin{itemize}
         \item the distance from the truth $g$ to a model $f$: the Kullback--Leibler divergence \refKL
         \item $KL(g, f) = E_g[\ln g(R) - \ln f(R)] \ge 0$, zero only if $f = g$
+        \item $R$: a new return drawn from the truth $g$; $E_g$: the mean under $g$
     \end{itemize}
     \item $\ell(\hat\theta)$ is too optimistic: the same data choose $\hat\theta$ and judge it
     \begin{itemize}
@@ -699,9 +717,10 @@ stable & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137.3$ & $137.3$ & $0.000$ \\
 \begin{columns}[T]
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-    \item $D_n = \sup_x |F_n(x) - F(x)|$, the largest vertical gap
+    \item $D_n = \sup_x |F_n(x) - F(x)|$, the largest vertical gap between the EDF and the model CDF ($\sup$: the largest value over all $x$)
     \begin{itemize}
-        \item with the ordered data $u_{(i)} = F(r_{(i)})$: $D_n = \max_i \max\{i/n - u_{(i)},\ u_{(i)} - (i-1)/n\}$
+        \item $r_{(i)}$: the $i$-th smallest return; $u_{(i)} = F(r_{(i)})$: its model probability
+        \item computing formula: $D_n = \max_i \max\{i/n - u_{(i)},\ u_{(i)} - (i-1)/n\}$
     \end{itemize}
     \item $F$ fully known: the law of $D_n$ does not depend on $F$ (Kolmogorov, 1933)
     \begin{itemize}
@@ -748,7 +767,7 @@ stable & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137.3$ & $137.3$ & $0.000$ \\
     \item Any model: \textbf{parametric bootstrap} \refSGQ
     \begin{itemize}
         \item simulate $n$ draws from $F(\cdot; \hat\theta)$, refit, recompute the statistic; repeat $B$ times
-        \item $p$-value $= (1 + \#\{\text{bootstrap statistics} \ge \text{observed}\})/(B + 1)$
+        \item $p$-value $= (1 + \#\{\text{bootstrap statistics} \ge \text{observed}\})/(B + 1)$: the share of simulated statistics at least as large as the observed one
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -765,6 +784,7 @@ stable & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137.3$ & $137.3$ & $0.000$ \\
     \end{itemize}
     \item Computing formula \refADb: $A^2 = -n - \frac{1}{n}\sum_i (2i - 1)\big[\ln u_{(i)} + \ln(1 - u_{(n + 1 - i)})\big]$
     \begin{itemize}
+        \item $u_{(i)} = F(r_{(i)})$ as in KS; large $W^2$ or $A^2$: a poor fit
         \item the weight $1/[F(1 - F)]$ is huge where $F$ is near 0 or 1: the tails
     \end{itemize}
 \end{itemize}
@@ -781,12 +801,15 @@ stable & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137.3$ & $137.3$ & $0.000$ \\
 \begin{frame}{Why KS Is Weak in the Tails}
 \itemsize{\footnotesize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch6_ks_tail.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch6_ks_tail.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item S\&P 500 against its Normal fit. Left: the KS gap peaks at $x = -0.41\%$, near the centre ($F = 36\%$), with $D_n = 0.093$
-    \item In the tails $F_n$ and $F$ are both close to 0 or 1, so the raw gap is small even when the model is badly wrong; the Anderson--Darling weight (right) puts the largest gap at $x = -6.9\%$
+    \item In the tails $F_n$ and $F$ are both close to 0 or 1, so the raw gap is small even when the model is badly wrong
+    \begin{itemize}
+        \item the Anderson--Darling weight (right) puts the largest gap at $x = -6.9\%$
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
@@ -794,12 +817,15 @@ stable & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137.3$ & $137.3$ & $0.000$ \\
 \begin{frame}{Power of the Three Tests}
 \itemsize{\footnotesize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch6_gof_power.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch6_gof_power.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Share of 1000 simulated samples in which Normality (estimated parameters) is rejected at 5\%; power = probability of rejecting a false $H_0$
-    \item Student-t data, $n = 250$: KS $62\%$, Cramér--von Mises $77\%$, Anderson--Darling $81\%$; tail-only departures ($n = 250$): $38\%$, $50\%$, $57\%$
+    \item Student-t data, $n = 250$: KS $62\%$, Cramér--von Mises $77\%$, Anderson--Darling $81\%$
+    \begin{itemize}
+        \item tail-only departures ($n = 250$): $38\%$, $50\%$, $57\%$
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
@@ -914,7 +940,10 @@ stable & $0.022$ & $0.81$ & $4.61$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item The worst day was $-12.8\%$; the model quantile at the same probability: Normal $-4.6\%$, Student-t $-22.9\%$, skewed-t $-24.5\%$, stable $-116.1\%$
+    \item The worst day was $-12.8\%$; the model quantile at the same probability:
+    \begin{itemize}
+        \item Normal $-4.6\%$, Student-t $-22.9\%$, skewed-t $-24.5\%$, stable $-116.1\%$
+    \end{itemize}
     \item The models that looked identical in the PP plot are far apart in the far tail
 \end{itemize}
 \quantlet{SFM\_ch6\_pp\_qq}{\qlurl{SFM_ch6_pp_qq}}
@@ -1040,7 +1069,13 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \begin{itemize}
     \item Exceedance: a day with $r_t < -\mathrm{VaR}_{1\%}$; under a correct model their number is $\mathrm{Binomial}(n, 0.01)$
     \item \refKupiec: $LR_{uc} = -2\ln\dfrac{(1-\alpha)^{n - x}\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \approx \chi^2(1)$, $x$ = number of exceedances
-    \item S\&P 500: Student-t 67 exceedances for 67 expected ($p = 0.986$); NIG, the AIC winner, 52 ($p = 0.053$)
+    \begin{itemize}
+        \item an LR test comparing the target rate $\alpha$ with the observed rate $x/n$; large $LR_{uc}$: wrong number of exceedances
+    \end{itemize}
+    \item S\&P 500: Student-t 67 exceedances for 67 expected ($p = 0.986$)
+    \begin{itemize}
+        \item NIG, the AIC winner, 52 ($p = 0.053$)
+    \end{itemize}
     \item The best model for the whole density is not always the best for one quantile; tail-focused scores exist \refDPD
 \end{itemize}\quantlet{SFM\_ch6\_tail\_var}{\qlurl{SFM_ch6_tail_var}}
 \end{frame}
@@ -1070,6 +1105,7 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
     \begin{itemize}
         \item \textbf{log score}: the mean of $\ln f(r_t; \hat\theta)$ over the test days; higher is better, a proper scoring rule \refGR
         \item \textbf{exceedances} of VaR 1\% (Kupiec) and the \textbf{pinball loss} $\frac{1}{n}\sum_t (\alpha - \mathbf{1}\{r_t < q\})(r_t - q)$ of the 1\% quantile $q$
+        \item pinball: $\mathbf{1}\{r_t < q\} = 1$ on a day below $q$, 0 otherwise; it penalises misses asymmetrically, lower is better
     \end{itemize}
     \item A score is \textbf{proper} if the true distribution gets the best expected score: forecasters cannot gain by distorting
 \end{itemize}
@@ -1106,7 +1142,10 @@ Bitcoin & 24.5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \begin{itemize}
     \item VaR 1\% exceedances on the test days; exp.: expected number; hist.: historical simulation (the 1\% quantile of the estimation sample)
     \item The AIC winner of 2000--2019 has the best log score only for the DAX; elsewhere the best log score belongs to a close neighbour
-    \item BET: the Normal model has 17 exceedances for 16.7 expected, the heavy-tailed models only 5: 2020--2026 was calmer for the BET than 2000--2019
+    \item BET: the Normal model has 17 exceedances for 16.7 expected, the heavy-tailed models only 5
+    \begin{itemize}
+        \item 2020--2026 was calmer for the BET than 2000--2019
+    \end{itemize}
     \item The right count for the wrong reason: a static model cannot follow changes in volatility
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
@@ -1171,20 +1210,30 @@ BET, Kupiec $p$ & $<0.001$ & $<0.001$ & $0.007$ & $0.066$ \\
 \end{center}
 \begin{itemize}
     \item Backtest 2003--2026, $n = 5\,714$ days for the S\&P 500; target rate 1\%; the worst year is 2008 for every model and both series
-    \item Heavy tails halve the excess of exceedances, but no unconditional model reaches 1\%: the volatility changes faster than a 1000-day window
+    \item Heavy tails halve the excess of exceedances, but no unconditional model reaches 1\%
+    \begin{itemize}
+        \item the volatility changes faster than a 1000-day window can adapt
+    \end{itemize}
     \item The remedy is a model for the volatility itself: GARCH, \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapters 8} and \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{9}
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
 \begin{frame}{The VaR Reliability Plot (SFEVaRqqplot)}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch6_var_qqplot.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch6_var_qqplot.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item DAX since 2000: Normal VaR 1\% with the volatility of the previous 250 days, RMA (rectangular moving average) or EMA (exponential, $\lambda = 0.96$); QQ plot of $L/\mathrm{VaR}$ against Normal quantiles
-    \item A straight line would mean a reliable VaR; both curve upwards at the right end: the losses beyond VaR are too large and too frequent ($2.13\%$ and $2.07\%$ exceedances)
+    \item DAX since 2000: Normal VaR 1\% with the volatility of the previous 250 days
+    \begin{itemize}
+        \item RMA (rectangular moving average) or EMA (exponential, $\lambda = 0.96$: the weight of each older day shrinks by 4\%)
+        \item QQ plot of $L/\mathrm{VaR}$ (loss divided by VaR) against Normal quantiles
+    \end{itemize}
+    \item A straight line would mean a reliable VaR; both curve upwards at the right end
+    \begin{itemize}
+        \item the losses beyond VaR are too large and too frequent ($2.13\%$ and $2.07\%$ exceedances)
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_var\_qqplot}{\qlurl{SFM_ch6_var_qqplot}}
 \end{frame}
@@ -1252,8 +1301,14 @@ BRD & $4.50$ & $3.81$ & $[4.18, 4.74]$ & $4.33$ & $14$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item VaR 1\% in \%; heavy-tailed range: the smallest and largest VaR 1\% of the six non-Normal models; range (\%): max/min $- 1$
-    \item Averaged: $\sum_i w_i\,\mathrm{VaR}_i$ with the Akaike weights; a frequentist cousin of Bayesian model averaging \refHoeting
+    \item VaR 1\% in \%; heavy-tailed range: the smallest and largest VaR 1\% of the six non-Normal models
+    \begin{itemize}
+        \item range (\%): max/min $- 1$, the relative distance between the extreme models
+    \end{itemize}
+    \item Averaged: $\sum_i w_i\,\mathrm{VaR}_i$ with the Akaike weights $w_i$
+    \begin{itemize}
+        \item a frequentist cousin of Bayesian model averaging \refHoeting
+    \end{itemize}
     \item \textbf{Model risk}: the range across plausible models; regulators ask banks to measure it \refKerkhof, \refDanielsson
 \end{itemize}\quantlet{SFM\_ch6\_model\_uncertainty}{\qlurl{SFM_ch6_model_uncertainty}}
 \end{frame}

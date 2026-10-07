@@ -135,12 +135,12 @@ window.SFM_DATA.quizzes['ml'] = {
                 "text": "Un random forest prognozează randamentul S&P 500 din următoarele 21 de zile. Validarea încrucișată 5-fold aleatoare dă un R2 în afara eșantionului de 37%, walk-forward dă -38%. De ce?",
                 "options": [
                     "Walk-forward irosește date",
-                    "Partițiile amestecate produc scurgeri de informație prin țintele suprapuse",
+                    "Partițiile amestecate produc leakage prin țintele suprapuse",
                     "Random forest are prea puțini arbori",
                     "S&P 500 este previzibil pe 21 de zile"
                 ],
                 "correctExplanation": "Zilele vecine au 20 din 21 de randamente comune în ținte; partițiile amestecate pun astfel de vecini în antrenare și în test, deci modelul a văzut răspunsurile.",
-                "incorrectExplanation": "Același experiment pe un mers aleator simulat, care nu are nimic de prezis, dă tot circa 35% cu partiții amestecate: cîștigul este scurgere de informație, nu abilitate."
+                "incorrectExplanation": "Același experiment pe un mers aleator simulat, care nu are nimic de prezis, dă tot circa 35% cu partiții amestecate: cîștigul provine din leakage, nu dintr-o abilitate reală."
             }
         },
         {
@@ -247,7 +247,7 @@ window.SFM_DATA.quizzes['ml'] = {
                     "100",
                     "15"
                 ],
-                "correctExplanation": "Pragul moale dă max(|Sxy| - lambda/2, 0)/Sxx, care devine zero cînd lambda/2 ajunge la 30, adică lambda = 60.",
+                "correctExplanation": "Soft thresholding dă max(|Sxy| - lambda/2, 0)/Sxx, care devine zero cînd lambda/2 ajunge la 30, adică lambda = 60.",
                 "incorrectExplanation": "Lasso scade lambda/2 din |Sxy| = 30; coeficientul se anulează cînd lambda/2 >= 30, deci de la lambda = 60."
             }
         },
@@ -404,12 +404,12 @@ window.SFM_DATA.quizzes['ml'] = {
                 "title": "ARCH cu rețea neuronală",
                 "text": "După votul pentru Brexit, volatilitatea GARCH(1,1) a cursului GBP/USD a crescut mult mai mult decît cea a unei rețele RBF cu ultimele 3 randamente ca intrări. De ce?",
                 "options": [
-                    "GARCH transmite tot trecutul prin varianța decalată; rețeaua uită un șoc după 3 zile",
+                    "GARCH transmite tot trecutul prin varianța de ieri; rețeaua uită un șoc după 3 zile",
                     "Rețeaua are prea multe unități",
                     "GARCH folosește randamente viitoare",
                     "Rețeaua este estimată prin cele mai mici pătrate"
                 ],
-                "correctExplanation": "GARCH are memorie prin beta sigma^2_{t-1}; o rețea ale cărei intrări sînt 3 randamente decalate poate reacționa doar la ultimele 3 zile.",
+                "correctExplanation": "GARCH are memorie prin beta sigma^2_{t-1}; o rețea ale cărei intrări sînt ultimele 3 randamente poate reacționa doar la ultimele 3 zile.",
                 "incorrectExplanation": "Niciun model nu folosește date viitoare; diferența este memoria: volatility clustering are nevoie de persistența pe care o construiește GARCH."
             }
         },
@@ -429,14 +429,14 @@ window.SFM_DATA.quizzes['ml'] = {
             },
             "ro": {
                 "title": "Prognoza unui nivel",
-                "text": "O rețea prognozează nivelul USD/JPY din ultimele 3 valori. Ce reper trebuie să bată?",
+                "text": "O rețea prognozează nivelul USD/JPY din ultimele 3 valori. Ce reper trebuie să depășească?",
                 "options": [
                     "Media istorică a nivelului",
                     "O prognoză zero",
                     "O tendință liniară",
                     "Mersul aleator: mîine este egal cu azi"
                 ],
-                "correctExplanation": "Cursurile de schimb sînt aproape un mers aleator, deci prognoza naivă mîine = azi este greu de bătut; în curs, rețeaua a avut un RMSE de test de circa 30 de ori mai mare.",
+                "correctExplanation": "Cursurile de schimb sînt aproape un mers aleator, deci prognoza naivă mîine = azi este greu de depășit; în curs, rețeaua a avut un RMSE de test de circa 30 de ori mai mare.",
                 "incorrectExplanation": "O serie de niveluri pare previzibilă deoarece valorile consecutive sînt apropiate; doar mersul aleator arată dacă modelul adaugă ceva."
             }
         },
@@ -599,7 +599,7 @@ window.SFM_DATA.quizzes['ml'] = {
                     "Estimăm cuantila de 1% a randamentului absolut"
                 ],
                 "correctExplanation": "VaR 1% este pierderea depășită cu probabilitatea 1%: minus cuantila condiționată de 1% a randamentului, un număr pozitiv.",
-                "incorrectExplanation": "Nivelul este probabilitatea cozii: regresia vizează coada inferioară de 1% a randamentului, iar semnul minus o transformă într-o pierdere pozitivă."
+                "incorrectExplanation": "Nivelul este probabilitatea cozii: regresia vizează coada stîngă de 1% a randamentului, iar semnul minus o transformă într-o pierdere pozitivă."
             }
         },
         {
@@ -653,7 +653,7 @@ window.SFM_DATA.quizzes['ml'] = {
                     "Deoarece lucrarea folosește date zilnice"
                 ],
                 "correctExplanation": "Randamentele lunare ale acțiunilor sînt în mare parte zgomot; sortarea acțiunilor după prognoze a dat pentru NN4 un raport Sharpe long-short, ponderat cu valoarea de piață, de 1,35.",
-                "incorrectExplanation": "Valoarea vine din ordonarea lunară a unei secțiuni transversale mari; rețeaua mai adîncă, cu cinci straturi, nu a bătut rețelele cu trei sau patru straturi."
+                "incorrectExplanation": "Valoarea vine din ordonarea lunară a unei secțiuni transversale mari; rețeaua mai adîncă, cu cinci straturi, nu a depășit rețelele cu trei sau patru straturi."
             }
         }
     ]

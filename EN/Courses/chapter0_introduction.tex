@@ -613,8 +613,8 @@ Bitcoin & $\times$257.4 & 47.4 & 66.7 \\
 \end{column}
 \begin{column}{0.45\textwidth}
 \begin{itemize}
-    \item \textbf{Return p.a.}: average daily log return times the number of days per year
-    \item \textbf{Volatility p.a.}: standard deviation of daily returns times $\sqrt{\text{days per year}}$ (definitions in Part II)
+    \item \textbf{Return p.a.}: average daily log return times $A$, the number of trading days per year
+    \item \textbf{Volatility p.a.}: standard deviation of daily returns times $\sqrt{A}$ (definitions in Part II)
     \item \textbf{Reading}
     \begin{itemize}
         \item Bitcoin: the highest return and about four times the volatility of the stock indices
@@ -669,11 +669,12 @@ Bitcoin & $\times$257.4 & 47.4 & 66.7 \\
 \begin{frame}{Crises and Drawdowns, 2000--2026}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.94\textwidth,height=0.62\textheight,keepaspectratio]{sfm_ch0_drawdowns.pdf}
+\includegraphics[width=0.94\textwidth,height=0.56\textheight,keepaspectratio]{sfm_ch0_drawdowns.pdf}
 \end{center}
 \vspace{-2mm}
 \begin{itemize}
     \item \textbf{Drawdown}: the loss from the highest previous price, $DD_t = P_t / \max_{s \le t} P_s - 1$
+    \item $P_t$: the price on day $t$; $\max_{s \le t} P_s$: the highest price up to day $t$; $DD_t \le 0$, and $DD_t = 0$ at a new high
 \end{itemize}
 \sfmquantlet{Ch_00}{SFM_ch0_drawdowns}
 \end{frame}
@@ -1075,13 +1076,14 @@ Bitcoin & $\times$257.4 & 47.4 & 66.7 \\
 \begin{frame}{Simple and Log Returns}
 \itemsize{\small}
 \begin{itemize}
-    \item $P_t$: the price at the end of day $t$ (for ETFs and shares, the price adjusted for dividends and splits)
+    \item $P_t$: the price at the end of day $t$ (for ETFs and shares, the price adjusted for dividends and splits); $P_{t-1}$: the price of the previous day
     \item \textbf{Simple return}: $R_t = \dfrac{P_t}{P_{t-1}} - 1$
     \begin{itemize}
         \item the percentage gain of one day: what the investor earns
     \end{itemize}
     \item \textbf{Log return}: $r_t = \ln \dfrac{P_t}{P_{t-1}} = \ln(1 + R_t)$
     \begin{itemize}
+        \item $\ln$: the natural logarithm; $r_t$ is the continuously compounded return of the day
         \item almost equal to $R_t$ for small moves; smaller for large ones
     \end{itemize}
     \item \textbf{Worked example}: $P_0 = 100$, $P_1 = 110$, $P_2 = 99$
@@ -1118,11 +1120,12 @@ Bitcoin & $\times$257.4 & 47.4 & 66.7 \\
     \begin{itemize}
         \item \textbf{mean}: $\bar r = \frac{1}{n} \sum_{t=1}^n r_t$
         \item \textbf{volatility}: the standard deviation $s = \sqrt{\frac{1}{n-1} \sum_{t=1}^n (r_t - \bar r)^2}$
+        \item $s$: the typical distance of a daily return from its mean; dividing by $n-1$ instead of $n$ corrects for $\bar r$ being estimated from the same data
     \end{itemize}
-    \item \textbf{Annualisation} with $q$ observations per year
+    \item \textbf{Annualisation} with $A$ observations per year
     \begin{itemize}
-        \item mean: $q \bar r$; volatility: $\sqrt{q}\, s$, because the variances of independent days add up
-        \item $q \approx 252$ for exchanges, $q = 365$ for Bitcoin
+        \item mean: $A \bar r$, because log returns add up; volatility: $\sqrt{A}\, s$, because the variances of independent days add up
+        \item $A \approx 252$ for exchanges, $A = 365$ for Bitcoin
     \end{itemize}
     \item \textbf{Worked example}
     \begin{itemize}
@@ -1186,9 +1189,10 @@ Bitcoin & $\times$257.4 & 47.4 & 66.7 \\
         \item expected under the Normal distribution with the same mean and variance: 0.43
         \item the worst day, 16 March 2020, lies -10.5 standard deviations from the mean
     \end{itemize}
-    \item \textbf{Kurtosis}: $\frac{1}{n}\sum (r_t - \bar r)^4 / s^4$, a measure of tail weight
+    \item \textbf{Kurtosis} $K = \frac{1}{n}\sum_{t=1}^n (r_t - \bar r)^4 / s^4$: the mean fourth power of the standardised returns
     \begin{itemize}
-        \item Normal distribution: 3; S\&P 500 since 2000: 13.7
+        \item $(r_t - \bar r)/s$: distance from the mean in standard deviations; the fourth power lets the extreme days dominate $K$
+        \item Normal distribution: $K = 3$; S\&P 500 since 2000: 13.7; $K > 3$ means heavier tails than the Normal
     \end{itemize}
     \item \textbf{Also more quiet days}: the histogram is taller in the centre
     \begin{itemize}
@@ -1220,7 +1224,7 @@ $t$ & $P_t$ & peak $M_t$ & $DD_t$ \\
 \end{column}
 \begin{column}{0.58\textwidth}
 \begin{itemize}
-    \item \textbf{Running peak}: $M_t = \max_{s \le t} P_s$, the highest price so far
+    \item \textbf{Running peak}: $M_t = \max_{s \le t} P_s$, the highest price over the days $s = 0, \ldots, t$
     \item \textbf{Drawdown}: $DD_t = P_t / M_t - 1$, never positive
     \item \textbf{Maximum drawdown} (MDD): the most negative $DD_t$; here $-25\%$, from 120 to 90
     \item \textbf{Why investors watch it}
@@ -1237,7 +1241,7 @@ $t$ & $P_t$ & peak $M_t$ & $DD_t$ \\
 \itemsize{\small}
 \begin{itemize}
     \item $R_t = P_t/P_{t-1} - 1$ compounds; $r_t = \ln(P_t/P_{t-1})$ adds up over time
-    \item Annualise the mean with $q$ and the volatility with $\sqrt{q}$; $q = 365$ for Bitcoin
+    \item Annualise the mean with $A$ and the volatility with $\sqrt{A}$; $A = 365$ for Bitcoin
     \item Daily returns: volatility clustering and heavy tails (kurtosis 13.7 against 3)
     \item Drawdown: the loss from the previous peak; the maximum drawdown summarises the worst episode
 \end{itemize}
@@ -1357,7 +1361,7 @@ $t$ & $P_t$ & peak $M_t$ & $DD_t$ \\
         \item drawdowns of -56.8\% (S\&P 500) and -82.5\% (BET) in 2008--2009
     \end{itemize}
     \item Four centuries of bubbles and crashes; models moved from the Normal random walk to heavy tails and changing volatility
-    \item Log returns add, simple returns compound; volatility scales with $\sqrt{q}$
+    \item Log returns add, simple returns compound; volatility scales with $\sqrt{A}$
     \item An AI-assisted result counts only after its references, numbers and rival explanations are checked
 \end{itemize}
 \end{frame}

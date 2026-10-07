@@ -159,7 +159,7 @@ window.SFM_DATA.quizzes['crypto'] = {
             },
             "ro": {
                 "title": "Forma cozii",
-                "text": "Indicele de coadă Hill al pierderilor este 2,71 [2,20; 3,21] pentru Bitcoin și 2,68 [2,08; 3,29] pentru S&P 500. Ce rezultă?",
+                "text": "Tail index-ul Hill al pierderilor este 2,71 [2,20; 3,21] pentru Bitcoin și 2,68 [2,08; 3,29] pentru S&P 500. Ce rezultă?",
                 "options": [
                     "Cele două cozi stîngi au aceeași formă; Bitcoin diferă în principal prin scală",
                     "Bitcoin are o coadă mult mai groasă",
@@ -167,7 +167,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                     "Bitcoin are o boltire finită"
                 ],
                 "correctExplanation": "Estimările punctuale sînt aproape egale, iar intervalele se suprapun: ambele urmează o lege de putere cu un exponent apropiat, în timp ce Bitcoin este de circa patru ori mai volatil.",
-                "incorrectExplanation": "Indicele de coadă măsoară forma cozii, nu scala ei; cu alpha sub 4, niciuna dintre serii nu are boltire finită, iar niciuna dintre cozi nu este Normală."
+                "incorrectExplanation": "Tail index-ul măsoară forma cozii, nu scala ei; cu alpha sub 4, niciuna dintre serii nu are boltire finită, iar niciuna dintre cozi nu este Normală."
             }
         },
         {
@@ -248,7 +248,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                     "Volatilitatea Bitcoin nu se grupează"
                 ],
                 "correctExplanation": "Un gamma pozitiv și semnificativ este efectul de levier al acțiunilor; pentru Bitcoin termenul este mic și nesemnificativ.",
-                "incorrectExplanation": "Statistica t de -0,7 nu poate distinge gamma pentru Bitcoin de zero, deci nu există dovezi de asimetrie; gruparea volatilității este o proprietate separată, măsurată prin alpha și beta."
+                "incorrectExplanation": "Statistica t de -0,7 nu poate distinge gamma pentru Bitcoin de zero, deci nu există dovezi de asimetrie; volatility clustering este o proprietate separată, măsurată prin alpha și beta."
             }
         },
         {
@@ -302,7 +302,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                     "Nicio diferență în medie; weekendul este mai calm ca varianță"
                 ],
                 "correctExplanation": "Testul mediei nu respinge, testul varianței respinge puternic: varianța din weekend este circa 40% din cea din zilele lucrătoare.",
-                "incorrectExplanation": "O p-valoare mare pentru medie și una foarte mică pentru varianță indică lucruri diferite: efectul este în risc, iar riscul este mai mic în weekend."
+                "incorrectExplanation": "Un p-value mare pentru medie și unul foarte mic pentru varianță indică lucruri diferite: efectul este în risc, iar riscul este mai mic în weekend."
             }
         },
         {
@@ -490,7 +490,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                     "ETF-urile au crescut volatilitatea",
                     "Volatilitatea este acum egală cu cea a S&P 500"
                 ],
-                "correctExplanation": "O p-valoare de 0,27 nu respinge egalitatea varianțelor, iar dobînzile, halving-ul și alegerile din SUA s-au schimbat în aceeași fereastră.",
+                "correctExplanation": "Un p-value de 0,27 nu respinge egalitatea varianțelor, iar dobînzile, halving-ul și alegerile din SUA s-au schimbat în aceeași fereastră.",
                 "incorrectExplanation": "Diferența de 7,7 puncte se încadrează în zgomotul a două ferestre de doi ani, iar fără un grup de control nu poate fi atribuită ETF-urilor."
             }
         },

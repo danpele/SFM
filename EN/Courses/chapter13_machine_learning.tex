@@ -85,31 +85,31 @@ MSCA Digital Finance}
     \item \textbf{AUC}: Area Under the (ROC) Curve
     \item \textbf{BET}: Bucharest Exchange Trading (index)
     \item \textbf{BVB}: Bursa de Valori București (the Bucharest Stock Exchange)
-    \item \textbf{CV}: Cross-Validation
     \item \textbf{DM}: Diebold–Mariano (test)
     \item \textbf{DSR}: Deflated Sharpe Ratio
     \item \textbf{EODHD}: EOD Historical Data (market-data provider)
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity
     \item \textbf{GB}: Gradient Boosting
-    \item \textbf{GJR-GARCH}: Glosten–Jagannathan–Runkle GARCH
     \item \textbf{HAR}: Heterogeneous AutoRegressive (model)
+    \item \textbf{HS}: Historical Simulation
+    \item \textbf{MA}: Moving Average
 \end{itemize}
 \end{column}
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{HS}: Historical Simulation
-    \item \textbf{IBM}: International Business Machines (company)
-    \item \textbf{LRV}: Long-Run Variance
-    \item \textbf{MA}: Moving Average
     \item \textbf{ML}: Machine Learning
     \item \textbf{MLP}: MultiLayer Perceptron
     \item \textbf{MSE}: Mean Squared Error
-    \item \textbf{NN-ARCH}: Neural-Network ARCH
     \item \textbf{NN3}: Neural Network with 3 hidden layers
     \item \textbf{NN4}: Neural Network with 4 hidden layers
     \item \textbf{OLS}: Ordinary Least Squares
     \item \textbf{OLS-3}: OLS with 3 predictors (size, book-to-market, momentum)
     \item \textbf{OMV}: Österreichische Mineralölverwaltung (Austrian Mineral Oil Administration (OMV group))
+    \item \textbf{PSR}: Probabilistic Sharpe Ratio
+    \item \textbf{QGB}: Quantile Gradient Boosting
+    \item \textbf{QLIKE}: Quasi-LIKElihood (loss function)
+    \item \textbf{QR}: Quantile Regression
+    \item \textbf{RF}: Random Forest
 \end{itemize}
 \end{column}
 \end{columns}
@@ -119,18 +119,10 @@ MSCA Digital Finance}
 \begin{columns}[T]
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{PSR}: Probabilistic Sharpe Ratio
-    \item \textbf{QGB}: Quantile Gradient Boosting
-    \item \textbf{QLIKE}: Quasi-LIKElihood (loss function)
-    \item \textbf{QR}: Quantile Regression
-    \item \textbf{RBF}: Radial Basis Function (network)
-    \item \textbf{RF}: Random Forest
-    \item \textbf{RMSE}: Root Mean Squared Error
     \item \textbf{ROC}: Receiver Operating Characteristic (curve)
     \item \textbf{RV}: Realised Variance
     \item \textbf{SFE}: Statistics of Financial Markets, Exercises (Quantlet collection of the textbook)
     \item \textbf{SHAP}: SHapley Additive exPlanations
-    \item \textbf{SSE}: Sum of Squared Errors
     \item \textbf{US}: United States
 \end{itemize}
 \end{column}
@@ -196,7 +188,8 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \refRosenblatt: a machine that learns to classify images by adjusting weights after each error
     \begin{itemize}
-        \item the \textbf{perceptron}: output $1$ if $w_0 + w^\top x > 0$, else $0$; the weights $w$ are learned from examples
+        \item the \textbf{perceptron}: output $1$ if $w_0 + w^\top x > 0$, else $0$
+        \item $x$: the inputs (photocell signals); $w$: their weights, learned from examples; $w_0$: the threshold term; $w^\top x = \sum_j w_jx_j$
         \item the Mark I Perceptron (Cornell, 1960): 400 photocells, weights set by electric motors
     \end{itemize}
     \item Three later milestones
@@ -223,7 +216,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \refBreimanTC, a statistician at Berkeley, describes two cultures
     \begin{itemize}
-        \item \textbf{data modelling}: assume a stochastic model ($y = x^\top\beta + \varepsilon$, GARCH), estimate it, test its parameters
+        \item \textbf{data modelling}: assume a stochastic model (the linear regression $y = x^\top\beta + \varepsilon$, GARCH), estimate it, test its parameters
         \item \textbf{algorithmic modelling}: treat the mechanism as unknown; find a rule $\hat f$ that predicts $y$ well on new data
     \end{itemize}
     \item This course used the first culture in \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapters 2}--\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter11_fractal_markets_long_memory.pdf}{11}
@@ -261,19 +254,41 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Supervised Learning: Notation and Loss}
+\begin{frame}{Supervised Learning: Notation and Loss (1/2)}
 \itemsize{\small}
 \begin{itemize}
-    \item Data $(x_t, y_t)$, $t = 1, \dots, n$: $x_t \in \mathbb{R}^p$ the \textbf{features} known at time $t$, $y_t$ the \textbf{target}
+    \item Data $(x_t, y_t)$, $t = 1, \dots, n$
     \begin{itemize}
-        \item \textbf{regression}: $y$ continuous (volatility, return); \textbf{classification}: $y$ a class (up/down, default; \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter12_scoring_models.pdf}{Chapter 12})
+        \item $t$: the index of the observation (a day, a week); $n$: the number of observations
+        \item $x_t \in \mathbb{R}^p$: the \textbf{features}, $p$ numbers known at time $t$ (past volatilities, past returns)
+        \item $y_t$: the \textbf{target}, the quantity we want to forecast (next week's volatility)
     \end{itemize}
+    \item Two types of problems
+    \begin{itemize}
+        \item \textbf{regression}: $y$ continuous (volatility, return)
+        \item \textbf{classification}: $y$ a class (up/down, default; \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter12_scoring_models.pdf}{Chapter 12})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Learning: Notation and Loss (2/2)}
+\itemsize{\small}
+\begin{itemize}
     \item Learning = choose $\hat f$ in a family $\mathcal{F}$ that minimises the average \textbf{loss} $\frac1n\sum_t L(y_t, f(x_t))$
+    \begin{itemize}
+        \item $f(x_t)$: the forecast of a rule $f$ for observation $t$; $L(y, \hat y)$: the cost of forecasting $\hat y$ when $y$ is observed
+        \item $\mathcal{F}$: the candidate rules (all linear regressions, all trees of depth 3); $\hat f$: the rule chosen from the data
+    \end{itemize}
+    \item Losses used in this course
     \begin{itemize}
         \item squared error $(y - \hat y)^2$ (MSE: mean squared error); QLIKE for variances (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8})
         \item quantile (pinball) loss for VaR (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}); log loss for probabilities (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter12_scoring_models.pdf}{Chapter 12})
     \end{itemize}
-    \item A \textbf{hyperparameter} is chosen before the fit (tree depth, penalty $\lambda$, number of neurons); the parameters are learned by the fit
+    \item A \textbf{hyperparameter} is chosen before the fit
+    \begin{itemize}
+        \item examples: tree depth, penalty $\lambda$, number of neurons
+        \item the parameters (coefficients, weights) are learned by the fit
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -327,17 +342,34 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The Bias--Variance Decomposition}
+\begin{frame}{The Bias--Variance Decomposition (1/2)}
 \itemsize{\small}
 \begin{itemize}
-    \item Model: $y = f(x) + \varepsilon$, $E[\varepsilon] = 0$, $\mathrm{Var}(\varepsilon) = \sigma^2$; $\hat f$ estimated on a random training sample
+    \item Model: $y = f(x) + \varepsilon$, $E[\varepsilon] = 0$, $\mathrm{Var}(\varepsilon) = \sigma^2$
     \begin{itemize}
-        \item expected test error at a point $x_0$:
-        \item $E\big[(y_0 - \hat f(x_0))^2\big] = \underbrace{\big(E[\hat f(x_0)] - f(x_0)\big)^2}_{\text{bias}^2} + \underbrace{\mathrm{Var}\big(\hat f(x_0)\big)}_{\text{variance}} + \underbrace{\sigma^2}_{\text{noise}}$
+        \item $f$: the true, unknown relation between $x$ and $y$; $\varepsilon$: the noise, unpredictable from $x$, with variance $\sigma^2$
+        \item $\hat f$: the estimate of $f$ from a random training sample; another sample would give another $\hat f$
     \end{itemize}
-    \item Derivation: write $y_0 - \hat f = (f - E\hat f) + (E\hat f - \hat f) + \varepsilon$; the cross terms have mean 0
+    \item Expected test error at a new point $x_0$, with $y_0 = f(x_0) + \varepsilon_0$: \[ E\big[(y_0 - \hat f(x_0))^2\big] = \underbrace{\big(E[\hat f(x_0)] - f(x_0)\big)^2}_{\text{bias}^2} + \underbrace{\mathrm{Var}\big(\hat f(x_0)\big)}_{\text{variance}} + \underbrace{\sigma^2}_{\text{noise}} \]
     \begin{itemize}
-        \item a rigid model: large bias, small variance; a flexible model: small bias, large variance
+        \item $E[\cdot]$: the average over all possible training samples and over the noise $\varepsilon_0$
+        \item bias: how far the average estimate is from the truth; variance: how much $\hat f(x_0)$ moves from one sample to another
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Bias--Variance Decomposition (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item Derivation: write $y_0 - \hat f = (f - E\hat f) + (E\hat f - \hat f) + \varepsilon_0$, all at $x_0$
+    \begin{itemize}
+        \item square and take the expectation: the three squares give bias$^2$, variance and $\sigma^2$
+        \item the cross terms have mean 0: $E[E\hat f - \hat f] = 0$, and $\varepsilon_0$ is independent of the training sample
+    \end{itemize}
+    \item Reading the decomposition
+    \begin{itemize}
+        \item a rigid model: large bias, small variance
+        \item a flexible model: small bias, large variance
         \item $\sigma^2$ is the floor: no model goes below it; in daily returns $\sigma^2$ is almost everything
     \end{itemize}
 \end{itemize}
@@ -503,7 +535,8 @@ MSCA Digital Finance}
 \begin{itemize}
     \item OLS (ordinary least squares): $\hat\beta = \arg\min_\beta \sum_t (y_t - x_t^\top\beta)^2 = (X^\top X)^{-1}X^\top y$
     \begin{itemize}
-        \item unbiased, but its variance $\sigma^2(X^\top X)^{-1}$ explodes when features are many or strongly correlated
+        \item $X$: the $n \times p$ matrix whose row $t$ is $x_t^\top$; $y$: the vector of targets; $\arg\min_\beta$: the $\beta$ that minimises the sum
+        \item unbiased, but its variance $\sigma^2(X^\top X)^{-1}$ ($\sigma^2$: the error variance) explodes when features are many or strongly correlated
     \end{itemize}
     \item Volatility features are highly correlated: today's, this week's and this month's realised variance
     \begin{itemize}
@@ -516,17 +549,34 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ridge Regression}
+\begin{frame}{Ridge Regression (1/2)}
 \itemsize{\small}
 \begin{itemize}
-    \item \refHK: $\hat\beta^{\,ridge} = \arg\min_\beta \sum_t (y_t - x_t^\top\beta)^2 + \lambda\sum_j \beta_j^2 = (X^\top X + \lambda I)^{-1}X^\top y$
+    \item \refHK: minimise the squared error plus a penalty on the squared coefficients \[ \hat\beta^{\,ridge} = \arg\min_\beta \sum_t (y_t - x_t^\top\beta)^2 + \lambda\sum_j \beta_j^2 = (X^\top X + \lambda I)^{-1}X^\top y \]
+    \item Notation
     \begin{itemize}
-        \item $\lambda \ge 0$ is the penalty: $\lambda = 0$ gives OLS, $\lambda \to \infty$ gives $\hat\beta \to 0$
-        \item $X^\top X + \lambda I$ is always invertible: ridge works even with more features than observations
+        \item $\beta_j$: the coefficient of feature $j$; $\sum_j \beta_j^2$: the penalty term, large when the coefficients are large
+        \item $\lambda \ge 0$: the strength of the penalty; $\lambda = 0$ gives OLS, $\lambda \to \infty$ gives $\hat\beta \to 0$
+        \item $I$: the $p \times p$ identity matrix
     \end{itemize}
-    \item \textbf{One feature} (centred), $S_{xx} = \sum x_t^2$, $S_{xy} = \sum x_ty_t$: $\hat\beta^{\,ridge} = \dfrac{S_{xy}}{S_{xx} + \lambda} = \dfrac{S_{xx}}{S_{xx} + \lambda}\,\hat\beta^{\,OLS}$
+    \item Consequence
     \begin{itemize}
-        \item example: $S_{xx} = 100$, $S_{xy} = 30$: OLS $0.30$; ridge with $\lambda = 50$: $30/150 = 0.20$ (shrinkage factor $0.67$)
+        \item $X^\top X + \lambda I$ is always invertible for $\lambda > 0$: ridge works even with more features than observations
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ridge Regression (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{One feature}, centred (mean 0): $S_{xx} = \sum_t x_t^2$, $S_{xy} = \sum_t x_ty_t$ \[ \hat\beta^{\,ridge} = \dfrac{S_{xy}}{S_{xx} + \lambda} = \dfrac{S_{xx}}{S_{xx} + \lambda}\,\hat\beta^{\,OLS}, \qquad \hat\beta^{\,OLS} = \dfrac{S_{xy}}{S_{xx}} \]
+    \begin{itemize}
+        \item the factor $S_{xx}/(S_{xx} + \lambda)$ lies in $(0, 1]$: the share of the OLS coefficient that ridge keeps
+    \end{itemize}
+    \item Example: $S_{xx} = 100$, $S_{xy} = 30$
+    \begin{itemize}
+        \item OLS: $30/100 = 0.30$
+        \item ridge with $\lambda = 50$: $30/150 = 0.20$ (shrinkage factor $0.67$)
     \end{itemize}
     \item Ridge shrinks all coefficients towards zero, but sets none exactly to zero
 \end{itemize}
@@ -544,6 +594,7 @@ MSCA Digital Finance}
     \item One feature: \textbf{soft thresholding}
     \begin{itemize}
         \item $\hat\beta^{\,lasso} = \mathrm{sign}(S_{xy})\,\max(|S_{xy}| - \lambda/2,\, 0)/S_{xx}$
+        \item $\mathrm{sign}(S_{xy})$: $+1$ or $-1$; if $|S_{xy}| \le \lambda/2$, the coefficient is exactly 0
         \item same data, $\lambda = 20$: $(30 - 10)/100 = 0.20$; zero for $\lambda \ge 60$
     \end{itemize}
     \item In practice
@@ -614,6 +665,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item \textbf{Greedy fit}: at each node choose $(j, s)$ that minimises $\mathrm{SSE} = \sum_{\text{left}}(y - \bar y_L)^2 + \sum_{\text{right}}(y - \bar y_R)^2$
     \begin{itemize}
+        \item SSE: sum of squared errors; $\bar y_L$, $\bar y_R$: the means of $y$ in the left and right groups (the two forecasts)
         \item repeat in each half until a stopping rule: maximum depth, minimum number of observations per leaf
     \end{itemize}
     \item Strengths and weaknesses
@@ -683,7 +735,7 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
     \end{itemize}
     \item Why averaging works: $B$ trees, each with variance $\sigma^2$ and pairwise correlation $\rho$
     \begin{itemize}
-        \item $\mathrm{Var}(\text{average}) = \rho\sigma^2 + (1 - \rho)\sigma^2/B$
+        \item $\mathrm{Var}(\text{average}) = \rho\sigma^2 + (1 - \rho)\sigma^2/B$: the part $\rho\sigma^2$, common to all trees, does not fall with $B$
         \item with $\rho = 0.3$, $\sigma^2 = 1$: $B = 1$: $1.000$; $B = 10$: $0.370$; $B = 300$: $0.302$
         \item more trees never overfit; less correlated trees (fewer features per split) reduce the floor $\rho\sigma^2$
     \end{itemize}
@@ -752,17 +804,33 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
 \section{Neural Networks}
 %=============================================================================
 
-\begin{frame}{From the Perceptron to the Multilayer Perceptron}
+\begin{frame}{From the Perceptron to the Multilayer Perceptron (1/2)}
 \itemsize{\small}
 \begin{itemize}
     \item A \textbf{neuron}: $h = g(b + w^\top x)$, a weighted sum of the inputs passed through an \textbf{activation function} $g$
     \begin{itemize}
-        \item the perceptron uses a step function; modern networks use smooth or piecewise linear $g$ (logistic, tanh, ReLU)
+        \item $x$: the inputs; $w$: their weights; $b$: a constant (the bias term of the neuron); $h$: the output of the neuron
+        \item $g$: a fixed nonlinear function; without it, a network of neurons would be just a linear regression
     \end{itemize}
-    \item \textbf{MLP} (multilayer perceptron) with one hidden layer of $K$ neurons
+    \item Activation functions
     \begin{itemize}
-        \item $\hat y = c + \sum_{k=1}^{K} v_k\, g(b_k + w_k^\top x)$: a linear model in $K$ learned nonlinear features
-        \item parameters with 11 inputs and 16 neurons: $192$ in the hidden layer, $17$ in the output, 209 in total
+        \item the perceptron uses a step function (0 or 1)
+        \item modern networks use smooth or piecewise linear $g$: logistic $1/(1 + e^{-z})$, tanh, ReLU $\max(0, z)$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{From the Perceptron to the Multilayer Perceptron (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{MLP} (multilayer perceptron) with one hidden layer of $K$ neurons \[ \hat y = c + \sum_{k=1}^{K} v_k\, g(b_k + w_k^\top x) \]
+    \begin{itemize}
+        \item $w_k$, $b_k$: the weights and the constant of hidden neuron $k$; $v_k$: the weight of neuron $k$ in the output; $c$: the output constant
+        \item reading: a linear model in $K$ nonlinear features $g(b_k + w_k^\top x)$, which are themselves learned
+    \end{itemize}
+    \item Number of parameters with 11 inputs and 16 neurons
+    \begin{itemize}
+        \item hidden layer: $11 \times 16$ weights $+ 16$ constants $= 192$; output: $16 + 1 = 17$; total 209
     \end{itemize}
     \item \textbf{Universal approximation} \refHSW: with enough neurons, one hidden layer approximates any continuous function on a compact set
 \end{itemize}
@@ -784,8 +852,10 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
 \begin{frame}{Training a Network}
 \itemsize{\small}
 \begin{itemize}
-    \item Minimise the loss by \textbf{gradient descent}: $\theta \leftarrow \theta - \eta\,\nabla_\theta L$ ($\eta$: the learning rate)
+    \item Minimise the loss by \textbf{gradient descent}: $\theta \leftarrow \theta - \eta\,\nabla_\theta L$
     \begin{itemize}
+        \item $\theta$: all weights and constants; $\nabla_\theta L$: the gradient, the vector of partial derivatives of the loss; $\eta > 0$: the learning rate (the step size)
+        \item each step moves $\theta$ in the direction in which the loss falls fastest
         \item \textbf{back-propagation} computes $\nabla_\theta L$ layer by layer with the chain rule \refRHW
         \item one \textbf{epoch} = one pass over the training data; Adam is a gradient method with adaptive step sizes
     \end{itemize}
@@ -822,13 +892,25 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Neural-Network ARCH: the Textbook Model}
+\begin{frame}{Neural-Network ARCH: the Textbook Model (1/2)}
 \itemsize{\small}
 \begin{itemize}
     \item \refFHH, Ch.~19: $r_t = f(x_{t-1}) + s(x_{t-1})\,\varepsilon_t$, with $f$ and $s^2$ estimated by neural networks
     \begin{itemize}
-        \item ARCH (\refEngle) is the special case $s^2(x) = \omega + \sum_i \alpha_i r_{t-i}^2$; the network lets the shape be free
+        \item $r_t$: the return of day $t$; $x_{t-1}$: the inputs known at the close of day $t - 1$
+        \item $f(x_{t-1})$: the conditional mean; $s^2(x_{t-1})$: the conditional variance; $\varepsilon_t$: a shock with mean 0 and variance 1
     \end{itemize}
+    \item ARCH (\refEngle) is the special case $s^2(x) = \omega + \sum_i \alpha_i r_{t-i}^2$
+    \begin{itemize}
+        \item $\omega > 0$, $\alpha_i \ge 0$: the variance is a linear function of the past squared returns
+        \item the network imposes no shape on $s^2$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Neural-Network ARCH: the Textbook Model (2/2)}
+\itemsize{\small}
+\begin{itemize}
     \item The Quantlet \refSFEa: GBP/USD, inputs $x$ = the last 3 returns, the German 10-year yield, the gold return
     \begin{itemize}
         \item step 1: a network $\hat f$ for the mean; residuals $e_t = r_t - \hat f(x_{t-1})$
@@ -836,7 +918,8 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
     \end{itemize}
     \item \textbf{RBF} (radial basis function) network with 3 units, as in the Quantlet
     \begin{itemize}
-        \item unit $j$: $\exp(-\|x - c_j\|^2/s_j^2)$, centres $c_j$ by clustering; output: a linear combination of the 3 units
+        \item unit $j$: $\exp(-\|x - c_j\|^2/s_j^2)$; $c_j$: its centre (found by clustering); $s_j$: its width; $\|x - c_j\|$: the distance from $x$ to $c_j$
+        \item the unit is close to 1 when $x$ is near $c_j$ and close to 0 far from it; output: a linear combination of the 3 units
         \item nothing forces $\hat s^2 > 0$: a variance network needs a floor, which GARCH guarantees by its constraints
     \end{itemize}
 \end{itemize}
@@ -914,33 +997,58 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
 \section{Application: Forecasting Realised Volatility}
 %=============================================================================
 
-\begin{frame}{Target and Features}
+\begin{frame}{Target and Features (1/2)}
 \itemsize{\small}
 \begin{itemize}
-    \item Daily variance proxy of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8} (no intraday data): $v_t = o_t^2 + \tfrac12(u_t - d_t)^2 - (2\ln 2 - 1)c_t^2$
+    \item Daily variance proxy of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8} (no intraday data): an estimate of the variance of day $t$ from its open, high, low and close \[ v_t = o_t^2 + \tfrac12(u_t - d_t)^2 - (2\ln 2 - 1)c_t^2 \]
     \begin{itemize}
-        \item $o_t$: overnight log return; $u_t, d_t, c_t$: log high, low and close relative to the open (the Garman--Klass term, \refGK)
+        \item $o_t$: the overnight log return (from the previous close to the open)
+        \item $u_t, d_t, c_t$: log high, low and close relative to the open (the Garman--Klass term, \refGK)
     \end{itemize}
     \item \textbf{Target}: $y_t = \ln\big(\tfrac15\sum_{j=1}^{5} v_{t+j}\big)$, the log realised variance of the next week
     \begin{itemize}
+        \item $j = 1, \dots, 5$: the next five trading days; the target is known only at the close of day $t + 5$
         \item logs make the target closer to Normal and the forecasts positive after $\exp$
-    \end{itemize}
-    \item \textbf{Features} at the close of day $t$
-    \begin{itemize}
-        \item HAR: $\ln v_t$, $\ln$ of the mean over 5 days (week) and over 22 days (month)
-        \item extended (11): plus 4 lags of $\ln v_t$, the 66-day mean, $r_t$, $\min(r_t, 0)$, $|r_t|$
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The HAR Benchmark}
+\begin{frame}{Target and Features (2/2)}
 \itemsize{\small}
 \begin{itemize}
-    \item \textbf{HAR} (heterogeneous autoregressive) model \refCorsi: $y_t = \beta_0 + \beta_d\ln v_t + \beta_w\ln v_t^{(w)} + \beta_m\ln v_t^{(m)} + u_t$
+    \item \textbf{Features} at the close of day $t$
+    \begin{itemize}
+        \item HAR: $\ln v_t$, $\ln$ of the mean over 5 days (week) and over 22 days (month)
+        \item extended (11): plus 4 lags of $\ln v_t$ ($\ln v_{t-1}, \dots, \ln v_{t-4}$), the 66-day mean, $r_t$, $\min(r_t, 0)$, $|r_t|$
+    \end{itemize}
+    \item Notation
+    \begin{itemize}
+        \item $r_t$: the log return of day $t$; $|r_t|$: its absolute value
+        \item $\min(r_t, 0)$: the return if negative, 0 otherwise; it lets falls and rises act differently (the leverage effect)
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The HAR Benchmark (1/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{HAR} (heterogeneous autoregressive) model \refCorsi{} \[ y_t = \beta_0 + \beta_d\ln v_t + \beta_w\ln v_t^{(w)} + \beta_m\ln v_t^{(m)} + u_t \]
+    \begin{itemize}
+        \item $v_t^{(w)}$, $v_t^{(m)}$: the mean of $v$ over the last 5 days (week) and over the last 22 days (month)
+        \item $\beta_0$: the constant; $\beta_d, \beta_w, \beta_m$: the weights of the three horizons; $u_t$: the error
+    \end{itemize}
+    \item Interpretation
     \begin{itemize}
         \item three horizons of traders (daily, weekly, monthly); estimated by OLS
+        \item with positive weights on the three horizons, a shock to volatility fades slowly
         \item a simple linear model that mimics long memory (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter11_fractal_markets_long_memory.pdf}{Chapter 11}) and is hard to beat
     \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The HAR Benchmark (2/2)}
+\itemsize{\small}
+\begin{itemize}
     \item The question of this section
     \begin{itemize}
         \item do lasso, random forest, gradient boosting or an MLP add anything to HAR out of sample?
@@ -949,25 +1057,59 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
     \item Design: walk-forward of Section 3, yearly refits; S\&P 500 from 2013, Bitcoin from 2018
     \begin{itemize}
         \item variance forecast $\hat h_t = \exp(\hat y_t + \hat s^2/2)$, $\hat s^2$ the residual variance in training (the log-Normal mean)
+        \item $\hat y_t$: the forecast of the log variance; $\exp(\hat y_t)$ alone would underestimate the mean variance, hence the term $\hat s^2/2$
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Evaluation: Out-of-Sample $R^2$, QLIKE and Diebold--Mariano}
-\itemsize{\footnotesize}
+\begin{frame}{Evaluation (1/3): Out-of-Sample $R^2$}
+\itemsize{\small}
 \begin{itemize}
-    \item \textbf{Out-of-sample} $R^2$ against a benchmark $\tilde y_t$: $R^2_{OOS} = 1 - \sum_t (y_t - \hat y_t)^2 / \sum_t (y_t - \tilde y_t)^2$ \refCT
+    \item \textbf{Out-of-sample} $R^2$ against a benchmark forecast $\tilde y_t$ \refCT{} \[ R^2_{OOS} = 1 - \frac{\sum_t (y_t - \hat y_t)^2}{\sum_t (y_t - \tilde y_t)^2} \]
     \begin{itemize}
-        \item benchmark the training mean, or HAR; $R^2_{OOS} < 0$: worse than the benchmark
-        \item step by step, S\&P 500, MLP against HAR: $1 - 0.397/0.433 = 1 - 0.917$, i.e.\ $+8.3\%$
+        \item $\hat y_t$: the forecast of the model; sums over the test days only
+        \item benchmark $\tilde y_t$: the training mean, or HAR
     \end{itemize}
-    \item \textbf{QLIKE} (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8}) on the variance: $L_t = \mathrm{RV}_t/\hat h_t + \ln\hat h_t$; robust to a noisy proxy \refPatton
+    \item Reading
     \begin{itemize}
-        \item for $\mathrm{RV} = 1$: $\hat h = 0.5$ costs $1.307$, $\hat h = 2$ costs $1.193$: under-prediction is punished more
+        \item $R^2_{OOS} \le 1$; $R^2_{OOS} > 0$: smaller squared error than the benchmark; $R^2_{OOS} < 0$: worse than the benchmark
+        \item unlike the in-sample $R^2$, it can be negative
     \end{itemize}
-    \item \textbf{Diebold--Mariano} test \refDM: $d_t = L_t^{A} - L_t^{B}$, $\mathrm{DM} = \bar d/\sqrt{\widehat{\mathrm{LRV}}/n} \sim N(0,1)$ under equal accuracy
+    \item Step by step, S\&P 500, MLP against HAR
     \begin{itemize}
-        \item LRV: the Newey--West long-run variance (5 lags), because overlapping targets make $d_t$ autocorrelated; DM $< 0$: $A$ is better
+        \item $1 - 0.397/0.433 = 1 - 0.917$, i.e.\ $+8.3\%$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Evaluation (2/3): QLIKE}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{QLIKE} (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8}): a loss for variance forecasts, robust to a noisy proxy \refPatton{} \[ L_t = \frac{\mathrm{RV}_t}{\hat h_t} + \ln\hat h_t \]
+    \begin{itemize}
+        \item $\mathrm{RV}_t$: the realised variance of the next 5 days (the target, in levels); $\hat h_t$: its forecast
+        \item for a given $\mathrm{RV}_t$, the loss is smallest at $\hat h_t = \mathrm{RV}_t$; lower average QLIKE is better
+    \end{itemize}
+    \item Asymmetry
+    \begin{itemize}
+        \item for $\mathrm{RV} = 1$: $\hat h = 0.5$ costs $1.307$, $\hat h = 2$ costs $1.193$
+        \item under-prediction is punished more: for risk management, underestimating volatility is the costly error
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Evaluation (3/3): the Diebold--Mariano Test}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{Diebold--Mariano} test \refDM: do two models $A$ and $B$ have the same expected loss? \[ d_t = L_t^{A} - L_t^{B}, \qquad \mathrm{DM} = \frac{\bar d}{\sqrt{\widehat{\mathrm{LRV}}/n}} \sim N(0,1) \text{ under equal accuracy} \]
+    \begin{itemize}
+        \item $L_t^{A}$, $L_t^{B}$: the losses of the two models on day $t$; $\bar d$: the mean of $d_t$; $n$: the number of test days
+        \item $\widehat{\mathrm{LRV}}$: the Newey--West long-run variance of $d_t$ (5 lags), because overlapping targets make $d_t$ autocorrelated
+    \end{itemize}
+    \item Reading
+    \begin{itemize}
+        \item DM $< 0$: $A$ has the smaller loss; DM $> 0$: $B$ is better
+        \item $|\mathrm{DM}| > 1.96$: the difference is significant at 5\%
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1023,6 +1165,7 @@ Bitcoin & HAR & $44.0$ & -- & $3.111$ & -- \\
     \end{itemize}
     \item \textbf{Shapley values} (game theory): $\hat f(x) = \phi_0 + \sum_j \phi_j(x)$, $\phi_j$ the fair share of feature $j$ in the forecast
     \begin{itemize}
+        \item $\phi_0$: the average forecast; $\phi_j(x) > 0$: feature $j$ raises this forecast above the average, $\phi_j(x) < 0$: lowers it
         \item $\phi_j$ averages the change of $\hat f$ when $j$ joins every subset of the other features
         \item SHAP (Shapley additive explanations) \refLL: fast versions for trees; for a linear model $\phi_j = \beta_j(x_j - \bar x_j)$
     \end{itemize}
@@ -1062,6 +1205,7 @@ Bitcoin & HAR & $44.0$ & -- & $3.111$ & -- \\
 \begin{itemize}
     \item Target: $y_t = \mathbf{1}\{r_{t+1} > 0\}$; features at the close of day $t$: the last 5 returns, sums over 5, 21 and 63 days, volatility over 21 and 63 days
     \begin{itemize}
+        \item $\mathbf{1}\{\cdot\}$: the indicator, 1 if the condition holds and 0 otherwise; $y_t = 1$: tomorrow's return is positive
         \item models: logit (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter12_scoring_models.pdf}{Chapter 12}), random forest and gradient boosting classifiers; walk-forward, yearly refits
         \item S\&P 500 and BET from 2008, Bitcoin from 2018
     \end{itemize}
@@ -1086,6 +1230,7 @@ Bitcoin & HAR & $44.0$ & -- & $3.111$ & -- \\
     \end{itemize}
     \item Test against the baseline: $z = (\widehat{\mathrm{acc}} - \mathrm{acc}_0)/\sqrt{\mathrm{acc}_0(1 - \mathrm{acc}_0)/n}$
     \begin{itemize}
+        \item $\widehat{\mathrm{acc}}$: the accuracy of the model; $\mathrm{acc}_0$: that of the baseline; $n$: the test days; $z \approx N(0,1)$ if the model has no extra skill
         \item S\&P 500, $n = 4\,705$: standard error 0.73 points; a 95\% band of $\pm$1.4 points around the baseline
         \item random forest: 53.1\%, $z = -1.79$ (p 0.074); boosting: 52.1\%, $z = -3.19$ (p 0.001)
     \end{itemize}
@@ -1138,13 +1283,27 @@ Bitcoin & HAR & $44.0$ & -- & $3.111$ & -- \\
 \section{Application: VaR 1\% by Quantile Methods}
 %=============================================================================
 
-\begin{frame}{Quantile Regression}
+\begin{frame}{Quantile Regression (1/2)}
 \itemsize{\small}
 \begin{itemize}
     \item \refKB: estimate the conditional $\alpha$-quantile $q_\alpha(x) = x^\top\beta_\alpha$ by minimising the \textbf{quantile (pinball) loss}
     \begin{itemize}
-        \item $\rho_\alpha(u) = u\,(\alpha - \mathbf{1}\{u < 0\})$, $u = y - q$: underneath the quantile the error costs $1 - \alpha$, above it $\alpha$
-        \item with $\alpha = 0.01$ and $q = -\mathrm{VaR}$: the average quantile loss of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}, $(\alpha - I_t)(r_t + \mathrm{VaR}_t)$
+        \item $q_\alpha(x)$: the level below which $y$ falls with probability $\alpha$, given $x$; $\beta_\alpha$: coefficients specific to the level $\alpha$
+    \end{itemize}
+    \item The loss of an error $u = y - q$: \[ \rho_\alpha(u) = u\,(\alpha - \mathbf{1}\{u < 0\}) \]
+    \begin{itemize}
+        \item below the quantile ($u < 0$) the error costs $(1 - \alpha)|u|$, above it $\alpha|u|$
+        \item with $\alpha = 0.01$, the minimum is reached when about 1\% of the observations lie below $q$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quantile Regression (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item With $\alpha = 0.01$ and $q = -\mathrm{VaR}$: the average quantile loss of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}
+    \begin{itemize}
+        \item $(\alpha - I_t)(r_t + \mathrm{VaR}_t)$, with $I_t = 1$ if $r_t < -\mathrm{VaR}_t$ (an exception) and 0 otherwise
     \end{itemize}
     \item VaR 1\% for day $t + 1$: $\widehat{\mathrm{VaR}}_t = -\hat q_{0.01}(x_t)$, with $x_t$ = daily, weekly and monthly volatility (square roots of the proxy) and $r_t$
     \begin{itemize}
@@ -1211,8 +1370,8 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
 \section{Data Snooping and the Deflated Sharpe Ratio}
 %=============================================================================
 
-\begin{frame}{The Best of $N$ Strategies}
-\itemsize{\footnotesize}
+\begin{frame}{The Best of $N$ Strategies (1/2)}
+\itemsize{\small}
 \begin{itemize}
     \item \textbf{Data snooping}: trying many models or rules on the same data and reporting the best \refWhite
     \begin{itemize}
@@ -1221,8 +1380,23 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
     \end{itemize}
     \item The annual Sharpe ratio of a strategy without skill over $Y$ years is about $N(0, 1/Y)$
     \begin{itemize}
-        \item expected maximum of $N$ independent trials: $\mathrm{E}[\max] \approx \sigma\big[(1 - \gamma)\Phi^{-1}(1 - \tfrac1N) + \gamma\,\Phi^{-1}(1 - \tfrac{1}{Ne})\big]$, $\gamma = 0.5772$ \refBLdP
-        \item 10 years, $\sigma = 0.316$, $N = 100$: $0.316\,[(1 - \gamma)\,2.326 + \gamma\,2.680] = 0.80$
+        \item Sharpe ratio: mean excess return divided by its standard deviation (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter1_data_returns_indicators.pdf}{Chapter 1}); $Y$: the number of years of data
+        \item mean 0: no skill; variance $1/Y$: the estimation error, which falls with the length of the sample
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Best of $N$ Strategies (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item Expected maximum of $N$ independent zero-skill trials \refBLdP{} \[ \mathrm{E}[\max] \approx \sigma\Big[(1 - \gamma)\,\Phi^{-1}\big(1 - \tfrac1N\big) + \gamma\,\Phi^{-1}\big(1 - \tfrac{1}{Ne}\big)\Big] \]
+    \begin{itemize}
+        \item $\sigma$: the standard deviation of the Sharpe ratios across trials ($1/\sqrt{Y}$ above); $N$: the number of trials
+        \item $\Phi^{-1}$: the quantile function of the standard Normal distribution; $e \approx 2.718$; $\gamma = 0.5772$: the Euler--Mascheroni constant
+    \end{itemize}
+    \item Example: 10 years, $\sigma = 1/\sqrt{10} = 0.316$, $N = 100$
+    \begin{itemize}
+        \item $0.316\,[(1 - \gamma)\,2.326 + \gamma\,2.680] = 0.80$: a Sharpe ratio this large is expected from pure luck
         \item simulation: the best of 10, 100 and 1000 zero-skill strategies has an average Sharpe ratio of $0.48$, $0.79$, $1.02$
     \end{itemize}
 \end{itemize}
@@ -1241,14 +1415,27 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
 \sfmquantlet{Ch_13}{SFM_ch13_data_snooping}
 \end{frame}
 
-\begin{frame}{The Deflated Sharpe Ratio}
-\itemsize{\footnotesize}
+\begin{frame}{The Deflated Sharpe Ratio (1/2)}
+\itemsize{\small}
 \begin{itemize}
-    \item \refBLdP: the probability that the true Sharpe ratio exceeds what the best of $N$ trials would show by luck
+    \item \refBLdP: the probability that the true Sharpe ratio exceeds what the best of $N$ trials would show by luck \[ \mathrm{DSR} = \Phi\Big(\dfrac{(\widehat{SR} - SR_0)\sqrt{T - 1}}{\sqrt{1 - \hat\gamma_3\widehat{SR} + \frac{\hat\gamma_4 - 1}{4}\widehat{SR}^2}}\Big) \]
+    \item Notation
     \begin{itemize}
-        \item $\mathrm{DSR} = \Phi\Big(\dfrac{(\widehat{SR} - SR_0)\sqrt{T - 1}}{\sqrt{1 - \hat\gamma_3\widehat{SR} + \frac{\hat\gamma_4 - 1}{4}\widehat{SR}^2}}\Big)$, per-day Sharpe ratios, $\hat\gamma_3$ skewness, $\hat\gamma_4$ kurtosis
-        \item $SR_0$: the expected maximum of the previous slide, with $\sigma$ = the standard deviation of the $N$ Sharpe ratios tried
+        \item $\widehat{SR}$: the per-day Sharpe ratio of the chosen strategy; $T$: the number of days
+        \item $SR_0$: the expected maximum of $N$ zero-skill trials (above), with $\sigma$ = the standard deviation of the $N$ Sharpe ratios tried
+        \item $\hat\gamma_3$: the skewness, $\hat\gamma_4$: the kurtosis of the daily returns (3 for the Normal distribution); $\Phi$: the standard Normal distribution function
     \end{itemize}
+    \item Reading
+    \begin{itemize}
+        \item the DSR is a probability in $(0, 1)$; above 0.95: the Sharpe ratio is significant after the correction for $N$ trials
+        \item negative skewness and fat tails enlarge the denominator and lower the DSR
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Deflated Sharpe Ratio (2/2)}
+\itemsize{\small}
+\begin{itemize}
     \item \textbf{Step by step}: the best MA rule, $N = 30$, $T = 3\,769$ days
     \begin{itemize}
         \item $\widehat{SR} = 0.0416$ per day ($\times\sqrt{252} = 0.66$); $\hat\gamma_3 = -0.44$, $\hat\gamma_4 = 12.0$
@@ -1303,6 +1490,7 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
 \begin{itemize}
     \item $R^2_{OOS} = 1 - \sum_{(i,t)}(r_{i,t+1} - \hat r_{i,t+1})^2 / \sum_{(i,t)} r_{i,t+1}^2$: the benchmark is a forecast of \textbf{zero}, not the historical mean
     \begin{itemize}
+        \item $r_{i,t+1}$: the return of stock $i$ in month $t + 1$; $\hat r_{i,t+1}$: its forecast; the sums run over all stock-months of the test period
         \item the authors note that the historical mean of a stock is so noisy that it is easy to beat: a zero benchmark is harder
     \end{itemize}
     \item Diebold--Mariano tests between all pairs of models, with a Bonferroni correction for the 12 comparisons

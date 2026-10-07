@@ -124,8 +124,8 @@ MSCA Digital Finance}
     \item \textbf{Întrebarea}: își amintesc randamentele de azi ce s-a întîmplat acum cîteva luni?
     \begin{itemize}
         \item ipoteza pieței fractale adaugă o a doua temă: cine tranzacționează și pe ce orizont
-        \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}: randamentele zilnice sînt aproape necorelate la decalaje mici; \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol8_estimatori_volatilitate.pdf}{Capitolele 8} și \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{9}: volatilitatea este persistentă
-        \item acest capitol se ocupă de dependența la decalaje \textbf{mari} și pe \textbf{multe} scale de timp
+        \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}: randamentele zilnice sînt aproape necorelate la laguri mici; \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol8_estimatori_volatilitate.pdf}{Capitolele 8} și \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{9}: volatilitatea este persistentă
+        \item acest capitol se ocupă de dependența la laguri \textbf{mari} și pe \textbf{multe} scale de timp
     \end{itemize}
     \item \textbf{Traseul} capitolului
     \begin{itemize}
@@ -291,7 +291,7 @@ Crizele & în afara teoriei & prăbușirea orizonturilor & dispariția în masă
 \section{Autosimilaritate și fractali}
 %=============================================================================
 
-\begin{frame}{Benoît Mandelbrot: rugozitatea ca măsură}
+\begin{frame}{Benoît Mandelbrot: măsurarea neregularității}
 \itemsize{\footnotesize}
 \begin{columns}[T]
 \begin{column}{0.58\textwidth}
@@ -345,7 +345,7 @@ Crizele & în afara teoriei & prăbușirea orizonturilor & dispariția în masă
     \item Mișcarea browniană (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol4_probabilitate.pdf}{Capitolul 4}) este autosimilară cu $H = 1/2$: $W_{ct} \overset{d}{=} \sqrt{c}\,W_t$
     \item Consecință pentru prețurile logaritmice cu creșteri autosimilare
     \begin{itemize}
-        \item $\mathrm{sd}(r_t^{(h)}) = h^H\,\mathrm{sd}(r_t)$, unde $r_t^{(h)}$ este randamentul pe $h$ zile
+        \item $\mathrm{sd}(r_t^{(h)}) = h^H\,\mathrm{sd}(r_t)$, unde $r_t^{(h)}$ este randamentul pe $h$ zile, iar sd abaterea standard
         \item regula rădăcinii pătrate a timpului, $\sqrt{h}$, este cazul particular $H = 1/2$
     \end{itemize}
     \item Un prim estimator al lui $H$: panta dreptei lui $\ln \mathrm{sd}(r^{(h)})$ în funcție de $\ln h$
@@ -434,13 +434,13 @@ Crizele & în afara teoriei & prăbușirea orizonturilor & dispariția în masă
     \item \textbf{Statistica R/S} (rescaled range, amplitudinea rescalată) \refFHH, 14.4.1: $(R/S)_n = R_n/S_n$
     \begin{itemize}
         \item împărțirea la $S_n$ elimină unitatea de măsură: $(R/S)_n$ este comparabilă între active
-        \item pentru date i.i.d.\ cu varianță finită, $(R/S)_n$ crește ca $n^{1/2}$; sub memorie lungă crește ca $n^H$, $H > 1/2$
+        \item pentru date i.i.d.\ cu varianță finită, $(R/S)_n$ crește ca $n^{1/2}$; în cazul memoriei lungi crește ca $n^H$, $H > 1/2$
     \end{itemize}
     \item Robustă la cozi groase: $R$ și $S$ sînt mărite de aceleași valori extreme \refMW
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: R/S pentru opt randamente}
+\begin{frame}{Exemplu rezolvat: R/S pentru opt randamente}
 \itemsize{\scriptsize}
 \begin{columns}[T]
 \begin{column}{0.52\textwidth}
@@ -468,6 +468,7 @@ Crizele & în afara teoriei & prăbușirea orizonturilor & dispariția în masă
         \item alegem mărimi de bloc $n$ între 10 și $N/4$, la distanțe egale pe scară logaritmică
         \item împărțim cele $N$ randamente în $\lfloor N/n\rfloor$ blocuri fără suprapunere; calculăm $R/S$ în fiecare bloc și facem media: $(R/S)_n$
         \item estimăm prin OLS (ordinary least squares, metoda celor mai mici pătrate) $\ln (R/S)_n = \ln c + H \ln n + e_n$: panta $\hat H$ estimează $H$
+        \item $N$: numărul de randamente; $n$: mărimea blocului; $c$: o constantă; $e_n$: eroarea regresiei
     \end{itemize}
     \item Graficul log-log este principalul instrument de diagnostic: o dreaptă susține existența unui singur exponent de scalare
     \item Se aplică randamentelor (staționare), nu prețurilor: pentru prețuri, $(R/S)_n$ crește ca $n$
@@ -482,7 +483,7 @@ Crizele & în afara teoriei & prăbușirea orizonturilor & dispariția în masă
 \toprule
 $H$ & creșteri & memorie & traiectorie ($D = 2 - H$) \\
 \midrule
-$0 < H < 0{,}5$ & corelate negativ & antipersistentă: inversări & rugoasă, $D > 1{,}5$ \\
+$0 < H < 0{,}5$ & corelate negativ & antipersistentă: inversări & neregulată, $D > 1{,}5$ \\
 $H = 0{,}5$ & necorelate & fără memorie (mers aleator) & $D = 1{,}5$ \\
 $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D < 1{,}5$ \\
 \bottomrule
@@ -493,7 +494,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
     \item Două efecte numite de \refNoah
     \begin{itemize}
         \item \textbf{efectul Noe}: valori extreme (cozi groase, potopul); \textbf{efectul Iosif}: serii lungi de valori mari sau mici („șapte ani de belșug, șapte ani de foamete”)
-        \item $H$ măsoară efectul Iosif; indicele de coadă din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{Capitolul 5} măsoară efectul Noe
+        \item $H$ măsoară efectul Iosif; tail index-ul din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{Capitolul 5} măsoară efectul Noe
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -510,7 +511,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
         \item $\hat H_{R/S}$ mediu: $0{,}588$ pentru $N = 250$, $0{,}562$ pentru $N = 1000$, $0{,}547$ pentru $N = 5000$
         \item banda de 95\% pentru $N = 1000$: $[0{,}50; 0{,}63]$
     \end{itemize}
-    \item Regulă: comparăm $\hat H$ cu distribuția lui $\hat H$ sub ipoteza nulă, pentru același $N$, nu cu 0,5 (secțiunea 5)
+    \item Regulă: comparăm $\hat H$ cu distribuția lui $\hat H$ în ipoteza nulă, pentru același $N$, nu cu 0,5 (secțiunea 5)
 \end{itemize}
 \end{frame}
 
@@ -536,6 +537,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
         \item $\sum_{k} |\rho(k)| = \infty$: autocorelațiile nu sînt sumabile
         \item echivalent, scădere hiperbolică $\rho(k) \sim C\,k^{2d - 1}$ cînd $k \to \infty$, cu \textbf{parametrul de memorie} $0 < d < 0{,}5$
         \item în frecvență: densitatea spectrală are un pol în zero, $f(\lambda) \sim C\,\lambda^{-2d}$ cînd $\lambda \to 0$
+        \item $C > 0$: o constantă; $\sim$: raportul celor doi membri tinde la 1; $f(\lambda)$: partea din varianță la frecvența $\lambda$ (ciclurile lungi: $\lambda$ aproape de 0)
     \end{itemize}
     \item \textbf{Memorie scurtă}: modelele ARMA (autoregressive moving average, autoregresive cu medie mobilă), de exemplu AR(1) cu $\rho(k) = \phi^k$
     \begin{itemize}
@@ -545,7 +547,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: cît de repede se stinge memoria?}
+\begin{frame}{Exemplu rezolvat: cît de repede se stinge memoria?}
 \itemsize{\small}
 \begin{itemize}
     \item Memorie lungă: zgomot gaussian fracționar (slide-urile următoare) cu $H = 0{,}8$
@@ -557,7 +559,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
     \begin{itemize}
         \item $\rho(10) = \phi^{10} = 0{,}0013$; $\rho(100) = \phi^{100}$, practic zero
     \end{itemize}
-    \item Același comportament pe termen scurt, dar un termen lung foarte diferit: după 100 de zile, un șoc mai contează doar sub memorie lungă
+    \item Același comportament pe termen scurt, dar un termen lung foarte diferit: după 100 de zile, un șoc mai contează doar în cazul memoriei lungi
 \end{itemize}
 \end{frame}
 
@@ -567,10 +569,10 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
     \item \textbf{Mișcarea browniană fracționară} (fBm, fractional Brownian motion) $B_H(t)$, $0 < H < 1$ \refMVN; \refFHH, Def.~14.2: proces gaussian cu traiectorii continue, autosimilar cu exponentul $H$ și cu creșteri staționare
     \item Proprietăți (\refFHH, Teorema 14.1)
     \begin{itemize}
-        \item $B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \sigma^2 |t|^{2H}$
+        \item $B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \sigma^2 |t|^{2H}$ ($\sigma^2$: varianța la $t = 1$)
         \item $\mathrm{Cov}(B_H(t), B_H(s)) = \tfrac{\sigma^2}{2}\left(|t|^{2H} + |s|^{2H} - |t - s|^{2H}\right)$
     \end{itemize}
-    \item $H = 1/2$: mișcarea browniană, creșteri independente; $H \neq 1/2$: creșterile sînt corelate la toate decalajele
+    \item $H = 1/2$: mișcarea browniană, creșteri independente; $H \neq 1/2$: creșterile sînt corelate la toate lagurile
     \item Simulare: exactă, din matricea de covarianță a creșterilor (scufundare circulantă, ca în notebook)
 \end{itemize}
 \end{frame}
@@ -623,7 +625,7 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
 \begin{frame}{ARFIMA(0,$d$,0): diferențierea fracționară}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item \textbf{ARFIMA}(0,$d$,0) \refGJ; \refHosking: $(1 - L)^d X_t = \varepsilon_t$, $\varepsilon_t$ i.i.d.\ $(0, \sigma^2)$, $L$ operatorul de decalaj ($L X_t = X_{t-1}$)
+    \item \textbf{ARFIMA}(0,$d$,0) \refGJ; \refHosking: $(1 - L)^d X_t = \varepsilon_t$, $\varepsilon_t$ i.i.d.\ $(0, \sigma^2)$, $L$ operatorul lag ($L X_t = X_{t-1}$)
     \begin{itemize}
         \item ARFIMA: autoregressive fractionally integrated moving average, model autoregresiv fracționar integrat cu medie mobilă; $d = 0$: zgomot alb, $d = 1$: mers aleator (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7})
     \end{itemize}
@@ -634,7 +636,8 @@ $0{,}5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D <
     \end{itemize}
     \item Autocorelațiile: $\rho(k) = \dfrac{\Gamma(1 - d)\,\Gamma(k + d)}{\Gamma(d)\,\Gamma(k + 1 - d)}$, adică $\rho(k) = \rho(k - 1)\,\dfrac{k - 1 + d}{k - d}$
     \begin{itemize}
-        \item $\rho(1) = d/(1 - d)$; pentru $k$ mare, $\rho(k) \sim C k^{2d - 1}$: memorie lungă pentru $0 < d < 1/2$
+        \item $\Gamma(\cdot)$: funcția gamma, $\Gamma(n) = (n - 1)!$ pentru numere întregi; $\rho(1) = d/(1 - d)$
+        \item pentru $k$ mare, $\rho(k) \sim C k^{2d - 1}$: memorie lungă pentru $0 < d < 1/2$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -675,7 +678,7 @@ $1$ & rădăcină unitară & nu & infinită & nu scade \\
 \sfmquantlet{Ch_11}{SFM_ch11_arfima}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: ARFIMA(0; 0,3; 0)}
+\begin{frame}{Exemplu rezolvat: ARFIMA(0; 0,3; 0)}
 \itemsize{\small}
 \begin{itemize}
     \item Ponderile lui $(1 - L)^{0{,}3}$: $\pi_1 = -d = -0{,}300$, $\pi_2 = \pi_1(1 - d)/2 = -0{,}105$
@@ -688,7 +691,7 @@ $1$ & rădăcină unitară & nu & infinită & nu scade \\
         \item $\rho(10) = 0{,}173$, $\rho(100) = 0{,}069$
     \end{itemize}
     \item AR(1) cu $\phi = 0{,}429$: $\rho(10) = 0{,}0002$
-    \item Autocorelația scade sub 0,05 după 4 decalaje pentru AR(1) și după 222 de decalaje pentru ARFIMA; $H = d + 0{,}5 = 0{,}8$
+    \item Autocorelația scade sub 0,05 după 4 laguri pentru AR(1) și după 222 laguri pentru ARFIMA; $H = d + 0{,}5 = 0{,}8$
 \end{itemize}
 \end{frame}
 
@@ -764,10 +767,12 @@ GPH & frecvență & $\hat d$ cu eroare standard & varianță mare; alegerea lă�
 \begin{itemize}
     \item \textbf{Periodograma} la frecvențele Fourier $\lambda_j = 2\pi j/T$: $I(\lambda_j) = \dfrac{1}{2\pi T}\left|\sum_{t=1}^{T} x_t e^{-i\lambda_j t}\right|^2$
     \begin{itemize}
+        \item $T$: numărul de observații; $i$: unitatea imaginară; $|\cdot|^2$: pătratul modulului
         \item estimează densitatea spectrală, care se comportă ca $C\lambda^{-2d}$ lîngă zero
     \end{itemize}
     \item \textbf{GPH} \refGPH; \refFHH, 14.5.2: $\ln I(\lambda_j) = c - d\,\ln\!\left(4\sin^2(\lambda_j/2)\right) + e_j$, $j = 1, \dots, m$
     \begin{itemize}
+        \item $m$: numărul de frecvențe joase folosite; $c$: o constantă; $e_j$: eroarea
         \item $\hat d$ = panta OLS în funcție de $-\ln(4\sin^2(\lambda_j/2))$; $\hat H = \hat d + 0{,}5$
         \item eroarea standard asimptotică $\pi/\sqrt{24m}$; lățimea de bandă $m = \lfloor T^{0{,}5}\rfloor$
     \end{itemize}
@@ -794,10 +799,11 @@ GPH & frecvență & $\hat d$ cu eroare standard & varianță mare; alegerea lă�
     \item Problema: și memoria scurtă (de exemplu un AR(1)) mărește R/S, deci R/S clasic confundă memoria scurtă cu memoria lungă
     \item \refLo: $V_N(q) = \dfrac{R_N}{\sqrt{N}\,\hat\sigma_N(q)}$, $\hat\sigma^2_N(q) = \hat\gamma_0 + 2\sum_{j=1}^{q}\left(1 - \tfrac{j}{q + 1}\right)\hat\gamma_j$
     \begin{itemize}
-        \item $\hat\gamma_j$: autocovarianțele de selecție; $\hat\sigma^2_N(q)$: varianța de lungă durată Newey--West \refNW; $q = 0$: R/S clasic
-        \item $q = \lfloor (3N/2)^{1/3}\,(2\hat\rho_1/(1 - \hat\rho_1^2))^{2/3}\rfloor$, dependent de date (regula lui Andrews, folosită de Lo)
+        \item $N$: numărul de randamente; $R_N$: amplitudinea abaterilor cumulate pe întregul eșantion
+        \item $\hat\gamma_j$: autocovarianțele de selecție; $\hat\sigma^2_N(q)$: varianța pe termen lung Newey--West \refNW; $q = 0$: R/S clasic
+        \item $q = \lfloor (3N/2)^{1/3}\,(2\hat\rho_1/(1 - \hat\rho_1^2))^{2/3}\rfloor$ ($\hat\rho_1$: autocorelația de ordinul 1), dependent de date (regula lui Andrews, folosită de Lo)
     \end{itemize}
-    \item $H_0$: memorie scurtă; la 5\% respingem dacă $V_N(q) \notin [0{,}809, 1{,}862]$
+    \item $H_0$: memorie scurtă; la 5\% respingem dacă $V_N(q) \notin [0{,}809; 1{,}862]$
     \begin{itemize}
         \item Concluzia lui Lo: nu există memorie lungă în randamentele indicilor bursieri din SUA, odată ce se ține cont de memoria scurtă
     \end{itemize}
@@ -824,7 +830,7 @@ GPH & frecvență & $\hat d$ cu eroare standard & varianță mare; alegerea lă�
     \begin{itemize}
         \item 1. simulăm multe serii i.i.d.\ Normale, de aceeași lungime $N$ ca datele
         \item 2. aplicăm exact același estimator (aceleași mărimi de bloc, aceeași lățime de bandă)
-        \item 3. cuantilele de 2,5\% și 97,5\% ale lui $\hat H$ formează banda de 95\% sub $H = 0{,}5$
+        \item 3. cuantilele de 2,5\% și 97,5\% ale lui $\hat H$ formează banda de 95\% în ipoteza $H = 0{,}5$
     \end{itemize}
     \item Respingem $H = 0{,}5$ doar dacă $\hat H$ se află în afara benzii
     \item Seria i.i.d.\ Normală este cea mai simplă ipoteză nulă; un model estimat cu memorie scurtă (AR, GARCH) dă o ipoteză nulă mai exigentă (secțiunea 6)
@@ -855,13 +861,13 @@ GPH & frecvență & $\hat d$ cu eroare standard & varianță mare; alegerea lă�
 \midrule
 randamente $r_t$ & $0{,}53$ & $0{,}49$ & $0{,}04$ ($0{,}07$) & $1{,}56$ & 7 \\
 randamente absolute $|r_t|$ & $0{,}86$ & $0{,}95$ & $0{,}47$ ($0{,}07$) & $2{,}66$ & 15 \\
-banda de 95\%, i.i.d. & $[0{,}51; 0{,}57]$ & $[0{,}46; 0{,}54]$ & $[0{,}36; 0{,}65]$ & $[0{,}809, 1{,}862]$ &  \\
+banda de 95\%, i.i.d. & $[0{,}51; 0{,}57]$ & $[0{,}46; 0{,}54]$ & $[0{,}36; 0{,}65]$ & $[0{,}809; 1{,}862]$ &  \\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
     \item $N = 6\,714$ randamente zilnice, din 2000 pînă la 18 septembrie 2026; banda GPH este dată pentru $\hat H = \hat d + 0{,}5$
-    \item Randamente: fiecare estimare se află în banda ei, $V_N(q)$ se află în $[0{,}809, 1{,}862]$
+    \item Randamente: fiecare estimare se află în banda ei, $V_N(q)$ se află în $[0{,}809; 1{,}862]$
     \item Randamente absolute: fiecare estimare este mult peste banda ei, iar testul lui Lo respinge memoria scurtă
 \end{itemize}
 \end{frame}
@@ -1004,7 +1010,7 @@ banda de 95\%, i.i.d. & $[0{,}51; 0{,}57]$ & $[0{,}46; 0{,}54]$ & $[0{,}36; 0{,}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item $|r_t|$: $\rho(1) = 0{,}289$, $\rho(50) = 0{,}127$, $\rho(100) = 0{,}082$; 227 dintre primele 250 de decalaje sînt peste banda $0{,}024$
+    \item $|r_t|$: $\rho(1) = 0{,}289$, $\rho(50) = 0{,}127$, $\rho(100) = 0{,}082$; 227 dintre primele 250 de laguri sînt peste banda $0{,}024$
     \item $r_t^2$: $\rho(1) = 0{,}313$, $\rho(50) = 0{,}053$; $r_t$: $\rho(1) = -0{,}099$, apoi în interiorul benzii
     \item \refDGE: $|r_t|$ este mai persistent decît $r_t^2$, care este mai afectat de zilele extreme izolate
 \end{itemize}
@@ -1193,8 +1199,9 @@ SNP & 3\,815 & $0{,}55$ & $0{,}49$ & $-0{,}02$ & $0{,}73$ & $0{,}21$ & $2{,}39$ 
 \begin{frame}{Scalarea riscului cu $h^H$}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item Dacă randamentele sînt autosimilare: VaR 1\% pe $h$ zile $= z_{0{,}99}\,\sigma\,h^H$, cu $z_{0{,}99} = 2{,}326$ (cazul Normal)
+    \item Dacă randamentele sînt autosimilare: VaR 1\% pe $h$ zile $= -z_{0{,}01}\,\sigma\,h^H$, cu $z_{0{,}01} = -2{,}326$ (cazul Normal, media 0)
     \begin{itemize}
+        \item $z_{0{,}01}$: cuantila de 1\% a lui $N(0,1)$; $\sigma$: volatilitatea zilnică; $h^H$ înlocuiește factorul $\sqrt{h}$
         \item volatilitatea zilnică $\sigma = 1{,}2\%$: VaR 1\% pe o zi $= 2{,}79\%$
     \end{itemize}
     \item Zece zile
@@ -1308,8 +1315,8 @@ fGn & $\rho(k) = \tfrac12(|k + 1|^{2H} - 2|k|^{2H} + |k - 1|^{2H}) \approx H(2H 
 ARFIMA(0,$d$,0) & $(1 - L)^d X_t = \varepsilon_t$, \quad $\rho(k) = \rho(k - 1)\frac{k - 1 + d}{k - d}$, \quad $d = H - 0{,}5$ \\
 DFA & $F(n) \propto n^{\alpha}$, \quad $\alpha = H$ pentru fGn \\
 GPH & $\ln I(\lambda_j) = c - d\ln(4\sin^2(\lambda_j/2)) + e_j$, \quad $j \le m = T^{0{,}5}$, \quad SE $= \pi/\sqrt{24m}$ \\
-Lo & $V_N(q) = R_N/(\sqrt{N}\hat\sigma_N(q))$; respingem la 5\% în afara $[0{,}809, 1{,}862]$ \\
-VaR 1\% & $z_{0{,}99}\,\sigma\,h^H$ \\
+Lo & $V_N(q) = R_N/(\sqrt{N}\hat\sigma_N(q))$; respingem la 5\% în afara $[0{,}809; 1{,}862]$ \\
+VaR 1\% & $-z_{0{,}01}\,\sigma\,h^H$ \\
 \bottomrule
 \end{tabular}
 \end{center}

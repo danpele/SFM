@@ -379,7 +379,7 @@ window.SFM_DATA.quizzes['var-es'] = {
                 "options": [
                     "Pentru randamente Normale i.i.d. cu media 0",
                     "Întotdeauna",
-                    "Pentru randamente GARCH după o furtună",
+                    "Pentru randamente GARCH după o perioadă turbulentă",
                     "Pentru randamente i.i.d. cu cozi groase"
                 ],
                 "correctExplanation": "Doar atunci randamentul pe 10 zile este Normal, cu abaterea standard sigma sqrt(10), deci toate cuantilele se scalează cu sqrt(10).",
@@ -491,7 +491,7 @@ window.SFM_DATA.quizzes['var-es'] = {
                     "LR_cc este numărul depășirilor împărțit la n"
                 ],
                 "correctExplanation": "Adună statistica Kupiec (rata) și statistica de independență (gruparea); fiecare are un grad de libertate.",
-                "incorrectExplanation": "Cele două statistici ale raportului de verosimilitate se adună, deci distribuția de referință are două grade de libertate; un raport de numărători este doar rata observată."
+                "incorrectExplanation": "Cele două statistici ale raportului de verosimilitate se adună, deci distribuția de referință are două grade de libertate; un raport între numere de zile este doar rata observată."
             }
         },
         {
@@ -652,8 +652,8 @@ window.SFM_DATA.quizzes['var-es'] = {
                     "Cei doi indici sînt independenți",
                     "Copulele nu pot fi comparate cu datele"
                 ],
-                "correctExplanation": "La independență s-ar aștepta circa 16 zile; datele arată o dependență puternică în coada inferioară, pe care doar copula t o surprinde parțial.",
-                "incorrectExplanation": "Cele 70 de zile sînt mult peste cele 16 așteptate la independență și peste cele 37 ale copulei Gaussiene; numărătorile compară direct copulele cu datele."
+                "correctExplanation": "La independență s-ar aștepta circa 16 zile; datele arată o dependență puternică în lower tail, pe care doar copula t o surprinde parțial.",
+                "incorrectExplanation": "Cele 70 de zile sînt mult peste cele 16 așteptate la independență și peste cele 37 ale copulei Gaussiene; aceste numere de zile compară direct copulele cu datele."
             }
         }
     ]

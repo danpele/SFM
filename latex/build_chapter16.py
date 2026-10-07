@@ -62,10 +62,49 @@ FACT = T('\\textbf{Empirical facts}', '\\textbf{Fapte empirice}')
 MIST = T('\\textbf{Common mistakes}', '\\textbf{Greșeli frecvente}')
 
 
-def review(n, title, formulas, fct, mistakes, size='footnotesize'):
-    """One recap slide per chapter: key formulas, empirical facts, common mistakes."""
-    D.frame(T(f'Chapter {n}: {title[0]}', f'Capitolul {n}: {title[1]}'),
-            items((FORM, formulas), (FACT, fct), (MIST, mistakes)), size)
+NOTN = T('\\textbf{Notation}', '\\textbf{Notațiile}')
+NOTE = {
+    0: [T('$\\sigma$: the standard deviation of daily returns; $A$: the number of observations per year', '$\\sigma$: abaterea standard a randamentelor zilnice; $A$: numărul de observații pe an'),
+        T('$P_t$: the price on day $t$; $\\max_{s \\le t}P_s$: the highest price up to day $t$; $D_t \\le 0$', '$P_t$: prețul din ziua $t$; $\\max_{s \\le t}P_s$: cel mai mare preț pînă în ziua $t$; $D_t \\le 0$')],
+    1: [T('$R_t$: the simple return, $r_t$: the log return of period $t$; $P_0$, $P_T$: the first and the last price; $Y$: the number of years', '$R_t$: randamentul simplu, $r_t$: randamentul logaritmic al perioadei $t$; $P_0$, $P_T$: primul și ultimul preț; $Y$: numărul de ani'),
+        T('$\\mu$, $\\sigma$: the annual mean and volatility; $r_f$: the risk-free rate; SR: the Sharpe ratio; SE: its standard error', '$\\mu$, $\\sigma$: media și volatilitatea anuale; $r_f$: rata fără risc; SR: raportul Sharpe; SE: eroarea lui standard')],
+    2: [T('$m_k = \\frac1n\\sum_t (r_t - \\bar r)^k$: the $k$-th central moment; $S$: skewness; $K$: excess kurtosis (0 for the Normal distribution)', '$m_k = \\frac1n\\sum_t (r_t - \\bar r)^k$: momentul centrat de ordin $k$; $S$: asimetria; $K$: excesul de boltire (0 pentru distribuția Normală)'),
+        T('JB: Jarque--Bera, $\\chi^2(2)$ under normality; $\\nu$: degrees of freedom; $\\hat\\rho(h)$: the autocorrelation at lag $h$; $m$: the number of lags', 'JB: Jarque--Bera, $\\chi^2(2)$ în ipoteza de normalitate; $\\nu$: gradele de libertate; $\\hat\\rho(h)$: autocorelația la lagul $h$; $m$: numărul de laguri')],
+    3: [T('$X_1, \\dots, X_n$: independent copies of $X$; $\\overset{d}{=}$: same distribution; $d_n$: a shift; $\\alpha \\in (0, 2]$: the stability index', '$X_1, \\dots, X_n$: copii independente ale lui $X$; $\\overset{d}{=}$: aceeași distribuție; $d_n$: o translație; $\\alpha \\in (0, 2]$: indicele de stabilitate'),
+        T('$c$: a constant; $p$: the order of a moment; S0, S1: two parametrisations of the same family', '$c$: o constantă; $p$: ordinul unui moment; S0, S1: două parametrizări ale aceleiași familii')],
+    4: [T('$a$, $b$: weights; $\\sigma_X$, $\\sigma_Y$: standard deviations; $p$: the estimated probability; $N$: the number of Monte Carlo draws', '$a$, $b$: ponderi; $\\sigma_X$, $\\sigma_Y$: abateri standard; $p$: probabilitatea estimată; $N$: numărul de extrageri Monte Carlo'),
+        T('GBM (geometric Brownian motion): $S_t$: price at time $t$ (years); $\\mu$: drift; $\\sigma$: volatility; $W_t \\sim N(0, t)$: a Brownian motion', 'GBM (mișcarea browniană geometrică): $S_t$: prețul la momentul $t$ (ani); $\\mu$: tendința; $\\sigma$: volatilitatea; $W_t \\sim N(0, t)$: o mișcare browniană')],
+    5: [T('$L_{(i)}$: the $i$-th largest loss; $k$: the number of tail observations; $\\xi = 1/\\alpha$: the shape (tail) parameter', '$L_{(i)}$: a $i$-a cea mai mare pierdere; $k$: numărul observațiilor din coadă; $\\xi = 1/\\alpha$: parametrul de formă al cozii'),
+        T('GPD: $u$: the threshold; $\\beta$: the scale; $N_u$: the losses above $u$ out of $n$; in the VaR formula $\\alpha$ is the level (1\\%), not the tail index', 'GPD: $u$: pragul; $\\beta$: scala; $N_u$: pierderile peste $u$ din cele $n$; în formula VaR, $\\alpha$ este nivelul (1\\%), nu tail index-ul')],
+    6: [T('$\\ell_0$, $\\ell_1$: the maximised log-likelihoods of the smaller and of the larger model; $k_0$, $k_1$, $k$: numbers of parameters; $n$: sample size', '$\\ell_0$, $\\ell_1$: log-verosimilitățile maxime ale modelului restrîns și ale celui extins; $k_0$, $k_1$, $k$: numerele de parametri; $n$: volumul eșantionului'),
+        T('$F_n$: the empirical distribution function; $F$: the model; $D_n$: their largest vertical distance; smaller AIC or BIC is better', '$F_n$: funcția de repartiție empirică; $F$: modelul; $D_n$: cea mai mare distanță verticală dintre ele; un AIC sau BIC mai mic este mai bun')],
+    7: [T('$\\rho(k)$: the autocorrelation at lag $k$; $q$: the horizon of the variance ratio; VR $= 1$ under a random walk', '$\\rho(k)$: autocorelația la lagul $k$; $q$: orizontul raportului varianțelor; VR $= 1$ pentru un mers aleator'),
+        T('$T$: the number of returns; $\\hat\\theta$: a variance estimate robust to volatility clustering; $Z^* \\approx N(0, 1)$ under the null', '$T$: numărul de randamente; $\\hat\\theta$: o estimație a varianței robustă la volatility clustering; $Z^* \\approx N(0, 1)$ în ipoteza nulă')],
+    8: [T('$\\lambda \\in (0, 1)$: the decay factor; $r_{t-1}$: yesterday\'s return; $H_t$, $L_t$: the high and the low of day $t$', '$\\lambda \\in (0, 1)$: factorul de descompunere; $r_{t-1}$: randamentul de ieri; $H_t$, $L_t$: maximul și minimul zilei $t$'),
+        T('ARCH-LM: $R^2$ of the regression of $r_t^2$ on its $q$ lags, times $n$; a large value: volatility clustering', 'ARCH-LM: $R^2$ al regresiei lui $r_t^2$ pe $q$ laguri ale sale, înmulțit cu $n$; o valoare mare: volatility clustering')],
+    9: [T('$\\omega$: the constant; $\\alpha$: the reaction to yesterday\'s shock $\\varepsilon_{t-1}$; $\\beta$: the memory; $\\bar\\sigma^2$: the long-run variance', '$\\omega$: constanta; $\\alpha$: reacția la șocul de ieri, $\\varepsilon_{t-1}$; $\\beta$: memoria; $\\bar\\sigma^2$: varianța pe termen lung'),
+        T('$E_t$: the forecast made at day $t$; $h$: the horizon in days; $\\alpha + \\beta$: the speed at which the forecast returns to $\\bar\\sigma^2$', '$E_t$: prognoza făcută în ziua $t$; $h$: orizontul, în zile; $\\alpha + \\beta$: viteza cu care prognoza revine la $\\bar\\sigma^2$')],
+    10: [T('$q_\\alpha$: the $\\alpha$-quantile of the return $X$; $z_\\alpha$: the standard Normal quantile; $\\varphi$: the standard Normal density', '$q_\\alpha$: cuantila de ordin $\\alpha$ a randamentului $X$; $z_\\alpha$: cuantila Normală standard; $\\varphi$: densitatea Normală standard'),
+         T('$x$: the exceptions in $n$ days; $\\hat\\pi = x/n$: the observed rate; $LR_{uc}$ compares it with the target $\\alpha$', '$x$: depășirile în $n$ zile; $\\hat\\pi = x/n$: rata observată; $LR_{uc}$ o compară cu ținta $\\alpha$')],
+    11: [T('$(R/S)_n$: the rescaled range (range of the cumulated deviations divided by the standard deviation) on blocks of $n$ days', '$(R/S)_n$: amplitudinea rescalată (amplitudinea abaterilor cumulate împărțită la abaterea standard) pe blocuri de $n$ zile'),
+         T('$H$: the Hurst exponent; $d$: the fractional parameter; $r^{(h)}$: the $h$-day return; sd: the standard deviation', '$H$: exponentul Hurst; $d$: parametrul fracționar; $r^{(h)}$: randamentul pe $h$ zile; sd: abaterea standard')],
+    12: [T('EL: expected loss; PD: probability of default; LGD: loss given default; EAD: exposure at default', 'EL: pierderea așteptată; PD: probabilitatea de nerambursare; LGD: pierderea în caz de nerambursare; EAD: expunerea la nerambursare'),
+         T('$p$: the probability of default given $x$; $\\beta_j$: a coefficient; $s$: the score of a bad or a good borrower; AUC $= 0.5$: no discrimination, 1: perfect', '$p$: probabilitatea de nerambursare condiționată de $x$; $\\beta_j$: un coeficient; $s$: scorul unui debitor rău sau bun; AUC $= 0{,}5$: nicio discriminare, 1: discriminare perfectă')],
+    13: [T('$y_0$: a new observation; $\\hat f$: the fitted model; $\\sigma^2$: the noise variance; $\\hat y$: the forecast', '$y_0$: o observație nouă; $\\hat f$: modelul estimat; $\\sigma^2$: varianța zgomotului; $\\hat y$: prognoza'),
+         T('$\\tilde y$: the benchmark forecast; sums over the test sample; $R^2_{OOS} < 0$: worse than the benchmark', '$\\tilde y$: prognoza de referință; sumele parcurg eșantionul de test; $R^2_{OOS} < 0$: mai slab decît reperul')],
+    14: [T('$\\sigma$: the standard deviation of daily returns; crypto trades 365 days a year', '$\\sigma$: abaterea standard a randamentelor zilnice; activele cripto se tranzacționează 365 de zile pe an'),
+         T('$P_t$: the price of the stablecoin in USD; 1 basis point $= 0.01\\%$; $d_t < 0$: below the peg', '$P_t$: prețul stablecoin-ului în USD; 1 punct de bază $= 0{,}01\\%$; $d_t < 0$: sub paritate')],
+    15: [T('$b$: the slope of the quantile regression of the system on the bank; $q_\\alpha$, $q_{50}$: the $\\alpha$-quantile and the median of the bank\'s return', '$b$: panta regresiei cuantilice a sistemului pe bancă; $q_\\alpha$, $q_{50}$: cuantila de ordin $\\alpha$ și mediana randamentului băncii'),
+         T('MES: the bank\'s mean loss on the market\'s worst days; SRISK: the capital missing in a crisis', 'MES: pierderea medie a băncii în cele mai proaste zile ale pieței; SRISK: capitalul lipsă într-o criză')],
+}
+
+
+def review(n, title, formulas, fct, mistakes, size='small'):
+    """Two recap slides per chapter: key formulas with their notation; empirical facts and common mistakes."""
+    D.frame(T(f'Chapter {n}: {title[0]} (1/2)', f'Capitolul {n}: {title[1]} (1/2)'),
+            items((FORM, formulas), (NOTN, NOTE[n])), size)
+    D.frame(T(f'Chapter {n}: {title[0]} (2/2)', f'Capitolul {n}: {title[1]} (2/2)'),
+            items((FACT, fct), (MIST, mistakes)), size)
 
 
 # =============================================================================
@@ -217,7 +256,7 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), cols(
        '\\textbf{Întrebarea}: ce spune întregul curs despre randamentele BET, S\\&P 500 și Bitcoin și cum se evaluează aceste cunoștințe la examen?'),
      [T('one chapter that ties Chapters 0--15 together', 'un capitol care leagă Capitolele 0--15')]),
     (T('\\textbf{Route}', '\\textbf{Traseul}'),
-     [T('Part I: the course map, one recap slide per chapter, the toolbox of tests and models', 'Partea I: harta cursului, cîte un slide de recapitulare pentru fiecare capitol, trusa de teste și modele'),
+     [T('Part I: the course map, two recap slides per chapter, the toolbox of tests and models', 'Partea I: harta cursului, cîte două slide-uri de recapitulare pentru fiecare capitol, trusa de teste și modele'),
       T('Part II: the exam (format, grading, eight solved problems) and the team project', 'Partea a II-a: examenul (format, criterii de notare, opt probleme rezolvate) și proiectul de echipă'),
       T('Part III: how AI could help in your own research', 'Partea a III-a: contribuția posibilă a AI în propria cercetare')])),
     ph('bvb2023', T('The Stock Exchange Palace, Bucharest', 'Palatul Bursei, București'), h='0.40\\textheight'), '0.58', '0.38'))
@@ -306,7 +345,7 @@ TROW = [
     (T('Volatility, \\% a year', 'Volatilitate, \\% pe an'), lambda k: f'$@{{s.{k}.vol}}$'),
     (T('Sharpe ratio ($r_f = 0$) $\\pm$ SE', 'Raportul Sharpe ($r_f = 0$) $\\pm$ SE'), lambda k: f'$@{{s.{k}.sh}} \\pm @{{s.{k}.shse}}$'),
     (T('Skewness; excess kurtosis', 'Asimetrie; excesul de boltire'), lambda k: f'$@{{s.{k}.skew}}$; $@{{s.{k}.k}}$'),
-    (T('Hill tail index of losses ($k = 2.5\\%\\,n$)', 'Indicele de coadă Hill al pierderilor ($k = 2{,}5\\%\\,n$)'), lambda k: f'$@{{s.{k}.hill}}$'),
+    (T('Hill tail index of losses ($k = 2.5\\%\\,n$)', 'Tail index-ul Hill al pierderilor ($k = 2{,}5\\%\\,n$)'), lambda k: f'$@{{s.{k}.hill}}$'),
     (T('Ljung--Box $Q(10)$: $r_t$; $r_t^2$', 'Ljung--Box $Q(10)$: $r_t$; $r_t^2$'), lambda k: f'$@{{s.{k}.lbr}}$; $@{{s.{k}.lbr2}}$'),
     (T('VR(5); robust $Z^*(5)$', 'VR(5); $Z^*(5)$ robust'), lambda k: f'$@{{s.{k}.vr}}$; $@{{s.{k}.zs}}$'),
     (T('GARCH(1,1)-$t$: $\\alpha + \\beta$', 'GARCH(1,1)-$t$: $\\alpha + \\beta$'), lambda k: f'$@{{s.{k}.pers}}$'),
@@ -323,7 +362,7 @@ D.frame(T('The Course in One Table', 'Cursul într-un singur tabel'), table(
 D.frame(T('Interpreting the Table', 'Interpretarea tabelului'), items(
     (T('\\textbf{Return and risk}: Bitcoin has about four times the volatility of the two indices', '\\textbf{Randament și risc}: Bitcoin are o volatilitate de circa patru ori mai mare decît a celor doi indici'),
      [T('the Sharpe ratios are close once their standard errors are taken into account', 'rapoartele Sharpe sînt apropiate, dacă ținem seama de erorile lor standard')]),
-    (T('\\textbf{Distribution}: negative skewness, excess kurtosis above 10, Hill indices between 2 and 3', '\\textbf{Distribuția}: asimetrie negativă, exces de boltire peste 10, indici Hill între 2 și 3'),
+    (T('\\textbf{Distribution}: negative skewness, excess kurtosis above 10, Hill indices between 2 and 3', '\\textbf{Distribuția}: asimetrie negativă, exces de boltire peste 10, tail index-uri Hill între 2 și 3'),
      [T('the Normal VaR 1\\% is too low by @{s.sp500.gap}\\% (S\\&P 500), @{s.bet.gap}\\% (BET) and @{s.btc.gap}\\% (Bitcoin)', 'VaR 1\\% Normal este prea mic cu @{s.sp500.gap}\\% (S\\&P 500), @{s.bet.gap}\\% (BET) și @{s.btc.gap}\\% (Bitcoin)')]),
     (T('\\textbf{Dependence}: Ljung--Box on $r_t^2$ is many times larger than on $r_t$', '\\textbf{Dependența}: statistica Ljung--Box pe $r_t^2$ este de multe ori mai mare decît pe $r_t$'),
      [T('the robust VR test rejects no random walk at 5\\% here; $H$ of $|r_t|$ is far above 0.5', 'testul VR robust nu respinge aici mersul aleator la 5\\%; $H$ pentru $|r_t|$ este mult peste 0,5'),
@@ -345,7 +384,7 @@ D.recap(('The Course Map', 'harta cursului'), [
 D.section('Chapters 0--3: Data, Returns and Distributions', 'Capitolele 0--3: date, randamente și distribuții')
 
 review(0, ('Introduction', 'introducere'),
-       [T('annualised volatility $\\sigma_{\\text{ann}} = \\sqrt{q}\\,\\sigma$, $q$ = observations per year (252 for shares, 365 for crypto)', 'volatilitatea anualizată $\\sigma_{\\text{an}} = \\sqrt{q}\\,\\sigma$, $q$ = observații pe an (252 la acțiuni, 365 la cripto)'),
+       [T('annualised volatility $\\sigma_{\\text{ann}} = \\sqrt{A}\\,\\sigma$, $A$ = observations per year (252 for shares, 365 for crypto)', 'volatilitatea anualizată $\\sigma_{\\text{an}} = \\sqrt{A}\\,\\sigma$, $A$ = observații pe an (252 la acțiuni, 365 la cripto)'),
         T('drawdown $D_t = P_t/\\max_{s \\le t}P_s - 1$; maximum drawdown MDD $= \\min_t D_t$', 'drawdown $D_t = P_t/\\max_{s \\le t}P_s - 1$; drawdown maxim MDD $= \\min_t D_t$')],
        [T('since 2015: volatility @{f0.spvol}\\% a year for the S\\&P 500, @{f0.btcvol}\\% for Bitcoin', 'din 2015: volatilitate de @{f0.spvol}\\% pe an pentru S\\&P 500 și de @{f0.btcvol}\\% pentru Bitcoin'),
         T('BET: $@{f0.betmdd}\\%$ from @{f0.betpeak} to @{f0.bettrough}; back to the peak only on @{f0.betrec}', 'BET: $@{f0.betmdd}\\%$ între @{f0.betpeak} și @{f0.bettrough}; revenire la vîrf abia la @{f0.betrec}')],
@@ -397,7 +436,7 @@ review(4, ('Probability', 'probabilitate'),
 review(5, ('Heavy Tails and Extreme Value Theory', 'cozi groase și teoria valorilor extreme'),
        [T('Hill: $\\hat\\alpha_k = [\\frac1k\\sum_{i=1}^k \\ln(L_{(i)}/L_{(k+1)})]^{-1}$, SE $\\approx \\hat\\alpha/\\sqrt{k}$ \\refHill; $\\xi = 1/\\alpha$', 'Hill: $\\hat\\alpha_k = [\\frac1k\\sum_{i=1}^k \\ln(L_{(i)}/L_{(k+1)})]^{-1}$, SE $\\approx \\hat\\alpha/\\sqrt{k}$ \\refHill; $\\xi = 1/\\alpha$'),
         T('GPD above $u$: VaR $= u + \\frac{\\beta}{\\xi}[(n\\alpha/N_u)^{-\\xi} - 1]$; GEV for block maxima', 'GPD peste $u$: VaR $= u + \\frac{\\beta}{\\xi}[(n\\alpha/N_u)^{-\\xi} - 1]$; GEV pentru block maxima')],
-       [T('tail index of the losses: BET @{f5.a.bet} (95\\% CI [@{f5.lo}, @{f5.hi}], since @{f5.y0.bet}), S\\&P 500 @{f5.a.sp500}, Bitcoin @{f5.a.btc}', 'indicele de coadă al pierderilor: BET @{f5.a.bet} (CI 95\\% [@{f5.lo}, @{f5.hi}], din @{f5.y0.bet}), S\\&P 500 @{f5.a.sp500}, Bitcoin @{f5.a.btc}'),
+       [T('tail index of the losses: BET @{f5.a.bet} (95\\% CI [@{f5.lo}, @{f5.hi}], since @{f5.y0.bet}), S\\&P 500 @{f5.a.sp500}, Bitcoin @{f5.a.btc}', 'tail index-ul pierderilor: BET @{f5.a.bet} (CI 95\\% [@{f5.lo}, @{f5.hi}], din @{f5.y0.bet}), S\\&P 500 @{f5.a.sp500}, Bitcoin @{f5.a.btc}'),
         T('BET, VaR 0.1\\%: EVT @{f5.v01e}\\%, Normal only @{f5.v01n}\\%', 'BET, VaR 0,1\\%: EVT @{f5.v01e}\\%, distribuția Normală doar @{f5.v01n}\\%')],
        [T('choosing $k$ without looking at the Hill plot; reporting $\\hat\\alpha$ without an interval', 'alegerea lui $k$ fără graficul Hill; raportarea lui $\\hat\\alpha$ fără interval'),
         T('applying the Hill estimator to returns instead of losses $L = -r$', 'aplicarea estimatorului Hill pe randamente în loc de pierderi $L = -r$')])
@@ -420,7 +459,7 @@ review(7, ('Efficient Markets, Random Walk and VR Tests', 'piețe eficiente, mer
 
 D.recap(('Chapters 4--7', 'Capitolele 4--7'), [
     T('Probability gives the tools: covariance, conditional variance, Monte Carlo with its error', 'Probabilitățile dau instrumentele: covarianța, varianța condiționată, Monte Carlo cu eroarea lui'),
-    T('Tails are power laws with $\\alpha$ between 2 and 4; EVT gives VaR far in the tail', 'Cozile sînt legi putere cu $\\alpha$ între 2 și 4; EVT dă VaR departe în coadă'),
+    T('Tails are power laws with $\\alpha$ between 2 and 4; EVT gives VaR far in the tail', 'Cozile urmează legi de putere cu $\\alpha$ între 2 și 4; EVT dă VaR departe în coadă'),
     T('Choose the model for its purpose and check it out of sample; test efficiency with robust statistics', 'Modelul se alege după scop și se verifică în afara eșantionului; eficiența se testează cu statistici robuste')])
 
 # =============================================================================
@@ -489,7 +528,7 @@ review(13, ('Machine Learning', 'învățare automată'),
         T('out of sample: $R^2_{OOS} = 1 - \\sum(y - \\hat y)^2/\\sum(y - \\tilde y)^2$ against a simple benchmark $\\tilde y$ \\refGKX', 'în afara eșantionului: $R^2_{OOS} = 1 - \\sum(y - \\hat y)^2/\\sum(y - \\tilde y)^2$ față de un reper simplu $\\tilde y$ \\refGKX')],
        [T('sign of S\\&P 500 returns since @{f13.y0}: ``always up\'\' @{f13.base}\\%, logit @{f13.logit}\\%, boosting @{f13.gb}\\%', 'semnul randamentelor S\\&P 500 din @{f13.y0}: „mereu creștere” @{f13.base}\\%, logit @{f13.logit}\\%, boosting @{f13.gb}\\%'),
         T('realised volatility: HAR $R^2_{OOS} = @{f13.har}$ against the mean; lasso lowers the squared error of HAR by only @{f13.lasso}\\%', 'volatilitatea realizată: HAR $R^2_{OOS} = @{f13.har}$ față de medie; lasso reduce eroarea pătratică a HAR doar cu @{f13.lasso}\\%')],
-       [T('random cross-validation on time series (look-ahead bias and leakage)', 'validarea încrucișată aleatoare pe serii de timp (look-ahead bias și scurgere de informație)'),
+       [T('random cross-validation on time series (look-ahead bias and leakage)', 'validarea încrucișată aleatoare pe serii de timp (look-ahead bias și leakage)'),
         T('reporting the best of many trials without deflating the Sharpe ratio', 'raportarea celei mai bune dintre multe încercări fără deflatarea raportului Sharpe')])
 
 review(14, ('Crypto Assets', 'active cripto'),
@@ -498,7 +537,7 @@ review(14, ('Crypto Assets', 'active cripto'),
        [T('Bitcoin: volatility @{f14.vol}\\% a year with 365 days (@{f14.vol252}\\% if one wrongly uses 252), maximum drawdown $@{f14.mdd}\\%$', 'Bitcoin: volatilitate de @{f14.vol}\\% pe an cu 365 de zile (@{f14.vol252}\\% dacă se folosește greșit 252), drawdown maxim $@{f14.mdd}\\%$'),
         T('correlation with the S\\&P 500: @{f14.pre} before 2020, @{f14.post} after: not a safe haven', 'corelația cu S\\&P 500: @{f14.pre} înainte de 2020, @{f14.post} după: nu este un activ de refugiu')],
        [T('removing weekends from crypto data, or joining crypto and equity returns on different calendars', 'eliminarea weekendurilor din datele cripto sau alinierea randamentelor cripto și de acțiuni pe calendare diferite'),
-        T('a Normal VaR for a series with $\\alpha + \\beta = 1$ and tail index below 3', 'un VaR Normal pentru o serie cu $\\alpha + \\beta = 1$ și indice de coadă sub 3')])
+        T('a Normal VaR for a series with $\\alpha + \\beta = 1$ and tail index below 3', 'un VaR Normal pentru o serie cu $\\alpha + \\beta = 1$ și tail index sub 3')])
 
 review(15, ('Systemic Risk', 'risc sistemic'),
        [T('CoVaR: the VaR of the system given an institution at its VaR; $\\Delta\\mathrm{CoVaR} = b\\,(q_{50} - q_\\alpha)$ from a quantile regression \\refAB', 'CoVaR: VaR-ul sistemului cînd o instituție se află la VaR-ul ei; $\\Delta\\mathrm{CoVaR} = b\\,(q_{50} - q_\\alpha)$ dintr-o regresie cuantilică \\refAB'),
@@ -546,8 +585,8 @@ D.frame(T('Toolbox (2/2): Dependence in Time, Volatility and Risk', 'Trusa de in
 D.frame(T('Conventions Used Throughout the Course', 'Convențiile folosite în tot cursul'), items(
     (T('\\textbf{Returns}: daily log returns in \\%, $r_t = 100\\,(\\ln P_t - \\ln P_{t-1})$', '\\textbf{Randamentele}: randamente logaritmice zilnice în \\%, $r_t = 100\\,(\\ln P_t - \\ln P_{t-1})$'),
      [T('portfolios: simple returns, prices joined on common days first', 'portofolii: randamente simple, după alinierea prețurilor pe zilele comune')]),
-    (T('\\textbf{Annualisation}: mean $\\times q$, volatility $\\times\\sqrt{q}$, with the actual $q$', '\\textbf{Anualizarea}: media $\\times q$, volatilitatea $\\times\\sqrt{q}$, cu $q$ real'),
-     [T('about 252 for shares and indices, 365 for crypto', 'circa 252 pentru acțiuni și indici, 365 pentru cripto')]),
+    (T('\\textbf{Annualisation}: mean $\\times A$, volatility $\\times\\sqrt{A}$, with the actual $A$', '\\textbf{Anualizarea}: media $\\times A$, volatilitatea $\\times\\sqrt{A}$, cu $A$ real'),
+     [T('$A$: the number of observations per year: about 252 for shares and indices, 365 for crypto', '$A$: numărul de observații pe an: circa 252 pentru acțiuni și indici, 365 pentru cripto')]),
     (T('\\textbf{Risk}: the level is the tail probability: VaR 1\\%, ES 2.5\\%', '\\textbf{Riscul}: nivelul este probabilitatea cozii: VaR 1\\%, ES 2,5\\%'),
      [T('$\\mathrm{VaR}_\\alpha = -q_\\alpha > 0$, a loss; historical simulation with $k = \\lceil n\\alpha \\rceil$', '$\\mathrm{VaR}_\\alpha = -q_\\alpha > 0$, o pierdere; simularea istorică cu $k = \\lceil n\\alpha \\rceil$')]),
     (T('\\textbf{Tests}: state $H_0$, the statistic, its distribution, the critical value and the decision at 5\\%', '\\textbf{Testele}: precizăm $H_0$, statistica, distribuția ei, valoarea critică și decizia la 5\\%'),
@@ -580,7 +619,7 @@ D.frame(T('Content Assessed', 'Conținutul evaluat'), items(
      [T('the definitions and formulas of the ``What You Need for Today\'\' slides of every seminar', 'definițiile și formulele de pe slide-urile „Noțiuni necesare azi” ale fiecărui seminar'),
       T('the computations of Part A of the seminars, on paper', 'calculele din Partea A a seminariilor, pe hîrtie')]),
     (T('\\textbf{Reading software output}', '\\textbf{Interpretarea rezultatelor obținute cu software}'),
-     [T('tables and charts like those of Part B: estimates, test statistics, $p$-values, backtests', 'tabele și grafice ca în Partea B: estimări, statistici de test, $p$-valori, backtesting'),
+     [T('tables and charts like those of Part B: estimates, test statistics, $p$-values, backtests', 'tabele și grafice ca în Partea B: estimări, statistici de test, p-value-uri, backtesting'),
       T('no code is written at the exam', 'la examen nu se scrie cod')]),
     (T('\\textbf{Understanding, not memory}', '\\textbf{Înțelegere, nu memorare}'),
      [T('why a method fails on financial returns, which test answers which question', 'de ce o metodă dă greș pe randamentele financiare, ce test răspunde la ce întrebare')])))
@@ -589,7 +628,7 @@ D.frame(T('Grading Criteria', 'Criterii de notare'), items(
     (T('\\textbf{The method}: the formula, with the numbers substituted', '\\textbf{Metoda}: formula, cu cifrele înlocuite'),
      [T('a correct method with an arithmetic slip receives most of the points', 'o metodă corectă cu o greșeală de calcul primește cea mai mare parte a punctajului')]),
     (T('\\textbf{The result}: the number, with its unit (\\%, days, RON) and its sign', '\\textbf{Rezultatul}: cifra, cu unitatea de măsură (\\%, zile, lei) și semnul ei'),
-     [T('for a test: $H_0$, the statistic, the critical value or the $p$-value, the decision', 'pentru un test: $H_0$, statistica, valoarea critică sau $p$-valoarea, decizia')]),
+     [T('for a test: $H_0$, the statistic, the critical value or the $p$-value, the decision', 'pentru un test: $H_0$, statistica, valoarea critică sau p-value-ul, decizia')]),
     (T('\\textbf{The interpretation}: three to five sentences, statistical and economic', '\\textbf{Interpretarea}: trei pînă la cinci fraze, statistice și economice'),
      [T('state the assumptions of an approximate formula (i.i.d., Normal, large $n$)', 'precizați ipotezele unei formule aproximative (i.i.d., distribuția Normală, $n$ mare)'),
       T('a correct number with a wrong interpretation does not receive all the points', 'o cifră corectă cu o interpretare greșită nu primește tot punctajul')])))
@@ -673,7 +712,7 @@ solution(4, [
     T('$\\mathrm{VR}(5) = 1 + 2(0.8 \\times 0.06 + 0.6 \\times 0.02 - 0.4 \\times 0.01 + 0.2 \\times 0.01) = 1 + 2 \\times @{e4.inner} = @{e4.vr}$', '$\\mathrm{VR}(5) = 1 + 2(0{,}8 \\times 0{,}06 + 0{,}6 \\times 0{,}02 - 0{,}4 \\times 0{,}01 + 0{,}2 \\times 0{,}01) = 1 + 2 \\times @{e4.inner} = @{e4.vr}$'),
     T('SE $= \\sqrt{72/37\\,500} = @{e4.se}$, $Z(5) = @{e4.z} > 1.96$; robust $Z^*(5) = (@{e4.vr} - 1)/0.065 = @{e4.zs} < 1.96$', 'SE $= \\sqrt{72/37\\,500} = @{e4.se}$, $Z(5) = @{e4.z} > 1{,}96$; $Z^*(5) = (@{e4.vr} - 1)/0{,}065 = @{e4.zs} < 1{,}96$ (robust)')],
     [T('VR $> 1$: positive autocorrelation (momentum); the i.i.d. test rejects the random walk', 'VR $> 1$: autocorelație pozitivă (momentum); testul i.i.d.\\ respinge mersul aleator'),
-     T('The robust test does not: volatility clustering inflates $Z(5)$; the robust decision is the one to report', 'Testul robust nu îl respinge: volatility clustering umflă statistica $Z(5)$; decizia care se raportează este cea robustă')])
+     T('The robust test does not: volatility clustering inflates $Z(5)$; the robust decision is the one to report', 'Testul robust nu îl respinge: volatility clustering mărește artificial statistica $Z(5)$; decizia care se raportează este cea robustă')])
 
 problem(5, ('Volatility Forecasts', 'prognoze de volatilitate'),
         [T('GARCH(1,1) for daily returns in \\%: $\\omega = 0.03$, $\\alpha = 0.09$, $\\beta = 0.89$; today $\\sigma_t^2 = 1.8$ and $\\varepsilon_t = -2.5$', 'GARCH(1,1) pentru randamente zilnice în \\%: $\\omega = 0{,}03$, $\\alpha = 0{,}09$, $\\beta = 0{,}89$; azi $\\sigma_t^2 = 1{,}8$ și $\\varepsilon_t = -2{,}5$'),
@@ -790,9 +829,9 @@ D.section('How AI Could Help: Your Own Research', 'Contribuția posibilă a AI: 
 
 D.frame(T('An Open Question for Your Own Research', 'O întrebare deschisă pentru propria cercetare'), cols(items(
     (T('\\textbf{Has the BET become a ``normal\'\' market?}', '\\textbf{A devenit BET o piață „obișnuită”?}'),
-     [T('since @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) and tail index @{f5.a.bet}', 'din @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) și indicele de coadă @{f5.a.bet}'),
-      T('since 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, tail index @{s.bet.hill}', 'din 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, indicele de coadă @{s.bet.hill}')]),
-    (T('\\textbf{Why it is open}', '\\textbf{De ce rămîne deschisă}'),
+     [T('since @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) and tail index @{f5.a.bet}', 'din @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) și tail index-ul @{f5.a.bet}'),
+      T('since 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, tail index @{s.bet.hill}', 'din 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, tail index-ul @{s.bet.hill}')]),
+    (T('\\textbf{Why it is open}', '\\textbf{Motivele pentru care întrebarea rămîne deschisă}'),
      [T('the momentum fades, but the tails do not become thinner', 'momentum-ul slăbește, dar cozile nu devin mai subțiri'),
       T('one extreme day ($@{f1.betminr}\\%$ on @{f1.betmin}) moves the tail estimate; few crises, short samples', 'o singură zi extremă ($@{f1.betminr}\\%$ la @{f1.betmin}) modifică estimarea cozii; puține crize, eșantioane scurte')]),
     T('Different teams with the same data reach different answers: nonstandard errors \\refMenk', 'Echipe diferite, cu aceleași date, ajung la răspunsuri diferite: erorile nestandard \\refMenk')),
@@ -827,7 +866,7 @@ D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: did the BET become more efficient, less volatile and thinner-tailed between 2000 and 2026?', '\\textbf{Întrebarea}: a devenit BET mai eficient, mai puțin volatil și cu cozi mai subțiri între 2000 și 2026?'),
      [T('data: BET since 1997, with the S\\&P 500 and the DAX as benchmarks (EODHD)', 'date: BET din 1997, cu S\\&P 500 și DAX ca repere (EODHD)')]),
     (T('Steps', 'Pași'),
-     [T('rolling robust VR(5), Hill index, GARCH persistence and Hurst exponent (Chapters 5, 7, 9, 11)', 'VR(5) robust, indicele Hill, persistența GARCH și exponentul Hurst pe ferestre mobile (Capitolele 5, 7, 9, 11)'),
+     [T('rolling robust VR(5), Hill index, GARCH persistence and Hurst exponent (Chapters 5, 7, 9, 11)', 'VR(5) robust, tail index-ul Hill, persistența GARCH și exponentul Hurst pe ferestre mobile (Capitolele 5, 7, 9, 11)'),
       T('bands from Monte Carlo or the bootstrap; the same analysis for the benchmarks', 'benzi Monte Carlo sau bootstrap; aceeași analiză pentru repere'),
       T('dates of change (e.g.\\ 2008, 2020) checked against the bands, not chosen after looking', 'datele de schimbare (de exemplu 2008, 2020) verificate față de benzi, nu alese după inspecția graficelor')]),
     T('Deliverable: one chart with four panels, one table, and a paragraph on what the data can and cannot show', 'Livrabil: un grafic cu patru panouri, un tabel și un paragraf despre ce pot și ce nu pot arăta datele'),
@@ -840,7 +879,7 @@ D.section('Summary', 'Rezumat')
 
 D.frame(T('Key Takeaways', 'Idei de reținut'), items(
     T('Returns, not prices: log returns in \\%, the right calendar, annualised with the actual frequency', 'Randamente, nu prețuri: randamente logaritmice în \\%, calendarul corect, anualizare cu frecvența reală'),
-    T('Returns have heavy tails (tail index 2--4), negative skewness and finite variance: the Normal distribution understates risk', 'Randamentele au cozi groase (indice de coadă 2--4), asimetrie negativă și varianță finită: distribuția Normală subestimează riscul'),
+    T('Returns have heavy tails (tail index 2--4), negative skewness and finite variance: the Normal distribution understates risk', 'Randamentele au cozi groase (tail index între 2 și 4), asimetrie negativă și varianță finită: distribuția Normală subestimează riscul'),
     T('The sign of returns is almost unpredictable; their size is predictable (volatility clustering, GARCH)', 'Semnul randamentelor este aproape imprevizibil; mărimea lor este previzibilă (volatility clustering, GARCH)'),
     T('Risk: VaR 1\\% $= -q_{1\\%}$ and ES 2.5\\%, always followed by a backtest', 'Riscul: VaR 1\\% $= -q_{1\\%}$ și ES 2,5\\%, urmate întotdeauna de backtesting'),
     T('Every result needs its uncertainty: SE, robust tests, Monte Carlo bands, out-of-sample checks', 'Orice rezultat are nevoie de incertitudinea lui: SE, teste robuste, benzi Monte Carlo, verificări în afara eșantionului'),

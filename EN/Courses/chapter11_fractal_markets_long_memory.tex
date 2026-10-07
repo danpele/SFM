@@ -344,7 +344,7 @@ Crises & outside the theory & collapse of horizons & mass extinction of strategi
     \item Brownian motion (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter4_probability.pdf}{Chapter 4}) is self-similar with $H = 1/2$: $W_{ct} \overset{d}{=} \sqrt{c}\,W_t$
     \item Consequence for log prices with self-similar increments
     \begin{itemize}
-        \item $\mathrm{sd}(r_t^{(h)}) = h^H\,\mathrm{sd}(r_t)$, where $r_t^{(h)}$ is the $h$-day return
+        \item $\mathrm{sd}(r_t^{(h)}) = h^H\,\mathrm{sd}(r_t)$, where $r_t^{(h)}$ is the $h$-day return and sd the standard deviation
         \item the square-root-of-time rule $\sqrt{h}$ is the special case $H = 1/2$
     \end{itemize}
     \item A first estimator of $H$: the slope of $\ln \mathrm{sd}(r^{(h)})$ on $\ln h$
@@ -467,6 +467,7 @@ Crises & outside the theory & collapse of horizons & mass extinction of strategi
         \item choose block sizes $n$ between 10 and $N/4$, evenly spaced on a log scale
         \item split the $N$ returns into $\lfloor N/n\rfloor$ non-overlapping blocks; compute $R/S$ in each block and average: $(R/S)_n$
         \item regress $\ln (R/S)_n = \ln c + H \ln n + e_n$ by OLS (ordinary least squares): the slope $\hat H$ estimates $H$
+        \item $N$: the number of returns; $n$: the block size; $c$: a constant; $e_n$: the regression error
     \end{itemize}
     \item The log-log plot is the main diagnostic: a straight line supports a single scaling exponent
     \item Applied to returns (stationary), not to prices: for prices, $(R/S)_n$ grows like $n$
@@ -535,6 +536,7 @@ $0.5 < H < 1$ & positively correlated & persistent: trends & smoother, $D < 1.5$
         \item $\sum_{k} |\rho(k)| = \infty$: the autocorrelations are not summable
         \item equivalently, hyperbolic decay $\rho(k) \sim C\,k^{2d - 1}$ as $k \to \infty$, with the \textbf{memory parameter} $0 < d < 0.5$
         \item in frequency: the spectral density has a pole at zero, $f(\lambda) \sim C\,\lambda^{-2d}$ as $\lambda \to 0$
+        \item $C > 0$: a constant; $\sim$: the ratio of the two sides tends to 1; $f(\lambda)$: the share of variance at frequency $\lambda$ (long cycles: $\lambda$ near 0)
     \end{itemize}
     \item \textbf{Short memory}: ARMA (autoregressive moving average) models, e.g.\ AR(1) with $\rho(k) = \phi^k$
     \begin{itemize}
@@ -566,7 +568,7 @@ $0.5 < H < 1$ & positively correlated & persistent: trends & smoother, $D < 1.5$
     \item \textbf{Fractional Brownian motion} (fBm) $B_H(t)$, $0 < H < 1$ \refMVN; \refFHH, Def.~14.2: a Gaussian process with continuous paths, self-similar with exponent $H$ and with stationary increments
     \item Properties (\refFHH, Th.~14.1)
     \begin{itemize}
-        \item $B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \sigma^2 |t|^{2H}$
+        \item $B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \sigma^2 |t|^{2H}$ ($\sigma^2$: the variance at $t = 1$)
         \item $\mathrm{Cov}(B_H(t), B_H(s)) = \tfrac{\sigma^2}{2}\left(|t|^{2H} + |s|^{2H} - |t - s|^{2H}\right)$
     \end{itemize}
     \item $H = 1/2$: Brownian motion, independent increments; $H \neq 1/2$: the increments are correlated at all lags
@@ -633,7 +635,8 @@ $0.5 < H < 1$ & positively correlated & persistent: trends & smoother, $D < 1.5$
     \end{itemize}
     \item Autocorrelations: $\rho(k) = \dfrac{\Gamma(1 - d)\,\Gamma(k + d)}{\Gamma(d)\,\Gamma(k + 1 - d)}$, i.e.\ $\rho(k) = \rho(k - 1)\,\dfrac{k - 1 + d}{k - d}$
     \begin{itemize}
-        \item $\rho(1) = d/(1 - d)$; for large $k$, $\rho(k) \sim C k^{2d - 1}$: long memory for $0 < d < 1/2$
+        \item $\Gamma(\cdot)$: the gamma function, $\Gamma(n) = (n - 1)!$ for integers; $\rho(1) = d/(1 - d)$
+        \item for large $k$, $\rho(k) \sim C k^{2d - 1}$: long memory for $0 < d < 1/2$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -763,10 +766,12 @@ GPH & frequency & $\hat d$ with a standard error & large variance; choice of ban
 \begin{itemize}
     \item \textbf{Periodogram} at the Fourier frequencies $\lambda_j = 2\pi j/T$: $I(\lambda_j) = \dfrac{1}{2\pi T}\left|\sum_{t=1}^{T} x_t e^{-i\lambda_j t}\right|^2$
     \begin{itemize}
+        \item $T$: the number of observations; $i$: the imaginary unit; $|\cdot|^2$: the squared modulus
         \item it estimates the spectral density, which behaves like $C\lambda^{-2d}$ near zero
     \end{itemize}
     \item \textbf{GPH} \refGPH; \refFHH, 14.5.2: $\ln I(\lambda_j) = c - d\,\ln\!\left(4\sin^2(\lambda_j/2)\right) + e_j$, $j = 1, \dots, m$
     \begin{itemize}
+        \item $m$: the number of low frequencies used; $c$: a constant; $e_j$: the error
         \item $\hat d$ = OLS slope on $-\ln(4\sin^2(\lambda_j/2))$; $\hat H = \hat d + 0.5$
         \item asymptotic standard error $\pi/\sqrt{24m}$; the bandwidth $m = \lfloor T^{0.5}\rfloor$
     \end{itemize}
@@ -793,8 +798,9 @@ GPH & frequency & $\hat d$ with a standard error & large variance; choice of ban
     \item Problem: short memory (e.g.\ an AR(1)) also raises R/S, so classical R/S mistakes short memory for long memory
     \item \refLo: $V_N(q) = \dfrac{R_N}{\sqrt{N}\,\hat\sigma_N(q)}$, $\hat\sigma^2_N(q) = \hat\gamma_0 + 2\sum_{j=1}^{q}\left(1 - \tfrac{j}{q + 1}\right)\hat\gamma_j$
     \begin{itemize}
+        \item $N$: the number of returns; $R_N$: the range of the cumulative deviations over the whole sample
         \item $\hat\gamma_j$: sample autocovariances; $\hat\sigma^2_N(q)$: the Newey--West long-run variance \refNW; $q = 0$: classical R/S
-        \item $q = \lfloor (3N/2)^{1/3}\,(2\hat\rho_1/(1 - \hat\rho_1^2))^{2/3}\rfloor$, data-dependent (Andrews' rule, used by Lo)
+        \item $q = \lfloor (3N/2)^{1/3}\,(2\hat\rho_1/(1 - \hat\rho_1^2))^{2/3}\rfloor$ ($\hat\rho_1$: first-order autocorrelation), data-dependent (Andrews' rule, used by Lo)
     \end{itemize}
     \item $H_0$: short memory; at 5\%, reject if $V_N(q) \notin [0.809, 1.862]$
     \begin{itemize}
@@ -1192,8 +1198,9 @@ SNP & 3\,815 & $0.55$ & $0.49$ & $-0.02$ & $0.73$ & $0.21$ & $2.39$ & $[0.45, 0.
 \begin{frame}{Scaling Risk with $h^H$}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item If returns are self-similar: $h$-day VaR 1\% $= z_{0.99}\,\sigma\,h^H$, with $z_{0.99} = 2.326$ (Normal case)
+    \item If returns are self-similar: $h$-day VaR 1\% $= -z_{0.01}\,\sigma\,h^H$, with $z_{0.01} = -2.326$ (Normal case, mean 0)
     \begin{itemize}
+        \item $z_{0.01}$: the 1\% quantile of $N(0,1)$; $\sigma$: the daily volatility; $h^H$ replaces the factor $\sqrt{h}$
         \item daily volatility $\sigma = 1.2\%$: one-day VaR 1\% $= 2.79\%$
     \end{itemize}
     \item Ten days
@@ -1308,7 +1315,7 @@ ARFIMA(0,$d$,0) & $(1 - L)^d X_t = \varepsilon_t$, \quad $\rho(k) = \rho(k - 1)\
 DFA & $F(n) \propto n^{\alpha}$, \quad $\alpha = H$ for fGn \\
 GPH & $\ln I(\lambda_j) = c - d\ln(4\sin^2(\lambda_j/2)) + e_j$, \quad $j \le m = T^{0.5}$, \quad SE $= \pi/\sqrt{24m}$ \\
 Lo & $V_N(q) = R_N/(\sqrt{N}\hat\sigma_N(q))$; reject at 5\% outside $[0.809, 1.862]$ \\
-VaR 1\% & $z_{0.99}\,\sigma\,h^H$ \\
+VaR 1\% & $-z_{0.01}\,\sigma\,h^H$ \\
 \bottomrule
 \end{tabular}
 \end{center}

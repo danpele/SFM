@@ -358,7 +358,8 @@ MSCA Digital Finance}
 \begin{itemize}
     \item $\varepsilon_t = \sigma_t z_t$, \quad $\sigma_t^2 = \omega + \alpha\,\varepsilon_{t-1}^2$, \quad $\omega > 0$, $\alpha \ge 0$
     \begin{itemize}
-        \item $\omega > 0$ and $\alpha \ge 0$ keep the variance positive
+        \item in words: today's variance = a constant plus a share $\alpha$ of yesterday's squared shock
+        \item $\omega$: the variance after a zero shock; $\alpha$: the reaction to yesterday's shock; both keep the variance positive
         \item a large shock yesterday, of either sign, raises today's variance
     \end{itemize}
     \item ``Autoregressive'': $\varepsilon_t^2$ follows an AR(1) (autoregressive) model
@@ -409,6 +410,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{ARCH($q$)}: $\sigma_t^2 = \omega + \alpha_1\varepsilon_{t-1}^2 + \dots + \alpha_q\varepsilon_{t-q}^2$, $\alpha_i \ge 0$; stationary if $\sum_i \alpha_i < 1$
     \begin{itemize}
+        \item $q$: the number of lags; $\alpha_i$: the reaction to the shock of $i$ days ago
         \item the effect of a shock lasts exactly $q$ days; real clustering lasts for months
     \end{itemize}
     \item Testing for ARCH effects: the ARCH-LM test of Engle (regression of $\hat\varepsilon_t^2$ on its lags), \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8}
@@ -482,6 +484,7 @@ GARCH(1,1) & 4 & $-9218.0$ & \textbf{18444.0} & \textbf{18471.2} & $0.980$ \\
     \item By recursion, an ARCH($\infty$) with geometric weights
     \begin{itemize}
         \item $\sigma_t^2 = \dfrac{\omega}{1 - \beta} + \alpha\sum_{j=0}^{\infty}\beta^j\,\varepsilon_{t-1-j}^2$: all past shocks matter, with decaying weights
+        \item the shock of $j + 1$ days ago gets the weight $\alpha\beta^j$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -491,7 +494,8 @@ GARCH(1,1) & 4 & $-9218.0$ & \textbf{18444.0} & \textbf{18471.2} & $0.980$ \\
 \begin{itemize}
     \item As for ARCH: $\varepsilon_t^2 = \omega + (\alpha + \beta)\varepsilon_{t-1}^2 + v_t - \beta v_{t-1}$, an ARMA(1,1) for the squared shocks
     \begin{itemize}
-        \item ARMA: autoregressive moving average; the ACF of $\varepsilon_t^2$ decays like $(\alpha + \beta)^k$
+        \item $v_t = \varepsilon_t^2 - \sigma_t^2$: the surprise in the squared shock, as for ARCH(1)
+        \item ARMA: autoregressive moving average; the ACF of $\varepsilon_t^2$ decays like $(\alpha + \beta)^k$ at lag $k$
     \end{itemize}
     \item \textbf{Covariance stationary} if $\alpha + \beta < 1$; then the \textbf{unconditional (long-run) variance} is
     \begin{itemize}
@@ -509,6 +513,7 @@ GARCH(1,1) & 4 & $-9218.0$ & \textbf{18444.0} & \textbf{18471.2} & $0.980$ \\
 \begin{itemize}
     \item Forecast of the variance $h$ days ahead (derived in Section 11): $E[\sigma_{t+h}^2 \mid \mathcal{F}_t] - \bar\sigma^2 = (\alpha + \beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2)$
     \begin{itemize}
+        \item $E[\cdot \mid \mathcal{F}_t]$: the forecast made at the end of day $t$; $\bar\sigma^2$: the long-run variance
         \item a deviation from the long-run variance shrinks by the factor $\alpha + \beta$ each day
     \end{itemize}
     \item \textbf{Half-life}: the number of days after which half of a variance shock is gone
@@ -576,11 +581,13 @@ GARCH(1,1) & 4 & $-9218.0$ & \textbf{18444.0} & \textbf{18471.2} & $0.980$ \\
 \begin{itemize}
     \item The returns are dependent, so we factor the joint density into conditional densities
     \begin{itemize}
+        \item $f$: a probability density; $T$: the number of returns; $\theta$: the vector of parameters; $\ell$: the log-likelihood
         \item $f(r_1, \dots, r_T) = f(r_1)\prod_{t=2}^{T} f(r_t \mid \mathcal{F}_{t-1})$, and $r_t \mid \mathcal{F}_{t-1} \sim N(\mu, \sigma_t^2)$ for Normal innovations
     \end{itemize}
     \item \textbf{Conditional log-likelihood} with $\theta = (\mu, \omega, \alpha, \beta)$:
     \begin{itemize}
         \item $\ell(\theta) = -\dfrac12\sum_{t=2}^{T}\Big[\ln(2\pi) + \ln\sigma_t^2(\theta) + \dfrac{(r_t - \mu)^2}{\sigma_t^2(\theta)}\Big]$
+        \item in words: each day adds a penalty for a large $\sigma_t^2$ and a penalty for a squared error that is large relative to $\sigma_t^2$
         \item $\sigma_t^2(\theta)$ is computed recursively from a starting value $\sigma_1^2$ (for example the sample variance)
     \end{itemize}
     \item \textbf{MLE} (maximum likelihood estimation): $\hat\theta = \arg\max_\theta \ell(\theta)$, under $\omega > 0$, $\alpha, \beta \ge 0$, $\alpha + \beta < 1$
@@ -684,7 +691,8 @@ $\beta$ & $0.8600$ ($0.0091$) & $0.8599$ & $0.0091$ & $0.0125$ \\
     \end{itemize}
     \item \textbf{Standardised Student-t} with $\nu > 2$ degrees of freedom (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2}) \refBollT
     \begin{itemize}
-        \item $z_t = t_\nu\sqrt{(\nu - 2)/\nu}$ has variance 1; kurtosis $3 + 6/(\nu - 4)$ for $\nu > 4$; $\nu \to \infty$: the Normal distribution
+        \item $t_\nu$: a Student-t variable with $\nu$ degrees of freedom; $z_t = t_\nu\sqrt{(\nu - 2)/\nu}$ has variance 1
+        \item a small $\nu$ means heavy tails: kurtosis $3 + 6/(\nu - 4)$ for $\nu > 4$; $\nu \to \infty$: the Normal distribution
         \item $\nu$ is estimated together with $(\mu, \omega, \alpha, \beta)$
     \end{itemize}
     \item \textbf{Skewed t} \refHansen: one more parameter $\lambda \in (-1, 1)$; $\lambda < 0$: a longer left tail
@@ -709,7 +717,7 @@ skewed t & $0.0153$ & $0.120$ & $0.872$ & $6.92$ & $-0.114$ & $-9038.4$ & $0.993
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Likelihood-ratio statistic $2(\ell_1 - \ell_0)$: t against Normal $311.0$ (1 restriction, $\chi^2_{0.95}(1) = 3.84$); skewed t against t $48.1$: both reject the smaller model
+    \item Likelihood-ratio statistic $2(\ell_1 - \ell_0)$ ($\ell_1$, $\ell_0$: maximised log-likelihoods of the larger and the smaller model): t against Normal $311.0$ (1 restriction, $\chi^2_{0.95}(1) = 3.84$); skewed t against t $48.1$: both reject the smaller model
     \item $\hat\nu = 6.26$: tails far heavier than Normal; $\hat\lambda = -0.114$: large falls more frequent than large rises
     \item Interpretation: $\alpha$ and $\beta$ hardly change; the innovation distribution matters for tail quantiles (VaR), less for $\sigma_t$
 \end{itemize}\sfmquantlet{Ch_09}{SFM_ch9_garch_estimation}
@@ -857,11 +865,13 @@ SNP & 2010 & $0.135$ & $0.807$ & $4.81$ & $0.942$ & 12 & 25.6 & 24.5 \\
 \begin{itemize}
     \item \textbf{GJR-GARCH} \refGJR: $\sigma_t^2 = \omega + (\alpha + \gamma\,I_{t-1})\,\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2$, $I_{t-1} = 1$ if $\varepsilon_{t-1} < 0$, else 0
     \begin{itemize}
+        \item $I_{t-1}$: an indicator of a negative shock yesterday; $\gamma$: the extra reaction to bad news
         \item good news: slope $\alpha$; bad news: $\alpha + \gamma$; leverage effect: $\gamma > 0$
         \item persistence $\alpha + \beta + \gamma/2$ for symmetric $z_t$ (half of the shocks are negative)
     \end{itemize}
     \item \textbf{EGARCH} (exponential GARCH) \refNelson: $\ln\sigma_t^2 = \omega + \alpha\big(|z_{t-1}| - E|z_{t-1}|\big) + \gamma z_{t-1} + \beta\ln\sigma_{t-1}^2$
     \begin{itemize}
+        \item $|z_{t-1}| - E|z_{t-1}|$: the size of yesterday's standardised shock above its average ($E|z| = \sqrt{2/\pi}$ for Normal $z$)
         \item the logarithm keeps $\sigma_t^2 > 0$ without sign restrictions on the parameters
         \item leverage effect: $\gamma < 0$ (a negative $z_{t-1}$ raises $\ln\sigma_t^2$); persistence: $\beta$
     \end{itemize}
@@ -989,7 +999,7 @@ $\hat z_t$, GARCH-t & $21.9$ (0.016) & $13.6$ (0.192) & $5.8$ (0.326) & $40.7$ (
 \begin{frame}{Nine Models for the S\&P 500}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item \textbf{AIC} (Akaike information criterion) $= -2\ell + 2k$ \refAkaike; \textbf{BIC} (Bayesian information criterion) $= -2\ell + k\ln T$ \refSchwarz; $k$ parameters; smaller is better (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6})
+    \item \textbf{AIC} (Akaike information criterion) $= -2\ell + 2k$ \refAkaike; \textbf{BIC} (Bayesian information criterion) $= -2\ell + k\ln T$ \refSchwarz; $\ell$: maximised log-likelihood, $k$ parameters, $T$ observations; smaller is better (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6})
 \end{itemize}\begin{center}
 \scriptsize
 \begin{tabular}{lrrrrrr}
@@ -1032,6 +1042,7 @@ EGARCH(1,1) & -9075.6 & 372.9 & -8922.1 & 74.8 & -8880.3 & 0.0 \\
     \end{itemize}
     \item By induction: $E_t[\sigma_{t+h}^2] = \bar\sigma^2 + (\alpha + \beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2)$
     \begin{itemize}
+        \item $E_t$: the expectation given the information at the end of day $t$; $h$: the horizon in days
         \item the forecast converges to the long-run variance; the speed is set by $\alpha + \beta$
     \end{itemize}
     \item Variance of the $H$-day return: the sum of the daily forecasts (returns are uncorrelated)
@@ -1078,6 +1089,7 @@ EGARCH(1,1) & -9075.6 & 372.9 & -8922.1 & 74.8 & -8880.3 & 0.0 \\
     \end{itemize}
     \item \textbf{QLIKE} loss \refPatton: $L(r_t^2, h_t) = \dfrac{r_t^2}{h_t} + \ln h_t$ (up to a constant); smaller is better
     \begin{itemize}
+        \item $h_t$: the variance forecast for day $t$, made at the end of day $t-1$
         \item ranks forecasts correctly even with a noisy proxy; it is minus the Normal log-likelihood
         \item penalises forecasts that are too low more than forecasts that are too high
     \end{itemize}
@@ -1131,11 +1143,13 @@ Bitcoin & 4\,279 & $3.383$ & $3.401$ & $3.390$ & ${-0.20}$ (0.845) \\
 \begin{itemize}
     \item \textbf{VaR} at level $\alpha$ (value at risk): the loss exceeded with probability $\alpha$: $\mathrm{VaR}_\alpha = -q_\alpha(r_{t+1})$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6})
     \begin{itemize}
+        \item here $\alpha$ is the VaR level, not the GARCH parameter; $q_\alpha$: the $\alpha$-quantile
         \item here $\alpha = 1\%$: VaR 1\%, a loss exceeded on one day in a hundred
     \end{itemize}
     \item With $r_{t+1} = \mu + \sigma_{t+1}z_{t+1}$: $\mathrm{VaR}_{t+1} = -(\mu + \sigma_{t+1}\,q_\alpha(z))$
     \begin{itemize}
         \item Normal: $q_{0.01} = -2.326$; standardised t: $q_{0.01} = t_\nu^{-1}(0.01)\sqrt{(\nu - 2)/\nu}$
+        \item $t_\nu^{-1}(0.01)$: the 1\% quantile of the Student-t with $\nu$ degrees of freedom; the square root rescales it to variance 1
         \item the VaR moves every day with $\sigma_{t+1}$: high in storms, low in calm periods
     \end{itemize}
     \item \textbf{Worked example}: S\&P 500 on 18 September 2026, GARCH(1,1)-t: $\hat\mu = 0.079$, $\sigma_{t+1} = 0.714$, $\hat\nu = 6.26$

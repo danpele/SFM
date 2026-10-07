@@ -175,10 +175,11 @@ MSCA Digital Finance}
         \item $\mathcal{F}$: the events we can assign a probability to (a $\sigma$-algebra)
         \item $P$: a function from events to $[0, 1]$
     \end{itemize}
-    \item Axioms
+    \item Axioms, for any event $A \in \mathcal{F}$
     \begin{itemize}
-        \item $P(A) \ge 0$; $P(\Omega) = 1$
-        \item for disjoint $A_1, A_2, \dots$: $P(\cup_i A_i) = \sum_i P(A_i)$
+        \item $P(A) \ge 0$: no probability is negative
+        \item $P(\Omega) = 1$: some outcome certainly occurs
+        \item $P(\cup_i A_i) = \sum_i P(A_i)$ for disjoint $A_1, A_2, \dots$ (no two can occur together): the probability of ``one of them'' is the sum
     \end{itemize}
     \item Everything else (expectation, independence, processes) is built on these three rules
 \end{itemize}
@@ -216,15 +217,35 @@ MSCA Digital Finance}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Conditional probability}: $P(A \mid B) = P(A \cap B)/P(B)$, for $P(B) > 0$
+    \begin{itemize}
+        \item $A, B$: two events; $A \cap B$: both occur
+        \item in words: among the cases in which $B$ occurs, the share in which $A$ also occurs
+    \end{itemize}
     \item \textbf{Bayes' rule}: $P(B \mid A) = P(A \mid B)P(B)/P(A)$
     \begin{itemize}
-        \item reverses the direction of conditioning: from ``signal given crisis'' to ``crisis given signal''
+        \item $P(B)$: the probability of $B$ before we learn $A$; $P(B \mid A)$: the updated probability once $A$ is observed
+        \item it reverses the direction of conditioning: from ``signal given crisis'' to ``crisis given signal''
     \end{itemize}
     \item \textbf{Independent} events: $P(A \cap B) = P(A)P(B)$, i.e. $P(A \mid B) = P(A)$
-    \item S\&P 500, 2000--2026: $P(\text{down day}) = 46.3\%$; $P(\text{down} \mid \text{down yesterday}) = 43.4\%$
     \begin{itemize}
-        \item two down days in a row: 20.1\%, against $21.4\%$ under independence
-        \item BET: 50.0\% after a down day vs 42.6\% after an up day: thin trading makes signs persist
+        \item learning that $B$ occurred does not change the probability of $A$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Down Days in a Row}
+\itemsize{\small}
+\begin{itemize}
+    \item S\&P 500, 2000--2026: $P(\text{down day}) = 46.3\%$
+    \begin{itemize}
+        \item after a down day: $P(\text{down} \mid \text{down yesterday}) = 43.4\%$
+        \item two down days in a row: 20.1\% in the data
+        \item under independence: $P(\text{down})^2 = 21.4\%$, close to the data
+    \end{itemize}
+    \item BET: 50.0\% after a down day vs 42.6\% after an up day
+    \begin{itemize}
+        \item the sign of the return persists from one day to the next
+        \item a consequence of thin trading: prices adjust to news over several days
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -244,7 +265,7 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Random Variables}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item A \textbf{random variable} $X: \Omega \to \mathbb{R}$ assigns a number to each outcome
     \begin{itemize}
@@ -253,10 +274,13 @@ MSCA Digital Finance}
     \item \textbf{Discrete}: finitely or countably many values $x_i$
     \begin{itemize}
         \item \textbf{PMF} (probability mass function): $p(x_i) = P(X = x_i)$, with $\sum_i p(x_i) = 1$
+        \item $p(x_i)$: the probability of the value $x_i$; the probabilities of all values add up to 1
     \end{itemize}
     \item \textbf{Continuous}: $P(a < X \le b) = \int_a^b f(x)\,dx$
     \begin{itemize}
-        \item $f$ is the \textbf{PDF} (probability density function), $f \ge 0$, $\int f = 1$; $P(X = x) = 0$ for every single $x$
+        \item the probability of an interval $(a, b]$ is the area under $f$ between $a$ and $b$
+        \item $f$ is the \textbf{PDF} (probability density function): $f \ge 0$ and the total area $\int f = 1$
+        \item a single point has no area: $P(X = x) = 0$ for every $x$
     \end{itemize}
     \item Textbook: \refFHH, Sec.~3.1
 \end{itemize}
@@ -267,17 +291,34 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{CDF} (cumulative distribution function): $F(x) = P(X \le x)$
     \begin{itemize}
-        \item non-decreasing, right-continuous, $F(-\infty) = 0$, $F(\infty) = 1$; $f = F'$ for a continuous $X$
+        \item the probability that $X$ does not exceed the threshold $x$
+        \item non-decreasing, right-continuous, from $F(-\infty) = 0$ to $F(\infty) = 1$
+        \item for a continuous $X$ the density is its derivative: $f = F'$
     \end{itemize}
     \item \textbf{Quantile} of order $\alpha$: $q_\alpha = F^{-1}(\alpha) = \inf\{x : F(x) \ge \alpha\}$
     \begin{itemize}
-        \item median $= q_{0.5}$; the 1\% quantile is the return beaten 99\% of the days
+        \item $\alpha \in (0, 1)$: a probability; $q_\alpha$ is the smallest $x$ with $P(X \le x) \ge \alpha$
+        \item $F^{-1}$: the quantile function, the inverse of the CDF; $\inf$: the smallest value of the set
+        \item median $= q_{0.5}$; the 1\% quantile is the return exceeded on 99\% of the days
     \end{itemize}
-    \item \textbf{VaR} (Value at Risk) 1\%: $\text{VaR}_{1\%} = -q_{0.01}$, the loss exceeded with probability 1\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Value at Risk and the Empirical CDF}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{VaR} (Value at Risk) 1\%: $\text{VaR}_{1\%} = -q_{0.01}$
     \begin{itemize}
-        \item a quantile of the return distribution; estimation and backtesting in \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}
+        \item $q_{0.01}$: the 1\% quantile of the returns, a negative number
+        \item the minus sign turns it into a loss: the loss exceeded with probability 1\%
+        \item estimation and backtesting in \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}
     \end{itemize}
     \item The \textbf{empirical CDF} of a sample: $\hat F(x) = \frac1n \#\{t : r_t \le x\}$
+    \begin{itemize}
+        \item $r_1, \dots, r_n$: the observed returns; $n$: the sample size
+        \item $\#\{\cdot\}$: the number of days in the set; $\hat F(x)$ is the share of days with a return at most $x$
+        \item the hat marks an estimate computed from data
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -288,7 +329,11 @@ MSCA Digital Finance}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Left: $K$ = up days in a full week of the S\&P 500 (1\,144 weeks) vs $B(5, p)$ with $p = 0.537$: mean 2.67 vs 2.69, variance 1.16 vs 1.24
+    \item Left: $K$ = number of up days in a full week of the S\&P 500 (1\,144 weeks)
+    \begin{itemize}
+        \item compared with $B(5, p)$, the binomial distribution: 5 days, each up with probability $p = 0.537$
+        \item mean 2.67 vs 2.69; variance 1.16 vs 1.24
+    \end{itemize}
     \item Right: daily log returns, a continuous random variable; the histogram estimates the PDF
     \item The binomial fits $K$ well; the Normal density misses the peak and the tails of the returns (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
 \end{itemize}
@@ -324,31 +369,66 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Expectation}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Expectation} (mean): $E[X] = \sum_i x_i p(x_i)$ or $E[X] = \int x f(x)\,dx$
     \begin{itemize}
+        \item $x_i$, $p(x_i)$: the values and their probabilities; $f$: the density
         \item the centre of mass of the distribution; it exists only if $E|X| < \infty$ (not for Cauchy, \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter3_alpha_stable_distributions.pdf}{Chapter 3})
     \end{itemize}
     \item Of a function: $E[g(X)] = \int g(x) f(x)\,dx$, without finding the distribution of $g(X)$
     \item \textbf{Linearity}: $E[aX + bY + c] = aE[X] + bE[Y] + c$, always (no independence needed)
     \begin{itemize}
+        \item $a, b, c$: constants; $X, Y$: any two random variables
         \item the expected return of a portfolio is the weighted mean of the expected returns
     \end{itemize}
-    \item In general $E[g(X)] \ne g(E[X])$: $E[e^X] > e^{E[X]}$ (Jensen), the volatility drag of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter1_data_returns_indicators.pdf}{Chapter 1}
+    \item In general $E[g(X)] \ne g(E[X])$
+    \begin{itemize}
+        \item Jensen: for a convex $g$, $E[g(X)] \ge g(E[X])$; for example $E[e^X] > e^{E[X]}$
+        \item the source of the volatility drag of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter1_data_returns_indicators.pdf}{Chapter 1}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Variance and Moments}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
-    \item \textbf{Variance}: $\text{Var}(X) = E[(X - \mu)^2] = E[X^2] - \mu^2$; standard deviation $\sigma = \sqrt{\text{Var}(X)}$ (volatility)
-    \item $\text{Var}(aX + b) = a^2\,\text{Var}(X)$: a shift does not change risk, a scale does
-    \item Moments $E[X^k]$; skewness and kurtosis use $k = 3, 4$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
-    \item Worked example: S\&P 500 daily mean $0.0247\%$, s.d. $1.213\%$, 251 days a year
+    \item \textbf{Variance}: $\text{Var}(X) = E[(X - \mu)^2] = E[X^2] - \mu^2$
     \begin{itemize}
-        \item for i.i.d. daily returns (independent and identically distributed): $E[\sum r_t] = 251 \times 0.0247 = 6.2\%$ a year
-        \item $\text{Var}(\sum r_t) = 251\,\sigma^2$, so annual volatility $1.213\sqrt{251} = 19.2\%$: the square-root-of-time rule
+        \item $\mu = E[X]$; the variance is the mean squared distance from the mean
+        \item standard deviation $\sigma = \sqrt{\text{Var}(X)}$, in the units of $X$; for returns it is the volatility
+    \end{itemize}
+    \item $\text{Var}(aX + b) = a^2\,\text{Var}(X)$
+    \begin{itemize}
+        \item adding a constant $b$ does not change risk; multiplying by $a$ multiplies the variance by $a^2$
+    \end{itemize}
+    \item Moments: $E[X^k]$ for $k = 1, 2, \dots$
+    \begin{itemize}
+        \item skewness and kurtosis use $k = 3, 4$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Annual Mean and Volatility}
+\itemsize{\small}
+\begin{itemize}
+    \item S\&P 500, daily log returns $r_t$
+    \begin{itemize}
+        \item daily mean $0.0247\%$, daily standard deviation $\sigma = 1.213\%$
+        \item $A = 251$: the number of trading days per year
+    \end{itemize}
+    \item Assume i.i.d. daily returns (independent and identically distributed)
+    \begin{itemize}
+        \item the annual log return is the sum of the $A$ daily ones: $\sum_{t=1}^{A} r_t$
+    \end{itemize}
+    \item Mean: $E[\sum r_t] = A \times 0.0247 = 6.2\%$ a year
+    \begin{itemize}
+        \item linearity of expectation
+    \end{itemize}
+    \item Variance: $\text{Var}(\sum r_t) = A\,\sigma^2$, because the covariances are zero
+    \begin{itemize}
+        \item annual volatility $\sigma\sqrt{A} = 1.213\sqrt{251} = 19.2\%$
+        \item the square-root-of-time rule: volatility grows with $\sqrt{h}$ over $h$ periods
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -358,6 +438,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{Chebyshev's inequality}: for any $X$ with finite variance, $P(|X - \mu| \ge k\sigma) \le 1/k^2$
     \begin{itemize}
+        \item $\mu$, $\sigma$: the mean and the standard deviation; $k > 1$: the distance from the mean, in standard deviations
         \item it uses only the mean and the variance, so it holds for every distribution
     \end{itemize}
     \item $k = 4$, S\&P 500, 2000--2026
@@ -366,7 +447,10 @@ MSCA Digital Finance}
         \item Normal distribution: 0.0063\%
         \item data: 46 days, 0.69\%
     \end{itemize}
-    \item Reality is between the two: the Normal distribution is far too optimistic, the worst case of Chebyshev too pessimistic
+    \item The data lie between the two
+    \begin{itemize}
+        \item the Normal distribution is far too optimistic; the worst case of Chebyshev is too pessimistic
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -384,21 +468,43 @@ MSCA Digital Finance}
 \section{Joint Distributions and Dependence}
 %=============================================================================
 
-\begin{frame}{Joint Distribution, Covariance, Correlation}
+\begin{frame}{Joint Distribution and Marginals}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{Joint CDF}: $F(x, y) = P(X \le x, Y \le y)$
+    \begin{itemize}
+        \item the probability that both variables are below their thresholds at the same time
+        \item for two returns: both markets fall below given levels on the same day
+    \end{itemize}
+    \item \textbf{Marginal} CDF: $F_X(x) = F(x, \infty)$
+    \begin{itemize}
+        \item the distribution of $X$ alone, whatever the value of $Y$
+    \end{itemize}
+    \item \textbf{Joint PDF} $f(x, y)$: $P((X, Y) \in B) = \iint_B f(x, y)\,dx\,dy$
+    \begin{itemize}
+        \item $B$: a region of the plane; the probability is the volume under $f$ above $B$
+        \item marginal density: $f_X(x) = \int f(x, y)\,dy$, integrating $Y$ out
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Covariance, Correlation and the Variance of a Sum}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item \textbf{Joint CDF}: $F(x, y) = P(X \le x, Y \le y)$; marginals $F_X(x) = F(x, \infty)$
-    \begin{itemize}
-        \item joint PDF $f(x, y)$; marginal $f_X(x) = \int f(x, y)\,dy$
-    \end{itemize}
     \item \textbf{Covariance}: $\text{Cov}(X, Y) = E[(X - \mu_X)(Y - \mu_Y)] = E[XY] - \mu_X\mu_Y$
+    \begin{itemize}
+        \item $\mu_X$, $\mu_Y$: the means; positive when $X$ and $Y$ tend to be above their means together
+    \end{itemize}
     \item \textbf{Correlation}: $\rho = \text{Cov}(X, Y)/(\sigma_X\sigma_Y) \in [-1, 1]$
     \begin{itemize}
+        \item the covariance divided by the two standard deviations: a number without units
         \item measures \textbf{linear} dependence only; $|\rho| = 1$ iff $Y = a + bX$
     \end{itemize}
     \item \textbf{Variance of a sum}: $\text{Var}(aX + bY) = a^2\sigma_X^2 + b^2\sigma_Y^2 + 2ab\,\text{Cov}(X, Y)$
     \begin{itemize}
-        \item with weights $w$ and covariance matrix $\Sigma$: $\sigma_p^2 = w^\top \Sigma w$
+        \item $a, b$: constants (in a portfolio, the weights); the covariance term can raise or lower the risk
+        \item many assets: $\sigma_p^2 = w^\top \Sigma w$, with $w$ the vector of weights and $\Sigma$ the covariance matrix
+        \item $\sigma_p^2$: the variance of the portfolio; $w^\top$: the transposed vector
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -418,15 +524,25 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Worked Example: a 50/50 Portfolio of S\&P 500 and DAX}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
-    \item Daily s.d.: $\sigma_1 = 1.22\%$, $\sigma_2 = 1.43\%$; covariance $1.045$; correlation $0.60$
+    \item Daily standard deviations: $\sigma_1 = 1.22\%$ (S\&P 500), $\sigma_2 = 1.43\%$ (DAX)
+    \begin{itemize}
+        \item covariance $1.045$; correlation $0.60$
+        \item weights $a = b = 0.5$, so $a^2 = b^2 = 0.25$ and $2ab = 0.5$
+    \end{itemize}
     \item $\sigma_p^2 = 0.25\sigma_1^2 + 0.25\sigma_2^2 + 2 \times 0.25\,\text{Cov} = 0.883 + 0.522 = 1.405$
     \begin{itemize}
         \item $\sigma_p = 1.19\%$, below the average volatility $1.32\%$: diversification
     \end{itemize}
-    \item S\&P 500 and BET, lower correlation: $\sigma_p = 1.04\%$ vs average $1.33\%$, a larger gain
-    \item Diversification works only through $\rho < 1$; in a crash correlations rise, exactly when it is needed
+    \item S\&P 500 and BET, lower correlation: $\sigma_p = 1.04\%$ vs average $1.33\%$
+    \begin{itemize}
+        \item the lower the correlation, the larger the reduction in risk
+    \end{itemize}
+    \item Diversification works only through $\rho < 1$
+    \begin{itemize}
+        \item in a crash correlations rise, exactly when diversification is needed
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -435,7 +551,8 @@ MSCA Digital Finance}
 \begin{itemize}
     \item $X$ and $Y$ are \textbf{independent} if $F(x, y) = F_X(x)F_Y(y)$ for all $x, y$
     \begin{itemize}
-        \item then $E[g(X)h(Y)] = E[g(X)]E[h(Y)]$ for \textbf{all} functions $g, h$
+        \item the joint CDF is the product of the marginal CDFs
+        \item then $E[g(X)h(Y)] = E[g(X)]E[h(Y)]$ for \textbf{all} functions $g, h$ (for example squares or absolute values)
     \end{itemize}
     \item Independent $\Rightarrow$ uncorrelated ($g, h$ = identity); the converse is false
     \item Example: $X \sim N(0, 1)$, $Y = X^2$
@@ -448,15 +565,22 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Returns Are Uncorrelated, Squared Returns Are Not}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch4_uncorrelated_dependent.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_uncorrelated_dependent.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Left: simulated $Y = X^2$, sample correlation $-0.038$, yet $Y$ is determined by $X$
-    \item Right: $\text{Corr}(r_t, r_{t-1})$ is small (S\&P 500 $-0.099$, DAX $-0.017$, Bitcoin $-0.022$); $\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $0.31$, $0.15$, $0.14$
-    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0.109$, a trace of thin trading; the negative S\&P 500 value comes mostly from crisis days
+    \item Right: $\text{Corr}(r_t, r_{t-1})$ is small: S\&P 500 $-0.099$, DAX $-0.017$, Bitcoin $-0.022$
+    \begin{itemize}
+        \item $\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $0.31$, $0.15$, $0.14$
+        \item band $\pm 1.96/\sqrt{n}$: the values compatible with zero correlation at the 5\% level
+    \end{itemize}
+    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0.109$, an effect of thin trading
+    \begin{itemize}
+        \item the negative S\&P 500 value comes mostly from crisis days
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_dependence}
 \end{frame}
@@ -476,34 +600,62 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Conditional Expectation}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Conditional density: $f(y \mid x) = f(x, y)/f_X(x)$
     \begin{itemize}
-        \item the distribution of $Y$ once we know that $X = x$
+        \item the distribution of $Y$ once we know that $X = x$: the joint density rescaled by the marginal one
     \end{itemize}
-    \item \textbf{Conditional expectation}: $E[Y \mid X = x] = \int y f(y \mid x)\,dy$; $E[Y \mid X]$ is a random variable, a function of $X$
+    \item \textbf{Conditional expectation}: $E[Y \mid X = x] = \int y f(y \mid x)\,dy$
+    \begin{itemize}
+        \item the mean of $Y$ computed with the conditional density
+        \item $E[Y \mid X]$ is a random variable, a function of $X$
+    \end{itemize}
     \item It is the best forecast of $Y$ from $X$: it minimises $E[(Y - g(X))^2]$ over all functions $g$
     \begin{itemize}
+        \item $E[(Y - g(X))^2]$: the mean squared error of the forecast $g(X)$
         \item for returns: $E[r_t \mid \mathcal{F}_{t-1}]$, the forecast given all information $\mathcal{F}_{t-1}$ up to yesterday
     \end{itemize}
     \item \textbf{Tower property} (law of iterated expectations): $E\big[E[Y \mid X]\big] = E[Y]$
+    \begin{itemize}
+        \item averaging the conditional forecasts over all values of $X$ gives back the unconditional mean
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Conditional Variance and the Law of Total Variance}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
     \item \textbf{Conditional variance}: $\text{Var}(Y \mid X) = E\big[(Y - E[Y \mid X])^2 \mid X\big]$
+    \begin{itemize}
+        \item the spread of $Y$ around its conditional mean, once $X$ is known
+    \end{itemize}
     \item \textbf{Law of total variance}: $\text{Var}(Y) = E\big[\text{Var}(Y \mid X)\big] + \text{Var}\big(E[Y \mid X]\big)$
     \begin{itemize}
-        \item within-group variance plus between-group variance
+        \item $E[\text{Var}(Y \mid X)]$: the average variance inside the groups defined by $X$ (within)
+        \item $\text{Var}(E[Y \mid X])$: how much the group means differ from each other (between)
+        \item total risk = within-group variance + between-group variance
     \end{itemize}
-    \item Worked example, two regimes: calm (probability $0.7$, mean $0.05\%$, s.d. $0.8\%$), turbulent ($0.3$, $-0.10\%$, $2\%$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Two Regimes}
+\itemsize{\footnotesize}
+\begin{itemize}
+    \item $X$ = the market regime, $Y = r$ = the daily return (in \%)
     \begin{itemize}
-        \item $E[r] = 0.7 \times 0.05 + 0.3 \times (-0.10) = 0.005\%$
-        \item $E[\text{Var}] = 0.7 \times 0.64 + 0.3 \times 4 = 1.648$; $\text{Var}(E) = 0.0047$
-        \item $\text{Var}(r) = 1.653$, s.d. $1.286\%$: almost all risk comes from the changing variance, not from the changing mean
+        \item calm: probability $0.7$, mean $0.05\%$, standard deviation $0.8\%$
+        \item turbulent: probability $0.3$, mean $-0.10\%$, standard deviation $2\%$
+    \end{itemize}
+    \item Mean (tower property): $E[r] = 0.7 \times 0.05 + 0.3 \times (-0.10) = 0.005\%$
+    \item The two parts of the variance
+    \begin{itemize}
+        \item within: $E[\text{Var}(r \mid X)] = 0.7 \times 0.8^2 + 0.3 \times 2^2 = 1.648$
+        \item between: $\text{Var}(E[r \mid X]) = 0.7(0.05 - E[r])^2 + 0.3(-0.10 - E[r])^2 = 0.0047$
+    \end{itemize}
+    \item $\text{Var}(r) = 1.653$, standard deviation $1.286\%$
+    \begin{itemize}
+        \item almost all risk comes from the different variances of the regimes, not from their different means
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -524,7 +676,7 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{From Conditional Variance to GARCH}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Write the return as $r_t = \mu_t + \sigma_t z_t$, with $z_t$ i.i.d., mean 0, variance 1
     \begin{itemize}
@@ -533,10 +685,18 @@ MSCA Digital Finance}
     \end{itemize}
     \item ARCH (autoregressive conditional heteroskedasticity) \refEngle: $\sigma_t^2 = \omega + \alpha r_{t-1}^2$
     \begin{itemize}
-        \item GARCH \refBollerslev: $\sigma_t^2 = \omega + \alpha r_{t-1}^2 + \beta\sigma_{t-1}^2$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{Chapter 9})
+        \item today's variance is a base level plus a share of yesterday's squared return
+        \item $\omega > 0$: the base level; $\alpha \ge 0$: how strongly a large move yesterday raises today's variance
+    \end{itemize}
+    \item GARCH \refBollerslev: $\sigma_t^2 = \omega + \alpha r_{t-1}^2 + \beta\sigma_{t-1}^2$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{Chapter 9})
+    \begin{itemize}
+        \item $\beta \ge 0$: the persistence; a large $\beta$ keeps a high variance high for many days
     \end{itemize}
     \item Exactly the pattern in the chart: a large $|r_{t-1}|$ raises today's conditional s.d.
-    \item The unconditional distribution is a mixture over $\sigma_t$: heavier tails than the Normal distribution, even if $z_t$ is Normal
+    \item The unconditional distribution is a mixture over $\sigma_t$
+    \begin{itemize}
+        \item it has heavier tails than the Normal distribution, even if $z_t$ is Normal
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -559,10 +719,12 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{LLN} (law of large numbers): for i.i.d. $X_i$ with $E|X| < \infty$, $\bar X_n \to \mu$ as $n \to \infty$
     \begin{itemize}
+        \item $\bar X_n = \frac1n\sum_{i=1}^n X_i$: the sample mean; $\mu = E[X]$: the true mean
         \item the reason why averages, frequencies and Monte Carlo estimates work
     \end{itemize}
-    \item \textbf{CLT}: with finite variance, $\sqrt{n}(\bar X_n - \mu)/\sigma \to N(0, 1)$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
+    \item \textbf{CLT} (central limit theorem): with finite variance, $\sqrt{n}(\bar X_n - \mu)/\sigma \to N(0, 1)$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
     \begin{itemize}
+        \item the standardised sample mean has, for large $n$, approximately the standard Normal distribution
         \item gives the speed: the error of $\bar X_n$ is about $\sigma/\sqrt{n}$
         \item infinite variance: sums converge to $\alpha$-stable laws instead (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter3_alpha_stable_distributions.pdf}{Chapter 3})
     \end{itemize}
@@ -573,13 +735,19 @@ MSCA Digital Finance}
 \begin{frame}{The LLN for the Mean Return: Slow}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.56\textheight,keepaspectratio]{sfm_ch4_lln.pdf}
+\includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch4_lln.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item S\&P 500, 26.7 years: mean $0.0247\%$ a day, standard error $\sigma/\sqrt{n} = 0.0148\%$, $t = 1.67$
-    \item Annual mean 6.2\%, 95\% interval $[-1.1\%, 13.5\%]$: even 26 years do not pin down the expected return
-    \item For $t = 3$ at this mean and volatility we would need about 86 years of data
+    \item S\&P 500, 26.7 years: mean $0.0247\%$ a day, standard error $\sigma/\sqrt{n} = 0.0148\%$
+    \begin{itemize}
+        \item $t$ = mean / standard error $= 1.67$; $|t| > 1.96$ would mean a mean significantly different from 0 at 5\%
+    \end{itemize}
+    \item Annual mean 6.2\%, 95\% interval $[-1.1\%, 13.5\%]$
+    \begin{itemize}
+        \item even 26 years do not pin down the expected return
+        \item for $t = 3$ at this mean and volatility we would need about 86 years of data
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_monte_carlo}
 \end{frame}
@@ -590,11 +758,12 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{The Monte Carlo Idea}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Estimate $\theta = E[g(X)]$ by $\hat\theta_N = \frac1N\sum_{i=1}^N g(X_i)$ with simulated $X_i$
     \begin{itemize}
-        \item a probability is an expectation: $P(A) = E[\mathbf{1}_A]$
+        \item $\theta$: the unknown quantity; $g$: a function of the simulated variable; $N$: the number of simulations
+        \item a probability is an expectation: $P(A) = E[\mathbf{1}_A]$, with $\mathbf{1}_A = 1$ if $A$ occurs and 0 otherwise
         \item the LLN makes $\hat\theta_N \to \theta$; the CLT gives the error $\text{sd}(g(X))/\sqrt{N}$
     \end{itemize}
     \item Named after the Monaco casino by Ulam and von Neumann, Los Alamos, 1940s \refMU
@@ -608,19 +777,39 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Pseudo-Random Numbers: Linear Congruential Generators}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
     \item \textbf{LCG} (linear congruential generator): $x_{k+1} = (a x_k + c) \bmod M$, $u_k = x_k/M \in [0, 1)$
     \begin{itemize}
-        \item deterministic: the same seed $x_0$ gives the same sequence, which makes results reproducible
+        \item each integer $x_{k+1}$ is computed from the previous one $x_k$
+        \item $a$: the multiplier; $c$: the increment; $M$: the modulus; $\bmod M$: the remainder of the division by $M$
+        \item $u_k$: the uniform number in $[0, 1)$ obtained by dividing by $M$
     \end{itemize}
-    \item Worked example (SFErangen1): $a = 5$, $c = 1$, $M = 16$, $x_0 = 7$
+    \item Deterministic: the same seed $x_0$ gives the same sequence
     \begin{itemize}
-        \item $x$: 7, 4, 5, 10, 3, 0, 1, 6, 15, 12, 13, 2, 11, 8, 9, 14, 7
-        \item period 16, the maximum $M$; with $a = 4$ the sequence sticks after one step (period 1)
+        \item this makes results reproducible
+        \item the \textbf{period}: the number of values before the sequence repeats; at most $M$
     \end{itemize}
     \item Real generators use huge $M$; the period must be far longer than any simulation
-    \item Good uniform marginals are not enough: consecutive numbers must also look independent
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: an LCG with $M = 16$}
+\itemsize{\small}
+\begin{itemize}
+    \item SFErangen1: $a = 5$, $c = 1$, $M = 16$, $x_0 = 7$
+    \begin{itemize}
+        \item first step: $x_1 = (5 \times 7 + 1) \bmod 16 = 36 \bmod 16 = 4$
+        \item the sequence $x$: 7, 4, 5, 10, 3, 0, 1, 6, 15, 12, 13, 2, 11, 8, 9, 14, 7
+    \end{itemize}
+    \item Period 16, the maximum possible, $M$
+    \begin{itemize}
+        \item with $a = 4$ the sequence sticks after one step (period 1)
+    \end{itemize}
+    \item Good uniform marginals are not enough
+    \begin{itemize}
+        \item consecutive numbers must also look independent: the next chart
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -639,17 +828,23 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{The Inverse Transform Method}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Theorem}: if $U \sim U(0, 1)$ and $F$ is a CDF, then $X = F^{-1}(U)$ has CDF $F$
     \begin{itemize}
+        \item $U(0, 1)$: the uniform distribution on $[0, 1]$, so $P(U \le u) = u$
+        \item in words: a uniform number, read as a probability, is turned into the quantile of that order
         \item proof: $P(X \le x) = P(F^{-1}(U) \le x) = P(U \le F(x)) = F(x)$
     \end{itemize}
-    \item Exponential with rate $\lambda$: $F(x) = 1 - e^{-\lambda x}$, so $X = -\ln(1 - U)/\lambda$
+    \item Exponential with rate $\lambda > 0$: $F(x) = 1 - e^{-\lambda x}$, so $X = -\ln(1 - U)/\lambda$
     \begin{itemize}
+        \item obtained by solving $u = F(x)$ for $x$; the mean is $1/\lambda$
         \item $\lambda = 2$, $u = 0.9$: $x = -\ln(0.1)/2 = 1.151$
     \end{itemize}
     \item Normal: $X = \mu + \sigma\,\Phi^{-1}(U)$
+    \begin{itemize}
+        \item $\Phi^{-1}$: the quantile function of $N(0, 1)$; $\mu$, $\sigma$: the desired mean and standard deviation
+    \end{itemize}
     \item Data: use the empirical quantile function $\hat F^{-1}$
     \begin{itemize}
         \item this is resampling past days: historical simulation and the bootstrap
@@ -671,17 +866,44 @@ MSCA Digital Finance}
 \sfmquantlet{Ch_04}{SFM_ch4_random_numbers}
 \end{frame}
 
-\begin{frame}{Worked Example: a Monthly Loss Probability by Monte Carlo}
-\itemsize{\footnotesize}
+\begin{frame}{Worked Example: a Monthly Loss Probability by Monte Carlo (1/2)}
+\itemsize{\small}
 \begin{itemize}
-    \item Model: S\&P 500 daily log returns i.i.d. $N(0.0247, 1.213^2)$ (in \%); event: 21-day log return below $-10\%$
-    \item Exact: the sum is $N(0.519, 5.56^2)$, so $p = \Phi(-1.892) = 2.922\%$
-    \item Monte Carlo: $\hat p_N$ = share of simulated months below $-10\%$; standard error $\sqrt{p(1 - p)/N}$
+    \item Model: S\&P 500 daily log returns i.i.d. $N(0.0247, 1.213^2)$, in \%
     \begin{itemize}
-        \item $N = 1\,000$: $3.000\%$ (s.e. 0.533\%); $N = 100\,000$: $2.901\%$ (s.e. 0.053\%)
+        \item $N(m, s^2)$: the Normal distribution with mean $m$ and variance $s^2$
+    \end{itemize}
+    \item Event: the 21-day log return (one month) is below $-10\%$
+    \begin{itemize}
+        \item $p$: its probability, the quantity we want
+    \end{itemize}
+    \item Exact: the sum of 21 i.i.d. Normal returns is $N(0.519, 5.56^2)$
+    \begin{itemize}
+        \item mean $21 \times 0.0247$, standard deviation $1.213\sqrt{21}$
+        \item standardise: $z = (-10 - 0.519)/5.56 = -1.892$
+        \item $p = \Phi(z) = 2.922\%$, with $\Phi$ the CDF of $N(0, 1)$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: a Monthly Loss Probability by Monte Carlo (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item Monte Carlo: simulate $N$ months; $\hat p_N$ = share of simulated months below $-10\%$
+    \begin{itemize}
+        \item standard error $\sqrt{p(1 - p)/N}$: the typical distance between $\hat p_N$ and $p$
+    \end{itemize}
+    \item Results
+    \begin{itemize}
+        \item $N = 1\,000$: $3.000\%$ (s.e. 0.533\%)
+        \item $N = 100\,000$: $2.901\%$ (s.e. 0.053\%)
         \item 10 times more precision needs 100 times more simulations
     \end{itemize}
-    \item For a relative error of 10\% (95\% level) we need $N \approx 1.96^2(1 - p)/(0.1^2 p) = 12\,762$
+    \item For a relative error of 10\% at the 95\% level: $N \approx 1.96^2(1 - p)/(0.1^2 p) = 12\,762$
+    \begin{itemize}
+        \item obtained from $1.96 \times \sqrt{p(1 - p)/N} = 0.1\,p$: the half-width of the interval is 10\% of $p$
+        \item a rare event needs many simulations
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -714,22 +936,27 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{The Binomial Process}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
-    \item Each period the price moves up by a factor $u$ with probability $p$ or down by $d < u$ with probability $1 - p$, independently
+    \item Each period the price is multiplied by $u$ (up) with probability $p$, or by $d < u$ (down) with probability $1 - p$
     \begin{itemize}
-        \item after $n$ steps with $K$ up moves: $S_n = S_0 u^K d^{n - K}$, $K \sim B(n, p)$
+        \item $u$, $d$: the up and down factors (e.g. $u = 1.2$: $+20\%$); the periods are independent
     \end{itemize}
-    \item $\ln S_n = \ln S_0 + K\ln u + (n - K)\ln d$: a random walk in log prices (Section 9)
+    \item After $n$ steps with $K$ up moves: $S_n = S_0 u^K d^{n - K}$
+    \begin{itemize}
+        \item $S_0$: the initial price; $K \sim B(n, p)$: the number of up moves is binomial
+        \item $\ln S_n = \ln S_0 + K\ln u + (n - K)\ln d$: a random walk in log prices (Section 9)
+    \end{itemize}
     \item $E[S_n] = S_0\,(pu + (1 - p)d)^n$, because the steps are independent
     \begin{itemize}
+        \item $pu + (1 - p)d$: the expected growth factor of one step
         \item the basis of the binomial option pricing model \refCRR; textbook: \refFHH, Ch.~7
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Worked Example: a Two-Step Tree}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item $S_0 = 100$, $u = 1.2$, $d = 0.8$, $p = 0.6$
     \item Terminal values and probabilities
@@ -737,36 +964,53 @@ MSCA Digital Finance}
         \item $uu$: 144 with $p^2 = 0.36$; $ud$ or $du$: 96 with $2p(1-p) = 0.48$; $dd$: 64 with $(1-p)^2 = 0.16$
     \end{itemize}
     \item $E[S_2] = 100 \times (0.6 \times 1.2 + 0.4 \times 0.8)^2 = 100 \times 1.04^2 = 108.16$
-    \item $P(S_2 < 100) = 0.48 + 0.16$: an up and a down move lose money, because $ud = 0.96 < 1$
-    \item With $p^* = (1 - d)/(u - d) = 0.50$ the price is a fair game, $E[S_{t+1} \mid S_t] = S_t$ (Section 9)
+    \item $P(S_2 < 100) = 0.48 + 0.16$
+    \begin{itemize}
+        \item one up and one down move lose money, because $ud = 0.96 < 1$
+    \end{itemize}
+    \item With $p^* = (1 - d)/(u - d) = 0.50$ the price is a fair game: $E[S_{t+1} \mid S_t] = S_t$ (Section 9)
+    \begin{itemize}
+        \item $p^*$ solves $p^*u + (1 - p^*)d = 1$: the expected growth factor of a step equals 1
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Calibrating the Tree to a Market (Cox--Ross--Rubinstein)}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{CRR} (Cox--Ross--Rubinstein) with step $\Delta t$: $u = e^{\sigma\sqrt{\Delta t}}$, $d = 1/u$, $p = (e^{\mu\Delta t} - d)/(u - d)$
     \begin{itemize}
-        \item so that the mean and the variance of each step match a market with drift $\mu$ and volatility $\sigma$
+        \item $\Delta t$: the length of one step, in years; $\mu$: the annual drift; $\sigma$: the annual volatility
+        \item $d = 1/u$: an up move followed by a down move returns to the start
+        \item chosen so that the mean and the variance of each step match a market with drift $\mu$ and volatility $\sigma$
     \end{itemize}
     \item S\&P 500, 2000--2026: $\sigma = 19.23\%$, $\mu = 8.06\%$ a year; daily steps, $\Delta t = 1/252$
     \begin{itemize}
         \item $u = 1.0122$, $d = 0.9880$, $p = 0.5102$
     \end{itemize}
-    \item As $\Delta t \to 0$, $\ln S_T$ becomes Normal (CLT for $K$): the tree converges to GBM (Section 10)
+    \item As $\Delta t \to 0$, $\ln S_T$ becomes Normal (CLT for $K$)
+    \begin{itemize}
+        \item $T$: the horizon; the tree converges to GBM (Section 10)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Binomial Paths and the Lognormal Limit (SFEBinomp)}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch4_binomial.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_binomial.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Left: 12 paths over one year of daily steps, $S_0 = 100$
-    \item Right: distribution of $S_T$ with 252 steps; $E[S_T] = 108.40$ $= 100e^{\mu}$; 5\% quantile 78.5 vs lognormal 77.6
-    \item $P(S_T < 100)$: 39.7\% binomial vs 37.3\% lognormal ($S_T = 100$ exactly has a probability mass, which the binomial counts on one side)
+    \item Right: distribution of $S_T$ after 252 steps ($T = 1$ year); $E[S_T] = 108.40$ $= 100e^{\mu}$
+    \begin{itemize}
+        \item 5\% quantile 78.5 vs 77.6 in the lognormal limit
+    \end{itemize}
+    \item $P(S_T < 100)$: 39.7\% binomial vs 37.3\% lognormal
+    \begin{itemize}
+        \item the exact value $S_T = 100$ has a positive probability, which the binomial counts on one side only
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_binomial}
 \end{frame}
@@ -792,9 +1036,13 @@ MSCA Digital Finance}
     \begin{itemize}
         \item one realisation = one path; a price series is a single path of the process
     \end{itemize}
-    \item $\mathcal{F}_t$: the information available at time $t$ (past prices, news); it grows with $t$ (a \textbf{filtration})
+    \item $\mathcal{F}_t$: the information available at time $t$ (past prices, news)
+    \begin{itemize}
+        \item it grows with $t$: nothing is forgotten (a \textbf{filtration})
+    \end{itemize}
     \item \textbf{(Weakly) stationary}: $E[X_t]$ and $\text{Cov}(X_t, X_{t+h})$ do not depend on $t$
     \begin{itemize}
+        \item $h$: the lag between two dates; the mean and the dependence look the same at every date
         \item returns: roughly yes; prices: no
     \end{itemize}
     \item Textbook: \refFHH, Ch.~4 and Sec.~11.3
@@ -802,29 +1050,38 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{White Noise and the Random Walk}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{White noise}: $E[\varepsilon_t] = 0$, $\text{Var}(\varepsilon_t) = \sigma^2$, $\text{Cov}(\varepsilon_t, \varepsilon_s) = 0$ for $t \ne s$
     \begin{itemize}
+        \item $\varepsilon_t$: the shock at time $t$; mean zero, constant variance $\sigma^2$, no correlation across dates
         \item i.i.d. noise is stronger: the $\varepsilon_t$ are independent, not only uncorrelated
     \end{itemize}
     \item \textbf{Random walk}: $S_t = S_{t-1} + \mu + \varepsilon_t = S_0 + \mu t + \sum_{s=1}^t \varepsilon_s$
     \begin{itemize}
-        \item $E[S_t] = S_0 + \mu t$; $\text{Var}(S_t) = t\sigma^2$: not stationary
+        \item each step adds the drift $\mu$ and a new shock; $S_0$: the starting value
+        \item $E[S_t] = S_0 + \mu t$; $\text{Var}(S_t) = t\sigma^2$ grows with $t$: not stationary
         \item simulated with $\sigma = 1$: variance 10.1, 49.8, 100.9 at $t = 10, 50, 100$
     \end{itemize}
-    \item Log prices as a random walk = returns as white noise: the benchmark of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7} (efficient markets)
+    \item Log prices as a random walk = returns as white noise
+    \begin{itemize}
+        \item the benchmark of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7} (efficient markets)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Martingales}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item $\{X_t\}$ is a \textbf{martingale} if $E|X_t| < \infty$ and $E[X_{t+1} \mid \mathcal{F}_t] = X_t$
     \begin{itemize}
+        \item $E|X_t| < \infty$: the mean exists; $\mathcal{F}_t$: the information up to $t$
         \item a fair game: the best forecast of tomorrow is today
     \end{itemize}
     \item A \textbf{martingale difference}: $\varepsilon_t = X_t - X_{t-1}$ with $E[\varepsilon_t \mid \mathcal{F}_{t-1}] = 0$
+    \begin{itemize}
+        \item the change cannot be predicted from the past
+    \end{itemize}
     \item Examples
     \begin{itemize}
         \item a random walk without drift; $S_t^2 - t\sigma^2$ for the same walk; the binomial price under $p^*$
@@ -841,19 +1098,38 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{AR(1)} (autoregressive of order 1): $X_t = c + \phi X_{t-1} + \varepsilon_t$, $\varepsilon_t$ white noise
     \begin{itemize}
+        \item today's value is a constant, plus a share $\phi$ of yesterday's value, plus a new shock
+        \item $c$: the constant; $\phi$: the persistence; $\sigma^2$: the variance of $\varepsilon_t$
         \item $\phi = 0$: white noise; $\phi = 1$, $c = \mu$: random walk
     \end{itemize}
     \item Stationary iff $|\phi| < 1$; then
     \begin{itemize}
-        \item mean $c/(1 - \phi)$, variance $\sigma^2/(1 - \phi^2)$, autocorrelation $\rho(h) = \phi^h$
-        \item half-life of a shock: $\ln 0.5/\ln\phi$ periods
+        \item mean $c/(1 - \phi)$, variance $\sigma^2/(1 - \phi^2)$
+        \item autocorrelation at lag $h$: $\rho(h) = \text{Corr}(X_t, X_{t-h}) = \phi^h$, decaying geometrically
+        \item half-life of a shock: $\ln 0.5/\ln\phi$ periods, the time until half of a shock is gone
     \end{itemize}
-    \item Simulated, $\sigma = 1$
+    \item Uses
     \begin{itemize}
-        \item $\phi = 0.5$: variance 1.34 (theory 1.33); $\rho(5) = 0.034$ (theory 0.031); half-life 1.0
-        \item $\phi = 0.95$: variance 10.20 (theory 10.26); $\rho(5) = 0.772$; half-life 13.5
+        \item interest rates and spreads (mean reversion)
+        \item the squared returns behave like a persistent AR, which leads to GARCH
     \end{itemize}
-    \item Uses: interest rates and spreads (mean reversion); the squared returns behave like a persistent AR, which leads to GARCH
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The AR(1) Process: Simulation}
+\itemsize{\small}
+\begin{itemize}
+    \item Simulated with $\sigma = 1$, $\phi = 0.5$
+    \begin{itemize}
+        \item variance 1.34 (theory $1/(1 - 0.5^2) = 1.33$)
+        \item $\rho(5) = 0.034$ (theory $0.5^5 = 0.031$); half-life 1.0 periods
+    \end{itemize}
+    \item Simulated with $\sigma = 1$, $\phi = 0.95$
+    \begin{itemize}
+        \item variance 10.20 (theory 10.26)
+        \item $\rho(5) = 0.772$; half-life 13.5 periods
+    \end{itemize}
+    \item The closer $\phi$ is to 1, the larger the variance and the slower a shock fades
 \end{itemize}
 \end{frame}
 
@@ -951,10 +1227,14 @@ MSCA Digital Finance}
     \begin{itemize}
         \item $W(0) = 0$
         \item increments over disjoint intervals are independent
-        \item $W(t) - W(s) \sim N(0, t - s)$ for $s < t$
+        \item $W(t) - W(s) \sim N(0, t - s)$ for $s < t$: the variance equals the elapsed time
         \item the paths are continuous
     \end{itemize}
-    \item It is the limit of the scaled random walk $W_n(t) = (\varepsilon_1 + \dots + \varepsilon_{\lfloor nt\rfloor})/\sqrt{n}$, $\varepsilon = \pm 1$ (Donsker)
+    \item Limit of the scaled random walk $W_n(t) = (\varepsilon_1 + \dots + \varepsilon_{\lfloor nt\rfloor})/\sqrt{n}$ (Donsker)
+    \begin{itemize}
+        \item $\varepsilon_i = \pm 1$ with probability $1/2$ each; $n$ steps per unit of time
+        \item $\lfloor nt\rfloor$: the number of steps up to time $t$ (integer part); dividing by $\sqrt{n}$ keeps the variance equal to $t$
+    \end{itemize}
     \item Textbook: \refFHH, Ch.~5
 \end{itemize}
 \end{column}
@@ -970,25 +1250,29 @@ MSCA Digital Finance}
 \begin{frame}{From Random Walks to the Wiener Process (SFEWienerProcess)}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch4_wiener.pdf}
+\includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch4_wiener.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Left: scaled random walks with 10, 100 and 10\,000 steps; the steps vanish, the randomness stays
-    \item Right: 20 Wiener paths; $\text{Var}(W(t)) = t$, so they spread like $\pm\sqrt{t}$; simulated $\text{Var}(W(1)) = 1.006$; 68.2\% of $W(1)$ inside $\pm 1$ (theory 68.3\%)
+    \item Right: 20 Wiener paths; $\text{Var}(W(t)) = t$, so they spread like $\pm\sqrt{t}$
+    \begin{itemize}
+        \item simulated $\text{Var}(W(1)) = 1.006$; 68.2\% of $W(1)$ inside $\pm 1$ (theory 68.3\%)
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
 
 \begin{frame}{Strange Properties of Wiener Paths}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Continuous everywhere, differentiable nowhere
     \begin{itemize}
-        \item $(W(t + h) - W(t))/h \sim N(0, 1/h)$ explodes as $h \to 0$
+        \item the slope $(W(t + h) - W(t))/h \sim N(0, 1/h)$ has a variance $1/h$ that grows without bound as $h \to 0$
     \end{itemize}
     \item \textbf{Quadratic variation}: $\sum_k (W(t_{k+1}) - W(t_k))^2 \to t$ on a finer and finer grid
     \begin{itemize}
+        \item $0 = t_0 < t_1 < \dots < t$: the grid; the sum of squared increments tends to the elapsed time $t$
         \item 1000 steps on $[0, 1]$: mean 0.999, s.d. 0.045 across 10\,000 paths
         \item the reason why $(dW)^2 = dt$ in It\^o calculus, and why realised variance measures volatility (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8})
     \end{itemize}
@@ -998,19 +1282,36 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Geometric Brownian Motion}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{GBM} (geometric Brownian motion): $dS_t = \mu S_t\,dt + \sigma S_t\,dW_t$
     \begin{itemize}
-        \item the relative change $dS/S$ has drift $\mu$ and volatility $\sigma$
+        \item $dS_t$: the change of the price over a very short interval $dt$
+        \item $dW_t$: the increment of the Wiener process over $dt$, distributed $N(0, dt)$
+        \item the relative change $dS/S$ has drift $\mu$ and volatility $\sigma$, both per year
     \end{itemize}
     \item Solution: $S_t = S_0\exp\big((\mu - \sigma^2/2)t + \sigma W_t\big)$
     \begin{itemize}
-        \item $\ln(S_t/S_0) \sim N\big((\mu - \sigma^2/2)t, \sigma^2 t\big)$: lognormal prices, i.i.d. Normal log returns
+        \item $\ln(S_t/S_0) \sim N\big((\mu - \sigma^2/2)t, \sigma^2 t\big)$
+        \item lognormal prices, i.i.d. Normal log returns
     \end{itemize}
-    \item Mean $E[S_t] = S_0e^{\mu t}$; median $S_0e^{(\mu - \sigma^2/2)t}$: the gap is the volatility drag
-    \item Exact simulation on a grid: $S_{t + \Delta t} = S_t\exp\big((\mu - \sigma^2/2)\Delta t + \sigma\sqrt{\Delta t}\,Z\big)$, $Z \sim N(0, 1)$
     \item The model behind \refBS{} (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6} of the textbook)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{GBM: Mean, Median and Simulation}
+\itemsize{\small}
+\begin{itemize}
+    \item Mean $E[S_t] = S_0e^{\mu t}$; median $S_0e^{(\mu - \sigma^2/2)t}$
+    \begin{itemize}
+        \item the median is lower: half of the paths end below $S_0e^{(\mu - \sigma^2/2)t}$
+        \item the gap, $\sigma^2/2$ a year in log terms, is the volatility drag
+    \end{itemize}
+    \item Exact simulation on a grid: $S_{t + \Delta t} = S_t\exp\big((\mu - \sigma^2/2)\Delta t + \sigma\sqrt{\Delta t}\,Z\big)$
+    \begin{itemize}
+        \item $\Delta t$: the grid step, in years; $Z \sim N(0, 1)$, a new independent draw at each step
+        \item exact because each log increment is Normal with the right mean and variance
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -1022,22 +1323,32 @@ MSCA Digital Finance}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Calibration, 2000--2026: $\sigma = 19.23\%$, log drift $\mu - \sigma^2/2 = 6.21\%$, so $\mu = 8.06\%$ a year
-    \item After 10 years: mean 224.0, median 186.2; 62.0\% of the paths end below the mean (theory $\Phi(\sigma\sqrt{T}/2) = 61.9\%$)
+    \item After $T = 10$ years: mean 224.0, median 186.2
+    \begin{itemize}
+        \item 62.0\% of the paths end below the mean; theory: $\Phi(\sigma\sqrt{T}/2) = 61.9\%$, with $\Phi$ the $N(0, 1)$ CDF
+    \end{itemize}
     \item Probability of a loss after 10 years: 15.3\%
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
 
 \begin{frame}{Real Paths in the GBM Fan}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch4_gbm_fan.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_gbm_fan.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Each fan: 4000 GBM paths with the drift and volatility of the series itself, started on its first day
-    \item S\&P 500: the path reached the 0.5\% quantile on 23 July 2002, then the median at the end; outside the 90\% band 7\% of the time
-    \item BET: outside the band 24\% of the time; the 2000--2007 boom and the 2008 crash are not GBM-like; Bitcoin: $\sigma = 66.6\%$ a year makes the fan enormous
+    \item S\&P 500: the path reached the 0.5\% quantile on 23 July 2002, then the median at the end
+    \begin{itemize}
+        \item outside the 90\% band 7\% of the time
+    \end{itemize}
+    \item BET: outside the band 24\% of the time
+    \begin{itemize}
+        \item the 2000--2007 boom and the 2008 crash are not GBM-like
+        \item Bitcoin: $\sigma = 66.6\%$ a year makes the fan enormous
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
@@ -1072,15 +1383,24 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{An Open Question: Does GBM Get Drawdown Risk Right?}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.48\textheight,keepaspectratio]{sfm_ch4_drawdown_years.pdf}
+\includegraphics[width=0.97\textwidth,height=0.42\textheight,keepaspectratio]{sfm_ch4_drawdown_years.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Drawdown within a calendar year beyond 20\%: S\&P 500 in 6 of 26 years (23\%) vs 34\% under GBM; BET 46\% vs 34\%
-    \item Beyond 40\%: GBM expects 0.14 such years for the S\&P 500 and 0.17 for the BET; both had 1 (2008: -48\% and -73\%)
-    \item Open: does GBM overstate moderate drawdowns and understate extreme ones because calm and crisis years cluster?
+    \item Drawdown: the fall from the highest price reached so far; here, within a calendar year
+    \begin{itemize}
+        \item beyond 20\%: S\&P 500 in 6 of 26 years (23\%) vs 34\% under GBM; BET 46\% vs 34\%
+    \end{itemize}
+    \item Beyond 40\%: GBM expects 0.14 such years for the S\&P 500 and 0.17 for the BET
+    \begin{itemize}
+        \item both had 1 (2008: -48\% and -73\%)
+    \end{itemize}
+    \item Open question
+    \begin{itemize}
+        \item does GBM overstate moderate drawdowns and understate extreme ones because calm and crisis years cluster?
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_drawdown_open}
 \end{frame}
@@ -1103,7 +1423,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item Definitions: drawdown from the running peak within the year, not from the first day of the year
     \item Calibration: the same $\mu$ and $\sigma$, the same number of trading days a year as the data
-    \item Inference: 26 years is a small sample; compute a binomial $p$-value, not only shares
+    \item Inference: 26 years is a small sample; compute a binomial p-value, not only shares
     \item Mechanism: the i.i.d. bootstrap keeps heavy tails but removes clustering; the difference isolates the effect of clustering
     \item References: every cited paper must exist; check the DOI
 \end{itemize}

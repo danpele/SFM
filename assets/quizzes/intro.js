@@ -273,7 +273,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Randamentele logaritmice",
                     "Ambele"
                 ],
-                "correctExplanation": "Suma randamentelor logaritmice zilnice este telescopică și dă ln(PT/P0). Randamentele simple se compun.",
+                "correctExplanation": "Suma randamentelor logaritmice zilnice se reduce telescopic la ln(PT/P0). Randamentele simple se compun.",
                 "incorrectExplanation": "Randamentele logaritmice se adună în timp; randamentele simple trebuie compuse."
             }
         },
@@ -342,7 +342,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "52",
                     "12"
                 ],
-                "correctExplanation": "Bitcoin trades every day, so q = 365; stock exchanges have about 252 trading days.",
+                "correctExplanation": "Bitcoin trades every day, so A = 365 observations a year; stock exchanges have about 252 trading days.",
                 "incorrectExplanation": "Use the actual frequency of the series: Bitcoin trades 365 days a year."
             },
             "ro": {
@@ -354,7 +354,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "52",
                     "12"
                 ],
-                "correctExplanation": "Bitcoin se tranzacționează în fiecare zi, deci q = 365; bursele au aproximativ 252 de zile de tranzacționare.",
+                "correctExplanation": "Bitcoin se tranzacționează în fiecare zi, deci A = 365 de observații pe an; bursele au aproximativ 252 de zile de tranzacționare.",
                 "incorrectExplanation": "Folosiți frecvența reală a seriei: Bitcoin se tranzacționează 365 de zile pe an."
             }
         },

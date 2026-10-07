@@ -258,6 +258,7 @@ MSCA Digital Finance}
     \item Abordarea \textbf{IRB} (internal ratings-based): banca estimează PD (și eventual LGD, EAD); autoritatea de reglementare dă formula \refBCBS, ¶328--330
     \begin{itemize}
         \item $K = \mathrm{LGD}\left[\Phi\!\left(\dfrac{\Phi^{-1}(\mathrm{PD}) + \sqrt{R}\,\Phi^{-1}(0{,}999)}{\sqrt{1 - R}}\right) - \mathrm{PD}\right]$; RWA $= 12{,}5\,K\,$EAD
+        \item $K$: capitalul pe unitatea de EAD; $\Phi$, $\Phi^{-1}$: funcția de repartiție $N(0,1)$ și inversa ei; 0,999: un an prost apare o dată la 1000 de ani
         \item $R$: corelația debitorilor cu un factor comun; RWA (risk-weighted assets): activele ponderate la risc, din care banca deține cel puțin 8\%
     \end{itemize}
     \item Logica \refGordy: termenul din $\Phi(\cdot)$ este PD într-un an al cărui factor comun este depășit doar cu probabilitatea 0,1\%
@@ -283,16 +284,18 @@ MSCA Digital Finance}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Debitorul $i$ intră în nerambursare dacă $\sqrt{\rho}\,Y + \sqrt{1 - \rho}\,\varepsilon_i < \Phi^{-1}(\mathrm{PD})$; $Y$: starea economiei; dat fiind $Y = y$: PD$(y) = \Phi\big((\Phi^{-1}(\mathrm{PD}) - \sqrt{\rho}\,y)/\sqrt{1 - \rho}\big)$, $\rho = 0{,}2$
+    \item $\varepsilon_i$: șocul propriu al debitorului; $Y$ și $\varepsilon_i$ independente, $N(0,1)$; $\rho$: ponderea factorului comun
     \item Interpretare: un credit cu PD $= 2\%$ intră în nerambursare cu probabilitatea 21{,}3\% într-un an prost ($y = -3$), 1{,}1\% într-un an obișnuit și aproape niciodată într-un an bun; IRB folosește $y = \Phi^{-1}(0{,}001)$
 \end{itemize}
 \sfmquantlet{Ch_12}{SFM_ch12_validation_irb}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: capitalul IRB al unui credit de retail}
+\begin{frame}{Exemplu rezolvat: capitalul IRB al unui credit de retail}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item Alte expuneri de retail: $R = 0{,}03\,w + 0{,}16\,(1 - w)$, $w = (1 - e^{-35\,\mathrm{PD}})/(1 - e^{-35})$ \refBCBS, ¶330
     \begin{itemize}
+        \item $w \in [0, 1]$ crește cu PD, deci $R$ scade de la 0,16 (credite foarte sigure) la 0,03 (credite foarte riscante)
         \item PD $= 2\%$: $R = 0{,}095$; $\Phi^{-1}(0{,}02) = -2{,}054$, $\Phi^{-1}(0{,}999) = 3{,}090$
     \end{itemize}
     \item \textbf{Pas cu pas}
@@ -318,7 +321,7 @@ MSCA Digital Finance}
 \sfmquantlet{Ch_12}{SFM_ch12_validation_irb}
 \end{frame}
 
-\begin{frame}{Recapitulare: ce este un scor de credit}
+\begin{frame}{Recapitulare: scorul de credit: definiție}
 \itemsize{\small}
 \begin{itemize}
     \item Un scor ordonează solicitanții după risc; o PD dă și nivelul riscului
@@ -391,7 +394,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item \textbf{Datele cardurilor de credit din Taiwan} \refTW; \refYL: 30\,000 de deținători de card, nerambursarea plății din octombrie 2005, 22{,}1\% nerambursări
     \begin{itemize}
-        \item variabile: limita de credit, vîrsta, starea plăților din aprilie--septembrie 2005, facturile și plățile; le folosim pentru calibrare și fairness
+        \item variabile: limita de credit, vîrsta, starea plăților din aprilie--septembrie 2005, facturile și plățile; le folosim pentru calibrare și echitate
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -404,7 +407,7 @@ MSCA Digital Finance}
         \item orice alegere (intervale, WoE, variabile, coeficienți) se face doar pe eșantionul de estimare
         \item eșantionul de test se folosește o singură dată, la final: joacă rolul viitorilor solicitanți
     \end{itemize}
-    \item \textbf{Scurgerea de informație} (leakage): informație din eșantionul de test care intră în model, de exemplu intervale alese pe toate datele
+    \item \textbf{Leakage} (scurgerea de informație): informație din eșantionul de test care intră în model, de exemplu intervale alese pe toate datele
     \begin{itemize}
         \item face rezultatul testului prea optimist; cu 300 de credite de test, o singură împărțire este și zgomotoasă, așa că adăugăm validarea încrucișată (secțiunea 7)
     \end{itemize}
@@ -445,7 +448,7 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: WoE și IV pentru contul curent}
+\begin{frame}{Exemplu rezolvat: WoE și IV pentru contul curent}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -636,7 +639,7 @@ sold $<$ 0 DM & $1{,}338$ & $0{,}192$ & $6{,}99$ & $<$\,0{,}001 & $3{,}81$ ($2{,
 \sfmquantlet{Ch_12}{SFM_ch12_logit_lda}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: PD a unui solicitant}
+\begin{frame}{Exemplu rezolvat: PD a unui solicitant}
 \itemsize{\small}
 \begin{itemize}
     \item Solicitantul: 36 de luni, 30 de ani, 4000 DM, fără cont curent; coeficienții din tabelul anterior, rotunjiți
@@ -765,7 +768,7 @@ vechimea la angajator & $0{,}122$ & $-0{,}873$ & $0{,}265$ \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: direcția Fisher cu două variabile}
+\begin{frame}{Exemplu rezolvat: direcția Fisher cu două variabile}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item $x = $ (durata în luni, vîrsta în ani), eșantionul complet: 700 de bun-platnici, 300 de rău-platnici
@@ -849,7 +852,7 @@ AUC de test (variabile WoE) & $0{,}801$ & $0{,}801$ \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: scoruri și puncte}
+\begin{frame}{Exemplu rezolvat: scoruri și puncte}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{De la PD la scor}: PD $= 5\%$, șansa 19:1: Scorul $= 487{,}12 + 28{,}85 \times \ln 19 = 487{,}12 + 28{,}85 \times 2{,}944 = 572{,}1$
@@ -1001,6 +1004,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
     \end{itemize}
     \item \textbf{KS} (Kolmogorov--Smirnov): $\max_s |F_{\text{rău}}(s) - F_{\text{bun}}(s)|$, cea mai mare distanță dintre distribuțiile scorurilor rău-platnicilor și bun-platnicilor
     \begin{itemize}
+        \item $F_{\text{rău}}$, $F_{\text{bun}}$: funcțiile de repartiție empirice ale scorurilor în cele două grupuri; KS $\in [0, 1]$
         \item citit pe curba ROC: KS $= \max_c\,(\mathrm{TPR} - \mathrm{FPR})$; scorul la care apare este un prim prag natural
     \end{itemize}
     \item Toate cele trei măsoară \textbf{discriminarea} (ordonarea), nu calibrarea
@@ -1029,13 +1033,14 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
     \begin{itemize}
         \item diagrama de calibrare: ordonăm după PD, formăm grupuri (de exemplu zece), reprezentăm PD medie față de rata observată
         \item Hosmer--Lemeshow \refHL: $\sum_g \dfrac{(O_g - n_g\bar p_g)^2}{n_g\bar p_g(1 - \bar p_g)} \approx \chi^2(G - 2)$
+        \item $G$ grupuri; $n_g$: mărimea, $O_g$: nerambursările observate, $\bar p_g$: PD medie a grupului $g$; o valoare mare: calibrare slabă
     \end{itemize}
-    \item \textbf{Scorul Brier} \refBrier: $\mathrm{BS} = \frac1n\sum_i (p_i - y_i)^2$, eroarea pătratică medie a PD; mai mic este mai bine
+    \item \textbf{Scorul Brier} \refBrier: $\mathrm{BS} = \frac1n\sum_i (p_i - y_i)^2$, eroarea pătratică medie a PD; o valoare mai mică este mai bună
     \begin{itemize}
         \item referința: o PD constantă egală cu rata din eșantionul de estimare; cîștigul $= 1 - \mathrm{BS}/\mathrm{BS}_{\text{ref}}$
         \item eșantionul de test al scorecard-ului: BS $= 0{,}162$ față de $0{,}210$ (cîștig 23\%); HL cu 10 grupuri $= 6{,}520$, p $= 0{,}589$
     \end{itemize}
-    \item Scorul Brier recompensează atît ordonarea, cît și calibrarea; AUC vede doar ordonarea
+    \item Scorul Brier recompensează atît ordonarea, cît și calibrarea; AUC măsoară doar ordonarea
 \end{itemize}
 \end{frame}
 
@@ -1050,7 +1055,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
     \item Logit pe 30\,000 de deținători de card (70\% estimare); eșantion de test de 9\,000; zece grupuri de cîte 900 după PD; bare: intervale de 95\%
     \item AUC de test $= 0{,}777$ (estimare $0{,}774$); Brier $= 0{,}136$ față de $0{,}172$ (cîștig 21\%)
     \item Hosmer--Lemeshow $= 40{,}660$, p $<$\,0{,}001: respins, deși punctele sînt aproape de diagonală
-    \item Interpretare: cu 9000 de clienți, testul detectează abateri mici (grupul cel mai sigur: PD 7{,}8\%, observat 5{,}9\%); judecăm mărimea abaterilor, nu doar p-valoarea
+    \item Interpretare: cu 9000 de clienți, testul detectează abateri mici (grupul cel mai sigur: PD 7{,}8\%, observat 5{,}9\%); judecăm mărimea abaterilor, nu doar p-value-ul
 \end{itemize}
 \end{column}
 \end{columns}
@@ -1266,7 +1271,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
 \end{columns}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: un scor Z}
+\begin{frame}{Exemplu rezolvat: un scor Z}
 \itemsize{\small}
 \begin{itemize}
     \item O companie ipotetică: $X_1 = 0{,}15$, $X_2 = 0{,}20$, $X_3 = 0{,}08$, $X_4 = 0{,}90$, $X_5 = 1{,}10$
@@ -1312,7 +1317,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
 \end{columns}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: distanța pînă la nerambursare}
+\begin{frame}{Exemplu rezolvat: distanța pînă la nerambursare}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item $V_0 = 100$, $D = 70$, $\sigma_V = 25\%$, $\mu = 5\%$, $T = 1$ an
@@ -1323,7 +1328,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60{,}0\%$ & $91{,}1\%$ & $53{,}3\%$ & $0{,}507
     \item Din piață: capitaluri proprii 40, volatilitatea acțiunilor 50\%, datorie 70, rata fără risc 3\%
     \begin{itemize}
         \item rezolvînd $E = V\Phi(d_1) - De^{-rT}\Phi(d_2)$ și $\sigma_E E = \Phi(d_1)\sigma_V V$: $V = 107{,}9$, $\sigma_V = 18{,}6\%$, DD $= 2{,}39$, PD $= 0{,}84\%$
-        \item $d_1$, $d_2$: termenii Black--Scholes din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol4_probabilitate.pdf}{Capitolul 4}, cu $V$ în locul prețului acțiunii
+        \item $E$, $\sigma_E$: valoarea și volatilitatea capitalurilor proprii; $r$: rata fără risc; $d_1$, $d_2$: termenii Black--Scholes din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol4_probabilitate.pdf}{Capitolul 4}, cu $V$ în locul prețului acțiunii
     \end{itemize}
     \item Interpretare: o PD din piață reacționează zilnic la prețuri; un scor contabil se schimbă o dată pe an
 \end{itemize}\sfmquantlet{Ch_12}{SFM_ch12_altman_merton}

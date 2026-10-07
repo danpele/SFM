@@ -85,7 +85,6 @@ MSCA Digital Finance}
 \begin{itemize}\setlength{\itemsep}{0pt}
     \item \textbf{ACF}: Autocorrelation Function (funcția de autocorelație)
     \item \textbf{AI}: Artificial Intelligence (inteligență artificială)
-    \item \textbf{AIC}: Akaike Information Criterion (criteriul informațional Akaike)
     \item \textbf{API}: Application Programming Interface (interfață de programare a aplicațiilor)
     \item \textbf{AR}: AutoRegressive (model); in event studies: Abnormal Return (model autoregresiv; în studiile de eveniment: randament anormal)
     \item \textbf{CI}: Confidence Interval (interval de încredere)
@@ -96,11 +95,11 @@ MSCA Digital Finance}
     \item \textbf{ES}: Expected Shortfall (pierderea așteptată în coadă)
     \item \textbf{ETF}: Exchange-Traded Fund (fond tranzacționat la bursă)
     \item \textbf{EWMA}: Exponentially Weighted Moving Average (medie mobilă ponderată exponențial)
+    \item \textbf{FTX}: FTX Trading Ltd. (crypto exchange, bankrupt in November 2022) — bursa cripto FTX, falimentară în noiembrie 2022
 \end{itemize}
 \end{column}
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{FTX}: FTX Trading Ltd. (crypto exchange, bankrupt in November 2022) — bursa cripto FTX, falimentară în noiembrie 2022
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity (heteroscedasticitate condiționată autoregresivă generalizată)
     \item \textbf{GENIUS}: Guiding and Establishing National Innovation for U.S. Stablecoins (Act) — legea americană privind stablecoins de plată
     \item \textbf{GJR}: Glosten–Jagannathan–Runkle (asymmetric GARCH) — modelul GARCH asimetric Glosten–Jagannathan–Runkle
@@ -110,9 +109,10 @@ MSCA Digital Finance}
     \item \textbf{LPPL}: Log-Periodic Power Law (legea de putere log-periodică)
     \item \textbf{LUNA}: Luna (token of the Terra blockchain) — token-ul blockchain-ului Terra
     \item \textbf{SEC}: Securities and Exchange Commission (Comisia americană pentru valori mobiliare)
-    \item \textbf{SHA-256}: Secure Hash Algorithm, 256 bits (algoritmul de hash securizat cu 256 de biți)
     \item \textbf{SUA}: Statele Unite ale Americii
     \item \textbf{SVB}: Silicon Valley Bank (banca Silicon Valley Bank)
+    \item \textbf{USDC}: USD Coin (stablecoin garantat cu dolari, emis de Circle)
+    \item \textbf{UST}: TerraUSD (stablecoin algoritmic al rețelei Terra)
 \end{itemize}
 \end{column}
 \end{columns}
@@ -122,8 +122,6 @@ MSCA Digital Finance}
 \begin{columns}[T]
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{USDC}: USD Coin (stablecoin garantat cu dolari, emis de Circle)
-    \item \textbf{UST}: TerraUSD (stablecoin algoritmic al rețelei Terra)
     \item \textbf{UTC}: Coordinated Universal Time (Temps Universel Coordonné) — timpul universal coordonat
     \item \textbf{VR}: Variance Ratio (raportul varianțelor)
 \end{itemize}
@@ -155,8 +153,8 @@ MSCA Digital Finance}
 \itemsize{\small}
 \begin{itemize}
     \item Explicați cum înregistrează un blockchain proprietatea, de ce mining-ul consumă energie și cum rezultă oferta de Bitcoin din regula halving-ului
-    \item Anualizați randamentele și volatilitățile cripto cu frecvența reală (365 de zile) și explicați ce greșim cu 252
-    \item Estimați indicele de coadă, un model GARCH(1,1)-t și testele raportului varianțelor pentru Bitcoin și comparați-le cu S\&P 500
+    \item Anualizați randamentele și volatilitățile cripto cu frecvența reală (365 de zile) și explicați eroarea introdusă de folosirea a 252 de zile
+    \item Estimați tail index-ul, un model GARCH(1,1)-t și testele raportului varianțelor pentru Bitcoin și comparați-le cu S\&P 500
     \item Măsurați în timp corelația activelor cripto cu acțiunile și aurul, precum și drawdown-urile unui activ cripto
     \item Descrieți cele trei tipuri de stablecoins, măsurați abaterea de la paritate în puncte de bază și interpretați un episod de depeg
     \item Calculați VaR 1\% și ES 2,5\% ale unei poziții cripto și verificați-le prin backtesting
@@ -389,13 +387,26 @@ MSCA Digital Finance}
 \section{Cripto ca o clasă de active}
 %=============================================================================
 
-\begin{frame}{Anualizarea cu frecvența reală}
-\itemsize{\footnotesize}
+\begin{frame}{Anualizarea cu frecvența reală (1/2)}
+\itemsize{\small}
 \begin{itemize}
-    \item Cu $m$ observații pe an și randamente zilnice i.i.d.: media anuală $= m\,\bar r$, volatilitatea anuală $= \sqrt{m}\,s$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1})
+    \item Cu $A$ observații pe an și randamente zilnice i.i.d. (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1}):
     \begin{itemize}
-        \item acțiunile: $m \approx 252$ de zile de tranzacționare; cripto: $m = 365$ (frecvența reală: $m = 365{,}3$ pentru Bitcoin, 251{,}4 pentru S\&P 500)
+        \item $\text{media anuală} = A\,\bar r, \qquad \text{volatilitatea anuală} = \sqrt{A}\,s$
+        \item $\bar r$: randamentul zilnic mediu; $s$: abaterea standard a randamentelor zilnice; $A$: numărul de randamente pe an
+        \item i.i.d.: independente și identic distribuite; atunci varianțele celor $A$ randamente zilnice se adună, de aici $\sqrt{A}$
     \end{itemize}
+    \item Valoarea corectă a lui $A$ este numărul real de observații pe an
+    \begin{itemize}
+        \item acțiunile: $A \approx 252$ de zile de tranzacționare; cripto: $A = 365$
+        \item frecvența reală în datele noastre: $A = 365{,}3$ pentru Bitcoin, 251{,}4 pentru S\&P 500
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Anualizarea cu frecvența reală (2/2)}
+\itemsize{\small}
+\begin{itemize}
     \item \textbf{Exemplu lucrat}: Bitcoin, $\bar r = 0{,}118\%$, $s = 3{,}49\%$ pe zi
     \begin{itemize}
         \item corect: $\sqrt{365} \times 3{,}49 = 19{,}10 \times 3{,}49 = 66{,}6\%$; media $365 \times 0{,}118 = 43{,}1\%$
@@ -404,7 +415,7 @@ MSCA Digital Finance}
     \item Regula cu 252 subestimează volatilitatea cu 16{,}9\% și media cu 31{,}0\%
     \begin{itemize}
         \item amestecul lor (media $\times 252$, volatilitatea $\times\sqrt{365}$) deformează și raportul Sharpe
-        \item comparațiile cu acțiunile: anualizăm fiecare serie cu propriul $m$, niciodată cu unul comun
+        \item comparațiile cu acțiunile: anualizăm fiecare serie cu propriul $A$, niciodată cu unul comun
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -415,7 +426,7 @@ MSCA Digital Finance}
 \scriptsize
 \begin{tabular}{lrrrrrrrr}
 \toprule
-& din & $n$ & media (\%) & ab.\ std.\ (\%) & vol.\ anuală (\%) & asim. & exces boltire & min (\%) \\
+& din & $n$ & media (\%) & ab.\ std.\ (\%) & vol.\ anuală (\%) & asim. & exces de boltire & min (\%) \\
 \midrule
 Bitcoin & 2014 & 4\,384 & $0{,}118$ & $3{,}49$ & $66{,}6$ & $-0{,}70$ & $12{,}0$ & $-46{,}5$ \\
 Ethereum & 2016 & 3\,913 & $0{,}202$ & $4{,}99$ & $95{,}3$ & $-0{,}20$ & $9{,}0$ & $-55{,}1$ \\
@@ -426,7 +437,7 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Randamente logaritmice zilnice pînă pe 18 septembrie 2026; volatilitatea anuală $= \sqrt{m}\,s$ cu frecvența reală $m$ a fiecărei serii; aurul: XAU/USD
+    \item Randamente logaritmice zilnice pînă pe 18 septembrie 2026; volatilitatea anuală $= \sqrt{A}\,s$ cu frecvența reală $A$ a fiecărei serii; aurul: XAU/USD
     \item Interpretare
     \begin{itemize}
         \item Bitcoin este de 3{,}8 ori mai volatil decît S\&P 500 (66{,}6\% față de 17{,}6\%); Ethereum de 5{,}4 ori, Solana de 6{,}7 ori
@@ -455,7 +466,7 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
 \begin{itemize}
     \item \refLT: Bitcoin, Ripple și Ethereum, randamente zilnice și săptămînale, 2011--2018
     \begin{itemize}
-        \item designul: regresia randamentelor cripto pe factorii pieței de acțiuni, pe valute, mărfuri și factori macroeconomici
+        \item metoda: regresia randamentelor cripto pe factorii pieței de acțiuni, pe valute, mărfuri și factori macroeconomici
     \end{itemize}
     \item Rezultatele
     \begin{itemize}
@@ -479,7 +490,8 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
     \end{itemize}
     \item Două teste pe Bitcoin, fiecare zi etichetată după data închiderii
     \begin{itemize}
-        \item media: $r_t = a + b\,W_t + \varepsilon_t$, $W_t = 1$ sîmbăta și duminica; erori standard HAC (Newey--West)
+        \item media: $r_t = a + b\,W_t + \varepsilon_t$, cu $W_t = 1$ sîmbăta și duminica și 0 în rest; erori standard HAC (Newey--West)
+        \item $a$: randamentul mediu în zilele lucrătoare; $b$: diferența weekend minus zile lucrătoare; $b = 0$: niciun efect de weekend în medie
         \item varianța: testul Brown--Forsythe (testul Levene în jurul medianei), robust la cozi groase
     \end{itemize}
     \item Raportul dintre varianța din weekend și cea din zilele lucrătoare: egal cu 1 dacă fiecare zi ar avea același risc
@@ -494,7 +506,7 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
 \vspace{-0.25cm}
 \begin{itemize}
     \item Abaterea standard a randamentelor zilnice după ziua închiderii; trei perioade
-    \item Variabila weekend $b$ (p-valoarea): $-0{,}01$ (0{,}95); $-0{,}11$ (0{,}48); $-0{,}03$ (0{,}83): niciun efect de weekend în medie
+    \item Coeficientul variabilei weekend, $b$ (p-value): $-0{,}01$ (0{,}95); $-0{,}11$ (0{,}48); $-0{,}03$ (0{,}83): niciun efect de weekend în medie
     \item Interpretare: varianța weekend/zile lucrătoare 0{,}66; 0{,}35; 0{,}39 (Brown--Forsythe p 0{,}002; $<$\,0{,}001; $<$\,0{,}001): piața cripto este mai liniștită cînd piețele tradiționale sînt închise
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_asset_class}
@@ -514,7 +526,24 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
 \section{Cozi și volatility clustering}
 %=============================================================================
 
-\begin{frame}{Cozi groase: estimatorul Hill}
+\begin{frame}{Cozi groase: estimatorul Hill (1/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item \refHill{} (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{Capitolul 5}): tail index-ul estimat din cele mai mari $k$ pierderi (sau cîștiguri) \[ \hat\alpha = \Big[\frac1k\sum_{i=1}^k \ln\frac{X_{(i)}}{X_{(k+1)}}\Big]^{-1}, \qquad CI_{95\%} = \hat\alpha\Big(1 \pm \frac{1{,}96}{\sqrt{k}}\Big) \]
+    \item Notațiile
+    \begin{itemize}
+        \item $X_{(1)} \ge X_{(2)} \ge \dots$: pierderile (sau cîștigurile) ordonate descrescător; $X_{(k+1)}$: pragul cozii
+        \item $k$: numărul observațiilor din coadă, aici $k = 2{,}5\%$ din $n$; $n$: volumul eșantionului; CI: intervalul de încredere
+    \end{itemize}
+    \item Semnificația lui $\alpha$: $P(X > x) \approx c\,x^{-\alpha}$ pentru $x$ mare ($c$: o constantă)
+    \begin{itemize}
+        \item un $\alpha$ mai mic înseamnă o coadă mai groasă
+        \item momentele de ordin $\ge \alpha$ sînt infinite: $\alpha < 4$ înseamnă o boltire infinită
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cozi groase: estimatorul Hill (2/2)}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -531,11 +560,29 @@ Aur & $3{,}11$ & $[2{,}42; 3{,}80]$ & $3{,}04$ & $[2{,}36; 3{,}71]$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item \refHill{} (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol5_cozi_groase_evt.pdf}{Capitolul 5}): $\hat\alpha = \big[\frac1k\sum_{i=1}^k \ln(X_{(i)}/X_{(k+1)})\big]^{-1}$ pe cele mai mari $k$ pierderi (sau cîștiguri), $k = 2{,}5\%$ din $n$; CI: $\hat\alpha(1 \pm 1{,}96/\sqrt{k})$
+    \item Interpretare
     \begin{itemize}
-        \item $P(X > x) \approx c\,x^{-\alpha}$: momentele de ordin $\ge \alpha$ sînt infinite
+        \item coada stîngă a Bitcoin ($\hat\alpha = 2{,}71$) este mai groasă decît coada dreaptă
+        \item cu $\alpha < 4$, boltirea nu este finită, deci boltirea de selecție nu este o valoare stabilă
+        \item intervalele pentru cripto și acțiuni se suprapun
     \end{itemize}
-    \item Interpretare: coada stîngă a Bitcoin ($\hat\alpha = 2{,}71$) este mai groasă decît coada dreaptă; cu $\alpha < 4$, boltirea nu este finită, deci boltirea de selecție nu este o cifră stabilă; intervalele pentru cripto și acțiuni se suprapun
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretarea ACF și a testului Ljung--Box}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{ACF} (funcția de autocorelație): $\hat\rho(k)$, corelația de selecție dintre $r_t$ și $r_{t-k}$; $k$: lagul, în zile
+    \begin{itemize}
+        \item în ipoteza de independență, $\hat\rho(k)$ se află în intervalul $\pm 1{,}96/\sqrt{n}$ cu probabilitatea 95\% ($n$: numărul de randamente)
+        \item ACF a lui $r_t$: este direcția previzibilă? ACF a lui $r_t^2$: este mărimea mișcării previzibilă (volatility clustering)?
+    \end{itemize}
+    \item Testul \textbf{Ljung--Box} pentru primele 10 autocorelații împreună: \[ Q(10) = n(n + 2)\sum_{k=1}^{10}\frac{\hat\rho(k)^2}{n - k} \]
+    \item Interpretarea
+    \begin{itemize}
+        \item în absența autocorelației, $Q(10)$ urmează o distribuție $\chi^2$ cu 10 grade de libertate
+        \item un $Q(10)$ mare și un p-value mic: autocorelațiile sînt semnificative împreună
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -546,14 +593,31 @@ Aur & $3{,}11$ & $[2{,}42; 3{,}80]$ & $3{,}04$ & $[2{,}36; 3{,}71]$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item ACF (funcția de autocorelație) a lui $r_t$ și a lui $r_t^2$, decalajele 1--30; linii întrerupte: $\pm 1{,}96/\sqrt{n} = \pm 0{,}030$
-    \item Randamentele: $\hat\rho(1) = -0{,}022$, 4 din 30 de decalaje în afara benzii; pătratele: $\hat\rho(1) = 0{,}137$, 15 din 30 în afara benzii
+    \item ACF (funcția de autocorelație) a lui $r_t$ și a lui $r_t^2$, lagurile 1--30; linii întrerupte: $\pm 1{,}96/\sqrt{n} = \pm 0{,}030$
+    \item Randamentele: $\hat\rho(1) = -0{,}022$, 4 din 30 de laguri în afara benzii; pătratele: $\hat\rho(1) = 0{,}137$, 15 din 30 în afara benzii
     \item Interpretare: statistica Ljung--Box $Q(10)$ este 20{,}2 pentru $r_t$ și 212{,}7 pentru $r_t^2$ (p $<$\,0{,}001): direcția este greu de prognozat, mărimea mișcării nu
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_garch_efficiency}
 \end{frame}
 
-\begin{frame}{GARCH(1,1)-t pentru active cripto și tradiționale}
+\begin{frame}{GARCH(1,1)-t pentru active cripto și tradiționale (1/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item \refBoll{} (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9}): varianța de azi este o sumă ponderată a unei constante, a pătratului șocului de ieri și a varianței de ieri \[ \sigma_t^2 = \omega + \alpha\,\varepsilon_{t-1}^2 + \beta\,\sigma_{t-1}^2, \qquad \varepsilon_t = \sigma_t z_t \]
+    \item Notațiile
+    \begin{itemize}
+        \item $\sigma_t^2$: varianța condiționată a zilei $t$; $\varepsilon_t$: șocul (randamentul centrat); $z_t$: Student-t cu $\nu$ grade de libertate, scalat la varianța 1
+        \item $\omega > 0$: constanta; $\alpha \ge 0$: reacția la șocuri; $\beta \ge 0$: memoria varianței trecute; $\alpha + \beta$: persistența
+        \item timpul de înjumătățire a unui șoc: $\ln 0{,}5/\ln(\alpha + \beta)$ zile, intervalul după care jumătate din efectul lui asupra varianței a dispărut
+    \end{itemize}
+    \item GJR: un termen suplimentar $\gamma\,\varepsilon_{t-1}^2\mathbb{1}\{\varepsilon_{t-1} < 0\}$
+    \begin{itemize}
+        \item $\mathbb{1}\{\varepsilon_{t-1} < 0\} = 1$ după o scădere; $\gamma > 0$: scăderile cresc volatilitatea mai mult decît creșterile, efectul de levier al acțiunilor
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{GARCH(1,1)-t pentru active cripto și tradiționale (2/2)}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -569,10 +633,7 @@ Aur & $0{,}010$ & $0{,}047$ & $0{,}947$ & $0{,}994$ & 113 & $4{,}13$ & $-0{,}051
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item \refBoll{} (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9}): $\sigma_t^2 = \omega + \alpha\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2$, inovații Student-t cu $\nu$ grade de libertate; timpul de înjumătățire a unui șoc $\ln 0{,}5/\ln(\alpha + \beta)$
-    \begin{itemize}
-        \item GJR: un termen suplimentar $\gamma\,\varepsilon_{t-1}^2\mathbb{1}\{\varepsilon_{t-1} < 0\}$; $\gamma > 0$ este efectul de levier al acțiunilor
-    \end{itemize}
+    \item Estimații prin verosimilitate maximă pe randamente logaritmice zilnice; timpul de înjumătățire în zile; $t$: statistica $t$ a lui $\hat\gamma$
 \end{itemize}
 \end{frame}
 
@@ -613,7 +674,7 @@ Aur & $0{,}010$ & $0{,}047$ & $0{,}947$ & $0{,}994$ & 113 & $4{,}13$ & $-0{,}051
 \itemsize{\small}
 \begin{itemize}
     \item Cozile cripto sînt groase ($\hat\alpha$ între 2,5 și 3,5), la fel de groase ca formă ca ale S\&P 500; activele cripto diferă prin scală
-    \item Volatilitatea se grupează puternic; GARCH-t se estimează cu $\alpha + \beta \approx 1$ (IGARCH)
+    \item Volatility clustering este puternic; GARCH-t se estimează cu $\alpha + \beta \approx 1$ (IGARCH)
     \item Niciun efect de levier: veștile bune și cele rele mișcă la fel volatilitatea cripto
 \end{itemize}
 \end{frame}
@@ -623,7 +684,7 @@ Aur & $0{,}010$ & $0{,}047$ & $0{,}947$ & $0{,}994$ & 113 & $4{,}13$ & $-0{,}051
 \section{Este piața cripto eficientă?}
 %=============================================================================
 
-\begin{frame}{Eficiența în formă slabă: ce testăm}
+\begin{frame}{Eficiența în formă slabă: ipotezele testate}
 \itemsize{\small}
 \begin{itemize}
     \item \refFama: pe o piață eficientă în formă slabă, prețurile trecute nu ajută la prognoza randamentelor viitoare (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7})
@@ -634,6 +695,7 @@ Aur & $0{,}010$ & $0{,}047$ & $0{,}947$ & $0{,}994$ & 113 & $4{,}13$ & $-0{,}051
     \begin{itemize}
         \item autocorelația de ordinul întîi $\hat\rho(1)$ și statistica Ljung--Box $Q(10)$
         \item raportul varianțelor \refLM: $\mathrm{VR}(q) = \mathrm{Var}(r_t + \dots + r_{t-q+1})/(q\,\mathrm{Var}(r_t))$, egal cu 1 pentru un mers aleator
+        \item $q$: orizontul, în zile; $r_t + \dots + r_{t-q+1}$: randamentul logaritmic pe $q$ zile; fără autocorelație, varianța lui este de $q$ ori cea zilnică
         \item $Z^*(q)$: varianta robustă la volatility clustering; respingem la 5\% dacă $|Z^*| > 1{,}96$
     \end{itemize}
     \item VR $> 1$: momentum (tendințe); VR $< 1$: revenire la medie
@@ -697,7 +759,7 @@ Ethereum & 2022--2026 & 1\,721 & $-0{,}015$ & $1{,}014$ & $0{,}20$ (0{,}844) \\
     \end{itemize}
     \item Datele noastre (din 2014): VR(5) între 0{,}78 și 1{,}17 pe ferestre mobile; nicio respingere robustă
     \begin{itemize}
-        \item piața a crescut, au venit arbitrajorii, au apărut derivatele și ETF-urile: perspectiva piețelor adaptive din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf}{Capitolul 11}
+        \item piața s-a extins, au intrat arbitrajorii, au apărut derivatele și ETF-urile: perspectiva piețelor adaptive din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf}{Capitolul 11}
     \end{itemize}
     \item Eficiența în formă slabă nu este eficiență în general: prețurile pot fi imprevizibile și totuși departe de orice valoare fundamentală
 \end{itemize}
@@ -765,7 +827,7 @@ Ethereum & 2022--2026 & 1\,721 & $-0{,}015$ & $1{,}014$ & $0{,}20$ (0{,}844) \\
     \end{itemize}
     \item \textbf{Corelația mobilă}: corelația de selecție pe ultimele 250 de zile comune, recalculată în fiecare zi
     \begin{itemize}
-        \item eroarea standard este circa $(1 - \rho^2)/\sqrt{250} \approx 0{,}06$: mișcările sub 0,1 sînt zgomot
+        \item eroarea standard este circa $(1 - \rho^2)/\sqrt{250} \approx 0{,}06$ ($\rho$: corelația adevărată, aici mică): mișcările sub 0,1 sînt zgomot
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -870,14 +932,15 @@ FTX & 5 noiembrie 2022 -- 21 noiembrie 2022 & $-29{,}9$ & $-38{,}4$ & $4{,}6$ & 
 \begin{itemize}
     \item \textbf{Drawdown}: $D_t = P_t/\max_{s \le t} P_s - 1$, pierderea față de ultimul maxim istoric (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1})
     \begin{itemize}
-        \item \textbf{drawdown maxim}: $\min_t D_t$; \textbf{timpul sub apă} (time under water): zilele pînă la un nou maxim istoric
+        \item $P_t$: prețul din ziua $t$; $\max_{s \le t} P_s$: cel mai mare preț pînă în ziua $t$; $D_t \le 0$
+        \item \textbf{drawdown maxim}: $\min_t D_t$; \textbf{perioada underwater} (time under water): zilele pînă la un nou maxim istoric
     \end{itemize}
-    \item O pierdere $d$ cere un cîștig $d/(1 - d)$ pentru recuperare, adică pentru revenirea la vîrful anterior
+    \item O pierdere $d$ cere un cîștig $d/(1 - d)$ pentru revenirea la vîrful anterior, deoarece $(1 - d)(1 + g) = 1$ dă $g = d/(1 - d)$
     \begin{itemize}
         \item $d = 75\%$: $0{,}75/0{,}25 = 300\%$; $d = 80\%$: 400\%
         \item cel mai adînc drawdown al Bitcoin în datele noastre: $-83{,}4\%$ (15 decembrie 2018); recuperarea a cerut un cîștig de 502\%
     \end{itemize}
-    \item Drawdown-urile depind de traiectorie, nu doar de distribuția randamentelor: volatilitatea mare și gruparea ei produc drawdown-uri adînci
+    \item Drawdown-urile depind de traiectorie, nu doar de distribuția randamentelor: volatilitatea mare și volatility clustering produc drawdown-uri adînci
 \end{itemize}
 \end{frame}
 
@@ -900,7 +963,7 @@ FTX & 5 noiembrie 2022 -- 21 noiembrie 2022 & $-29{,}9$ & $-38{,}4$ & $4{,}6$ & 
 \scriptsize
 \begin{tabular}{lrlrrlr}
 \toprule
-Maxim & USD & minim & USD & adîncime (\%) & nou maxim & zile sub apă \\
+Maxim & USD & minim & USD & adîncime (\%) & nou maxim & zile underwater \\
 \midrule
 2014-09-17 & 457 & 2015-01-14 & 178 & $-61{,}1$ & 2015-12-15 & 454 \\
 2017-12-16 & 19\,497 & 2018-12-15 & 3\,237 & $-83{,}4$ & 2020-11-30 & 1080 \\
@@ -931,14 +994,15 @@ Maxim & USD & minim & USD & adîncime (\%) & nou maxim & zile sub apă \\
     \end{itemize}
     \item Legea de putere log-periodică (LPPL) \refJLS: înaintea unui crah, $\ln P_t \approx A + B(t_c - t)^m + C(t_c - t)^m\cos(\omega\ln(t_c - t) - \phi)$
     \begin{itemize}
-        \item o creștere mai rapidă decît cea exponențială, cu oscilații tot mai dese; $t_c$: momentul critic
+        \item $t_c$: momentul critic (data cea mai probabilă a crahului); $A$: logaritmul prețului atins la $t_c$ (aici $A$ nu este numărul de perioade pe an)
+        \item $B < 0$, $0 < m < 1$: o creștere mai rapidă decît cea exponențială; $C$, $\omega$, $\phi$: amplitudinea, frecvența și faza unor oscilații tot mai dese spre $t_c$
     \end{itemize}
     \item Atenție: șapte parametri, multe optime locale, iar $t_c$ este cel mai incert dintre ei; ajustările par convingătoare abia după crah
 \end{itemize}
 \end{column}
 \begin{column}{0.31\textwidth}
 \centering
-\includegraphics[height=0.36\textheight]{ch14_sornette_2012.jpg}\\[1mm]
+\includegraphics[height=0.30\textheight]{ch14_sornette_2012.jpg}\\[1mm]
 \imgcap{Didier Sornette}
 \imgcredit{https://commons.wikimedia.org/wiki/File:Didier_Sornette.jpg}{Foto: Didier Sornette (2012); CC BY-SA 3.0 DE; Wikimedia Commons}
 \end{column}
@@ -968,7 +1032,7 @@ Maxim & USD & minim & USD & adîncime (\%) & nou maxim & zile sub apă \\
     \begin{itemize}
         \item 10 ianuarie 2024: SEC (Securities and Exchange Commission) aprobă 11 ETF-uri spot pe Bitcoin \refSEC; tranzacționarea începe pe 11 ianuarie
     \end{itemize}
-    \item De ce contează
+    \item Importanța momentului
     \begin{itemize}
         \item fondurile de pensii și consultanții pot deține Bitcoin printr-un instrument financiar reglementat
         \item unitățile ETF se tranzacționează doar în zilele lucrătoare: o parte a tranzacționării se mută în orele bursei
@@ -993,7 +1057,7 @@ Maxim & USD & minim & USD & adîncime (\%) & nou maxim & zile sub apă \\
 \vspace{-0.25cm}
 \begin{itemize}
     \item Stînga: volatilitatea Bitcoin pe ferestre de 90 de zile, anualizată cu $\sqrt{365}$. Dreapta: ponderea weekendului în suma pătratelor randamentelor, pe ani (2/7 dacă fiecare zi ar avea aceeași varianță)
-    \item Interpretare: volatilitatea a continuat să scadă după ianuarie 2024, dar scădea deja de dinainte; ponderea weekendului este mult sub 2/7 din 2020
+    \item Interpretare: volatilitatea a continuat să scadă după ianuarie 2024, dar era deja în scădere înainte; ponderea weekendului este mult sub 2/7 din 2020
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_bubbles_etf}
 \end{frame}
@@ -1032,7 +1096,7 @@ GARCH(1,1)-t $\hat\alpha + \hat\beta$ & $1{,}000$ & $0{,}97$ \\
         \item corelația randamentelor zilnice 0{,}91; panta IBIT în funcție de Bitcoin 0{,}94
         \item \textbf{tracking error}: abaterea standard anualizată a diferenței de randament, 20{,}8\%
     \end{itemize}
-    \item De ce nu 1: cele două închideri sînt la patru ore distanță (ora 16:00 la New York față de miezul nopții UTC)
+    \item Explicația abaterii de la 1: cele două închideri sînt la patru ore distanță (ora 16:00 la New York față de miezul nopții UTC)
     \begin{itemize}
         \item pe o săptămînă diferența se compensează; fondul deține Bitcoin unu la unu, minus un comision mic
     \end{itemize}
@@ -1054,7 +1118,7 @@ GARCH(1,1)-t $\hat\alpha + \hat\beta$ & $1{,}000$ & $0{,}97$ \\
 \section{Stablecoins}
 %=============================================================================
 
-\begin{frame}{Ce este un stablecoin?}
+\begin{frame}{Stablecoins: definiție și tipuri}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -1064,7 +1128,7 @@ Tipul & cum se menține paritatea & exemple & riscul \\
 \midrule
 garantat cu monedă fiduciară (fiat-backed) & rezerve în dolari, depozite și titluri de stat; deținătorii răscumpără 1 monedă pentru 1 USD la emitent & USDT, USDC & rezervele și banca la care sînt păstrate \\
 garantat cu active cripto (crypto-backed) & credite supra-garantate cu active cripto, lichidate automat de contracte inteligente & DAI & o prăbușire a garanției \\
-algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru a ține prețul la 1 USD & UST (Terra) & o retragere masivă (run) care distruge ambele monede \\
+algoritmic & fără rezerve: un algoritm emite și retrage din circulație (burn) o a doua monedă pentru a ține prețul la 1 USD & UST (Terra) & o retragere masivă (run) care distruge ambele monede \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1111,7 +1175,8 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
 \begin{itemize}
     \item \textbf{Punct de bază} (bp, basis point): o sutime de procent, 0,01\% $= 0{,}0001$
     \begin{itemize}
-        \item \textbf{abaterea de la paritate}: $d_t = 10\,000\,(P_t - 1)$ bp pentru o monedă cu paritatea 1 USD
+        \item \textbf{abaterea de la paritate}: $d_t = 10\,000\,(P_t - 1)$ bp pentru o monedă cu paritatea 1 USD; $P_t$: prețul ei în USD în ziua $t$
+        \item $d_t < 0$: moneda se tranzacționează sub paritate; $d_t > 0$: peste paritate
     \end{itemize}
     \item \textbf{Exemplu lucrat}: USDC s-a închis la 0,9715 USD pe 11 martie 2023
     \begin{itemize}
@@ -1121,6 +1186,7 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
     \item Statisticile unei parități: abaterea absolută mediană, proporția zilelor peste 10 sau 50 bp, cea mai proastă închidere și cel mai prost minim
     \begin{itemize}
         \item viteza revenirii: AR(1) $d_t = \phi\,d_{t-1} + e_t$, timpul de înjumătățire $\ln 0{,}5/\ln\phi$ zile
+        \item $\phi \in (0, 1)$: fracțiunea din abaterea de azi care persistă mîine; $e_t$: un șoc nou; un $\phi$ mic înseamnă o revenire rapidă la paritate
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1150,7 +1216,7 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
     \end{itemize}
     \item 11 martie: USDC scade la 0{,}8774 USD (minim, $-1226$ bp) și se închide la 0{,}9715; DAI, garantat în mare parte cu USDC, îl urmează
     \begin{itemize}
-        \item USDT se tranzacționează peste 1 (închidere de pînă la 77 bp): banii fug de la un stablecoin la altul
+        \item USDT se tranzacționează peste 1 (închidere de pînă la 77 bp): capitalul se mută de la un stablecoin la altul
     \end{itemize}
     \item 12 martie, seara: autoritățile americane garantează toate depozitele SVB \refFed; pe 13 martie USDC revine la paritate
 \end{itemize}
@@ -1182,7 +1248,7 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
 \begin{itemize}
     \item UST era ținut la 1 USD printr-un schimb cu o a doua monedă, LUNA: 1 UST putea fi schimbat oricînd pe LUNA în valoare de 1 USD
     \begin{itemize}
-        \item UST sub 1: cumpărăm UST, îl schimbăm pe LUNA nou de 1 USD, vindem LUNA: UST se arde, LUNA se emite
+        \item UST sub 1: cumpărăm UST, îl schimbăm pe LUNA nou în valoare de 1 USD, vindem LUNA: UST este retras din circulație (burn), LUNA este emis
         \item singura garanție era valoarea de piață a LUNA
     \end{itemize}
     \item Cererea venea de la protocolul Anchor, care plătea aproape 20\% pe an pentru depozitele în UST \refLMS
@@ -1222,7 +1288,7 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
     \begin{itemize}
         \item cînd această cerere dispare, moneda se tranzacționează sub paritate, ca bancnota unei bănci nesigure
     \end{itemize}
-    \item Lecția statistică: abaterile de la paritate sînt mici și scurte în perioadele normale și sar în criză: o serie cu cozi groase, dependentă de regim
+    \item Lecția statistică: abaterile de la paritate sînt mici și scurte în perioadele normale și cresc brusc în criză: o serie cu cozi groase, dependentă de regim
 \end{itemize}
 \end{frame}
 
@@ -1297,6 +1363,7 @@ algoritmic & fără rezerve: un algoritm emite și arde o a doua monedă pentru 
 \begin{itemize}
     \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10}: $\mathrm{VaR}_\alpha = -q_\alpha$, pierderea depășită cu probabilitatea $\alpha$ (VaR 1\%); $\mathrm{ES}_\alpha = -E[r \mid r \le q_\alpha]$ (ES 2,5\%)
     \begin{itemize}
+        \item $q_\alpha$: cuantila de ordin $\alpha$ a randamentului zilnic $r$; $E[r \mid r \le q_\alpha]$: randamentul mediu în zilele de dincolo de cuantilă
         \item simularea istorică (HS), distribuția Normală, Student-t (verosimilitate maximă), GARCH(1,1)-t pentru ziua următoare
     \end{itemize}
     \item De la randamente logaritmice la dolari: un randament logaritmic de $-v\%$ înseamnă o pierdere $W(1 - e^{-v/100})$ pentru o poziție cu valoarea $W$
@@ -1351,7 +1418,8 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
     \end{itemize}
     \item 10 zile: VaR 1\% istoric al randamentelor pe 10 zile este 29{,}52\%; regula rădăcinii pătrate a timpului dă 33{,}34\%
     \begin{itemize}
-        \item regula supraestimează: cu indicele de coadă $\alpha > 2$, o cuantilă extremă a sumei a $h$ randamente crește aproximativ ca $h^{1/\alpha}$, mai lent decît $\sqrt{h}$
+        \item regula rădăcinii pătrate a timpului: $\mathrm{VaR}(h\text{ zile}) = \sqrt{h}\,\mathrm{VaR}(1\text{ zi})$, exactă doar pentru randamente Normale i.i.d.
+        \item regula supraestimează: cu tail index-ul $\alpha > 2$, o cuantilă extremă a sumei a $h$ randamente crește aproximativ ca $h^{1/\alpha}$, mai lent decît $\sqrt{h}$
     \end{itemize}
     \item ES 2,5\% (HS) este apropiat de VaR 1\% (HS) pentru Bitcoin, ca în \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10} pentru acțiuni
 \end{itemize}
@@ -1365,7 +1433,7 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \vspace{-0.25cm}
 \begin{itemize}
     \item Prognoze pe o zi din 1 ianuarie 2018: HS pe ultimele 365 de zile; GARCH(1,1)-t reestimat la fiecare 365 de zile pe toate datele anterioare
-    \item Depășiri (așteptat 31{,}8): HS 29 (0{,}91\%), GARCH-t 41 (1{,}29\%); Kupiec \refKupiec: $LR = 0{,}26$ (p $= 0{,}61$) și $2{,}45$ (p $= 0{,}12$)
+    \item Depășiri (așteptat 31{,}8): HS 29 (0{,}91\%), GARCH-t 41 (1{,}29\%); Kupiec \refKupiec: $LR = 0{,}26$ (p $= 0{,}61$) și $2{,}45$ (p $= 0{,}12$); $LR \sim \chi^2(1)$ dacă rata depășirilor este 1\%
     \item Interpretare: ambele trec testul Kupiec; HS cere în medie un VaR mai mare (9{,}5\% față de 8{,}5\%), GARCH-t reacționează mai repede, dar este depășit mai des (2018: 9 depășiri)
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_crypto_var}
@@ -1453,7 +1521,7 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \itemsize{\small}
 \begin{itemize}
     \item Bitcoin: un registru public securizat prin proof of work, cu o ofertă fixă de 21 de milioane; Ethereum execută contracte inteligente prin proof of stake
-    \item Anualizăm cu 365 de zile; volatilitatea cripto este de 3{,}8 pînă la 6{,}7 ori cea a S\&P 500, cu cozi groase și grupare de tip IGARCH
+    \item Anualizăm cu 365 de zile; volatilitatea cripto este de 3{,}8 pînă la 6{,}7 ori cea a S\&P 500, cu cozi groase și volatility clustering de tip IGARCH
     \item Testele VR robuste nu resping eficiența în formă slabă din 2014; weekendul este mai calm în varianță, nu diferit în medie
     \item Corelația cu acțiunile a crescut de la circa 0 la circa 0{,}39 după 2020; Bitcoin nu este un activ de refugiu
     \item Drawdown-urile de peste 50\% sînt obișnuite; efectul ETF-urilor asupra volatilității nu este semnificativ
@@ -1470,7 +1538,7 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \textbf{Mărimea} & \textbf{Formula} \\
 \midrule
 Oferta de Bitcoin & $210\,000 \times 50 \times \sum_{j \ge 0} 2^{-j} = 21$ milioane \\
-Anualizarea & media $m\bar r$, volatilitatea $\sqrt{m}\,s$; $m = 365$ (cripto), $252$ (acțiuni) \\
+Anualizarea & media $A\bar r$, volatilitatea $\sqrt{A}\,s$; $A = 365$ (cripto), $252$ (acțiuni) \\
 Hill & $\hat\alpha = \big[\frac1k\sum_{i \le k}\ln(X_{(i)}/X_{(k+1)})\big]^{-1}$ \\
 GARCH(1,1) & $\sigma_t^2 = \omega + \alpha\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2$, înjumătățire $\frac{\ln 0{,}5}{\ln(\alpha + \beta)}$ \\
 Raportul varianțelor & $\mathrm{VR}(q) = \mathrm{Var}(r_t + \dots + r_{t-q+1})/(q\,\mathrm{Var}(r_t))$ \\

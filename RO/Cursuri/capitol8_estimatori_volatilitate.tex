@@ -172,7 +172,7 @@ MSCA Digital Finance}
 \section{Volatilitatea: definiție și caracter latent}
 %=============================================================================
 
-\begin{frame}{Volatilitatea vine în rafale}
+\begin{frame}{Volatilitatea apare în episoade}
 \itemsize{\small}
 \begin{columns}[T]
 \begin{column}{0.52\textwidth}
@@ -181,12 +181,12 @@ MSCA Digital Finance}
     \begin{itemize}
         \item după crahul din 19 octombrie 1987, piețele au rămas agitate săptămîni la rînd
     \end{itemize}
-    \item Volatilitatea intră în aproape orice cifră din finanțe
+    \item Volatilitatea intervine în aproape toate mărimile din finanțe
     \begin{itemize}
         \item măsurile de risc: VaR și ES (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10}), raportul Sharpe (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1})
-        \item prețurile opțiunilor, marjele burselor, mărimea pozițiilor
+        \item prețurile opțiunilor, marjele cerute de burse, mărimea pozițiilor
     \end{itemize}
-    \item Acest capitol: cum o \textbf{măsurăm} din prețuri și cum verificăm dacă formează clustere
+    \item Acest capitol: \textbf{măsurarea} ei din prețuri și testarea volatility clustering
 \end{itemize}
 \end{column}
 \begin{column}{0.44\textwidth}
@@ -206,10 +206,10 @@ MSCA Digital Finance}
         \item \textbf{volatilitatea} = abaterea standard a randamentelor, $\sigma = \sqrt{\mathrm{Var}(r_t)}$
         \item are unitatea de măsură a randamentului (\% pe zi); varianța $\sigma^2$ se măsoară în \%$^2$
     \end{itemize}
-    \item \textbf{Anualizarea}: cu $a$ observații pe an și randamente necorelate, $\sigma_{\text{an}} = \sigma_{\text{zi}}\sqrt{a}$
+    \item \textbf{Anualizarea}: cu $A$ observații pe an și randamente necorelate, $\sigma_{\text{an}} = \sigma_{\text{zi}}\sqrt{A}$
     \begin{itemize}
-        \item $a$ = frecvența reală: circa 252 pentru S\&P 500, 250 pentru BET, 365 pentru Bitcoin (tranzacționat în fiecare zi)
-        \item regula $\sqrt{a}$ este regula rădăcinii pătrate a timpului din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}: cere randamente necorelate
+        \item $A$ = frecvența reală: circa 252 pentru S\&P 500, 250 pentru BET, 365 pentru Bitcoin (tranzacționat în fiecare zi)
+        \item regula $\sqrt{A}$ este regula rădăcinii pătrate a timpului din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}: cere randamente necorelate
     \end{itemize}
     \item Volatilitatea măsoară dispersia în ambele sensuri: un cîștig mare contează la fel de mult ca o pierdere mare
     \begin{itemize}
@@ -256,8 +256,9 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{frame}{Volatilitatea este latentă}
 \itemsize{\small}
 \begin{itemize}
-    \item Model: $r_t = \mu + \sigma_t z_t$, cu $z_t$ i.i.d., de medie 0 și varianță 1
+    \item Modelul: randamentul este o medie constantă plus un șoc a cărui mărime se schimbă zilnic: $r_t = \mu + \sigma_t z_t$
     \begin{itemize}
+        \item $\mu$: randamentul mediu; $z_t$: șocuri i.i.d., de medie 0 și varianță 1
         \item $\sigma_t$ este \textbf{volatilitatea condiționată}: $\sigma_t^2 = \mathrm{Var}(r_t \mid \mathcal{F}_{t-1})$, cu $\mathcal{F}_{t-1}$ informația de la închiderea zilei $t-1$
         \item \textbf{volatilitatea necondiționată} $\sigma = \sqrt{\mathrm{Var}(r_t)}$ este nivelul ei mediu pe termen lung
     \end{itemize}
@@ -268,7 +269,9 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
     \end{itemize}
     \item Trei moduri de a obține mai multă informație despre $\sigma_t$
     \begin{itemize}
-        \item calculăm media pe multe zile (volatilitatea istorică, EWMA); folosim întreaga traiectorie a zilei (prețurile maxim și minim); folosim prețurile din timpul zilei (volatilitatea realizată)
+        \item media pe multe zile: volatilitatea istorică, EWMA
+        \item întreaga traiectorie a zilei: prețurile maxim și minim
+        \item prețurile din timpul zilei: volatilitatea realizată
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -276,7 +279,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{frame}{Exemplu rezolvat: anualizarea volatilității}
 \itemsize{\small}
 \begin{itemize}
-    \item S\&P 500 din 1990: abaterea standard zilnică $\hat\sigma = 1{,}13\%$, $a = 252$ de observații pe an
+    \item S\&P 500 din 1990: abaterea standard zilnică $\hat\sigma = 1{,}13\%$, $A = 252$ de observații pe an
     \begin{itemize}
         \item $\hat\sigma_{\text{an}} = 1{,}13 \times \sqrt{252} = 1{,}13 \times 15{,}87 = 18{,}0\%$
     \end{itemize}
@@ -292,7 +295,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{frame}{Recapitulare: volatilitatea: definiție și caracter latent}
 \itemsize{\small}
 \begin{itemize}
-    \item Volatilitatea = abaterea standard a randamentelor; se anualizează cu $\sqrt{a}$, unde $a$ este numărul real de observații pe an
+    \item Volatilitatea = abaterea standard a randamentelor; se anualizează cu $\sqrt{A}$, unde $A$ este numărul real de observații pe an
     \item Volatilitatea condiționată $\sigma_t$ variază în timp și nu este observată niciodată: o putem doar estima
     \item Toate piețele au perioade liniștite și perioade agitate
 \end{itemize}
@@ -309,6 +312,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
     \item \textbf{Volatilitatea istorică} pe o fereastră cu ultimele $n$ zile:
     \begin{itemize}
         \item $\hat\sigma_t = \sqrt{\dfrac{1}{n-1}\sum_{j=0}^{n-1}(r_{t-j} - \bar r_t)^2}$, cu $\bar r_t$ media acelorași $n$ randamente
+        \item $j$: cîte zile în urmă se află randamentul ($j = 0$ este ziua $t$); $\hat\sigma_t$: estimarea la închiderea zilei $t$
         \item \textbf{fereastră mobilă}: în fiecare zi intră cel mai nou randament și iese cel mai vechi
     \end{itemize}
     \item Varianta cu media zero: $\hat\sigma_t^2 = \frac{1}{n}\sum_{j=0}^{n-1} r_{t-j}^2$
@@ -317,7 +321,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
     \end{itemize}
     \item Ferestre uzuale: $n = 21$ (o lună), $63$ (un trimestru), $252$ (un an) de zile de tranzacționare
     \begin{itemize}
-        \item fiecare $\hat\sigma_t$ se anualizează cu $\sqrt{a}$ și se reprezintă în ultima zi a ferestrei
+        \item fiecare $\hat\sigma_t$ se anualizează cu $\sqrt{A}$ și se reprezintă în ultima zi a ferestrei
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -359,6 +363,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{itemize}
     \item Cu $n$ randamente Normale i.i.d., eroarea standard relativă a lui $\hat\sigma$ este $\mathrm{SE}(\hat\sigma)/\sigma \approx 1/\sqrt{2n}$
     \begin{itemize}
+        \item $\mathrm{SE}(\hat\sigma)$: abaterea standard a estimării de la un eșantion la altul; împărțită la $\sigma$, este o eroare relativă
         \item $n = 21$: 15\%; $n = 63$: 9\%; $n = 252$: 4\%
     \end{itemize}
     \item Cu cozi groase (coeficient de boltire $\kappa$): $\mathrm{SE}(\hat\sigma)/\sigma \approx \sqrt{(\kappa - 1)/(4n)}$ (metoda delta)
@@ -378,7 +383,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{itemize}
     \item Abaterea standard pe o fereastră mobilă de $n$ zile; pentru date zilnice media poate fi fixată la zero
     \item Ferestrele scurte reacționează repede, dar sînt zgomotoase; cele lungi sînt netede, dar lente
-    \item O volatilitate pe 21 de zile are o incertitudine de $\pm$15\% sau mai mult: o zecimală înseamnă deja prea multă precizie
+    \item O volatilitate pe 21 de zile are o incertitudine de $\pm$15\% sau mai mult: chiar și o zecimală sugerează o precizie pe care estimarea nu o are
 \end{itemize}
 \end{frame}
 
@@ -387,7 +392,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \section{EWMA și RiskMetrics}
 %=============================================================================
 
-\begin{frame}{1994: RiskMetrics face din volatilitate o cifră zilnică}
+\begin{frame}{1994: RiskMetrics transformă volatilitatea într-un indicator zilnic}
 \itemsize{\small}
 \begin{columns}[T]
 \begin{column}{0.56\textwidth}
@@ -418,13 +423,15 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{itemize}
     \item Recurența \textbf{EWMA} (media zero): $\sigma_t^2 = \lambda\,\sigma_{t-1}^2 + (1-\lambda)\,r_{t-1}^2$, \ $0 < \lambda < 1$
     \begin{itemize}
+        \item varianța de azi = o medie ponderată a varianței de ieri și a randamentului de ieri la pătrat
+        \item $\lambda$: ponderea trecutului; un $\lambda$ apropiat de 1 dă o estimare netedă, care reacționează lent
         \item $\sigma_t^2$ folosește randamentele pînă în ziua $t-1$: este prognoza pentru ziua $t$
         \item valoarea inițială: $\sigma_1^2$ = media primelor randamente la pătrat; efectul ei dispare după cîteva luni
     \end{itemize}
     \item Prin dezvoltarea recurenței: $\sigma_t^2 = (1-\lambda)\sum_{j \ge 1}\lambda^{j-1} r_{t-j}^2$
     \begin{itemize}
         \item ponderile $(1-\lambda)\lambda^{j-1}$ scad geometric și au suma 1
-        \item \textbf{timpul de înjumătățire}: decalajul la care ponderea se înjumătățește, $\ln 0{,}5/\ln\lambda$
+        \item \textbf{timpul de înjumătățire}: lagul la care ponderea se înjumătățește, $\ln 0{,}5/\ln\lambda$
     \end{itemize}
     \item O fereastră mobilă dă ponderea $1/n$ fiecăreia dintre ultimele $n$ zile și 0 tuturor zilelor mai vechi
 \end{itemize}
@@ -437,7 +444,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item $\lambda = 0{,}94$: timp de înjumătățire 11{,}2 zile, decalaj mediu $1/(1-\lambda) = 16{,}7$ zile, 99\% din pondere în ultimele 74 de zile
+    \item $\lambda = 0{,}94$: timp de înjumătățire 11{,}2 zile, lag mediu $1/(1-\lambda) = 16{,}7$ zile, 99\% din pondere în ultimele 74 de zile
     \item $\lambda = 0{,}97$: timp de înjumătățire 22{,}8 zile, 99\% din pondere în ultimele 151 de zile
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_ewma}
@@ -473,7 +480,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \sfmquantlet{Ch_08}{SFM_ch8_ewma}
 \end{frame}
 
-\begin{frame}{Interpretarea ghost effect}
+\begin{frame}{Interpretarea: ghost effect și atenuarea treptată a memoriei}
 \itemsize{\small}
 \begin{itemize}
     \item \textbf{Răspuns}: pe 15 iunie 2020, randamentul din 16 martie 2020 ($-12{,}8\%$) a ieșit din fereastra de 63 de zile
@@ -486,7 +493,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
         \item vîrful EWMA: 84{,}8\% pe 24 martie 2020; vîrful pe 63 de zile: 62{,}6\% abia pe 20 mai 2020
         \item în ziua ghost effect, EWMA s-a modificat cu doar $-0{,}9$ puncte procentuale
     \end{itemize}
-    \item Prețul vitezei: EWMA este mai zgomotos decît o fereastră lungă și nu are un nivel de lungă durată spre care să revină
+    \item Costul reacției rapide: EWMA este mai zgomotos decît o fereastră lungă și nu are un nivel pe termen lung spre care să revină
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_ewma}
 \end{frame}
 
@@ -495,12 +502,13 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{itemize}
     \item \textbf{ARCH} \refEngle{} și \textbf{GARCH} \refBollerslev: $\sigma_t^2 = \omega + \alpha\, r_{t-1}^2 + \beta\,\sigma_{t-1}^2$
     \begin{itemize}
+        \item $\omega > 0$: o constantă; $\alpha$: reacția la randamentul de ieri la pătrat; $\beta$: ponderea varianței de ieri
         \item EWMA este cazul particular $\omega = 0$, $\alpha = 1 - \lambda$, $\beta = \lambda$, deci $\alpha + \beta = 1$ (GARCH „integrat”, \textbf{IGARCH})
     \end{itemize}
     \item Consecințe pentru prognozele făcute în ziua $t$ pentru ziua $t + h$
     \begin{itemize}
-        \item EWMA: constantă, $E_t[\sigma_{t+h}^2] = \sigma_{t+1}^2$ pentru orice $h$: nivelul de azi persistă la nesfîrșit
-        \item GARCH cu $\alpha + \beta < 1$: atrasă spre varianța de lungă durată $\omega/(1 - \alpha - \beta)$
+        \item EWMA: constantă, $E_t[\sigma_{t+h}^2] = \sigma_{t+1}^2$ pentru orice $h$ ($E_t$: media condiționată de informația din ziua $t$): nivelul de azi persistă la nesfîrșit
+        \item GARCH cu $\alpha + \beta < 1$: atrasă spre varianța pe termen lung $\omega/(1 - \alpha - \beta)$
     \end{itemize}
     \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9} estimează $\omega$, $\alpha$, $\beta$ prin verosimilitate maximă; aici $\lambda$ este fixat sau ales după un criteriu de prognoză (secțiunea 8)
 \end{itemize}
@@ -537,7 +545,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{O zi de tranzacționare: ce înregistrează OHLC}
+\begin{frame}{O zi de tranzacționare în datele OHLC}
 \itemsize{\footnotesize}
 \begin{center}
 \includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch8_ohlc_path.pdf}
@@ -555,13 +563,14 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
 \begin{itemize}
     \item Pentru o mișcare browniană fără tendință (drift), cu varianța $\sigma^2$ pe zi: $E[(u_t - d_t)^2] = 4\ln 2\;\sigma^2$ \refParkinson
     \begin{itemize}
+        \item în cuvinte: pătratul amplitudinii logaritmice, rescalat astfel încît, în medie, să fie egal cu varianța
         \item o zi: $\hat\sigma_{P,t}^2 = \dfrac{(u_t - d_t)^2}{4\ln 2}$; pe $n$ zile: media acestor valori
         \item $4\ln 2 \approx 2{,}77$: amplitudinea este, în medie, mai mare decît $\sigma$
     \end{itemize}
     \item Ipoteze
     \begin{itemize}
         \item tranzacționare continuă în timpul zilei, deci maximul și minimul observate sînt extremele reale
-        \item fără tendință și fără salt overnight: amplitudinea vede doar ședința de tranzacționare
+        \item fără tendință și fără salt overnight: amplitudinea reflectă doar ședința de tranzacționare
     \end{itemize}
     \item Mult mai precis decît $r_t^2$: o simulare din această secțiune măsoară cu cît
     \begin{itemize}
@@ -583,7 +592,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
         \item $\hat\sigma_{RS,t}^2 = u_t(u_t - c_t) + d_t(d_t - c_t)$
         \item util pentru active cu o tendință puternică pe fereastră (de exemplu, Bitcoin într-o perioadă de creștere puternică)
     \end{itemize}
-    \item Ambele ignoră totuși randamentul overnight $o_t$: măsoară doar varianța ședinței de tranzacționare
+    \item Ambele ignoră însă randamentul overnight $o_t$: măsoară doar varianța ședinței de tranzacționare
 \end{itemize}
 \end{frame}
 
@@ -617,7 +626,7 @@ Bitcoin & 66{,}6\% & ${-46{,}5}\%$ & 12 martie 2020 & 12{,}0 \\
         \item Parkinson: $(7{,}37)^2/2{,}773 = 19{,}6$; Garman--Klass: 17{,}5; Rogers--Satchell: 16{,}5
         \item partea overnight $o^2 = 60{,}2$; overnight plus Rogers--Satchell: 76{,}7
     \end{itemize}
-    \item Cea mai mare parte a scăderii s-a produs overnight, înainte de deschidere: estimatorii care ignoră $o_t$ ratează cea mai mare parte a riscului din această zi
+    \item Cea mai mare parte a scăderii s-a produs overnight, înainte de deschidere: estimatorii care ignoră $o_t$ nu surprind cea mai mare parte a riscului din această zi
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_range_estimators}
 \end{frame}
 
@@ -652,7 +661,7 @@ Deplasarea (\%), 26 de prețuri pe zi & ${0}$ & ${-23}$ & ${-32}$ & ${-32}$ & ${
 \end{center}
 \begin{itemize}
     \item Cu tranzacționare continuă, estimatorii de amplitudine sînt de 5--9 ori mai eficienți: o lună de amplitudini conține tot atîta informație cît 5--9 luni de închideri
-    \item Cu salt overnight, Parkinson, GK și RS ratează noaptea (deplasare de circa $-22\%$); doar YZ rămîne nedeplasat; raportul \textbf{MSE} (mean squared error, eroarea pătratică medie) = $\mathrm{MSE}(CC)/\mathrm{MSE}$
+    \item Cu salt overnight, Parkinson, GK și RS omit varianța nopții (deplasare de circa $-22\%$); doar YZ rămîne nedeplasat; raportul \textbf{MSE} (mean squared error, eroarea pătratică medie) = $\mathrm{MSE}(CC)/\mathrm{MSE}$
     \item Cu puține tranzacții amplitudinea observată este prea mică: toți estimatorii de amplitudine subestimează (piețe puțin lichide) \refMolnar
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_range_efficiency}
 \end{frame}
@@ -688,11 +697,11 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
     \end{itemize}
     \item DAX și acțiunile BVB: între un sfert și o treime din varianță apare overnight
     \begin{itemize}
-        \item Parkinson, GK și RS sînt mult sub CC; YZ, care adaugă noaptea, este apropiat de CC
+        \item Parkinson, GK și RS sînt mult sub CC; YZ, care include varianța nopții, este apropiat de CC
     \end{itemize}
     \item S\&P 500: chiar și YZ (16{,}3\%) rămîne sub CC (19{,}9\%)
     \begin{itemize}
-        \item randamentele overnight și cele deschidere--închidere sînt corelate pozitiv (0{,}22); o explicație probabilă: deschiderea indicelui folosește prețuri vechi ale acțiunilor care încă nu s-au tranzacționat
+        \item randamentele overnight și cele deschidere--închidere sînt corelate pozitiv (0{,}22); o explicație probabilă: deschiderea indicelui folosește prețuri stale (neactualizate) ale acțiunilor care încă nu s-au tranzacționat
         \item $\mathrm{Var}(r) = \mathrm{Var}(o) + \mathrm{Var}(c) + 2\,\mathrm{Cov}(o, c)$: niciun estimator de amplitudine nu vede termenul de covarianță
     \end{itemize}
     \item Lecția: verificați ipotezele pe date înainte de a avea încredere într-un cîștig de eficiență
@@ -715,8 +724,8 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
 \begin{frame}{Recapitulare: estimatori de amplitudine}
 \itemsize{\small}
 \begin{itemize}
-    \item Parkinson folosește amplitudinea, Garman--Klass adaugă randamentul deschidere--închidere, Rogers--Satchell permite o tendință, Yang--Zhang adaugă noaptea
-    \item În teorie de 5--9 ori mai eficienți decît estimatorul închidere--închidere; în practică deplasați în jos de salturile overnight și de tranzacționarea discretă
+    \item Parkinson folosește amplitudinea, Garman--Klass adaugă randamentul deschidere--închidere, Rogers--Satchell permite o tendință, Yang--Zhang adaugă varianța nopții
+    \item În teorie de 5--9 ori mai eficienți decît estimatorul închidere--închidere; în practică subestimează varianța din cauza salturilor overnight și a tranzacționării discrete
     \item Alegeți Yang--Zhang pentru piețele care se închid noaptea; orice estimator de amplitudine pentru piețele deschise 24 de ore
 \end{itemize}
 \end{frame}
@@ -731,6 +740,7 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
 \begin{itemize}
     \item Împărțim ziua $t$ în $M$ intervale (de exemplu $M = 78$ de randamente de cinci minute $r_{t,i}$ într-o ședință de 6,5 ore)
     \begin{itemize}
+        \item $r_{t,i}$: randamentul logaritmic al intervalului $i$ din ziua $t$, $i = 1, \dots, M$
         \item \textbf{varianța realizată} $\mathrm{RV}_t = \sum_{i=1}^{M} r_{t,i}^2$; \textbf{volatilitatea realizată} $= \sqrt{\mathrm{RV}_t}$
         \item cînd $M \to \infty$, $\mathrm{RV}_t$ converge către \textbf{varianța integrată} a zilei $t$, adică varianța reală a zilei \refABDL, \refBNS
     \end{itemize}
@@ -774,7 +784,7 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
 \itemsize{\small}
 \begin{itemize}
     \item $\mathrm{RV}_t = \sum_i r_{t,i}^2$ estimează varianța unei zile aproape fără eroare
-    \item Eșantionarea prea deasă preia zgomotul de microstructură; 5 minute este compromisul uzual
+    \item Eșantionarea prea deasă preia zgomotul de microstructură; intervalul de 5 minute este compromisul uzual
     \item Ordinea după precizie a măsurilor zilnice: RV $>$ estimatorii de amplitudine $>$ randamentul zilnic la pătrat
 \end{itemize}
 \end{frame}
@@ -817,8 +827,8 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item ACF de selecție (funcția de autocorelație, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}) pentru $r_t$, $r_t^2$ și $|r_t|$, decalajele 1--100, cu banda de 95\% $\pm 1{,}96/\sqrt{T}$ pentru date i.i.d.
-    \item S\&P 500: toate cele 100 de autocorelații ale lui $r_t^2$ și $|r_t|$ sînt deasupra benzii; la decalajul 100, $|r_t|$ are încă $0{,}09$
+    \item ACF de selecție (funcția de autocorelație, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}) pentru $r_t$, $r_t^2$ și $|r_t|$, lagurile 1--100, cu banda de 95\% $\pm 1{,}96/\sqrt{T}$ pentru date i.i.d.
+    \item S\&P 500: toate cele 100 de autocorelații ale lui $r_t^2$ și $|r_t|$ sînt deasupra benzii; la lagul 100, $|r_t|$ are încă $0{,}09$
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_clustering}
 \end{frame}
@@ -829,7 +839,7 @@ SNP & 2010 & 24{,}5 & 21{,}4 & 20{,}8 & 21{,}4 & 25{,}8 & 27\% & ${-0{,}20}$ \\
 \footnotesize
 \begin{tabular}{lrrrrrr}
 \toprule
-& $\hat\rho_1(|r|)$ & $\hat\rho_{10}(|r|)$ & $\hat\rho_{100}(|r|)$ & $\hat\rho_1(r^2)$ & $\hat\rho_{10}(r^2)$ & \textbf{Decalaje în afara benzii, $|r|$} \\
+& $\hat\rho_1(|r|)$ & $\hat\rho_{10}(|r|)$ & $\hat\rho_{100}(|r|)$ & $\hat\rho_1(r^2)$ & $\hat\rho_{10}(r^2)$ & \textbf{Laguri în afara benzii, $|r|$} \\
 \midrule
 S\&P 500 & $0{,}27$ & $0{,}28$ & $0{,}09$ & $0{,}31$ & $0{,}24$ & 100/100 \\
 BET & $0{,}41$ & $0{,}23$ & $0{,}11$ & $0{,}33$ & $0{,}18$ & 100/100 \\
@@ -839,12 +849,12 @@ Bitcoin & $0{,}21$ & $0{,}12$ & $0{,}02$ & $0{,}14$ & $0{,}04$ & 92/100 \\
 \end{center}
 \begin{itemize}
     \item Scădere lentă: un șoc de volatilitate se vede încă după luni de zile; \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf}{Capitolul 11} numește acest fenomen memorie lungă
-    \item \textbf{Efectul Taylor}: $|r_t|$ este mai autocorelat decît $r_t^2$ (96\% dintre decalaje la S\&P 500, toate decalajele la BET și Bitcoin) \refDGE
-    \item Bitcoin: volatility clustering mai slab în $r_t^2$ (26 din 100 de decalaje în afara benzii): cîteva zile foarte mari domină pătratele
+    \item \textbf{Efectul Taylor}: $|r_t|$ este mai autocorelat decît $r_t^2$ (96\% dintre laguri la S\&P 500, toate lagurile la BET și Bitcoin) \refDGE
+    \item Bitcoin: volatility clustering mai slab în $r_t^2$ (26 din 100 de laguri în afara benzii): cîteva zile cu variații extreme domină pătratele
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_clustering}
 \end{frame}
 
-\begin{frame}{Este volatility clustering real? Amestecați zilele}
+\begin{frame}{Amestecarea zilelor: un test pentru volatility clustering}
 \itemsize{\footnotesize}
 \begin{center}
 \includegraphics[width=0.97\textwidth,height=0.48\textheight,keepaspectratio]{sfm_ch8_shuffle.pdf}
@@ -864,7 +874,9 @@ Bitcoin & $0{,}21$ & $0{,}12$ & $0{,}02$ & $0{,}14$ & $0{,}04$ & 92/100 \\
     \item $H_0$: fără volatility clustering, $\mathrm{Var}(r_t \mid \mathcal{F}_{t-1})$ constantă, deci $r_t^2$ este necorelat
     \begin{itemize}
         \item \textbf{Testul McLeod--Li} \refML: statistica Ljung--Box \refLjung{} aplicată lui $r_t^2$
-        \item $Q(m) = T(T+2)\sum_{k=1}^m \hat\rho_k(r^2)^2/(T-k) \sim \chi^2(m)$ în ipoteza $H_0$; respingem dacă $Q(m)$ depășește cuantila de 95\%
+        \item $Q(m) = T(T+2)\sum_{k=1}^m \hat\rho_k(r^2)^2/(T-k) \sim \chi^2(m)$ în ipoteza $H_0$: o sumă ponderată a pătratelor primelor $m$ autocorelații
+        \item $T$: numărul de randamente; $m$: numărul de laguri testate; $\hat\rho_k(r^2)$: autocorelația de selecție a lui $r_t^2$ la lagul $k$
+        \item $Q(m) \ge 0$; valorile mari indică pătrate autocorelate; respingem dacă $Q(m)$ depășește cuantila de 95\% $\chi^2_{0{,}95}(m)$
     \end{itemize}
     \item \textbf{Exemplu rezolvat}: S\&P 500, $T = 9\,240$, $m = 3$
     \begin{itemize}
@@ -878,17 +890,19 @@ Bitcoin & $0{,}21$ & $0{,}12$ & $0{,}02$ & $0{,}14$ & $0{,}04$ & 92/100 \\
 \begin{frame}{Testul ARCH-LM (Engle, 1982)}
 \itemsize{\small}
 \begin{itemize}
-    \item Regresia auxiliară a randamentelor centrate la pătrat $e_t^2$, $e_t = r_t - \bar r$, pe $q$ dintre propriile lor decalaje \refEngle:
+    \item Regresia auxiliară a randamentelor centrate la pătrat $e_t^2$, $e_t = r_t - \bar r$, pe $q$ dintre propriile lor laguri \refEngle:
     \begin{itemize}
         \item $e_t^2 = c_0 + c_1 e_{t-1}^2 + \dots + c_q e_{t-q}^2 + u_t$; $H_0$: $c_1 = \dots = c_q = 0$
+        \item $\bar r$: media de selecție; $c_0, \dots, c_q$: coeficienții regresiei; $u_t$: eroarea
         \item statistica \textbf{LM} (Lagrange multiplier, multiplicatorul Lagrange): $\mathrm{LM} = n R^2 \sim \chi^2(q)$, $n$ = numărul de observații din regresie
     \end{itemize}
     \item S\&P 500, $q = 5$: $R^2 = 0{,}241$, $n = 9\,235$
     \begin{itemize}
+        \item $R^2 \in [0, 1]$: proporția din varianța lui $e_t^2$ explicată de propriul trecut
         \item $\mathrm{LM} = 9\,235 \times 0{,}241 = 2\,227 \gg \chi^2_{0{,}95}(5) = 11{,}07$: efecte ARCH puternice
     \end{itemize}
     \item Interpretarea lui $R^2$: circa un sfert din variația de la o zi la alta a lui $e_t^2$ poate fi anticipată din ultimele cinci zile
-    \item Ambele teste sînt diagnostice: arată că volatility clustering există, nu cum îl modelăm (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
+    \item Ambele teste sînt instrumente de diagnostic: arată că volatility clustering există, nu cum îl modelăm (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_clustering}
 \end{frame}
 
@@ -912,7 +926,7 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
 \begin{itemize}
     \item Valori critice de 5\%: $\chi^2_{0{,}95}(10) = 18{,}31$ pentru $Q(10)$, $\chi^2_{0{,}95}(5) = 11{,}07$ pentru ARCH-LM(5); toate statisticile pentru $r^2$ și $|r|$ resping, cu p $<$ 0,001
     \item $Q(10)$ pentru $r$ este mult mai mic: previzibilitatea mediei este slabă (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}), cea a mărimii este puternică peste tot
-    \item Bitcoin și cele două acțiuni BVB au cele mai mici valori ARCH-LM, deși au cozi groase: cîteva zile extreme diluează regresia
+    \item Bitcoin și cele două acțiuni BVB au cele mai mici valori ARCH-LM, deși au cozi groase: cîteva zile extreme domină regresia și reduc $R^2$
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_clustering}
 \end{frame}
 
@@ -923,7 +937,7 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Stînga: zile liniștite cu abaterea standard 1, zile agitate cu abaterea standard 2 (ponderea $p = 0{,}2$): $E[\sigma^2] = 1{,}6$, $E[\sigma^4] = 4{,}0$, coeficientul de boltire $3E[\sigma^4]/E[\sigma^2]^2 = 4{,}69$, deși fiecare zi este Normală
+    \item Stînga: zile liniștite cu abaterea standard 1, zile agitate cu abaterea standard 2 (ponderea $p = 0{,}2$): $E[\sigma^2] = 1{,}6$, $E[\sigma^4] = 4{,}0$, coeficientul de boltire $3E[\sigma^4]/E[\sigma^2]^2 = 4{,}69$, deși randamentul fiecărei zile urmează distribuția Normală
     \item Dreapta: coeficientul de boltire al unui GARCH(1,1), $3 + 6\alpha^2/(1 - \beta^2 - 2\alpha\beta - 3\alpha^2)$, ca în SFEkurgarch; $\alpha = 0{,}10$, $\beta = 0{,}85$: 3{,}77 (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_kurgarch}
@@ -962,11 +976,12 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
     \item Volatilitatea se schimbă în timp, dar nu se îndepărtează la nesfîrșit: revine la un nivel normal \refSchwert
     \begin{itemize}
         \item AR(1) pentru logaritmul volatilității realizate lunare a S\&P 500 (441 de luni): $\hat\phi = 0{,}67$ (SE 0{,}04)
-        \item timpul de înjumătățire al unui șoc de volatilitate: $\ln 0{,}5/\ln\hat\phi = 1{,}7$ luni; nivelul de lungă durată circa 13{,}5\%
+        \item $\hat\phi$: ponderea estimată a logaritmului volatilității din luna precedentă; o valoare apropiată de 1 înseamnă o revenire lentă la medie
+        \item timpul de înjumătățire al unui șoc de volatilitate: $\ln 0{,}5/\ln\hat\phi = 1{,}7$ luni; nivelul pe termen lung circa 13{,}5\%
     \end{itemize}
     \item Volatilitatea lunară are asimetrie la dreapta (coeficientul de asimetrie 3{,}3), logaritmul ei mult mai puțin (0{,}6) \refABDE
     \begin{itemize}
-        \item media 15{,}3\% este peste mediana 12{,}9\%: cîteva luni de criză trag media în sus
+        \item media 15{,}3\% este peste mediana 12{,}9\%: cîteva luni de criză ridică media
         \item de aceea modelele volatilității sînt adesea scrise pentru $\ln\sigma_t$
     \end{itemize}
     \item Revenirea la medie este exact ce îi lipsește modelului EWMA și ce are GARCH cu $\alpha + \beta < 1$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
@@ -1006,7 +1021,7 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item VIX și volatilitatea realizată a S\&P 500 în următoarele 21 de zile de tranzacționare, $\sqrt{(a/21)\sum_{j=1}^{21} r_{t+j}^2}$; maximul VIX: 82{,}7 pe 16 martie 2020
+    \item VIX și volatilitatea realizată a S\&P 500 în următoarele 21 de zile de tranzacționare, $\sqrt{(A/21)\sum_{j=1}^{21} r_{t+j}^2}$; maximul VIX: 82{,}7 pe 16 martie 2020
     \item \textbf{Întrebare pentru sală}: linia roșie este de obicei deasupra sau sub cea albastră?
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_long_term_vix}
@@ -1039,13 +1054,14 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
     \end{itemize}
     \item O măsură simplă: $\mathrm{corr}(r_t, |r_{t+j}|)$ pentru $j = 1, 2, \dots$
     \begin{itemize}
-        \item negativă: căderea de azi anunță agitația de mîine; zero într-un model simetric
+        \item $j$: numărul de zile în avans; $\mathrm{corr}$: corelația de selecție pe toate zilele $t$
+        \item negativă: o scădere azi este urmată de o volatilitate mai mare mîine; zero într-un model simetric
     \end{itemize}
     \item \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2} a arătat asimetria distribuției; aici asimetria apare în \textbf{dinamica} volatilității
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Veștile proaste cresc volatilitatea viitoare}
+\begin{frame}{Știrile negative cresc volatilitatea viitoare}
 \itemsize{\footnotesize}
 \begin{center}
 \includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch8_leverage.pdf}
@@ -1098,7 +1114,8 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
     \end{itemize}
     \item \textbf{Regresia Mincer--Zarnowitz} \refMZ: $\hat\sigma_t^2 = a + b\,h_t + u_t$
     \begin{itemize}
-        \item o prognoză bună are $a \approx 0$, $b \approx 1$; $R^2$ măsoară ce parte din variația variabilei proxy este explicată de prognoză
+        \item $a$: interceptul; $b$: panta; $u_t$: eroarea; o prognoză bună are $a \approx 0$, $b \approx 1$
+        \item $R^2$ măsoară ce parte din variația variabilei proxy este explicată de prognoză
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1108,6 +1125,7 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
 \begin{itemize}
     \item Pierderea medie pe zilele de evaluare; o valoare mai mică este mai bună \refPatton
     \begin{itemize}
+        \item $L$: pierderea dintr-o zi; $h_t$: prognoza varianței; $\hat\sigma_t^2$: variabila proxy
         \item MSE: $L = (\hat\sigma_t^2 - h_t)^2$
         \item \textbf{QLIKE} (quasi-likelihood, cvasi-verosimilitate): $L = \hat\sigma_t^2/h_t + \ln h_t$, adică, pînă la constante, opusul log-verosimilității Normale
     \end{itemize}
@@ -1123,7 +1141,7 @@ SNP & 3\,815 & ${-0{,}015}$ & $20{,}7$ & $0{,}195$ & 505 & 944 & 234 & $8{,}9$ \
 \end{itemize}
 \end{frame}
 
-\begin{frame}{S\&P 500: care prognoză este cea mai bună?}
+\begin{frame}{S\&P 500: compararea prognozelor}
 \itemsize{\footnotesize}
 \begin{center}
 \footnotesize
@@ -1139,7 +1157,7 @@ MZ $R^2$, proxy de amplitudine & 0{,}24 & 0{,}09 & 0{,}02 & 0{,}29 & 0{,}19 & 0{
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Prognoze ale varianței pentru ziua următoare, pentru 4\,202 de zile, începînd din 2010; proxy $r_t^2$; prognoza VIX: VIX$^2/a$; proxy de amplitudine: $o_t^2$ plus termenul Garman--Klass
+    \item Prognoze ale varianței pentru ziua următoare, pentru 4\,202 de zile, începînd din 2010; proxy $r_t^2$; prognoza VIX: VIX$^2/A$; proxy de amplitudine: $o_t^2$ plus termenul Garman--Klass
     \item Testul \textbf{DM} (Diebold--Mariano) al egalității QLIKE \refDM: EWMA 0,94 față de 21 de zile $t = -4{,}50$ (p $<$\,0{,}001); VIX față de EWMA 0,94 $t = -0{,}32$ (p = 0{,}751)
     \item EWMA este semnificativ mai bun decît fereastra de 21 de zile; VIX și EWMA nu diferă semnificativ; fereastra lungă este cea mai slabă; o variabilă proxy precisă crește fiecare $R^2$, dar nu schimbă ordinea
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_forecast_evaluation}
@@ -1166,7 +1184,7 @@ MZ $R^2$, proxy de amplitudine & 0{,}24 & 0{,}09 & 0{,}02 & 0{,}29 & 0{,}19 & 0{
 \vspace{-0.25cm}
 \begin{itemize}
     \item QLIKE mediu al prognozelor EWMA pentru ziua următoare (proxy $r_t^2$, din 2010; Bitcoin din 2016) minus minimul lui, pentru $\lambda$ între 0,80 și 0,995
-    \item Cel mai bun $\lambda$: S\&P 500 0{,}925, BET 0{,}885, Bitcoin 0{,}970; valoarea RiskMetrics 0,94 pierde doar 0{,}002 la S\&P 500
+    \item Cel mai bun $\lambda$: S\&P 500 0{,}925, BET 0{,}885, Bitcoin 0{,}970; valoarea RiskMetrics 0,94 are un QLIKE mai mare cu doar 0{,}002 la S\&P 500
     \item Un singur $\lambda$ pentru toate activele este un compromis comod, nu un optim
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_forecast_evaluation}
@@ -1217,7 +1235,7 @@ MZ $R^2$, proxy de amplitudine & 0{,}24 & 0{,}09 & 0{,}02 & 0{,}29 & 0{,}19 & 0{
 \begin{frame}{Verificări necesare}
 \itemsize{\small}
 \begin{itemize}
-    \item Constantele: $4\ln 2$ la Parkinson, $2\ln 2 - 1$ la Garman--Klass, $k$ la Yang--Zhang; o ciornă cu $\ln 2$ sau cu $k = 0{,}34$ este greșită
+    \item Constantele: $4\ln 2$ la Parkinson, $2\ln 2 - 1$ la Garman--Klass, $k$ la Yang--Zhang; o primă versiune cu $\ln 2$ sau cu $k = 0{,}34$ este greșită
     \item Prețurile acțiunilor: deschiderea, maximul și minimul trebuie ajustate pentru dividende și splituri cu același factor ca închiderea
     \item Anualizarea cu frecvența reală: 365 pentru cripto, circa 250 pentru acțiunile BVB
     \item Fără informație din viitor: prognoza pentru ziua $t$ folosește doar datele pînă în ziua $t-1$
@@ -1253,7 +1271,7 @@ MZ $R^2$, proxy de amplitudine & 0{,}24 & 0{,}09 & 0{,}02 & 0{,}29 & 0{,}19 & 0{
 \begin{itemize}
     \item Volatilitatea este abaterea standard a randamentelor; este latentă și variază în timp; se anualizează cu frecvența reală
     \item La ferestrele istorice, viteza de reacție se plătește cu zgomot; EWMA ($\lambda = 0{,}94$) reacționează repede și evită ghost effect
-    \item Estimatorii de amplitudine folosesc traiectoria zilei: mult mai eficienți, dar deplasați de salturile overnight și de tranzacționarea rară; Yang--Zhang adaugă noaptea
+    \item Estimatorii de amplitudine folosesc traiectoria zilei: mult mai eficienți, dar deplasați de salturile overnight și de tranzacționarea rară; Yang--Zhang adaugă varianța nopții
     \item Volatility clustering: $|r_t|$ și $r_t^2$ sînt autocorelate; se detectează cu Ljung--Box pe $r_t^2$ și cu ARCH-LM
     \item Volatilitatea revine la medie; VIX depășește de obicei volatilitatea realizată; scăderile cresc volatilitatea viitoare
     \item Comparați prognozele cu pierderi robuste (QLIKE) și o variabilă proxy; testați diferențele
@@ -1268,7 +1286,7 @@ MZ $R^2$, proxy de amplitudine & 0{,}24 & 0{,}09 & 0{,}02 & 0{,}29 & 0{,}19 & 0{
 \toprule
 \textbf{Mărimea} & \textbf{Formula} \\
 \midrule
-Volatilitatea anualizată & $\sigma_{\text{an}} = \sigma_{\text{zi}}\sqrt{a}$ \\
+Volatilitatea anualizată & $\sigma_{\text{an}} = \sigma_{\text{zi}}\sqrt{A}$ \\
 EWMA & $\sigma_t^2 = \lambda\sigma_{t-1}^2 + (1-\lambda)r_{t-1}^2$, \quad timp de înjumătățire $\ln 0{,}5/\ln\lambda$ \\
 Parkinson & $(u_t - d_t)^2/(4\ln 2)$ \\
 Garman--Klass & $0{,}5(u_t - d_t)^2 - (2\ln 2 - 1)c_t^2$ \\

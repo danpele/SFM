@@ -31,8 +31,8 @@ window.SFM_DATA.quizzes['evt'] = {
                     "$C x^{-3}$ pentru $x$ mare",
                     "$1 - x$ pentru $0 \\le x \\le 1$"
                 ],
-                "correctExplanation": "O lege putere $Cx^{-\\alpha}$ scade mult mai încet decît orice exponențială: este o coadă groasă cu indicele $\\alpha = 3$.",
-                "incorrectExplanation": "Cozile exponențiale și cea a distribuției Normale sînt subțiri; o distribuție mărginită nu are coadă. Doar $Cx^{-3}$ este o lege putere."
+                "correctExplanation": "O lege de putere $Cx^{-\\alpha}$ scade mult mai încet decît orice exponențială: este o coadă groasă cu tail index-ul $\\alpha = 3$.",
+                "incorrectExplanation": "Cozile exponențiale și cea a distribuției Normale sînt subțiri; o distribuție mărginită nu are coadă. Doar $Cx^{-3}$ este o lege de putere."
             }
         },
         {
@@ -77,8 +77,8 @@ window.SFM_DATA.quizzes['evt'] = {
                 "incorrectExplanation": "$E|L|^m$ is finite only for $m < \\alpha = 3$: mean and variance exist, the kurtosis (fourth moment) does not."
             },
             "ro": {
-                "title": "Momente și indicele de coadă",
-                "text": "O distribuție a pierderilor are indicele de coadă $\\alpha = 3$. Ce afirmație este adevărată?",
+                "title": "Momente și tail index-ul",
+                "text": "O distribuție a pierderilor are tail index-ul $\\alpha = 3$. Ce afirmație este adevărată?",
                 "options": [
                     "Varianța este infinită",
                     "Varianța este finită, boltirea este infinită",
@@ -104,8 +104,8 @@ window.SFM_DATA.quizzes['evt'] = {
                 "incorrectExplanation": "A Student-t with $\\nu$ degrees of freedom is regularly varying with index $\\alpha = \\nu$."
             },
             "ro": {
-                "title": "Indicele de coadă Student-t",
-                "text": "Care este indicele de coadă al unei distribuții Student-t cu $\\nu = 4$ grade de libertate?",
+                "title": "Tail index-ul unei distribuții Student-t",
+                "text": "Care este tail index-ul unei distribuții Student-t cu $\\nu = 4$ grade de libertate?",
                 "options": [
                     "$\\alpha = 2$",
                     "$\\alpha = 4$",
@@ -193,7 +193,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Nimic: un $k$ mai mare este întotdeauna mai bun",
                     "Estimatorul nu se poate calcula"
                 ],
-                "correctExplanation": "Un $k$ mare reduce varianța, dar folosește pierderi unde legea putere nu mai este valabilă: deplasare. Alegem $\\hat\\alpha$ din zona în care graficul Hill este aproximativ orizontal.",
+                "correctExplanation": "Un $k$ mare reduce varianța, dar folosește pierderi unde legea de putere nu mai este valabilă: deplasare. Alegem $\\hat\\alpha$ din zona în care graficul Hill este aproximativ orizontal.",
                 "incorrectExplanation": "Un $k$ mic înseamnă varianță mare; un $k$ mare include corpul distribuției și creează deplasare."
             }
         },
@@ -247,7 +247,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Varianță finită și moment de ordin patru infinit",
                     "O distribuție mărginită"
                 ],
-                "correctExplanation": "Un indice de coadă în jur de 3 (legea cubică inversă) implică o varianță finită, dar o boltire infinită.",
+                "correctExplanation": "Un tail index în jur de 3 (legea cubică inversă) implică o varianță finită, dar o boltire infinită.",
                 "incorrectExplanation": "Cu $\\hat\\alpha \\approx 3$: există momentele de ordin mai mic decît 3; varianța este finită, boltirea nu."
             }
         },
@@ -348,7 +348,7 @@ window.SFM_DATA.quizzes['evt'] = {
             },
             "ro": {
                 "title": "Domeniul de atracție",
-                "text": "Maximele lunare ale pierderilor zilnice cu indicele de coadă $\\alpha \\approx 3$ urmează aproximativ ce distribuție?",
+                "text": "Maximele lunare ale pierderilor zilnice cu tail index-ul $\\alpha \\approx 3$ urmează aproximativ ce distribuție?",
                 "options": [
                     "Gumbel, cu $\\xi = 0$",
                     "Weibull, cu $\\xi = -1/3$",
@@ -483,7 +483,7 @@ window.SFM_DATA.quizzes['evt'] = {
             },
             "ro": {
                 "title": "Forma GPD",
-                "text": "O ajustare GPD dă $\\hat\\xi = 0{,}25$. Care este indicele de coadă implicat și este varianța finită?",
+                "text": "O ajustare GPD dă $\\hat\\xi = 0{,}25$. Care este tail index-ul implicat și este varianța finită?",
                 "options": [
                     "$\\alpha = 0{,}25$; nu",
                     "$\\alpha = 4$; nu",
@@ -491,7 +491,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "$\\alpha = 1{,}25$; nu"
                 ],
                 "correctExplanation": "$\\alpha = 1/\\xi = 4$; varianța este finită pentru că $\\xi < 1/2$.",
-                "incorrectExplanation": "Indicele de coadă este inversul formei, $\\alpha = 1/\\xi$; o GPD are varianță finită pentru $\\xi < 1/2$."
+                "incorrectExplanation": "Tail index-ul este inversul formei, $\\alpha = 1/\\xi$; o GPD are varianță finită pentru $\\xi < 1/2$."
             }
         },
         {
@@ -625,7 +625,7 @@ window.SFM_DATA.quizzes['evt'] = {
                     "Cele două metode folosesc date diferite",
                     "VaR 0,1% nu există pentru cozi groase"
                 ],
-                "correctExplanation": "Pierderile reale au o coadă putere; distribuția Normală o ignoră și subestimează cuantilele îndepărtate de circa două ori.",
+                "correctExplanation": "Pierderile reale au o coadă de tip putere; distribuția Normală o ignoră și subestimează cuantilele îndepărtate de circa două ori.",
                 "incorrectExplanation": "Cuantilele există întotdeauna; diferența vine din coada subțire a distribuției Normale, nu din date sau din EVT."
             }
         },

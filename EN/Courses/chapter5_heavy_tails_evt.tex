@@ -77,6 +77,7 @@ MSCA Digital Finance}
     \item \textbf{BET-TR}: BET Total Return (index)
     \item \textbf{BVB}: Bursa de Valori București (the Bucharest Stock Exchange)
     \item \textbf{CI}: Confidence Interval
+    \item \textbf{CLT}: Central Limit Theorem
     \item \textbf{COVID-19}: COronaVIrus Disease 2019
     \item \textbf{EODHD}: EOD Historical Data (market-data provider)
     \item \textbf{ES}: Expected Shortfall
@@ -84,11 +85,11 @@ MSCA Digital Finance}
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity
     \item \textbf{GEV}: Generalised Extreme Value (distribution)
     \item \textbf{GPD}: Generalised Pareto Distribution
-    \item \textbf{ML}: Maximum Likelihood
 \end{itemize}
 \end{column}
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{ML}: Maximum Likelihood
     \item \textbf{OMV}: Österreichische Mineralölverwaltung (Austrian Mineral Oil Administration (OMV group))
     \item \textbf{POT}: Peaks Over Threshold
     \item \textbf{PP}: Probability–Probability (plot)
@@ -167,8 +168,8 @@ MSCA Digital Finance}
     \end{itemize}
     \item Measure it with the Normal distribution fitted to the S\&P 500, 1990--2026
     \begin{itemize}
-        \item daily standard deviation $\hat\sigma = 1.13\%$, so $z = -19.7$
-        \item $P(Z \le -19.7) \approx 10^{-86}$: impossible, yet it happened
+        \item daily standard deviation $\hat\sigma = 1.13\%$; $z = (r - \hat\mu)/\hat\sigma = -19.7$ standard deviations
+        \item $P(Z \le -19.7) \approx 10^{-86}$, with $Z \sim N(0, 1)$: impossible, yet it happened
     \end{itemize}
     \item The Normal distribution says nothing useful about such days: we need a model of the tail
 \end{itemize}
@@ -340,14 +341,14 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
     \begin{itemize}
         \item the \textbf{tail} of $L$ is described by the survival function $\bar F(x) = P(L > x)$
     \end{itemize}
-    \item \textbf{Light tail}: $\bar F(x)$ falls at least as fast as an exponential, $e^{-cx}$
+    \item \textbf{Light tail}: $\bar F(x)$ falls at least as fast as an exponential, $e^{-cx}$ with some $c > 0$
     \begin{itemize}
         \item examples: Normal ($\bar F(x) \approx e^{-x^2/2}$), Exponential ($e^{-x}$); all moments are finite
     \end{itemize}
     \item \textbf{Heavy (power-law) tail}: $\bar F(x)$ falls like a power, $x^{-\alpha}$
     \begin{itemize}
         \item examples: Pareto, Student-t, the $\alpha$-stable laws of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter3_alpha_stable_distributions.pdf}{Chapter 3}
-        \item $\alpha$ is the \textbf{tail index}: the smaller $\alpha$, the heavier the tail
+        \item $\alpha > 0$ is the \textbf{tail index}: the smaller $\alpha$, the heavier the tail
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -370,6 +371,7 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
 \begin{itemize}
     \item $L$ has a \textbf{regularly varying} tail with index $\alpha > 0$ if $\bar F(x) = x^{-\alpha}\ell(x)$
     \begin{itemize}
+        \item in words: far in the tail, $\bar F$ behaves like the power $x^{-\alpha}$, up to a factor $\ell(x)$ that changes very slowly
         \item $\ell$ is \textbf{slowly varying}: $\ell(tx)/\ell(x) \to 1$ as $x \to \infty$, for every $t > 0$ (e.g.\ a constant, $\ln x$)
     \end{itemize}
     \item Equivalent: $\dfrac{P(L > tx)}{P(L > x)} \to t^{-\alpha}$ for large $x$
@@ -390,6 +392,7 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
 \begin{itemize}
     \item For a regularly varying tail: $E|L|^m < \infty$ if $m < \alpha$ and $E|L|^m = \infty$ if $m > \alpha$
     \begin{itemize}
+        \item $E|L|^m$: the moment of order $m$; it is finite only for orders below the tail index
         \item $\alpha \le 1$: no mean; $\alpha \le 2$: no variance; $\alpha \le 4$: no kurtosis
     \end{itemize}
     \item The ``inverse cubic law'' of stock returns: $\alpha \approx 3$ \refGopi
@@ -472,6 +475,7 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
     \item Sort the losses: $L_{(1)} \ge L_{(2)} \ge \dots \ge L_{(n)}$; keep the $k$ largest
     \begin{itemize}
         \item \textbf{Hill estimator} \refHill: $\hat\alpha_k = \Big[\dfrac{1}{k}\sum_{i=1}^{k}\ln\dfrac{L_{(i)}}{L_{(k+1)}}\Big]^{-1}$
+        \item in words: the inverse of the average log ratio between the $k$ largest losses and the threshold
         \item the threshold is the $(k+1)$-th largest loss, $u = L_{(k+1)}$
     \end{itemize}
     \item Why it works: if $P(L > x \mid L > u) = (x/u)^{-\alpha}$ (Pareto above $u$), then $\ln(L/u)$ given $L > u$ is Exponential with mean $1/\alpha$
@@ -533,7 +537,9 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
 \begin{itemize}
     \item For i.i.d.\ data with a Pareto-type tail: $\sqrt{k}\,(\hat\alpha_k - \alpha) \to N(0, \alpha^2)$, for $k \to \infty$, $k/n \to 0$
     \begin{itemize}
-        \item i.i.d.: independent and identically distributed; $\mathrm{SE} = \hat\alpha/\sqrt{k}$, 95\% CI (confidence interval) $\hat\alpha(1 \pm 1.96/\sqrt{k})$
+        \item i.i.d.: independent and identically distributed; for large $k$, $\hat\alpha_k$ is approximately Normal around $\alpha$
+        \item $k/n \to 0$: the number of tail losses grows, but is a vanishing share of the sample
+        \item $\mathrm{SE} = \hat\alpha/\sqrt{k}$; 95\% CI (confidence interval): $\hat\alpha(1 \pm 1.96/\sqrt{k})$
     \end{itemize}
     \item Returns are not independent: large losses come in clusters (volatility clustering)
     \begin{itemize}
@@ -560,7 +566,10 @@ Bitcoin & 4\,384 & 109 & $2.71$ & $[2.20, 3.21]$ & $0.26$ & $0.23$ & $3.83$ / $2
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Losses: $\hat\alpha$ between $2.57$ and $3.00$; the intervals exclude 2 (finite variance) and lie below 4 (no finite kurtosis)
+    \item Losses: $\hat\alpha$ between $2.57$ and $3.00$
+    \begin{itemize}
+        \item the intervals exclude 2 (finite variance) and lie below 4 (no finite kurtosis)
+    \end{itemize}
     \item The block-bootstrap SE is close to the i.i.d.\ one here; the estimates move with $k$ by more than one SE
     \item Last column: the Hill index of gains ($r_t > 0$), same $k$
 \end{itemize}\quantlet{SFM\_ch5\_hill}{\qlurl{SFM_ch5_hill}}
@@ -571,7 +580,8 @@ Bitcoin & 4\,384 & 109 & $2.71$ & $[2.20, 3.21]$ & $0.26$ & $0.23$ & $3.83$ / $2
 \begin{itemize}
     \item \textbf{Hill (Weissman) quantile} \refWeissman: $\hat x_p = L_{(k+1)}\Big(\dfrac{k}{n p}\Big)^{1/\hat\alpha}$
     \begin{itemize}
-        \item the loss exceeded with probability $p$, extrapolated from the threshold with the power law; SFE Quantlet SFEhillquantile
+        \item $\hat x_p$: the loss exceeded with probability $p$; $k/n$: the share of losses above the threshold $L_{(k+1)}$
+        \item extrapolated from the threshold with the power law; SFE Quantlet SFEhillquantile
     \end{itemize}
     \item \textbf{Worked example}, S\&P 500, VaR 0.1\%: $n = 9\,240$, $k = 231$, $L_{(k+1)} = 2.34\%$, $\hat\alpha = 2.97$
     \begin{itemize}
@@ -728,12 +738,29 @@ Transgaz (TGN) & 3\,725 & $3.02$ & $[2.41, 3.64]$ & $0.31$ & $3.56$ \\
     \begin{itemize}
         \item then $H$ is a \textbf{GEV} (generalised extreme value) distribution \refFT, \refGnedenko
     \end{itemize}
+    \item Notation
+    \begin{itemize}
+        \item $M_n$: the maximum of $n$ losses; $b_n$ centres it, $a_n$ rescales it, as $\bar X_n$ is standardised in the CLT
+        \item non-degenerate: $H$ is a true distribution, not a mass concentrated in a single point
+    \end{itemize}
+    \item Whatever the law of the losses, the normalised maximum has only one family of possible limits
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The GEV Distribution}
+\itemsize{\small}
+\begin{itemize}
     \item \textbf{GEV} with shape $\xi$, location $\mu$, scale $\sigma > 0$ (the unified form of \refJenkinson)
     \begin{itemize}
         \item $H(x) = \exp\Big\{-\Big[1 + \xi\,\dfrac{x - \mu}{\sigma}\Big]^{-1/\xi}\Big\}$ for $1 + \xi(x - \mu)/\sigma > 0$
         \item $\xi = 0$: $H(x) = \exp\{-e^{-(x - \mu)/\sigma}\}$, the limit as $\xi \to 0$
     \end{itemize}
-    \item Whatever the law of the losses, the normalised maximum has only one family of possible limits
+    \item What each parameter does
+    \begin{itemize}
+        \item $\mu$: shifts the distribution (the typical size of the maximum)
+        \item $\sigma$: stretches it (the spread of the maxima)
+        \item $\xi$: the shape of the right tail; the larger $\xi$, the heavier the tail
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -874,7 +901,10 @@ Bitcoin & $14.6$ & $30.3$ & $[21.2, 41.1]$ & $47.4$ & $46.5$ & $12$ \\
 \end{center}
 \begin{itemize}
     \item Daily loss (\%) exceeded on average once in $T$ years; interval: bootstrap of the monthly maxima (200 samples)
-    \item BET: $\hat\xi = 0.36$ makes the 50-year level $24.8\%$, almost twice the largest loss seen: a small change in $\hat\xi$, a large change far out
+    \item BET: $\hat\xi = 0.36$ makes the 50-year level $24.8\%$, almost twice the largest loss seen
+    \begin{itemize}
+        \item a small change in $\hat\xi$ gives a large change far in the tail
+    \end{itemize}
     \item Block maxima use one loss per month: the peaks over threshold method uses all large losses
 \end{itemize}\quantlet{SFM\_ch5\_gev\_block\_maxima}{\qlurl{SFM_ch5_gev_block_maxima}}
 \end{frame}
@@ -926,7 +956,7 @@ Bitcoin & $14.6$ & $30.3$ & $[21.2, 41.1]$ & $47.4$ & $46.5$ & $12$ \\
     \end{itemize}
     \item $G_{\xi, \beta}(y) = 1 - \Big(1 + \xi\,\dfrac{y}{\beta}\Big)^{-1/\xi}$, $y \ge 0$ (for $\xi < 0$: $y \le -\beta/\xi$); $\xi = 0$: $1 - e^{-y/\beta}$
     \begin{itemize}
-        \item shape $\xi$: the \textbf{same} as in the GEV; scale $\beta > 0$ depends on $u$
+        \item $y$: the excess over $u$; shape $\xi$: the \textbf{same} as in the GEV; scale $\beta > 0$ depends on $u$
         \item $\xi > 0$: Pareto-type tail with $\alpha = 1/\xi$; $\xi = 0$: Exponential; $\xi < 0$: bounded
     \end{itemize}
     \item Moments of the GPD: mean $\beta/(1 - \xi)$ if $\xi < 1$; variance finite if $\xi < 1/2$
@@ -1000,7 +1030,11 @@ Bitcoin & 4\,384 & $3.33$ & 439 & $0.12$ & $0.05$ & $2.663$ & $8.5$ \\
 \begin{itemize}
     \item Maximum likelihood on the excesses $L - u$ \refDS; SE from the curvature of the log-likelihood
     \item $\hat\xi$ between $0.12$ and $0.22$: heavy tails with a finite variance ($\xi < 0.5$) for all four
-    \item $1/\hat\xi$ is larger than the Hill $\hat\alpha$ (2.5\% of the losses): above the 90\% quantile, a GPD with a free scale $\beta$ needs a smaller $\xi$; the tail index is hard to pin down, so report more than one estimator
+    \item $1/\hat\xi$ is larger than the Hill $\hat\alpha$ (2.5\% of the losses)
+    \begin{itemize}
+        \item above the 90\% quantile, a GPD with a free scale $\beta$ needs a smaller $\xi$
+        \item the tail index is hard to pin down: report more than one estimator
+    \end{itemize}
 \end{itemize}\quantlet{SFM\_ch5\_pot\_gpd}{\qlurl{SFM_ch5_pot_gpd}}
 \end{frame}
 
@@ -1025,6 +1059,9 @@ Bitcoin & 4\,384 & $3.33$ & 439 & $0.12$ & $0.05$ & $2.663$ & $8.5$ \\
         \item estimate $P(L > u)$ by $N_u/n$ and $P(L > x \mid L > u)$ by the GPD
     \end{itemize}
     \item \textbf{Tail estimator}: $\hat{\bar F}(x) = \dfrac{N_u}{n}\Big(1 + \hat\xi\,\dfrac{x - u}{\hat\beta}\Big)^{-1/\hat\xi}$, $x > u$
+    \begin{itemize}
+        \item $N_u$: the number of losses above $u$; $n$: the sample size; the bracket is the GPD probability of exceeding $x$
+    \end{itemize}
     \item Historical data inside the sample, a fitted power law beyond it
     \begin{itemize}
         \item the model is used only where it is justified: above $u$
@@ -1095,7 +1132,8 @@ S\&P 500, Black Monday & 19 October 1987 & $-22.3$ & $10^{84}$ & $1\,600$ \\
     \item Three ways to estimate them from daily losses
     \begin{itemize}
         \item \textbf{historical simulation}: the empirical quantile and the mean of the losses beyond it
-        \item \textbf{Normal}: $\mathrm{VaR}_p = \hat\mu_L + \hat\sigma z_{1-p}$, $\mathrm{ES}_p = \hat\mu_L + \hat\sigma\,\varphi(z_{1-p})/p$ ($\varphi$: the standard Normal density)
+        \item \textbf{Normal}: $\mathrm{VaR}_p = \hat\mu_L + \hat\sigma z_{1-p}$, $\mathrm{ES}_p = \hat\mu_L + \hat\sigma\,\varphi(z_{1-p})/p$
+        \item $\hat\mu_L$, $\hat\sigma$: mean and standard deviation of the losses; $z_{1-p}$: the $(1-p)$ quantile of $N(0, 1)$; $\varphi$: the standard Normal density
         \item \textbf{EVT (POT)}: invert the tail estimator
     \end{itemize}
     \item Levels used in practice: VaR 1\% (daily, Basel backtesting), ES 2.5\% \refBasel, VaR 0.1\% (stress)
@@ -1108,10 +1146,12 @@ S\&P 500, Black Monday & 19 October 1987 & $-22.3$ & $10^{84}$ & $1\,600$ \\
     \item Solve $\dfrac{N_u}{n}\Big(1 + \xi\,\dfrac{x - u}{\beta}\Big)^{-1/\xi} = p$ for $x$
     \begin{itemize}
         \item $\mathrm{VaR}_p = u + \dfrac{\beta}{\xi}\Big[\Big(\dfrac{n p}{N_u}\Big)^{-\xi} - 1\Big]$, valid for $p < N_u/n$
+        \item the threshold plus a GPD quantile of the excess; $np/N_u$: the target probability relative to the share of excesses
     \end{itemize}
     \item The excess over $\mathrm{VaR}_p$ is again GPD with the same $\xi$: its mean is $(\beta + \xi(\mathrm{VaR}_p - u))/(1 - \xi)$
     \begin{itemize}
         \item $\mathrm{ES}_p = \dfrac{\mathrm{VaR}_p}{1 - \xi} + \dfrac{\beta - \xi u}{1 - \xi}$, valid for $\xi < 1$ \refMF
+        \item ES = VaR plus the mean excess beyond VaR
     \end{itemize}
     \item With $\xi > 0$, ES is a fixed multiple of VaR far in the tail: $\mathrm{ES}_p/\mathrm{VaR}_p \to 1/(1 - \xi)$
     \item Ported from the SFE Quantlet var\_pot (VaR estimates with the POT model)
@@ -1151,7 +1191,11 @@ Bitcoin & $10.38$ & $10.51$ & $7.99$ & $10.90$ & $10.84$ & $8.03$ \\
 \end{center}
 \begin{itemize}
     \item At these levels EVT and historical simulation differ by at most $0.14$ percentage points: there are enough data at 1\% and 2.5\%
-    \item The Normal law is too low: the EVT VaR 1\% is $27\%$ higher for the S\&P 500 and $31\%$ higher for the BET; ES 2.5\% by a similar margin
+    \item The Normal law is too low
+    \begin{itemize}
+        \item the EVT VaR 1\% is $27\%$ higher for the S\&P 500 and $31\%$ higher for the BET
+        \item ES 2.5\% by a similar margin
+    \end{itemize}
 \end{itemize}\quantlet{SFM\_ch5\_evt\_var}{\qlurl{SFM_ch5_evt_var}}
 \end{frame}
 
@@ -1255,10 +1299,14 @@ Bitcoin & 2\,453 & $24.5$ & 8 & 10 & 23 & $2.5$ & 1 & 1 & 8 \\
 \begin{itemize}
     \item \textbf{Has the tail of BET losses changed as the Bucharest market grew?}
     \begin{itemize}
-        \item Hill index, $k = 2.5\%$ of $n$: 1997--2009: $\hat\alpha = 2.90$ (block SE $0.33$); 2010--2026: $\hat\alpha = 2.16$ ($0.27$)
-        \item $z = -1.73$: a heavier tail after 2010, but not significant at 5\%
+        \item Hill index, $k = 2.5\%$ of $n$, 1997--2009: $\hat\alpha = 2.90$ (block SE $0.33$)
+        \item 2010--2026: $\hat\alpha = 2.16$ (block SE $0.27$)
+        \item $z = (\hat\alpha_1 - \hat\alpha_2)/\sqrt{\mathrm{SE}_1^2 + \mathrm{SE}_2^2} = -1.73$: a heavier tail after 2010, but not significant at 5\% ($|z| < 1.96$)
     \end{itemize}
-    \item Why it is open: the threshold fell from $3.95\%$ to $2.01\%$ with the volatility; is the change in the tail or in the volatility?
+    \item Why it is open: the threshold fell from $3.95\%$ to $2.01\%$ with the volatility
+    \begin{itemize}
+        \item is the change in the tail or in the volatility?
+    \end{itemize}
     \item AI tools can speed up such a study; they do not replace checking it \refWang
 \end{itemize}\quantlet{SFM\_ch5\_hill}{\qlurl{SFM_ch5_hill}}
 \end{frame}

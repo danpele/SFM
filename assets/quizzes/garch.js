@@ -158,16 +158,16 @@ window.SFM_DATA.quizzes['garch'] = {
                 "incorrectExplanation": "First compute the daily long-run variance omega/(1 - alpha - beta) = 1.0, then annualise the standard deviation with sqrt(252): about 15.9%."
             },
             "ro": {
-                "title": "Volatilitatea de lungă durată",
-                "text": "Randamente zilnice în %: omega = 0,02, alpha = 0,10, beta = 0,88. Care este volatilitatea de lungă durată anualizată (252 de zile)?",
+                "title": "Volatilitatea pe termen lung",
+                "text": "Randamente zilnice în %: omega = 0,02, alpha = 0,10, beta = 0,88. Care este volatilitatea pe termen lung anualizată (252 de zile)?",
                 "options": [
                     "Circa 1,0%",
                     "Circa 2,2%",
                     "Circa 25,2%",
                     "Circa 15,9%"
                 ],
-                "correctExplanation": "Varianța de lungă durată este 0,02/(1 - 0,98) = 1,0 (%^2 pe zi); volatilitatea anualizată este sqrt(252 x 1,0) = 15,9%.",
-                "incorrectExplanation": "Calculăm întîi varianța zilnică de lungă durată omega/(1 - alpha - beta) = 1,0, apoi anualizăm abaterea standard cu sqrt(252): circa 15,9%."
+                "correctExplanation": "Varianța pe termen lung este 0,02/(1 - 0,98) = 1,0 (%^2 pe zi); volatilitatea anualizată este sqrt(252 x 1,0) = 15,9%.",
+                "incorrectExplanation": "Calculăm întîi varianța zilnică pe termen lung omega/(1 - alpha - beta) = 1,0, apoi anualizăm abaterea standard cu sqrt(252): circa 15,9%."
             }
         },
         {
@@ -193,8 +193,8 @@ window.SFM_DATA.quizzes['garch'] = {
                     "Circa 7 zile",
                     "Circa 99 de zile"
                 ],
-                "correctExplanation": "Timpul de înjumătățire este ln 0,5 / ln 0,99 = 69 de zile: o persistență apropiată de 1 înseamnă o volatilitate de lungă durată.",
-                "incorrectExplanation": "O abatere de la varianța de lungă durată se micșorează cu factorul alpha + beta în fiecare zi; din 0,99^h = 0,5 rezultă h = ln 0,5/ln 0,99, circa 69 de zile."
+                "correctExplanation": "Timpul de înjumătățire este ln 0,5 / ln 0,99 = 69 de zile: o persistență apropiată de 1 înseamnă că șocurile de volatilitate durează mult.",
+                "incorrectExplanation": "O abatere de la varianța pe termen lung se micșorează cu factorul alpha + beta în fiecare zi; din 0,99^h = 0,5 rezultă h = ln 0,5/ln 0,99, circa 69 de zile."
             }
         },
         {
@@ -244,11 +244,11 @@ window.SFM_DATA.quizzes['garch'] = {
                 "options": [
                     "Varianța reacționează puternic la șocul de ieri",
                     "Randamentele sînt puternic autocorelate",
-                    "Varianța de lungă durată este mare",
+                    "Varianța pe termen lung este mare",
                     "Varianța are o memorie lungă: nivelul de ieri se păstrează în mare parte"
                 ],
                 "correctExplanation": "beta este ponderea varianței condiționate de ieri: un beta mare înseamnă o varianță care se schimbă lent, persistentă.",
-                "incorrectExplanation": "Reacția la știri este alpha; beta măsoară memoria. Niciunul nu spune ceva despre autocorelația randamentelor, iar nivelul de lungă durată depinde de omega/(1 - alpha - beta)."
+                "incorrectExplanation": "Reacția la știri este alpha; beta măsoară memoria. Niciunul nu spune ceva despre autocorelația randamentelor, iar nivelul pe termen lung depinde de omega/(1 - alpha - beta)."
             }
         },
         {
@@ -350,13 +350,13 @@ window.SFM_DATA.quizzes['garch'] = {
                 "title": "O estimare pe frontieră",
                 "text": "Pentru Bitcoin, GARCH(1,1)-t dă alpha + beta = 1,000. Ce rezultă?",
                 "options": [
-                    "Modelul este un IGARCH: nu există timp de înjumătățire și nici volatilitate de lungă durată finită",
+                    "Modelul este un IGARCH: nu există timp de înjumătățire și nici volatilitate pe termen lung finită",
                     "Volatilitatea Bitcoin este constantă",
                     "Estimarea a eșuat, iar modelul trebuie abandonat",
                     "Varianța Bitcoin are un timp de înjumătățire de o zi"
                 ],
                 "correctExplanation": "Cu alpha + beta = 1, șocurile varianței nu se sting niciodată; prognozele sînt aceleași pentru orice orizont, ca la EWMA.",
-                "incorrectExplanation": "Volatilitatea este departe de a fi constantă, iar estimarea poate fi folosită; dar cu persistența 1 nu există revenire la medie, deci nici timp de înjumătățire, nici varianță de lungă durată de raportat."
+                "incorrectExplanation": "Volatilitatea este departe de a fi constantă, iar estimarea poate fi folosită; dar cu persistența 1 nu există revenire la medie, deci nici timp de înjumătățire, nici varianță pe termen lung de raportat."
             }
         },
         {
@@ -490,7 +490,7 @@ window.SFM_DATA.quizzes['garch'] = {
                     "Modelul are prea mulți parametri",
                     "Nu a rămas niciun efect ARCH; pot rămîne asimetria sau o distribuție greșită"
                 ],
-                "correctExplanation": "Un test trecut arată doar că pătratele reziduurilor nu sînt autocorelate; alte teste (sign bias, graficul QQ) pot găsi încă probleme.",
+                "correctExplanation": "Un test fără respingere arată doar că pătratele reziduurilor nu sînt autocorelate; alte teste (sign bias, graficul QQ) pot găsi încă probleme.",
                 "incorrectExplanation": "Nerespingerea unei ipoteze nule nu este o dovadă; testul verifică o singură proprietate a reziduurilor, nu întregul model sau randamentele."
             }
         },
@@ -515,7 +515,7 @@ window.SFM_DATA.quizzes['garch'] = {
                     "Asimetria (efectul de levier)",
                     "O constantă în medie",
                     "Cozi mai groase în distribuție",
-                    "Mai multe decalaje ale pătratelor șocurilor"
+                    "Mai multe laguri ale pătratelor șocurilor"
                 ],
                 "correctExplanation": "Testul face regresia lui z_t^2 pe semnul și mărimea șocurilor trecute: o respingere înseamnă că semnul șocurilor trecute încă anticipează varianța (Engle și Ng, 1993).",
                 "incorrectExplanation": "Testul privește semnul șocurilor trecute, deci arată spre un termen asimetric care lipsește, de exemplu gamma din GJR sau EGARCH."
@@ -564,15 +564,15 @@ window.SFM_DATA.quizzes['garch'] = {
             },
             "ro": {
                 "title": "Prognoze pe mai mulți pași",
-                "text": "Imediat după un crah, sigma_{t+1}^2 este mult peste varianța de lungă durată. Cum prognozează GARCH(1,1) varianța următoarelor 10 zile?",
+                "text": "Imediat după un crah, sigma_{t+1}^2 este mult peste varianța pe termen lung. Cum prognozează GARCH(1,1) varianța următoarelor 10 zile?",
                 "options": [
                     "Ca 10 ori sigma_{t+1}^2",
-                    "Ca 10 ori varianța de lungă durată",
+                    "Ca 10 ori varianța pe termen lung",
                     "Ca sigma_{t+1}^2, deoarece nu depinde de orizont",
-                    "Ca sumă a prognozelor zilnice, care scad spre nivelul de lungă durată"
+                    "Ca sumă a prognozelor zilnice, care scad spre nivelul pe termen lung"
                 ],
                 "correctExplanation": "E_t[sigma_{t+h}^2] = s2bar + (alpha + beta)^(h-1)(sigma_{t+1}^2 - s2bar); varianța pe 10 zile este suma acestor prognoze, sub 10 sigma_{t+1}^2.",
-                "incorrectExplanation": "Regula rădăcinii pătrate a timpului supraestimează riscul după un crah, iar nivelul de lungă durată îl subestimează; doar IGARCH (EWMA) păstrează prognoza constantă."
+                "incorrectExplanation": "Regula rădăcinii pătrate a timpului supraestimează riscul după un crah, iar nivelul pe termen lung îl subestimează; doar IGARCH (EWMA) păstrează prognoza constantă."
             }
         },
         {

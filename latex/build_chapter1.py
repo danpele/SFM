@@ -329,7 +329,7 @@ D.frame(T('Daily Bars: OHLCV', 'Barele zilnice: OHLCV'), items(
     T('\\textbf{OHLCV}: open $O_t$, high $H_t$, low $L_t$, close $C_t$, volume $V_t$ of day $t$',
       '\\textbf{OHLCV}: prețul de deschidere $O_t$, maxim $H_t$, minim $L_t$, de închidere $C_t$ și volumul $V_t$ din ziua $t$'),
     T('By construction $L_t \\le O_t, C_t \\le H_t$; the range $H_t - L_t$ measures the intraday spread of prices',
-      'Prin construcție $L_t \\le O_t, C_t \\le H_t$; amplitudinea $H_t - L_t$ măsoară împrăștierea prețurilor în timpul zilei'),
+      'Prin construcție $L_t \\le O_t, C_t \\le H_t$; amplitudinea $H_t - L_t$ măsoară variația prețurilor în timpul zilei'),
     T('Banca Transilvania (TLV), the last five trading days in our data:', 'Banca Transilvania (TLV), ultimele cinci zile de tranzacționare din datele noastre:')) +
     table('lrrrrr', T('Date', 'Data') + ' & Open & High & Low & Close & ' + T('Volume', 'Volum'), ohlc_rows, size='footnotesize') +
     items(T('Check: on @{ohlc.flat} open = high = low = close with @{ohlc.flatvol} shares traded; a flat bar with a large volume is suspicious',
@@ -343,12 +343,14 @@ D.frame(T('Corporate Actions and the Adjusted Close', 'Evenimente corporative ș
      [T('cash dividend $D$: $A = 1 - D/P_{t-1}$', 'dividend în numerar $D$: $A = 1 - D/P_{t-1}$'),
       T('split $m$-for-$n$ ($m$ new shares for $n$ old): $A = n/m$; a consolidation is a split with $m < n$',
         'split $m$-la-$n$ ($m$ acțiuni noi pentru $n$ vechi): $A = n/m$; o consolidare este un split cu $m < n$')]),
-    T('\\textbf{Adjusted close}: every earlier price is multiplied by the factors of all later events, $P^{\\text{adj}}_t = P_t \\prod_{k:\\, t_k > t} A_{t_k}$',
-      '\\textbf{Prețul ajustat}: fiecare preț anterior se înmulțește cu factorii tuturor evenimentelor ulterioare, $P^{\\text{adj}}_t = P_t \\prod_{k:\\, t_k > t} A_{t_k}$'),
-    T('Returns computed from adjusted prices include the dividend and have no artificial jumps',
-      'Randamentele calculate din prețuri ajustate includ dividendul și nu au salturi artificiale'),
-    T('With dividends, the simple return is $R_t = (P_t + D_t)/P_{t-1} - 1$ \\refFHH',
-      'Cu dividende, randamentul simplu este $R_t = (P_t + D_t)/P_{t-1} - 1$ \\refFHH')))
+    (T('\\textbf{Adjusted close}: every earlier price is multiplied by the factors of all later events, $P^{\\text{adj}}_t = P_t \\prod_{k:\\, t_k > t} A_{t_k}$',
+       '\\textbf{Prețul ajustat}: fiecare preț anterior se înmulțește cu factorii tuturor evenimentelor ulterioare, $P^{\\text{adj}}_t = P_t \\prod_{k:\\, t_k > t} A_{t_k}$'),
+     [T('$t_k$: the day of event $k$; the product runs over all events after day $t$, so the last prices stay unchanged',
+        '$t_k$: ziua evenimentului $k$; produsul parcurge toate evenimentele de după ziua $t$, deci ultimele prețuri rămîn neschimbate'),
+      T('returns computed from adjusted prices include the dividend and have no artificial jumps',
+        'randamentele calculate din prețuri ajustate includ dividendul și nu au salturi artificiale')]),
+    T('With dividends, the simple return is $R_t = (P_t + D_t)/P_{t-1} - 1$, with $D_t$ the dividend paid on day $t$ \\refFHH',
+      'Cu dividende, randamentul simplu este $R_t = (P_t + D_t)/P_{t-1} - 1$, unde $D_t$ este dividendul plătit în ziua $t$ \\refFHH')))
 
 D.frame(T('Worked Example: Adjusted Prices', 'Exemplu rezolvat: prețuri ajustate'), items(
     T('A share trades at 100; on day 5 it pays a cash dividend of 2; on day 10 it splits 2-for-1',
@@ -369,7 +371,7 @@ D.frame(T('Worked Example: Adjusted Prices', 'Exemplu rezolvat: prețuri ajustat
 chart(T('Real Data: Banca Transilvania, Close vs Adjusted Close', 'Date reale: Banca Transilvania, prețul de închidere și prețul ajustat'),
       'sfm_ch1_tlv_adjusted', 'SFM_ch1_data_quality', [
           T('On @{tlv.date} the close jumps from @{tlv.before} to @{tlv.after} RON: a share consolidation, @{tlv.ratio} old shares into one',
-            'Pe @{tlv.date} prețul urcă brusc de la @{tlv.before} la @{tlv.after} lei: o consolidare a acțiunilor, @{tlv.ratio} acțiuni vechi într-una'),
+            'Pe @{tlv.date} prețul crește brusc de la @{tlv.before} la @{tlv.after} lei: o consolidare a acțiunilor, @{tlv.ratio} acțiuni vechi într-una'),
           T('Log return from the close: $+@{tlv.jc}\\%$ in one day; from the adjusted close: $@{tlv.ja}\\%$',
             'Randamentul logaritmic din prețul de închidere: $+@{tlv.jc}\\%$ într-o zi; din prețul ajustat: $@{tlv.ja}\\%$'),
           T('Since 2015 the two series disagree by more than 2\\% on @{tlv.nev} days (dividends, bonus shares)',
@@ -409,7 +411,7 @@ D.frame(T('A Data Checklist', 'Lista de verificare a datelor'), items(
     T('Jumps: list the 10 largest absolute returns and check each against the news',
       'Salturi: listați cele mai mari 10 randamente în valoare absolută și verificați-le pe fiecare în știri'),
     T('Flat bars, zero volume, repeated prices: holidays filled with the last price or stale quotes',
-      'Bare plate, volum zero, prețuri repetate: zile libere completate cu ultimul preț sau cotații vechi'),
+      'Bare plate, volum zero, prețuri repetate: zile libere completate cu ultimul preț sau prețuri stale (neactualizate)'),
     T('Units and currency: RON, EUR, USD; index points; prices in cents', 'Unități și monedă: lei, euro, dolari; puncte de indice; prețuri în cenți'),
     T('Keep the raw file and the download date; never edit data manually', 'Păstrați fișierul brut și data descărcării; nu modificați niciodată datele manual')))
 
@@ -426,14 +428,14 @@ D.recap(('Data', 'date'), [
 # =============================================================================
 D.section('From Prices to Returns', 'De la prețuri la randamente')
 
-D.frame(T('Why Returns, Not Prices?', 'De ce randamente, nu prețuri?'), items(
+D.frame(T('Why Returns, Not Prices?', 'Randamentele în locul prețurilor'), items(
     (T('A price has a unit and a scale; a return does not', 'Un preț are unitate de măsură și scară; un randament nu are'),
-     [T('a 1-leu move is large for a 2-leu share and small for a 500-leu share', 'o mișcare de 1 leu este mare pentru o acțiune de 2 lei și mică pentru una de 500 de lei')]),
+     [T('a 1-leu move is large for a 2-leu share and small for a 500-leu share', 'o variație de 1 leu este mare pentru o acțiune de 2 lei și mică pentru una de 500 de lei')]),
     T('Returns of different assets, currencies and periods can be compared directly',
       'Randamentele unor active, monede și perioade diferite se pot compara direct'),
     (T('Prices trend and wander; returns fluctuate around a stable level', 'Prețurile au trend și nu revin la un nivel fix; randamentele oscilează în jurul unui nivel stabil'),
      [T('\\textbf{weakly stationary} series: constant mean, constant variance, and a covariance that depends only on the lag',
-        'serie \\textbf{slab staționară}: medie constantă, varianță constantă și o covarianță care depinde doar de decalaj'),
+        'serie \\textbf{slab staționară}: medie constantă, varianță constantă și o covarianță care depinde doar de lag'),
       T('most statistical methods of this course assume (at least) weak stationarity',
         'majoritatea metodelor statistice ale cursului presupun (cel puțin) staționaritate slabă')]),
     T('The investor cares about the relative change of wealth, which is exactly a return',
@@ -442,20 +444,36 @@ D.frame(T('Why Returns, Not Prices?', 'De ce randamente, nu prețuri?'), items(
 chart(T('S\\&P 500: Price Level vs Daily Returns', 'S\\&P 500: nivelul prețului și randamentele zilnice'), 'sfm_ch1_price_returns',
       'SFM_ch1_prices_returns', [
           T('Top: the price trends upward with long swings; its mean and spread change over time',
-            'Sus: prețul are trend crescător, cu oscilații lungi; media și împrăștierea lui se schimbă în timp'),
+            'Sus: prețul are trend crescător, cu oscilații lungi; media și dispersia lui se schimbă în timp'),
           T('Bottom: the returns fluctuate around zero, in calm and turbulent periods (2008, 2020)',
             'Jos: randamentele oscilează în jurul lui zero, în perioade calme și agitate (2008, 2020)')], h='0.62\\textheight')
 
-D.frame(T('A Formal Check: the ADF Test', 'O verificare formală: testul ADF'), items(
-    (T('\\textbf{ADF test} \\refDF: is there a unit root (a random walk) in the series?', '\\textbf{Testul ADF} \\refDF: are seria o rădăcină unitară (un mers aleator)?'),
-     [T('$H_0$: unit root, non-stationary; $H_1$: stationary', '$H_0$: rădăcină unitară, nestaționară; $H_1$: staționară'),
-      T('regression $\\Delta y_t = \\alpha + \\beta t + \\gamma y_{t-1} + \\sum_j \\delta_j \\Delta y_{t-j} + \\varepsilon_t$; reject $H_0$ when the $t$-statistic of $\\gamma$ is very negative',
-        'regresia $\\Delta y_t = \\alpha + \\beta t + \\gamma y_{t-1} + \\sum_j \\delta_j \\Delta y_{t-j} + \\varepsilon_t$; respingem $H_0$ cînd statistica $t$ a lui $\\gamma$ este foarte negativă')]),
+D.frame(T('A Formal Check: the ADF Test (1/2)', 'O verificare formală: testul ADF (1/2)'), items(
+    (T('\\textbf{ADF test} (augmented Dickey--Fuller) \\refDF: is there a unit root (a random walk) in the series?', '\\textbf{Testul ADF} (augmented Dickey--Fuller) \\refDF: are seria o rădăcină unitară (un mers aleator)?'),
+     [T('$H_0$: unit root, the series is non-stationary; $H_1$: the series is stationary', '$H_0$: rădăcină unitară, seria este nestaționară; $H_1$: seria este staționară')]),
+    T('The test regresses the daily change of the series on its previous level \\[ \\Delta y_t = \\alpha + \\beta t + \\gamma\\, y_{t-1} + \\sum_{j=1}^{p} \\delta_j\\, \\Delta y_{t-j} + \\varepsilon_t \\]',
+      'Testul regresează variația zilnică a seriei pe nivelul ei din ziua anterioară \\[ \\Delta y_t = \\alpha + \\beta t + \\gamma\\, y_{t-1} + \\sum_{j=1}^{p} \\delta_j\\, \\Delta y_{t-j} + \\varepsilon_t \\]'),
+    (T('Notation', 'Notațiile'),
+     [T('$y_t$: the tested series (log price or log return); $\\Delta y_t = y_t - y_{t-1}$: its change from day $t-1$ to day $t$',
+        '$y_t$: seria testată (logaritmul prețului sau randamentul logaritmic); $\\Delta y_t = y_t - y_{t-1}$: variația ei de la ziua $t-1$ la ziua $t$'),
+      T('$\\alpha$: constant; $\\beta t$: linear trend; $\\delta_j$: coefficients of the $p$ lagged changes, which absorb short-term autocorrelation; $\\varepsilon_t$: error',
+        '$\\alpha$: constanta; $\\beta t$: trendul liniar; $\\delta_j$: coeficienții celor $p$ variații cu lag, care preiau autocorelația pe termen scurt; $\\varepsilon_t$: eroarea'),
+      T('$\\gamma = 0$: the series does not return to a level (unit root); $\\gamma < 0$: it is pulled back (stationary)',
+        '$\\gamma = 0$: seria nu revine la un nivel (rădăcină unitară); $\\gamma < 0$: seria este readusă spre nivelul ei (staționară)')]),
+    T('Reject $H_0$ when the $t$-statistic of $\\hat\\gamma$ is below the critical value (Dickey--Fuller tables, not Student)',
+      'Respingem $H_0$ cînd statistica $t$ a lui $\\hat\\gamma$ este sub valoarea critică (din tabelele Dickey--Fuller, nu Student)')))
+
+D.frame(T('A Formal Check: the ADF Test (2/2)', 'O verificare formală: testul ADF (2/2)'), items(
     (T('S\\&P 500, daily data since @{adf.first}', 'S\\&P 500, date zilnice din @{adf.first}'),
-     [T('log price (with trend): statistic $@{adf.p}$, 5\\% critical value $@{adf.c5ct}$, $p = @{adf.pp}$: we do not reject the unit root',
-        'logaritmul prețului (cu trend): statistica $@{adf.p}$, valoarea critică 5\\% $@{adf.c5ct}$, $p = @{adf.pp}$: nu respingem rădăcina unitară'),
-      T('log returns: statistic $@{adf.r}$, 5\\% critical value $@{adf.c5c}$, $p < 0.001$: we reject it',
-        'randamente logaritmice: statistica $@{adf.r}$, valoarea critică 5\\% $@{adf.c5c}$, $p < 0.001$: o respingem')]),
+     [T('log price (with trend): statistic $@{adf.p}$, 5\\% critical value $@{adf.c5ct}$, p-value $@{adf.pp}$: we do not reject the unit root',
+        'logaritmul prețului (cu trend): statistica $@{adf.p}$, valoarea critică 5\\% $@{adf.c5ct}$, p-value $@{adf.pp}$: nu respingem rădăcina unitară'),
+      T('log returns: statistic $@{adf.r}$, 5\\% critical value $@{adf.c5c}$, p-value $< 0.001$: we reject it',
+        'randamente logaritmice: statistica $@{adf.r}$, valoarea critică 5\\% $@{adf.c5c}$, p-value $< 0.001$: o respingem')]),
+    (T('Reading', 'Interpretare'),
+     [T('p-value: the probability, under $H_0$, of a statistic at least as negative as the observed one; below 0.05 we reject $H_0$',
+        'p-value: probabilitatea, în ipoteza $H_0$, de a obține o statistică cel puțin la fel de negativă ca cea observată; sub 0,05 respingem $H_0$'),
+      T('prices behave like a random walk; returns are stationary, so we model returns, not prices',
+        'prețurile se comportă ca un mers aleator; randamentele sînt staționare, deci modelăm randamentele, nu prețurile')]),
     T('Unit roots and random walks are the subject of Chapter 7', 'Rădăcinile unitare și mersul aleator sînt subiectul Capitolului 7')) + ql('SFM_ch1_prices_returns'))
 
 # =============================================================================
@@ -487,19 +505,19 @@ D.frame(T('The Log Return', 'Randamentul logaritmic'), items(
     T('Log returns are the default in statistics of financial markets: they add up over time (next section)',
       'Randamentele logaritmice sînt alegerea standard în statistica piețelor financiare: se adună în timp (secțiunea următoare)')))
 
-D.frame(T('How Far Apart Are $r$ and $R$?', 'Cît de mult diferă $r$ și $R$?'), items(
+D.frame(T('How Far Apart Are $r$ and $R$?', 'Diferența dintre $r$ și $R$'), items(
     (T('Taylor expansion of the logarithm around 0', 'Dezvoltarea în serie Taylor a logaritmului în jurul lui 0'),
      [T('$r = \\ln(1 + R) = R - \\dfrac{R^2}{2} + \\dfrac{R^3}{3} - \\dots$', '$r = \\ln(1 + R) = R - \\dfrac{R^2}{2} + \\dfrac{R^3}{3} - \\dots$'),
       T('$\\ln$ is concave, so $r < R$ for every $R \\neq 0$', '$\\ln$ este concavă, deci $r < R$ pentru orice $R \\neq 0$')]),
-    (T('Daily move, $R = 1\\%$', 'Mișcare zilnică, $R = 1\\%$'),
+    (T('Daily move, $R = 1\\%$', 'Variație zilnică, $R = 1\\%$'),
      [T('$r = @{ex.one.r}\\%$, and $R - R^2/2 = @{ex.one.taylor}\\%$: the gap $R - r$ is @{ex.one.gap} basis points',
         '$r = @{ex.one.r}\\%$, iar $R - R^2/2 = @{ex.one.taylor}\\%$: diferența $R - r$ este de @{ex.one.gap} puncte de bază')]),
-    (T('Large move, $R = 10\\%$', 'Mișcare mare, $R = 10\\%$'),
+    (T('Large move, $R = 10\\%$', 'Variație mare, $R = 10\\%$'),
      [T('$r = @{ex.ten.r}\\%$, and $R - R^2/2 = @{ex.ten.taylor}\\%$: the gap $R - r$ is @{ex.ten.gap} basis points',
         '$r = @{ex.ten.r}\\%$, iar $R - R^2/2 = @{ex.ten.taylor}\\%$: diferența $R - r$ este de @{ex.ten.gap} puncte de bază')]),
     T('A \\textbf{basis point} (bp) is 0.01 percentage points', 'Un \\textbf{punct de bază} (bp) este 0,01 puncte procentuale'),
     T('Conclusion: for daily returns $r \\approx R$; for large moves and long horizons they differ',
-      'Concluzie: pentru randamente zilnice $r \\approx R$; pentru mișcări mari și orizonturi lungi diferă')))
+      'Concluzie: pentru randamente zilnice $r \\approx R$; pentru variații mari și orizonturi lungi diferă')))
 
 side(T('Simple vs Log Returns on Real Extremes', 'Randamente simple și logaritmice în zilele extreme'), 'sfm_ch1_simple_log', 'SFM_ch1_simple_log_returns', [
     T('Bitcoin, @{sl.btc_min.date}: $R = @{sl.btc_min.R}\\%$ but $r = @{sl.btc_min.r}\\%$', 'Bitcoin, @{sl.btc_min.date}: $R = @{sl.btc_min.R}\\%$, dar $r = @{sl.btc_min.r}\\%$'),
@@ -532,12 +550,12 @@ D.frame(T('Which Return When?', 'Alegerea tipului de randament'), table(
      T('Portfolio of several assets', 'Portofoliu din mai multe active') + ' & ' + T('simple', 'simplu') + ' & ' + T('$R_p = \\sum_i w_i R_i$, exact', '$R_p = \\sum_i w_i R_i$, exact'),
      T('Statistical modelling', 'Modelare statistică') + ' & ' + T('log', 'logaritmic') + ' & ' + T('unbounded, closer to a symmetric distribution', 'nemărginit, mai aproape de o distribuție simetrică'),
      T('Reporting to investors', 'Raportare către investitori') + ' & ' + T('simple', 'simplu') + ' & ' + T('``the fund gained 10\\%\'\' is a simple return', '„fondul a cîștigat 10\\%” este un randament simplu'),
-     T('Daily data, small moves', 'Date zilnice, mișcări mici') + ' & ' + T('either', 'oricare') + ' & ' + T('the difference is about $R^2/2$', 'diferența este aproximativ $R^2/2$')],
+     T('Daily data, small moves', 'Date zilnice, variații mici') + ' & ' + T('either', 'oricare') + ' & ' + T('the difference is about $R^2/2$', 'diferența este aproximativ $R^2/2$')],
     size='footnotesize') + items(T('Always say which one you use: a ``return of 10\\%\'\' is ambiguous', 'Precizați întotdeauna tipul de randament folosit: un „randament de 10\\%” este ambiguu')))
 
 D.recap(('Simple and Log Returns', 'randamente simple și logaritmice'), [
     T('$R_t = P_t/P_{t-1} - 1$; $r_t = \\ln(P_t/P_{t-1}) = \\ln(1 + R_t)$', '$R_t = P_t/P_{t-1} - 1$; $r_t = \\ln(P_t/P_{t-1}) = \\ln(1 + R_t)$'),
-    T('$r < R$ for every move; the gap is about $R^2/2$, negligible for daily data', '$r < R$ pentru orice mișcare; diferența este aproximativ $R^2/2$, neglijabilă pentru date zilnice'),
+    T('$r < R$ for every move; the gap is about $R^2/2$, negligible for daily data', '$r < R$ pentru orice variație nenulă; diferența este aproximativ $R^2/2$, neglijabilă pentru date zilnice'),
     T('Log returns add over time; simple returns add across assets', 'Randamentele logaritmice se adună în timp; cele simple se adună între active'),
     T('Gains and losses of the same size do not cancel', 'Cîștigurile și pierderile de aceeași mărime nu se anulează')])
 
@@ -552,6 +570,8 @@ D.frame(T('Returns over $k$ Periods', 'Randamente pe $k$ perioade'), items(
         '$1 + R_t(k) = \\dfrac{P_t}{P_{t-k}} = (1 + R_t)(1 + R_{t-1}) \\cdots (1 + R_{t-k+1})$')]),
     (T('\\textbf{Log}: returns add', '\\textbf{Logaritmice}: randamentele se adună'),
      [T('$r_t(k) = \\ln\\dfrac{P_t}{P_{t-k}} = r_t + r_{t-1} + \\dots + r_{t-k+1}$', '$r_t(k) = \\ln\\dfrac{P_t}{P_{t-k}} = r_t + r_{t-1} + \\dots + r_{t-k+1}$')]),
+    T('$R_t(k)$, $r_t(k)$: the simple and the log return over the $k$ periods that end at $t$, from $P_{t-k}$ to $P_t$',
+      '$R_t(k)$, $r_t(k)$: randamentul simplu și cel logaritmic pe cele $k$ perioade care se încheie la $t$, de la $P_{t-k}$ la $P_t$'),
     T('Consequence: the mean and variance of a $k$-day log return follow from those of the daily returns',
       'Consecință: media și varianța randamentului logaritmic pe $k$ zile rezultă din cele ale randamentelor zilnice'),
     T('Weekly, monthly or yearly returns are computed from the prices at the end of each period, not by averaging',
@@ -560,6 +580,8 @@ D.frame(T('Returns over $k$ Periods', 'Randamente pe $k$ perioade'), items(
 D.frame(T('Cumulative Return and Wealth', 'Randamentul cumulat și averea'), items(
     T('Wealth after $T$ periods, starting from $W_0$: $W_T = W_0 \\prod_{t=1}^{T} (1 + R_t) = W_0 \\exp\\Big(\\sum_{t=1}^{T} r_t\\Big)$',
       'Averea după $T$ perioade, pornind de la $W_0$: $W_T = W_0 \\prod_{t=1}^{T} (1 + R_t) = W_0 \\exp\\Big(\\sum_{t=1}^{T} r_t\\Big)$'),
+    T('$\\prod_{t=1}^{T}$: the product of the $T$ gross returns; $\\exp(x) = e^x$ undoes the logarithm',
+      '$\\prod_{t=1}^{T}$: produsul celor $T$ randamente brute; $\\exp(x) = e^x$ inversează logaritmul'),
     (T('\\textbf{Cumulative simple return}: $\\text{CSR}_T = W_T/W_0 - 1$', '\\textbf{Randamentul simplu cumulat}: $\\text{CSR}_T = W_T/W_0 - 1$'),
      [T('what the investor gained, in percent', 'cîștigul investitorului, în procente')]),
     (T('\\textbf{Cumulative log return}: $\\text{CLR}_T = \\ln(W_T/W_0) = \\sum_t r_t$', '\\textbf{Randamentul logaritmic cumulat}: $\\text{CLR}_T = \\ln(W_T/W_0) = \\sum_t r_t$'),
@@ -576,7 +598,9 @@ chart(T('Growth of 100 Invested, @{y0}--@{y1}', 'Evoluția a 100 de unități in
 
 D.frame(T('Portfolio Returns', 'Randamentul unui portofoliu'), items(
     (T('Portfolio with weights $w_1, \\dots, w_n$, $\\sum_i w_i = 1$, set at the start of the period', 'Portofoliu cu ponderile $w_1, \\dots, w_n$, $\\sum_i w_i = 1$, fixate la începutul perioadei'),
-     [T('\\textbf{simple}: $R_p = \\sum_i w_i R_i$, exact', '\\textbf{simplu}: $R_p = \\sum_i w_i R_i$, exact'),
+     [T('$R_i$, $r_i$: the simple and the log return of asset $i = 1, \\dots, n$ over the period; $w_i$: the share of wealth in asset $i$',
+        '$R_i$, $r_i$: randamentul simplu și cel logaritmic al activului $i = 1, \\dots, n$ pe perioadă; $w_i$: ponderea averii investite în activul $i$'),
+      T('\\textbf{simple}: $R_p = \\sum_i w_i R_i$, exact', '\\textbf{simplu}: $R_p = \\sum_i w_i R_i$, exact'),
       T('\\textbf{log}: $r_p = \\ln\\big(\\sum_i w_i e^{r_i}\\big) \\neq \\sum_i w_i r_i$', '\\textbf{logaritmic}: $r_p = \\ln\\big(\\sum_i w_i e^{r_i}\\big) \\neq \\sum_i w_i r_i$')]),
     (T('Example: 60\\% in A ($R_A = 10\\%$), 40\\% in B ($R_B = -5\\%$)', 'Exemplu: 60\\% în A ($R_A = 10\\%$), 40\\% în B ($R_B = -5\\%$)'),
      [T('$R_p = 0.6 \\times 10\\% + 0.4 \\times (-5\\%) = @{pf.Rp}\\%$; exact $r_p = \\ln(1 + R_p) = @{pf.rp}\\%$',
@@ -611,12 +635,14 @@ D.section('Annualisation', 'Anualizarea')
 D.frame(T('Annualising the Mean and the Volatility', 'Anualizarea mediei și a volatilității'), items(
     T('$q$ = number of observations per year: about 252 for exchanges, 365 for crypto, 52 for weekly, 12 for monthly data',
       '$q$ = numărul de observații pe an: aproximativ 252 pentru burse, 365 pentru cripto, 52 pentru date săptămînale, 12 pentru date lunare'),
+    T('$\\mu$, $\\sigma$: the mean and the standard deviation of the returns at the frequency of the data (for example, daily)',
+      '$\\mu$, $\\sigma$: media și abaterea standard a randamentelor la frecvența datelor (de exemplu, zilnică)'),
     (T('\\textbf{Mean}: log returns add, so $\\mu_{\\text{year}} = q\\,\\mu$', '\\textbf{Media}: randamentele logaritmice se adună, deci $\\mu_{\\text{an}} = q\\,\\mu$'),
      [T('the same rule is used for the mean of simple returns (arithmetic annualisation)', 'aceeași regulă se folosește pentru media randamentelor simple (anualizare aritmetică)')]),
     (T('\\textbf{Volatility} = standard deviation of returns: $\\sigma_{\\text{year}} = \\sqrt{q}\\,\\sigma$, the \\textbf{square-root-of-time rule}',
        '\\textbf{Volatilitatea} = abaterea standard a randamentelor: $\\sigma_{\\text{an}} = \\sqrt{q}\\,\\sigma$, \\textbf{regula rădăcinii pătrate a timpului}'),
-     [T('valid when returns are uncorrelated with constant variance: then $\\Var(r_1 + \\dots + r_q) = q\\,\\sigma^2$',
-        'valabilă cînd randamentele sînt necorelate și au varianță constantă: atunci $\\Var(r_1 + \\dots + r_q) = q\\,\\sigma^2$')]),
+     [T('valid when returns are uncorrelated with constant variance: then $\\Var(r_1 + \\dots + r_q) = q\\,\\sigma^2$, and the square root gives $\\sqrt{q}\\,\\sigma$',
+        'valabilă cînd randamentele sînt necorelate și au varianță constantă: atunci $\\Var(r_1 + \\dots + r_q) = q\\,\\sigma^2$, iar rădăcina pătrată dă $\\sqrt{q}\\,\\sigma$')]),
     (T('S\\&P 500: daily $\\sigma = @{sp.daily.sd}\\%$, so $\\sigma_{\\text{year}} = @{sp.daily.sd}\\% \\times @{sqrt252} = @{sp.ann.from}\\%$',
        'S\\&P 500: $\\sigma$ zilnic $= @{sp.daily.sd}\\%$, deci $\\sigma_{\\text{an}} = @{sp.daily.sd}\\% \\times @{sqrt252} = @{sp.ann.from}\\%$'),
      [T('Bitcoin: $\\sqrt{365} = @{sqrt365}$ gives @{btc.ann.from}\\%; the stock-market factor $\\sqrt{252}$ would give only @{btc.ann.wrong}\\%',
@@ -634,10 +660,14 @@ D.frame(T('The Compound Annual Growth Rate', 'Rata anuală compusă de creștere
       'CAGR folosește doar primul și ultimul preț: nu spune nimic despre traiectoria dintre ele'),
     T('Also called the geometric mean return', 'Se mai numește randamentul mediu geometric')))
 
-D.frame(T('How Precisely Do We Know the Mean?', 'Cît de precis cunoaștem media?'), items(
+D.frame(T('How Precisely Do We Know the Mean?', 'Precizia estimării mediei'), items(
     (T('Standard error of the annual mean: $\\text{SE}(\\hat\\mu_{\\text{year}}) = \\sigma_{\\text{year}} / \\sqrt{Y}$, with $Y$ years of data',
        'Eroarea standard a mediei anuale: $\\text{SE}(\\hat\\mu_{\\text{an}}) = \\sigma_{\\text{an}} / \\sqrt{Y}$, cu $Y$ ani de date'),
-     [T('it depends on the number of \\textbf{years}, not on the number of observations', 'depinde de numărul de \\textbf{ani}, nu de numărul de observații')]),
+     [T('$\\hat\\mu_{\\text{year}}$: the estimated annual mean (a hat marks an estimate from the sample)',
+        '$\\hat\\mu_{\\text{an}}$: media anuală estimată (căciula marchează o valoare estimată din eșantion)'),
+      T('it depends on the number of \\textbf{years}, not on the number of observations', 'depinde de numărul de \\textbf{ani}, nu de numărul de observații'),
+      T('95\\% confidence interval: $\\hat\\mu_{\\text{year}} \\pm 1.96\\,\\text{SE}$, with 1.96 the 97.5\\% quantile of the standard Normal distribution',
+        'intervalul de încredere 95\\%: $\\hat\\mu_{\\text{an}} \\pm 1.96\\,\\text{SE}$, unde 1,96 este cuantila de 97,5\\% a distribuției Normale standard')]),
     (T('S\\&P 500, @{d.sp500.years} years: annual mean log return @{d.sp500.annmean}\\%, SE @{d.sp500.se}\\%',
        'S\\&P 500, @{d.sp500.years} ani: media anuală a randamentelor logaritmice @{d.sp500.annmean}\\%, SE @{d.sp500.se}\\%'),
      [T('95\\% CI (confidence interval): [@{d.sp500.cilo}\\%, @{d.sp500.cihi}\\%]', 'intervalul de încredere 95\\%: [@{d.sp500.cilo}\\%; @{d.sp500.cihi}\\%]')]),
@@ -667,7 +697,7 @@ D.recap(('Annualisation', 'anualizarea'), [
 # =============================================================================
 D.section('Descriptive Statistics of Returns', 'Statisticile descriptive ale randamentelor')
 
-D.frame(T('Location and Spread', 'Poziție și împrăștiere'), items(
+D.frame(T('Location and Spread', 'Poziție și dispersie'), items(
     T('Sample $r_1, \\dots, r_n$ of daily log returns (in \\%)', 'Eșantion $r_1, \\dots, r_n$ de randamente logaritmice zilnice (în \\%)'),
     T('\\textbf{Mean}: $\\bar r = \\frac1n \\sum_{t=1}^{n} r_t$, the average daily return', '\\textbf{Media}: $\\bar r = \\frac1n \\sum_{t=1}^{n} r_t$, randamentul zilnic mediu'),
     (T('\\textbf{Variance}: $\\hat\\sigma^2 = \\frac{1}{n-1} \\sum_{t=1}^{n} (r_t - \\bar r)^2$; \\textbf{standard deviation} $\\hat\\sigma = \\sqrt{\\hat\\sigma^2}$',
@@ -679,13 +709,16 @@ D.frame(T('Location and Spread', 'Poziție și împrăștiere'), items(
 
 D.frame(T('Shape: Skewness and Kurtosis', 'Forma: asimetria și boltirea'), items(
     (T('\\textbf{Skewness}: $\\hat S = \\frac1n \\sum_t (r_t - \\bar r)^3 / \\hat\\sigma^3$', '\\textbf{Asimetria} (skewness): $\\hat S = \\frac1n \\sum_t (r_t - \\bar r)^3 / \\hat\\sigma^3$'),
-     [T('$S = 0$: symmetric; $S < 0$: a longer left tail, large losses more frequent than large gains',
+     [T('the cube keeps the sign of each deviation, so large losses push $\\hat S$ below 0 and large gains above 0',
+        'puterea a treia păstrează semnul fiecărei abateri, deci pierderile mari împing $\\hat S$ sub 0, iar cîștigurile mari peste 0'),
+      T('$S = 0$: symmetric; $S < 0$: a longer left tail, large losses more frequent than large gains',
         '$S = 0$: simetrică; $S < 0$: coadă stîngă mai lungă, pierderile mari mai frecvente decît cîștigurile mari')]),
     (T('\\textbf{Kurtosis}: $\\hat K = \\frac1n \\sum_t (r_t - \\bar r)^4 / \\hat\\sigma^4$; \\textbf{excess kurtosis} $\\hat K - 3$',
        '\\textbf{Boltirea} (kurtosis): $\\hat K = \\frac1n \\sum_t (r_t - \\bar r)^4 / \\hat\\sigma^4$; \\textbf{excesul de boltire} (excess kurtosis) $\\hat K - 3$'),
-     [T('the Normal distribution has $K = 3$, so excess kurtosis 0', 'distribuția Normală are $K = 3$, deci exces de boltire 0'),
+     [T('the fourth power makes the extreme days dominate $\\hat K$', 'puterea a patra face ca zilele extreme să domine $\\hat K$'),
+      T('the Normal distribution has $K = 3$, so excess kurtosis 0', 'distribuția Normală are $K = 3$, deci exces de boltire 0'),
       T('excess kurtosis $> 0$: \\textbf{heavy tails}, extreme days more frequent than under the Normal distribution',
-        'exces de boltire $> 0$: \\textbf{cozi groase}, zile extreme mai frecvente decît sub distribuția Normală')]),
+        'exces de boltire $> 0$: \\textbf{cozi groase}, zile extreme mai frecvente decît în cazul distribuției Normale')]),
     T('Both are sensitive to single extreme days: report them with the extremes', 'Ambele sînt sensibile la zile extreme izolate: raportați-le împreună cu extremele'),
     T('Heavy tails and asymmetry are \\textbf{stylised facts} of returns \\refCont; formal tests in Chapter 2',
       'Cozile groase și asimetria sînt \\textbf{fapte stilizate} ale randamentelor \\refCont; testele formale în Capitolul 2')))
@@ -697,7 +730,7 @@ def drow(k):
 
 
 DHEAD = (T('Series', 'Seria') + ' & ' + T('Mean', 'Media') + ' & ' + T('Std. dev.', 'Abaterea std.') + ' & ' + T('Skew.', 'Asim.') + ' & '
-         + T('Exc. kurt.', 'Exces aplat.') + ' & ' + T('Minimum (date)', 'Minimul (data)') + ' & ' + T('Maximum', 'Maximul'))
+         + T('Exc. kurt.', 'Exces bolt.') + ' & ' + T('Minimum (date)', 'Minimul (data)') + ' & ' + T('Maximum', 'Maximul'))
 
 D.frame(T('Daily Log Returns: Indices and Bitcoin, @{y0}--@{y1}', 'Randamente logaritmice zilnice: indici și Bitcoin, @{y0}--@{y1}'),
         table('lrrrrlr', DHEAD, [drow(k) for k in INDICES], size='footnotesize') + items(
@@ -720,7 +753,7 @@ chart(T('Histograms vs the Normal Distribution', 'Histogramele față de distrib
     T('S\\&P 500: @{h.sp500.in1}\\% of days lie within one standard deviation of the mean (Normal: @{h.n.in1}\\%)',
       'S\\&P 500: @{h.sp500.in1}\\% din zile sînt la cel mult o abatere standard de medie (distribuția Normală: @{h.n.in1}\\%)'),
     T('Beyond three standard deviations: @{h.sp500.out3}\\% of days vs @{h.n.out3}\\% under the Normal distribution, @{h.ratio} times more',
-      'Dincolo de trei abateri standard: @{h.sp500.out3}\\% din zile, față de @{h.n.out3}\\% sub distribuția Normală, adică de @{h.ratio} ori mai multe')],
+      'Dincolo de trei abateri standard: @{h.sp500.out3}\\% din zile, față de @{h.n.out3}\\% în cazul distribuției Normale, adică de @{h.ratio} ori mai multe')],
       h='0.55\\textheight')
 
 chart(T('Volatility Changes over Time', 'Volatilitatea se schimbă în timp'), 'sfm_ch1_rolling_vol_1y', 'SFM_ch1_descriptive_stats', [
@@ -734,7 +767,7 @@ D.recap(('Descriptive Statistics', 'statistici descriptive'), [
       'Raportați media, abaterea standard, asimetria, excesul de boltire, cuantilele și extremele cu datele lor'),
     T('Daily returns: mean near 0, volatility 1--3\\% a day, heavy tails, often negative skewness',
       'Randamente zilnice: medie apropiată de 0, volatilitate 1--3\\% pe zi, cozi groase, adesea asimetrie negativă'),
-    T('Extreme days are several times more frequent than under the Normal distribution', 'Zilele extreme sînt de cîteva ori mai frecvente decît sub distribuția Normală'),
+    T('Extreme days are several times more frequent than under the Normal distribution', 'Zilele extreme sînt de cîteva ori mai frecvente decît în cazul distribuției Normale'),
     T('Volatility is not constant over time', 'Volatilitatea nu este constantă în timp')])
 
 # =============================================================================
@@ -744,11 +777,11 @@ D.section('Performance Indicators', 'Indicatori de performanță')
 
 D.frame(T('Why One Number Is Not Enough', 'Limitele unui singur indicator'), items(
     T('Return alone rewards risk taking: a leveraged bet can show a high return for years',
-      'Randamentul singur răsplătește asumarea de risc: un pariu cu efect de levier poate arăta un randament mare ani la rînd'),
+      'Randamentul, luat izolat, favorizează asumarea de risc: o poziție cu efect de levier poate avea un randament mare ani la rînd'),
     (T('Three questions an investor asks', 'Trei întrebări pe care le pune un investitor'),
      [T('how much did it grow? (CAGR)', 'cît a crescut? (CAGR)'),
       T('how bumpy was the ride? (volatility, downside deviation)', 'cît de mari au fost fluctuațiile? (volatilitate, abaterea negativă)'),
-      T('how deep was the worst fall? (maximum drawdown)', 'cît de adîncă a fost cea mai mare cădere? (drawdown maxim)')]),
+      T('how deep was the worst fall? (maximum drawdown)', 'cît de adîncă a fost cea mai mare scădere? (drawdown maxim)')]),
     T('\\textbf{Risk-adjusted} indicators divide a return by a risk measure: Sharpe, Sortino, Calmar',
       'Indicatorii \\textbf{ajustați la risc} împart un randament la o măsură a riscului: Sharpe, Sortino, Calmar'),
     T('All are estimates from one sample: each has an estimation error', 'Toate sînt estimări dintr-un singur eșantion: fiecare are o eroare de estimare')))
@@ -772,6 +805,8 @@ D.frame(T('The Sharpe Ratio Is an Estimate', 'Raportul Sharpe este o estimare'),
     (T('Standard error for i.i.d. (independent, identically distributed) returns \\refLo', 'Eroarea standard pentru randamente i.i.d. (independente și identic distribuite) \\refLo'),
      [T('$\\text{SE}(\\widehat{\\text{SR}}) \\approx \\sqrt{(1 + \\text{SR}^2/2)/n}$ per period; annual: multiply by $\\sqrt{q}$',
         '$\\text{SE}(\\widehat{\\text{SR}}) \\approx \\sqrt{(1 + \\text{SR}^2/2)/n}$ pe perioadă; anual: înmulțiți cu $\\sqrt{q}$'),
+      T('$\\widehat{\\text{SR}}$: the Sharpe ratio estimated from the sample; $n$: the number of returns; $q$: returns per year',
+        '$\\widehat{\\text{SR}}$: raportul Sharpe estimat din eșantion; $n$: numărul de randamente; $q$: numărul de randamente pe an'),
       T('roughly $1/\\sqrt{Y}$ for the annual Sharpe ratio: about $@{se.sr.full}$ with @{se.sr.years} years of data', 'aproximativ $1/\\sqrt{Y}$ pentru raportul Sharpe anual: circa $@{se.sr.full}$ cu @{se.sr.years} ani de date')]),
     (T('S\\&P 500, @{y0}--@{y1}: $\\text{SR} = @{p.sp500.sharpe}$, SE $@{p.sp500.sharpe_se}$', 'S\\&P 500, @{y0}--@{y1}: $\\text{SR} = @{p.sp500.sharpe}$, SE $@{p.sp500.sharpe_se}$'),
      [T('95\\% CI [$@{p.sp500.sharpe_lo}$, $@{p.sp500.sharpe_hi}$]', 'intervalul de încredere 95\\%: [$@{p.sp500.sharpe_lo}$; $@{p.sp500.sharpe_hi}$]')]),
@@ -788,7 +823,9 @@ D.frame(T('The Sortino Ratio', 'Raportul Sortino'), items(
     T('Investors dislike losses, not gains: the volatility treats both the same', 'Investitorii se tem de pierderi, nu de cîștiguri; volatilitatea le tratează însă la fel'),
     (T('\\textbf{Downside deviation} below a target $\\tau$ (here $\\tau = 0$)', '\\textbf{Abaterea negativă} (downside deviation) sub un prag $\\tau$ (aici $\\tau = 0$)'),
      [T('$\\sigma_D = \\sqrt{\\frac1n \\sum_t \\min(R_t - \\tau, 0)^2}$, only days below the target count',
-        '$\\sigma_D = \\sqrt{\\frac1n \\sum_t \\min(R_t - \\tau, 0)^2}$, contează doar zilele sub prag')]),
+        '$\\sigma_D = \\sqrt{\\frac1n \\sum_t \\min(R_t - \\tau, 0)^2}$, contează doar zilele sub prag'),
+      T('$\\min(R_t - \\tau, 0)$: the shortfall below the target on day $t$, zero on days above it; $n$: all days of the sample',
+        '$\\min(R_t - \\tau, 0)$: deficitul sub prag din ziua $t$, zero în zilele peste prag; $n$: toate zilele eșantionului')]),
     T('\\textbf{Sortino ratio} \\refSortino: $\\text{Sortino} = \\dfrac{\\mu - \\tau}{\\sigma_D}$, annualised like the Sharpe ratio',
       '\\textbf{Raportul Sortino} (Sortino ratio) \\refSortino: $\\text{Sortino} = \\dfrac{\\mu - \\tau}{\\sigma_D}$, anualizat ca raportul Sharpe'),
     T('For a symmetric distribution $\\sigma_D \\approx \\sigma/\\sqrt2$, so Sortino $\\approx 1.4 \\times$ Sharpe',
@@ -796,10 +833,11 @@ D.frame(T('The Sortino Ratio', 'Raportul Sortino'), items(
     T('S\\&P 500, @{y0}--@{y1}: Sharpe $@{p.sp500.sharpe}$, Sortino $@{p.sp500.sortino}$', 'S\\&P 500, @{y0}--@{y1}: Sharpe $@{p.sp500.sharpe}$, Sortino $@{p.sp500.sortino}$')))
 
 D.frame(T('Drawdown and Maximum Drawdown', 'Drawdown și drawdown maxim'), items(
-    (T('\\textbf{Drawdown}: the fall from the highest price reached so far', '\\textbf{Drawdown}: căderea de la cel mai mare preț atins pînă acum'),
-     [T('$\\text{DD}_t = \\dfrac{P_t}{\\max_{s \\le t} P_s} - 1 \\le 0$; zero at a new maximum', '$\\text{DD}_t = \\dfrac{P_t}{\\max_{s \\le t} P_s} - 1 \\le 0$; zero la un nou maxim')]),
+    (T('\\textbf{Drawdown}: the fall from the highest price reached so far', '\\textbf{Drawdown}: scăderea față de cel mai mare preț atins pînă atunci'),
+     [T('$\\text{DD}_t = \\dfrac{P_t}{\\max_{s \\le t} P_s} - 1 \\le 0$; zero at a new maximum', '$\\text{DD}_t = \\dfrac{P_t}{\\max_{s \\le t} P_s} - 1 \\le 0$; zero la un nou maxim'),
+      T('$\\max_{s \\le t} P_s$: the highest price over all days $s$ up to day $t$', '$\\max_{s \\le t} P_s$: cel mai mare preț din toate zilele $s$ de pînă la ziua $t$, inclusiv')]),
     (T('\\textbf{MDD} (maximum drawdown): $\\text{MDD} = \\min_t \\text{DD}_t$, the worst peak-to-trough fall',
-       '\\textbf{MDD} (maximum drawdown, drawdown maxim): $\\text{MDD} = \\min_t \\text{DD}_t$, cea mai mare cădere de la vîrf la minim'),
+       '\\textbf{MDD} (maximum drawdown, drawdown maxim): $\\text{MDD} = \\min_t \\text{DD}_t$, cea mai mare scădere de la un vîrf la minimul următor'),
      [T('also report the dates: peak, trough and \\textbf{recovery} (back to the old peak)', 'raportați și datele: vîrful, minimul și \\textbf{revenirea} la vechiul vîrf')]),
     (T('A loss $x$ needs a gain $x/(1 - x)$ to recover', 'O pierdere $x$ cere un cîștig $x/(1 - x)$ pentru revenire'),
      [T('10\\% needs @{need.10}\\%; 20\\% needs @{need.20}\\%; 50\\% needs @{need.50}\\%; 80\\% needs @{need.80}\\%',
@@ -829,17 +867,19 @@ D.frame(T('Reading the Drawdown Chart', 'Interpretarea graficului drawdown-urilo
 
 D.frame(T('The Calmar Ratio', 'Raportul Calmar'), items(
     T('\\textbf{Calmar ratio}: growth per unit of the worst fall, $\\text{Calmar} = \\dfrac{\\text{CAGR}}{|\\text{MDD}|}$',
-      '\\textbf{Raportul Calmar} (Calmar ratio): creșterea pe unitatea celei mai mari căderi, $\\text{Calmar} = \\dfrac{\\text{CAGR}}{|\\text{MDD}|}$'),
+      '\\textbf{Raportul Calmar} (Calmar ratio): creșterea pe unitatea celei mai mari scăderi, $\\text{Calmar} = \\dfrac{\\text{CAGR}}{|\\text{MDD}|}$'),
     T('Popular with fund managers: the MDD is the loss an investor actually lives through', 'Popular printre administratorii de fonduri: MDD este pierderea pe care investitorul o suportă efectiv'),
     (T('S\\&P 500, @{y0}--@{y1}: CAGR @{p.sp500.cagr}\\%, MDD $@{p.sp500.mdd}\\%$', 'S\\&P 500, @{y0}--@{y1}: CAGR @{p.sp500.cagr}\\%, MDD $@{p.sp500.mdd}\\%$'),
      [T('Calmar $= @{p.sp500.cagr}/@{sp.absmdd} = @{p.sp500.calmar}$', 'Calmar $= @{p.sp500.cagr}/@{sp.absmdd} = @{p.sp500.calmar}$')]),
     T('A single event decides the denominator: the Calmar ratio is even noisier than the Sharpe ratio',
-      'Un singur eveniment determină numitorul: raportul Calmar este și mai zgomotos decît raportul Sharpe'),
+      'Un singur eveniment determină numitorul: raportul Calmar este și mai instabil decît raportul Sharpe'),
     T('Compare Calmar ratios only over the same period', 'Comparați rapoartele Calmar doar pe aceeași perioadă')))
 
 D.frame(T('Volatility Drag', 'Volatility drag'), items(
     (T('For a log return with mean $m$ and variance $\\sigma^2$, the simple return has mean $\\approx m + \\sigma^2/2$', 'Pentru un randament logaritmic cu media $m$ și varianța $\\sigma^2$, randamentul simplu are media $\\approx m + \\sigma^2/2$'),
      [T('so the growth rate is $\\mu_{\\text{log}} \\approx \\mu_{\\text{arith}} - \\sigma^2/2$', 'deci rata de creștere este $\\mu_{\\text{log}} \\approx \\mu_{\\text{arith}} - \\sigma^2/2$'),
+      T('$\\mu_{\\text{arith}}$: mean of the simple returns; $\\mu_{\\text{log}}$: mean of the log returns, the growth rate of wealth',
+        '$\\mu_{\\text{arith}}$: media randamentelor simple; $\\mu_{\\text{log}}$: media randamentelor logaritmice, adică rata de creștere a averii'),
       T('the gap $\\sigma^2/2$ is the \\textbf{volatility drag} \\refBoothFama; it comes from the concavity of $\\ln$ (Jensen\'s inequality)',
         'diferența $\\sigma^2/2$ este \\textbf{volatility drag} \\refBoothFama; provine din concavitatea lui $\\ln$ (inegalitatea lui Jensen)')]),
     (T('Two assets with the same arithmetic mean, 10\\% a year', 'Două active cu aceeași medie aritmetică, 10\\% pe an'),
@@ -897,7 +937,7 @@ side(T('Risk and Return, @{y0}--@{y1}', 'Risc și randament, @{y0}--@{y1}'), 'sf
 
 D.recap(('Performance Indicators', 'indicatori de performanță'), [
     T('CAGR (growth), volatility (risk), Sharpe and Sortino (return per unit of risk)', 'CAGR (creștere), volatilitate (risc), Sharpe și Sortino (randament pe unitatea de risc)'),
-    T('MDD and Calmar: the worst fall, which the investor actually lives through', 'MDD și Calmar: cea mai mare cădere, pe care investitorul o suportă efectiv'),
+    T('MDD and Calmar: the worst fall, which the investor actually lives through', 'MDD și Calmar: cea mai mare scădere, pe care investitorul o suportă efectiv'),
     T('Volatility drag: $\\mu_{\\text{log}} \\approx \\mu_{\\text{arith}} - \\sigma^2/2$, growth is below the arithmetic mean', 'Volatility drag: $\\mu_{\\text{log}} \\approx \\mu_{\\text{arith}} - \\sigma^2/2$, creșterea este sub media aritmetică'),
     T('Every indicator is an estimate: compare differences with their standard errors', 'Fiecare indicator este o estimare: comparați diferențele cu erorile lor standard')])
 
@@ -919,7 +959,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list papers on the persistence of performance and summarise their methods',
-      '\\textbf{Literatura}: lista lucrărilor despre persistența performanței și rezumarea metodelor lor'),
+      '\\textbf{Literatura}: identificarea lucrărilor despre persistența performanței și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft a Python function for rolling Sharpe ratios on the course data',
       '\\textbf{Cod}: o primă versiune a unei funcții Python pentru raportul Sharpe pe ferestre mobile, pe datele cursului'),
     T('\\textbf{Robustness}: propose other windows, other indicators (Sortino, Calmar), other markets',
@@ -963,7 +1003,7 @@ D.frame(T('Key Takeaways', 'Idei principale'), items(
     T('Log returns add over time; simple returns add across assets', 'Randamentele logaritmice se adună în timp; cele simple se adună între active'),
     T('Annualise with the actual frequency: mean $\\times\\,q$, volatility $\\times\\sqrt{q}$', 'Anualizați cu frecvența reală: media $\\times\\,q$, volatilitatea $\\times\\sqrt{q}$'),
     T('Returns have heavy tails, negative skewness and changing volatility', 'Randamentele au cozi groase, asimetrie negativă și volatilitate variabilă'),
-    T('Judge performance with several indicators: CAGR, volatility, Sharpe, Sortino, MDD, Calmar', 'Judecați performanța cu mai mulți indicatori: CAGR, volatilitate, Sharpe, Sortino, MDD, Calmar'),
+    T('Judge performance with several indicators: CAGR, volatility, Sharpe, Sortino, MDD, Calmar', 'Evaluați performanța cu mai mulți indicatori: CAGR, volatilitate, Sharpe, Sortino, MDD, Calmar'),
     T('Volatility costs growth: $\\sigma^2/2$ a year', 'Volatilitatea reduce creșterea cu $\\sigma^2/2$ pe an'),
     T('Mean returns and Sharpe ratios are imprecise: report standard errors', 'Randamentele medii și rapoartele Sharpe sînt imprecise: raportați erorile standard')))
 

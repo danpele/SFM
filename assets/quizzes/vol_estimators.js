@@ -82,7 +82,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                 "options": [
                     "Nu este observată niciodată: în fiecare zi vedem doar un randament generat cu acea volatilitate",
                     "Este publicată cu întîrziere de bursă",
-                    "Este mereu egală cu volatilitatea de lungă durată",
+                    "Este mereu egală cu volatilitatea pe termen lung",
                     "Poate fi calculată exact din prețul de închidere"
                 ],
                 "correctExplanation": "Observăm un singur randament pe zi; $r_t^2$ este o măsură nedeplasată, dar foarte zgomotoasă, a lui $\\sigma_t^2$, deci $\\sigma_t$ trebuie estimat.",
@@ -215,7 +215,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                 "title": "EWMA și GARCH",
                 "text": "EWMA este un GARCH(1,1) cu $\\omega = 0$, $\\alpha = 1 - \\lambda$, $\\beta = \\lambda$. Ce implică acest lucru pentru prognozele lui?",
                 "options": [
-                    "Revin repede la varianța de lungă durată",
+                    "Revin repede la varianța pe termen lung",
                     "Sînt mereu zero",
                     "Cresc nelimitat cu orizontul",
                     "Sînt constante: prognoza pentru orice orizont este egală cu cea pentru ziua următoare"
@@ -302,7 +302,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                     "Yang–Zhang"
                 ],
                 "correctExplanation": "Yang–Zhang adaugă varianța de selecție a randamentelor overnight la o combinație ponderată a varianțelor deschidere–închidere și Rogers–Satchell.",
-                "incorrectExplanation": "Parkinson, Garman–Klass și Rogers–Satchell folosesc doar prețurile din ședința de tranzacționare, deci ratează varianța care apare noaptea."
+                "incorrectExplanation": "Parkinson, Garman–Klass și Rogers–Satchell folosesc doar prețurile din ședința de tranzacționare, deci omit varianța care apare noaptea."
             }
         },
         {
@@ -355,7 +355,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                     "Devin exact nedeplasați",
                     "Nimic: amplitudinea nu depinde de numărul de tranzacții"
                 ],
-                "correctExplanation": "Cu puține prețuri observate, maximul și minimul reale sînt ratate, deci amplitudinea se micșorează; în simularea noastră cu 26 de prețuri pe zi deplasarea este de circa $-20\\%$ pînă la $-30\\%$.",
+                "correctExplanation": "Cu puține prețuri observate, maximul și minimul reale nu sînt observate, deci amplitudinea se micșorează; în simularea noastră cu 26 de prețuri pe zi deplasarea este de circa $-20\\%$ pînă la $-30\\%$.",
                 "incorrectExplanation": "Formulele presupun tranzacționare continuă; cînd traiectoria este observată rar, extremele observate se află în interiorul celor reale."
             }
         },
@@ -383,7 +383,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                     "Bitcoin nu are prețuri maxime și minime"
                 ],
                 "correctExplanation": "Fără închiderea pieței, deschiderea este egală cu închiderea precedentă, iar ponderea nopții în varianță este aproape zero.",
-                "incorrectExplanation": "Bitcoin are cozi groase și volatility clustering; diferența dispare pentru că lipsește perioada overnight pe care estimatorii de amplitudine nu o văd."
+                "incorrectExplanation": "Bitcoin are cozi groase și volatility clustering; diferența dispare pentru că lipsește perioada overnight pe care estimatorii de amplitudine nu o includ."
             }
         },
         {
@@ -459,11 +459,11 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                 "text": "Ce configurație a autocorelațiilor de selecție arată volatility clustering?",
                 "options": [
                     "ACF-ul randamentelor aproape zero, ACF-ul randamentelor la pătrat pozitiv și cu scădere lentă",
-                    "ACF-ul randamentelor mare și pozitiv la decalajul 1",
+                    "ACF-ul randamentelor mare și pozitiv la lagul 1",
                     "ACF-ul randamentelor la pătrat exact zero",
                     "ACF-ul randamentelor și ACF-ul randamentelor la pătrat ambele aproape zero"
                 ],
-                "correctExplanation": "Semnul randamentelor este aproape imprevizibil, dar mărimea lor nu: randamentele la pătrat și cele în valoare absolută sînt autocorelate pe multe decalaje.",
+                "correctExplanation": "Semnul randamentelor este aproape imprevizibil, dar mărimea lor nu: randamentele la pătrat și cele în valoare absolută sînt autocorelate pe multe laguri.",
                 "incorrectExplanation": "Randamentele autocorelate ar însemna o medie previzibilă (Capitolul 7); volatility clustering privește autocorelația randamentelor la pătrat sau în valoare absolută."
             }
         },
@@ -510,14 +510,14 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
             },
             "ro": {
                 "title": "Testul ARCH-LM",
-                "text": "O regresie ARCH-LM cu $q = 5$ decalaje pe $n = 1000$ de observații are $R^2 = 0{,}05$. Ce concluzie trageți la 5% ($\\chi^2_{0{,}95}(5) = 11{,}07$)?",
+                "text": "O regresie ARCH-LM cu $q = 5$ laguri pe $n = 1000$ de observații are $R^2 = 0{,}05$. Ce concluzie trageți la 5% ($\\chi^2_{0{,}95}(5) = 11{,}07$)?",
                 "options": [
                     "LM = 0,05: fără efecte ARCH",
                     "LM = 5: fără efecte ARCH",
                     "LM = 250: efecte ARCH",
                     "LM = 50: respingem ipoteza nulă a absenței efectelor ARCH"
                 ],
-                "correctExplanation": "$\\mathrm{LM} = nR^2 = 1000 \\times 0{,}05 = 50 > 11{,}07$: randamentele la pătrat pot fi anticipate din propriile decalaje.",
+                "correctExplanation": "$\\mathrm{LM} = nR^2 = 1000 \\times 0{,}05 = 50 > 11{,}07$: randamentele la pătrat pot fi anticipate din propriile laguri.",
                 "incorrectExplanation": "Statistica este $n$ înmulțit cu $R^2$ și se compară cu valoarea critică $\\chi^2(q)$; nici $R^2$ singur, nici $5 \\times 50$ nu reprezintă statistica."
             }
         },
@@ -625,7 +625,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                     "Volatilitatea nu depinde de randamentele trecute",
                     "Randamentele negative sînt urmate de o volatilitate mai mare decît randamentele pozitive de aceeași mărime"
                 ],
-                "correctExplanation": "La indicii bursieri $\\mathrm{corr}(r_t, |r_{t+j}|) < 0$: o scădere de azi anunță agitație mîine.",
+                "correctExplanation": "La indicii bursieri $\\mathrm{corr}(r_t, |r_{t+j}|) < 0$: o scădere azi este urmată de o volatilitate mai mare mîine.",
                 "incorrectExplanation": "Efectul este o asimetrie în dinamica volatilității; nu spune nimic despre randamentele viitoare sau despre levierul fondurilor."
             }
         },

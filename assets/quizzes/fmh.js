@@ -220,7 +220,7 @@ window.SFM_DATA.quizzes['fmh'] = {
                     "H = 0,7 înseamnă că seria nu este staționară",
                     "H este un exponent de scalare: creșterile sînt corelate pozitiv, dar H nu este o probabilitate"
                 ],
-                "correctExplanation": "H descrie cum se scalează amplitudinea și varianța cu orizontul; cu H = 0,7, creșterile sînt corelate pozitiv la toate decalajele, ceea ce nu este o probabilitate de semn.",
+                "correctExplanation": "H descrie cum se scalează amplitudinea și varianța cu orizontul; cu H = 0,7, creșterile sînt corelate pozitiv la toate lagurile, ceea ce nu este o probabilitate de semn.",
                 "incorrectExplanation": "Nu există o legătură directă între H și probabilitatea ca semnul să se repete, iar fGn cu H = 0,7 este staționar."
             }
         },
@@ -297,12 +297,12 @@ window.SFM_DATA.quizzes['fmh'] = {
                 "text": "Ce proprietate definește memoria lungă a unei serii staționare (FHH, 14.1)?",
                 "options": [
                     "Autocorelațiile sînt toate negative",
-                    "Autocorelațiile sînt nule după decalajul q",
+                    "Autocorelațiile sînt nule după lagul q",
                     "Autocorelațiile scad hiperbolic, ca k^(2d-1), iar suma lor este infinită",
                     "Autocorelațiile scad ca phi^k, cu |phi| < 1"
                 ],
                 "correctExplanation": "Memoria lungă: rho(k) ~ C k^(2d-1), cu 0 < d < 0,5, deci suma valorilor |rho(k)| diverge.",
-                "incorrectExplanation": "Autocorelațiile nule după decalajul q descriu un model MA(q), iar scăderea geometrică un model AR, ambele cu memorie scurtă; autocorelațiile negative indică antipersistență."
+                "incorrectExplanation": "Autocorelațiile nule după lagul q descriu un model MA(q), iar scăderea geometrică un model AR, ambele cu memorie scurtă; autocorelațiile negative indică antipersistență."
             }
         },
         {
@@ -409,7 +409,7 @@ window.SFM_DATA.quizzes['fmh'] = {
                     "Pentru că dependența pe termen scurt (de exemplu un AR(1)) mărește și ea R/S clasic și poate fi confundată cu memoria lungă",
                     "Pentru a folosi date intraday"
                 ],
-                "correctExplanation": "Lo înlocuiește abaterea standard cu o abatere standard de lungă durată Newey-West, astfel încît memoria scurtă singură nu mai duce la respingere.",
+                "correctExplanation": "Lo înlocuiește abaterea standard cu o abatere standard pe termen lung Newey-West, astfel încît memoria scurtă singură nu mai duce la respingere.",
                 "incorrectExplanation": "R/S este deja robust la cozi groase (Mandelbrot și Wallis 1969); modificarea nu privește GARCH sau datele intraday."
             }
         },

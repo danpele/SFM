@@ -191,7 +191,7 @@ window.SFM_DATA.quizzes['emh'] = {
                     "Independența observațiilor",
                     "Media zero",
                     "Varianța constantă",
-                    "Autocorelația nulă la orice decalaj $k \\ne 0$"
+                    "Autocorelația nulă la orice lag $k \\ne 0$"
                 ],
                 "correctExplanation": "Zgomotul alb trebuie să fie necorelat, nu independent: randamentele GARCH sînt zgomot alb, dar nu sînt independente.",
                 "incorrectExplanation": "Media zero, varianța constantă și autocorelația nulă definesc zgomotul alb; independența este proprietatea mai puternică i.i.d."
@@ -247,8 +247,8 @@ window.SFM_DATA.quizzes['emh'] = {
                     "(0,5; 0)",
                     "(0,4; 0,16)"
                 ],
-                "correctExplanation": "$\\rho(1) = \\beta/(1 + \\beta^2) = 0{,}5/1{,}25 = 0{,}4$, iar ACF-ul unui MA(1) este nul după decalajul 1.",
-                "incorrectExplanation": "Autocorelația unui MA(1) la decalajul 1 este $\\beta/(1+\\beta^2)$, nu $\\beta$; după decalajul 1 șocurile nu se mai suprapun, deci $\\rho(2) = 0$."
+                "correctExplanation": "$\\rho(1) = \\beta/(1 + \\beta^2) = 0{,}5/1{,}25 = 0{,}4$, iar ACF-ul unui MA(1) este nul după lagul 1.",
+                "incorrectExplanation": "Autocorelația unui MA(1) la lagul 1 este $\\beta/(1+\\beta^2)$, nu $\\beta$; după lagul 1 șocurile nu se mai suprapun, deci $\\rho(2) = 0$."
             }
         },
         {
@@ -325,11 +325,11 @@ window.SFM_DATA.quizzes['emh'] = {
                 "options": [
                     "DAX are o rădăcină unitară în randamente",
                     "Eșantionul este prea scurt",
-                    "Testul robust folosește mai puține decalaje",
+                    "Testul robust folosește mai puține laguri",
                     "Volatility clustering face ca $\\mathrm{Var}(\\hat\\rho(k))$ să fie mai mare decît $1/T$"
                 ],
                 "correctExplanation": "În prezența volatility clustering, testul clasic folosește o varianță prea mică și respinge prea des; statistica robustă corectează acest lucru.",
-                "incorrectExplanation": "Ambele teste folosesc aceleași 10 decalaje și același eșantion lung; diferența vine din varianța autocorelațiilor, pe care testul clasic o fixează la $1/T$."
+                "incorrectExplanation": "Ambele teste folosesc aceleași 10 laguri și același eșantion lung; diferența vine din varianța autocorelațiilor, pe care testul clasic o fixează la $1/T$."
             }
         },
         {
@@ -460,7 +460,7 @@ window.SFM_DATA.quizzes['emh'] = {
                 "options": [
                     "O rădăcină unitară",
                     "Zgomot alb",
-                    "Nicio autocorelație pînă la decalajul 10",
+                    "Nicio autocorelație pînă la lagul 10",
                     "Staționaritatea (în jurul unei constante sau al unei tendințe)"
                 ],
                 "correctExplanation": "KPSS inversează rolurile: $H_0$ este staționaritatea, iar o statistică mare o respinge în favoarea unei rădăcini unitare.",
@@ -545,7 +545,7 @@ window.SFM_DATA.quizzes['emh'] = {
                     "Reziduurile sînt zgomot alb"
                 ],
                 "correctExplanation": "Granger și Newbold (1974): cu mersuri aleatoare independente, testul $t$ respinge mult prea des, iar $R^2$ este departe de zero.",
-                "incorrectExplanation": "Ambele serii rătăcesc, deci adesea au din întîmplare tendințe comune; reziduurile moștenesc rădăcina unitară, iar testul $t$ obișnuit nu este valid."
+                "incorrectExplanation": "Ambele serii sînt nestaționare (mersuri aleatoare), deci adesea au din întîmplare tendințe comune; reziduurile moștenesc rădăcina unitară, iar testul $t$ obișnuit nu este valid."
             }
         },
         {

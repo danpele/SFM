@@ -200,6 +200,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item \textbf{Benchmark}: $r_t$ i.i.d. $N(\mu, \sigma^2)$
     \begin{itemize}
+        \item $N(\mu, \sigma^2)$: the Normal distribution with mean $\mu$ and variance $\sigma^2$ (daily mean and variance of the log returns)
         \item prices follow a geometric random walk; $P_t$ is lognormal \refOsborne
         \item the first model of this kind, for arithmetic price changes: \refBachelier
     \end{itemize}
@@ -247,7 +248,10 @@ MSCA Digital Finance}
         \item its \textbf{CDF} (cumulative distribution function) is $\Phi(z) = P(Z \le z)$, with no closed form; tables or software
     \end{itemize}
     \item Probabilities of $X$ come from $Z$: $P(X \le x) = \Phi\big((x - \mu)/\sigma\big)$
-    \item Quantile of order $\alpha$: $x_\alpha = \mu + \sigma z_\alpha$, with $z_{0.01} = -2.33$, $z_{0.05} = -1.64$
+    \item Quantile of order $\alpha$: $x_\alpha = \mu + \sigma z_\alpha$, the value with $P(X \le x_\alpha) = \alpha$
+    \begin{itemize}
+        \item $z_\alpha = \Phi^{-1}(\alpha)$: the quantile of $N(0, 1)$; $z_{0.01} = -2.33$, $z_{0.05} = -1.64$
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -297,6 +301,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \end{tabular}
 \end{center}
 \begin{itemize}
+    \item $P(|Z| > k)$: the probability that a standard Normal variable lies more than $k$ standard deviations from 0
     \item Years computed with 252 trading days a year
     \item Each extra standard deviation makes a move 7 to 291 times rarer
     \item A 6-sigma day should not happen in the whole history of stock markets
@@ -339,10 +344,13 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \itemsize{\small}
 \begin{itemize}
     \item A positive variable $Y$ is \textbf{lognormal}, $Y \sim LN(m, s^2)$, if $\ln Y \sim N(m, s^2)$
+    \begin{itemize}
+        \item $m$, $s^2$: the mean and the variance of $\ln Y$, not of $Y$
+    \end{itemize}
     \item Density: $f(y) = \dfrac{1}{y s\sqrt{2\pi}} \exp\Big(-\dfrac{(\ln y - m)^2}{2s^2}\Big)$, \quad $y > 0$
     \item Under the benchmark, $\ln(P_T/P_0) = r_1 + \dots + r_T \sim N(T\mu, T\sigma^2)$
     \begin{itemize}
-        \item so $P_T/P_0 \sim LN(T\mu, T\sigma^2)$ \refOsborne
+        \item $T$: the horizon in days; so $P_T/P_0 \sim LN(T\mu, T\sigma^2)$ \refOsborne
     \end{itemize}
     \item Why lognormal and not Normal prices?
     \begin{itemize}
@@ -359,6 +367,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
     \item If $Y \sim LN(m, s^2)$:
     \item median $e^{m}$; mode $e^{m - s^2}$; mean $E[Y] = e^{m + s^2/2}$
     \begin{itemize}
+        \item mode: the most likely value; median: the value exceeded with probability 1/2
         \item always mode $<$ median $<$ mean: a long right tail (positive skewness)
     \end{itemize}
     \item Variance: $\text{Var}(Y) = (e^{s^2} - 1)\,e^{2m + s^2}$
@@ -392,6 +401,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
     \begin{itemize}
         \item median $100e^{\mu} = 112.3$; mean $100e^{\mu + \sigma^2/2} = 113.9$
         \item probability of a loss $\Phi(-\mu/\sigma) = 24.8\%$; 5\% quantile $100e^{\mu - 1.645\sigma} = 84.9$
+        \item $\Phi(-\mu/\sigma) = P(r < 0)$: the probability of a negative log return; $-1.645 = z_{0.05}$
     \end{itemize}
     \item After 10 years, $P_{10}/P_0 \sim LN(10\mu, 10\sigma^2)$
     \begin{itemize}
@@ -442,6 +452,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
     \item \textbf{CLT} (Lindeberg--Lévy): $X_1, \dots, X_n$ i.i.d. with mean $\mu$ and finite variance $\sigma^2$
     \begin{itemize}
         \item $\dfrac{\sqrt{n}\,(\bar X_n - \mu)}{\sigma} \xrightarrow{d} N(0, 1)$ as $n \to \infty$
+        \item $\bar X_n$: the mean of the $n$ variables; $\xrightarrow{d}$: convergence in distribution, the CDF of the left side approaches $\Phi$
         \item equivalently, the sum $X_1 + \dots + X_n$ is approximately $N(n\mu, n\sigma^2)$
     \end{itemize}
     \item Three conditions
@@ -462,7 +473,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \begin{itemize}
     \item Standardised mean of $n$ Bernoulli($0.2$) draws (a skewed variable), 20\,000 simulations
     \item Share above $1.96$: 5.8\% for $n = 5$, 2.7\% for $n = 30$, 2.8\% for $n = 300$; Normal distribution: 2.5\%
-    \item Skewness of the mean, $(1 - 2p)/\sqrt{np(1-p)}$: $0.67$, $0.27$, $0.09$
+    \item Skewness of the mean, $(1 - 2p)/\sqrt{np(1-p)}$ with $p = 0.2$: $0.67$, $0.27$, $0.09$; it falls like $1/\sqrt{n}$
 \end{itemize}
 \sfmquantlet{Ch_02}{SFM_ch2_clt_normal_approx}
 \end{frame}
@@ -470,11 +481,12 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \begin{frame}{The Normal Approximation of the Binomial (SFENormalApprox)}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.60\textheight,keepaspectratio]{sfm_ch2_normal_approx.pdf}
+\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch2_normal_approx.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item $B(n, p) \approx N\big(np, np(1-p)\big)$; with continuity correction, $P(X \le k) \approx \Phi\big((k + 0.5 - np)/\sqrt{np(1-p)}\big)$
+    \item $B(n, p)$: the number of successes in $n$ independent trials with success probability $p$; $B(n, p) \approx N\big(np, np(1-p)\big)$
+    \item Continuity correction: $P(X \le k) \approx \Phi\big((k + 0.5 - np)/\sqrt{np(1-p)}\big)$; the $+0.5$ spreads each integer $k$ over $[k - 0.5, k + 0.5]$
     \item Largest error of the CDF: $0.001$ for $n = 20, p = 0.5$; $0.037$ for $n = 20, p = 0.1$; $0.017$ for $n = 100, p = 0.1$
     \item Rule of thumb: the approximation is good when $np(1-p)$ is large (at least about 9)
 \end{itemize}
@@ -513,10 +525,10 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \begin{frame}{Four Moments}
 \itemsize{\small}
 \begin{itemize}
-    \item Mean $\mu = E[X]$; variance $\sigma^2 = E[(X - \mu)^2]$
+    \item Mean $\mu = E[X]$; variance $\sigma^2 = E[(X - \mu)^2]$; $E[\cdot]$ is the expected value
     \item \textbf{Skewness}: $\gamma_1 = E[(X - \mu)^3]/\sigma^3$
     \begin{itemize}
-        \item $\gamma_1 < 0$: a longer left tail, large losses more frequent than large gains
+        \item the third power keeps the sign of each deviation; $\gamma_1 < 0$: a longer left tail, large losses more frequent than large gains
     \end{itemize}
     \item \textbf{Kurtosis}: $\gamma_2 = E[(X - \mu)^4]/\sigma^4$; Normal distribution: $\gamma_2 = 3$
     \begin{itemize}
@@ -543,7 +555,7 @@ $k$ & $P(|Z| > k)$ & once every \dots\ trading days & once every \dots\ years \\
 \begin{frame}{Sample Moments}
 \itemsize{\small}
 \begin{itemize}
-    \item Central sample moments: $m_k = \frac1n \sum_{t=1}^n (r_t - \bar r)^k$
+    \item Central sample moments: $m_k = \frac1n \sum_{t=1}^n (r_t - \bar r)^k$, the average $k$-th power of the deviations from the mean ($m_2$: variance)
     \item Sample skewness $S = m_3/m_2^{3/2}$; sample excess kurtosis $K = m_4/m_2^2 - 3$
     \item If the data are i.i.d. Normal: $S \approx N(0, 6/n)$ and $K \approx N(0, 24/n)$
     \begin{itemize}
@@ -631,6 +643,10 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
         \item the sum of two squared standardised statistics: $(S/\sqrt{6/n})^2 + (K/\sqrt{24/n})^2$
     \end{itemize}
     \item Under $H_0$ and for large $n$: $\text{JB} \sim \chi^2(2)$; reject at 5\% if $\text{JB} > 5.99$
+    \begin{itemize}
+        \item $\chi^2(2)$: the chi-squared distribution with 2 degrees of freedom, the distribution of a sum of two squared independent $N(0,1)$ variables; 5.99 is its 95\% quantile
+        \item JB $= 0$ for a perfect Normal shape; large values mean skewness or excess kurtosis far from 0
+    \end{itemize}
     \item Simple, uses only two moments, and is the standard test reported in empirical finance
 \end{itemize}
 \end{frame}
@@ -640,7 +656,7 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
 \begin{itemize}
     \item $n = 4\,201$, $S = -0.61$, $K = 13.5$
     \item $\text{JB} = 700.2 \times (0.367 + 45.5) = 32\,113$
-    \item Critical value 5.99: normality is rejected; the $p$-value is zero to any number of decimals
+    \item Critical value 5.99: normality is rejected; the p-value is zero to any number of decimals
     \item The kurtosis term dominates: almost all of JB comes from $K^2/4$
     \item JB for the other series: BET 56\,762, DAX 9\,909, Bitcoin 26\,482, SNN 3\,174
     \begin{itemize}
@@ -654,7 +670,7 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
 \begin{itemize}
     \item With thousands of observations it rejects even tiny departures
     \begin{itemize}
-        \item report the size of $S$ and $K$, not only the $p$-value
+        \item report the size of $S$ and $K$, not only the p-value
     \end{itemize}
     \item It assumes i.i.d. data; with volatility clustering its standard errors are too small
     \begin{itemize}
@@ -672,8 +688,9 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
     \begin{itemize}
         \item sort the data: $r_{(1)} \le r_{(2)} \le \dots \le r_{(n)}$
         \item plot $r_{(i)}$ against the model quantile $F^{-1}\big((i - 0.5)/n\big)$
+        \item $r_{(i)}$: the $i$-th smallest return; $F^{-1}$: the quantile function of the model; $(i - 0.5)/n$: the share of the data below $r_{(i)}$
     \end{itemize}
-    \item How to read it
+    \item Reading
     \begin{itemize}
         \item points on the 45-degree line: the model fits
         \item an S-shape, low end below and high end above the line: heavier tails than the model
@@ -737,6 +754,7 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
     \item $T = Z/\sqrt{V/\nu}$ with $Z \sim N(0,1)$ independent of $V \sim \chi^2(\nu)$: $T \sim t(\nu)$
     \begin{itemize}
         \item $\nu > 0$: the \textbf{degrees of freedom}, which control the tails
+        \item $\chi^2(\nu)$: the distribution of a sum of $\nu$ squared independent $N(0,1)$ variables; $\Gamma$: the gamma function, $\Gamma(k) = (k-1)!$ for integer $k$
     \end{itemize}
     \item Density: $f(x) = \dfrac{\Gamma\big((\nu+1)/2\big)}{\sqrt{\nu\pi}\,\Gamma(\nu/2)} \Big(1 + \dfrac{x^2}{\nu}\Big)^{-(\nu+1)/2}$
     \item Location--scale version for returns: $r = m + s\,T$, with location $m$, scale $s$ and $\nu$
@@ -754,6 +772,7 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
     \end{itemize}
     \item \textbf{Power-law tails}: $P(|T| > x) \approx c\,x^{-\nu}$ for large $x$
     \begin{itemize}
+        \item $c > 0$: a constant; doubling $x$ divides the tail probability by about $2^{\nu}$
         \item the Normal tail falls like $e^{-x^2/2}$, much faster than any power
         \item $\nu$ is also the \textbf{tail index}, estimated directly in \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter5_heavy_tails_evt.pdf}{Chapter 5}
     \end{itemize}
@@ -781,6 +800,7 @@ Romgaz (SNG) & 2013 & 2\,909 & $0.090$ & $1.40$ & $-0.34$ & $5.3$ & $-11.0$ \\
     \item \textbf{MLE} (maximum likelihood estimation): choose $(\nu, m, s)$ that maximise the log-likelihood
     \begin{itemize}
         \item $\ell(\nu, m, s) = \sum_{t=1}^n \ln f\big((r_t - m)/s; \nu\big) - n \ln s$
+        \item $f(\cdot; \nu)$: the $t(\nu)$ density; $-n \ln s$ corrects for rescaling the returns by $s$
         \item no closed form: a numerical optimiser (\texttt{scipy.stats.t.fit} in the notebook)
     \end{itemize}
     \item \textbf{AIC} (Akaike information criterion) \refAkaike: $\text{AIC} = 2k - 2\ell$
@@ -924,7 +944,7 @@ Romgaz (SNG) & $3.40$ & 3\,415 & $482$ \\
 \footnotesize
 \begin{tabular}{lrrrrrr}
 \toprule
-Series & $n$ & $>3\sigma$ & $>4\sigma$ & $>5\sigma$ & $>6\sigma$ & $p$ (Poisson, $4\sigma$) \\
+Series & $n$ & $>3\sigma$ & $>4\sigma$ & $>5\sigma$ & $>6\sigma$ & p-value (Poisson, $4\sigma$) \\
 \midrule
 S\&P 500 & 4\,201 & 62 & 28 & 12 & 8 & ${2 \times 10^{-46}}$ \\
 DAX & 4\,244 & 56 & 20 & 5 & 4 & ${1 \times 10^{-30}}$ \\
@@ -936,7 +956,7 @@ Normal distribution, $n = 4\,201$ & & $11.34$ & $0.27$ & $2.4 \times 10^{-3}$ & 
 \end{center}
 \begin{itemize}
     \item $>k\sigma$: number of days with $|r_t - \bar r| > k\,s$; last row: number expected under the Normal distribution
-    \item $p$: probability of at least that many 4-sigma days if the Normal count is Poisson with mean $n \times 6.3 \times 10^{-5}$
+    \item p-value: probability of at least that many 4-sigma days if the Normal count is Poisson with mean $n \times 6.3 \times 10^{-5}$
     \item S\&P 500: 105 times more 4-sigma days than the Normal distribution allows
 \end{itemize}\sfmquantlet{Ch_02}{SFM_ch2_sigma_days}
 \end{frame}
@@ -980,7 +1000,7 @@ Normal distribution, $n = 4\,201$ & & $11.34$ & $0.27$ & $2.4 \times 10^{-3}$ & 
 \begin{itemize}
     \item Excess kurtosis, daily $\to$ monthly $\to$ quarterly: S\&P 500 13.5 $\to$ 3.7 $\to$ 1.5; BET 17.9 $\to$ 8.3 $\to$ 0.6; Bitcoin 12.0 $\to$ 1.0 $\to$ 0.7
     \item The fall is slow and not monotone: one crash month (March 2020) dominates a sample of 200 months
-    \item Quarterly returns: JB no longer rejects normality for the BET ($p = 0.07$) and Bitcoin ($p = 0.22$)
+    \item Quarterly returns: JB no longer rejects normality for the BET (p-value $0.07$) and Bitcoin (p-value $0.22$)
 \end{itemize}
 \sfmquantlet{Ch_02}{SFM_ch2_cont_stylised_facts}
 \end{frame}
@@ -1005,11 +1025,12 @@ Normal distribution, $n = 4\,201$ & & $11.34$ & $0.27$ & $2.4 \times 10^{-3}$ & 
     \item \textbf{ACF} (autocorrelation function): $\rho(h) = \text{Corr}(r_t, r_{t-h})$, $h = 1, 2, \dots$
     \begin{itemize}
         \item sample version $\hat\rho(h) = \sum_t (r_t - \bar r)(r_{t-h} - \bar r)/\sum_t (r_t - \bar r)^2$
-        \item for i.i.d. data, $\hat\rho(h) \approx N(0, 1/n)$: 95\% band $\pm 1.96/\sqrt{n}$
+        \item $h$: the lag in days; $\rho(h) \in [-1, 1]$; for i.i.d. data, $\hat\rho(h) \approx N(0, 1/n)$: 95\% band $\pm 1.96/\sqrt{n}$
     \end{itemize}
     \item \textbf{LB} (Ljung--Box) test \refLB{} of $H_0$: $\rho(1) = \dots = \rho(m) = 0$
     \begin{itemize}
         \item $Q(m) = n(n+2)\sum_{h=1}^m \hat\rho(h)^2/(n - h) \sim \chi^2(m)$; for $m = 10$, reject if $Q > 18.3$
+        \item $m$: the number of lags tested together; $Q$ adds up the squared autocorrelations, so large values mean some $\rho(h) \neq 0$
     \end{itemize}
     \item Why absent? If returns were predictable, traders would exploit it until the predictability disappears (efficient markets, \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7})
 \end{itemize}
@@ -1145,6 +1166,7 @@ Romgaz (SNG) & $5.3$ & $1.4$ & $0.07$ & $0.08$ & $-0.04$ & $1.02$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
+    \item Columns: excess kurtosis of daily and 21-day returns; ACF of returns at lag 1 and of $|r_t|$ at lag 10; mean $L(k)$ over lags 1--5; 1\% over 99\% quantile
     \item Facts 1, 3 and 4 hold for every series; fact 2 holds with noise; facts 5 and 6 hold for the indices and most BVB stocks, weakly or not for Bitcoin and SNN
     \item A comparison of the return distributions of cryptocurrencies and traditional assets: \refPeleCrypto
 \end{itemize}\sfmquantlet{Ch_02}{SFM_ch2_cont_stylised_facts}
@@ -1198,7 +1220,7 @@ EGARCH, GJR-GARCH (Ch.~9) & \checkmark & \checkmark & \checkmark & \checkmark & 
 \begin{column}{0.44\textwidth}
 \begin{itemize}
     \item As a market matures (more traders, futures, ETFs), its tails might thin out
-    \item Bitcoin, 2015--2026: yearly $\hat\nu$ between 1.5 and 5.1; rank correlation with the year $0.63$ ($p = 0.03$)
+    \item Bitcoin, 2015--2026: yearly $\hat\nu$ between 1.5 and 5.1; rank correlation with the year $0.63$ (p-value $0.03$)
     \item Why it is open: 12 noisy yearly estimates, one year (2020, excess kurtosis 51) dominated by one day
     \item AI tools can speed up such a study; they do not replace checking it \refWang
 \end{itemize}

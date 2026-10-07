@@ -22,7 +22,7 @@ window.SFM_DATA.quizzes['probability'] = {
                 "text": "Dacă $\\mathrm{Var}(X) = 4$, cît este $\\mathrm{Var}(3X + 5)$?",
                 "options": ["$17$", "$12$", "$36$", "$41$"],
                 "correctExplanation": "$\\mathrm{Var}(aX + b) = a^2\\mathrm{Var}(X) = 9 \\times 4 = 36$: o translație nu schimbă varianța, o scalare o înmulțește cu pătratul ei.",
-                "incorrectExplanation": "Constanta 5 nu schimbă împrăștierea, iar factorul 3 intră la pătrat: $9 \\times 4 = 36$."
+                "incorrectExplanation": "Constanta 5 nu schimbă dispersia, iar factorul 3 intră la pătrat: $9 \\times 4 = 36$."
             }
         },
         {
@@ -257,7 +257,7 @@ window.SFM_DATA.quizzes['probability'] = {
             },
             "ro": {
                 "title": "Generatorul RANDU",
-                "text": "RANDU ($x_{k+1} = 65539\\,x_k \\bmod 2^{31}$) trece testele mediei, varianței și corelației la decalajul 1. Care este defectul lui?",
+                "text": "RANDU ($x_{k+1} = 65539\\,x_k \\bmod 2^{31}$) trece testele mediei, varianței și corelației la lagul 1. Care este defectul lui?",
                 "options": ["Numerele lui nu sînt între 0 și 1", "Perioada lui este 16", "Tripletele consecutive stau pe doar 15 plane paralele", "Nu poate fi pornit dintr-o sămînță aleasă"],
                 "correctExplanation": "$9u_k - 6u_{k+1} + u_{k+2}$ este întotdeauna întreg: tripletele cad pe 15 plane (Marsaglia, 1968), ceea ce deformează orice simulare tridimensională.",
                 "incorrectExplanation": "Defectul este în distribuția comună a numerelor consecutive: tripletele stau pe 15 plane, invizibile pentru testele unidimensionale."

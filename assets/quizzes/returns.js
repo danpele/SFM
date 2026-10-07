@@ -51,7 +51,7 @@ window.SFM_DATA.quizzes['returns'] = {
             },
             "ro": {
                 "title": "Randamentul logaritmic și randamentul simplu",
-                "text": "Pentru orice mișcare de preț cu $R_t \\neq 0$, cum se compară randamentul logaritmic $r_t = \\ln(1 + R_t)$ cu $R_t$?",
+                "text": "Pentru orice variație de preț cu $R_t \\neq 0$, cum se compară randamentul logaritmic $r_t = \\ln(1 + R_t)$ cu $R_t$?",
                 "options": [
                     "$r_t < R_t$",
                     "$r_t > R_t$",
@@ -409,7 +409,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Volatilitatea scade",
                     "Distribuția este distribuția Normală"
                 ],
-                "correctExplanation": "Asimetria negativă înseamnă o coadă stîngă mai lungă: căderile mari sînt mai frecvente decît creșterile mari.",
+                "correctExplanation": "Asimetria negativă înseamnă o coadă stîngă mai lungă: scăderile mari sînt mai frecvente decît creșterile mari.",
                 "incorrectExplanation": "Asimetria măsoară lipsa de simetrie; o valoare negativă înseamnă o coadă stîngă mai lungă, nu o medie negativă."
             }
         },
@@ -566,12 +566,12 @@ window.SFM_DATA.quizzes['returns'] = {
                 "title": "Drawdown maxim",
                 "text": "Ce este drawdown-ul maxim (MDD, maximum drawdown)?",
                 "options": [
-                    "Cea mai mare cădere de la un vîrf anterior la un minim ulterior",
+                    "Cea mai mare scădere de la un vîrf anterior la un minim ulterior",
                     "Cel mai slab randament zilnic",
                     "Cea mai mare pierdere anuală",
                     "Diferența dintre cel mai mare și cel mai mic preț"
                 ],
-                "correctExplanation": "$\\text{MDD} = \\min_t \\big(P_t/\\max_{s \\le t} P_s - 1\\big)$: cea mai mare cădere de la vîrf la minim.",
+                "correctExplanation": "$\\text{MDD} = \\min_t \\big(P_t/\\max_{s \\le t} P_s - 1\\big)$: cea mai mare scădere de la vîrf la minim.",
                 "incorrectExplanation": "MDD se măsoară de la un vîrf anterior la un minim ulterior; de obicei este mult mai mare decît pierderea din cea mai slabă zi."
             }
         },
@@ -598,7 +598,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "Drawdown-ul maxim împărțit la volatilitate",
                     "CAGR împărțit la abaterea negativă"
                 ],
-                "correctExplanation": "Calmar $= \\text{CAGR}/|\\text{MDD}|$: creșterea pe unitatea celei mai mari căderi.",
+                "correctExplanation": "Calmar $= \\text{CAGR}/|\\text{MDD}|$: creșterea pe unitatea celei mai mari scăderi.",
                 "incorrectExplanation": "Raportul Calmar are la numitor drawdown-ul maxim: CAGR$/|$MDD$|$."
             }
         },

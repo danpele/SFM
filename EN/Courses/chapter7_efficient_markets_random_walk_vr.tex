@@ -678,6 +678,9 @@ GARCH returns (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch
         \item ``portmanteau'': a suitcase that carries many autocorrelations at once
     \end{itemize}
     \item Box--Pierce \refBP: $Q_{BP}(m) = T\sum_{k=1}^{m} \hat\rho(k)^2$
+    \begin{itemize}
+        \item $T$: the number of returns; $m$: the number of lags tested; squares, so positive and negative autocorrelations both count
+    \end{itemize}
     \item \textbf{LB} (Ljung--Box) \refLjung: $Q_{LB}(m) = T(T+2)\sum_{k=1}^{m} \dfrac{\hat\rho(k)^2}{T - k}$, closer to $\chi^2$ in small samples
     \begin{itemize}
         \item under i.i.d.\ returns both $\sim \chi^2(m)$; reject $H_0$ if $Q > \chi^2_{0.95}(m)$; $\chi^2_{0.95}(10) = 18.31$
@@ -749,6 +752,7 @@ TGN & 3\,725 & ${0.055}$ & $28.7$ & 0.001 & $12.3$ & 0.263 & $639$ & ${1.49}$ & 
 \begin{itemize}
     \item A \textbf{run}: a sequence of returns with the same sign; $+ + - + + + - -$ has 4 runs \refWW
     \begin{itemize}
+        \item $R$: the observed number of runs
         \item the test uses only the signs: it is \textbf{nonparametric}, insensitive to heavy tails and to volatility
     \end{itemize}
     \item With $n_1$ positive and $n_2$ negative returns, $n = n_1 + n_2$, under independence:
@@ -800,12 +804,18 @@ TGN & 3\,725 & ${0.055}$ & $28.7$ & 0.001 & $12.3$ & 0.263 & $639$ & ${1.49}$ & 
 \begin{frame}{Why It Matters: Spurious Regression}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch7_spurious.pdf}
+\includegraphics[width=0.97\textwidth,height=0.48\textheight,keepaspectratio]{sfm_ch7_spurious.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Regress one random walk on another, independent one ($T = 500$, 2\,000 repetitions) \refGN: $|t| > 1.96$ in 90\% of cases, median $R^2 = 0.17$
-    \item On the increments: $|t| > 1.96$ in 5.5\% of cases, as it should be; lesson: test for unit roots before regressing levels ($|t| > 40$ in 2.6\% of cases, not drawn)
+    \item Regress one random walk on another, independent one ($T = 500$, 2\,000 repetitions) \refGN
+    \begin{itemize}
+        \item $|t| > 1.96$ in 90\% of cases, median $R^2 = 0.17$: a ``relation'' that does not exist
+    \end{itemize}
+    \item On the increments: $|t| > 1.96$ in 5.5\% of cases, as it should be
+    \begin{itemize}
+        \item lesson: test for unit roots before regressing levels ($|t| > 40$ in 2.6\% of cases, not drawn)
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_07}{SFM_ch7_unit_roots}
 \end{frame}
@@ -815,6 +825,7 @@ TGN & 3\,725 & ${0.055}$ & $28.7$ & 0.001 & $12.3$ & 0.263 & $639$ & ${1.49}$ & 
 \begin{itemize}
     \item Subtract $p_{t-1}$: $\Delta p_t = c + \gamma\, p_{t-1} + \varepsilon_t$ with $\gamma = \phi - 1$ \refDF
     \begin{itemize}
+        \item $\Delta p_t = p_t - p_{t-1}$; $c$: a constant; $\gamma < 0$ pulls $p_t$ back towards a level
         \item $H_0$: $\gamma = 0$ (unit root); $H_1$: $\gamma < 0$ (stationary); a one-sided test
         \item statistic: $\tau = \hat\gamma/\mathrm{SE}(\hat\gamma)$, the usual $t$-ratio of OLS (ordinary least squares)
     \end{itemize}
@@ -835,6 +846,7 @@ TGN & 3\,725 & ${0.055}$ & $28.7$ & 0.001 & $12.3$ & 0.263 & $639$ & ${1.49}$ & 
     \item \textbf{ADF} (augmented Dickey--Fuller) \refSD: add lagged differences to remove autocorrelation from $\varepsilon_t$
     \begin{itemize}
         \item $\Delta p_t = c + bt + \gamma\, p_{t-1} + \sum_{j=1}^{L} \delta_j \Delta p_{t-j} + \varepsilon_t$; same $\tau$, same critical values
+        \item $bt$: a linear trend; $\delta_j$: the coefficients of the $L$ lagged differences
         \item $L$ chosen by AIC (Akaike information criterion, \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6}), at most $12(T/100)^{1/4}$
     \end{itemize}
     \item \textbf{Worked example}: BET log price, constant, no lags, $T = 7\,243$
@@ -873,7 +885,10 @@ TGN & 3\,725 & ${0.055}$ & $28.7$ & 0.001 & $12.3$ & 0.263 & $639$ & ${1.49}$ & 
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Log price: ADF $-1.73$ (p = 0.736), KPSS $2.30$ (p $<$\,0.01): a unit root, not stationary
+    \item Log price: ADF $-1.73$ (p = 0.736), KPSS $2.30$ (p $<$\,0.01)
+    \begin{itemize}
+        \item a unit root, not stationary
+    \end{itemize}
     \item Returns: ADF $-13.65$ (p $<$\,0.001), KPSS $0.12$ (p $>$\,0.10): stationary
     \item The 2008 fall looks like a temporary deviation, but the tests say: permanent shocks, no return to a trend line
 \end{itemize}
@@ -978,12 +993,14 @@ TGN & ${-0.96}$ & ${-0.92}$ & ${0.71}$ & ${-39.90}$ & ${-57.83}$ & ${0.22}$ \\
     \item With $T$ returns, mean $\hat\mu$ and overlapping $q$-day sums \refLM:
     \begin{itemize}
         \item $\hat\sigma_a^2 = \frac{1}{T-1}\sum_t (r_t - \hat\mu)^2$, \quad $\hat\sigma_c^2(q) = \frac{1}{m}\sum_t (r_t(q) - q\hat\mu)^2$
+        \item $\hat\sigma_a^2$: the variance of one-day returns; $\hat\sigma_c^2(q)$: the variance of $q$-day sums, divided by $q$
         \item $m = q(T - q + 1)(1 - q/T)$ corrects the bias; $\widehat{\mathrm{VR}}(q) = \hat\sigma_c^2(q)/\hat\sigma_a^2$
     \end{itemize}
     \item \textbf{Homoskedastic} test (RW1): $Z(q) = \dfrac{\widehat{\mathrm{VR}}(q) - 1}{\sqrt{2(2q-1)(q-1)/(3qT)}} \approx N(0, 1)$
     \item \textbf{Robust} test (RW3, martingale): $Z^*(q) = \dfrac{\widehat{\mathrm{VR}}(q) - 1}{\sqrt{\hat\theta(q)/T}} \approx N(0, 1)$
     \begin{itemize}
         \item $\hat\theta(q) = \sum_{j=1}^{q-1}\big[2(q-j)/q\big]^2\hat\delta(j)$, with the $\hat\delta(j)$ of the robust ACF band
+        \item $\hat\theta(q)/T$: the variance of $\widehat{\mathrm{VR}}(q)$ that allows for volatility clustering
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -1003,7 +1020,10 @@ TGN & ${-0.96}$ & ${-0.92}$ & ${0.71}$ & ${-39.90}$ & ${-57.83}$ & ${0.22}$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item 1\,000 samples of $T = 2000$ returns with $H_0$ true: i.i.d.\ Normal, and GARCH(1,1) ($\alpha = 0.12$, $\beta = 0.86$): uncorrelated, with volatility clustering
+    \item 1\,000 samples of $T = 2000$ returns with $H_0$ true: i.i.d.\ Normal, and GARCH(1,1) ($\alpha = 0.12$, $\beta = 0.86$)
+    \begin{itemize}
+        \item GARCH: uncorrelated returns, with volatility clustering ($\alpha$: reaction to yesterday's shock, $\beta$: persistence)
+    \end{itemize}
     \item i.i.d.: both reject about 5\%; GARCH: $Z(2)$ rejects 17.1\% of the time, $Z^*(2)$ only 4.7\%
     \item The \textbf{size} of a test: how often it rejects a true $H_0$; $Z$ finds ``inefficiency'' that is only volatility clustering
 \end{itemize}
@@ -1104,7 +1124,11 @@ TGN & 3\,725 & $2.60$ & 0.037 & $3.0$ & ${3.78}$ & 0.004 \\
 \begin{itemize}
     \item Both tests reject for the S\&P 500, the BET and Transgaz; neither rejects for DAX, Bitcoin, TLV, SNP and BRD
     \item $\hat k$ is large where the first autocorrelation is large (BET $5.6$), small where it is near 0 (DAX $1.7$)
-    \item Interpretation: rejection does not mean profit: an autocorrelation of $-0.079$ predicts less than 1\% of the variance of tomorrow's return; trading costs absorb most of it
+    \item Interpretation: rejection does not mean profit
+    \begin{itemize}
+        \item an autocorrelation of $-0.079$ explains $\hat\rho(1)^2$, less than 1\%, of the variance of tomorrow's return
+        \item trading costs absorb most of it
+    \end{itemize}
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_variance_ratio}
 \end{frame}
 
@@ -1227,8 +1251,14 @@ Bitcoin & 2022--2026 & 1\,722 & ${-0.026}$ & $1.01$ & ${0.18}$ & 0.924 \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item BET: strong momentum in 1997--2006 ($\hat\rho(1) = 0.270$), much weaker afterwards; since 2017 VR(5) is still above 1, but the joint test does not reject
-    \item S\&P 500: the negative autocorrelation appears after 2002; Bitcoin: no rejection in any period since 2014; \refUrquhart{} found inefficiency in its earliest years
+    \item BET: strong momentum in 1997--2006 ($\hat\rho(1) = 0.270$), much weaker afterwards
+    \begin{itemize}
+        \item since 2017 VR(5) is still above 1, but the joint test does not reject
+    \end{itemize}
+    \item S\&P 500: the negative autocorrelation appears after 2002
+    \begin{itemize}
+        \item Bitcoin: no rejection in any period since 2014; \refUrquhart{} found inefficiency in its earliest years
+    \end{itemize}
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_adaptive_markets}
 \end{frame}
 
@@ -1315,8 +1345,14 @@ Bitcoin & 2022--2026 & 1\,722 & ${-0.026}$ & $1.01$ & ${0.18}$ & 0.924 \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Mean daily return by weekday with 95\% intervals (Newey--West standard errors \refNW); Wald test of equal means: S\&P 500 p = 0.69, BET p = 0.24
-    \item BET Monday: $-0.019\%$, the only negative mean, yet not significant; January: BET $0.185\%$ per day against $0.036\%$ ($t = 1.72$, p = 0.09); S\&P 500: p = 0.59
+    \item Mean daily return by weekday with 95\% intervals (Newey--West standard errors \refNW)
+    \begin{itemize}
+        \item Wald test of equal means across weekdays: S\&P 500 p = 0.69, BET p = 0.24
+    \end{itemize}
+    \item BET Monday: $-0.019\%$, the only negative mean, yet not significant
+    \begin{itemize}
+        \item January: BET $0.185\%$ per day against $0.036\%$ ($t = 1.72$, p = 0.09); S\&P 500: p = 0.59
+    \end{itemize}
     \item No calendar effect survives at 5\% in our data
 \end{itemize}
 \sfmquantlet{Ch_07}{SFM_ch7_calendar_anomalies}
@@ -1341,10 +1377,14 @@ Bitcoin & 2022--2026 & 1\,722 & ${-0.026}$ & $1.01$ & ${0.18}$ & 0.924 \\
 \begin{itemize}
     \item \textbf{Did the BET become more efficient after Romania's upgrade to Secondary Emerging market (September 2020)?} \refFTSE
     \begin{itemize}
-        \item five years before: $\hat\rho(1) = -0.002$, VR(5) $= 1.12$ ($Z^* = 0.80$); five years after: $\hat\rho(1) = 0.087$, VR(5) $= 1.18$ ($Z^* = 1.78$)
+        \item five years before: $\hat\rho(1) = -0.002$, VR(5) $= 1.12$ ($Z^* = 0.80$)
+        \item five years after: $\hat\rho(1) = 0.087$, VR(5) $= 1.18$ ($Z^* = 1.78$)
         \item difference of the two VR(5): $z = 0.34$: no evidence of a change
     \end{itemize}
-    \item Why it is open: COVID-19, new large listings and higher volumes happened at the same time; is the index or each stock the right unit?
+    \item Why it is open: COVID-19, new large listings and higher volumes happened at the same time
+    \begin{itemize}
+        \item is the index or each stock the right unit?
+    \end{itemize}
     \item AI tools can speed up such a study; they do not replace checking it \refWang
 \end{itemize}\sfmquantlet{Ch_07}{SFM_ch7_adaptive_markets}
 \end{frame}

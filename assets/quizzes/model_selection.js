@@ -375,7 +375,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
             },
             "ro": {
                 "title": "Bootstrap parametric",
-                "text": "Cum se calculează o valoare $p$ prin bootstrap parametric pentru o statistică EDF?",
+                "text": "Cum se calculează un p-value prin bootstrap parametric pentru o statistică EDF?",
                 "options": [
                     "Reeșantionăm randamentele observate cu întoarcere și recalculăm statistica fără reestimare",
                     "Simulăm eșantioane din modelul estimat, reestimăm modelul pe fiecare eșantion, recalculăm statistica și numărăm de cîte ori depășește valoarea observată",

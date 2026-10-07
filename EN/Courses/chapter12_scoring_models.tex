@@ -257,6 +257,7 @@ MSCA Digital Finance}
     \item \textbf{IRB} (internal ratings-based) approach: the bank estimates PD (and possibly LGD, EAD); the regulator gives the formula \refBCBS, ¶328--330
     \begin{itemize}
         \item $K = \mathrm{LGD}\left[\Phi\!\left(\dfrac{\Phi^{-1}(\mathrm{PD}) + \sqrt{R}\,\Phi^{-1}(0.999)}{\sqrt{1 - R}}\right) - \mathrm{PD}\right]$; RWA $= 12.5\,K\,$EAD
+        \item $K$: the capital per unit of EAD; $\Phi$, $\Phi^{-1}$: the $N(0,1)$ distribution function and its inverse; 0.999: a bad year occurs once in 1000 years
         \item $R$: the correlation of the borrowers with one common factor; RWA: risk-weighted assets, of which the bank holds at least 8\%
     \end{itemize}
     \item Logic \refGordy: the term in $\Phi(\cdot)$ is the PD in a year whose common factor is exceeded only with probability 0.1\%
@@ -282,6 +283,7 @@ MSCA Digital Finance}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Borrower $i$ defaults if $\sqrt{\rho}\,Y + \sqrt{1 - \rho}\,\varepsilon_i < \Phi^{-1}(\mathrm{PD})$; $Y$: the state of the economy; given $Y = y$: PD$(y) = \Phi\big((\Phi^{-1}(\mathrm{PD}) - \sqrt{\rho}\,y)/\sqrt{1 - \rho}\big)$, $\rho = 0.2$
+    \item $\varepsilon_i$: the borrower's own shock; $Y$ and $\varepsilon_i$ independent $N(0,1)$; $\rho$: the weight of the common factor
     \item Interpretation: a loan with PD $= 2\%$ defaults with probability 21.3\% in a bad year ($y = -3$), 1.1\% in a typical year and almost never in a good year; IRB uses $y = \Phi^{-1}(0.001)$
 \end{itemize}
 \sfmquantlet{Ch_12}{SFM_ch12_validation_irb}
@@ -292,6 +294,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item Other retail exposures: $R = 0.03\,w + 0.16\,(1 - w)$, $w = (1 - e^{-35\,\mathrm{PD}})/(1 - e^{-35})$ \refBCBS, ¶330
     \begin{itemize}
+        \item $w \in [0, 1]$ grows with PD, so $R$ falls from 0.16 (very safe loans) to 0.03 (very risky loans)
         \item PD $= 2\%$: $R = 0.095$; $\Phi^{-1}(0.02) = -2.054$, $\Phi^{-1}(0.999) = 3.090$
     \end{itemize}
     \item \textbf{Step by step}
@@ -1000,6 +1003,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60.0\%$ & $91.1\%$ & $53.3\%$ & $0.507$ \\
     \end{itemize}
     \item \textbf{KS} (Kolmogorov--Smirnov): $\max_s |F_{\text{bad}}(s) - F_{\text{good}}(s)|$, the largest gap between the score distributions of bads and goods
     \begin{itemize}
+        \item $F_{\text{bad}}$, $F_{\text{good}}$: the empirical distribution functions of the scores in the two groups; KS $\in [0, 1]$
         \item read on the ROC curve: KS $= \max_c\,(\mathrm{TPR} - \mathrm{FPR})$; the score where it occurs is a natural first cut-off
     \end{itemize}
     \item All three measure \textbf{discrimination} (ranking), not calibration
@@ -1028,6 +1032,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60.0\%$ & $91.1\%$ & $53.3\%$ & $0.507$ \\
     \begin{itemize}
         \item reliability diagram: sort by PD, form groups (e.g.\ ten), plot the mean PD against the observed default rate
         \item Hosmer--Lemeshow \refHL: $\sum_g \dfrac{(O_g - n_g\bar p_g)^2}{n_g\bar p_g(1 - \bar p_g)} \approx \chi^2(G - 2)$
+        \item $G$ groups; $n_g$: size, $O_g$: observed defaults, $\bar p_g$: mean PD of group $g$; a large value: poor calibration
     \end{itemize}
     \item \textbf{Brier score} \refBrier: $\mathrm{BS} = \frac1n\sum_i (p_i - y_i)^2$, the mean squared error of the PDs; lower is better
     \begin{itemize}
@@ -1322,7 +1327,7 @@ PD $> 1/6$ & 82 & 8 & 112 & 98 & $60.0\%$ & $91.1\%$ & $53.3\%$ & $0.507$ \\
     \item From the market: equity 40, equity volatility 50\%, debt 70, risk-free rate 3\%
     \begin{itemize}
         \item solving $E = V\Phi(d_1) - De^{-rT}\Phi(d_2)$ and $\sigma_E E = \Phi(d_1)\sigma_V V$: $V = 107.9$, $\sigma_V = 18.6\%$, DD $= 2.39$, PD $= 0.84\%$
-        \item $d_1$, $d_2$: the Black--Scholes terms of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter4_probability.pdf}{Chapter 4}, with $V$ in place of the share price
+        \item $E$, $\sigma_E$: value and volatility of equity; $r$: the risk-free rate; $d_1$, $d_2$: the Black--Scholes terms of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter4_probability.pdf}{Chapter 4}, with $V$ in place of the share price
     \end{itemize}
     \item Interpretation: a market-based PD reacts every day to prices; an accounting score changes once a year
 \end{itemize}\sfmquantlet{Ch_12}{SFM_ch12_altman_merton}

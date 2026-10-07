@@ -162,7 +162,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. CE ESTE RISCUL SISTEMIC
 # =============================================================================
-D.section('What Is Systemic Risk?', 'Ce este riscul sistemic?')
+D.section('What Is Systemic Risk?', 'Riscul sistemic: definiție și canale')
 
 D.frame(T('A Definition', 'O definiție'), items(
     (T('\\textbf{Systemic risk}: the risk that the financial system as a whole stops working (lending, payments, trading), with large costs for the real economy \\refFSB',
@@ -174,7 +174,7 @@ D.frame(T('A Definition', 'O definiție'), items(
       T('\\textbf{interconnectedness}: how many others it would drag down', '\\textbf{interconectarea}: pe cîte alte instituții le-ar trage în jos')]),
     T('Key point: systemic risk is a property of the \\textbf{system}, not of a single balance sheet', 'Ideea principală: riscul sistemic este o proprietate a \\textbf{sistemului}, nu a unui singur bilanț')))
 
-D.frame(T('Why VaR of Each Bank Is Not Enough', 'De ce nu ajunge VaR-ul fiecărei bănci'), items(
+D.frame(T('Why VaR of Each Bank Is Not Enough', 'Limitele VaR calculat separat pentru fiecare bancă'), items(
     (T('VaR 1\\% of a bank (Chapter 10): the loss of \\textbf{this} bank exceeded with probability 1\\%', 'VaR 1\\% al unei bănci (Capitolul 10): pierderea \\textbf{acestei} bănci, depășită cu probabilitatea 1\\%'),
      [T('it ignores what happens to the others when this bank is in trouble', 'ignoră ce se întîmplă cu celelalte bănci cînd această bancă are probleme')]),
     (T('\\textbf{Fallacy of composition}: if every bank sells risky assets to cut its own VaR, prices fall for all and the risk of all rises',
@@ -235,7 +235,7 @@ D.frame(T('Measures of This Chapter at a Glance', 'Măsurile capitolului, pe scu
     T('All measures use only market prices: they are available daily, for any listed bank', 'Toate măsurile folosesc doar prețurile de piață: sînt disponibile zilnic, pentru orice bancă listată'),
     T('Their weakness: market prices can be calm while risk builds up (2006--2007)', 'Punctul lor slab: prețurile de piață pot fi liniștite în timp ce riscul se acumulează (2006--2007)')))
 
-D.recap(('What Is Systemic Risk?', 'ce este riscul sistemic?'), [
+D.recap(('What Is Systemic Risk?', 'definiția și canalele riscului sistemic'), [
     T('Systemic risk: the system stops working; it is a property of the system, not of one balance sheet', 'Riscul sistemic: sistemul nu mai funcționează; este o proprietate a sistemului, nu a unui singur bilanț'),
     T('Channels: direct contagion, common exposures and fire sales, runs and information contagion, all amplified by leverage', 'Canale: contagiunea directă, expunerile comune și vînzările forțate, retragerile masive și contagiunea informațională, toate amplificate de efectul de levier'),
     T('Measures look at joint tails: the system given the bank (CoVaR) or the bank given the system (MES, SRISK)', 'Măsurile privesc cozile comune: sistemul condiționat de bancă (CoVaR) sau banca condiționat de sistem (MES, SRISK)')])
@@ -357,13 +357,21 @@ D.frame(T('Interpretation: When Diversification Fails', 'Interpretarea corelați
      [T('in calm years the BVB stocks are driven by their own news and by low liquidity; in a crisis, by the common shock', 'în anii liniștiți, acțiunile BVB sînt determinate de propriile știri și de lichiditatea redusă; într-o criză, de șocul comun')]),
     T('Caution: a rolling correlation estimated on 120 days is noisy, and a rise in correlation does not prove contagion (next slide)', 'Atenție: o corelație pe 120 de zile este zgomotoasă, iar o creștere a corelației nu dovedește contagiunea (slide-ul următor)')))
 
-D.frame(T('Contagion or Interdependence? Forbes and Rigobon', 'Contagiune sau interdependență? Forbes și Rigobon'), items(
+D.frame(T('Contagion or Interdependence? Forbes and Rigobon (1/2)', 'Contagiune sau interdependență? Forbes și Rigobon (1/2)'), items(
     (T('If $y = \\beta x + e$ with fixed $\\beta$, the correlation of $x$ and $y$ rises \\textbf{automatically} when the variance of $x$ rises \\refFR',
        'Dacă $y = \\beta x + e$ cu $\\beta$ fix, corelația dintre $x$ și $y$ crește \\textbf{automat} cînd crește varianța lui $x$ \\refFR'),
-     [T('a higher correlation in a crisis may be the same link seen in a more volatile period: \\textbf{interdependence}', 'o corelație mai mare într-o criză poate fi aceeași legătură, văzută într-o perioadă mai volatilă: \\textbf{interdependență}'),
+     [T('$x$: the return of the source market; $y$: the return of the other market; $\\beta$: the strength of the link; $e$: a shock of $y$ unrelated to $x$',
+        '$x$: randamentul pieței-sursă; $y$: randamentul celeilalte piețe; $\\beta$: intensitatea legăturii; $e$: un șoc al lui $y$ fără legătură cu $x$'),
+      T('a higher correlation in a crisis may be the same link seen in a more volatile period: \\textbf{interdependence}', 'o corelație mai mare într-o criză poate fi aceeași legătură, văzută într-o perioadă mai volatilă: \\textbf{interdependență}'),
       T('\\textbf{contagion}: the link itself becomes stronger', '\\textbf{contagiune}: legătura însăși devine mai puternică')]),
-    (T('Corrected correlation: $\\rho^* = \\rho / \\sqrt{1 + \\delta(1 - \\rho^2)}$, with $\\delta = \\sigma^2_{\\text{crisis}} / \\sigma^2_{\\text{calm}} - 1$ for the source market',
-       'Corelația corectată: $\\rho^* = \\rho / \\sqrt{1 + \\delta(1 - \\rho^2)}$, cu $\\delta = \\sigma^2_{\\text{criză}} / \\sigma^2_{\\text{calm}} - 1$ pentru piața-sursă'),
+    T('Corrected correlation:', 'Corelația corectată:') + ' \\[ \\rho^* = \\frac{\\rho}{\\sqrt{1 + \\delta(1 - \\rho^2)}}, \\qquad \\delta = \\frac{\\sigma^2_{\\text{' + T('crisis', 'criză') + '}}}{\\sigma^2_{\\text{calm}}} - 1 \\]',
+    (T('Notation', 'Notațiile'),
+     [T('$\\rho$: the correlation measured in the crisis; $\\sigma^2$: the variance of the source market in each period', '$\\rho$: corelația măsurată în criză; $\\sigma^2$: varianța pieței-sursă în fiecare perioadă'),
+      T('$\\delta$: the relative rise of that variance; $\\rho^*$: the crisis correlation that the calm-period volatility would give', '$\\delta$: creșterea relativă a acestei varianțe; $\\rho^*$: corelația din criză, recalculată la volatilitatea din perioada calmă'),
+      T('compare $\\rho^*$ with $\\rho_{\\text{calm}}$: $\\rho^* > \\rho_{\\text{calm}}$ points to contagion', 'comparăm $\\rho^*$ cu $\\rho_{\\text{calm}}$: $\\rho^* > \\rho_{\\text{calm}}$ indică o contagiune')])))
+
+D.frame(T('Contagion or Interdependence? Forbes and Rigobon (2/2)', 'Contagiune sau interdependență? Forbes și Rigobon (2/2)'), items(
+    (T('Worked example', 'Exemplu rezolvat'),
      [T('US bank portfolio (source) and European bank portfolio: calm January 2005 -- June 2007 ($n = @{fr.n0}$), crisis 15 September -- 31 December 2008 ($n = @{fr.n1}$)',
         'Portofoliul băncilor americane (sursa) și cel al băncilor europene: perioada calmă ianuarie 2005 -- iunie 2007 ($n = @{fr.n0}$), criza 15 septembrie -- 31 decembrie 2008 ($n = @{fr.n1}$)'),
       T('$\\rho_{\\text{calm}} = @{fr.rho_calm}$, $\\rho_{\\text{crisis}} = @{fr.rho_crisis}$; variance $@{fr.vc}$ $\\to$ $@{fr.vk}$, so $\\delta = @{fr.delta}$',
@@ -371,16 +379,25 @@ D.frame(T('Contagion or Interdependence? Forbes and Rigobon', 'Contagiune sau in
       T('$\\rho^* = @{fr.rho_crisis}/\\sqrt{1 + @{fr.delta} \\times @{fr.r2}} = @{fr.rho_crisis}/\\sqrt{@{fr.inside}} = @{fr.rho_adj}$',
         '$\\rho^* = @{fr.rho_crisis}/\\sqrt{1 + @{fr.delta} \\times @{fr.r2}} = @{fr.rho_crisis}/\\sqrt{@{fr.inside}} = @{fr.rho_adj}$')]),
     T('Interpretation: after the correction there is no rise in correlation: the data are consistent with interdependence, not with a stronger link',
-      'Interpretare: după corecție, corelația nu mai crește: datele sînt compatibile cu interdependența, nu cu o legătură mai puternică')), 'footnotesize')
+      'Interpretare: după corecție, corelația nu mai crește: datele sînt compatibile cu interdependența, nu cu o legătură mai puternică')))
 
-D.frame(T('Tail Dependence (Chapter 10)', 'Dependența în cozi (Capitolul 10)'), items(
-    (T('Pseudo-observations $U = $ rank$/(n + 1)$; \\textbf{lower tail dependence} at level $q$: $\\lambda(q) = P(U_1 \\le q \\mid U_2 \\le q)$',
-       'Pseudo-observațiile $U = $ rang$/(n + 1)$; \\textbf{dependența în coada inferioară} la nivelul $q$: $\\lambda(q) = P(U_1 \\le q \\mid U_2 \\le q)$'),
-     [T('under independence $\\lambda(q) = q$; the limit $\\lambda_L = \\lim_{q \\to 0}\\lambda(q)$ is the tail-dependence coefficient', 'la independență, $\\lambda(q) = q$; limita $\\lambda_L = \\lim_{q \\to 0}\\lambda(q)$ este coeficientul de dependență în coadă')]),
-    (T('The t copula (Chapter 10) has $\\lambda_L = 2t_{\\nu+1}(-\\sqrt{(\\nu + 1)(1 - \\rho)/(1 + \\rho)}) > 0$ \\refDM; the Gaussian copula has $\\lambda_L = 0$',
-       'Copula t (Capitolul 10) are $\\lambda_L = 2t_{\\nu+1}(-\\sqrt{(\\nu + 1)(1 - \\rho)/(1 + \\rho)}) > 0$ \\refDM; copula Gaussiană are $\\lambda_L = 0$'),
-     [T('$\\rho = \\sin(\\pi\\tau/2)$ from Kendall\'s $\\tau$, $\\nu$ by maximum likelihood', '$\\rho = \\sin(\\pi\\tau/2)$ din $\\tau$ al lui Kendall, $\\nu$ prin verosimilitate maximă')]),
+D.frame(T('Tail Dependence (Chapter 10) (1/2)', 'Dependența în cozi (Capitolul 10) (1/2)'), items(
+    (T('\\textbf{Pseudo-observations}: $U = \\text{rank}/(n + 1)$, the rank of a return among the $n$ returns of its series, scaled to $(0, 1)$', '\\textbf{Pseudo-observațiile}: $U = \\text{rang}/(n + 1)$, rangul unui randament între cele $n$ randamente ale seriei, scalat în $(0, 1)$'),
+     [T('$U \\le 0.05$: one of the worst 5\\% of days of that series; the marginal distributions no longer matter', '$U \\le 0{,}05$: una dintre cele mai proaste 5\\% dintre zilele seriei; distribuțiile marginale nu mai contează')]),
+    (T('\\textbf{Lower tail dependence} at level $q$: $\\lambda(q) = P(U_1 \\le q \\mid U_2 \\le q)$', '\\textbf{Dependența în lower tail} la nivelul $q$: $\\lambda(q) = P(U_1 \\le q \\mid U_2 \\le q)$'),
+     [T('$U_1$: the bank; $U_2$: the market; $\\lambda(q)$: the probability that the bank is in its worst $q$ days, given that the market is in its worst $q$ days',
+        '$U_1$: banca; $U_2$: piața; $\\lambda(q)$: probabilitatea ca banca să fie în cele mai proaste $q$ zile ale ei, dat fiind că piața este în cele mai proaste $q$ zile'),
+      T('under independence $\\lambda(q) = q$; the limit $\\lambda_L = \\lim_{q \\to 0}\\lambda(q)$ is the tail-dependence coefficient', 'la independență, $\\lambda(q) = q$; limita $\\lambda_L = \\lim_{q \\to 0}\\lambda(q)$ este coeficientul de dependență în coadă')]),
     T('For systemic risk: tail dependence measures how often a bank and the market are in their worst days \\textbf{together}', 'Pentru riscul sistemic: dependența în cozi măsoară cît de des sînt o bancă și piața \\textbf{împreună} în cele mai proaste zile ale lor')))
+
+D.frame(T('Tail Dependence (Chapter 10) (2/2)', 'Dependența în cozi (Capitolul 10) (2/2)'), items(
+    T('The t copula (Chapter 10) has a positive tail-dependence coefficient \\refDM; the Gaussian copula has $\\lambda_L = 0$', 'Copula t (Capitolul 10) are un coeficient de dependență în coadă pozitiv \\refDM; copula Gaussiană are $\\lambda_L = 0$')
+    + ' \\[ \\lambda_L = 2\\,t_{\\nu+1}\\Big(-\\sqrt{(\\nu + 1)(1 - \\rho)/(1 + \\rho)}\\Big) > 0 \\]',
+    (T('Notation', 'Notațiile'),
+     [T('$t_{\\nu+1}$: the distribution function of a Student-t with $\\nu + 1$ degrees of freedom', '$t_{\\nu+1}$: funcția de repartiție a distribuției Student-t cu $\\nu + 1$ grade de libertate'),
+      T('$\\rho$: the correlation parameter of the copula; $\\nu$: its degrees of freedom; a small $\\nu$ gives strong joint crashes', '$\\rho$: parametrul de corelație al copulei; $\\nu$: gradele ei de libertate; un $\\nu$ mic înseamnă prăbușiri simultane puternice')]),
+    (T('Estimation', 'Estimarea'),
+     [T('$\\rho = \\sin(\\pi\\tau/2)$ from Kendall\'s $\\tau$, a rank correlation; $\\nu$ by maximum likelihood', '$\\rho = \\sin(\\pi\\tau/2)$ din $\\tau$ al lui Kendall, o corelație a rangurilor; $\\nu$ prin verosimilitate maximă')])))
 
 D.frame(T('Tail Dependence of Banks and Markets', 'Dependența în cozi dintre bănci și piețe'), table(
     'lrrrrrr', T('\\textbf{Pair}', '\\textbf{Perechea}') + ' & $n$ & ' + T('corr.', 'corel.') + ' & $\\lambda(5\\%)$ & $\\lambda(1\\%)$ & $\\hat\\nu$ & $\\lambda_L$ (t)',
@@ -396,7 +413,7 @@ D.frame(T('Tail Dependence of Banks and Markets', 'Dependența în cozi dintre b
 
 chart(T('Joint Bad Days', 'Zile proaste comune'), 'sfm_ch15_tail_scatter', 'SFM_ch15_dependence', [
     T('Lower-left corner of the pseudo-observations; orange: both the bank portfolio and the index in their worst 5\\% of days',
-      'Colțul din stînga jos al pseudo-observațiilor; portocaliu: atît portofoliul de bănci, cît și indicele sînt în cele mai proaste 5\\% dintre zile'),
+      'Regiunea lower tail a pseudo-observațiilor (ranguri mici pentru ambele serii); portocaliu: atît portofoliul de bănci, cît și indicele sînt în cele mai proaste 5\\% dintre zile'),
     T('US: @{tf.US.both} joint bad days against @{tf.US.exp} under independence (about @{tf.US.ratio} times more); Romania: @{tf.RO.both} against @{tf.RO.exp}',
       'SUA: @{tf.US.both} zile proaste comune, față de @{tf.US.exp} la independență (de circa @{tf.US.ratio} ori mai multe); România: @{tf.RO.both}, față de @{tf.RO.exp}')],
     h='0.60\\textheight')
@@ -413,18 +430,21 @@ D.section('CoVaR and Delta-CoVaR', 'CoVaR și Delta-CoVaR')
 
 D.frame(T('From VaR to CoVaR', 'De la VaR la CoVaR'), items(
     (T('$X^i$: return of institution $i$; $X^{sys}$: return of the system; level $\\alpha$ = probability of the tail (Chapter 10)', '$X^i$: randamentul instituției $i$; $X^{sys}$: randamentul sistemului; nivelul $\\alpha$ = probabilitatea cozii (Capitolul 10)'),
-     [T('$\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: the loss of $i$ exceeded with probability $\\alpha$', '$\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: pierderea lui $i$ depășită cu probabilitatea $\\alpha$')]),
+     [T('$q_\\alpha(X^i)$: the $\\alpha$-quantile of $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: the loss of $i$ exceeded with probability $\\alpha$', '$q_\\alpha(X^i)$: cuantila de ordin $\\alpha$ a lui $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: pierderea lui $i$ depășită cu probabilitatea $\\alpha$')]),
     (T('\\textbf{CoVaR} (conditional VaR of the system) \\refAB: $\\mathrm{CoVaR}^{sys|i}_\\alpha = -q_\\alpha\\big(X^{sys} \\mid X^i = q_\\alpha(X^i)\\big)$',
        '\\textbf{CoVaR} (VaR-ul condiționat al sistemului) \\refAB: $\\mathrm{CoVaR}^{sys|i}_\\alpha = -q_\\alpha\\big(X^{sys} \\mid X^i = q_\\alpha(X^i)\\big)$'),
-     [T('the VaR 1\\% of the system on a day when institution $i$ is at its own VaR 1\\%: ``CoVaR 1\\%\'\'', 'VaR 1\\% al sistemului într-o zi în care instituția $i$ se află la propriul VaR 1\\%: „CoVaR 1\\%”')]),
+     [T('$q_\\alpha(X^{sys} \\mid \\cdot)$: the $\\alpha$-quantile of the system return, conditional on what follows the bar', '$q_\\alpha(X^{sys} \\mid \\cdot)$: cuantila de ordin $\\alpha$ a randamentului sistemului, condiționată de ce urmează după bară'),
+      T('the VaR 1\\% of the system on a day when institution $i$ is at its own VaR 1\\%: ``CoVaR 1\\%\'\'', 'VaR 1\\% al sistemului într-o zi în care instituția $i$ se află la propriul VaR 1\\%: „CoVaR 1\\%”')]),
     (T('\\textbf{$\\Delta$CoVaR}: $\\Delta\\mathrm{CoVaR}^{sys|i}_\\alpha = \\mathrm{CoVaR}^{sys|X^i = q_\\alpha}_\\alpha - \\mathrm{CoVaR}^{sys|X^i = q_{50\\%}}_\\alpha$',
        '\\textbf{$\\Delta$CoVaR}: $\\Delta\\mathrm{CoVaR}^{sys|i}_\\alpha = \\mathrm{CoVaR}^{sys|X^i = q_\\alpha}_\\alpha - \\mathrm{CoVaR}^{sys|X^i = q_{50\\%}}_\\alpha$'),
-     [T('how much the VaR of the system rises when $i$ moves from a normal day (its median) to distress: the \\textbf{contribution} of $i$ to systemic risk',
+     [T('$q_{50\\%}$: the median of $X^i$, a normal day of the institution', '$q_{50\\%}$: mediana lui $X^i$, o zi obișnuită pentru instituție'),
+      T('how much the VaR of the system rises when $i$ moves from a normal day (its median) to distress: the \\textbf{contribution} of $i$ to systemic risk',
         'cu cît crește VaR-ul sistemului cînd $i$ trece de la o zi obișnuită (mediana sa) la o zi de criză: \\textbf{contribuția} lui $i$ la riscul sistemic')])))
 
 D.frame(T('Quantile Regression (Chapter 13)', 'Regresia cuantilică (Capitolul 13)'), items(
     (T('Linear quantile regression \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$', 'Regresia cuantilică liniară \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$'),
      [T('estimated by minimising $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, with the check loss $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$', 'estimată prin minimizarea $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, cu funcția de pierdere $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$'),
+      T('$u$: the residual; $\\mathbf{1}\\{u < 0\\}$: 1 if the point is below the line, 0 otherwise', '$u$: reziduul; $\\mathbf{1}\\{u < 0\\}$: 1 dacă punctul este sub dreaptă, 0 în rest'),
       T('for $\\alpha = 1\\%$, a residual below the line costs 99 times more than one above it: the line passes below 99\\% of the points', 'pentru $\\alpha = 1\\%$, un reziduu sub dreaptă costă de 99 de ori mai mult decît unul deasupra ei: dreapta trece sub 99\\% dintre puncte')]),
     (T('Same idea as VaR 1\\% by quantile regression in Chapter 13, now with another institution as the regressor', 'Aceeași idee ca VaR 1\\% prin regresie cuantilică din Capitolul 13, acum cu o altă instituție ca variabilă explicativă'),
      [T('the slope $b_\\alpha$ can differ from the OLS slope: the tail can react more strongly than the centre', 'panta $b_\\alpha$ poate diferi de panta OLS: coada poate reacționa mai puternic decît centrul')]),
@@ -433,7 +453,7 @@ D.frame(T('Quantile Regression (Chapter 13)', 'Regresia cuantilică (Capitolul 1
 D.frame(T('Estimating CoVaR in Three Steps', 'Estimarea CoVaR în trei pași'), items(
     (T('\\textbf{Step 1}: quantile regression of the system on the institution at level $\\alpha$: $X^{sys}_t = a + bX^i_t + \\varepsilon_t$ \\refAB',
        '\\textbf{Pasul 1}: regresia cuantilică a sistemului pe instituție, la nivelul $\\alpha$: $X^{sys}_t = a + bX^i_t + \\varepsilon_t$ \\refAB'),
-     [T('the $\\alpha$-quantile of the error is zero by construction', 'cuantila de ordin $\\alpha$ a erorii este zero prin construcție')]),
+     [T('$\\hat a$, $\\hat b$: the estimated intercept and slope; the $\\alpha$-quantile of the error $\\varepsilon_t$ is zero by construction', '$\\hat a$, $\\hat b$: termenul liber și panta estimate; cuantila de ordin $\\alpha$ a erorii $\\varepsilon_t$ este zero prin construcție')]),
     T('\\textbf{Step 2}: the empirical quantiles of the institution: $\\hat q_\\alpha(X^i)$ (distress) and $\\hat q_{50\\%}(X^i)$ (median)', '\\textbf{Pasul 2}: cuantilele empirice ale instituției: $\\hat q_\\alpha(X^i)$ (dificultate) și $\\hat q_{50\\%}(X^i)$ (mediana)'),
     (T('\\textbf{Step 3}: plug in', '\\textbf{Pasul 3}: înlocuim'),
      [T('$\\mathrm{CoVaR}_\\alpha = -(\\hat a + \\hat b\\,\\hat q_\\alpha(X^i))$', '$\\mathrm{CoVaR}_\\alpha = -(\\hat a + \\hat b\\,\\hat q_\\alpha(X^i))$'),
@@ -487,10 +507,12 @@ chart(T('VaR Is Not $\\Delta$CoVaR', 'VaR nu este $\\Delta$CoVaR'), 'sfm_ch15_va
     h='0.60\\textheight')
 
 D.frame(T('Time-Varying $\\Delta$CoVaR', '$\\Delta$CoVaR variabil în timp'), items(
-    (T('Adrian and Brunnermeier let the quantiles depend on lagged \\textbf{state variables} $M_{t-1}$ \\refAB', 'Adrian și Brunnermeier lasă cuantilele să depindă de \\textbf{variabile de stare} $M_{t-1}$ decalate \\refAB'),
-     [T('$X^i_t = c + \\gamma^\\top M_{t-1}$ at levels $\\alpha$ and 50\\%: $\\hat q_{\\alpha,t}(X^i)$ and $\\hat q_{50\\%,t}(X^i)$', '$X^i_t = c + \\gamma^\\top M_{t-1}$ la nivelurile $\\alpha$ și 50\\%: $\\hat q_{\\alpha,t}(X^i)$ și $\\hat q_{50\\%,t}(X^i)$'),
-      T('$X^{sys}_t = a + bX^i_t + \\delta^\\top M_{t-1}$ at level $\\alpha$; then $\\Delta\\mathrm{CoVaR}_t = \\hat b\\,(\\hat q_{50\\%,t} - \\hat q_{\\alpha,t})$', '$X^{sys}_t = a + bX^i_t + \\delta^\\top M_{t-1}$ la nivelul $\\alpha$; apoi $\\Delta\\mathrm{CoVaR}_t = \\hat b\\,(\\hat q_{50\\%,t} - \\hat q_{\\alpha,t})$')]),
-    (T('The paper uses seven state variables (VIX, liquidity and credit spreads, interest rates, market and real-estate returns)', 'Lucrarea folosește șapte variabile de stare (VIX, diferențe de lichiditate și de credit, dobînzi, randamentele pieței și ale sectorului imobiliar)'),
+    (T('Adrian and Brunnermeier let the quantiles depend on lagged \\textbf{state variables} $M_{t-1}$ \\refAB', 'Adrian și Brunnermeier lasă cuantilele să depindă de \\textbf{variabile de stare} cu un lag, $M_{t-1}$ \\refAB'),
+     [T('$M_{t-1}$: the vector of state variables known at the close of day $t - 1$ (market stress, interest rates)', '$M_{t-1}$: vectorul variabilelor de stare cunoscute la închiderea zilei $t - 1$ (stresul pieței, dobînzile)'),
+      T('$X^i_t = c + \\gamma^\\top M_{t-1}$ at levels $\\alpha$ and 50\\%: $\\hat q_{\\alpha,t}(X^i)$ and $\\hat q_{50\\%,t}(X^i)$', '$X^i_t = c + \\gamma^\\top M_{t-1}$ la nivelurile $\\alpha$ și 50\\%: $\\hat q_{\\alpha,t}(X^i)$ și $\\hat q_{50\\%,t}(X^i)$'),
+      T('$X^{sys}_t = a + bX^i_t + \\delta^\\top M_{t-1}$ at level $\\alpha$; then $\\Delta\\mathrm{CoVaR}_t = \\hat b\\,(\\hat q_{50\\%,t} - \\hat q_{\\alpha,t})$', '$X^{sys}_t = a + bX^i_t + \\delta^\\top M_{t-1}$ la nivelul $\\alpha$; apoi $\\Delta\\mathrm{CoVaR}_t = \\hat b\\,(\\hat q_{50\\%,t} - \\hat q_{\\alpha,t})$'),
+      T('$c$, $\\gamma$, $a$, $b$, $\\delta$: coefficients of the quantile regressions ($\\delta$ is not the $\\delta$ of Forbes--Rigobon)', '$c$, $\\gamma$, $a$, $b$, $\\delta$: coeficienții regresiilor cuantilice ($\\delta$ nu este $\\delta$ din Forbes--Rigobon)')]),
+    (T('The paper uses seven state variables (VIX, liquidity and credit spreads, interest rates, market and real-estate returns)', 'Lucrarea folosește șapte variabile de stare (VIX, spread-uri de lichiditate și de credit, dobînzi, randamentele pieței și ale sectorului imobiliar)'),
      [T('here, a reduced set: the VIX level and the index return of the previous day', 'aici, un set redus: nivelul VIX și randamentul indicelui din ziua precedentă')]),
     T('The slope $\\hat b$ is fixed; the time variation comes from the distance between the two conditional quantiles of the bank', 'Panta $\\hat b$ este fixă; variația în timp vine din distanța dintre cele două cuantile condiționate ale băncii')))
 
@@ -524,8 +546,9 @@ D.section('MES and SRISK', 'MES și SRISK')
 D.frame(T('Marginal Expected Shortfall', 'Marginal expected shortfall (MES)'), items(
     (T('\\textbf{MES} \\refAPPR: the expected loss of institution $i$ on the days when the market is in its tail', '\\textbf{MES} \\refAPPR: pierderea așteptată a instituției $i$ în zilele în care piața este în coada sa'),
      [T('$\\mathrm{MES}^i_\\alpha = -E\\big[X^i \\mid X^m \\le q_\\alpha(X^m)\\big]$; we use the worst 5\\% of market days: ``MES 5\\%\'\'', '$\\mathrm{MES}^i_\\alpha = -E\\big[X^i \\mid X^m \\le q_\\alpha(X^m)\\big]$; folosim cele mai proaste 5\\% dintre zilele pieței: „MES 5\\%”'),
+      T('$X^m$: the market return; $q_\\alpha(X^m)$: its $\\alpha$-quantile; the bar: ``on the days when\'\'', '$X^m$: randamentul pieței; $q_\\alpha(X^m)$: cuantila lui de ordin $\\alpha$; bara: „în zilele în care”'),
       T('the direction is the opposite of CoVaR: the bank given the market, not the market given the bank', 'direcția este opusă celei din CoVaR: banca condiționat de piață, nu piața condiționat de bancă')]),
-    (T('Why ``marginal\'\': ES of the market $= \\sum_i w_i\\,\\mathrm{MES}^i$ when the market is a portfolio with weights $w_i$', 'De ce „marginal”: ES-ul pieței $= \\sum_i w_i\\,\\mathrm{MES}^i$ cînd piața este un portofoliu cu ponderile $w_i$'),
+    (T('Why ``marginal\'\': ES of the market $= \\sum_i w_i\\,\\mathrm{MES}^i$ when the market is a portfolio with weights $w_i$', 'Termenul „marginal”: ES-ul pieței $= \\sum_i w_i\\,\\mathrm{MES}^i$ cînd piața este un portofoliu cu ponderile $w_i$'),
      [T('MES is the contribution of $i$ to the ES of the system (Chapter 10)', 'MES este contribuția lui $i$ la ES-ul sistemului (Capitolul 10)')]),
     T('Estimation: sort the days by the market return, take the worst $\\lceil n\\alpha \\rceil$ days, average the bank\'s returns on those days, change the sign',
       'Estimare: ordonăm zilele după randamentul pieței, luăm cele mai proaste $\\lceil n\\alpha \\rceil$ zile, facem media randamentelor băncii în acele zile și schimbăm semnul')))
@@ -556,7 +579,7 @@ D.frame(T('Interpretation: MES and $\\Delta$CoVaR', 'Interpretarea MES și a $\\
 
 chart(T('Case Study: Did MES Predict the 2008 Losses?', 'Studiu de caz: a prezis MES pierderile din 2008?'), 'sfm_ch15_mes_crisis', 'SFM_ch15_mes_srisk', [
     T('Design of \\refAPPR: MES 5\\% measured from June 2006 to June 2007, against the return from July 2007 to December 2008; here 11 US and European banks',
-      'Designul din \\refAPPR: MES 5\\% măsurat din iunie 2006 pînă în iunie 2007, comparat cu randamentul din iulie 2007 pînă în decembrie 2008; aici 11 bănci americane și europene'),
+      'Schema din \\refAPPR: MES 5\\% măsurat din iunie 2006 pînă în iunie 2007, comparat cu randamentul din iulie 2007 pînă în decembrie 2008; aici 11 bănci americane și europene'),
     T('Spearman correlation $@{mc.sp}$ (p $= @{mc.p}$, $n = @{mc.n}$): the sign of the paper (higher MES, larger loss), but not significant with 11 banks; worst return: @{mc.worst} ($@{mc.C.r}\\%$)',
       'Corelația Spearman $@{mc.sp}$ (p $= @{mc.p}$, $n = @{mc.n}$): semnul din lucrare (MES mai mare, pierdere mai mare), dar nesemnificativ cu 11 bănci; cel mai prost randament: @{mc.worst} ($@{mc.C.r}\\%$)')],
     h='0.58\\textheight')
@@ -565,7 +588,8 @@ D.frame(T('From MES to LRMES', 'De la MES la LRMES'), items(
     (T('A crisis lasts months: we need the loss of the bank if the market falls 40\\% over six months: \\textbf{LRMES} (long-run MES)',
        'O criză durează luni: avem nevoie de pierderea băncii dacă piața scade cu 40\\% în șase luni: \\textbf{LRMES} (long-run MES, MES pe termen lung)'),
      [T('approximation of \\refAER: $\\mathrm{LRMES} \\approx 1 - \\exp(-18 \\times \\mathrm{MES})$, with MES the daily loss (as a fraction) on the days when the market falls by more than 2\\%',
-        'aproximarea din \\refAER: $\\mathrm{LRMES} \\approx 1 - \\exp(-18 \\times \\mathrm{MES})$, cu MES pierderea zilnică (ca fracție) în zilele în care piața scade cu peste 2\\%')]),
+        'aproximarea din \\refAER: $\\mathrm{LRMES} \\approx 1 - \\exp(-18 \\times \\mathrm{MES})$, cu MES pierderea zilnică (ca fracție) în zilele în care piața scade cu peste 2\\%'),
+      T('the factor 18 turns the daily loss on bad days into the loss over a six-month crisis; $1 - e^{-x}$ keeps LRMES between 0 and 1', 'factorul 18 transformă pierderea zilnică din zilele proaste în pierderea dintr-o criză de șase luni; $1 - e^{-x}$ menține LRMES între 0 și 1')]),
     (T('Example: MES $= 3\\% = 0.03$: $\\mathrm{LRMES} = 1 - e^{-0.54} = 1 - @{ex.exp} = @{ex.lr}\\%$', 'Exemplu: MES $= 3\\% = 0{,}03$: $\\mathrm{LRMES} = 1 - e^{-0{,}54} = 1 - @{ex.exp} = @{ex.lr}\\%$'),
      [T('the bank would lose about @{ex.lr}\\% of its market value in such a crisis', 'banca ar pierde aproximativ @{ex.lr}\\% din valoarea de piață într-o astfel de criză')]),
     T('Our 13 banks: LRMES between @{rg.lr.lo}\\% and @{rg.lr.hi}\\%; Brownlees and Engle estimate it instead from a dynamic model (GARCH and dynamic correlation) \\refBE',
@@ -576,6 +600,7 @@ D.frame(T('SRISK: the Capital Shortfall in a Crisis', 'SRISK: deficitul de capit
      [T('$D$: book value of debt; $W$: market value of equity; assets $\\approx D + W$', '$D$: valoarea contabilă a datoriilor; $W$: valoarea de piață a capitalului propriu; activele $\\approx D + W$')]),
     (T('\\textbf{SRISK} $= k(D + W_{\\text{crisis}}) - W_{\\text{crisis}}$ with $W_{\\text{crisis}} = (1 - \\mathrm{LRMES})W$:', '\\textbf{SRISK} $= k(D + W_{\\text{criză}}) - W_{\\text{criză}}$ cu $W_{\\text{criză}} = (1 - \\mathrm{LRMES})W$:'),
      [T('$\\mathrm{SRISK} = kD - (1 - k)(1 - \\mathrm{LRMES})\\,W$ \\refBE', '$\\mathrm{SRISK} = kD - (1 - k)(1 - \\mathrm{LRMES})\\,W$ \\refBE'),
+      T('$kD$: the capital required on the debt; $(1 - k)(1 - \\mathrm{LRMES})W$: the equity left after the crisis, net of the capital required on it', '$kD$: capitalul cerut pentru datorii; $(1 - k)(1 - \\mathrm{LRMES})W$: capitalul propriu rămas după criză, net de capitalul cerut pentru el'),
       T('SRISK $> 0$: capital missing in a crisis; the \\textbf{aggregate SRISK} (sum of the positive values) is what the state might have to cover', 'SRISK $> 0$: capital lipsă într-o criză; \\textbf{SRISK agregat} (suma valorilor pozitive) este ceea ce statul ar putea fi nevoit să acopere')]),
     (T('Example: $D = 900$, $W = 100$ (billion), LRMES $= @{ex.lr}\\%$', 'Exemplu: $D = 900$, $W = 100$ (miliarde), LRMES $= @{ex.lr}\\%$'),
      [T('SRISK $= 0.08 \\times 900 - 0.92 \\times (1 - @{ex.lr}\\%) \\times 100 = @{ex.kd} - @{ex.cap} = @{ex.srisk}$ billion', 'SRISK $= 0{,}08 \\times 900 - 0{,}92 \\times (1 - @{ex.lr}\\%) \\times 100 = @{ex.kd} - @{ex.cap} = @{ex.srisk}$ miliarde')])))
@@ -616,9 +641,11 @@ D.frame(T('The Network View', 'Perspectiva rețelei'), items(
 
 D.frame(T('Granger Causality', 'Cauzalitatea Granger'), items(
     (T('$x$ \\textbf{Granger-causes} $y$ if past values of $x$ improve the forecast of $y$ beyond the past of $y$ \\refGranger', '$x$ \\textbf{cauzează în sens Granger} pe $y$ dacă valorile trecute ale lui $x$ îmbunătățesc prognoza lui $y$ dincolo de trecutul lui $y$ \\refGranger'),
-     [T('regression $y_t = a + b\\,y_{t-1} + c\\,x_{t-1} + e_t$; test $H_0: c = 0$ with a $t$ test at 5\\%', 'regresia $y_t = a + b\\,y_{t-1} + c\\,x_{t-1} + e_t$; testăm $H_0: c = 0$ cu un test $t$ la 5\\%')]),
+     [T('regression $y_t = a + b\\,y_{t-1} + c\\,x_{t-1} + e_t$; test $H_0: c = 0$ with a $t$ test at 5\\%', 'regresia $y_t = a + b\\,y_{t-1} + c\\,x_{t-1} + e_t$; testăm $H_0: c = 0$ cu un test $t$ la 5\\%'),
+      T('$a$: the constant; $b$: the own past of $y$; $c$: the effect of yesterday\'s $x$; $e_t$: the error; $c \\ne 0$: a link from $x$ to $y$', '$a$: constanta; $b$: efectul propriului trecut al lui $y$; $c$: efectul lui $x$ de ieri; $e_t$: eroarea; $c \\ne 0$: o legătură de la $x$ la $y$')]),
     (T('\\textbf{Degree of Granger causality} (DGC) \\refBGLP: the share of the $N(N-1)$ ordered pairs with a significant link', '\\textbf{Gradul de cauzalitate Granger} (DGC, degree of Granger causality) \\refBGLP: proporția dintre cele $N(N-1)$ perechi ordonate cu o legătură semnificativă'),
-     [T('the paper: monthly returns, 36-month rolling windows, lag 1, 5\\% level', 'lucrarea: randamente lunare, ferestre mobile de 36 de luni, un decalaj, nivelul 5\\%'),
+     [T('$N$: the number of banks; $N(N - 1)$: the ordered pairs ($i \\to j$ and $j \\to i$ count separately)', '$N$: numărul de bănci; $N(N - 1)$: perechile ordonate ($i \\to j$ și $j \\to i$ se numără separat)'),
+      T('the paper: monthly returns, 36-month rolling windows, lag 1, 5\\% level', 'lucrarea: randamente lunare, ferestre mobile de 36 de luni, un lag, nivelul 5\\%'),
       T('the paper also filters each series with a GARCH(1,1) model; with 36 monthly observations per window we report the unfiltered test', 'lucrarea filtrează în plus fiecare serie cu un model GARCH(1,1); cu 36 de observații lunare pe fereastră, raportăm testul nefiltrat')]),
     T('Under no links, about 5\\% of pairs are significant by chance: DGC must be compared with 5\\%', 'Fără legături, aproximativ 5\\% dintre perechi sînt semnificative din întîmplare: DGC trebuie comparat cu 5\\%')))
 

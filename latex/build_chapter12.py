@@ -231,6 +231,7 @@ D.frame(T('The Basel IRB Capital Formula', 'Formula de capital IRB din Basel'), 
        'Abordarea \\textbf{IRB} (internal ratings-based): banca estimează PD (și eventual LGD, EAD); autoritatea de reglementare dă formula \\refBCBS, ¶328--330'),
      [T('$K = \\mathrm{LGD}\\left[\\Phi\\!\\left(\\dfrac{\\Phi^{-1}(\\mathrm{PD}) + \\sqrt{R}\\,\\Phi^{-1}(0.999)}{\\sqrt{1 - R}}\\right) - \\mathrm{PD}\\right]$; RWA $= 12.5\\,K\\,$EAD',
         '$K = \\mathrm{LGD}\\left[\\Phi\\!\\left(\\dfrac{\\Phi^{-1}(\\mathrm{PD}) + \\sqrt{R}\\,\\Phi^{-1}(0.999)}{\\sqrt{1 - R}}\\right) - \\mathrm{PD}\\right]$; RWA $= 12.5\\,K\\,$EAD'),
+      T('$K$: the capital per unit of EAD; $\\Phi$, $\\Phi^{-1}$: the $N(0,1)$ distribution function and its inverse; 0.999: a bad year occurs once in 1000 years', '$K$: capitalul pe unitatea de EAD; $\\Phi$, $\\Phi^{-1}$: funcția de repartiție $N(0,1)$ și inversa ei; 0,999: un an prost apare o dată la 1000 de ani'),
       T('$R$: the correlation of the borrowers with one common factor; RWA: risk-weighted assets, of which the bank holds at least 8\\%', '$R$: corelația debitorilor cu un factor comun; RWA (risk-weighted assets): activele ponderate la risc, din care banca deține cel puțin 8\\%')]),
     (T('Logic \\refGordy: the term in $\\Phi(\\cdot)$ is the PD in a year whose common factor is exceeded only with probability 0.1\\%', 'Logica \\refGordy: termenul din $\\Phi(\\cdot)$ este PD într-un an al cărui factor comun este depășit doar cu probabilitatea 0,1\\%'),
      [T('so $K$ is the credit VaR 0.1\\% of the loss minus EL: the unexpected loss (Chapter 10)', 'deci $K$ este VaR 0,1\\% al pierderii din credit minus EL: pierderea neașteptată (Capitolul 10)')])),
@@ -239,14 +240,16 @@ D.frame(T('The Basel IRB Capital Formula', 'Formula de capital IRB din Basel'), 
 chart(T('PD in Good and Bad Years: the One-Factor Model', 'PD în ani buni și în ani proști: modelul cu un factor'), 'sfm_ch12_conditional_pd', 'SFM_ch12_validation_irb', [
     T('Borrower $i$ defaults if $\\sqrt{\\rho}\\,Y + \\sqrt{1 - \\rho}\\,\\varepsilon_i < \\Phi^{-1}(\\mathrm{PD})$; $Y$: the state of the economy; given $Y = y$: PD$(y) = \\Phi\\big((\\Phi^{-1}(\\mathrm{PD}) - \\sqrt{\\rho}\\,y)/\\sqrt{1 - \\rho}\\big)$, $\\rho = 0.2$',
       'Debitorul $i$ intră în nerambursare dacă $\\sqrt{\\rho}\\,Y + \\sqrt{1 - \\rho}\\,\\varepsilon_i < \\Phi^{-1}(\\mathrm{PD})$; $Y$: starea economiei; dat fiind $Y = y$: PD$(y) = \\Phi\\big((\\Phi^{-1}(\\mathrm{PD}) - \\sqrt{\\rho}\\,y)/\\sqrt{1 - \\rho}\\big)$, $\\rho = 0{,}2$'),
+    T('$\\varepsilon_i$: the borrower\'s own shock; $Y$ and $\\varepsilon_i$ independent $N(0,1)$; $\\rho$: the weight of the common factor', '$\\varepsilon_i$: șocul propriu al debitorului; $Y$ și $\\varepsilon_i$ independente, $N(0,1)$; $\\rho$: ponderea factorului comun'),
     T('Interpretation: a loan with PD $= 2\\%$ defaults with probability @{cpd.b}\\% in a bad year ($y = -3$), @{cpd.t}\\% in a typical year and almost never in a good year; IRB uses $y = \\Phi^{-1}(0.001)$',
       'Interpretare: un credit cu PD $= 2\\%$ intră în nerambursare cu probabilitatea @{cpd.b}\\% într-un an prost ($y = -3$), @{cpd.t}\\% într-un an obișnuit și aproape niciodată într-un an bun; IRB folosește $y = \\Phi^{-1}(0{,}001)$')],
     h='0.46\\textheight')
 
-D.frame(T('Worked Example: IRB Capital of a Retail Loan', 'Exemplu lucrat: capitalul IRB al unui credit de retail'), items(
+D.frame(T('Worked Example: IRB Capital of a Retail Loan', 'Exemplu rezolvat: capitalul IRB al unui credit de retail'), items(
     (T('Other retail exposures: $R = 0.03\\,w + 0.16\\,(1 - w)$, $w = (1 - e^{-35\\,\\mathrm{PD}})/(1 - e^{-35})$ \\refBCBS, ¶330',
        'Alte expuneri de retail: $R = 0.03\\,w + 0.16\\,(1 - w)$, $w = (1 - e^{-35\\,\\mathrm{PD}})/(1 - e^{-35})$ \\refBCBS, ¶330'),
-     [T('PD $= 2\\%$: $R = @{el.R}$; $\\Phi^{-1}(0.02) = @{el.zpd}$, $\\Phi^{-1}(0.999) = @{el.z999}$', 'PD $= 2\\%$: $R = @{el.R}$; $\\Phi^{-1}(0.02) = @{el.zpd}$, $\\Phi^{-1}(0.999) = @{el.z999}$')]),
+     [T('$w \\in [0, 1]$ grows with PD, so $R$ falls from 0.16 (very safe loans) to 0.03 (very risky loans)', '$w \\in [0, 1]$ crește cu PD, deci $R$ scade de la 0,16 (credite foarte sigure) la 0,03 (credite foarte riscante)'),
+      T('PD $= 2\\%$: $R = @{el.R}$; $\\Phi^{-1}(0.02) = @{el.zpd}$, $\\Phi^{-1}(0.999) = @{el.z999}$', 'PD $= 2\\%$: $R = @{el.R}$; $\\Phi^{-1}(0.02) = @{el.zpd}$, $\\Phi^{-1}(0.999) = @{el.z999}$')]),
     (T('\\textbf{Step by step}', '\\textbf{Pas cu pas}'),
      [T('argument: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: the PD in a bad year',
         'argumentul: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: PD într-un an prost'),
@@ -262,7 +265,7 @@ chart(T('Expected Loss and IRB Capital as Functions of PD', 'Pierderea așteptat
       'Interpretare: EL crește liniar cu PD; $K$ crește repede la PD mici și apoi se aplatizează, deoarece un credit foarte riscant este în mare parte o pierdere așteptată (inclusă în preț)')],
     h='0.50\\textheight')
 
-D.recap(('What a Credit Score Is', 'ce este un scor de credit'), [
+D.recap(('What a Credit Score Is', 'scorul de credit: definiție'), [
     T('A score orders applicants by risk; a PD also gives the level of risk', 'Un scor ordonează solicitanții după risc; o PD dă și nivelul riscului'),
     T('EL $=$ PD $\\times$ LGD $\\times$ EAD is priced in; Basel capital covers the unexpected loss (a credit VaR 0.1\\% minus EL)', 'EL $=$ PD $\\times$ LGD $\\times$ EAD intră în preț; capitalul Basel acoperă pierderea neașteptată (VaR 0,1\\% al creditului minus EL)'),
     T('Statistical scoring started with Fisher\'s discriminant analysis (Durand, 1941)', 'Scoringul statistic a început cu analiza discriminantă a lui Fisher (Durand, 1941)')])
@@ -314,14 +317,14 @@ D.frame(T('Class Imbalance and Oversampling', 'Dezechilibrul claselor și suprar
     (T('\\textbf{Taiwan credit card data} \\refTW; \\refYL: @{tw.n} card holders, default on the October 2005 payment, @{tw.rate}\\% defaults',
        '\\textbf{Datele cardurilor de credit din Taiwan} \\refTW; \\refYL: @{tw.n} de deținători de card, nerambursarea plății din octombrie 2005, @{tw.rate}\\% nerambursări'),
      [T('inputs: credit limit, age, the repayment status of April--September 2005, bills and payments; we use them for calibration and fairness',
-        'variabile: limita de credit, vîrsta, starea plăților din aprilie--septembrie 2005, facturile și plățile; le folosim pentru calibrare și fairness')])))
+        'variabile: limita de credit, vîrsta, starea plăților din aprilie--septembrie 2005, facturile și plățile; le folosim pentru calibrare și echitate')])))
 
 D.frame(T('Training and Test Samples', 'Eșantionul de estimare și eșantionul de test'), items(
     (T('\\textbf{Stratified split}: @{ntrain} credits for estimation (training), @{ntest} for testing, with @{badpct}\\% bads in both',
        '\\textbf{Împărțire stratificată}: @{ntrain} de credite pentru estimare, @{ntest} pentru test, cu @{badpct}\\% rău-platnici în ambele'),
      [T('every choice (bins, WoE, variables, coefficients) is made on the training sample only', 'orice alegere (intervale, WoE, variabile, coeficienți) se face doar pe eșantionul de estimare'),
       T('the test sample is used once, at the end: it plays the role of the future applicants', 'eșantionul de test se folosește o singură dată, la final: joacă rolul viitorilor solicitanți')]),
-    (T('\\textbf{Leakage}: information from the test sample that enters the model, e.g.\\ bins chosen on all data', '\\textbf{Scurgerea de informație} (leakage): informație din eșantionul de test care intră în model, de exemplu intervale alese pe toate datele'),
+    (T('\\textbf{Leakage}: information from the test sample that enters the model, e.g.\\ bins chosen on all data', '\\textbf{Leakage} (scurgerea de informație): informație din eșantionul de test care intră în model, de exemplu intervale alese pe toate datele'),
      [T('it makes the test result too optimistic; with 300 test credits one split is also noisy, so we add cross-validation (Section 7)',
         'face rezultatul testului prea optimist; cu 300 de credite de test, o singură împărțire este și zgomotoasă, așa că adăugăm validarea încrucișată (secțiunea 7)')])))
 
@@ -347,7 +350,7 @@ D.frame(T('Weight of Evidence', 'Weight of Evidence (WoE)'), items(
      [T('a symmetric Kullback--Leibler divergence between the distributions of goods and bads across the bins', 'o divergență Kullback--Leibler simetrică între distribuțiile bun-platnicilor și ale rău-platnicilor pe intervale'),
       T('rule of thumb \\refSiddiqi: below 0.02 useless, 0.02--0.1 weak, 0.1--0.3 medium, above 0.3 strong', 'regula practică \\refSiddiqi: sub 0,02 inutilă, 0,02--0,1 slabă, 0,1--0,3 medie, peste 0,3 puternică')])), 'footnotesize')
 
-D.frame(T('Worked Example: WoE and IV of the Checking Account', 'Exemplu lucrat: WoE și IV pentru contul curent'), table(
+D.frame(T('Worked Example: WoE and IV of the Checking Account', 'Exemplu rezolvat: WoE și IV pentru contul curent'), table(
     'lrrrrrr', T('Checking account & goods & bads & $g_i/G$ & $b_i/B$ & WoE & IV term', 'Contul curent & bun-pl. & rău-pl. & $g_i/G$ & $b_i/B$ & WoE & termen IV'),
     [T('no checking account', 'fără cont curent') + ' & @{sw1.g} & @{sw1.b} & $@{sw1.dg}$ & $@{sw1.db}$ & $@{sw1.w}$ & $@{sw1.iv}$',
      T('balance $<$ 0 DM', 'sold $<$ 0 DM') + ' & @{sw2.g} & @{sw2.b} & $@{sw2.dg}$ & $@{sw2.db}$ & $@{sw2.w}$ & $@{sw2.iv}$',
@@ -447,7 +450,7 @@ side_chart(T('Odds Ratios with Confidence Intervals', 'Rapoartele șanselor cu i
     T('The amount is not significant once the duration is in the model (the two are correlated)', 'Suma nu este semnificativă odată ce durata este în model (cele două sînt corelate)')],
     wl='0.54', wr='0.44', h='0.55\\textheight')
 
-D.frame(T('Worked Example: the PD of an Applicant', 'Exemplu lucrat: PD a unui solicitant'), items(
+D.frame(T('Worked Example: the PD of an Applicant', 'Exemplu rezolvat: PD a unui solicitant'), items(
     (T('Applicant: 36 months, 30 years old, 4000 DM, no checking account; coefficients of the previous table, rounded', 'Solicitantul: 36 de luni, 30 de ani, 4000 DM, fără cont curent; coeficienții din tabelul anterior, rotunjiți'),
      [T('$\\eta = @{sm.const.b} + @{sm.duration_years.b} \\times 3 + (@{sm.age_decades.b}) \\times 3 + @{sm.amount_1000.b} \\times 4 + @{sm.no_account.b}$', '$\\eta = @{sm.const.b} + @{sm.duration_years.b} \\times 3 + (@{sm.age_decades.b}) \\times 3 + @{sm.amount_1000.b} \\times 4 + @{sm.no_account.b}$'),
       T('$\\eta = @{sm.const.b} + @{ex.t.duration_years} + (@{ex.t.age_decades}) + @{ex.t.amount_1000} + @{ex.t.no_account} = @{ex.eta}$', '$\\eta = @{sm.const.b} + @{ex.t.duration_years} + (@{ex.t.age_decades}) + @{ex.t.amount_1000} + @{ex.t.no_account} = @{ex.eta}$')]),
@@ -506,7 +509,7 @@ D.frame(T('LDA as a Probability Model', 'LDA ca model de probabilitate'), items(
       T('logit: maximise the conditional likelihood of $Y$ given $x$; no assumption on the distribution of $x$', 'logit: maximizăm verosimilitatea condiționată a lui $Y$ dată fiind $x$; nicio ipoteză asupra distribuției lui $x$')]),
     T('Classification rule: assign to ``bad\'\' if $c + w^\\top x > \\ln(C_{FP}/C_{FN})$ (costs, Section 7)', 'Regula de clasificare: clasificăm solicitantul ca „rău-platnic” dacă $c + w^\\top x > \\ln(C_{FP}/C_{FN})$ (costuri, secțiunea 7)')), 'footnotesize')
 
-D.frame(T('Worked Example: Fisher\'s Direction with Two Variables', 'Exemplu lucrat: direcția Fisher cu două variabile'), items(
+D.frame(T('Worked Example: Fisher\'s Direction with Two Variables', 'Exemplu rezolvat: direcția Fisher cu două variabile'), items(
     (T('$x = $ (duration in months, age in years), full sample: @{l2.n0} goods, @{l2.n1} bads', '$x = $ (durata în luni, vîrsta în ani), eșantionul complet: @{l2.n0} de bun-platnici, @{l2.n1} de rău-platnici'),
      [T('$m_0 = (@{l2.m0d}, @{l2.m0a})$, $m_1 = (@{l2.m1d}, @{l2.m1a})$, $m_1 - m_0 = (@{l2.dd}, @{l2.da})$', '$m_0 = (@{l2.m0d}, @{l2.m0a})$, $m_1 = (@{l2.m1d}, @{l2.m1a})$, $m_1 - m_0 = (@{l2.dd}, @{l2.da})$'),
       T('$S_W = \\begin{pmatrix} @{l2.s11} & @{l2.s12} \\\\ @{l2.s12} & @{l2.s22} \\end{pmatrix}$, $\\det S_W = @{l2.det}$', '$S_W = \\begin{pmatrix} @{l2.s11} & @{l2.s12} \\\\ @{l2.s12} & @{l2.s22} \\end{pmatrix}$, $\\det S_W = @{l2.det}$')]),
@@ -555,7 +558,7 @@ D.frame(T('Scaling a Scorecard', 'Scalarea unui scorecard'), items(
     (T('Here: PDO $= 20$, 600 points at odds 50:1', 'Aici: PDO $= 20$, 600 de puncte la șansa 50:1'),
      [T('Factor $= 20/\\ln 2 = @{sc.f}$; Offset $= 600 - @{sc.f} \\times \\ln 50 = 600 - @{sc.f} \\times @{sc.ln50} = @{sc.o}$', 'Factor $= 20/\\ln 2 = @{sc.f}$; Offset $= 600 - @{sc.f} \\times \\ln 50 = 600 - @{sc.f} \\times @{sc.ln50} = @{sc.o}$')])))
 
-D.frame(T('Worked Example: Scores and Points', 'Exemplu lucrat: scoruri și puncte'), items(
+D.frame(T('Worked Example: Scores and Points', 'Exemplu rezolvat: scoruri și puncte'), items(
     (T('\\textbf{PD to score}: PD $= 5\\%$, odds 19:1: Score $= @{sc.o} + @{sc.f} \\times \\ln 19 = @{sc.o} + @{sc.f} \\times @{sc.ln19} = @{sc.s5}$',
        '\\textbf{De la PD la scor}: PD $= 5\\%$, șansa 19:1: Scorul $= @{sc.o} + @{sc.f} \\times \\ln 19 = @{sc.o} + @{sc.f} \\times @{sc.ln19} = @{sc.s5}$'),
      [T('PD $= 30\\%$ (odds 7:3): $@{sc.o} + @{sc.f} \\times @{sc.ln73} = @{sc.s30}$', 'PD $= 30\\%$ (șansa 7:3): $@{sc.o} + @{sc.f} \\times @{sc.ln73} = @{sc.s30}$')]),
@@ -637,7 +640,8 @@ D.frame(T('CAP Curve, Accuracy Ratio and KS', 'Curba CAP, raportul de acuratețe
         '\\textbf{AR} (accuracy ratio, raportul de acuratețe) $= \\dfrac{\\text{aria dintre CAP-ul modelului și diagonală}}{\\text{aria dintre CAP-ul perfect și diagonală}}$; pentru un scor continuu AR $=$ Gini')]),
     (T('\\textbf{KS} (Kolmogorov--Smirnov): $\\max_s |F_{\\text{bad}}(s) - F_{\\text{good}}(s)|$, the largest gap between the score distributions of bads and goods',
        '\\textbf{KS} (Kolmogorov--Smirnov): $\\max_s |F_{\\text{rău}}(s) - F_{\\text{bun}}(s)|$, cea mai mare distanță dintre distribuțiile scorurilor rău-platnicilor și bun-platnicilor'),
-     [T('read on the ROC curve: KS $= \\max_c\\,(\\mathrm{TPR} - \\mathrm{FPR})$; the score where it occurs is a natural first cut-off', 'citit pe curba ROC: KS $= \\max_c\\,(\\mathrm{TPR} - \\mathrm{FPR})$; scorul la care apare este un prim prag natural')]),
+     [T('$F_{\\text{bad}}$, $F_{\\text{good}}$: the empirical distribution functions of the scores in the two groups; KS $\\in [0, 1]$', '$F_{\\text{rău}}$, $F_{\\text{bun}}$: funcțiile de repartiție empirice ale scorurilor în cele două grupuri; KS $\\in [0, 1]$'),
+      T('read on the ROC curve: KS $= \\max_c\\,(\\mathrm{TPR} - \\mathrm{FPR})$; the score where it occurs is a natural first cut-off', 'citit pe curba ROC: KS $= \\max_c\\,(\\mathrm{TPR} - \\mathrm{FPR})$; scorul la care apare este un prim prag natural')]),
     T('All three measure \\textbf{discrimination} (ranking), not calibration', 'Toate cele trei măsoară \\textbf{discriminarea} (ordonarea), nu calibrarea')))
 
 D.frame(T('CAP and KS on the Test Sample', 'CAP și KS pe eșantionul de test'), cols(
@@ -650,18 +654,19 @@ D.frame(T('CAP and KS on the Test Sample', 'CAP și KS pe eșantionul de test'),
 D.frame(T('Calibration and the Brier Score', 'Calibrarea și scorul Brier'), items(
     (T('\\textbf{Calibration}: among applicants with PD $\\approx p$, a share of about $p$ defaults', '\\textbf{Calibrarea}: dintre solicitanții cu PD $\\approx p$, aproximativ o pondere $p$ intră în nerambursare'),
      [T('reliability diagram: sort by PD, form groups (e.g.\\ ten), plot the mean PD against the observed default rate', 'diagrama de calibrare: ordonăm după PD, formăm grupuri (de exemplu zece), reprezentăm PD medie față de rata observată'),
-      T('Hosmer--Lemeshow \\refHL: $\\sum_g \\dfrac{(O_g - n_g\\bar p_g)^2}{n_g\\bar p_g(1 - \\bar p_g)} \\approx \\chi^2(G - 2)$', 'Hosmer--Lemeshow \\refHL: $\\sum_g \\dfrac{(O_g - n_g\\bar p_g)^2}{n_g\\bar p_g(1 - \\bar p_g)} \\approx \\chi^2(G - 2)$')]),
-    (T('\\textbf{Brier score} \\refBrier: $\\mathrm{BS} = \\frac1n\\sum_i (p_i - y_i)^2$, the mean squared error of the PDs; lower is better', '\\textbf{Scorul Brier} \\refBrier: $\\mathrm{BS} = \\frac1n\\sum_i (p_i - y_i)^2$, eroarea pătratică medie a PD; mai mic este mai bine'),
+      T('Hosmer--Lemeshow \\refHL: $\\sum_g \\dfrac{(O_g - n_g\\bar p_g)^2}{n_g\\bar p_g(1 - \\bar p_g)} \\approx \\chi^2(G - 2)$', 'Hosmer--Lemeshow \\refHL: $\\sum_g \\dfrac{(O_g - n_g\\bar p_g)^2}{n_g\\bar p_g(1 - \\bar p_g)} \\approx \\chi^2(G - 2)$'),
+      T('$G$ groups; $n_g$: size, $O_g$: observed defaults, $\\bar p_g$: mean PD of group $g$; a large value: poor calibration', '$G$ grupuri; $n_g$: mărimea, $O_g$: nerambursările observate, $\\bar p_g$: PD medie a grupului $g$; o valoare mare: calibrare slabă')]),
+    (T('\\textbf{Brier score} \\refBrier: $\\mathrm{BS} = \\frac1n\\sum_i (p_i - y_i)^2$, the mean squared error of the PDs; lower is better', '\\textbf{Scorul Brier} \\refBrier: $\\mathrm{BS} = \\frac1n\\sum_i (p_i - y_i)^2$, eroarea pătratică medie a PD; o valoare mai mică este mai bună'),
      [T('reference: a constant PD equal to the training bad rate; skill $= 1 - \\mathrm{BS}/\\mathrm{BS}_{\\text{ref}}$', 'referința: o PD constantă egală cu rata din eșantionul de estimare; cîștigul $= 1 - \\mathrm{BS}/\\mathrm{BS}_{\\text{ref}}$'),
       T('scorecard test sample: BS $= @{v.brier}$ against $@{v.brier_ref}$ (skill @{v.bss}\\%); HL with 10 groups $= @{v.hl}$, p $= @{v.hl_p}$', 'eșantionul de test al scorecard-ului: BS $= @{v.brier}$ față de $@{v.brier_ref}$ (cîștig @{v.bss}\\%); HL cu 10 grupuri $= @{v.hl}$, p $= @{v.hl_p}$')]),
-    T('Brier rewards both ranking and calibration; AUC sees only the ranking', 'Scorul Brier recompensează atît ordonarea, cît și calibrarea; AUC vede doar ordonarea')))
+    T('Brier rewards both ranking and calibration; AUC sees only the ranking', 'Scorul Brier recompensează atît ordonarea, cît și calibrarea; AUC măsoară doar ordonarea')))
 
 side_chart(T('Calibration on the Taiwan Data', 'Calibrarea pe datele din Taiwan'), 'sfm_ch12_calibration', 'SFM_ch12_validation_irb', [
     T('Logit on @{tw.n} card holders (70\\% estimation); test sample of @{tc.n}; ten groups of 900 by PD; bars: 95\\% intervals', 'Logit pe @{tw.n} de deținători de card (70\\% estimare); eșantion de test de @{tc.n}; zece grupuri de cîte 900 după PD; bare: intervale de 95\\%'),
     T('Test AUC $= @{tc.auc}$ (estimation $@{tc.auc_train}$); Brier $= @{tc.brier}$ against $@{tc.brier_ref}$ (skill @{tc.bss}\\%)', 'AUC de test $= @{tc.auc}$ (estimare $@{tc.auc_train}$); Brier $= @{tc.brier}$ față de $@{tc.brier_ref}$ (cîștig @{tc.bss}\\%)'),
     T('Hosmer--Lemeshow $= @{tc.hl}$, p @{tc.hlp}: rejected, although the points lie close to the diagonal', 'Hosmer--Lemeshow $= @{tc.hl}$, p @{tc.hlp}: respins, deși punctele sînt aproape de diagonală'),
     T('Interpretation: with 9000 clients the test detects small deviations (the safest group: PD @{tc.g0p}\\%, observed @{tc.g0r}\\%); judge the size of the gaps, not only the p-value',
-      'Interpretare: cu 9000 de clienți, testul detectează abateri mici (grupul cel mai sigur: PD @{tc.g0p}\\%, observat @{tc.g0r}\\%); judecăm mărimea abaterilor, nu doar p-valoarea')],
+      'Interpretare: cu 9000 de clienți, testul detectează abateri mici (grupul cel mai sigur: PD @{tc.g0p}\\%, observat @{tc.g0r}\\%); judecăm mărimea abaterilor, nu doar p-value-ul')],
     wl='0.44', wr='0.54', h='0.62\\textheight')
 
 D.frame(T('Out-of-Sample and Cross-Validation', 'Validarea în afara eșantionului și validarea încrucișată'), items(
@@ -783,7 +788,7 @@ D.frame(T('The Altman Z-Score (1968)', 'Scorul Z al lui Altman (1968)'), cols(it
     ph('stern', T('NYU Stern School of Business, Altman\'s institution', 'NYU Stern School of Business, instituția lui Altman'), h='0.36\\textheight'),
     wl='0.60', wr='0.37'), 'footnotesize')
 
-D.frame(T('Worked Example: a Z-Score', 'Exemplu lucrat: un scor Z'), items(
+D.frame(T('Worked Example: a Z-Score', 'Exemplu rezolvat: un scor Z'), items(
     (T('A hypothetical firm: $X_1 = 0.15$, $X_2 = 0.20$, $X_3 = 0.08$, $X_4 = 0.90$, $X_5 = 1.10$', 'O companie ipotetică: $X_1 = 0.15$, $X_2 = 0.20$, $X_3 = 0.08$, $X_4 = 0.90$, $X_5 = 1.10$'),
      [T('$Z = 1.2 \\times 0.15 + 1.4 \\times 0.20 + 3.3 \\times 0.08 + 0.6 \\times 0.90 + 1.0 \\times 1.10$', '$Z = 1.2 \\times 0.15 + 1.4 \\times 0.20 + 3.3 \\times 0.08 + 0.6 \\times 0.90 + 1.0 \\times 1.10$'),
       T('$Z = @{alt.t1} + @{alt.t2} + @{alt.t3} + @{alt.t4} + @{alt.t5} = @{alt.z}$: the grey zone', '$Z = @{alt.t1} + @{alt.t2} + @{alt.t3} + @{alt.t4} + @{alt.t5} = @{alt.z}$: zona gri')]),
@@ -803,14 +808,14 @@ D.frame(T('Merton\'s Distance to Default', 'Distanța pînă la nerambursare a l
     T('$V$ and $\\sigma_V$ are not observed: they are solved from the equity price and the equity volatility (option pricing)', '$V$ și $\\sigma_V$ nu sînt observabile: se obțin din prețul și volatilitatea acțiunilor (evaluarea opțiunilor)')),
     ph('merton', T('Robert C. Merton, 2010', 'Robert C. Merton, 2010'), h='0.42\\textheight'), wl='0.66', wr='0.31'), 'footnotesize')
 
-D.frame(T('Worked Example: Distance to Default', 'Exemplu lucrat: distanța pînă la nerambursare'), items(
+D.frame(T('Worked Example: Distance to Default', 'Exemplu rezolvat: distanța pînă la nerambursare'), items(
     (T('$V_0 = 100$, $D = 70$, $\\sigma_V = 25\\%$, $\\mu = 5\\%$, $T = 1$ year', '$V_0 = 100$, $D = 70$, $\\sigma_V = 25\\%$, $\\mu = 5\\%$, $T = 1$ an'),
      [T('$\\ln(100/70) = @{mt.ln}$; $\\mu - \\sigma_V^2/2 = 0.05 - 0.03125 = @{mt.drift}$', '$\\ln(100/70) = @{mt.ln}$; $\\mu - \\sigma_V^2/2 = 0.05 - 0.03125 = @{mt.drift}$'),
       T('$\\mathrm{DD} = @{mt.num}/0.25 = @{mt.dd}$; PD $= \\Phi(-@{mt.dd}) = @{mt.pd}\\%$', '$\\mathrm{DD} = @{mt.num}/0.25 = @{mt.dd}$; PD $= \\Phi(-@{mt.dd}) = @{mt.pd}\\%$')]),
     (T('From the market: equity 40, equity volatility 50\\%, debt 70, risk-free rate 3\\%', 'Din piață: capitaluri proprii 40, volatilitatea acțiunilor 50\\%, datorie 70, rata fără risc 3\\%'),
      [T('solving $E = V\\Phi(d_1) - De^{-rT}\\Phi(d_2)$ and $\\sigma_E E = \\Phi(d_1)\\sigma_V V$: $V = @{me.V}$, $\\sigma_V = @{me.s}\\%$, DD $= @{me.dd}$, PD $= @{me.pd}\\%$',
         'rezolvînd $E = V\\Phi(d_1) - De^{-rT}\\Phi(d_2)$ și $\\sigma_E E = \\Phi(d_1)\\sigma_V V$: $V = @{me.V}$, $\\sigma_V = @{me.s}\\%$, DD $= @{me.dd}$, PD $= @{me.pd}\\%$'),
-      T('$d_1$, $d_2$: the Black--Scholes terms of Chapter 4, with $V$ in place of the share price', '$d_1$, $d_2$: termenii Black--Scholes din Capitolul 4, cu $V$ în locul prețului acțiunii')]),
+      T('$E$, $\\sigma_E$: value and volatility of equity; $r$: the risk-free rate; $d_1$, $d_2$: the Black--Scholes terms of Chapter 4, with $V$ in place of the share price', '$E$, $\\sigma_E$: valoarea și volatilitatea capitalurilor proprii; $r$: rata fără risc; $d_1$, $d_2$: termenii Black--Scholes din Capitolul 4, cu $V$ în locul prețului acțiunii')]),
     T('Interpretation: a market-based PD reacts every day to prices; an accounting score changes once a year', 'Interpretare: o PD din piață reacționează zilnic la prețuri; un scor contabil se schimbă o dată pe an')) + ql('SFM_ch12_altman_merton'), 'footnotesize')
 
 chart(T('Merton: Asset Paths and PD', 'Merton: traiectoriile activelor și PD'), 'sfm_ch12_merton', 'SFM_ch12_altman_merton', [

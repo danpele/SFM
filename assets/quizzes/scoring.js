@@ -274,7 +274,7 @@ window.SFM_DATA.quizzes['scoring'] = {
                     "Variabila protejată nu este o variabilă a modelului",
                     "Rate egale de aprobare a bun-platnicilor în toate grupurile"
                 ],
-                "correctExplanation": "Hardt, Price și Srebro (2016): rate egale de adevărat pozitive pentru clasa îndreptățită, aici ratele de aprobare a bun-platnicilor.",
+                "correctExplanation": "Hardt, Price și Srebro (2016): rate egale de true positive pentru clasa favorabilă, aici ratele de aprobare a bun-platnicilor.",
                 "incorrectExplanation": "Ratele egale de aprobare pentru toți solicitanții înseamnă paritate demografică; excluderea variabilei nu îi elimină influența."
             }
         },
@@ -540,7 +540,7 @@ window.SFM_DATA.quizzes['scoring'] = {
                 "text": "Pe 9000 de clienți de test, testul Hosmer-Lemeshow respinge calibrarea, deși grupurile sînt aproape de diagonală. Ce rezultă?",
                 "options": [
                     "Modelul este inutil",
-                    "Cu multe observații, testul detectează abateri mici: judecăm mărimea abaterilor, nu doar p-valoarea",
+                    "Cu multe observații, testul detectează abateri mici: judecăm mărimea abaterilor, nu doar p-value-ul",
                     "AUC trebuie să fie greșit",
                     "Testul trebuie să folosească cinci grupuri"
                 ],
@@ -599,7 +599,7 @@ window.SFM_DATA.quizzes['scoring'] = {
                     "DD = 1,50; PD = 6,7%"
                 ],
                 "correctExplanation": "DD = [ln(100/70) + (0,05 - 0,03125)]/0,25 = 1,50; PD = N(-1,50) = 6,7%.",
-                "incorrectExplanation": "Se folosește logaritmul raportului active/datorie plus corecția tendinței, împărțit la volatilitate; PD este coada distribuției Normale sub -DD."
+                "incorrectExplanation": "Se folosește logaritmul raportului active/datorie plus corecția tendinței, împărțit la volatilitate; PD este probabilitatea din coada stîngă a distribuției Normale, sub -DD."
             }
         },
         {
@@ -652,7 +652,7 @@ window.SFM_DATA.quizzes['scoring'] = {
                     "Intervalele, WoE, selecția variabilelor și coeficienții se refac toate pe părțile de estimare",
                     "Părțile de test se folosesc pentru alegerea variabilelor"
                 ],
-                "correctExplanation": "Orice alegere făcută pe baza datelor aparține părților de estimare; altfel, părțile de test se scurg în model.",
+                "correctExplanation": "Orice alegere făcută pe baza datelor aparține părților de estimare; altfel, informația din părțile de test intră în model (leakage).",
                 "incorrectExplanation": "Intervalele sau variabilele alese pe toate datele folosesc rezultatele de test și fac AUC de test prea optimist."
             }
         }

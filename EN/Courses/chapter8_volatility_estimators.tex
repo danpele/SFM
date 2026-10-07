@@ -205,10 +205,10 @@ MSCA Digital Finance}
         \item \textbf{volatility} = the standard deviation of returns, $\sigma = \sqrt{\mathrm{Var}(r_t)}$
         \item it has the units of the return (\% per day); the variance $\sigma^2$ has units of \%$^2$
     \end{itemize}
-    \item \textbf{Annualisation}: with $a$ observations per year and uncorrelated returns, $\sigma_{\text{year}} = \sigma_{\text{day}}\sqrt{a}$
+    \item \textbf{Annualisation}: with $A$ observations per year and uncorrelated returns, $\sigma_{\text{year}} = \sigma_{\text{day}}\sqrt{A}$
     \begin{itemize}
-        \item $a$ = the actual frequency: about 252 for the S\&P 500, 250 for the BET, 365 for Bitcoin (trades every day)
-        \item the rule $\sqrt{a}$ is the square-root-of-time rule of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7}: it needs uncorrelated returns
+        \item $A$ = the actual frequency: about 252 for the S\&P 500, 250 for the BET, 365 for Bitcoin (trades every day)
+        \item the rule $\sqrt{A}$ is the square-root-of-time rule of \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7}: it needs uncorrelated returns
     \end{itemize}
     \item Volatility measures dispersion in both directions: a large gain counts as much as a large loss
     \begin{itemize}
@@ -255,8 +255,9 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{frame}{Volatility Is Latent}
 \itemsize{\small}
 \begin{itemize}
-    \item Model: $r_t = \mu + \sigma_t z_t$, with $z_t$ i.i.d., mean 0, variance 1
+    \item Model: the return is a constant mean plus a shock whose size changes every day: $r_t = \mu + \sigma_t z_t$
     \begin{itemize}
+        \item $\mu$: the mean return; $z_t$: i.i.d.\ shocks with mean 0 and variance 1
         \item $\sigma_t$ is the \textbf{conditional volatility}: $\sigma_t^2 = \mathrm{Var}(r_t \mid \mathcal{F}_{t-1})$, with $\mathcal{F}_{t-1}$ the information at the close of day $t-1$
         \item the \textbf{unconditional volatility} $\sigma = \sqrt{\mathrm{Var}(r_t)}$ is its long-run average level
     \end{itemize}
@@ -267,7 +268,9 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
     \end{itemize}
     \item Three ways to get more information about $\sigma_t$
     \begin{itemize}
-        \item average many days (historical volatility, EWMA); use the whole daily path (high and low prices); use intraday prices (realised volatility)
+        \item average many days: historical volatility, EWMA
+        \item use the whole path of the day: the high and low prices
+        \item use intraday prices: realised volatility
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -275,7 +278,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{frame}{Worked Example: Annualising Volatility}
 \itemsize{\small}
 \begin{itemize}
-    \item S\&P 500 since 1990: daily standard deviation $\hat\sigma = 1.13\%$, $a = 252$ observations per year
+    \item S\&P 500 since 1990: daily standard deviation $\hat\sigma = 1.13\%$, $A = 252$ observations per year
     \begin{itemize}
         \item $\hat\sigma_{\text{year}} = 1.13 \times \sqrt{252} = 1.13 \times 15.87 = 18.0\%$
     \end{itemize}
@@ -291,7 +294,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{frame}{Recap: What Is Volatility?}
 \itemsize{\small}
 \begin{itemize}
-    \item Volatility = standard deviation of returns; annualise with $\sqrt{a}$, $a$ the actual number of observations per year
+    \item Volatility = standard deviation of returns; annualise with $\sqrt{A}$, $A$ the actual number of observations per year
     \item Conditional volatility $\sigma_t$ changes over time and is never observed: we can only estimate it
     \item All markets show quiet and turbulent periods
 \end{itemize}
@@ -308,6 +311,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
     \item \textbf{Historical volatility} on a window of the last $n$ days:
     \begin{itemize}
         \item $\hat\sigma_t = \sqrt{\dfrac{1}{n-1}\sum_{j=0}^{n-1}(r_{t-j} - \bar r_t)^2}$, with $\bar r_t$ the mean of the same $n$ returns
+        \item $j$: how many days back the return lies ($j = 0$ is day $t$); $\hat\sigma_t$: the estimate at the close of day $t$
         \item \textbf{rolling window}: each day the newest return enters and the oldest leaves
     \end{itemize}
     \item Zero-mean version: $\hat\sigma_t^2 = \frac{1}{n}\sum_{j=0}^{n-1} r_{t-j}^2$
@@ -316,7 +320,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
     \end{itemize}
     \item Usual windows: $n = 21$ (a month), $63$ (a quarter), $252$ (a year) of trading days
     \begin{itemize}
-        \item each $\hat\sigma_t$ is annualised with $\sqrt{a}$ and plotted at the last day of its window
+        \item each $\hat\sigma_t$ is annualised with $\sqrt{A}$ and plotted at the last day of its window
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -358,6 +362,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{itemize}
     \item With $n$ i.i.d.\ Normal returns, the relative standard error of $\hat\sigma$ is $\mathrm{SE}(\hat\sigma)/\sigma \approx 1/\sqrt{2n}$
     \begin{itemize}
+        \item $\mathrm{SE}(\hat\sigma)$: the standard deviation of the estimate across samples; divided by $\sigma$ it is a relative error
         \item $n = 21$: 15\%; $n = 63$: 9\%; $n = 252$: 4\%
     \end{itemize}
     \item With heavy tails (kurtosis $\kappa$): $\mathrm{SE}(\hat\sigma)/\sigma \approx \sqrt{(\kappa - 1)/(4n)}$ (delta method)
@@ -417,6 +422,8 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{itemize}
     \item \textbf{EWMA} recursion (zero mean): $\sigma_t^2 = \lambda\,\sigma_{t-1}^2 + (1-\lambda)\,r_{t-1}^2$, \ $0 < \lambda < 1$
     \begin{itemize}
+        \item today's variance = a weighted average of yesterday's variance and yesterday's squared return
+        \item $\lambda$: the weight of the past; a $\lambda$ close to 1 gives a smooth, slowly reacting estimate
         \item $\sigma_t^2$ uses returns up to day $t-1$: it is the forecast for day $t$
         \item start: $\sigma_1^2$ = the mean of the first squared returns; its effect fades after a few months
     \end{itemize}
@@ -494,11 +501,12 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{itemize}
     \item \textbf{ARCH} \refEngle{} and \textbf{GARCH} \refBollerslev: $\sigma_t^2 = \omega + \alpha\, r_{t-1}^2 + \beta\,\sigma_{t-1}^2$
     \begin{itemize}
+        \item $\omega > 0$: a constant; $\alpha$: the reaction to yesterday's squared return; $\beta$: the weight of yesterday's variance
         \item EWMA is the special case $\omega = 0$, $\alpha = 1 - \lambda$, $\beta = \lambda$, so $\alpha + \beta = 1$ (``integrated'' GARCH, \textbf{IGARCH})
     \end{itemize}
     \item Consequences for forecasts made at day $t$ for day $t + h$
     \begin{itemize}
-        \item EWMA: flat, $E_t[\sigma_{t+h}^2] = \sigma_{t+1}^2$ for every $h$: today's level persists for ever
+        \item EWMA: flat, $E_t[\sigma_{t+h}^2] = \sigma_{t+1}^2$ for every $h$ ($E_t$: expectation given the information of day $t$): today's level persists for ever
         \item GARCH with $\alpha + \beta < 1$: pulled towards the long-run variance $\omega/(1 - \alpha - \beta)$
     \end{itemize}
     \item \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{Chapter 9} estimates $\omega$, $\alpha$, $\beta$ by maximum likelihood; here $\lambda$ is fixed or chosen by a forecast criterion (Section 8)
@@ -554,6 +562,7 @@ Bitcoin & 66.6\% & ${-46.5}\%$ & 12 March 2020 & 12.0 \\
 \begin{itemize}
     \item For a Brownian motion with no drift and variance $\sigma^2$ per day: $E[(u_t - d_t)^2] = 4\ln 2\;\sigma^2$ \refParkinson
     \begin{itemize}
+        \item in words: the squared log range, rescaled so that on average it equals the variance
         \item one day: $\hat\sigma_{P,t}^2 = \dfrac{(u_t - d_t)^2}{4\ln 2}$; on $n$ days: the mean of these values
         \item $4\ln 2 \approx 2.77$: the range is on average larger than $\sigma$
     \end{itemize}
@@ -730,6 +739,7 @@ SNP & 2010 & 24.5 & 21.4 & 20.8 & 21.4 & 25.8 & 27\% & ${-0.20}$ \\
 \begin{itemize}
     \item Split day $t$ into $M$ intervals (for example $M = 78$ five-minute returns $r_{t,i}$ in a 6.5-hour session)
     \begin{itemize}
+        \item $r_{t,i}$: the log return of interval $i$ of day $t$, $i = 1, \dots, M$
         \item \textbf{realised variance} $\mathrm{RV}_t = \sum_{i=1}^{M} r_{t,i}^2$; \textbf{realised volatility} $= \sqrt{\mathrm{RV}_t}$
         \item as $M \to \infty$, $\mathrm{RV}_t$ converges to the \textbf{integrated variance} of day $t$, the true variance of the day \refABDL, \refBNS
     \end{itemize}
@@ -863,7 +873,9 @@ Bitcoin & $0.21$ & $0.12$ & $0.02$ & $0.14$ & $0.04$ & 92/100 \\
     \item $H_0$: no clustering, $\mathrm{Var}(r_t \mid \mathcal{F}_{t-1})$ constant, so $r_t^2$ is uncorrelated
     \begin{itemize}
         \item \textbf{McLeod--Li test} \refML: the Ljung--Box statistic \refLjung{} applied to $r_t^2$
-        \item $Q(m) = T(T+2)\sum_{k=1}^m \hat\rho_k(r^2)^2/(T-k) \sim \chi^2(m)$ under $H_0$; reject if $Q(m)$ exceeds the 95\% quantile
+        \item $Q(m) = T(T+2)\sum_{k=1}^m \hat\rho_k(r^2)^2/(T-k) \sim \chi^2(m)$ under $H_0$: a weighted sum of the first $m$ squared autocorrelations
+        \item $T$: number of returns; $m$: number of lags tested; $\hat\rho_k(r^2)$: sample autocorrelation of $r_t^2$ at lag $k$
+        \item $Q(m) \ge 0$; large values mean autocorrelated squares; reject if $Q(m)$ exceeds the 95\% quantile $\chi^2_{0.95}(m)$
     \end{itemize}
     \item \textbf{Worked example}: S\&P 500, $T = 9\,240$, $m = 3$
     \begin{itemize}
@@ -880,10 +892,12 @@ Bitcoin & $0.21$ & $0.12$ & $0.02$ & $0.14$ & $0.04$ & 92/100 \\
     \item Auxiliary regression of the squared demeaned returns $e_t^2$, $e_t = r_t - \bar r$, on $q$ of their own lags \refEngle:
     \begin{itemize}
         \item $e_t^2 = c_0 + c_1 e_{t-1}^2 + \dots + c_q e_{t-q}^2 + u_t$; $H_0$: $c_1 = \dots = c_q = 0$
+        \item $\bar r$: the sample mean; $c_0, \dots, c_q$: regression coefficients; $u_t$: the error term
         \item \textbf{LM} (Lagrange multiplier) statistic: $\mathrm{LM} = n R^2 \sim \chi^2(q)$, $n$ = number of observations in the regression
     \end{itemize}
     \item S\&P 500, $q = 5$: $R^2 = 0.241$, $n = 9\,235$
     \begin{itemize}
+        \item $R^2 \in [0, 1]$: the share of the variance of $e_t^2$ explained by its own past
         \item $\mathrm{LM} = 9\,235 \times 0.241 = 2\,227 \gg \chi^2_{0.95}(5) = 11.07$: strong ARCH effects
     \end{itemize}
     \item Interpretation of $R^2$: about a quarter of the day-to-day variation of $e_t^2$ is predictable from the last five days
@@ -961,6 +975,7 @@ SNP & 3\,815 & ${-0.015}$ & $20.7$ & $0.195$ & 505 & 944 & 234 & $8.9$ \\
     \item Volatility changes over time, but it does not drift away: it returns to a normal level \refSchwert
     \begin{itemize}
         \item AR(1) of log monthly realised volatility of the S\&P 500 (441 months): $\hat\phi = 0.67$ (SE 0.04)
+        \item $\hat\phi$: the estimated weight of last month's log volatility; close to 1 means slow mean reversion
         \item half-life of a volatility shock: $\ln 0.5/\ln\hat\phi = 1.7$ months; long-run level about 13.5\%
     \end{itemize}
     \item Monthly volatility is right-skewed (skewness 3.3), its logarithm much less (0.6) \refABDE
@@ -1005,7 +1020,7 @@ SNP & 3\,815 & ${-0.015}$ & $20.7$ & $0.195$ & 505 & 944 & 234 & $8.9$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item VIX and the realised volatility of the S\&P 500 over the next 21 trading days, $\sqrt{(a/21)\sum_{j=1}^{21} r_{t+j}^2}$; maximum VIX: 82.7 on 16 March 2020
+    \item VIX and the realised volatility of the S\&P 500 over the next 21 trading days, $\sqrt{(A/21)\sum_{j=1}^{21} r_{t+j}^2}$; maximum VIX: 82.7 on 16 March 2020
     \item \textbf{Question for the room}: is the red line usually above or below the blue one?
 \end{itemize}
 \sfmquantlet{Ch_08}{SFM_ch8_long_term_vix}
@@ -1038,6 +1053,7 @@ SNP & 3\,815 & ${-0.015}$ & $20.7$ & $0.195$ & 505 & 944 & 234 & $8.9$ \\
     \end{itemize}
     \item A simple measure: $\mathrm{corr}(r_t, |r_{t+j}|)$ for $j = 1, 2, \dots$
     \begin{itemize}
+        \item $j$: the number of days ahead; $\mathrm{corr}$: the sample correlation over all days $t$
         \item negative: today's fall announces tomorrow's turbulence; zero under a symmetric model
     \end{itemize}
     \item \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2} met the asymmetry of the distribution; here the asymmetry is in the \textbf{dynamics} of volatility
@@ -1097,7 +1113,8 @@ SNP & 3\,815 & ${-0.015}$ & $20.7$ & $0.195$ & 505 & 944 & 234 & $8.9$ \\
     \end{itemize}
     \item \textbf{Mincer--Zarnowitz regression} \refMZ: $\hat\sigma_t^2 = a + b\,h_t + u_t$
     \begin{itemize}
-        \item a good forecast has $a \approx 0$, $b \approx 1$; the $R^2$ measures how much of the proxy the forecast explains
+        \item $a$: intercept; $b$: slope; $u_t$: error; a good forecast has $a \approx 0$, $b \approx 1$
+        \item the $R^2$ measures how much of the proxy the forecast explains
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1107,6 +1124,7 @@ SNP & 3\,815 & ${-0.015}$ & $20.7$ & $0.195$ & 505 & 944 & 234 & $8.9$ \\
 \begin{itemize}
     \item Average loss over the evaluation days; lower is better \refPatton
     \begin{itemize}
+        \item $L$: the loss of one day; $h_t$: the variance forecast; $\hat\sigma_t^2$: the proxy
         \item MSE: $L = (\hat\sigma_t^2 - h_t)^2$
         \item \textbf{QLIKE} (quasi-likelihood): $L = \hat\sigma_t^2/h_t + \ln h_t$, minus the Normal log-likelihood up to constants
     \end{itemize}
@@ -1138,7 +1156,7 @@ MZ $R^2$, range proxy & 0.24 & 0.09 & 0.02 & 0.29 & 0.19 & 0.42 \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Next-day variance forecasts for 4\,202 days from 2010; proxy $r_t^2$; VIX forecast: VIX$^2/a$; range proxy: $o_t^2$ plus the Garman--Klass term
+    \item Next-day variance forecasts for 4\,202 days from 2010; proxy $r_t^2$; VIX forecast: VIX$^2/A$; range proxy: $o_t^2$ plus the Garman--Klass term
     \item \textbf{DM} (Diebold--Mariano) test of equal QLIKE \refDM: EWMA 0.94 against 21 days $t = -4.50$ (p $<$\,0.001); VIX against EWMA 0.94 $t = -0.32$ (p = 0.751)
     \item EWMA beats the 21-day window; VIX and EWMA are not significantly different; the long window is worst; a precise proxy raises every $R^2$, but not the ranking
 \end{itemize}\sfmquantlet{Ch_08}{SFM_ch8_forecast_evaluation}
@@ -1267,7 +1285,7 @@ MZ $R^2$, range proxy & 0.24 & 0.09 & 0.02 & 0.29 & 0.19 & 0.42 \\
 \toprule
 \textbf{Quantity} & \textbf{Formula} \\
 \midrule
-Annualised volatility & $\sigma_{\text{year}} = \sigma_{\text{day}}\sqrt{a}$ \\
+Annualised volatility & $\sigma_{\text{year}} = \sigma_{\text{day}}\sqrt{A}$ \\
 EWMA & $\sigma_t^2 = \lambda\sigma_{t-1}^2 + (1-\lambda)r_{t-1}^2$, \quad half-life $\ln 0.5/\ln\lambda$ \\
 Parkinson & $(u_t - d_t)^2/(4\ln 2)$ \\
 Garman--Klass & $0.5(u_t - d_t)^2 - (2\ln 2 - 1)c_t^2$ \\

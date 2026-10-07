@@ -280,6 +280,7 @@ MSCA Digital Finance}
     \item \textbf{Definition}: $\mathrm{ES}_\alpha(X) = -\dfrac{1}{\alpha}\displaystyle\int_0^\alpha q_u(X)\,du$: the average of the VaRs at all levels below $\alpha$
     \begin{itemize}
         \item for a continuous distribution: $\mathrm{ES}_\alpha = -E[X \mid X \le q_\alpha(X)]$, the average loss on the worst $\alpha$ of the days
+        \item $u$: the integration variable, a tail level running from 0 to $\alpha$
         \item other names: CVaR (conditional VaR), TVaR (tail VaR), expected tail loss
     \end{itemize}
     \item Properties
@@ -476,6 +477,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item \textbf{VaR is elicitable}: the quantile (pinball) loss $S(v, x) = (\alpha - \mathbf{1}\{x < -v\})(x + v)$
     \begin{itemize}
+        \item $v$: the VaR forecast; $x$: the realised return; $\mathbf{1}\{\cdot\}$: 1 if the event occurs, 0 otherwise
         \item two VaR models can be compared by their average quantile loss
     \end{itemize}
     \item \textbf{ES alone is not elicitable} \refGneiting; the pair (VaR, ES) is \refFZ
@@ -590,6 +592,7 @@ EVT (POT) & GPD above a high threshold (\sfmchlink{https://danpele.github.io/SFM
     \item Losses $L = -r$; threshold $u$ = the 90\% quantile of the losses \refMF; excesses $L - u$ above $u$ follow a GPD (generalised Pareto distribution) with shape $\xi$ and scale $\beta$
     \begin{itemize}
         \item $\mathrm{VaR}_\alpha = u + \dfrac{\beta}{\xi}\Big[\Big(\dfrac{n\alpha}{N_u}\Big)^{-\xi} - 1\Big]$, \quad $\mathrm{ES}_\alpha = \dfrac{\mathrm{VaR}_\alpha + \beta - \xi u}{1 - \xi}$ ($N_u$: number of excesses)
+        \item $n$: the number of days; $n\alpha/N_u$: the tail probability relative to the share of excesses; $\xi > 0$: a heavy tail
     \end{itemize}
     \item S\&P 500: $u = 1.26\%$, $N_u = 672$ (10.0\% of the days), $\hat\xi = 0.164$, $\hat\beta = 0.820$
     \begin{itemize}
@@ -685,6 +688,7 @@ SNP & $4.70$ & $3.72$ & $4.57$ & $8.18$ & $4.71$ & ${8.9}$ & $0.22$ \\
     \item Conditional model: $r_{t+1} = \mu + \sigma_{t+1}z_{t+1}$, $z$ i.i.d.\ with mean 0 and variance 1
     \begin{itemize}
         \item $\mathrm{VaR}_{t+1} = -(\mu + \sigma_{t+1}\,q_\alpha(z))$, \quad $\mathrm{ES}_{t+1} = -\mu + \sigma_{t+1}\,\mathrm{ES}_\alpha(z)$
+        \item $q_\alpha(z)$, $\mathrm{ES}_\alpha(z)$: the quantile and the ES of the standardised innovation $z$
         \item two ingredients: the volatility forecast $\sigma_{t+1}$ and the distribution of $z$
     \end{itemize}
     \item Two choices for the distribution of $z$
@@ -844,6 +848,7 @@ moderate skewness and kurtosis & Cornish--Fisher & a quick correction of the Nor
 \begin{itemize}
     \item Portfolio: $\mu_p = w^\top\mu$, $\sigma_p^2 = w^\top\Sigma w = w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2w_1w_2\rho\sigma_1\sigma_2$ ($\Sigma$: covariance matrix)
     \begin{itemize}
+        \item $w$: the vector of weights; $\mu$: the vector of mean returns; $\rho$: the correlation of the two assets
         \item if returns are jointly Normal: $\mathrm{VaR}_p = -(\mu_p + z_\alpha\sigma_p)$ (the RiskMetrics method \refRM)
     \end{itemize}
     \item \textbf{Step by step}: $\sigma_p^2 = 0.712^2 + 0.614^2 + 2 \times 0.5 \times 0.5 \times 0.369 = 1.068$, $\sigma_p = 1.033$
@@ -851,7 +856,7 @@ moderate skewness and kurtosis & Cornish--Fisher & a quick correction of the Nor
         \item VaR 1\% $= -(0.055 - 2.326 \times 1.033) = 2.35\%$; the weighted sum of the two Normal VaRs: $0.5 \times 3.23 + 0.5 \times 2.82 = 3.03\%$
         \item \textbf{diversification benefit}: 22\% of the risk disappears; with $\rho = 1$ it would be zero
     \end{itemize}
-    \item Euler contributions $w_i(\Sigma w)_i/\sigma_p$ add up to $\sigma_p$: BET 56\%, S\&P 500 44\% of the portfolio risk
+    \item Euler contributions $w_i(\Sigma w)_i/\sigma_p$ ($(\Sigma w)_i$: the $i$-th entry of $\Sigma w$) add up to $\sigma_p$: BET 56\%, S\&P 500 44\% of the portfolio risk
 \end{itemize}
 \end{frame}
 
@@ -878,6 +883,7 @@ moderate skewness and kurtosis & Cornish--Fisher & a quick correction of the Nor
     \end{itemize}
     \item \textbf{Lower tail dependence}: $\lambda_L = \lim_{q \to 0} P(U_1 \le q \mid U_2 \le q)$, $U_i = F_i(X_i)$ (the returns on a uniform scale)
     \begin{itemize}
+        \item $q$: a small probability; $F_i$: the distribution function of asset $i$; $\lambda_L \in [0, 1]$
         \item the chance that BET has one of its worst days given that the S\&P 500 has one of its worst days
         \item data: $q = 5\%$: $0.22$; $q = 1\%$: $0.19$; under independence both would equal $q$
     \end{itemize}
@@ -912,6 +918,7 @@ moderate skewness and kurtosis & Cornish--Fisher & a quick correction of the Nor
     \item \textbf{t copula}: the dependence of a bivariate Student-t with $\rho$ and $\nu$ \refDM
     \begin{itemize}
         \item $\lambda_L = 2\,t_{\nu+1}\Big(-\sqrt{(\nu + 1)(1 - \rho)/(1 + \rho)}\Big) > 0$: crashes cluster across assets
+        \item $t_{\nu+1}(\cdot)$: the distribution function of a Student-t with $\nu + 1$ degrees of freedom; a smaller $\nu$ or a larger $\rho$ gives a larger $\lambda_L$
     \end{itemize}
     \item Fit on BET and S\&P 500: $\rho = \sin(\pi\hat\tau/2) = 0.157$ (valid for both copulas); $\hat\nu = 4.50$ by maximum likelihood
     \begin{itemize}
@@ -1021,7 +1028,8 @@ historical simulation (the data) & $3.08$ & $3.30$ & 0.19\% \\
     \item \textbf{POF} (proportion of failures) \refKupiec: $H_0$: $P(I_t = 1) = \alpha$; $\hat\pi = x/n$
     \begin{itemize}
         \item $LR_{uc} = -2\big[(n - x)\ln(1 - \alpha) + x\ln\alpha - (n - x)\ln(1 - \hat\pi) - x\ln\hat\pi\big] \sim \chi^2(1)$ under $H_0$
-        \item a likelihood-ratio test (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6}); reject at 5\% if $LR_{uc} > 3.84$
+        \item $x$: exceptions in $n$ days; $\hat\pi$: the observed rate; $LR_{uc}$ compares the likelihood under the rate $\alpha$ with that under $\hat\pi$
+        \item $LR_{uc} \ge 0$; a likelihood-ratio test (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter6_model_selection_risk_management.pdf}{Chapter 6}); reject at 5\% if $LR_{uc} > 3.84$
     \end{itemize}
     \item \textbf{Step by step}: $n = 250$, $x = 7$, $\hat\pi = 0.028$
     \begin{itemize}
@@ -1058,6 +1066,7 @@ historical simulation (the data) & $3.08$ & $3.30$ & 0.19\% \\
 \begin{itemize}
     \item Count the transitions: $n_{ij}$ = number of days with $I_{t-1} = i$ and $I_t = j$; $\hat\pi_{01} = \dfrac{n_{01}}{n_{00} + n_{01}}$, $\hat\pi_{11} = \dfrac{n_{11}}{n_{10} + n_{11}}$
     \begin{itemize}
+        \item $\hat\pi_{01}$: the rate of exceptions after a day without one; $\hat\pi_{11}$: after a day with one
         \item $H_0$: $\pi_{01} = \pi_{11}$ (an exception today does not change the chance of one tomorrow) \refChris
         \item $LR_{ind} = -2\ln\dfrac{(1 - \hat\pi)^{n_{00} + n_{10}}\hat\pi^{n_{01} + n_{11}}}{(1 - \hat\pi_{01})^{n_{00}}\hat\pi_{01}^{n_{01}}(1 - \hat\pi_{11})^{n_{10}}\hat\pi_{11}^{n_{11}}} \sim \chi^2(1)$
     \end{itemize}
@@ -1223,6 +1232,7 @@ Bitcoin & $13.57$ & $14.52$ & $13.53$ & $13.75$ & 3 & 4 & 2 & 2 \\
     \item ES is not elicitable alone, but it can be tested together with VaR \refAS
     \begin{itemize}
         \item $Z_2 = \dfrac{1}{T\alpha}\displaystyle\sum_{t=1}^{T}\dfrac{r_t I_t}{\mathrm{ES}_t} + 1$, \quad $I_t = \mathbf{1}\{r_t < -\mathrm{VaR}_t\}$, $\alpha = 2.5\%$
+        \item $T$: the number of test days; $\mathrm{VaR}_t$, $\mathrm{ES}_t$: the forecasts for day $t$; each exception adds $r_t/\mathrm{ES}_t$
         \item if VaR and ES are right, $E[Z_2] = 0$; $Z_2 < 0$: the losses beyond VaR are larger than the forecast ES, or too frequent
     \end{itemize}
     \item p-value by simulation: draw returns from each day's forecast distribution, recompute $Z_2$ 1000 times

@@ -390,8 +390,8 @@ D.frame(T('Summary Statistics: Monthly DAX and Daily Returns', 'Statistici descr
     ['DAX 2004--2014 & @{dm.book.n} & $@{dm.book.min}$ & $@{dm.book.max}$ & $@{dm.book.sd}$ & $@{dm.book.ann_vol}$ & $@{dm.book.skew}$ & $@{dm.book.kurt}$',
      'DAX 2004--@{y1} & @{dm.full.n} & $@{dm.full.min}$ & $@{dm.full.max}$ & $@{dm.full.sd}$ & $@{dm.full.ann_vol}$ & $@{dm.full.skew}$ & $@{dm.full.kurt}$'],
     size='footnotesize') + items(
-    T('Monthly, in \\%; kurtosis $= E(X - \\mu)^4/\\sigma^4$, equal to 3 for the Normal distribution; Jarque--Bera (Chapter 2) $p$-value $@{dm.full.jbp}$',
-      'Lunar, în \\%; boltirea (kurtosis) $= E(X - \\mu)^4/\\sigma^4$, egală cu 3 pentru distribuția Normală; valoarea $p$ Jarque--Bera (Capitolul 2) $@{dm.full.jbp}$'),
+    (T('Monthly, in \\%; kurtosis $= E(X - \\mu)^4/\\sigma^4$, with $\\mu$, $\\sigma$ the mean and the standard deviation; equal to 3 for the Normal distribution', 'Lunar, în \\%; boltirea (kurtosis) $= E(X - \\mu)^4/\\sigma^4$, cu $\\mu$, $\\sigma$ media și abaterea standard; egală cu 3 pentru distribuția Normală'),
+     [T('Jarque--Bera test of Normality (Chapter 2): $p$-value $@{dm.full.jbp}$', 'testul de normalitate Jarque--Bera (Capitolul 2): p-value $@{dm.full.jbp}$')]),
     (T('Daily log returns since 2000 (Bitcoin since 2014, BVB stocks since 2010): kurtosis', 'Randamente logaritmice zilnice din 2000 (Bitcoin din 2014, acțiunile BVB din 2010): boltirea'),
      [T('BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$',
         'BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$'),
@@ -421,14 +421,16 @@ D.section('Maximum Likelihood, Recalled', 'Recapitulare: metoda verosimilități
 
 D.frame(T('Likelihood and Log-Likelihood', 'Verosimilitate și log-verosimilitate'), items(
     (T('Data $r_1, \\dots, r_n$, assumed i.i.d.\\ (independent, identically distributed) with density $f(r; \\theta)$', 'Datele $r_1, \\dots, r_n$, presupuse i.i.d.\\ (independente și identic distribuite), cu densitatea $f(r; \\theta)$'),
-     [T('\\textbf{likelihood}: $L(\\theta) = \\prod_{t=1}^n f(r_t; \\theta)$, the probability density of the observed sample as a function of $\\theta$',
+     [T('$\\theta$: the vector of model parameters (for example $\\mu, \\sigma$); $f$: the density of the model', '$\\theta$: vectorul parametrilor modelului (de exemplu $\\mu, \\sigma$); $f$: densitatea modelului'),
+      T('\\textbf{likelihood}: $L(\\theta) = \\prod_{t=1}^n f(r_t; \\theta)$, the probability density of the observed sample as a function of $\\theta$',
         '\\textbf{verosimilitatea}: $L(\\theta) = \\prod_{t=1}^n f(r_t; \\theta)$, densitatea eșantionului observat, ca funcție de $\\theta$'),
       T('\\textbf{log-likelihood}: $\\ell(\\theta) = \\sum_{t=1}^n \\ln f(r_t; \\theta)$; sums are easier than products', '\\textbf{log-verosimilitatea}: $\\ell(\\theta) = \\sum_{t=1}^n \\ln f(r_t; \\theta)$; sumele se manipulează mai ușor decît produsele')]),
     (T('\\textbf{Maximum likelihood (ML) estimate}: $\\hat\\theta = \\arg\\max_\\theta \\ell(\\theta)$', '\\textbf{Estimarea de verosimilitate maximă (ML, maximum likelihood)}: $\\hat\\theta = \\arg\\max_\\theta \\ell(\\theta)$'),
      [T('$\\ell(\\hat\\theta)$, the maximised log-likelihood, is the raw material of every comparison in this chapter',
         '$\\ell(\\hat\\theta)$, log-verosimilitatea maximizată, stă la baza tuturor comparațiilor din acest capitol')]),
-    T('Large $n$: $\\hat\\theta$ is approximately Normal around the true $\\theta$, with covariance $\\approx [-\\partial^2\\ell/\\partial\\theta\\,\\partial\\theta^\\top]^{-1}$ (the inverse of the observed information)',
-      'Pentru $n$ mare, $\\hat\\theta$ are o distribuție aproximativ Normală în jurul valorii adevărate $\\theta$, cu covarianța $\\approx [-\\partial^2\\ell/\\partial\\theta\\,\\partial\\theta^\\top]^{-1}$ (inversa informației observate)')))
+    (T('Large $n$: $\\hat\\theta$ is approximately Normal around the true $\\theta$', 'Pentru $n$ mare, $\\hat\\theta$ are o distribuție aproximativ Normală în jurul valorii adevărate $\\theta$'),
+     [T('covariance $\\approx [-\\partial^2\\ell/\\partial\\theta\\,\\partial\\theta^\\top]^{-1}$, the inverse of the observed information', 'covarianța $\\approx [-\\partial^2\\ell/\\partial\\theta\\,\\partial\\theta^\\top]^{-1}$, inversa informației observate'),
+      T('a sharply curved $\\ell$ (large second derivative) means a precise estimate', 'o funcție $\\ell$ puternic curbată (derivata a doua mare) înseamnă o estimare precisă')])), 'footnotesize')
 
 D.frame(T('Worked Example: the Normal Model, Step by Step', 'Exemplu lucrat: modelul Normal, pas cu pas'), items(
     (T('$\\ell(\\mu, \\sigma) = -\\dfrac{n}{2}\\ln(2\\pi\\sigma^2) - \\dfrac{1}{2\\sigma^2}\\sum_t (r_t - \\mu)^2$', '$\\ell(\\mu, \\sigma) = -\\dfrac{n}{2}\\ln(2\\pi\\sigma^2) - \\dfrac{1}{2\\sigma^2}\\sum_t (r_t - \\mu)^2$'),
@@ -466,7 +468,7 @@ D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
       'Amestecul Normal: $@{sp.mix.w1}\\%$ zile calme cu abaterea standard $@{sp.mix.s1}\\%$, $@{sp.mix.w2}\\%$ zile agitate cu $@{sp.mix.s2}\\%$ și medie negativă'),
     T('Stable $\\hat\\alpha = @{sp.st.a}$ (Chapter 3): heavier tails than any other candidate', 'Distribuția stabilă, $\\hat\\alpha = @{sp.st.a}$ (Capitolul 3): cozi mai groase decît orice alt candidat')))
 
-chart(T('How Precise Is $\\hat\\nu$? The Profile Log-Likelihood', 'Cît de precis este $\\hat\\nu$? Log-verosimilitatea profil'), 'sfm_ch6_profile_nu', 'SFM_ch6_ml_fits', [
+chart(T('How Precise Is $\\hat\\nu$? The Profile Log-Likelihood', 'Precizia lui $\\hat\\nu$: log-verosimilitatea profil'), 'sfm_ch6_profile_nu', 'SFM_ch6_ml_fits', [
     T('For each $\\nu$, maximise $\\ell$ over location and scale; the curve falls by $@{pr.l5}$ at $\\nu = 5$',
       'Pentru fiecare $\\nu$, maximizăm $\\ell$ în raport cu locația și scala; la $\\nu = 5$, curba scade cu $@{pr.l5}$'),
     T('95\\% interval: all $\\nu$ with $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, here $[@{pr.lo}, @{pr.hi}]$ around $\\hat\\nu = @{pr.nu}$: the tails are pinned down well',
@@ -505,9 +507,11 @@ D.frame(T('Nested Models', 'Modele imbricate'), items(
 
 D.frame(T('The Likelihood-Ratio Test', 'Testul raportului de verosimilitate'), items(
     (T('$H_0$: model 0 (restricted) is true; $H_1$: model 1 (larger)', '$H_0$: modelul 0 (restrîns) este adevărat; $H_1$: modelul 1 (mai general)'),
-     [T('$LR = 2\\,[\\ell_1(\\hat\\theta_1) - \\ell_0(\\hat\\theta_0)] \\ge 0$', '$LR = 2\\,[\\ell_1(\\hat\\theta_1) - \\ell_0(\\hat\\theta_0)] \\ge 0$'),
-      T('\\textbf{Wilks\' theorem} (\\refWilks): under $H_0$, $LR \\approx \\chi^2(d)$, $d = k_1 - k_0$ restrictions, if the restricted values are inside the parameter space',
-        '\\textbf{Teorema lui Wilks} (\\refWilks): sub $H_0$, $LR \\approx \\chi^2(d)$, cu $d = k_1 - k_0$ restricții, dacă valorile fixate se află în interiorul spațiului parametrilor')]),
+     [T('$LR = 2\\,[\\ell_1(\\hat\\theta_1) - \\ell_0(\\hat\\theta_0)] \\ge 0$: twice the gain in maximised log-likelihood', '$LR = 2\\,[\\ell_1(\\hat\\theta_1) - \\ell_0(\\hat\\theta_0)] \\ge 0$: de două ori cîștigul de log-verosimilitate maximizată'),
+      T('$\\ell_0, \\ell_1$: the log-likelihoods of the two models; $k_0, k_1$: their numbers of parameters', '$\\ell_0, \\ell_1$: log-verosimilitățile celor două modele; $k_0, k_1$: numerele lor de parametri')]),
+    (T('\\textbf{Wilks\' theorem} (\\refWilks): under $H_0$, $LR \\approx \\chi^2(d)$, with $d = k_1 - k_0$ restrictions', '\\textbf{Teorema lui Wilks} (\\refWilks): sub $H_0$, $LR \\approx \\chi^2(d)$, cu $d = k_1 - k_0$ restricții'),
+     [T('$\\chi^2(d)$: the chi-square distribution with $d$ degrees of freedom', '$\\chi^2(d)$: distribuția hi-pătrat cu $d$ grade de libertate'),
+      T('valid if the restricted values are inside the parameter space', 'valabilă dacă valorile fixate se află în interiorul spațiului parametrilor')]),
     (T('Decision at 5\\%: reject $H_0$ if $LR > \\chi^2_{0.95}(d)$', 'Decizia la 5\\%: respingem $H_0$ dacă $LR > \\chi^2_{0.95}(d)$'),
      [T('$\\chi^2_{0.95}(1) = @{chi95}$, $\\chi^2_{0.95}(2) = @{chi2_95}$', '$\\chi^2_{0.95}(1) = @{chi95}$; $\\chi^2_{0.95}(2) = @{chi2_95}$')]),
     T('Intuition: twice the log of how many times more likely the data are under the larger model', 'Intuiția: de două ori logaritmul raportului dintre verosimilitățile datelor sub cele două modele')))
@@ -528,21 +532,22 @@ D.frame(T('A Boundary Case: Normal inside Student-t', 'Un caz de frontieră: Nor
     (T('$H_0$: $1/\\nu = 0$ is on the edge of the space $1/\\nu \\ge 0$: Wilks\' theorem does not apply', '$H_0$: $1/\\nu = 0$ este pe marginea spațiului $1/\\nu \\ge 0$: teorema lui Wilks nu se aplică'),
      [T('\\refSL: the null law is a 50:50 mixture of $\\chi^2(0)$ (a point mass at 0) and $\\chi^2(1)$', '\\refSL: distribuția statisticii sub $H_0$ este un amestec 50:50 de $\\chi^2(0)$ (o masă de probabilitate concentrată în 0) și $\\chi^2(1)$'),
       T('5\\% critical value: $\\chi^2_{0.90}(1) = @{chi90}$ instead of $@{chi95}$; the naive $p$-value is twice the correct one',
-        'valoarea critică la 5\\%: $\\chi^2_{0.90}(1) = @{chi90}$ în loc de $@{chi95}$; valoarea $p$ naivă este dublul celei corecte')]),
+        'valoarea critică la 5\\%: $\\chi^2_{0.90}(1) = @{chi90}$ în loc de $@{chi95}$; p-value-ul naiv este dublul celui corect')]),
     T('Real data: $LR$ = @{lr.nt.sp500} (S\\&P 500), @{lr.nt.btc} (Bitcoin): the Normal model is rejected with either critical value',
       'Date reale: $LR$ = @{lr.nt.sp500} (S\\&P 500), @{lr.nt.btc} (Bitcoin): modelul Normal este respins cu oricare valoare critică'),
     T('The same issue appears for a mixture weight $w = 0$ and for variance parameters equal to 0', 'Aceeași problemă apare pentru o pondere a amestecului $w = 0$ și pentru parametri de varianță egali cu 0'),
     T('\\textbf{What do you think?} Does the boundary matter when $LR$ is in the thousands?', '\\textbf{Ce credeți?} Contează frontiera cînd $LR$ este de ordinul miilor?'),
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
-     [T('no for the decision; yes for small samples and borderline $LR$ values, where it halves the $p$-value', 'nu pentru decizia de aici; contează însă în eșantioane mici și pentru valori $LR$ la limită, unde înjumătățește valoarea $p$')])))
+     [T('no for the decision; yes for small samples and borderline $LR$ values, where it halves the $p$-value', 'nu pentru decizia de aici; contează însă în eșantioane mici și pentru valori $LR$ la limită, unde înjumătățește p-value-ul')])))
 
 D.frame(T('Non-Nested Models: the Vuong Test', 'Modele neimbricate: testul Vuong'), table(
     'lrrr', T('& Student-t vs GED & Student-t vs stable & skewed-t vs NIG', '& Student-t față de GED & Student-t față de stabilă & skewed-t față de NIG'),
     [f'{NAMES[k]} & $@{{vu_t_ged.{k}}}$ ($@{{vu_t_gedp.{k}}}$) & $@{{vu_t_stable.{k}}}$ ($@{{vu_t_stablep.{k}}}$) & $@{{vu_skt_nig.{k}}}$ ($@{{vu_skt_nigp.{k}}}$)' for k in ASSETS],
     size='footnotesize') + items(
-    T('\\refVuong: $m_t = \\ln f_1(r_t) - \\ln f_2(r_t)$, $V = \\sqrt{n}\\,\\bar m / s_m \\approx N(0, 1)$ if both models are equally close to the truth',
+    (T('\\refVuong: $m_t = \\ln f_1(r_t) - \\ln f_2(r_t)$, $V = \\sqrt{n}\\,\\bar m / s_m \\approx N(0, 1)$ if both models are equally close to the truth',
       '\\refVuong: $m_t = \\ln f_1(r_t) - \\ln f_2(r_t)$, $V = \\sqrt{n}\\,\\bar m / s_m \\approx N(0, 1)$ dacă ambele modele sînt la fel de aproape de adevăr'),
-    T('$V > 1.96$: the first model is closer; $V < -1.96$: the second; ($p$-value) in brackets', '$V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; valoarea $p$ este în paranteză'),
+     [T('$f_1, f_2$: the two fitted densities; $m_t$: by how much model 1 explains day $t$ better; $\\bar m$, $s_m$: mean and standard deviation of the $m_t$', '$f_1, f_2$: cele două densități estimate; $m_t$: cu cît explică modelul 1 mai bine ziua $t$; $\\bar m$, $s_m$: media și abaterea standard a valorilor $m_t$'),
+      T('$V > 1.96$: the first model is closer; $V < -1.96$: the second; ($p$-value) in brackets', '$V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; p-value-ul este în paranteză')]),
     T('Student-t beats the stable law everywhere; NIG beats the skewed-t on the S\\&P 500 and the DAX; Student-t vs GED splits by market',
       'Student-t este preferat distribuției stabile pe toate piețele; NIG este preferat distribuției skewed-t pentru S\\&P 500 și DAX; comparația Student-t--GED diferă de la o piață la alta')) + ql('SFM_ch6_lr_aic'), size='footnotesize')
 
@@ -558,9 +563,10 @@ D.recap(('Likelihood-Ratio and Vuong Tests', 'Testele raportului de verosimilita
 D.section('Information Criteria: AIC and BIC', 'Criterii informaționale: AIC și BIC')
 
 D.frame(T('Akaike\'s Idea', 'Ideea lui Akaike'), cols(items(
-    (T('Hirotugu Akaike asked: which model will predict \\textbf{new} data best?', 'Hirotugu Akaike și-a pus întrebarea: ce model va prezice cel mai bine date \\textbf{noi}?'),
+    (T('Hirotugu Akaike asked: which model will predict \\textbf{new} data best?', 'Hirotugu Akaike și-a pus întrebarea: ce model va descrie cel mai bine date \\textbf{noi}?'),
      [T('the distance from the truth $g$ to a model $f$: the Kullback--Leibler divergence \\refKL', 'distanța de la distribuția adevărată $g$ la un model $f$: divergența Kullback--Leibler \\refKL'),
-      T('$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero only if $f = g$', '$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero doar dacă $f = g$')]),
+      T('$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero only if $f = g$', '$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero doar dacă $f = g$'),
+      T('$R$: a new return drawn from the truth $g$; $E_g$: the mean under $g$', '$R$: un randament nou, generat de distribuția adevărată $g$; $E_g$: media calculată sub $g$')]),
     (T('$\\ell(\\hat\\theta)$ is too optimistic: the same data choose $\\hat\\theta$ and judge it', '$\\ell(\\hat\\theta)$ este prea optimistă: aceleași date servesc și la estimarea lui $\\hat\\theta$, și la evaluarea lui'),
      [T('the optimism is about $k$, the number of parameters \\refAkaike', 'supraestimarea este, în medie, de circa $k$, numărul de parametri \\refAkaike')]),
     T('Result: $\\mathrm{AIC} = -2\\ell(\\hat\\theta) + 2k$, an estimate of the expected out-of-sample fit (lower is better)',
@@ -645,9 +651,9 @@ D.frame(T('From Pearson to the Empirical Distribution Function', 'De la Pearson 
     wl='0.64', wr='0.32'))
 
 D.frame(T('The Kolmogorov--Smirnov Test', 'Testul Kolmogorov--Smirnov'), cols(items(
-    (T('$D_n = \\sup_x |F_n(x) - F(x)|$, the largest vertical gap', '$D_n = \\sup_x |F_n(x) - F(x)|$, cea mai mare distanță pe verticală'),
-     [T('with the ordered data $u_{(i)} = F(r_{(i)})$: $D_n = \\max_i \\max\\{i/n - u_{(i)},\\ u_{(i)} - (i-1)/n\\}$',
-        'cu datele ordonate $u_{(i)} = F(r_{(i)})$: $D_n = \\max_i \\max\\{i/n - u_{(i)},\\ u_{(i)} - (i-1)/n\\}$')]),
+    (T('$D_n = \\sup_x |F_n(x) - F(x)|$, the largest vertical gap between the EDF and the model CDF ($\\sup$: the largest value over all $x$)', '$D_n = \\sup_x |F_n(x) - F(x)|$, cea mai mare distanță pe verticală dintre EDF și funcția de repartiție a modelului ($\\sup$: cea mai mare valoare pe toate $x$)'),
+     [T('$r_{(i)}$: the $i$-th smallest return; $u_{(i)} = F(r_{(i)})$: its model probability', '$r_{(i)}$: al $i$-lea cel mai mic randament; $u_{(i)} = F(r_{(i)})$: probabilitatea lui în model'),
+      T('computing formula: $D_n = \\max_i \\max\\{i/n - u_{(i)},\\ u_{(i)} - (i-1)/n\\}$', 'formula de calcul: $D_n = \\max_i \\max\\{i/n - u_{(i)},\\ u_{(i)} - (i-1)/n\\}$')]),
     (T('$F$ fully known: the law of $D_n$ does not depend on $F$ (Kolmogorov, 1933)', '$F$ complet cunoscută: distribuția lui $D_n$ nu depinde de $F$ (Kolmogorov, 1933)'),
      [T('large $n$: reject at 5\\% if $D_n > 1.358/\\sqrt{n}$; tables for small $n$: \\refSmirnov', '$n$ mare: respingem la 5\\% dacă $D_n > 1{,}358/\\sqrt{n}$; tabele pentru $n$ mic: \\refSmirnov'),
       T('$n = @{n.sp500}$: critical value $@{ks.asy.sp}$', '$n = @{n.sp500}$: valoarea critică $@{ks.asy.sp}$')]),
@@ -673,7 +679,7 @@ D.frame(T('Estimated Parameters: the Lilliefors Problem', 'Parametri estimați: 
      [T('$n = 5$: $@{li.5}$ instead of $@{a5.crit}$; $n = 1000$: $@{li.1000}$ instead of $@{ks.asy.1000}$', '$n = 5$: $@{li.5}$ în loc de $@{a5.crit}$; $n = 1000$: $@{li.1000}$ în loc de $@{ks.asy.1000}$')]),
     (T('Any model: \\textbf{parametric bootstrap} \\refSGQ', 'Orice model: \\textbf{bootstrap parametric} \\refSGQ'),
      [T('simulate $n$ draws from $F(\\cdot; \\hat\\theta)$, refit, recompute the statistic; repeat $B$ times', 'simulăm $n$ extrageri din $F(\\cdot; \\hat\\theta)$, reestimăm parametrii, recalculăm statistica; repetăm de $B$ ori'),
-      T('$p$-value $= (1 + \\#\\{\\text{bootstrap statistics} \\ge \\text{observed}\\})/(B + 1)$', 'valoarea $p$ $= (1 + \\#\\{\\text{statistici bootstrap} \\ge \\text{cea observată}\\})/(B + 1)$')])))
+      T('$p$-value $= (1 + \\#\\{\\text{bootstrap statistics} \\ge \\text{observed}\\})/(B + 1)$: the share of simulated statistics at least as large as the observed one', 'p-value $= (1 + \\#\\{\\text{statistici bootstrap} \\ge \\text{cea observată}\\})/(B + 1)$: proporția statisticilor simulate cel puțin egale cu cea observată')])))
 
 D.frame(T('Cramér--von Mises and Anderson--Darling', 'Cramér--von Mises și Anderson--Darling'), cols(items(
     (T('Both integrate the squared gap $[F_n(x) - F(x)]^2$ over all $x$ instead of taking its maximum', 'Ambele integrează pătratul distanței $[F_n(x) - F(x)]^2$ pe toate valorile $x$ în loc să ia maximul'),
@@ -682,25 +688,26 @@ D.frame(T('Cramér--von Mises and Anderson--Darling', 'Cramér--von Mises și An
       T('\\textbf{Anderson--Darling}: $A^2 = n\\int \\dfrac{[F_n - F]^2}{F(1 - F)}\\, dF$ \\refAD', '\\textbf{Anderson--Darling}: $A^2 = n\\int \\dfrac{[F_n - F]^2}{F(1 - F)}\\, dF$ \\refAD')]),
     (T('Computing formula \\refADb: $A^2 = -n - \\frac{1}{n}\\sum_i (2i - 1)\\big[\\ln u_{(i)} + \\ln(1 - u_{(n + 1 - i)})\\big]$',
        'Formula de calcul \\refADb: $A^2 = -n - \\frac{1}{n}\\sum_i (2i - 1)\\big[\\ln u_{(i)} + \\ln(1 - u_{(n + 1 - i)})\\big]$'),
-     [T('the weight $1/[F(1 - F)]$ is huge where $F$ is near 0 or 1: the tails', 'ponderea $1/[F(1 - F)]$ este foarte mare acolo unde $F$ este aproape de 0 sau 1, adică în cozi')])),
+     [T('$u_{(i)} = F(r_{(i)})$ as in KS; large $W^2$ or $A^2$: a poor fit', '$u_{(i)} = F(r_{(i)})$, ca la KS; valori mari ale lui $W^2$ sau $A^2$: o ajustare slabă'),
+      T('the weight $1/[F(1 - F)]$ is huge where $F$ is near 0 or 1: the tails', 'ponderea $1/[F(1 - F)]$ este foarte mare acolo unde $F$ este aproape de 0 sau 1, adică în cozi')])),
     pic('ch6_cramer.jpg', 'Harald Cramér (1893--1985)', 'Harald Cramér (1893--1985)',
         'https://commons.wikimedia.org/wiki/File:Harald_Cramér.jpg',
         'Photo: unknown photographer (1951); public domain; Wikimedia Commons', 'Foto: fotograf necunoscut (1951); domeniu public; Wikimedia Commons',
         h='0.42\\textheight'), wl='0.66', wr='0.30'))
 
-chart(T('Why KS Is Weak in the Tails', 'De ce este KS slab în cozi'), 'sfm_ch6_ks_tail', 'SFM_ch6_gof_tests', [
+chart(T('Why KS Is Weak in the Tails', 'Slăbiciunea testului KS în cozi'), 'sfm_ch6_ks_tail', 'SFM_ch6_gof_tests', [
     T('S\\&P 500 against its Normal fit. Left: the KS gap peaks at $x = @{kt.x}\\%$, near the centre ($F = @{kt.F}\\%$), with $D_n = @{kt.d}$',
       'S\\&P 500 comparat cu distribuția Normală estimată. Stînga: distanța KS are maximul la $x = @{kt.x}\\%$, aproape de centru ($F = @{kt.F}\\%$), cu $D_n = @{kt.d}$'),
-    T('In the tails $F_n$ and $F$ are both close to 0 or 1, so the raw gap is small even when the model is badly wrong; the Anderson--Darling weight (right) puts the largest gap at $x = @{kt.wx}\\%$',
-      'În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult; cu ponderea Anderson--Darling (dreapta), distanța maximă apare la $x = @{kt.wx}\\%$')],
-    h='0.54\\textheight')
+    (T('In the tails $F_n$ and $F$ are both close to 0 or 1, so the raw gap is small even when the model is badly wrong', 'În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult'),
+     [T('the Anderson--Darling weight (right) puts the largest gap at $x = @{kt.wx}\\%$', 'cu ponderea Anderson--Darling (dreapta), distanța maximă apare la $x = @{kt.wx}\\%$')])],
+    h='0.50\\textheight')
 
 chart(T('Power of the Three Tests', 'Puterea celor trei teste'), 'sfm_ch6_gof_power', 'SFM_ch6_gof_tests', [
     T('Share of 1000 simulated samples in which Normality (estimated parameters) is rejected at 5\\%; power = probability of rejecting a false $H_0$',
       'Proporția din 1000 de eșantioane simulate în care normalitatea (parametri estimați) este respinsă la 5\\%; puterea = probabilitatea de a respinge un $H_0$ fals'),
-    T('Student-t data, $n = 250$: KS $@{pw.t5.250.ks}\\%$, Cramér--von Mises $@{pw.t5.250.cvm}\\%$, Anderson--Darling $@{pw.t5.250.ad}\\%$; tail-only departures ($n = 250$): $@{pw.contam.250.ks}\\%$, $@{pw.contam.250.cvm}\\%$, $@{pw.contam.250.ad}\\%$',
-      'Date Student-t, $n = 250$: KS $@{pw.t5.250.ks}\\%$, Cramér--von Mises $@{pw.t5.250.cvm}\\%$, Anderson--Darling $@{pw.t5.250.ad}\\%$; abateri doar în cozi ($n = 250$): $@{pw.contam.250.ks}\\%$, $@{pw.contam.250.cvm}\\%$, $@{pw.contam.250.ad}\\%$')],
-    h='0.54\\textheight')
+    (T('Student-t data, $n = 250$: KS $@{pw.t5.250.ks}\\%$, Cramér--von Mises $@{pw.t5.250.cvm}\\%$, Anderson--Darling $@{pw.t5.250.ad}\\%$', 'Date Student-t, $n = 250$: KS $@{pw.t5.250.ks}\\%$, Cramér--von Mises $@{pw.t5.250.cvm}\\%$, Anderson--Darling $@{pw.t5.250.ad}\\%$'),
+     [T('tail-only departures ($n = 250$): $@{pw.contam.250.ks}\\%$, $@{pw.contam.250.cvm}\\%$, $@{pw.contam.250.ad}\\%$', 'abateri doar în cozi ($n = 250$): $@{pw.contam.250.ks}\\%$, $@{pw.contam.250.cvm}\\%$, $@{pw.contam.250.ad}\\%$')])],
+    h='0.50\\textheight')
 
 
 def gofrow(m):
@@ -714,7 +721,7 @@ D.frame(T('EDF Tests on the S\\&P 500', 'Teste EDF pe S\\&P 500'), cols(table(
      [T('Student-t: KS $@{gb.Student-t.ks.crit}$, AD $@{gb.Student-t.ad.crit}$', 'Student-t: KS $@{gb.Student-t.ks.crit}$, AD $@{gb.Student-t.ad.crit}$'),
       T('skewed-t: KS $@{gb.Skewed-t.ks.crit}$, AD $@{gb.Skewed-t.ad.crit}$', 'skewed-t: KS $@{gb.Skewed-t.ks.crit}$, AD $@{gb.Skewed-t.ad.crit}$')]),
     T('Normal, Student-t, skewed-t: bootstrap $p = @{gb.pmin}$, the smallest possible: all rejected', 'Normală, Student-t, skewed-t: $p$ bootstrap $= @{gb.pmin}$, cel mai mic posibil: toate respinse'),
-    T('Student-t, naive KS $p$-value (as if $\\theta$ were known): $@{gb.Student-t.naive}$', 'Student-t, valoarea $p$ KS naivă (ca și cum $\\theta$ ar fi cunoscut): $@{gb.Student-t.naive}$')),
+    T('Student-t, naive KS $p$-value (as if $\\theta$ were known): $@{gb.Student-t.naive}$', 'Student-t, p-value-ul KS naiv (ca și cum $\\theta$ ar fi cunoscut): $@{gb.Student-t.naive}$')),
     wl='0.44', wr='0.52') + items(
     T('KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; smaller is better', 'KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; valorile mai mici indică o ajustare mai bună')) + ql('SFM_ch6_gof_tests'), size='footnotesize')
 
@@ -755,8 +762,8 @@ chart(T('PP Plots: S\\&P 500', 'Grafice PP: S\\&P 500'), 'sfm_ch6_pp', 'SFM_ch6_
     T('Student-t, skewed-t, stable: on the diagonal; in a PP plot they are indistinguishable', 'Student-t, skewed-t, stabilă: pe diagonală; într-un grafic PP nu se pot deosebi')], h='0.5\\textheight')
 
 chart(T('QQ Plots: S\\&P 500', 'Grafice QQ: S\\&P 500'), 'sfm_ch6_qq', 'SFM_ch6_pp_qq', [
-    T('The worst day was $@{pq.xmin}\\%$; the model quantile at the same probability: Normal $@{pq.Normal.q}\\%$, Student-t $@{pq.Student-t.q}\\%$, skewed-t $@{pq.Skewed-t.q}\\%$, stable $@{pq.Stable.q}\\%$',
-      'Cel mai mic randament zilnic a fost $@{pq.xmin}\\%$; cuantila modelului la aceeași probabilitate: Normală $@{pq.Normal.q}\\%$, Student-t $@{pq.Student-t.q}\\%$, skewed-t $@{pq.Skewed-t.q}\\%$, stabilă $@{pq.Stable.q}\\%$'),
+    (T('The worst day was $@{pq.xmin}\\%$; the model quantile at the same probability:', 'Cel mai mic randament zilnic a fost $@{pq.xmin}\\%$; cuantila modelului la aceeași probabilitate:'),
+     [T('Normal $@{pq.Normal.q}\\%$, Student-t $@{pq.Student-t.q}\\%$, skewed-t $@{pq.Skewed-t.q}\\%$, stable $@{pq.Stable.q}\\%$', 'Normală $@{pq.Normal.q}\\%$, Student-t $@{pq.Student-t.q}\\%$, skewed-t $@{pq.Skewed-t.q}\\%$, stabilă $@{pq.Stable.q}\\%$')]),
     T('The models that looked identical in the PP plot are far apart in the far tail', 'Modelele care păreau identice în graficul PP diferă puternic în extremitatea cozii')], h='0.5\\textheight')
 
 chart(T('QQ Plots for BET, Bitcoin and Banca Transilvania', 'Grafice QQ pentru BET, Bitcoin și Banca Transilvania'), 'sfm_ch6_qq_assets', 'SFM_ch6_pp_qq', [
@@ -822,10 +829,11 @@ D.frame(T('Counting Exceedances: the Kupiec Test', 'Numărarea depășirilor: te
     [xrow(k) for k in ['bet', 'sp500', 'dax', 'btc']], size='scriptsize') + items(
     T('Exceedance: a day with $r_t < -\\mathrm{VaR}_{1\\%}$; under a correct model their number is $\\mathrm{Binomial}(n, 0.01)$',
       'Depășire: o zi cu $r_t < -\\mathrm{VaR}_{1\\%}$; pentru un model corect, numărul lor este $\\mathrm{Binomial}(n; 0{,}01)$'),
-    T('\\refKupiec: $LR_{uc} = -2\\ln\\dfrac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \\approx \\chi^2(1)$, $x$ = number of exceedances',
+    (T('\\refKupiec: $LR_{uc} = -2\\ln\\dfrac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \\approx \\chi^2(1)$, $x$ = number of exceedances',
       '\\refKupiec: $LR_{uc} = -2\\ln\\dfrac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \\approx \\chi^2(1)$, $x$ = numărul de depășiri'),
-    T('S\\&P 500: Student-t @{x.sp500.Student-t} exceedances for @{x.sp500.exp} expected ($p = @{xp.sp500.Student-t}$); NIG, the AIC winner, @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)',
-      'S\\&P 500: Student-t, @{x.sp500.Student-t} depășiri față de @{x.sp500.exp} așteptate ($p = @{xp.sp500.Student-t}$); NIG, cîștigătorul AIC, @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)'),
+     [T('an LR test comparing the target rate $\\alpha$ with the observed rate $x/n$; large $LR_{uc}$: wrong number of exceedances', 'un test LR care compară rata țintă $\\alpha$ cu rata observată $x/n$; $LR_{uc}$ mare: număr greșit de depășiri')]),
+    (T('S\\&P 500: Student-t @{x.sp500.Student-t} exceedances for @{x.sp500.exp} expected ($p = @{xp.sp500.Student-t}$)', 'S\\&P 500: Student-t, @{x.sp500.Student-t} depășiri față de @{x.sp500.exp} așteptate ($p = @{xp.sp500.Student-t}$)'),
+     [T('NIG, the AIC winner, @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)', 'NIG, cîștigătorul AIC: @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)')]),
     T('The best model for the whole density is not always the best for one quantile; tail-focused scores exist \\refDPD',
       'Cel mai bun model pentru întreaga densitate nu este întotdeauna cel mai bun pentru o cuantilă; există scoruri axate pe coadă \\refDPD')) + ql('SFM_ch6_tail_var'), size='footnotesize')
 
@@ -839,7 +847,7 @@ D.recap(('VaR 1\\% in Sample', 'VaR 1\\% în eșantion'), [
 # =============================================================================
 D.section('Out of Sample: Validation and Overfitting', 'În afara eșantionului: validare și supraajustare')
 
-D.frame(T('Why Out of Sample?', 'De ce în afara eșantionului?'), items(
+D.frame(T('Why Out of Sample?', 'Rolul validării în afara eșantionului'), items(
     (T('In sample, a larger model always fits at least as well: $\\ell$ never decreases when parameters are added', 'În eșantion, un model mai general se ajustează cel puțin la fel de bine: $\\ell$ nu scade niciodată cînd adăugăm parametri'),
      [T('\\textbf{overfitting}: the extra parameters fit noise of the estimation sample, not features of future returns',
         '\\textbf{supraajustare} (overfitting): parametrii suplimentari modelează zgomotul eșantionului de estimare, nu trăsături ale randamentelor viitoare')]),
@@ -848,7 +856,8 @@ D.frame(T('Why Out of Sample?', 'De ce în afara eșantionului?'), items(
      [T('\\textbf{log score}: the mean of $\\ln f(r_t; \\hat\\theta)$ over the test days; higher is better, a proper scoring rule \\refGR',
         '\\textbf{scorul logaritmic}: media lui $\\ln f(r_t; \\hat\\theta)$ pe zilele de test; valoarea mai mare este preferată; este o regulă de scor proprie (proper scoring rule) \\refGR'),
       T('\\textbf{exceedances} of VaR 1\\% (Kupiec) and the \\textbf{pinball loss} $\\frac{1}{n}\\sum_t (\\alpha - \\mathbf{1}\\{r_t < q\\})(r_t - q)$ of the 1\\% quantile $q$',
-        '\\textbf{depășirile} VaR 1\\% (Kupiec) și \\textbf{pierderea pinball} $\\frac{1}{n}\\sum_t (\\alpha - \\mathbf{1}\\{r_t < q\\})(r_t - q)$ a cuantilei de 1\\% $q$')]),
+        '\\textbf{depășirile} VaR 1\\% (Kupiec) și \\textbf{pierderea pinball} $\\frac{1}{n}\\sum_t (\\alpha - \\mathbf{1}\\{r_t < q\\})(r_t - q)$ a cuantilei de 1\\% $q$'),
+      T('pinball: $\\mathbf{1}\\{r_t < q\\} = 1$ on a day below $q$, 0 otherwise; it penalises misses asymmetrically, lower is better', 'pinball: $\\mathbf{1}\\{r_t < q\\} = 1$ într-o zi sub $q$, 0 altfel; penalizează asimetric abaterile, valoarea mai mică este preferată')]),
     T('A score is \\textbf{proper} if the true distribution gets the best expected score: forecasters cannot gain by distorting',
       'Un scor este \\textbf{propriu} dacă distribuția adevărată obține cel mai bun scor așteptat: prognozistul nu are nimic de cîștigat dacă își distorsionează prognoza')))
 
@@ -871,8 +880,8 @@ D.frame(T('Reading the Out-of-Sample Table', 'Interpretarea tabelului din afara 
       'Depășiri ale VaR 1\\% pe zilele de test; aștept.: numărul așteptat; ist.: simularea istorică (cuantila de 1\\% a eșantionului de estimare)'),
     T('The AIC winner of 2000--2019 has the best log score only for the DAX; elsewhere the best log score belongs to a close neighbour',
       'Cîștigătorul AIC din 2000--2019 are cel mai bun scor logaritmic doar pentru DAX; în rest, cel mai bun scor aparține unui model apropiat în clasament'),
-    T('BET: the Normal model has @{o.bet.Normal.x} exceedances for @{o.bet.exp} expected, the heavy-tailed models only @{o.bet.Student-t.x}: 2020--@{y1} was calmer for the BET than 2000--2019',
-      'BET: modelul Normal are @{o.bet.Normal.x} depășiri față de @{o.bet.exp} așteptate, modelele cu cozi groase doar @{o.bet.Student-t.x}: perioada 2020--@{y1} a fost mai calmă pentru BET decît 2000--2019'),
+    (T('BET: the Normal model has @{o.bet.Normal.x} exceedances for @{o.bet.exp} expected, the heavy-tailed models only @{o.bet.Student-t.x}', 'BET: modelul Normal are @{o.bet.Normal.x} depășiri față de @{o.bet.exp} așteptate, modelele cu cozi groase doar @{o.bet.Student-t.x}'),
+     [T('2020--@{y1} was calmer for the BET than 2000--2019', 'perioada 2020--@{y1} a fost mai calmă pentru BET decît 2000--2019')]),
     T('The right count for the wrong reason: a static model cannot follow changes in volatility', 'Numărul potrivit, dar din motive greșite: un model static nu poate urmări schimbările de volatilitate')) + ql('SFM_ch6_out_of_sample'), size='footnotesize')
 
 chart(T('Overfitting: Normal Mixtures with 1 to 6 Components', 'Supraajustare: amestecuri Normale cu 1 pînă la 6 componente'), 'sfm_ch6_overfit', 'SFM_ch6_out_of_sample', [
@@ -881,7 +890,7 @@ chart(T('Overfitting: Normal Mixtures with 1 to 6 Components', 'Supraajustare: a
     T('In sample (blue) the fit improves with every component; out of sample (red) it peaks at $c = @{of.best_out}$ and then declines',
       'În eșantion (albastru), calitatea ajustării crește cu fiecare componentă; în afara eșantionului (roșu) atinge maximul la $c = @{of.best_out}$ și apoi scade')], h='0.52\\textheight')
 
-D.frame(T('Which Criterion Warned Us?', 'Care criteriu ne-a avertizat?'), items(
+D.frame(T('Which Criterion Warned Us?', 'Criteriul care a semnalat supraajustarea'), items(
     (T('Mean log-likelihood per day, in sample $\\to$ out of sample', 'Log-verosimilitatea medie pe zi, în eșantion $\\to$ în afara eșantionului'),
      [T('$c = 1$ (Normal): $@{of.1.in} \\to @{of.1.out}$; $c = 3$: $@{of.3.in} \\to @{of.3.out}$; $c = 6$ (@{of.6.k} parameters): $@{of.6.in} \\to @{of.6.out}$',
         '$c = 1$ (Normală): $@{of.1.in} \\to @{of.1.out}$; $c = 3$: $@{of.3.in} \\to @{of.3.out}$; $c = 6$ (@{of.6.k} parametri): $@{of.6.in} \\to @{of.6.out}$')]),
@@ -906,15 +915,16 @@ D.frame(T('Rolling Backtest: the Results', 'Backtesting pe fereastră mobilă: r
     size='footnotesize') + items(
     T('Backtest @{rv.sp.y0}--@{y1}, $n = @{rv.sp.n}$ days for the S\\&P 500; target rate 1\\%; the worst year is 2008 for every model and both series',
       'Backtesting @{rv.sp.y0}--@{y1}, $n = @{rv.sp.n}$ zile pentru S\\&P 500; rata țintă 1\\%; cel mai slab an este 2008, pentru toate modelele și pentru ambele serii'),
-    T('Heavy tails halve the excess of exceedances, but no unconditional model reaches 1\\%: the volatility changes faster than a 1000-day window',
-      'Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\\%: volatilitatea se schimbă mai repede decît se poate adapta o fereastră de 1000 de zile'),
+    (T('Heavy tails halve the excess of exceedances, but no unconditional model reaches 1\\%', 'Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\\%'),
+     [T('the volatility changes faster than a 1000-day window can adapt', 'volatilitatea se schimbă mai repede decît se poate adapta o fereastră de 1000 de zile')]),
     T('The remedy is a model for the volatility itself: GARCH, Chapters 8 and 9', 'Remediul este un model pentru volatilitatea însăși: GARCH, Capitolele 8 și 9')) + ql('SFM_ch6_out_of_sample'), size='footnotesize')
 
 chart(T('The VaR Reliability Plot (SFEVaRqqplot)', 'Graficul de fiabilitate VaR (SFEVaRqqplot)'), 'sfm_ch6_var_qqplot', 'SFM_ch6_var_qqplot', [
-    T('DAX since @{vq.y0}: Normal VaR 1\\% with the volatility of the previous 250 days, RMA (rectangular moving average) or EMA (exponential, $\\lambda = 0.96$); QQ plot of $L/\\mathrm{VaR}$ against Normal quantiles',
-      'DAX din @{vq.y0}: VaR 1\\% Normal cu volatilitatea ultimelor 250 de zile, RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\\lambda = 0{,}96$); graficul QQ al lui $L/\\mathrm{VaR}$ față de cuantilele Normale'),
-    T('A straight line would mean a reliable VaR; both curve upwards at the right end: the losses beyond VaR are too large and too frequent ($@{vq.rma.rate}\\%$ and $@{vq.ema.rate}\\%$ exceedances)',
-      'O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept: pierderile dincolo de VaR sînt prea mari și prea frecvente ($@{vq.rma.rate}\\%$ și $@{vq.ema.rate}\\%$ depășiri)')], h='0.52\\textheight')
+    (T('DAX since @{vq.y0}: Normal VaR 1\\% with the volatility of the previous 250 days', 'DAX din @{vq.y0}: VaR 1\\% Normal cu volatilitatea ultimelor 250 de zile'),
+     [T('RMA (rectangular moving average) or EMA (exponential, $\\lambda = 0.96$: the weight of each older day shrinks by 4\\%)', 'RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\\lambda = 0{,}96$: ponderea fiecărei zile mai vechi scade cu 4\\%)'),
+      T('QQ plot of $L/\\mathrm{VaR}$ (loss divided by VaR) against Normal quantiles', 'graficul QQ al lui $L/\\mathrm{VaR}$ (pierderea împărțită la VaR) față de cuantilele Normale')]),
+    (T('A straight line would mean a reliable VaR; both curve upwards at the right end', 'O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept'),
+     [T('the losses beyond VaR are too large and too frequent ($@{vq.rma.rate}\\%$ and $@{vq.ema.rate}\\%$ exceedances)', 'pierderile dincolo de VaR sînt prea mari și prea frecvente ($@{vq.rma.rate}\\%$ și $@{vq.ema.rate}\\%$ depășiri)')])], h='0.46\\textheight', size='scriptsize')
 
 D.recap(('Out of Sample', 'În afara eșantionului'), [
     T('Judge models on data they have not seen: log score, exceedances, pinball loss', 'Judecați modelele pe date pe care nu le-au văzut: scor logaritmic, depășiri, pierdere pinball'),
@@ -926,7 +936,7 @@ D.recap(('Out of Sample', 'În afara eșantionului'), [
 # =============================================================================
 D.section('Model Uncertainty', 'Incertitudinea de model')
 
-chart(T('How Sure Are We of the Winner?', 'Cît de siguri sîntem de cîștigător?'), 'sfm_ch6_model_uncertainty', 'SFM_ch6_model_uncertainty', [
+chart(T('How Sure Are We of the Winner?', 'Stabilitatea cîștigătorului'), 'sfm_ch6_model_uncertainty', 'SFM_ch6_model_uncertainty', [
     T('S\\&P 500, @{u.B} moving-block bootstrap resamples (blocks of 20 days keep the volatility clusters); in each, six models refitted',
       'S\\&P 500, @{u.B} de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează volatility clustering); în fiecare reeșantionare, cele șase modele sînt reestimate'),
     T('Left: NIG has the lowest AIC in $@{u.w.NIG}\\%$ of the resamples; right: the bootstrap spread of VaR 1\\% under each model',
@@ -947,10 +957,10 @@ D.frame(T('Model Averaging and Model Risk', 'Medierea modelelor și riscul de mo
     'lrrrrr', T('& data & Normal & heavy-tailed range & averaged & range (\\%)', '& date & Normală & interval (cozi groase) & mediat & interval (\\%)'),
     [f'{NAMES[k]} & $@{{av.{k}.emp}}$ & $@{{av.{k}.normal}}$ & $[@{{av.{k}.min_heavy}}, @{{av.{k}.max_heavy}}]$ & $@{{av.{k}.avg}}$ & $@{{av.{k}.range}}$' for k in ALL],
     size='scriptsize') + items(
-    T('VaR 1\\% in \\%; heavy-tailed range: the smallest and largest VaR 1\\% of the six non-Normal models; range (\\%): max/min $- 1$',
-      'VaR 1\\% în \\%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\\% dintre cele șase modele nenormale; intervalul (\\%): max/min $- 1$'),
-    T('Averaged: $\\sum_i w_i\\,\\mathrm{VaR}_i$ with the Akaike weights; a frequentist cousin of Bayesian model averaging \\refHoeting',
-      'Mediat: $\\sum_i w_i\\,\\mathrm{VaR}_i$ cu ponderile Akaike; un analog frecventist al medierii bayesiene a modelelor \\refHoeting'),
+    (T('VaR 1\\% in \\%; heavy-tailed range: the smallest and largest VaR 1\\% of the six non-Normal models', 'VaR 1\\% în \\%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\\% dintre cele șase modele nenormale'),
+     [T('range (\\%): max/min $- 1$, the relative distance between the extreme models', 'intervalul (\\%): max/min $- 1$, distanța relativă dintre modelele extreme')]),
+    (T('Averaged: $\\sum_i w_i\\,\\mathrm{VaR}_i$ with the Akaike weights $w_i$', 'Mediat: $\\sum_i w_i\\,\\mathrm{VaR}_i$, cu ponderile Akaike $w_i$'),
+     [T('a frequentist cousin of Bayesian model averaging \\refHoeting', 'un analog frecventist al medierii bayesiene a modelelor \\refHoeting')]),
     T('\\textbf{Model risk}: the range across plausible models; regulators ask banks to measure it \\refKerkhof, \\refDanielsson',
       '\\textbf{Riscul de model}: amplitudinea rezultatelor între modelele plauzibile; autoritățile de supraveghere cer băncilor să îl măsoare \\refKerkhof, \\refDanielsson')) + ql('SFM_ch6_model_uncertainty'), size='footnotesize')
 
@@ -977,7 +987,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
      [T('part of the heavy tails of daily returns comes from changing volatility (Chapter 2)', 'o parte din cozile groase ale randamentelor zilnice provine din volatilitatea variabilă în timp (Capitolul 2)'),
       T('returns divided by a volatility forecast (for example EMA, $\\lambda = 0.96$) have lighter tails; which candidate fits them best?',
         'randamentele împărțite la o prognoză de volatilitate (de exemplu EMA, $\\lambda = 0{,}96$) au cozi mai subțiri; care candidat li se potrivește cel mai bine?')]),
-    T('Why it is open: the answer differs across markets, and the volatility model itself is a choice', 'De ce este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere'),
+    T('Why it is open: the answer differs across markets, and the volatility model itself is a choice', 'Motivul pentru care este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere'),
     T('Raw daily returns: NIG wins for the three indices, GED for Bitcoin, Student-t for BVB stocks (this chapter)', 'Randamentele zilnice brute: NIG cîștigă pentru cei trei indici, GED pentru Bitcoin, Student-t pentru acțiunile BVB (acest capitol)'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 

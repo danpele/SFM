@@ -350,7 +350,7 @@ window.SFM_DATA.quizzes['stable'] = {
                 "title": "Varianța de selecție cînd varianța este infinită",
                 "text": "Calculați varianța de selecție pe un eșantion tot mai mare dintr-o lege stabilă cu $\\alpha = 1{,}6$. Ce observați?",
                 "options": [
-                    "Nu se stabilizează: sare în sus de fiecare dată cînd apare o valoare extremă nouă",
+                    "Nu se stabilizează: crește brusc de fiecare dată cînd apare o valoare extremă nouă",
                     "Converge rapid la $2\\gamma^2$",
                     "Scade spre zero",
                     "Converge la $\\alpha$"
@@ -563,8 +563,8 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "Stable laws with $\\alpha < 2$ have tail exponent $\\alpha$ below 2; an exponent near 3 gives finite variance, as in a Student-t with about 3 degrees of freedom. A power tail still rules out the Normal distribution."
             },
             "ro": {
-                "title": "Dovezi din indicele de coadă",
-                "text": "Estimările indicelui de coadă calculate doar din cele mai mari randamente ale acțiunilor sînt de obicei în jur de 3. Ce sugerează aceasta?",
+                "title": "Dovezi din tail index",
+                "text": "Estimările tail index-ului calculate doar din cele mai mari randamente ale acțiunilor sînt de obicei în jur de 3. Ce sugerează aceasta?",
                 "options": [
                     "Randamentele sînt exact Cauchy",
                     "Varianța este infinită",
@@ -623,7 +623,7 @@ window.SFM_DATA.quizzes['stable'] = {
                     "Randamente care se potrivesc bine cu distribuția Normală",
                     "Cozi groase compatibile cu legi stabile cu $\\alpha < 2$, în sprijinul lui Mandelbrot",
                     "O previzibilitate puternică a randamentelor zilnice",
-                    "Un indice de coadă mult peste 4"
+                    "Un tail index mult peste 4"
                 ],
                 "correctExplanation": "Fama a găsit mai multe randamente extreme decît permite distribuția Normală și exponenți caracteristici sub 2, în acord cu ipoteza lui Mandelbrot.",
                 "incorrectExplanation": "Fama (1965) a susținut ipoteza legilor stabile de tip Pareto, cu $\\alpha < 2$; critica ulterioară (varianță finită, $\\alpha$ care crește cu agregarea) a venit din alte studii."

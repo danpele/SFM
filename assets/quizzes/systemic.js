@@ -483,14 +483,14 @@ window.SFM_DATA.quizzes['systemic'] = {
             },
             "ro": {
                 "title": "Dependența în cozi",
-                "text": "Ce copulă permite prăbușiri simultane ale unei bănci și ale pieței, cu dependență pozitivă în coada inferioară?",
+                "text": "Ce copulă permite prăbușiri simultane ale unei bănci și ale pieței, cu dependență pozitivă în lower tail?",
                 "options": [
                     "Copula t cu puține grade de libertate",
                     "Copula Gaussiană",
                     "Copula de independență",
                     "Orice copulă cu corelația sub 0,5"
                 ],
-                "correctExplanation": "Copula t are lambda_L > 0, mai mare pentru nu mic; capitolul găsește nu în jur de 3-4 pentru bănci și piețele lor.",
+                "correctExplanation": "Copula t are lambda_L > 0, mai mare pentru un ν mic; capitolul găsește ν în jur de 3-4 pentru bănci și piețele lor.",
                 "incorrectExplanation": "Copula Gaussiană și copula de independență au dependență în coadă zero; corelația singură nu o determină."
             }
         },
@@ -517,7 +517,7 @@ window.SFM_DATA.quizzes['systemic'] = {
                     "Un șoc la A produce întotdeauna o pierdere la B",
                     "Randamentele trecute ale lui A ajută la prognoza lui B dincolo de trecutul lui B"
                 ],
-                "correctExplanation": "Cauzalitatea Granger privește prognoza: randamentele decalate ale lui A au un coeficient semnificativ în regresia lui B.",
+                "correctExplanation": "Cauzalitatea Granger privește prognoza: randamentele trecute ale lui A au un coeficient semnificativ în regresia lui B.",
                 "incorrectExplanation": "O legătură statistică nu dezvăluie acționariate, credite sau un canal cauzal; arată doar conținut predictiv."
             }
         },

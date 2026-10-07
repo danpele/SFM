@@ -186,7 +186,7 @@ window.SFM_DATA.quizzes['review'] = {
             },
             "ro": {
                 "title": "Randamente necorelate",
-                "text": "ACF al randamentelor zilnice este aproape zero, ACF al randamentelor absolute este pozitiv la multe decalaje. Ce rezultă?",
+                "text": "ACF al randamentelor zilnice este aproape zero, ACF al randamentelor absolute este pozitiv la multe laguri. Ce rezultă?",
                 "options": [
                     "Randamentele sînt independente",
                     "Semnul randamentelor este previzibil",
@@ -320,8 +320,8 @@ window.SFM_DATA.quizzes['review'] = {
                 "incorrectExplanation": "With a power-law tail of index α the moments of order p < α are finite and those of order p ≥ α are infinite; α = 3.5 means a finite variance and an infinite kurtosis."
             },
             "ro": {
-                "title": "Indicele de coadă",
-                "text": "Graficul Hill dă indicele de coadă α̂ = 3,5 pentru pierderile zilnice. Ce momente ale pierderilor există?",
+                "title": "Tail index-ul",
+                "text": "Graficul Hill dă tail index-ul α̂ = 3,5 pentru pierderile zilnice. Ce momente ale pierderilor există?",
                 "options": [
                     "Doar media",
                     "Niciunul",
@@ -329,7 +329,7 @@ window.SFM_DATA.quizzes['review'] = {
                     "Media, varianța și asimetria, dar nu și boltirea"
                 ],
                 "correctExplanation": "Există momentele de ordin p < α = 3,5: media (p = 1), varianța (p = 2) și asimetria (p = 3); boltirea (p = 4) este infinită.",
-                "incorrectExplanation": "Pentru o coadă de tip putere cu indicele α, momentele de ordin p < α sînt finite, iar cele de ordin p ≥ α sînt infinite; α = 3,5 înseamnă varianță finită și boltire infinită."
+                "incorrectExplanation": "Pentru o coadă de tip putere cu tail index-ul α, momentele de ordin p < α sînt finite, iar cele de ordin p ≥ α sînt infinite; α = 3,5 înseamnă varianță finită și boltire infinită."
             }
         },
         {
@@ -598,7 +598,7 @@ window.SFM_DATA.quizzes['review'] = {
                     "Doar pe eșantionul de antrenare",
                     "După numărul de parametri"
                 ],
-                "correctExplanation": "Antrenarea pe trecut și testarea pe viitor, cu un interval liber pentru țintele suprapuse, evită look-ahead bias și scurgerea de informație.",
+                "correctExplanation": "Antrenarea pe trecut și testarea pe viitor, cu un interval liber pentru țintele suprapuse, evită look-ahead bias și leakage-ul.",
                 "incorrectExplanation": "Partițiile aleatoare pun observații din viitor în setul de antrenare: eroarea este subestimată, iar modelul pare mai bun decît este."
             }
         },

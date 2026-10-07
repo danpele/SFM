@@ -104,8 +104,8 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items
        '\\textbf{Întrebarea}: își amintesc randamentele de azi ce s-a întîmplat acum cîteva luni?'),
      [T('the fractal market hypothesis adds a second theme: who trades, and at which horizon', 'ipoteza pieței fractale adaugă o a doua temă: cine tranzacționează și pe ce orizont'),
       T('Chapter 7: daily returns are almost uncorrelated at short lags; Chapters 8 and 9: volatility is persistent',
-        'Capitolul 7: randamentele zilnice sînt aproape necorelate la decalaje mici; Capitolele 8 și 9: volatilitatea este persistentă'),
-      T('this chapter asks about dependence over \\textbf{long} lags and over \\textbf{many} time scales', 'acest capitol se ocupă de dependența la decalaje \\textbf{mari} și pe \\textbf{multe} scale de timp')]),
+        'Capitolul 7: randamentele zilnice sînt aproape necorelate la laguri mici; Capitolele 8 și 9: volatilitatea este persistentă'),
+      T('this chapter asks about dependence over \\textbf{long} lags and over \\textbf{many} time scales', 'acest capitol se ocupă de dependența la laguri \\textbf{mari} și pe \\textbf{multe} scale de timp')]),
     (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
      [T('the fractal market hypothesis of Peters; self-similarity and fractals', 'ipoteza pieței fractale a lui Peters; autosimilaritate și fractali'),
       T('Hurst and the Nile; the R/S statistic; long memory, fractional Brownian motion, ARFIMA', 'Hurst și Nilul; statistica R/S; memoria lungă, mișcarea browniană fracționară, ARFIMA'),
@@ -221,7 +221,7 @@ D.recap(('From Efficient to Fractal Markets', 'de la piețe eficiente la piețe 
 # =============================================================================
 D.section('Self-Similarity and Fractals', 'Autosimilaritate și fractali')
 
-D.frame(T('Benoît Mandelbrot: Roughness as a Measure', 'Benoît Mandelbrot: rugozitatea ca măsură'), cols(items(
+D.frame(T('Benoît Mandelbrot: Roughness as a Measure', 'Benoît Mandelbrot: măsurarea neregularității'), cols(items(
     (T('\\refMan: cotton prices have heavy tails and look alike at daily, monthly and yearly scales', '\\refMan: prețurile bumbacului au cozi groase și arată asemănător la scară zilnică, lunară și anuală'),
      [T('the $\\alpha$-stable distributions of Chapter 3', 'distribuțiile $\\alpha$-stabile din Capitolul 3')]),
     T('\\refCoast: the measured length of a coast grows as the ruler shrinks; the growth rate defines a \\textbf{fractal dimension}',
@@ -248,7 +248,7 @@ D.frame(T('Self-Similar Processes', 'Procese autosimilare'), items(
      [T('$\\overset{d}{=}$: equal in distribution; stretching time by $c$ equals stretching values by $c^H$', '$\\overset{d}{=}$: egalitate în distribuție; dilatarea timpului cu $c$ echivalează cu dilatarea valorilor cu $c^H$')]),
     T('Brownian motion (Chapter 4) is self-similar with $H = 1/2$: $W_{ct} \\overset{d}{=} \\sqrt{c}\\,W_t$', 'Mișcarea browniană (Capitolul 4) este autosimilară cu $H = 1/2$: $W_{ct} \\overset{d}{=} \\sqrt{c}\\,W_t$'),
     (T('Consequence for log prices with self-similar increments', 'Consecință pentru prețurile logaritmice cu creșteri autosimilare'),
-     [T('$\\mathrm{sd}(r_t^{(h)}) = h^H\\,\\mathrm{sd}(r_t)$, where $r_t^{(h)}$ is the $h$-day return', '$\\mathrm{sd}(r_t^{(h)}) = h^H\\,\\mathrm{sd}(r_t)$, unde $r_t^{(h)}$ este randamentul pe $h$ zile'),
+     [T('$\\mathrm{sd}(r_t^{(h)}) = h^H\\,\\mathrm{sd}(r_t)$, where $r_t^{(h)}$ is the $h$-day return and sd the standard deviation', '$\\mathrm{sd}(r_t^{(h)}) = h^H\\,\\mathrm{sd}(r_t)$, unde $r_t^{(h)}$ este randamentul pe $h$ zile, iar sd abaterea standard'),
       T('the square-root-of-time rule $\\sqrt{h}$ is the special case $H = 1/2$', 'regula rădăcinii pătrate a timpului, $\\sqrt{h}$, este cazul particular $H = 1/2$')]),
     T('A first estimator of $H$: the slope of $\\ln \\mathrm{sd}(r^{(h)})$ on $\\ln h$', 'Un prim estimator al lui $H$: panta dreptei lui $\\ln \\mathrm{sd}(r^{(h)})$ în funcție de $\\ln h$')))
 
@@ -297,10 +297,10 @@ D.frame(T('The R/S Statistic', 'Statistica R/S'), items(
       '\\textbf{Amplitudinea}: $R_n = \\max_k Y_k - \\min_k Y_k$; \\textbf{abaterea standard}: $S_n = \\sqrt{\\tfrac1n\\sum_j (x_j - \\bar x)^2}$'),
     (T('\\textbf{R/S statistic} (rescaled range) \\refFHH, 14.4.1: $(R/S)_n = R_n/S_n$', '\\textbf{Statistica R/S} (rescaled range, amplitudinea rescalată) \\refFHH, 14.4.1: $(R/S)_n = R_n/S_n$'),
      [T('dividing by $S_n$ removes the unit: $(R/S)_n$ is comparable across assets', 'împărțirea la $S_n$ elimină unitatea de măsură: $(R/S)_n$ este comparabilă între active'),
-      T('for i.i.d.\\ data with finite variance, $(R/S)_n$ grows like $n^{1/2}$; under long memory like $n^H$, $H > 1/2$', 'pentru date i.i.d.\\ cu varianță finită, $(R/S)_n$ crește ca $n^{1/2}$; sub memorie lungă crește ca $n^H$, $H > 1/2$')]),
+      T('for i.i.d.\\ data with finite variance, $(R/S)_n$ grows like $n^{1/2}$; under long memory like $n^H$, $H > 1/2$', 'pentru date i.i.d.\\ cu varianță finită, $(R/S)_n$ crește ca $n^{1/2}$; în cazul memoriei lungi crește ca $n^H$, $H > 1/2$')]),
     T('Robust to heavy tails: $R$ and $S$ are inflated by the same extreme values \\refMW', 'Robustă la cozi groase: $R$ și $S$ sînt mărite de aceleași valori extreme \\refMW')))
 
-D.frame(T('Worked Example: R/S of Eight Returns', 'Exemplu lucrat: R/S pentru opt randamente'), cols(items(
+D.frame(T('Worked Example: R/S of Eight Returns', 'Exemplu rezolvat: R/S pentru opt randamente'), cols(items(
     T('Returns (\\%): $0.5;\\ -0.3;\\ 0.8;\\ -0.2;\\ 0.6;\\ -0.1;\\ 0.4;\\ -0.7$', 'Randamente (\\%): $0.5;\\ -0.3;\\ 0.8;\\ -0.2;\\ 0.6;\\ -0.1;\\ 0.4;\\ -0.7$'),
     T('Mean $\\bar x = 1.0/8 = @{ex.mean}$', 'Media $\\bar x = 1.0/8 = @{ex.mean}$'),
     T('Deviations: $@{ex.dev1}$, $@{ex.dev2}$, $@{ex.dev3}$, $@{ex.dev4}$, $@{ex.dev5}$, $@{ex.dev6}$, $@{ex.dev7}$, $@{ex.dev8}$',
@@ -315,13 +315,14 @@ D.frame(T('From R/S to the Hurst Exponent', 'De la R/S la exponentul Hurst'), it
     (T('Steps \\refMW', 'Pașii \\refMW'),
      [T('choose block sizes $n$ between 10 and $N/4$, evenly spaced on a log scale', 'alegem mărimi de bloc $n$ între 10 și $N/4$, la distanțe egale pe scară logaritmică'),
       T('split the $N$ returns into $\\lfloor N/n\\rfloor$ non-overlapping blocks; compute $R/S$ in each block and average: $(R/S)_n$', 'împărțim cele $N$ randamente în $\\lfloor N/n\\rfloor$ blocuri fără suprapunere; calculăm $R/S$ în fiecare bloc și facem media: $(R/S)_n$'),
-      T('regress $\\ln (R/S)_n = \\ln c + H \\ln n + e_n$ by OLS (ordinary least squares): the slope $\\hat H$ estimates $H$', 'estimăm prin OLS (ordinary least squares, metoda celor mai mici pătrate) $\\ln (R/S)_n = \\ln c + H \\ln n + e_n$: panta $\\hat H$ estimează $H$')]),
+      T('regress $\\ln (R/S)_n = \\ln c + H \\ln n + e_n$ by OLS (ordinary least squares): the slope $\\hat H$ estimates $H$', 'estimăm prin OLS (ordinary least squares, metoda celor mai mici pătrate) $\\ln (R/S)_n = \\ln c + H \\ln n + e_n$: panta $\\hat H$ estimează $H$'),
+      T('$N$: the number of returns; $n$: the block size; $c$: a constant; $e_n$: the regression error', '$N$: numărul de randamente; $n$: mărimea blocului; $c$: o constantă; $e_n$: eroarea regresiei')]),
     T('The log-log plot is the main diagnostic: a straight line supports a single scaling exponent', 'Graficul log-log este principalul instrument de diagnostic: o dreaptă susține existența unui singur exponent de scalare'),
     T('Applied to returns (stationary), not to prices: for prices, $(R/S)_n$ grows like $n$', 'Se aplică randamentelor (staționare), nu prețurilor: pentru prețuri, $(R/S)_n$ crește ca $n$')))
 
 D.frame(T('Interpreting $H$', 'Interpretarea exponentului $H$'), table(
     'llll', T('$H$ & increments & memory & path ($D = 2 - H$)', '$H$ & creșteri & memorie & traiectorie ($D = 2 - H$)'),
-    [T('$0 < H < 0.5$ & negatively correlated & anti-persistent: reversals & rough, $D > 1.5$', '$0 < H < 0.5$ & corelate negativ & antipersistentă: inversări & rugoasă, $D > 1.5$'),
+    [T('$0 < H < 0.5$ & negatively correlated & anti-persistent: reversals & rough, $D > 1.5$', '$0 < H < 0.5$ & corelate negativ & antipersistentă: inversări & neregulată, $D > 1.5$'),
      T('$H = 0.5$ & uncorrelated & none (random walk) & $D = 1.5$', '$H = 0.5$ & necorelate & fără memorie (mers aleator) & $D = 1.5$'),
      T('$0.5 < H < 1$ & positively correlated & persistent: trends & smoother, $D < 1.5$', '$0.5 < H < 1$ & corelate pozitiv & persistentă: tendințe & mai netedă, $D < 1.5$')],
     size='footnotesize') + items(
@@ -329,7 +330,7 @@ D.frame(T('Interpreting $H$', 'Interpretarea exponentului $H$'), table(
     (T('Two effects named by \\refNoah', 'Două efecte numite de \\refNoah'),
      [T('\\textbf{Noah effect}: extreme values (heavy tails, the flood); \\textbf{Joseph effect}: long runs of high or low values (``seven years of plenty, seven years of famine\'\')',
         '\\textbf{efectul Noe}: valori extreme (cozi groase, potopul); \\textbf{efectul Iosif}: serii lungi de valori mari sau mici („șapte ani de belșug, șapte ani de foamete”)'),
-      T('$H$ measures the Joseph effect; the tail index of Chapter 5 measures the Noah effect', '$H$ măsoară efectul Iosif; indicele de coadă din Capitolul 5 măsoară efectul Noe')])))
+      T('$H$ measures the Joseph effect; the tail index of Chapter 5 measures the Noah effect', '$H$ măsoară efectul Iosif; tail index-ul din Capitolul 5 măsoară efectul Noe')])))
 
 D.frame(T('Small Samples: the Bias of R/S', 'Eșantioane mici: deplasarea estimatorului R/S'), items(
     (T('For i.i.d.\\ data, $(R/S)_n$ approaches $c\\,n^{1/2}$ only for large $n$; for small $n$ it grows faster \\refAL', 'Pentru date i.i.d., $(R/S)_n$ se apropie de $c\\,n^{1/2}$ doar pentru $n$ mare; pentru $n$ mic crește mai repede \\refAL'),
@@ -339,7 +340,7 @@ D.frame(T('Small Samples: the Bias of R/S', 'Eșantioane mici: deplasarea estima
         '$\\hat H_{R/S}$ mediu: $@{mc.250.rs.mean}$ pentru $N = 250$, $@{mc.1000.rs.mean}$ pentru $N = 1000$, $@{mc.5000.rs.mean}$ pentru $N = 5000$'),
       T('95\\% band for $N = 1000$: $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$', 'banda de 95\\% pentru $N = 1000$: $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$')]),
     T('Rule: compare $\\hat H$ with the distribution of $\\hat H$ under the null hypothesis for the same $N$, not with 0.5 (Section 5)',
-      'Regulă: comparăm $\\hat H$ cu distribuția lui $\\hat H$ sub ipoteza nulă, pentru același $N$, nu cu 0,5 (secțiunea 5)')))
+      'Regulă: comparăm $\\hat H$ cu distribuția lui $\\hat H$ în ipoteza nulă, pentru același $N$, nu cu 0,5 (secțiunea 5)')))
 
 D.recap(('Hurst, the Nile and the R/S Statistic', 'Hurst, Nilul și statistica R/S'), [
     T('$(R/S)_n$: range of the cumulative deviations divided by the standard deviation', '$(R/S)_n$: amplitudinea abaterilor cumulate împărțită la abaterea standard'),
@@ -356,28 +357,29 @@ D.frame(T('Short and Long Memory', 'Memorie scurtă și memorie lungă'), items(
        '$X_t$ staționar, cu autocorelațiile $\\rho(k)$ (ACF, autocorrelation function, funcția de autocorelație); \\textbf{memorie lungă} \\refFHH, 14.1:'),
      [T('$\\sum_{k} |\\rho(k)| = \\infty$: the autocorrelations are not summable', '$\\sum_{k} |\\rho(k)| = \\infty$: autocorelațiile nu sînt sumabile'),
       T('equivalently, hyperbolic decay $\\rho(k) \\sim C\\,k^{2d - 1}$ as $k \\to \\infty$, with the \\textbf{memory parameter} $0 < d < 0.5$', 'echivalent, scădere hiperbolică $\\rho(k) \\sim C\\,k^{2d - 1}$ cînd $k \\to \\infty$, cu \\textbf{parametrul de memorie} $0 < d < 0.5$'),
-      T('in frequency: the spectral density has a pole at zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ as $\\lambda \\to 0$', 'în frecvență: densitatea spectrală are un pol în zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ cînd $\\lambda \\to 0$')]),
+      T('in frequency: the spectral density has a pole at zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ as $\\lambda \\to 0$', 'în frecvență: densitatea spectrală are un pol în zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ cînd $\\lambda \\to 0$'),
+      T('$C > 0$: a constant; $\\sim$: the ratio of the two sides tends to 1; $f(\\lambda)$: the share of variance at frequency $\\lambda$ (long cycles: $\\lambda$ near 0)', '$C > 0$: o constantă; $\\sim$: raportul celor doi membri tinde la 1; $f(\\lambda)$: partea din varianță la frecvența $\\lambda$ (ciclurile lungi: $\\lambda$ aproape de 0)')]),
     (T('\\textbf{Short memory}: ARMA (autoregressive moving average) models, e.g.\\ AR(1) with $\\rho(k) = \\phi^k$', '\\textbf{Memorie scurtă}: modelele ARMA (autoregressive moving average, autoregresive cu medie mobilă), de exemplu AR(1) cu $\\rho(k) = \\phi^k$'),
      [T('exponential decay: $\\sum_k |\\phi|^k = 1/(1 - |\\phi|) < \\infty$', 'scădere exponențială: $\\sum_k |\\phi|^k = 1/(1 - |\\phi|) < \\infty$')]),
     T('Link with the Hurst exponent: $d = H - 1/2$', 'Legătura cu exponentul Hurst: $d = H - 1/2$')))
 
-D.frame(T('Worked Example: How Fast Does Memory Fade?', 'Exemplu lucrat: cît de repede se stinge memoria?'), items(
+D.frame(T('Worked Example: How Fast Does Memory Fade?', 'Exemplu rezolvat: cît de repede se stinge memoria?'), items(
     (T('Long memory: fractional Gaussian noise (next slides) with $H = 0.8$', 'Memorie lungă: zgomot gaussian fracționar (slide-urile următoare) cu $H = 0.8$'),
      [T('$\\rho(1) = 2^{2H - 1} - 1 = 2^{0.6} - 1 = @{fgn.r1f}$', '$\\rho(1) = 2^{2H - 1} - 1 = 2^{0.6} - 1 = @{fgn.r1f}$'),
       T('$\\rho(10) = @{fgn.8.r10}$, $\\rho(50) = @{fgn.8.r50}$, $\\rho(100) = @{fgn.8.r100}$', '$\\rho(10) = @{fgn.8.r10}$, $\\rho(50) = @{fgn.8.r50}$, $\\rho(100) = @{fgn.8.r100}$')]),
     (T('Short memory: AR(1) with the same first autocorrelation, $\\phi = @{ar.phi}$', 'Memorie scurtă: AR(1) cu aceeași autocorelație de ordinul întîi, $\\phi = @{ar.phi}$'),
      [T('$\\rho(10) = \\phi^{10} = @{ar.r10}$; $\\rho(100) = \\phi^{100}$, practically zero', '$\\rho(10) = \\phi^{10} = @{ar.r10}$; $\\rho(100) = \\phi^{100}$, practic zero')]),
     T('Same short-run behaviour, very different long run: after 100 days, a shock still matters only under long memory',
-      'Același comportament pe termen scurt, dar un termen lung foarte diferit: după 100 de zile, un șoc mai contează doar sub memorie lungă')))
+      'Același comportament pe termen scurt, dar un termen lung foarte diferit: după 100 de zile, un șoc mai contează doar în cazul memoriei lungi')))
 
 D.frame(T('Fractional Brownian Motion', 'Mișcarea browniană fracționară'), items(
     T('\\textbf{Fractional Brownian motion} (fBm) $B_H(t)$, $0 < H < 1$ \\refMVN; \\refFHH, Def.~14.2: a Gaussian process with continuous paths, self-similar with exponent $H$ and with stationary increments',
        '\\textbf{Mișcarea browniană fracționară} (fBm, fractional Brownian motion) $B_H(t)$, $0 < H < 1$ \\refMVN; \\refFHH, Def.~14.2: proces gaussian cu traiectorii continue, autosimilar cu exponentul $H$ și cu creșteri staționare'),
     (T('Properties (\\refFHH, Th.~14.1)', 'Proprietăți (\\refFHH, Teorema 14.1)'),
-     [T('$B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \\sigma^2 |t|^{2H}$', '$B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \\sigma^2 |t|^{2H}$'),
+     [T('$B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \\sigma^2 |t|^{2H}$ ($\\sigma^2$: the variance at $t = 1$)', '$B_H(0) = 0$, $E[B_H(t)] = 0$, $E[B_H(t)^2] = \\sigma^2 |t|^{2H}$ ($\\sigma^2$: varianța la $t = 1$)'),
       T('$\\mathrm{Cov}(B_H(t), B_H(s)) = \\tfrac{\\sigma^2}{2}\\left(|t|^{2H} + |s|^{2H} - |t - s|^{2H}\\right)$', '$\\mathrm{Cov}(B_H(t), B_H(s)) = \\tfrac{\\sigma^2}{2}\\left(|t|^{2H} + |s|^{2H} - |t - s|^{2H}\\right)$')]),
     T('$H = 1/2$: Brownian motion, independent increments; $H \\neq 1/2$: the increments are correlated at all lags',
-      '$H = 1/2$: mișcarea browniană, creșteri independente; $H \\neq 1/2$: creșterile sînt corelate la toate decalajele'),
+      '$H = 1/2$: mișcarea browniană, creșteri independente; $H \\neq 1/2$: creșterile sînt corelate la toate lagurile'),
     T('Simulation: exact, from the covariance matrix of the increments (circulant embedding, as in the notebook)',
       'Simulare: exactă, din matricea de covarianță a creșterilor (scufundare circulantă, ca în notebook)')))
 
@@ -410,7 +412,7 @@ chart(T('The ACF of Fractional Gaussian Noise', 'ACF a zgomotului gaussian frac�
 
 D.frame(T('ARFIMA(0,$d$,0): Fractional Differencing', 'ARFIMA(0,$d$,0): diferențierea fracționară'), items(
     (T('\\textbf{ARFIMA}(0,$d$,0) \\refGJ; \\refHosking: $(1 - L)^d X_t = \\varepsilon_t$, $\\varepsilon_t$ i.i.d.\\ $(0, \\sigma^2)$, $L$ the lag operator ($L X_t = X_{t-1}$)',
-       '\\textbf{ARFIMA}(0,$d$,0) \\refGJ; \\refHosking: $(1 - L)^d X_t = \\varepsilon_t$, $\\varepsilon_t$ i.i.d.\\ $(0, \\sigma^2)$, $L$ operatorul de decalaj ($L X_t = X_{t-1}$)'),
+       '\\textbf{ARFIMA}(0,$d$,0) \\refGJ; \\refHosking: $(1 - L)^d X_t = \\varepsilon_t$, $\\varepsilon_t$ i.i.d.\\ $(0, \\sigma^2)$, $L$ operatorul lag ($L X_t = X_{t-1}$)'),
      [T('ARFIMA: autoregressive fractionally integrated moving average; $d = 0$: white noise, $d = 1$: random walk (Chapter 7)',
         'ARFIMA: autoregressive fractionally integrated moving average, model autoregresiv fracționar integrat cu medie mobilă; $d = 0$: zgomot alb, $d = 1$: mers aleator (Capitolul 7)')]),
     (T('Binomial expansion \\refFHH, 14.2: $(1 - L)^d = \\sum_{j \\ge 0} \\pi_j L^j$, $\\pi_0 = 1$, $\\pi_j = \\pi_{j-1}\\,(j - 1 - d)/j$',
@@ -419,7 +421,8 @@ D.frame(T('ARFIMA(0,$d$,0): Fractional Differencing', 'ARFIMA(0,$d$,0): diferen�
       T('MA($\\infty$) form: $X_t = \\sum_{j \\ge 0}\\psi_j\\varepsilon_{t-j}$, $\\psi_0 = 1$, $\\psi_j = \\psi_{j-1}\\,(j - 1 + d)/j$', 'forma MA($\\infty$): $X_t = \\sum_{j \\ge 0}\\psi_j\\varepsilon_{t-j}$, $\\psi_0 = 1$, $\\psi_j = \\psi_{j-1}\\,(j - 1 + d)/j$')]),
     (T('Autocorrelations: $\\rho(k) = \\dfrac{\\Gamma(1 - d)\\,\\Gamma(k + d)}{\\Gamma(d)\\,\\Gamma(k + 1 - d)}$, i.e.\\ $\\rho(k) = \\rho(k - 1)\\,\\dfrac{k - 1 + d}{k - d}$',
        'Autocorelațiile: $\\rho(k) = \\dfrac{\\Gamma(1 - d)\\,\\Gamma(k + d)}{\\Gamma(d)\\,\\Gamma(k + 1 - d)}$, adică $\\rho(k) = \\rho(k - 1)\\,\\dfrac{k - 1 + d}{k - d}$'),
-     [T('$\\rho(1) = d/(1 - d)$; for large $k$, $\\rho(k) \\sim C k^{2d - 1}$: long memory for $0 < d < 1/2$', '$\\rho(1) = d/(1 - d)$; pentru $k$ mare, $\\rho(k) \\sim C k^{2d - 1}$: memorie lungă pentru $0 < d < 1/2$')])), 'footnotesize')
+     [T('$\\Gamma(\\cdot)$: the gamma function, $\\Gamma(n) = (n - 1)!$ for integers; $\\rho(1) = d/(1 - d)$', '$\\Gamma(\\cdot)$: funcția gamma, $\\Gamma(n) = (n - 1)!$ pentru numere întregi; $\\rho(1) = d/(1 - d)$'),
+      T('for large $k$, $\\rho(k) \\sim C k^{2d - 1}$: long memory for $0 < d < 1/2$', 'pentru $k$ mare, $\\rho(k) \\sim C k^{2d - 1}$: memorie lungă pentru $0 < d < 1/2$')])), 'footnotesize')
 
 D.frame(T('The Memory Parameter $d$', 'Parametrul de memorie $d$'), table(
     'lllll', T('$d$ & memory & mean reversion & variance & ACF', '$d$ & memorie & revenire la medie & varianță & ACF'),
@@ -440,7 +443,7 @@ chart(T('ARFIMA(0,$d$,0) with $d = 0.4$ and $d = -0.4$', 'ARFIMA(0,$d$,0) cu $d 
       '$d = 0.4$: $\\rho(1) = @{af.p.rho1}$, $\\rho(10) = @{af.p.rho10}$, $\\rho(50) = @{af.p.rho50}$: valuri lente în jurul mediei; $d = -0.4$: $\\rho(1) = @{af.n.rho1}$, apoi aproape zero')],
     h='0.52\\textheight')
 
-D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu lucrat: ARFIMA(0; 0,3; 0)'), items(
+D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu rezolvat: ARFIMA(0; 0,3; 0)'), items(
     (T('Weights of $(1 - L)^{0.3}$: $\\pi_1 = -d = @{af3.pi1}$, $\\pi_2 = \\pi_1(1 - d)/2 = @{af3.pi2}$', 'Ponderile lui $(1 - L)^{0.3}$: $\\pi_1 = -d = @{af3.pi1}$, $\\pi_2 = \\pi_1(1 - d)/2 = @{af3.pi2}$'),
      [T('MA weights: $\\psi_1 = d = @{af3.psi1}$, $\\psi_2 = \\psi_1(1 + d)/2 = @{af3.psi2}$', 'ponderile MA: $\\psi_1 = d = @{af3.psi1}$, $\\psi_2 = \\psi_1(1 + d)/2 = @{af3.psi2}$')]),
     (T('Autocorrelations', 'Autocorelațiile'),
@@ -448,7 +451,7 @@ D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu lucrat: ARFIMA(0; 0,3; 0
       T('$\\rho(10) = @{af3.r10}$, $\\rho(100) = @{af3.r100}$', '$\\rho(10) = @{af3.r10}$, $\\rho(100) = @{af3.r100}$')]),
     T('AR(1) with $\\phi = @{af3.r1}$: $\\rho(10) = @{af3.ar10}$', 'AR(1) cu $\\phi = @{af3.r1}$: $\\rho(10) = @{af3.ar10}$'),
     T('The autocorrelation falls below 0.05 after @{af3.firstar} lags for the AR(1) and after @{af3.first} lags for ARFIMA; $H = d + 0.5 = 0.8$',
-      'Autocorelația scade sub 0,05 după @{af3.firstar} decalaje pentru AR(1) și după @{af3.first} decalaje pentru ARFIMA; $H = d + 0.5 = 0.8$')))
+      'Autocorelația scade sub 0,05 după @{af3.firstar} laguri pentru AR(1) și după @{af3.first} laguri pentru ARFIMA; $H = d + 0.5 = 0.8$')))
 
 D.recap(('Long Memory', 'memoria lungă'), [
     T('Long memory: $\\rho(k) \\sim C k^{2d - 1}$, not summable; short memory: exponential decay', 'Memorie lungă: $\\rho(k) \\sim C k^{2d - 1}$, nesumabile; memorie scurtă: scădere exponențială'),
@@ -494,10 +497,12 @@ chart(T('R/S and DFA: S\\&P 500 since 2000', 'R/S și DFA: S\\&P 500 din 2000'),
 D.frame(T('The GPH Log-Periodogram Regression', 'Regresia GPH pe log-periodogramă'), items(
     (T('\\textbf{Periodogram} at the Fourier frequencies $\\lambda_j = 2\\pi j/T$: $I(\\lambda_j) = \\dfrac{1}{2\\pi T}\\left|\\sum_{t=1}^{T} x_t e^{-i\\lambda_j t}\\right|^2$',
        '\\textbf{Periodograma} la frecvențele Fourier $\\lambda_j = 2\\pi j/T$: $I(\\lambda_j) = \\dfrac{1}{2\\pi T}\\left|\\sum_{t=1}^{T} x_t e^{-i\\lambda_j t}\\right|^2$'),
-     [T('it estimates the spectral density, which behaves like $C\\lambda^{-2d}$ near zero', 'estimează densitatea spectrală, care se comportă ca $C\\lambda^{-2d}$ lîngă zero')]),
+     [T('$T$: the number of observations; $i$: the imaginary unit; $|\\cdot|^2$: the squared modulus', '$T$: numărul de observații; $i$: unitatea imaginară; $|\\cdot|^2$: pătratul modulului'),
+      T('it estimates the spectral density, which behaves like $C\\lambda^{-2d}$ near zero', 'estimează densitatea spectrală, care se comportă ca $C\\lambda^{-2d}$ lîngă zero')]),
     (T('\\textbf{GPH} \\refGPH; \\refFHH, 14.5.2: $\\ln I(\\lambda_j) = c - d\\,\\ln\\!\\left(4\\sin^2(\\lambda_j/2)\\right) + e_j$, $j = 1, \\dots, m$',
        '\\textbf{GPH} \\refGPH; \\refFHH, 14.5.2: $\\ln I(\\lambda_j) = c - d\\,\\ln\\!\\left(4\\sin^2(\\lambda_j/2)\\right) + e_j$, $j = 1, \\dots, m$'),
-     [T('$\\hat d$ = OLS slope on $-\\ln(4\\sin^2(\\lambda_j/2))$; $\\hat H = \\hat d + 0.5$', '$\\hat d$ = panta OLS în funcție de $-\\ln(4\\sin^2(\\lambda_j/2))$; $\\hat H = \\hat d + 0.5$'),
+     [T('$m$: the number of low frequencies used; $c$: a constant; $e_j$: the error', '$m$: numărul de frecvențe joase folosite; $c$: o constantă; $e_j$: eroarea'),
+      T('$\\hat d$ = OLS slope on $-\\ln(4\\sin^2(\\lambda_j/2))$; $\\hat H = \\hat d + 0.5$', '$\\hat d$ = panta OLS în funcție de $-\\ln(4\\sin^2(\\lambda_j/2))$; $\\hat H = \\hat d + 0.5$'),
       T('asymptotic standard error $\\pi/\\sqrt{24m}$; the bandwidth $m = \\lfloor T^{0.5}\\rfloor$', 'eroarea standard asimptotică $\\pi/\\sqrt{24m}$; lățimea de bandă $m = \\lfloor T^{0.5}\\rfloor$')]),
     T('Trade-off: a small $m$ keeps only the long-run frequencies (small bias, large variance); a large $m$ lets short-run dynamics in (bias)',
       'Compromis: un $m$ mic păstrează doar frecvențele de termen lung (deplasare mică, varianță mare); un $m$ mare lasă să intre dinamica de termen scurt (deplasare)')))
@@ -512,9 +517,10 @@ D.frame(T("Lo's Modified R/S Test", 'Testul R/S modificat al lui Lo'), items(
     T('Problem: short memory (e.g.\\ an AR(1)) also raises R/S, so classical R/S mistakes short memory for long memory', 'Problema: și memoria scurtă (de exemplu un AR(1)) mărește R/S, deci R/S clasic confundă memoria scurtă cu memoria lungă'),
     (T('\\refLo: $V_N(q) = \\dfrac{R_N}{\\sqrt{N}\\,\\hat\\sigma_N(q)}$, $\\hat\\sigma^2_N(q) = \\hat\\gamma_0 + 2\\sum_{j=1}^{q}\\left(1 - \\tfrac{j}{q + 1}\\right)\\hat\\gamma_j$',
        '\\refLo: $V_N(q) = \\dfrac{R_N}{\\sqrt{N}\\,\\hat\\sigma_N(q)}$, $\\hat\\sigma^2_N(q) = \\hat\\gamma_0 + 2\\sum_{j=1}^{q}\\left(1 - \\tfrac{j}{q + 1}\\right)\\hat\\gamma_j$'),
-     [T('$\\hat\\gamma_j$: sample autocovariances; $\\hat\\sigma^2_N(q)$: the Newey--West long-run variance \\refNW; $q = 0$: classical R/S', '$\\hat\\gamma_j$: autocovarianțele de selecție; $\\hat\\sigma^2_N(q)$: varianța de lungă durată Newey--West \\refNW; $q = 0$: R/S clasic'),
-      T('$q = \\lfloor (3N/2)^{1/3}\\,(2\\hat\\rho_1/(1 - \\hat\\rho_1^2))^{2/3}\\rfloor$, data-dependent (Andrews\' rule, used by Lo)', '$q = \\lfloor (3N/2)^{1/3}\\,(2\\hat\\rho_1/(1 - \\hat\\rho_1^2))^{2/3}\\rfloor$, dependent de date (regula lui Andrews, folosită de Lo)')]),
-    (T('$H_0$: short memory; at 5\\%, reject if $V_N(q) \\notin [0.809, 1.862]$', '$H_0$: memorie scurtă; la 5\\% respingem dacă $V_N(q) \\notin [0.809, 1.862]$'),
+     [T('$N$: the number of returns; $R_N$: the range of the cumulative deviations over the whole sample', '$N$: numărul de randamente; $R_N$: amplitudinea abaterilor cumulate pe întregul eșantion'),
+      T('$\\hat\\gamma_j$: sample autocovariances; $\\hat\\sigma^2_N(q)$: the Newey--West long-run variance \\refNW; $q = 0$: classical R/S', '$\\hat\\gamma_j$: autocovarianțele de selecție; $\\hat\\sigma^2_N(q)$: varianța pe termen lung Newey--West \\refNW; $q = 0$: R/S clasic'),
+      T('$q = \\lfloor (3N/2)^{1/3}\\,(2\\hat\\rho_1/(1 - \\hat\\rho_1^2))^{2/3}\\rfloor$ ($\\hat\\rho_1$: first-order autocorrelation), data-dependent (Andrews\' rule, used by Lo)', '$q = \\lfloor (3N/2)^{1/3}\\,(2\\hat\\rho_1/(1 - \\hat\\rho_1^2))^{2/3}\\rfloor$ ($\\hat\\rho_1$: autocorelația de ordinul 1), dependent de date (regula lui Andrews, folosită de Lo)')]),
+    (T('$H_0$: short memory; at 5\\%, reject if $V_N(q) \\notin [⁅0.809⁆, ⁅1.862⁆]$', '$H_0$: memorie scurtă; la 5\\% respingem dacă $V_N(q) \\notin [⁅0.809⁆, ⁅1.862⁆]$'),
      [T('Lo\'s finding: no long memory in US stock index returns once short memory is allowed for', 'Concluzia lui Lo: nu există memorie lungă în randamentele indicilor bursieri din SUA, odată ce se ține cont de memoria scurtă')])), 'footnotesize')
 
 chart(T("Classical against Modified R/S: Size and Power", 'R/S clasic față de R/S modificat: mărimea și puterea testului'), 'sfm_ch11_lo_test', 'SFM_ch11_monte_carlo', [
@@ -528,7 +534,7 @@ D.frame(T('Small Samples and Monte Carlo Bands', 'Eșantioane mici și benzi Mon
     (T('Asymptotic results are unreliable for R/S and DFA at the sample sizes of finance; use simulation \\refWeron', 'Rezultatele asimptotice nu sînt de încredere pentru R/S și DFA la mărimile de eșantion din finanțe; folosim simularea \\refWeron'),
      [T('1. simulate many i.i.d.\\ Normal series with the same length $N$ as the data', '1. simulăm multe serii i.i.d.\\ Normale, de aceeași lungime $N$ ca datele'),
       T('2. apply exactly the same estimator (same block sizes, same bandwidth)', '2. aplicăm exact același estimator (aceleași mărimi de bloc, aceeași lățime de bandă)'),
-      T('3. the 2.5\\% and 97.5\\% quantiles of $\\hat H$ form the 95\\% band under $H = 0.5$', '3. cuantilele de 2,5\\% și 97,5\\% ale lui $\\hat H$ formează banda de 95\\% sub $H = 0.5$')]),
+      T('3. the 2.5\\% and 97.5\\% quantiles of $\\hat H$ form the 95\\% band under $H = 0.5$', '3. cuantilele de 2,5\\% și 97,5\\% ale lui $\\hat H$ formează banda de 95\\% în ipoteza $H = 0.5$')]),
     T('Reject $H = 0.5$ only if $\\hat H$ lies outside the band', 'Respingem $H = 0.5$ doar dacă $\\hat H$ se află în afara benzii'),
     T('i.i.d.\\ Normal is the simplest null; a fitted short-memory model (AR, GARCH) gives a stricter null (Section 6)', 'Seria i.i.d.\\ Normală este cea mai simplă ipoteză nulă; un model estimat cu memorie scurtă (AR, GARCH) dă o ipoteză nulă mai exigentă (secțiunea 6)')))
 
@@ -544,10 +550,10 @@ D.frame(T('S\\&P 500: All Estimators', 'S\\&P 500: toți estimatorii'), table(
     'lrrrrr', T(' & R/S & DFA & GPH $\\hat d$ (SE) & Lo $V_N(q)$ & $q$', ' & R/S & DFA & GPH $\\hat d$ (SE) & Lo $V_N(q)$ & $q$'),
     [T('returns $r_t$', 'randamente $r_t$') + ' & $@{m.sp500.r.rs}$ & $@{m.sp500.r.dfa}$ & $@{m.sp500.r.d}$ ($@{m.sp500.r.dse}$) & $@{m.sp500.r.V}$ & @{m.sp500.r.q}',
      T('absolute returns $|r_t|$', 'randamente absolute $|r_t|$') + ' & $@{m.sp500.abs.rs}$ & $@{m.sp500.abs.dfa}$ & $@{m.sp500.abs.d}$ ($@{m.sp500.abs.dse}$) & $@{m.sp500.abs.V}$ & @{m.sp500.abs.q}',
-     T('95\\% band, i.i.d.', 'banda de 95\\%, i.i.d.') + ' & $[@{m.sp500.mc.rs.lo}, @{m.sp500.mc.rs.hi}]$ & $[@{m.sp500.mc.dfa.lo}, @{m.sp500.mc.dfa.hi}]$ & $[@{m.sp500.mc.gph.lo}, @{m.sp500.mc.gph.hi}]$ & $[0.809, 1.862]$ & '],
+     T('95\\% band, i.i.d.', 'banda de 95\\%, i.i.d.') + ' & $[@{m.sp500.mc.rs.lo}, @{m.sp500.mc.rs.hi}]$ & $[@{m.sp500.mc.dfa.lo}, @{m.sp500.mc.dfa.hi}]$ & $[@{m.sp500.mc.gph.lo}, @{m.sp500.mc.gph.hi}]$ & $[⁅0.809⁆, ⁅1.862⁆]$ & '],
     size='footnotesize') + items(
     T('$N = @{m.sp500.n}$ daily returns, 2000 to @{end}; GPH band given for $\\hat H = \\hat d + 0.5$', '$N = @{m.sp500.n}$ randamente zilnice, din 2000 pînă la @{end}; banda GPH este dată pentru $\\hat H = \\hat d + 0.5$'),
-    T('Returns: every estimate inside its band, $V_N(q)$ inside $[0.809, 1.862]$', 'Randamente: fiecare estimare se află în banda ei, $V_N(q)$ se află în $[0.809, 1.862]$'),
+    T('Returns: every estimate inside its band, $V_N(q)$ inside $[⁅0.809⁆, ⁅1.862⁆]$', 'Randamente: fiecare estimare se află în banda ei, $V_N(q)$ se află în $[⁅0.809⁆, ⁅1.862⁆]$'),
     T('Absolute returns: every estimate far above its band, Lo rejects short memory', 'Randamente absolute: fiecare estimare este mult peste banda ei, iar testul lui Lo respinge memoria scurtă')))
 
 D.frame(T('Interpretation: S\\&P 500', 'Interpretarea rezultatelor: S\\&P 500'), items(
@@ -628,7 +634,7 @@ D.section('Long Memory in Volatility', 'Memoria lungă a volatilității')
 
 chart(T('S\\&P 500: the ACF of $r_t$, $|r_t|$ and $r_t^2$', 'S\\&P 500: ACF pentru $r_t$, $|r_t|$ și $r_t^2$'), 'sfm_ch11_vol_acf', 'SFM_ch11_volatility_memory', [
     T('$|r_t|$: $\\rho(1) = @{va.a.1}$, $\\rho(50) = @{va.a.50}$, $\\rho(100) = @{va.a.100}$; @{va.a.npos} of the first 250 lags above the band $@{va.band}$',
-      '$|r_t|$: $\\rho(1) = @{va.a.1}$, $\\rho(50) = @{va.a.50}$, $\\rho(100) = @{va.a.100}$; @{va.a.npos} dintre primele 250 de decalaje sînt peste banda $@{va.band}$'),
+      '$|r_t|$: $\\rho(1) = @{va.a.1}$, $\\rho(50) = @{va.a.50}$, $\\rho(100) = @{va.a.100}$; @{va.a.npos} dintre primele 250 de laguri sînt peste banda $@{va.band}$'),
     T('$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, then inside the band',
       '$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, apoi în interiorul benzii'),
     T('\\refDGE: $|r_t|$ is more persistent than $r_t^2$, which is more affected by single extreme days', '\\refDGE: $|r_t|$ este mai persistent decît $r_t^2$, care este mai afectat de zilele extreme izolate')],
@@ -731,8 +737,9 @@ D.recap(('Rolling Hurst Exponents', 'exponenți Hurst pe ferestre mobile'), [
 D.section('Long Memory and Risk', 'Memoria lungă și riscul')
 
 D.frame(T('Scaling Risk with $h^H$', 'Scalarea riscului cu $h^H$'), items(
-    (T('If returns are self-similar: $h$-day VaR 1\\% $= z_{0.99}\\,\\sigma\\,h^H$, with $z_{0.99} = 2.326$ (Normal case)', 'Dacă randamentele sînt autosimilare: VaR 1\\% pe $h$ zile $= z_{0.99}\\,\\sigma\\,h^H$, cu $z_{0.99} = 2.326$ (cazul Normal)'),
-     [T('daily volatility $\\sigma = 1.2\\%$: one-day VaR 1\\% $= @{vs.var1}\\%$', 'volatilitatea zilnică $\\sigma = 1.2\\%$: VaR 1\\% pe o zi $= @{vs.var1}\\%$')]),
+    (T('If returns are self-similar: $h$-day VaR 1\\% $= -z_{0.01}\\,\\sigma\\,h^H$, with $z_{0.01} = -2.326$ (Normal case, mean 0)', 'Dacă randamentele sînt autosimilare: VaR 1\\% pe $h$ zile $= -z_{0.01}\\,\\sigma\\,h^H$, cu $z_{0.01} = -2.326$ (cazul Normal, media 0)'),
+     [T('$z_{0.01}$: the 1\\% quantile of $N(0,1)$; $\\sigma$: the daily volatility; $h^H$ replaces the factor $\\sqrt{h}$', '$z_{0.01}$: cuantila de 1\\% a lui $N(0,1)$; $\\sigma$: volatilitatea zilnică; $h^H$ înlocuiește factorul $\\sqrt{h}$'),
+      T('daily volatility $\\sigma = 1.2\\%$: one-day VaR 1\\% $= @{vs.var1}\\%$', 'volatilitatea zilnică $\\sigma = 1.2\\%$: VaR 1\\% pe o zi $= @{vs.var1}\\%$')]),
     (T('Ten days', 'Zece zile'),
      [T('$H = 0.45$: factor $@{vs.f10.45}$, VaR $@{vs.v10.45}\\%$; $H = 0.5$: $@{vs.f10.50}$, $@{vs.v10.50}\\%$; $H = 0.55$: $@{vs.f10.55}$, $@{vs.v10.55}\\%$',
         '$H = 0.45$: factorul $@{vs.f10.45}$, VaR $@{vs.v10.45}\\%$; $H = 0.5$: $@{vs.f10.50}$, $@{vs.v10.50}\\%$; $H = 0.55$: $@{vs.f10.55}$, $@{vs.v10.55}\\%$'),
@@ -806,8 +813,8 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'ARFIMA(0,$d$,0) & $(1 - L)^d X_t = \\varepsilon_t$, \\quad $\\rho(k) = \\rho(k - 1)\\frac{k - 1 + d}{k - d}$, \\quad $d = H - 0.5$',
      'DFA & $F(n) \\propto n^{\\alpha}$, \\quad $\\alpha = H$ ' + T('for fGn', 'pentru fGn'),
      'GPH & $\\ln I(\\lambda_j) = c - d\\ln(4\\sin^2(\\lambda_j/2)) + e_j$, \\quad $j \\le m = T^{0.5}$, \\quad SE $= \\pi/\\sqrt{24m}$',
-     'Lo & $V_N(q) = R_N/(\\sqrt{N}\\hat\\sigma_N(q))$; ' + T('reject at 5\\% outside', 'respingem la 5\\% în afara') + ' $[0.809, 1.862]$',
-     'VaR 1\\% & $z_{0.99}\\,\\sigma\\,h^H$'],
+     'Lo & $V_N(q) = R_N/(\\sqrt{N}\\hat\\sigma_N(q))$; ' + T('reject at 5\\% outside', 'respingem la 5\\% în afara') + ' $[⁅0.809⁆, ⁅1.862⁆]$',
+     'VaR 1\\% & $-z_{0.01}\\,\\sigma\\,h^H$'],
     size='scriptsize') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(

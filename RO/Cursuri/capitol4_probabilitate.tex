@@ -112,7 +112,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item Calculați speranțe matematice, varianțe, covarianțe și corelații, precum și volatilitatea unui portofoliu
     \item Explicați de ce randamente necorelate pot fi totuși dependente și măsurați acest lucru
-    \item Folosiți speranța condiționată și varianța condiționată, cărămizile modelelor GARCH
+    \item Folosiți speranța condiționată și varianța condiționată, elementele de bază ale modelelor GARCH
     \item Generați numere aleatoare prin metoda transformării inverse și estimați o probabilitate prin Monte Carlo, cu eroarea ei standard
     \item Definiți mersul aleator, martingalul, zgomotul alb, procesul Wiener și GBM și simulați-le
 \end{itemize}
@@ -176,10 +176,11 @@ MSCA Digital Finance}
         \item $\mathcal{F}$: evenimentele cărora le putem atribui o probabilitate (o $\sigma$-algebră)
         \item $P$: o funcție de la evenimente la $[0, 1]$
     \end{itemize}
-    \item Axiome
+    \item Axiomele, pentru orice eveniment $A \in \mathcal{F}$
     \begin{itemize}
-        \item $P(A) \ge 0$; $P(\Omega) = 1$
-        \item pentru $A_1, A_2, \dots$ disjuncte: $P(\cup_i A_i) = \sum_i P(A_i)$
+        \item $P(A) \ge 0$: nicio probabilitate nu este negativă
+        \item $P(\Omega) = 1$: unul dintre rezultate are loc sigur
+        \item $P(\cup_i A_i) = \sum_i P(A_i)$ pentru $A_1, A_2, \dots$ disjuncte (oricare două nu pot avea loc simultan): probabilitatea ca unul dintre ele să aibă loc este suma probabilităților
     \end{itemize}
     \item Tot restul (speranță, independență, procese) se construiește pe aceste trei reguli
 \end{itemize}
@@ -217,15 +218,35 @@ MSCA Digital Finance}
 \itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Probabilitatea condiționată}: $P(A \mid B) = P(A \cap B)/P(B)$, pentru $P(B) > 0$
+    \begin{itemize}
+        \item $A, B$: două evenimente; $A \cap B$: au loc amîndouă
+        \item în cuvinte: dintre cazurile în care are loc $B$, proporția celor în care are loc și $A$
+    \end{itemize}
     \item \textbf{Regula lui Bayes}: $P(B \mid A) = P(A \mid B)P(B)/P(A)$
     \begin{itemize}
+        \item $P(B)$: probabilitatea lui $B$ înainte de a afla $A$; $P(B \mid A)$: probabilitatea actualizată după ce observăm $A$
         \item inversează sensul condiționării: de la „semnal dată fiind criza” la „criză dat fiind semnalul”
     \end{itemize}
     \item Evenimente \textbf{independente}: $P(A \cap B) = P(A)P(B)$, adică $P(A \mid B) = P(A)$
-    \item S\&P 500, 2000--2026: $P(\text{zi de scădere}) = 46{,}3\%$; $P(\text{scădere} \mid \text{scădere ieri}) = 43{,}4\%$
     \begin{itemize}
-        \item două zile de scădere la rînd: 20{,}1\%, față de $21{,}4\%$ în ipoteza de independență
-        \item BET: 50{,}0\% după o zi de scădere față de 42{,}6\% după o zi de creștere: din cauza lichidității reduse, semnul randamentului persistă
+        \item faptul că $B$ a avut loc nu schimbă probabilitatea lui $A$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemplu: zile de scădere consecutive}
+\itemsize{\small}
+\begin{itemize}
+    \item S\&P 500, 2000--2026: $P(\text{zi de scădere}) = 46{,}3\%$
+    \begin{itemize}
+        \item după o zi de scădere: $P(\text{scădere} \mid \text{scădere ieri}) = 43{,}4\%$
+        \item două zile de scădere la rînd: 20{,}1\% în date
+        \item în ipoteza de independență: $P(\text{scădere})^2 = 21{,}4\%$, apropiat de date
+    \end{itemize}
+    \item BET: 50{,}0\% după o zi de scădere, față de 42{,}6\% după o zi de creștere
+    \begin{itemize}
+        \item semnul randamentului persistă de la o zi la alta
+        \item o consecință a lichidității reduse: prețurile se ajustează la știri în mai multe zile
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -245,7 +266,7 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Variabile aleatoare}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item O \textbf{variabilă aleatoare} $X: \Omega \to \mathbb{R}$ asociază un număr fiecărui rezultat
     \begin{itemize}
@@ -254,10 +275,13 @@ MSCA Digital Finance}
     \item \textbf{Discretă}: un număr finit sau numărabil de valori $x_i$
     \begin{itemize}
         \item \textbf{PMF} (probability mass function, funcția de masă de probabilitate): $p(x_i) = P(X = x_i)$, cu $\sum_i p(x_i) = 1$
+        \item $p(x_i)$: probabilitatea valorii $x_i$; probabilitățile tuturor valorilor însumează 1
     \end{itemize}
     \item \textbf{Continuă}: $P(a < X \le b) = \int_a^b f(x)\,dx$
     \begin{itemize}
-        \item $f$ este \textbf{PDF} (probability density function, densitatea de probabilitate), $f \ge 0$, $\int f = 1$; $P(X = x) = 0$ pentru orice $x$
+        \item probabilitatea unui interval $(a, b]$ este aria de sub $f$ între $a$ și $b$
+        \item $f$ este \textbf{PDF} (probability density function, densitatea de probabilitate): $f \ge 0$, iar aria totală $\int f = 1$
+        \item un singur punct nu are arie: $P(X = x) = 0$ pentru orice $x$
     \end{itemize}
     \item Manual: \refFHH, secț.~3.1
 \end{itemize}
@@ -268,17 +292,34 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{CDF} (cumulative distribution function, funcția de repartiție): $F(x) = P(X \le x)$
     \begin{itemize}
-        \item nedescrescătoare, continuă la dreapta, $F(-\infty) = 0$, $F(\infty) = 1$; $f = F'$ pentru $X$ continuă
+        \item probabilitatea ca $X$ să nu depășească pragul $x$
+        \item nedescrescătoare, continuă la dreapta, de la $F(-\infty) = 0$ la $F(\infty) = 1$
+        \item pentru $X$ continuă, densitatea este derivata ei: $f = F'$
     \end{itemize}
     \item \textbf{Cuantila} de ordin $\alpha$: $q_\alpha = F^{-1}(\alpha) = \inf\{x : F(x) \ge \alpha\}$
     \begin{itemize}
+        \item $\alpha \in (0, 1)$: o probabilitate; $q_\alpha$ este cel mai mic $x$ pentru care $P(X \le x) \ge \alpha$
+        \item $F^{-1}$: funcția cuantilă, inversa funcției de repartiție; $\inf$: cea mai mică valoare a mulțimii
         \item mediana $= q_{0{,}5}$; cuantila de 1\% este randamentul depășit în 99\% din zile
     \end{itemize}
-    \item \textbf{VaR} (Value at Risk, valoarea expusă la risc) 1\%: $\text{VaR}_{1\%} = -q_{0{,}01}$, pierderea depășită cu probabilitatea 1\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}{VaR și funcția de repartiție empirică}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{VaR} (Value at Risk, valoarea expusă la risc) 1\%: $\text{VaR}_{1\%} = -q_{0{,}01}$
     \begin{itemize}
-        \item o cuantilă a distribuției randamentelor; estimare și backtesting în \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10}
+        \item $q_{0{,}01}$: cuantila de 1\% a randamentelor, un număr negativ
+        \item semnul minus o transformă în pierdere: pierderea depășită cu probabilitatea 1\%
+        \item estimarea și backtesting-ul: \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10}
     \end{itemize}
     \item \textbf{CDF empirică} a unui eșantion: $\hat F(x) = \frac1n \#\{t : r_t \le x\}$
+    \begin{itemize}
+        \item $r_1, \dots, r_n$: randamentele observate; $n$: volumul eșantionului
+        \item $\#\{\cdot\}$: numărul de zile din mulțime; $\hat F(x)$ este proporția zilelor cu randamentul cel mult $x$
+        \item căciula marchează o estimare calculată din date
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -289,7 +330,11 @@ MSCA Digital Finance}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Stînga: $K$ = zilele de creștere dintr-o săptămînă completă a S\&P 500 (1\,144 de săptămîni), comparat cu $B(5, p)$, $p = 0{,}537$: media 2{,}67 față de 2{,}69, varianța 1{,}16 față de 1{,}24
+    \item Stînga: $K$ = numărul zilelor de creștere dintr-o săptămînă completă a S\&P 500 (1\,144 de săptămîni)
+    \begin{itemize}
+        \item comparat cu $B(5, p)$, distribuția binomială: 5 zile, fiecare de creștere cu probabilitatea $p = 0{,}537$
+        \item media 2{,}67 față de 2{,}69; varianța 1{,}16 față de 1{,}24
+    \end{itemize}
     \item Dreapta: randamentele logaritmice zilnice, o variabilă aleatoare continuă; histograma estimează PDF
     \item Distribuția binomială se potrivește bine lui $K$; densitatea distribuției Normale nu surprinde nici vîrful, nici cozile randamentelor (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
 \end{itemize}
@@ -325,40 +370,76 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Speranța matematică}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Speranța matematică} (media): $E[X] = \sum_i x_i p(x_i)$ sau $E[X] = \int x f(x)\,dx$
     \begin{itemize}
+        \item $x_i$, $p(x_i)$: valorile și probabilitățile lor; $f$: densitatea
         \item centrul de greutate al distribuției; există doar dacă $E|X| < \infty$ (nu și pentru Cauchy, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3})
     \end{itemize}
     \item A unei funcții: $E[g(X)] = \int g(x) f(x)\,dx$, fără a afla distribuția lui $g(X)$
     \item \textbf{Liniaritate}: $E[aX + bY + c] = aE[X] + bE[Y] + c$, întotdeauna (fără independență)
     \begin{itemize}
+        \item $a, b, c$: constante; $X, Y$: oricare două variabile aleatoare
         \item randamentul așteptat al unui portofoliu este media ponderată a randamentelor așteptate
     \end{itemize}
-    \item În general $E[g(X)] \ne g(E[X])$: $E[e^X] > e^{E[X]}$ (Jensen), volatility drag din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1}
+    \item În general, $E[g(X)] \ne g(E[X])$
+    \begin{itemize}
+        \item Jensen: pentru $g$ convexă, $E[g(X)] \ge g(E[X])$; de exemplu, $E[e^X] > e^{E[X]}$
+        \item sursa volatility drag din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol1_date_randamente_indicatori.pdf}{Capitolul 1}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Varianța și momentele}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
-    \item \textbf{Varianța}: $\text{Var}(X) = E[(X - \mu)^2] = E[X^2] - \mu^2$; abaterea standard $\sigma = \sqrt{\text{Var}(X)}$ (volatilitatea)
-    \item $\text{Var}(aX + b) = a^2\,\text{Var}(X)$: o translație nu schimbă riscul, o scalare da
-    \item Momentele $E[X^k]$; asimetria și boltirea folosesc $k = 3, 4$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
-    \item Exemplu lucrat: S\&P 500, media zilnică $0{,}0247\%$, abaterea standard $1{,}213\%$, 251 de zile pe an
+    \item \textbf{Varianța}: $\text{Var}(X) = E[(X - \mu)^2] = E[X^2] - \mu^2$
     \begin{itemize}
-        \item pentru randamente zilnice i.i.d. (independente și identic distribuite): $E[\sum r_t] = 251 \times 0{,}0247 = 6{,}2\%$ pe an
-        \item $\text{Var}(\sum r_t) = 251\,\sigma^2$, deci volatilitatea anuală $1{,}213\sqrt{251} = 19{,}2\%$: regula rădăcinii pătrate a timpului
+        \item $\mu = E[X]$; varianța este distanța pătratică medie față de medie
+        \item abaterea standard $\sigma = \sqrt{\text{Var}(X)}$, în unitățile lui $X$; pentru randamente, este volatilitatea
+    \end{itemize}
+    \item $\text{Var}(aX + b) = a^2\,\text{Var}(X)$
+    \begin{itemize}
+        \item adăugarea unei constante $b$ nu schimbă riscul; înmulțirea cu $a$ înmulțește varianța cu $a^2$
+    \end{itemize}
+    \item Momentele: $E[X^k]$, pentru $k = 1, 2, \dots$
+    \begin{itemize}
+        \item asimetria și boltirea folosesc $k = 3, 4$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Cît de rară este o zi de 4 sigma? Marginea lui Cebîșev}
+\begin{frame}{Exemplu lucrat: media și volatilitatea anuale}
+\itemsize{\small}
+\begin{itemize}
+    \item S\&P 500, randamentele logaritmice zilnice $r_t$
+    \begin{itemize}
+        \item media zilnică $0{,}0247\%$, abaterea standard zilnică $\sigma = 1{,}213\%$
+        \item $A = 251$: numărul de zile de tranzacționare pe an
+    \end{itemize}
+    \item Presupunem randamente zilnice i.i.d. (independente și identic distribuite)
+    \begin{itemize}
+        \item randamentul logaritmic anual este suma celor $A$ randamente zilnice: $\sum_{t=1}^{A} r_t$
+    \end{itemize}
+    \item Media: $E[\sum r_t] = A \times 0{,}0247 = 6{,}2\%$ pe an
+    \begin{itemize}
+        \item din liniaritatea speranței
+    \end{itemize}
+    \item Varianța: $\text{Var}(\sum r_t) = A\,\sigma^2$, pentru că toate covarianțele sînt zero
+    \begin{itemize}
+        \item volatilitatea anuală $\sigma\sqrt{A} = 1{,}213\sqrt{251} = 19{,}2\%$
+        \item regula rădăcinii pătrate a timpului: pe $h$ perioade, volatilitatea crește cu $\sqrt{h}$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Frecvența zilelor de 4 sigma: marginea lui Cebîșev}
 \itemsize{\small}
 \begin{itemize}
     \item \textbf{Inegalitatea lui Cebîșev}: pentru orice $X$ cu varianță finită, $P(|X - \mu| \ge k\sigma) \le 1/k^2$
     \begin{itemize}
+        \item $\mu$, $\sigma$: media și abaterea standard; $k > 1$: distanța față de medie, în abateri standard
         \item folosește doar media și varianța, deci este valabilă pentru orice distribuție
     \end{itemize}
     \item $k = 4$, S\&P 500, 2000--2026
@@ -367,7 +448,10 @@ MSCA Digital Finance}
         \item distribuția Normală: 0{,}0063\%
         \item în date: 46 de zile, 0{,}69\%
     \end{itemize}
-    \item Realitatea este între cele două: distribuția Normală este mult prea optimistă, cazul cel mai rău al lui Cebîșev prea pesimist
+    \item Frecvența observată se află între cele două valori
+    \begin{itemize}
+        \item distribuția Normală este mult prea optimistă; cazul cel mai nefavorabil al lui Cebîșev este prea pesimist
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -385,21 +469,43 @@ MSCA Digital Finance}
 \section{Distribuții comune și dependență}
 %=============================================================================
 
-\begin{frame}{Distribuția comună, covarianța, corelația}
+\begin{frame}{Distribuția comună și distribuțiile marginale}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{CDF comună}: $F(x, y) = P(X \le x, Y \le y)$
+    \begin{itemize}
+        \item probabilitatea ca ambele variabile să fie simultan sub pragurile lor
+        \item pentru două randamente: ambele piețe scad sub nivelurile date în aceeași zi
+    \end{itemize}
+    \item CDF \textbf{marginală}: $F_X(x) = F(x, \infty)$
+    \begin{itemize}
+        \item distribuția lui $X$ singură, oricare ar fi valoarea lui $Y$
+    \end{itemize}
+    \item \textbf{PDF comună} $f(x, y)$: $P((X, Y) \in B) = \iint_B f(x, y)\,dx\,dy$
+    \begin{itemize}
+        \item $B$: o regiune din plan; probabilitatea este volumul de sub $f$ deasupra lui $B$
+        \item densitatea marginală: $f_X(x) = \int f(x, y)\,dy$, prin integrare după $y$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Covarianța, corelația și varianța unei sume}
 \itemsize{\footnotesize}
 \begin{itemize}
-    \item \textbf{CDF comună}: $F(x, y) = P(X \le x, Y \le y)$; marginalele $F_X(x) = F(x, \infty)$
-    \begin{itemize}
-        \item PDF comună $f(x, y)$; marginala $f_X(x) = \int f(x, y)\,dy$
-    \end{itemize}
     \item \textbf{Covarianța}: $\text{Cov}(X, Y) = E[(X - \mu_X)(Y - \mu_Y)] = E[XY] - \mu_X\mu_Y$
+    \begin{itemize}
+        \item $\mu_X$, $\mu_Y$: mediile; pozitivă cînd $X$ și $Y$ tind să fie simultan peste mediile lor
+    \end{itemize}
     \item \textbf{Corelația}: $\rho = \text{Cov}(X, Y)/(\sigma_X\sigma_Y) \in [-1, 1]$
     \begin{itemize}
+        \item covarianța împărțită la cele două abateri standard: un număr fără unitate de măsură
         \item măsoară doar dependența \textbf{liniară}; $|\rho| = 1$ dacă și numai dacă $Y = a + bX$
     \end{itemize}
     \item \textbf{Varianța unei sume}: $\text{Var}(aX + bY) = a^2\sigma_X^2 + b^2\sigma_Y^2 + 2ab\,\text{Cov}(X, Y)$
     \begin{itemize}
-        \item cu ponderile $w$ și matricea de covarianță $\Sigma$: $\sigma_p^2 = w^\top \Sigma w$
+        \item $a, b$: constante (într-un portofoliu, ponderile); termenul de covarianță poate crește sau reduce riscul
+        \item mai multe active: $\sigma_p^2 = w^\top \Sigma w$, cu $w$ vectorul ponderilor și $\Sigma$ matricea de covarianță
+        \item $\sigma_p^2$: varianța portofoliului; $w^\top$: vectorul transpus
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -419,15 +525,25 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Exemplu lucrat: un portofoliu 50/50 din S\&P 500 și DAX}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
-    \item Abaterile standard zilnice: $\sigma_1 = 1{,}22\%$, $\sigma_2 = 1{,}43\%$; covarianța $1{,}045$; corelația $0{,}60$
+    \item Abaterile standard zilnice: $\sigma_1 = 1{,}22\%$ (S\&P 500), $\sigma_2 = 1{,}43\%$ (DAX)
+    \begin{itemize}
+        \item covarianța $1{,}045$; corelația $0{,}60$
+        \item ponderile $a = b = 0{,}5$, deci $a^2 = b^2 = 0{,}25$ și $2ab = 0{,}5$
+    \end{itemize}
     \item $\sigma_p^2 = 0{,}25\sigma_1^2 + 0{,}25\sigma_2^2 + 2 \times 0{,}25\,\text{Cov} = 0{,}883 + 0{,}522 = 1{,}405$
     \begin{itemize}
-        \item $\sigma_p = 1{,}19\%$, sub volatilitatea medie $1{,}32\%$: diversificare
+        \item $\sigma_p = 1{,}19\%$, sub volatilitatea medie $1{,}32\%$: efectul diversificării
     \end{itemize}
-    \item S\&P 500 și BET, corelație mai mică: $\sigma_p = 1{,}04\%$ față de media $1{,}33\%$, un cîștig mai mare
-    \item Diversificarea funcționează doar prin $\rho < 1$; într-un crah corelațiile cresc, exact cînd este nevoie de ea
+    \item S\&P 500 și BET, corelație mai mică: $\sigma_p = 1{,}04\%$ față de media $1{,}33\%$
+    \begin{itemize}
+        \item cu cît corelația este mai mică, cu atît reducerea riscului este mai mare
+    \end{itemize}
+    \item Diversificarea funcționează doar prin $\rho < 1$
+    \begin{itemize}
+        \item într-un crah corelațiile cresc, exact cînd diversificarea ar fi necesară
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -436,7 +552,8 @@ MSCA Digital Finance}
 \begin{itemize}
     \item $X$ și $Y$ sînt \textbf{independente} dacă $F(x, y) = F_X(x)F_Y(y)$ pentru orice $x, y$
     \begin{itemize}
-        \item atunci $E[g(X)h(Y)] = E[g(X)]E[h(Y)]$ pentru \textbf{toate} funcțiile $g, h$
+        \item CDF comună este produsul CDF marginale
+        \item atunci $E[g(X)h(Y)] = E[g(X)]E[h(Y)]$ pentru \textbf{toate} funcțiile $g, h$ (de exemplu, pătrate sau valori absolute)
     \end{itemize}
     \item Independente $\Rightarrow$ necorelate ($g, h$ = identitatea); reciproca este falsă
     \item Exemplu: $X \sim N(0, 1)$, $Y = X^2$
@@ -449,15 +566,22 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Randamentele sînt necorelate, pătratele lor nu}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch4_uncorrelated_dependent.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_uncorrelated_dependent.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Stînga: $Y = X^2$ simulat, corelația de selecție $-0{,}038$, deși $Y$ este determinat de $X$
-    \item Dreapta: $\text{Corr}(r_t, r_{t-1})$ este mică (S\&P 500 $-0{,}099$, DAX $-0{,}017$, Bitcoin $-0{,}022$); $\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $0{,}31$, $0{,}15$, $0{,}14$
-    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0{,}109$, o urmă a lichidității reduse; valoarea negativă pentru S\&P 500 provine mai ales din zilele de criză
+    \item Dreapta: $\text{Corr}(r_t, r_{t-1})$ este mică: S\&P 500 $-0{,}099$, DAX $-0{,}017$, Bitcoin $-0{,}022$
+    \begin{itemize}
+        \item $\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $0{,}31$, $0{,}15$, $0{,}14$
+        \item banda $\pm 1{,}96/\sqrt{n}$: valorile compatibile cu o corelație nulă, la pragul de 5\%
+    \end{itemize}
+    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0{,}109$, un efect al lichidității reduse
+    \begin{itemize}
+        \item valoarea negativă pentru S\&P 500 provine mai ales din zilele de criză
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_dependence}
 \end{frame}
@@ -477,34 +601,62 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Speranța condiționată}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Densitatea condiționată: $f(y \mid x) = f(x, y)/f_X(x)$
     \begin{itemize}
-        \item distribuția lui $Y$ după ce aflăm că $X = x$
+        \item distribuția lui $Y$ după ce aflăm că $X = x$: densitatea comună rescalată prin cea marginală
     \end{itemize}
-    \item \textbf{Speranța condiționată}: $E[Y \mid X = x] = \int y f(y \mid x)\,dy$; $E[Y \mid X]$ este o variabilă aleatoare, o funcție de $X$
+    \item \textbf{Speranța condiționată}: $E[Y \mid X = x] = \int y f(y \mid x)\,dy$
+    \begin{itemize}
+        \item media lui $Y$ calculată cu densitatea condiționată
+        \item $E[Y \mid X]$ este o variabilă aleatoare, o funcție de $X$
+    \end{itemize}
     \item Este cea mai bună prognoză a lui $Y$ pe baza lui $X$: minimizează $E[(Y - g(X))^2]$ dintre toate funcțiile $g$
     \begin{itemize}
+        \item $E[(Y - g(X))^2]$: eroarea pătratică medie a prognozei $g(X)$
         \item pentru randamente: $E[r_t \mid \mathcal{F}_{t-1}]$, prognoza dată fiind toată informația $\mathcal{F}_{t-1}$ pînă ieri
     \end{itemize}
     \item \textbf{Proprietatea turnului} (legea speranțelor iterate): $E\big[E[Y \mid X]\big] = E[Y]$
+    \begin{itemize}
+        \item media prognozelor condiționate, pe toate valorile lui $X$, este media necondiționată
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Varianța condiționată și legea varianței totale}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
     \item \textbf{Varianța condiționată}: $\text{Var}(Y \mid X) = E\big[(Y - E[Y \mid X])^2 \mid X\big]$
+    \begin{itemize}
+        \item dispersia lui $Y$ în jurul mediei condiționate, după ce $X$ este cunoscut
+    \end{itemize}
     \item \textbf{Legea varianței totale}: $\text{Var}(Y) = E\big[\text{Var}(Y \mid X)\big] + \text{Var}\big(E[Y \mid X]\big)$
     \begin{itemize}
-        \item varianța din interiorul grupurilor plus varianța dintre grupuri
+        \item $E[\text{Var}(Y \mid X)]$: varianța medie din interiorul grupurilor definite de $X$
+        \item $\text{Var}(E[Y \mid X])$: cît de mult diferă mediile grupurilor între ele
+        \item riscul total = varianța din interiorul grupurilor + varianța dintre grupuri
     \end{itemize}
-    \item Exemplu lucrat, două regimuri: calm (probabilitatea $0{,}7$, media $0{,}05\%$, abaterea standard $0{,}8\%$), agitat ($0{,}3$, $-0{,}10\%$, $2\%$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemplu lucrat: două regimuri}
+\itemsize{\footnotesize}
+\begin{itemize}
+    \item $X$ = regimul pieței, $Y = r$ = randamentul zilnic (în \%)
     \begin{itemize}
-        \item $E[r] = 0{,}7 \times 0{,}05 + 0{,}3 \times (-0{,}10) = 0{,}005\%$
-        \item $E[\text{Var}] = 0{,}7 \times 0{,}64 + 0{,}3 \times 4 = 1{,}648$; $\text{Var}(E) = 0{,}0047$
-        \item $\text{Var}(r) = 1{,}653$, abaterea standard $1{,}286\%$: aproape tot riscul provine din diferența de varianță între regimuri, nu din diferența de medie
+        \item calm: probabilitatea $0{,}7$, media $0{,}05\%$, abaterea standard $0{,}8\%$
+        \item agitat: probabilitatea $0{,}3$, media $-0{,}10\%$, abaterea standard $2\%$
+    \end{itemize}
+    \item Media (proprietatea turnului): $E[r] = 0{,}7 \times 0{,}05 + 0{,}3 \times (-0{,}10) = 0{,}005\%$
+    \item Cele două componente ale varianței
+    \begin{itemize}
+        \item în interiorul regimurilor: $E[\text{Var}(r \mid X)] = 0{,}7 \times 0{,}8^2 + 0{,}3 \times 2^2 = 1{,}648$
+        \item între regimuri: $\text{Var}(E[r \mid X]) = 0{,}7(0{,}05 - E[r])^2 + 0{,}3(-0{,}10 - E[r])^2 = 0{,}0047$
+    \end{itemize}
+    \item $\text{Var}(r) = 1{,}653$, abaterea standard $1{,}286\%$
+    \begin{itemize}
+        \item aproape tot riscul provine din diferența de varianță dintre regimuri, nu din diferența de medie
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -525,19 +677,27 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{De la varianța condiționată la GARCH}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Scriem randamentul ca $r_t = \mu_t + \sigma_t z_t$, cu $z_t$ i.i.d., media 0, varianța 1
     \begin{itemize}
         \item $\mu_t = E[r_t \mid \mathcal{F}_{t-1}]$: media condiționată, aproape constantă
         \item $\sigma_t^2 = \text{Var}(r_t \mid \mathcal{F}_{t-1})$: varianța condiționată, care se schimbă cu știrile
     \end{itemize}
-    \item ARCH \refEngle: $\sigma_t^2 = \omega + \alpha r_{t-1}^2$
+    \item ARCH (autoregressive conditional heteroskedasticity) \refEngle: $\sigma_t^2 = \omega + \alpha r_{t-1}^2$
     \begin{itemize}
-        \item GARCH \refBollerslev: $\sigma_t^2 = \omega + \alpha r_{t-1}^2 + \beta\sigma_{t-1}^2$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
+        \item varianța de azi este un nivel de bază plus o parte din pătratul randamentului de ieri
+        \item $\omega > 0$: nivelul de bază; $\alpha \ge 0$: cît de mult crește varianța de azi după o mișcare mare ieri
+    \end{itemize}
+    \item GARCH \refBollerslev: $\sigma_t^2 = \omega + \alpha r_{t-1}^2 + \beta\sigma_{t-1}^2$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9})
+    \begin{itemize}
+        \item $\beta \ge 0$: persistența; un $\beta$ mare menține mult timp o varianță ridicată
     \end{itemize}
     \item Este exact tiparul din grafic: un $|r_{t-1}|$ mare crește abaterea standard condiționată de azi
-    \item Distribuția necondiționată este un amestec peste $\sigma_t$: cozi mai groase decît distribuția Normală, chiar dacă $z_t$ este Normal
+    \item Distribuția necondiționată este un amestec de distribuții cu diferite $\sigma_t$
+    \begin{itemize}
+        \item are cozi mai groase decît distribuția Normală, chiar dacă $z_t$ are distribuție Normală
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -560,10 +720,12 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{LLN} (law of large numbers, legea numerelor mari): pentru $X_i$ i.i.d. cu $E|X| < \infty$, $\bar X_n \to \mu$ cînd $n \to \infty$
     \begin{itemize}
+        \item $\bar X_n = \frac1n\sum_{i=1}^n X_i$: media de selecție; $\mu = E[X]$: media adevărată
         \item motivul pentru care funcționează mediile, frecvențele și estimările Monte Carlo
     \end{itemize}
-    \item \textbf{CLT}: cu varianță finită, $\sqrt{n}(\bar X_n - \mu)/\sigma \to N(0, 1)$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
+    \item \textbf{CLT} (central limit theorem, teorema limită centrală): cu varianță finită, $\sqrt{n}(\bar X_n - \mu)/\sigma \to N(0, 1)$ (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
     \begin{itemize}
+        \item media de selecție standardizată are, pentru $n$ mare, aproximativ distribuția Normală standard
         \item dă viteza de convergență: eroarea lui $\bar X_n$ este de circa $\sigma/\sqrt{n}$
         \item varianță infinită: sumele converg, în schimb, către legi $\alpha$-stabile (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol3_distributii_alfa_stabile.pdf}{Capitolul 3})
     \end{itemize}
@@ -574,13 +736,19 @@ MSCA Digital Finance}
 \begin{frame}{LLN pentru randamentul mediu: convergență lentă}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.56\textheight,keepaspectratio]{sfm_ch4_lln.pdf}
+\includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch4_lln.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item S\&P 500, 26{,}7 ani: media $0{,}0247\%$ pe zi, eroarea standard $\sigma/\sqrt{n} = 0{,}0148\%$, $t = 1{,}67$
-    \item Media anuală 6{,}2\%, intervalul de 95\% $[-1{,}1\%; 13{,}5\%]$: nici 26 de ani de date nu ajung pentru a estima precis randamentul așteptat
-    \item Pentru $t = 3$, la această medie și volatilitate, ar fi nevoie de circa 86 de ani de date
+    \item S\&P 500, 26{,}7 ani: media $0{,}0247\%$ pe zi, eroarea standard $\sigma/\sqrt{n} = 0{,}0148\%$
+    \begin{itemize}
+        \item $t$ = media / eroarea standard $= 1{,}67$; $|t| > 1{,}96$ ar indica o medie semnificativ diferită de 0, la pragul de 5\%
+    \end{itemize}
+    \item Media anuală 6{,}2\%, intervalul de încredere de 95\%: $[-1{,}1\%; 13{,}5\%]$
+    \begin{itemize}
+        \item nici 26 de ani de date nu ajung pentru a estima precis randamentul așteptat
+        \item pentru $t = 3$, la această medie și volatilitate, ar fi nevoie de circa 86 de ani de date
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_monte_carlo}
 \end{frame}
@@ -591,12 +759,13 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Ideea Monte Carlo}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Estimăm $\theta = E[g(X)]$ prin $\hat\theta_N = \frac1N\sum_{i=1}^N g(X_i)$, cu $X_i$ simulate
     \begin{itemize}
-        \item o probabilitate este o speranță: $P(A) = E[\mathbf{1}_A]$
-        \item LLN face ca $\hat\theta_N \to \theta$; CLT dă eroarea $\text{sd}(g(X))/\sqrt{N}$
+        \item $\theta$: mărimea necunoscută; $g$: o funcție de variabila simulată; $N$: numărul de simulări
+        \item o probabilitate este o speranță: $P(A) = E[\mathbf{1}_A]$, cu $\mathbf{1}_A = 1$ dacă $A$ are loc și 0 altfel
+        \item LLN face ca $\hat\theta_N \to \theta$; CLT dă eroarea $\text{sd}(g(X))/\sqrt{N}$, unde $\text{sd}$ este abaterea standard
     \end{itemize}
     \item Ulam și von Neumann au numit metoda după cazinoul din Monaco (Los Alamos, anii 1940) \refMU
     \item În finanțe \refGlasserman
@@ -609,19 +778,39 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Numere pseudo-aleatoare: generatoare congruențiale liniare}
-\itemsize{\footnotesize}
+\itemsize{\small}
 \begin{itemize}
     \item \textbf{LCG} (linear congruential generator, generator congruențial liniar): $x_{k+1} = (a x_k + c) \bmod M$, $u_k = x_k/M \in [0, 1)$
     \begin{itemize}
-        \item determinist: aceeași sămînță $x_0$ dă același șir, ceea ce face rezultatele reproductibile
+        \item fiecare număr întreg $x_{k+1}$ se calculează din precedentul, $x_k$
+        \item $a$: multiplicatorul; $c$: incrementul; $M$: modulul; $\bmod M$: restul împărțirii la $M$
+        \item $u_k$: numărul uniform din $[0, 1)$ obținut prin împărțirea la $M$
     \end{itemize}
-    \item Exemplu lucrat (SFErangen1): $a = 5$, $c = 1$, $M = 16$, $x_0 = 7$
+    \item Determinist: aceeași sămînță $x_0$ dă același șir
     \begin{itemize}
-        \item $x$: 7, 4, 5, 10, 3, 0, 1, 6, 15, 12, 13, 2, 11, 8, 9, 14, 7
-        \item perioada 16, maximul posibil, $M$; cu $a = 4$ șirul se blochează după un pas (perioada 1)
+        \item acest lucru face rezultatele reproductibile
+        \item \textbf{perioada}: numărul de valori după care șirul se repetă; cel mult $M$
     \end{itemize}
     \item Generatoarele reale folosesc $M$ uriaș; perioada trebuie să fie mult mai lungă decît orice simulare
-    \item Nu ajunge ca distribuțiile marginale să fie uniforme: numerele consecutive trebuie să pară și independente
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemplu lucrat: un LCG cu $M = 16$}
+\itemsize{\small}
+\begin{itemize}
+    \item SFErangen1: $a = 5$, $c = 1$, $M = 16$, $x_0 = 7$
+    \begin{itemize}
+        \item primul pas: $x_1 = (5 \times 7 + 1) \bmod 16 = 36 \bmod 16 = 4$
+        \item șirul $x$: 7, 4, 5, 10, 3, 0, 1, 6, 15, 12, 13, 2, 11, 8, 9, 14, 7
+    \end{itemize}
+    \item Perioada 16, maximul posibil, $M$
+    \begin{itemize}
+        \item cu $a = 4$ șirul se blochează după un pas (perioada 1)
+    \end{itemize}
+    \item Nu ajunge ca distribuțiile marginale să fie uniforme
+    \begin{itemize}
+        \item numerele consecutive trebuie să pară și independente: graficul următor
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -640,17 +829,23 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Metoda transformării inverse}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Teoremă}: dacă $U \sim U(0, 1)$ și $F$ este o CDF, atunci $X = F^{-1}(U)$ are CDF $F$
     \begin{itemize}
+        \item $U(0, 1)$: distribuția uniformă pe $[0, 1]$, deci $P(U \le u) = u$
+        \item în cuvinte: un număr uniform, interpretat ca probabilitate, este transformat în cuantila de acel ordin
         \item demonstrație: $P(X \le x) = P(F^{-1}(U) \le x) = P(U \le F(x)) = F(x)$
     \end{itemize}
-    \item Distribuția exponențială cu rata $\lambda$: $F(x) = 1 - e^{-\lambda x}$, deci $X = -\ln(1 - U)/\lambda$
+    \item Distribuția exponențială cu rata $\lambda > 0$: $F(x) = 1 - e^{-\lambda x}$, deci $X = -\ln(1 - U)/\lambda$
     \begin{itemize}
+        \item se obține rezolvînd $u = F(x)$ în raport cu $x$; media este $1/\lambda$
         \item $\lambda = 2$, $u = 0{,}9$: $x = -\ln(0{,}1)/2 = 1{,}151$
     \end{itemize}
     \item Distribuția Normală: $X = \mu + \sigma\,\Phi^{-1}(U)$
+    \begin{itemize}
+        \item $\Phi^{-1}$: funcția cuantilă a distribuției $N(0, 1)$; $\mu$, $\sigma$: media și abaterea standard dorite
+    \end{itemize}
     \item Pentru date reale: folosim funcția cuantilă empirică $\hat F^{-1}$
     \begin{itemize}
         \item adică reeșantionăm zilele trecute: simularea istorică și bootstrap-ul
@@ -672,17 +867,44 @@ MSCA Digital Finance}
 \sfmquantlet{Ch_04}{SFM_ch4_random_numbers}
 \end{frame}
 
-\begin{frame}{Exemplu lucrat: probabilitatea unei pierderi lunare prin Monte Carlo}
-\itemsize{\footnotesize}
+\begin{frame}{Exemplu lucrat: probabilitatea unei pierderi lunare prin Monte Carlo (1/2)}
+\itemsize{\small}
 \begin{itemize}
-    \item Modelul: randamentele logaritmice zilnice ale S\&P 500 i.i.d. $N(0{,}0247; 1{,}213^2)$ (în \%); evenimentul: randamentul logaritmic pe 21 de zile sub $-10\%$
-    \item Exact: suma este $N(0{,}519; 5{,}56^2)$, deci $p = \Phi(-1{,}892) = 2{,}922\%$
-    \item Monte Carlo: $\hat p_N$ = ponderea lunilor simulate sub $-10\%$; eroarea standard $\sqrt{p(1 - p)/N}$
+    \item Modelul: randamentele logaritmice zilnice ale S\&P 500, i.i.d. $N(0{,}0247; 1{,}213^2)$, în \%
     \begin{itemize}
-        \item $N = 1\,000$: $3{,}000\%$ (eroarea standard 0{,}533\%); $N = 100\,000$: $2{,}901\%$ (eroarea standard 0{,}053\%)
+        \item $N(m, s^2)$: distribuția Normală cu media $m$ și varianța $s^2$
+    \end{itemize}
+    \item Evenimentul: randamentul logaritmic pe 21 de zile (o lună) este sub $-10\%$
+    \begin{itemize}
+        \item $p$: probabilitatea lui, mărimea căutată
+    \end{itemize}
+    \item Exact: suma a 21 de randamente Normale i.i.d. este $N(0{,}519; 5{,}56^2)$
+    \begin{itemize}
+        \item media $21 \times 0{,}0247$, abaterea standard $1{,}213\sqrt{21}$
+        \item standardizăm: $z = (-10 - 0{,}519)/5{,}56 = -1{,}892$
+        \item $p = \Phi(z) = 2{,}922\%$, cu $\Phi$ funcția de repartiție a distribuției $N(0, 1)$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exemplu lucrat: probabilitatea unei pierderi lunare prin Monte Carlo (2/2)}
+\itemsize{\small}
+\begin{itemize}
+    \item Monte Carlo: simulăm $N$ luni; $\hat p_N$ = ponderea lunilor simulate sub $-10\%$
+    \begin{itemize}
+        \item eroarea standard $\sqrt{p(1 - p)/N}$: distanța tipică dintre $\hat p_N$ și $p$
+    \end{itemize}
+    \item Rezultate
+    \begin{itemize}
+        \item $N = 1\,000$: $3{,}000\%$ (eroarea standard 0{,}533\%)
+        \item $N = 100\,000$: $2{,}901\%$ (eroarea standard 0{,}053\%)
         \item o precizie de 10 ori mai mare cere de 100 de ori mai multe simulări
     \end{itemize}
-    \item Pentru o eroare relativă de 10\% (la nivelul de încredere de 95\%) avem nevoie de $N \approx 1{,}96^2(1 - p)/(0{,}1^2 p) = 12\,762$
+    \item Pentru o eroare relativă de 10\%, la nivelul de încredere de 95\%: $N \approx 1{,}96^2(1 - p)/(0{,}1^2 p) = 12\,762$
+    \begin{itemize}
+        \item se obține din $1{,}96 \times \sqrt{p(1 - p)/N} = 0{,}1\,p$: semilățimea intervalului este 10\% din $p$
+        \item un eveniment rar cere multe simulări
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -715,22 +937,27 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{Procesul binomial}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
-    \item În fiecare perioadă prețul crește cu factorul $u$ cu probabilitatea $p$ sau scade cu factorul $d < u$ cu probabilitatea $1 - p$, independent
+    \item În fiecare perioadă prețul se înmulțește cu $u$ (creștere), cu probabilitatea $p$, sau cu $d < u$ (scădere), cu probabilitatea $1 - p$
     \begin{itemize}
-        \item după $n$ pași cu $K$ creșteri: $S_n = S_0 u^K d^{n - K}$, $K \sim B(n, p)$
+        \item $u$, $d$: factorii de creștere și de scădere (de exemplu, $u = 1{,}2$: $+20\%$); perioadele sînt independente
     \end{itemize}
-    \item $\ln S_n = \ln S_0 + K\ln u + (n - K)\ln d$: un mers aleator în prețurile logaritmice (secțiunea 9)
+    \item După $n$ pași, dintre care $K$ creșteri: $S_n = S_0 u^K d^{n - K}$
+    \begin{itemize}
+        \item $S_0$: prețul inițial; $K \sim B(n, p)$: numărul de creșteri are distribuție binomială
+        \item $\ln S_n = \ln S_0 + K\ln u + (n - K)\ln d$: un mers aleator în prețurile logaritmice (secțiunea 9)
+    \end{itemize}
     \item $E[S_n] = S_0\,(pu + (1 - p)d)^n$, pentru că pașii sînt independenți
     \begin{itemize}
+        \item $pu + (1 - p)d$: factorul de creștere așteptat al unui pas
         \item baza modelului binomial de evaluare a opțiunilor \refCRR; manual: \refFHH, cap.~7
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Exemplu lucrat: un arbore cu doi pași}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item $S_0 = 100$, $u = 1{,}2$, $d = 0{,}8$, $p = 0{,}6$
     \item Valorile finale și probabilitățile lor
@@ -738,36 +965,53 @@ MSCA Digital Finance}
         \item $uu$: 144 cu $p^2 = 0{,}36$; $ud$ sau $du$: 96 cu $2p(1-p) = 0{,}48$; $dd$: 64 cu $(1-p)^2 = 0{,}16$
     \end{itemize}
     \item $E[S_2] = 100 \times (0{,}6 \times 1{,}2 + 0{,}4 \times 0{,}8)^2 = 100 \times 1{,}04^2 = 108{,}16$
-    \item $P(S_2 < 100) = 0{,}48 + 0{,}16$: o creștere urmată de o scădere (sau invers) aduce o pierdere, pentru că $ud = 0{,}96 < 1$
-    \item Cu $p^* = (1 - d)/(u - d) = 0{,}50$ prețul este un joc echitabil, $E[S_{t+1} \mid S_t] = S_t$ (secțiunea 9)
+    \item $P(S_2 < 100) = 0{,}48 + 0{,}16$
+    \begin{itemize}
+        \item o creștere și o scădere, în orice ordine, aduc o pierdere, pentru că $ud = 0{,}96 < 1$
+    \end{itemize}
+    \item Cu $p^* = (1 - d)/(u - d) = 0{,}50$ prețul este un joc echitabil: $E[S_{t+1} \mid S_t] = S_t$ (secțiunea 9)
+    \begin{itemize}
+        \item $p^*$ este soluția ecuației $p^*u + (1 - p^*)d = 1$: factorul de creștere așteptat al unui pas este 1
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Calibrarea arborelui pe o piață (Cox--Ross--Rubinstein)}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{CRR} (Cox--Ross--Rubinstein) cu pasul $\Delta t$: $u = e^{\sigma\sqrt{\Delta t}}$, $d = 1/u$, $p = (e^{\mu\Delta t} - d)/(u - d)$
     \begin{itemize}
-        \item astfel încît media și varianța fiecărui pas să corespundă unei piețe cu tendința $\mu$ și volatilitatea $\sigma$
+        \item $\Delta t$: lungimea unui pas, în ani; $\mu$: tendința anuală (drift); $\sigma$: volatilitatea anuală
+        \item $d = 1/u$: o creștere urmată de o scădere readuce prețul la valoarea inițială
+        \item alese astfel încît media și varianța fiecărui pas să corespundă unei piețe cu tendința $\mu$ și volatilitatea $\sigma$
     \end{itemize}
     \item S\&P 500, 2000--2026: $\sigma = 19{,}23\%$, $\mu = 8{,}06\%$ pe an; pași zilnici, $\Delta t = 1/252$
     \begin{itemize}
         \item $u = 1{,}0122$, $d = 0{,}9880$, $p = 0{,}5102$
     \end{itemize}
-    \item Cînd $\Delta t \to 0$, $\ln S_T$ devine Normal (CLT pentru $K$): arborele converge către GBM (secțiunea 10)
+    \item Cînd $\Delta t \to 0$, $\ln S_T$ devine Normal (CLT aplicată lui $K$)
+    \begin{itemize}
+        \item $T$: orizontul; arborele converge către GBM (secțiunea 10)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Traiectorii binomiale și limita lognormală (SFEBinomp)}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch4_binomial.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_binomial.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Stînga: 12 traiectorii pe un an, cu pași zilnici, $S_0 = 100$
-    \item Dreapta: distribuția lui $S_T$ cu 252 de pași; $E[S_T] = 108{,}40$ $= 100e^{\mu}$; cuantila de 5\%: 78{,}5, față de 77{,}6 în distribuția lognormală
-    \item $P(S_T < 100)$: 39{,}7\% în modelul binomial, față de 37{,}3\% în cel lognormal (valoarea exactă $S_T = 100$ are probabilitate pozitivă, pe care modelul binomial o plasează de o singură parte)
+    \item Dreapta: distribuția lui $S_T$ după 252 de pași ($T = 1$ an); $E[S_T] = 108{,}40$ $= 100e^{\mu}$
+    \begin{itemize}
+        \item cuantila de 5\%: 78{,}5, față de 77{,}6 în limita lognormală
+    \end{itemize}
+    \item $P(S_T < 100)$: 39{,}7\% în modelul binomial, față de 37{,}3\% în cel lognormal
+    \begin{itemize}
+        \item valoarea exactă $S_T = 100$ are probabilitate pozitivă, pe care modelul binomial o plasează de o singură parte
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_binomial}
 \end{frame}
@@ -775,7 +1019,7 @@ MSCA Digital Finance}
 \begin{frame}{Recapitulare: modelul binomial}
 \itemsize{\small}
 \begin{itemize}
-    \item Sus sau jos în fiecare perioadă: $S_n = S_0 u^K d^{n-K}$ cu $K$ binomial
+    \item Creștere sau scădere în fiecare perioadă: $S_n = S_0 u^K d^{n-K}$ cu $K$ binomial
     \item CRR reproduce $\mu$ și $\sigma$; limita este lognormală
     \item Un $p^*$ special transformă prețul într-un joc echitabil: cheia evaluării opțiunilor
 \end{itemize}
@@ -793,9 +1037,13 @@ MSCA Digital Finance}
     \begin{itemize}
         \item o realizare = o traiectorie; o serie de prețuri este o singură traiectorie a procesului
     \end{itemize}
-    \item $\mathcal{F}_t$: informația disponibilă la momentul $t$ (prețuri trecute, știri); crește cu $t$ (o \textbf{filtrare})
+    \item $\mathcal{F}_t$: informația disponibilă la momentul $t$ (prețuri trecute, știri)
+    \begin{itemize}
+        \item crește cu $t$: nimic nu se uită (o \textbf{filtrare})
+    \end{itemize}
     \item \textbf{Staționar (slab)}: $E[X_t]$ și $\text{Cov}(X_t, X_{t+h})$ nu depind de $t$
     \begin{itemize}
+        \item $h$: lagul dintre două momente; media și dependența arată la fel la orice moment
         \item randamentele: aproximativ da; prețurile: nu
     \end{itemize}
     \item Manual: \refFHH, cap.~4 și secț.~11.3
@@ -803,29 +1051,38 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Zgomotul alb și mersul aleator}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Zgomot alb}: $E[\varepsilon_t] = 0$, $\text{Var}(\varepsilon_t) = \sigma^2$, $\text{Cov}(\varepsilon_t, \varepsilon_s) = 0$ pentru $t \ne s$
     \begin{itemize}
+        \item $\varepsilon_t$: șocul de la momentul $t$; medie zero, varianță constantă $\sigma^2$, necorelat între momente diferite
         \item zgomotul i.i.d. este o condiție mai tare: $\varepsilon_t$ sînt independente, nu doar necorelate
     \end{itemize}
     \item \textbf{Mers aleator}: $S_t = S_{t-1} + \mu + \varepsilon_t = S_0 + \mu t + \sum_{s=1}^t \varepsilon_s$
     \begin{itemize}
-        \item $E[S_t] = S_0 + \mu t$; $\text{Var}(S_t) = t\sigma^2$: nestaționar
+        \item fiecare pas adaugă tendința (drift-ul) $\mu$ și un șoc nou; $S_0$: valoarea de pornire
+        \item $E[S_t] = S_0 + \mu t$; $\text{Var}(S_t) = t\sigma^2$ crește cu $t$: nestaționar
         \item simulat cu $\sigma = 1$: varianța 10{,}1; 49{,}8; 100{,}9 la $t = 10, 50, 100$
     \end{itemize}
-    \item Dacă prețurile logaritmice urmează un mers aleator, randamentele sînt zgomot alb: ipoteza de referință din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7} (piețe eficiente)
+    \item Dacă prețurile logaritmice urmează un mers aleator, randamentele sînt zgomot alb
+    \begin{itemize}
+        \item ipoteza de referință din \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7} (piețe eficiente)
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Martingale}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item $\{X_t\}$ este un \textbf{martingal} dacă $E|X_t| < \infty$ și $E[X_{t+1} \mid \mathcal{F}_t] = X_t$
     \begin{itemize}
+        \item $E|X_t| < \infty$: media există; $\mathcal{F}_t$: informația pînă la momentul $t$
         \item un joc echitabil: cea mai bună prognoză pentru mîine este valoarea de azi
     \end{itemize}
     \item O \textbf{diferență de martingal}: $\varepsilon_t = X_t - X_{t-1}$ cu $E[\varepsilon_t \mid \mathcal{F}_{t-1}] = 0$
+    \begin{itemize}
+        \item variația nu poate fi prevăzută pe baza trecutului
+    \end{itemize}
     \item Exemple
     \begin{itemize}
         \item un mers aleator fără tendință; $S_t^2 - t\sigma^2$ pentru același mers; prețul binomial cu $p^*$
@@ -842,19 +1099,38 @@ MSCA Digital Finance}
 \begin{itemize}
     \item \textbf{AR(1)} (autoregresiv de ordinul 1): $X_t = c + \phi X_{t-1} + \varepsilon_t$, $\varepsilon_t$ zgomot alb
     \begin{itemize}
+        \item valoarea de azi este o constantă, plus o fracțiune $\phi$ din valoarea de ieri, plus un șoc nou
+        \item $c$: constanta; $\phi$: persistența; $\sigma^2$: varianța lui $\varepsilon_t$
         \item $\phi = 0$: zgomot alb; $\phi = 1$, $c = \mu$: mers aleator
     \end{itemize}
     \item Staționar dacă și numai dacă $|\phi| < 1$; atunci
     \begin{itemize}
-        \item media $c/(1 - \phi)$, varianța $\sigma^2/(1 - \phi^2)$, autocorelația $\rho(h) = \phi^h$
-        \item timpul de înjumătățire al unui șoc: $\ln 0{,}5/\ln\phi$ perioade
+        \item media $c/(1 - \phi)$, varianța $\sigma^2/(1 - \phi^2)$
+        \item autocorelația la lagul $h$: $\rho(h) = \text{Corr}(X_t, X_{t-h}) = \phi^h$, cu scădere geometrică
+        \item timpul de înjumătățire al unui șoc: $\ln 0{,}5/\ln\phi$ perioade, timpul după care jumătate din șoc a dispărut
     \end{itemize}
-    \item Simulat, $\sigma = 1$
+    \item Utilizări
     \begin{itemize}
-        \item $\phi = 0{,}5$: varianța 1{,}34 (teoretic 1{,}33); $\rho(5) = 0{,}034$ (teoretic 0{,}031); timpul de înjumătățire 1{,}0
-        \item $\phi = 0{,}95$: varianța 10{,}20 (teoretic 10{,}26); $\rho(5) = 0{,}772$; timpul de înjumătățire 13{,}5
+        \item dobînzi și spread-uri (revenire la medie)
+        \item pătratele randamentelor se comportă ca un AR persistent, ceea ce duce la GARCH
     \end{itemize}
-    \item Utilizări: dobînzi și spread-uri (revenire la medie); pătratele randamentelor se comportă ca un AR persistent, ceea ce duce la GARCH
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Procesul AR(1): simulare}
+\itemsize{\small}
+\begin{itemize}
+    \item Simulat cu $\sigma = 1$, $\phi = 0{,}5$
+    \begin{itemize}
+        \item varianța 1{,}34 (teoretic $1/(1 - 0{,}5^2) = 1{,}33$)
+        \item $\rho(5) = 0{,}034$ (teoretic $0{,}5^5 = 0{,}031$); timpul de înjumătățire 1{,}0 perioade
+    \end{itemize}
+    \item Simulat cu $\sigma = 1$, $\phi = 0{,}95$
+    \begin{itemize}
+        \item varianța 10{,}20 (teoretic 10{,}26)
+        \item $\rho(5) = 0{,}772$; timpul de înjumătățire 13{,}5 perioade
+    \end{itemize}
+    \item Cu cît $\phi$ este mai aproape de 1, cu atît varianța este mai mare și un șoc se stinge mai încet
 \end{itemize}
 \end{frame}
 
@@ -921,7 +1197,7 @@ MSCA Digital Finance}
 \begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \begin{itemize}
-    \item 1827: botanistul Robert Brown observă particule de polen care tremură în apă
+    \item 1827: botanistul Robert Brown observă mișcarea neregulată a particulelor de polen în apă
     \item 1900: Louis Bachelier modelează piața obligațiunilor de la Paris cu aceeași mișcare, cu cinci ani înaintea lui Einstein \refBachelier
     \item 1905: Albert Einstein o explică prin ciocniri moleculare \refEinstein
     \item 1923: Norbert Wiener construiește obiectul matematic riguros \refWiener
@@ -952,10 +1228,14 @@ MSCA Digital Finance}
     \begin{itemize}
         \item $W(0) = 0$
         \item creșterile pe intervale disjuncte sînt independente
-        \item $W(t) - W(s) \sim N(0, t - s)$ pentru $s < t$
+        \item $W(t) - W(s) \sim N(0, t - s)$ pentru $s < t$: varianța este egală cu timpul scurs
         \item traiectoriile sînt continue
     \end{itemize}
-    \item Este limita mersului aleator scalat $W_n(t) = (\varepsilon_1 + \dots + \varepsilon_{\lfloor nt\rfloor})/\sqrt{n}$, $\varepsilon = \pm 1$ (Donsker)
+    \item Limita mersului aleator scalat $W_n(t) = (\varepsilon_1 + \dots + \varepsilon_{\lfloor nt\rfloor})/\sqrt{n}$ (Donsker)
+    \begin{itemize}
+        \item $\varepsilon_i = \pm 1$, fiecare cu probabilitatea $1/2$; $n$ pași pe unitatea de timp
+        \item $\lfloor nt\rfloor$: numărul de pași pînă la momentul $t$ (partea întreagă); împărțirea la $\sqrt{n}$ menține varianța egală cu $t$
+    \end{itemize}
     \item Manual: \refFHH, cap.~5
 \end{itemize}
 \end{column}
@@ -971,25 +1251,29 @@ MSCA Digital Finance}
 \begin{frame}{De la mersul aleator la procesul Wiener (SFEWienerProcess)}
 \itemsize{\footnotesize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch4_wiener.pdf}
+\includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch4_wiener.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Stînga: mersuri aleatoare scalate cu 10, 100 și 10\,000 de pași; treptele dispar, caracterul aleator rămîne
-    \item Dreapta: 20 de traiectorii Wiener; $\text{Var}(W(t)) = t$, deci dispersia crește ca $\pm\sqrt{t}$; $\text{Var}(W(1))$ simulată $= 1{,}006$; 68{,}2\% din $W(1)$ în $\pm 1$ (teoretic 68{,}3\%)
+    \item Dreapta: 20 de traiectorii Wiener; $\text{Var}(W(t)) = t$, deci dispersia crește ca $\pm\sqrt{t}$
+    \begin{itemize}
+        \item $\text{Var}(W(1))$ simulată $= 1{,}006$; 68{,}2\% din valorile $W(1)$ în $\pm 1$ (teoretic 68{,}3\%)
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
 
 \begin{frame}{Proprietăți neobișnuite ale traiectoriilor Wiener}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Continue peste tot, nicăieri derivabile
     \begin{itemize}
-        \item $(W(t + h) - W(t))/h \sim N(0, 1/h)$ explodează cînd $h \to 0$
+        \item panta $(W(t + h) - W(t))/h \sim N(0, 1/h)$ are varianța $1/h$, care crește nelimitat cînd $h \to 0$
     \end{itemize}
     \item \textbf{Variația pătratică}: $\sum_k (W(t_{k+1}) - W(t_k))^2 \to t$ pe o grilă tot mai fină
     \begin{itemize}
+        \item $0 = t_0 < t_1 < \dots < t$: grila; suma pătratelor creșterilor tinde către timpul scurs $t$
         \item 1000 de pași pe $[0, 1]$: media 0{,}999, abaterea standard 0{,}045 pe 10\,000 de traiectorii
         \item motivul pentru care $(dW)^2 = dt$ în calculul It\^o și pentru care varianța realizată măsoară volatilitatea (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol8_estimatori_volatilitate.pdf}{Capitolul 8})
     \end{itemize}
@@ -999,19 +1283,36 @@ MSCA Digital Finance}
 \end{frame}
 
 \begin{frame}{Mișcarea browniană geometrică}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{GBM} (geometric Brownian motion, mișcarea browniană geometrică): $dS_t = \mu S_t\,dt + \sigma S_t\,dW_t$
     \begin{itemize}
-        \item variația relativă $dS/S$ are tendința $\mu$ și volatilitatea $\sigma$
+        \item $dS_t$: variația prețului pe un interval foarte scurt $dt$
+        \item $dW_t$: creșterea procesului Wiener pe intervalul $dt$, cu distribuția $N(0, dt)$
+        \item variația relativă $dS/S$ are tendința (drift-ul) $\mu$ și volatilitatea $\sigma$, ambele anuale
     \end{itemize}
     \item Soluția: $S_t = S_0\exp\big((\mu - \sigma^2/2)t + \sigma W_t\big)$
     \begin{itemize}
-        \item $\ln(S_t/S_0) \sim N\big((\mu - \sigma^2/2)t, \sigma^2 t\big)$: prețuri lognormale, randamente logaritmice Normale i.i.d.
+        \item $\ln(S_t/S_0) \sim N\big((\mu - \sigma^2/2)t, \sigma^2 t\big)$
+        \item prețuri lognormale, randamente logaritmice Normale i.i.d.
     \end{itemize}
-    \item Media $E[S_t] = S_0e^{\mu t}$; mediana $S_0e^{(\mu - \sigma^2/2)t}$: diferența este volatility drag
-    \item Simulare exactă pe o grilă: $S_{t + \Delta t} = S_t\exp\big((\mu - \sigma^2/2)\Delta t + \sigma\sqrt{\Delta t}\,Z\big)$, $Z \sim N(0, 1)$
     \item Modelul din spatele formulei \refBS{} (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf}{capitolul 6} din manual)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{GBM: media, mediana și simularea}
+\itemsize{\small}
+\begin{itemize}
+    \item Media $E[S_t] = S_0e^{\mu t}$; mediana $S_0e^{(\mu - \sigma^2/2)t}$
+    \begin{itemize}
+        \item mediana este mai mică: jumătate din traiectorii se termină sub $S_0e^{(\mu - \sigma^2/2)t}$
+        \item diferența, $\sigma^2/2$ pe an în termeni logaritmici, este volatility drag
+    \end{itemize}
+    \item Simulare exactă pe o grilă: $S_{t + \Delta t} = S_t\exp\big((\mu - \sigma^2/2)\Delta t + \sigma\sqrt{\Delta t}\,Z\big)$
+    \begin{itemize}
+        \item $\Delta t$: pasul grilei, în ani; $Z \sim N(0, 1)$, o extragere nouă și independentă la fiecare pas
+        \item exactă, pentru că fiecare creștere logaritmică este Normală, cu media și varianța corecte
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -1023,22 +1324,32 @@ MSCA Digital Finance}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Calibrare, 2000--2026: $\sigma = 19{,}23\%$, tendința logaritmică $\mu - \sigma^2/2 = 6{,}21\%$, deci $\mu = 8{,}06\%$ pe an
-    \item După 10 ani: media 224{,}0, mediana 186{,}2; 62{,}0\% din traiectorii se termină sub medie (teoretic $\Phi(\sigma\sqrt{T}/2) = 61{,}9\%$)
+    \item După $T = 10$ ani: media 224{,}0, mediana 186{,}2
+    \begin{itemize}
+        \item 62{,}0\% din traiectorii se termină sub medie; teoretic: $\Phi(\sigma\sqrt{T}/2) = 61{,}9\%$, cu $\Phi$ funcția de repartiție $N(0, 1)$
+    \end{itemize}
     \item Probabilitatea unei pierderi după 10 ani: 15{,}3\%
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
 
 \begin{frame}{Traiectorii reale în evantaiul GBM}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch4_gbm_fan.pdf}
+\includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch4_gbm_fan.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Fiecare evantai: 4000 de traiectorii GBM cu tendința și volatilitatea seriei respective, pornite din prima zi a seriei
-    \item S\&P 500: traiectoria reală a coborît pînă la cuantila de 0{,}5\% pe 23 iulie 2002 și a încheiat perioada în jurul medianei; în afara benzii de 90\% în 7\% din timp
-    \item BET: în afara benzii 24\% din timp; avîntul din 2000--2007 și crahul din 2008 nu seamănă cu GBM; Bitcoin: cu $\sigma = 66{,}6\%$ pe an, evantaiul este foarte larg
+    \item S\&P 500: traiectoria reală a coborît pînă la cuantila de 0{,}5\% pe 23 iulie 2002 și a încheiat perioada în jurul medianei
+    \begin{itemize}
+        \item în afara benzii de 90\% în 7\% din timp
+    \end{itemize}
+    \item BET: în afara benzii 24\% din timp
+    \begin{itemize}
+        \item avîntul din 2000--2007 și crahul din 2008 nu seamănă cu GBM
+        \item Bitcoin: cu $\sigma = 66{,}6\%$ pe an, evantaiul este foarte larg
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
@@ -1073,15 +1384,24 @@ MSCA Digital Finance}
 %=============================================================================
 
 \begin{frame}{O întrebare deschisă: estimează GBM corect riscul de drawdown?}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-\includegraphics[width=0.97\textwidth,height=0.48\textheight,keepaspectratio]{sfm_ch4_drawdown_years.pdf}
+\includegraphics[width=0.97\textwidth,height=0.42\textheight,keepaspectratio]{sfm_ch4_drawdown_years.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Drawdown de peste 20\% în cursul unui an calendaristic: S\&P 500 în 6 din 26 de ani (23\%) față de 34\% în GBM; BET 46\% față de 34\%
-    \item Peste 40\%: GBM prevede, în medie, 0{,}14 asemenea ani pentru S\&P 500 și 0{,}17 pentru BET; fiecare indice a avut 1 (2008: $-48\%$ și $-73\%$)
-    \item Întrebare deschisă: supraestimează GBM drawdown-urile moderate și le subestimează pe cele extreme pentru că anii calmi și cei de criză apar grupat?
+    \item Drawdown: scăderea față de cel mai mare preț atins pînă atunci; aici, în cursul unui an calendaristic
+    \begin{itemize}
+        \item peste 20\%: S\&P 500 în 6 din 26 de ani (23\%), față de 34\% în GBM; BET 46\% față de 34\%
+    \end{itemize}
+    \item Peste 40\%: GBM prevede, în medie, 0{,}14 asemenea ani pentru S\&P 500 și 0{,}17 pentru BET
+    \begin{itemize}
+        \item fiecare indice a avut 1 (2008: $-48\%$ și $-73\%$)
+    \end{itemize}
+    \item Întrebare deschisă
+    \begin{itemize}
+        \item supraestimează GBM drawdown-urile moderate și le subestimează pe cele extreme pentru că anii calmi și cei de criză apar grupat?
+    \end{itemize}
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_drawdown_open}
 \end{frame}
@@ -1104,7 +1424,7 @@ MSCA Digital Finance}
 \begin{itemize}
     \item Definițiile: drawdown-ul se calculează față de maximul atins pînă atunci în cursul anului, nu față de prima zi a anului
     \item Calibrarea: aceleași $\mu$ și $\sigma$, același număr de zile de tranzacționare pe an ca în date
-    \item Inferența: 26 de ani reprezintă un eșantion mic; calculați o valoare $p$ binomială, nu doar proporții
+    \item Inferența: 26 de ani reprezintă un eșantion mic; calculați un p-value binomial, nu doar proporții
     \item Mecanismul: bootstrap-ul i.i.d. păstrează cozile groase, dar elimină clustering-ul; diferența izolează efectul clustering-ului
     \item Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul
 \end{itemize}

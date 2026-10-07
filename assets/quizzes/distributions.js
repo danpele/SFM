@@ -247,7 +247,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Cîștigurile sînt mai frecvente decît pierderile",
                     "Coada stîngă este mai lungă: pierderile mari sînt mai extreme decît cîștigurile mari"
                 ],
-                "correctExplanation": "Asimetria negativă înseamnă o coadă stîngă mai lungă: cele mai mari căderi sînt mai mari decît cele mai mari creșteri.",
+                "correctExplanation": "Asimetria negativă înseamnă o coadă stîngă mai lungă: cele mai mari scăderi sînt mai mari decît cele mai mari creșteri.",
                 "incorrectExplanation": "Asimetria descrie lipsa de simetrie a cozilor, nu semnul mediei sau ponderea zilelor pozitive."
             }
         },
@@ -294,7 +294,7 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Interpretarea unei respingeri JB",
-                "text": "JB respinge normalitatea randamentelor S&P 500 cu $p \\approx 0$. Ce puteți concluziona?",
+                "text": "JB respinge normalitatea randamentelor S&P 500 cu un p-value $\\approx 0$. Ce puteți concluziona?",
                 "options": [
                     "Randamentele urmează o distribuție Student-t",
                     "Randamentele nu sînt Normale; testul nu spune ce distribuție urmează",
@@ -348,7 +348,7 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Citirea unui QQ plot",
-                "text": "Un QQ plot al randamentelor standardizate față de $N(0,1)$ are formă de S: capătul de jos sub dreaptă, cel de sus deasupra. Ce arată?",
+                "text": "Un QQ plot al randamentelor standardizate față de $N(0,1)$ are formă de S: capătul stîng sub dreaptă, cel drept deasupra. Ce arată?",
                 "options": [
                     "Cozi mai groase decît ale distribuției Normale",
                     "Cozi mai subțiri decît ale distribuției Normale",
@@ -598,7 +598,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                     "Volatility clustering",
                     "Absența autocorelației liniare"
                 ],
-                "correctExplanation": "Bitcoin are cozi groase și volatility clustering, dar $\\text{Corr}(r_t, |r_{t+k}|)$ este aproape zero după decalajul 1: în spatele lui nu există o firmă cu datorii.",
+                "correctExplanation": "Bitcoin are cozi groase și volatility clustering, dar $\\text{Corr}(r_t, |r_{t+k}|)$ este aproape zero după lagul 1: în spatele lui nu există o firmă cu datorii.",
                 "incorrectExplanation": "Cozile groase, volatility clustering și autocorelația aproape nulă sînt valabile pentru Bitcoin; corelația de levier este aproape de marginea benzii de încredere."
             }
         },
@@ -618,7 +618,7 @@ window.SFM_DATA.quizzes['distributions'] = {
             },
             "ro": {
                 "title": "Testul Ljung–Box",
-                "text": "Care este distribuția statisticii Ljung–Box $Q(m)$ în ipoteza nulă a absenței autocorelației pînă la decalajul $m$?",
+                "text": "Care este distribuția statisticii Ljung–Box $Q(m)$ în ipoteza nulă a absenței autocorelației pînă la lagul $m$?",
                 "options": [
                     "$N(0, 1)$",
                     "$\\chi^2(2)$",
@@ -648,7 +648,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "text": "Prețul ajustat al unei acțiuni dă randamente de $-15\\%$ și $+20{,}5\\%$ în două zile consecutive, la data ex a unei distribuiri de acțiuni gratuite. Care este primul pas?",
                 "options": [
                     "Le păstrați: dovedesc cozile groase",
-                    "Verificați evenimentul corporativ: o ajustare plasată greșit creează două randamente extreme false care umflă boltirea",
+                    "Verificați evenimentul corporativ: o ajustare plasată greșit creează două randamente extreme false care măresc artificial boltirea",
                     "Le înlocuiți cu zero fără verificare",
                     "Folosiți în schimb prețul de închidere brut, care nu are salturi"
                 ],

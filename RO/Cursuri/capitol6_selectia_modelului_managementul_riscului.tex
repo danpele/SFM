@@ -273,7 +273,10 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item Lunar, în \%; boltirea (kurtosis) $= E(X - \mu)^4/\sigma^4$, egală cu 3 pentru distribuția Normală; valoarea $p$ Jarque--Bera (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2}) $<0{,}001$
+    \item Lunar, în \%; boltirea (kurtosis) $= E(X - \mu)^4/\sigma^4$, cu $\mu$, $\sigma$ media și abaterea standard; egală cu 3 pentru distribuția Normală
+    \begin{itemize}
+        \item testul de normalitate Jarque--Bera (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2}): p-value $<0{,}001$
+    \end{itemize}
     \item Randamente logaritmice zilnice din 2000 (Bitcoin din 2014, acțiunile BVB din 2010): boltirea
     \begin{itemize}
         \item BET $14{,}1$, S\&P 500 $13{,}7$, DAX $9{,}1$, Bitcoin $15{,}0$, TLV $16{,}5$, SNP $11{,}9$, BRD $10{,}3$
@@ -313,10 +316,11 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
 %=============================================================================
 
 \begin{frame}{Verosimilitate și log-verosimilitate}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item Datele $r_1, \dots, r_n$, presupuse i.i.d.\ (independente și identic distribuite), cu densitatea $f(r; \theta)$
     \begin{itemize}
+        \item $\theta$: vectorul parametrilor modelului (de exemplu $\mu, \sigma$); $f$: densitatea modelului
         \item \textbf{verosimilitatea}: $L(\theta) = \prod_{t=1}^n f(r_t; \theta)$, densitatea eșantionului observat, ca funcție de $\theta$
         \item \textbf{log-verosimilitatea}: $\ell(\theta) = \sum_{t=1}^n \ln f(r_t; \theta)$; sumele se manipulează mai ușor decît produsele
     \end{itemize}
@@ -324,7 +328,11 @@ DAX 2004--2026 & 267 & $-21{,}70$ & $17{,}12$ & $5{,}39$ & $18{,}66$ & $-0{,}72$
     \begin{itemize}
         \item $\ell(\hat\theta)$, log-verosimilitatea maximizată, stă la baza tuturor comparațiilor din acest capitol
     \end{itemize}
-    \item Pentru $n$ mare, $\hat\theta$ are o distribuție aproximativ Normală în jurul valorii adevărate $\theta$, cu covarianța $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$ (inversa informației observate)
+    \item Pentru $n$ mare, $\hat\theta$ are o distribuție aproximativ Normală în jurul valorii adevărate $\theta$
+    \begin{itemize}
+        \item covarianța $\approx [-\partial^2\ell/\partial\theta\,\partial\theta^\top]^{-1}$, inversa informației observate
+        \item o funcție $\ell$ puternic curbată (derivata a doua mare) înseamnă o estimare precisă
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -382,7 +390,7 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Cît de precis este $\hat\nu$? Log-verosimilitatea profil}
+\begin{frame}{Precizia lui $\hat\nu$: log-verosimilitatea profil}
 \itemsize{\footnotesize}
 \begin{center}
     \includegraphics[width=0.97\textwidth,height=0.56\textheight,keepaspectratio]{sfm_ch6_profile_nu.pdf}
@@ -451,8 +459,13 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
 \begin{itemize}
     \item $H_0$: modelul 0 (restrîns) este adevărat; $H_1$: modelul 1 (mai general)
     \begin{itemize}
-        \item $LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \ge 0$
-        \item \textbf{Teorema lui Wilks} (\refWilks): sub $H_0$, $LR \approx \chi^2(d)$, cu $d = k_1 - k_0$ restricții, dacă valorile fixate se află în interiorul spațiului parametrilor
+        \item $LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \ge 0$: de două ori cîștigul de log-verosimilitate maximizată
+        \item $\ell_0, \ell_1$: log-verosimilitățile celor două modele; $k_0, k_1$: numerele lor de parametri
+    \end{itemize}
+    \item \textbf{Teorema lui Wilks} (\refWilks): sub $H_0$, $LR \approx \chi^2(d)$, cu $d = k_1 - k_0$ restricții
+    \begin{itemize}
+        \item $\chi^2(d)$: distribuția hi-pătrat cu $d$ grade de libertate
+        \item valabilă dacă valorile fixate se află în interiorul spațiului parametrilor
     \end{itemize}
     \item Decizia la 5\%: respingem $H_0$ dacă $LR > \chi^2_{0{,}95}(d)$
     \begin{itemize}
@@ -485,14 +498,14 @@ stabilă & $\hat\alpha = 1{,}540$, $\hat\beta = -0{,}181$, $\hat\gamma = 0{,}582
     \item $H_0$: $1/\nu = 0$ este pe marginea spațiului $1/\nu \ge 0$: teorema lui Wilks nu se aplică
     \begin{itemize}
         \item \refSL: distribuția statisticii sub $H_0$ este un amestec 50:50 de $\chi^2(0)$ (o masă de probabilitate concentrată în 0) și $\chi^2(1)$
-        \item valoarea critică la 5\%: $\chi^2_{0{,}90}(1) = 2{,}71$ în loc de $3{,}84$; valoarea $p$ naivă este dublul celei corecte
+        \item valoarea critică la 5\%: $\chi^2_{0{,}90}(1) = 2{,}71$ în loc de $3{,}84$; p-value-ul naiv este dublul celui corect
     \end{itemize}
     \item Date reale: $LR$ = 1\,949 (S\&P 500), 1\,337 (Bitcoin): modelul Normal este respins cu oricare valoare critică
     \item Aceeași problemă apare pentru o pondere a amestecului $w = 0$ și pentru parametri de varianță egali cu 0
     \item \textbf{Ce credeți?} Contează frontiera cînd $LR$ este de ordinul miilor?
     \item \textbf{Răspuns}
     \begin{itemize}
-        \item nu pentru decizia de aici; contează însă în eșantioane mici și pentru valori $LR$ la limită, unde înjumătățește valoarea $p$
+        \item nu pentru decizia de aici; contează însă în eșantioane mici și pentru valori $LR$ la limită, unde înjumătățește p-value-ul
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -514,7 +527,10 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
 \end{center}
 \begin{itemize}
     \item \refVuong: $m_t = \ln f_1(r_t) - \ln f_2(r_t)$, $V = \sqrt{n}\,\bar m / s_m \approx N(0, 1)$ dacă ambele modele sînt la fel de aproape de adevăr
-    \item $V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; valoarea $p$ este în paranteză
+    \begin{itemize}
+        \item $f_1, f_2$: cele două densități estimate; $m_t$: cu cît explică modelul 1 mai bine ziua $t$; $\bar m$, $s_m$: media și abaterea standard a valorilor $m_t$
+        \item $V > 1{,}96$: primul model este mai aproape; $V < -1{,}96$: al doilea; p-value-ul este în paranteză
+    \end{itemize}
     \item Student-t este preferat distribuției stabile pe toate piețele; NIG este preferat distribuției skewed-t pentru S\&P 500 și DAX; comparația Student-t--GED diferă de la o piață la alta
 \end{itemize}\quantlet{SFM\_ch6\_lr\_aic}{\qlurl{SFM_ch6_lr_aic}}
 \end{frame}
@@ -539,10 +555,11 @@ Bitcoin & $-3{,}80$ ($<0{,}001$) & $16{,}47$ ($<0{,}001$) & $-6{,}76$ ($<0{,}001
 \begin{columns}[T]
 \begin{column}{0.64\textwidth}
 \begin{itemize}
-    \item Hirotugu Akaike și-a pus întrebarea: ce model va prezice cel mai bine date \textbf{noi}?
+    \item Hirotugu Akaike și-a pus întrebarea: ce model va descrie cel mai bine date \textbf{noi}?
     \begin{itemize}
         \item distanța de la distribuția adevărată $g$ la un model $f$: divergența Kullback--Leibler \refKL
         \item $KL(g, f) = E_g[\ln g(R) - \ln f(R)] \ge 0$, zero doar dacă $f = g$
+        \item $R$: un randament nou, generat de distribuția adevărată $g$; $E_g$: media calculată sub $g$
     \end{itemize}
     \item $\ell(\hat\theta)$ este prea optimistă: aceleași date servesc și la estimarea lui $\hat\theta$, și la evaluarea lui
     \begin{itemize}
@@ -700,9 +717,10 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \begin{columns}[T]
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-    \item $D_n = \sup_x |F_n(x) - F(x)|$, cea mai mare distanță pe verticală
+    \item $D_n = \sup_x |F_n(x) - F(x)|$, cea mai mare distanță pe verticală dintre EDF și funcția de repartiție a modelului ($\sup$: cea mai mare valoare pe toate $x$)
     \begin{itemize}
-        \item cu datele ordonate $u_{(i)} = F(r_{(i)})$: $D_n = \max_i \max\{i/n - u_{(i)},\ u_{(i)} - (i-1)/n\}$
+        \item $r_{(i)}$: al $i$-lea cel mai mic randament; $u_{(i)} = F(r_{(i)})$: probabilitatea lui în model
+        \item formula de calcul: $D_n = \max_i \max\{i/n - u_{(i)},\ u_{(i)} - (i-1)/n\}$
     \end{itemize}
     \item $F$ complet cunoscută: distribuția lui $D_n$ nu depinde de $F$ (Kolmogorov, 1933)
     \begin{itemize}
@@ -749,7 +767,7 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
     \item Orice model: \textbf{bootstrap parametric} \refSGQ
     \begin{itemize}
         \item simulăm $n$ extrageri din $F(\cdot; \hat\theta)$, reestimăm parametrii, recalculăm statistica; repetăm de $B$ ori
-        \item valoarea $p$ $= (1 + \#\{\text{statistici bootstrap} \ge \text{cea observată}\})/(B + 1)$
+        \item p-value $= (1 + \#\{\text{statistici bootstrap} \ge \text{cea observată}\})/(B + 1)$: proporția statisticilor simulate cel puțin egale cu cea observată
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -766,6 +784,7 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
     \end{itemize}
     \item Formula de calcul \refADb: $A^2 = -n - \frac{1}{n}\sum_i (2i - 1)\big[\ln u_{(i)} + \ln(1 - u_{(n + 1 - i)})\big]$
     \begin{itemize}
+        \item $u_{(i)} = F(r_{(i)})$, ca la KS; valori mari ale lui $W^2$ sau $A^2$: o ajustare slabă
         \item ponderea $1/[F(1 - F)]$ este foarte mare acolo unde $F$ este aproape de 0 sau 1, adică în cozi
     \end{itemize}
 \end{itemize}
@@ -779,15 +798,18 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \end{columns}
 \end{frame}
 
-\begin{frame}{De ce este KS slab în cozi}
+\begin{frame}{Slăbiciunea testului KS în cozi}
 \itemsize{\footnotesize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch6_ks_tail.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch6_ks_tail.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item S\&P 500 comparat cu distribuția Normală estimată. Stînga: distanța KS are maximul la $x = -0{,}41\%$, aproape de centru ($F = 36\%$), cu $D_n = 0{,}093$
-    \item În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult; cu ponderea Anderson--Darling (dreapta), distanța maximă apare la $x = -6{,}9\%$
+    \item În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult
+    \begin{itemize}
+        \item cu ponderea Anderson--Darling (dreapta), distanța maximă apare la $x = -6{,}9\%$
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
@@ -795,12 +817,15 @@ stabilă & 4 & $-9\,893$ & $19\,794$ & $19\,821$ & $137{,}3$ & $137{,}3$ & $0{,}
 \begin{frame}{Puterea celor trei teste}
 \itemsize{\footnotesize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.54\textheight,keepaspectratio]{sfm_ch6_gof_power.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.50\textheight,keepaspectratio]{sfm_ch6_gof_power.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
     \item Proporția din 1000 de eșantioane simulate în care normalitatea (parametri estimați) este respinsă la 5\%; puterea = probabilitatea de a respinge un $H_0$ fals
-    \item Date Student-t, $n = 250$: KS $62\%$, Cramér--von Mises $77\%$, Anderson--Darling $81\%$; abateri doar în cozi ($n = 250$): $38\%$, $50\%$, $57\%$
+    \item Date Student-t, $n = 250$: KS $62\%$, Cramér--von Mises $77\%$, Anderson--Darling $81\%$
+    \begin{itemize}
+        \item abateri doar în cozi ($n = 250$): $38\%$, $50\%$, $57\%$
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_gof\_tests}{\qlurl{SFM_ch6_gof_tests}}
 \end{frame}
@@ -835,7 +860,7 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
         \item skewed-t: KS $0{,}008$, AD $0{,}35$
     \end{itemize}
     \item Normală, Student-t, skewed-t: $p$ bootstrap $= 0{,}005$, cel mai mic posibil: toate respinse
-    \item Student-t, valoarea $p$ KS naivă (ca și cum $\theta$ ar fi cunoscut): $0{,}021$
+    \item Student-t, p-value-ul KS naiv (ca și cum $\theta$ ar fi cunoscut): $0{,}021$
 \end{itemize}
 \end{column}
 \end{columns}\begin{itemize}
@@ -915,7 +940,10 @@ stabilă & $0{,}022$ & $0{,}81$ & $4{,}61$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item Cel mai mic randament zilnic a fost $-12{,}8\%$; cuantila modelului la aceeași probabilitate: Normală $-4{,}6\%$, Student-t $-22{,}9\%$, skewed-t $-24{,}5\%$, stabilă $-116{,}1\%$
+    \item Cel mai mic randament zilnic a fost $-12{,}8\%$; cuantila modelului la aceeași probabilitate:
+    \begin{itemize}
+        \item Normală $-4{,}6\%$, Student-t $-22{,}9\%$, skewed-t $-24{,}5\%$, stabilă $-116{,}1\%$
+    \end{itemize}
     \item Modelele care păreau identice în graficul PP diferă puternic în extremitatea cozii
 \end{itemize}
 \quantlet{SFM\_ch6\_pp\_qq}{\qlurl{SFM_ch6_pp_qq}}
@@ -1041,7 +1069,13 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \begin{itemize}
     \item Depășire: o zi cu $r_t < -\mathrm{VaR}_{1\%}$; pentru un model corect, numărul lor este $\mathrm{Binomial}(n; 0{,}01)$
     \item \refKupiec: $LR_{uc} = -2\ln\dfrac{(1-\alpha)^{n - x}\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \approx \chi^2(1)$, $x$ = numărul de depășiri
-    \item S\&P 500: Student-t, 67 depășiri față de 67 așteptate ($p = 0{,}986$); NIG, cîștigătorul AIC, 52 ($p = 0{,}053$)
+    \begin{itemize}
+        \item un test LR care compară rata țintă $\alpha$ cu rata observată $x/n$; $LR_{uc}$ mare: număr greșit de depășiri
+    \end{itemize}
+    \item S\&P 500: Student-t, 67 depășiri față de 67 așteptate ($p = 0{,}986$)
+    \begin{itemize}
+        \item NIG, cîștigătorul AIC: 52 ($p = 0{,}053$)
+    \end{itemize}
     \item Cel mai bun model pentru întreaga densitate nu este întotdeauna cel mai bun pentru o cuantilă; există scoruri axate pe coadă \refDPD
 \end{itemize}\quantlet{SFM\_ch6\_tail\_var}{\qlurl{SFM_ch6_tail_var}}
 \end{frame}
@@ -1060,7 +1094,7 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
 \section{În afara eșantionului: validare și supraajustare}
 %=============================================================================
 
-\begin{frame}{De ce în afara eșantionului?}
+\begin{frame}{Rolul validării în afara eșantionului}
 \itemsize{\small}
 \begin{itemize}
     \item În eșantion, un model mai general se ajustează cel puțin la fel de bine: $\ell$ nu scade niciodată cînd adăugăm parametri
@@ -1071,6 +1105,7 @@ Bitcoin & 44 & 86 & 34 & 36 & 56 & 44 & 16 \\
     \begin{itemize}
         \item \textbf{scorul logaritmic}: media lui $\ln f(r_t; \hat\theta)$ pe zilele de test; valoarea mai mare este preferată; este o regulă de scor proprie (proper scoring rule) \refGR
         \item \textbf{depășirile} VaR 1\% (Kupiec) și \textbf{pierderea pinball} $\frac{1}{n}\sum_t (\alpha - \mathbf{1}\{r_t < q\})(r_t - q)$ a cuantilei de 1\% $q$
+        \item pinball: $\mathbf{1}\{r_t < q\} = 1$ într-o zi sub $q$, 0 altfel; penalizează asimetric abaterile, valoarea mai mică este preferată
     \end{itemize}
     \item Un scor este \textbf{propriu} dacă distribuția adevărată obține cel mai bun scor așteptat: prognozistul nu are nimic de cîștigat dacă își distorsionează prognoza
 \end{itemize}
@@ -1107,7 +1142,10 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \begin{itemize}
     \item Depășiri ale VaR 1\% pe zilele de test; aștept.: numărul așteptat; ist.: simularea istorică (cuantila de 1\% a eșantionului de estimare)
     \item Cîștigătorul AIC din 2000--2019 are cel mai bun scor logaritmic doar pentru DAX; în rest, cel mai bun scor aparține unui model apropiat în clasament
-    \item BET: modelul Normal are 17 depășiri față de 16{,}7 așteptate, modelele cu cozi groase doar 5: perioada 2020--2026 a fost mai calmă pentru BET decît 2000--2019
+    \item BET: modelul Normal are 17 depășiri față de 16{,}7 așteptate, modelele cu cozi groase doar 5
+    \begin{itemize}
+        \item perioada 2020--2026 a fost mai calmă pentru BET decît 2000--2019
+    \end{itemize}
     \item Numărul potrivit, dar din motive greșite: un model static nu poate urmări schimbările de volatilitate
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
@@ -1125,7 +1163,7 @@ Bitcoin & 24{,}5 & 23 & 7 & 7 & 7 & 1 & 10 & GED & NIG \\
 \quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
-\begin{frame}{Care criteriu ne-a avertizat?}
+\begin{frame}{Criteriul care a semnalat supraajustarea}
 \itemsize{\small}
 \begin{itemize}
     \item Log-verosimilitatea medie pe zi, în eșantion $\to$ în afara eșantionului
@@ -1172,20 +1210,30 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \end{center}
 \begin{itemize}
     \item Backtesting 2003--2026, $n = 5\,714$ zile pentru S\&P 500; rata țintă 1\%; cel mai slab an este 2008, pentru toate modelele și pentru ambele serii
-    \item Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\%: volatilitatea se schimbă mai repede decît se poate adapta o fereastră de 1000 de zile
+    \item Cozile groase înjumătățesc excesul de depășiri, dar niciun model necondiționat nu ajunge la 1\%
+    \begin{itemize}
+        \item volatilitatea se schimbă mai repede decît se poate adapta o fereastră de 1000 de zile
+    \end{itemize}
     \item Remediul este un model pentru volatilitatea însăși: GARCH, \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol8_estimatori_volatilitate.pdf}{Capitolele 8} și \sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{9}
 \end{itemize}\quantlet{SFM\_ch6\_out\_of\_sample}{\qlurl{SFM_ch6_out_of_sample}}
 \end{frame}
 
 \begin{frame}{Graficul de fiabilitate VaR (SFEVaRqqplot)}
-\itemsize{\footnotesize}
+\itemsize{\scriptsize}
 \begin{center}
-    \includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch6_var_qqplot.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.46\textheight,keepaspectratio]{sfm_ch6_var_qqplot.pdf}
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item DAX din 2000: VaR 1\% Normal cu volatilitatea ultimelor 250 de zile, RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\lambda = 0{,}96$); graficul QQ al lui $L/\mathrm{VaR}$ față de cuantilele Normale
-    \item O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept: pierderile dincolo de VaR sînt prea mari și prea frecvente ($2{,}13\%$ și $2{,}07\%$ depășiri)
+    \item DAX din 2000: VaR 1\% Normal cu volatilitatea ultimelor 250 de zile
+    \begin{itemize}
+        \item RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\lambda = 0{,}96$: ponderea fiecărei zile mai vechi scade cu 4\%)
+        \item graficul QQ al lui $L/\mathrm{VaR}$ (pierderea împărțită la VaR) față de cuantilele Normale
+    \end{itemize}
+    \item O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept
+    \begin{itemize}
+        \item pierderile dincolo de VaR sînt prea mari și prea frecvente ($2{,}13\%$ și $2{,}07\%$ depășiri)
+    \end{itemize}
 \end{itemize}
 \quantlet{SFM\_ch6\_var\_qqplot}{\qlurl{SFM_ch6_var_qqplot}}
 \end{frame}
@@ -1204,7 +1252,7 @@ BET, Kupiec $p$ & $<0{,}001$ & $<0{,}001$ & $0{,}007$ & $0{,}066$ \\
 \section{Incertitudinea de model}
 %=============================================================================
 
-\begin{frame}{Cît de siguri sîntem de cîștigător?}
+\begin{frame}{Stabilitatea cîștigătorului}
 \itemsize{\footnotesize}
 \begin{center}
     \includegraphics[width=0.97\textwidth,height=0.52\textheight,keepaspectratio]{sfm_ch6_model_uncertainty.pdf}
@@ -1253,8 +1301,14 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item VaR 1\% în \%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\% dintre cele șase modele nenormale; intervalul (\%): max/min $- 1$
-    \item Mediat: $\sum_i w_i\,\mathrm{VaR}_i$ cu ponderile Akaike; un analog frecventist al medierii bayesiene a modelelor \refHoeting
+    \item VaR 1\% în \%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\% dintre cele șase modele nenormale
+    \begin{itemize}
+        \item intervalul (\%): max/min $- 1$, distanța relativă dintre modelele extreme
+    \end{itemize}
+    \item Mediat: $\sum_i w_i\,\mathrm{VaR}_i$, cu ponderile Akaike $w_i$
+    \begin{itemize}
+        \item un analog frecventist al medierii bayesiene a modelelor \refHoeting
+    \end{itemize}
     \item \textbf{Riscul de model}: amplitudinea rezultatelor între modelele plauzibile; autoritățile de supraveghere cer băncilor să îl măsoare \refKerkhof, \refDanielsson
 \end{itemize}\quantlet{SFM\_ch6\_model\_uncertainty}{\qlurl{SFM_ch6_model_uncertainty}}
 \end{frame}
@@ -1293,7 +1347,7 @@ BRD & $4{,}50$ & $3{,}81$ & $[4{,}18; 4{,}74]$ & $4{,}33$ & $14$ \\
         \item o parte din cozile groase ale randamentelor zilnice provine din volatilitatea variabilă în timp (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf}{Capitolul 2})
         \item randamentele împărțite la o prognoză de volatilitate (de exemplu EMA, $\lambda = 0{,}96$) au cozi mai subțiri; care candidat li se potrivește cel mai bine?
     \end{itemize}
-    \item De ce este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere
+    \item Motivul pentru care este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere
     \item Randamentele zilnice brute: NIG cîștigă pentru cei trei indici, GED pentru Bitcoin, Student-t pentru acțiunile BVB (acest capitol)
     \item Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \refWang
 \end{itemize}
