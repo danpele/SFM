@@ -390,8 +390,9 @@ D.frame(T('Summary Statistics: Monthly DAX and Daily Returns', 'Statistici descr
     ['DAX 2004--2014 & @{dm.book.n} & $@{dm.book.min}$ & $@{dm.book.max}$ & $@{dm.book.sd}$ & $@{dm.book.ann_vol}$ & $@{dm.book.skew}$ & $@{dm.book.kurt}$',
      'DAX 2004--@{y1} & @{dm.full.n} & $@{dm.full.min}$ & $@{dm.full.max}$ & $@{dm.full.sd}$ & $@{dm.full.ann_vol}$ & $@{dm.full.skew}$ & $@{dm.full.kurt}$'],
     size='footnotesize') + items(
-    (T('Monthly, in \\%; kurtosis $= E(X - \\mu)^4/\\sigma^4$, with $\\mu$, $\\sigma$ the mean and the standard deviation; equal to 3 for the Normal distribution', 'Lunar, în \\%; boltirea (kurtosis) $= E(X - \\mu)^4/\\sigma^4$, cu $\\mu$, $\\sigma$ media și abaterea standard; egală cu 3 pentru distribuția Normală'),
-     [T('Jarque--Bera test of Normality (Chapter 2): $p$-value $@{dm.full.jbp}$', 'testul de normalitate Jarque--Bera (Capitolul 2): p-value $@{dm.full.jbp}$')]),
+    (T('Monthly, in \\%; st.\\ dev.: standard deviation $\\sigma$; ann.\\ vol.: $\\sigma\\sqrt{12}$', 'Lunar, în \\%; ab.\\ std.: abaterea standard $\\sigma$; vol.\\ anuală: $\\sigma\\sqrt{12}$'),
+     [T('skewness $E(X - \\mu)^3/\\sigma^3$ and kurtosis $E(X - \\mu)^4/\\sigma^4$, with $\\mu$ the mean; 0 and 3 for the Normal distribution', 'asimetria $E(X - \\mu)^3/\\sigma^3$ și boltirea (kurtosis) $E(X - \\mu)^4/\\sigma^4$, cu $\\mu$ media; 0 și 3 pentru distribuția Normală'),
+      T('Jarque--Bera test of Normality (Chapter 2): $p$-value $@{dm.full.jbp}$', 'testul de normalitate Jarque--Bera (Capitolul 2): p-value $@{dm.full.jbp}$')]),
     (T('Daily log returns since 2000 (Bitcoin since 2014, BVB stocks since 2010): kurtosis', 'Randamente logaritmice zilnice din 2000 (Bitcoin din 2014, acțiunile BVB din 2010): boltirea'),
      [T('BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$',
         'BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$'),
@@ -609,7 +610,7 @@ D.frame(T('Worked Example: Seven Models for the S\\&P 500', 'Exemplu lucrat: șa
     T('Example: NIG, $\\mathrm{AIC} = -2(@{ll.sp500.NIG}) + 2 \\cdot 4 = @{aic.sp500.NIG}$', 'Exemplu: NIG, $\\mathrm{AIC} = -2(@{ll.sp500.NIG}) + 2 \\cdot 4 = @{aic.sp500.NIG}$'),
     T('NIG wins on both criteria; the next model, skewed-t, has $\\Delta = @{daic1.sp500.Skewed-t}$, so $e^{-\\Delta/2} \\approx @{ex.e.skt.sci}$: weight $w \\approx 1$ for NIG',
       'NIG cîștigă pe ambele criterii; următorul model, skewed-t, are $\\Delta = @{daic1.sp500.Skewed-t}$, deci $e^{-\\Delta/2} \\approx @{ex.e.skt.sci}$: ponderea $w \\approx 1$ pentru NIG'),
-    T('Normal: $\\Delta$AIC of @{daic.sp500.Normal}; the stable law: @{daic.sp500.Stable}', 'modelul Normal: $\\Delta$AIC de @{daic.sp500.Normal}; distribuția stabilă: @{daic.sp500.Stable}')) + ql('SFM_ch6_lr_aic'), size='footnotesize')
+    T('Normal: $\\Delta$AIC of @{daic.sp500.Normal}; the stable law: @{daic.sp500.Stable}', 'Modelul Normal: $\\Delta$AIC de @{daic.sp500.Normal}; distribuția stabilă: @{daic.sp500.Stable}')) + ql('SFM_ch6_lr_aic'), size='footnotesize')
 
 chart(T('$\\Delta$AIC across Seven Series', '$\\Delta$AIC pentru șapte serii'), 'sfm_ch6_delta_aic', 'SFM_ch6_lr_aic', [
     T('Each row: one series; 0 marks the best model; darker cells: worse models (log colour scale)', 'Fiecare rînd: o serie; 0 marchează cel mai bun model; celule mai închise: modele mai slabe (scară logaritmică a culorii)')],
@@ -784,7 +785,7 @@ D.section('The Purpose Decides: Which Model Gets VaR 1\\% Right?', 'Scopul decid
 
 D.frame(T('VaR and ES', 'VaR și ES'), items(
     (T('Return $X$, level $\\alpha$ (here $\\alpha = 1\\%$ or $2.5\\%$, the probability of the tail)', 'Randamentul $X$, nivelul $\\alpha$ (aici $\\alpha = 1\\%$ sau $2{,}5\\%$, probabilitatea cozii)'),
-     [T('\\textbf{VaR} (Value at Risk): $\\mathrm{VaR}_\\alpha = -q_\\alpha(X)$, the loss exceeded with probability $\\alpha$', '\\textbf{VaR} (Value at Risk, valoarea la risc): $\\mathrm{VaR}_\\alpha = -q_\\alpha(X)$, pierderea depășită cu probabilitatea $\\alpha$'),
+     [T('\\textbf{VaR} (Value at Risk): $\\mathrm{VaR}_\\alpha = -q_\\alpha(X)$, the loss exceeded with probability $\\alpha$', '\\textbf{VaR} (Value at Risk, valoarea expusă la risc): $\\mathrm{VaR}_\\alpha = -q_\\alpha(X)$, pierderea depășită cu probabilitatea $\\alpha$'),
       T('\\textbf{ES} (expected shortfall): $\\mathrm{ES}_\\alpha = -\\frac{1}{\\alpha}\\int_0^\\alpha q_u\\, du = -E[X \\mid X \\le q_\\alpha]$, the average loss in the tail',
         '\\textbf{ES} (expected shortfall, pierderea așteptată în coadă): $\\mathrm{ES}_\\alpha = -\\frac{1}{\\alpha}\\int_0^\\alpha q_u\\, du = -E[X \\mid X \\le q_\\alpha]$, pierderea medie din coadă')]),
     (T('Normal model: $\\mathrm{VaR}_\\alpha = -(\\mu + \\sigma z_\\alpha)$, $z_{0.01} = -@{z01}$', 'Modelul Normal: $\\mathrm{VaR}_\\alpha = -(\\mu + \\sigma z_\\alpha)$, $z_{0{,}01} = -@{z01}$'),
@@ -832,7 +833,7 @@ D.frame(T('Counting Exceedances: the Kupiec Test', 'Numărarea depășirilor: te
     (T('\\refKupiec: $LR_{uc} = -2\\ln\\dfrac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \\approx \\chi^2(1)$, $x$ = number of exceedances',
       '\\refKupiec: $LR_{uc} = -2\\ln\\dfrac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x} \\approx \\chi^2(1)$, $x$ = numărul de depășiri'),
      [T('an LR test comparing the target rate $\\alpha$ with the observed rate $x/n$; large $LR_{uc}$: wrong number of exceedances', 'un test LR care compară rata țintă $\\alpha$ cu rata observată $x/n$; $LR_{uc}$ mare: număr greșit de depășiri')]),
-    (T('S\\&P 500: Student-t @{x.sp500.Student-t} exceedances for @{x.sp500.exp} expected ($p = @{xp.sp500.Student-t}$)', 'S\\&P 500: Student-t, @{x.sp500.Student-t} depășiri față de @{x.sp500.exp} așteptate ($p = @{xp.sp500.Student-t}$)'),
+    (T('S\\&P 500: Student-t @{x.sp500.Student-t} exceedances for @{x.sp500.exp} expected ($p = @{xp.sp500.Student-t}$)', 'S\\&P 500: Student-t, @{x.sp500.Student-t} de depășiri față de @{x.sp500.exp} așteptate ($p = @{xp.sp500.Student-t}$)'),
      [T('NIG, the AIC winner, @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)', 'NIG, cîștigătorul AIC: @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)')]),
     T('The best model for the whole density is not always the best for one quantile; tail-focused scores exist \\refDPD',
       'Cel mai bun model pentru întreaga densitate nu este întotdeauna cel mai bun pentru o cuantilă; există scoruri axate pe coadă \\refDPD')) + ql('SFM_ch6_tail_var'), size='footnotesize')
@@ -920,8 +921,9 @@ D.frame(T('Rolling Backtest: the Results', 'Backtesting pe fereastră mobilă: r
     T('The remedy is a model for the volatility itself: GARCH, Chapters 8 and 9', 'Remediul este un model pentru volatilitatea însăși: GARCH, Capitolele 8 și 9')) + ql('SFM_ch6_out_of_sample'), size='footnotesize')
 
 chart(T('The VaR Reliability Plot (SFEVaRqqplot)', 'Graficul de fiabilitate VaR (SFEVaRqqplot)'), 'sfm_ch6_var_qqplot', 'SFM_ch6_var_qqplot', [
-    (T('DAX since @{vq.y0}: Normal VaR 1\\% with the volatility of the previous 250 days', 'DAX din @{vq.y0}: VaR 1\\% Normal cu volatilitatea ultimelor 250 de zile'),
-     [T('RMA (rectangular moving average) or EMA (exponential, $\\lambda = 0.96$: the weight of each older day shrinks by 4\\%)', 'RMA (rectangular moving average, medie mobilă simplă) sau EMA (exponential moving average, medie mobilă exponențială, $\\lambda = 0{,}96$: ponderea fiecărei zile mai vechi scade cu 4\\%)'),
+    (T('DAX since @{vq.y0}: Normal VaR 1\\% $= -z_{0.01}\\hat\\sigma_t = 2.326\\,\\hat\\sigma_t$, with $\\hat\\sigma_t$ from the previous 250 days', 'DAX din @{vq.y0}: VaR 1\\% Normal $= -z_{0.01}\\hat\\sigma_t = 2.326\\,\\hat\\sigma_t$, cu $\\hat\\sigma_t$ din ultimele 250 de zile'),
+     [T('RMA (rectangular moving average): $\\hat\\sigma_t^2 = \\frac{1}{250}\\sum_{j=1}^{250} r_{t-j}^2$, equal weights', 'RMA (rectangular moving average, medie mobilă simplă): $\\hat\\sigma_t^2 = \\frac{1}{250}\\sum_{j=1}^{250} r_{t-j}^2$, ponderi egale'),
+      T('EMA (exponential moving average): $\\hat\\sigma_t^2 = (1 - \\lambda)\\sum_{j \\ge 0} \\lambda^j r_{t-1-j}^2$, $\\lambda = 0.96$: each older day weighs 4\\% less', 'EMA (exponential moving average, medie mobilă exponențială): $\\hat\\sigma_t^2 = (1 - \\lambda)\\sum_{j \\ge 0} \\lambda^j r_{t-1-j}^2$, $\\lambda = 0{,}96$: fiecare zi mai veche are o pondere cu 4\\% mai mică'),
       T('QQ plot of $L/\\mathrm{VaR}$ (loss divided by VaR) against Normal quantiles', 'graficul QQ al lui $L/\\mathrm{VaR}$ (pierderea împărțită la VaR) față de cuantilele Normale')]),
     (T('A straight line would mean a reliable VaR; both curve upwards at the right end', 'O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept'),
      [T('the losses beyond VaR are too large and too frequent ($@{vq.rma.rate}\\%$ and $@{vq.ema.rate}\\%$ exceedances)', 'pierderile dincolo de VaR sînt prea mari și prea frecvente ($@{vq.rma.rate}\\%$ și $@{vq.ema.rate}\\%$ depășiri)')])], h='0.46\\textheight', size='scriptsize')
@@ -989,7 +991,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
         'randamentele împărțite la o prognoză de volatilitate (de exemplu EMA, $\\lambda = 0{,}96$) au cozi mai subțiri; care candidat li se potrivește cel mai bine?')]),
     T('Why it is open: the answer differs across markets, and the volatility model itself is a choice', 'Motivul pentru care este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere'),
     T('Raw daily returns: NIG wins for the three indices, GED for Bitcoin, Student-t for BVB stocks (this chapter)', 'Randamentele zilnice brute: NIG cîștigă pentru cei trei indici, GED pentru Bitcoin, Student-t pentru acțiunile BVB (acest capitol)'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
+    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies that compare return distributions after GARCH filtering, with their samples and criteria',
@@ -1044,7 +1046,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'Anderson--Darling & $A^2 = n\\int [F_n - F]^2 / [F(1 - F)]\\, dF$',
      'Kupiec & $LR_{uc} = -2\\ln\\frac{(1-\\alpha)^{n - x}\\alpha^x}{(1 - x/n)^{n - x}(x/n)^x}$',
      T('Pinball loss', 'Pierderea pinball') + ' & $\\frac{1}{n}\\sum_t (\\alpha - \\mathbf{1}\\{r_t < q\\})(r_t - q)$'],
-    size='scriptsize') + '}')
+    size='footnotesize') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: model A has $\\ell = -1000$ with $k = 3$, model B has $\\ell = -998$ with $k = 5$; which has the lower AIC?',

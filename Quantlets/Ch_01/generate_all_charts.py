@@ -342,13 +342,13 @@ def fig_vol_drag(perf, save=True):
     x = 100 * perf['half_var'].astype(float)
     y = 100 * perf['drag'].astype(float)
     lo, hi = min(x.min(), y.min()) * 0.8, max(x.max(), y.max()) * 1.25
-    ax.plot([lo, hi], [lo, hi], color='black', lw=0.9, ls='--', label='drag = sigma^2 / 2')
+    ax.plot([lo, hi], [lo, hi], color='black', lw=0.9, ls='--', label=r'drag $= \sigma^2/2$')
     for lab, xv, yv in zip(perf.index, x, y):
         c, mk = SCATTER[lab]
         ax.scatter(xv, yv, s=70 if mk == '*' else 45, color=c, marker=mk, zorder=3, label=lab)
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_xlabel('Half the annual variance, sigma^2/2 (% per year, log scale)')
+    ax.set_xlabel(r'Half the annual variance, $\sigma^2/2$ (% per year, log scale)')
     ax.set_ylabel('Arithmetic minus log mean (% per year)')
     st.legend_outside_bottom(ax, ncol=4, y=-0.17)
     st.check_no_grey(fig)
@@ -356,14 +356,25 @@ def fig_vol_drag(perf, save=True):
         st.save_fig('sfm_ch1_vol_drag')
 
 
+# direct labels of the risk-return scatter (offsets in points, so that nearby assets do not overlap)
+RR_SHORT = {'Banca Transilvania': 'TLV', 'OMV Petrom': 'SNP', 'Nuclearelectrica': 'SNN', 'Transgaz': 'TGN'}
+RR_LABELS = {'S&P 500': (8, -2, 'left'), 'DAX': (8, -3, 'left'), 'BET': (-8, 0, 'right'), 'BET-TR': (-8, 0, 'right'),
+             'Bitcoin': (-9, 0, 'right'), 'Banca Transilvania': (8, 0, 'left'), 'OMV Petrom': (-8, -3, 'right'),
+             'BRD': (8, -4, 'left'), 'Nuclearelectrica': (8, 0, 'left'), 'Transgaz': (-8, 3, 'right')}
+
+
 def fig_risk_return(perf, save=True):
     """Annualised volatility vs CAGR, one point per asset, 2015-2026."""
     fig, ax = plt.subplots(figsize=(8.6, 4.4))
     for lab in perf.index:
         c, mk = SCATTER[lab]
-        ax.scatter(100 * perf.loc[lab, 'vol'], 100 * perf.loc[lab, 'cagr'], s=80 if mk == '*' else 50,
-                   color=c, marker=mk, zorder=3, label=lab)
-    ax.axhline(0, color='black', lw=0.6)
+        xv, yv = 100 * perf.loc[lab, 'vol'], 100 * perf.loc[lab, 'cagr']
+        ax.scatter(xv, yv, s=80 if mk == '*' else 50, color=c, marker=mk, zorder=3, label=lab)
+        dx, dy, ha = RR_LABELS.get(lab, (8, 0, 'left'))
+        ax.annotate(RR_SHORT.get(lab, lab), (xv, yv), xytext=(dx, dy), textcoords='offset points', fontsize=10.5,
+                    color=st.DarkText, ha=ha, va='center')
+    ax.axhline(0, color=st.DarkText, lw=0.6)
+    ax.set_xlim(left=8)
     ax.set_xlabel('Annualised volatility (%)')
     ax.set_ylabel('CAGR (%)')
     st.legend_outside_bottom(ax, ncol=4, y=-0.17)

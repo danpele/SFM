@@ -438,6 +438,9 @@ Aur & 2014 & 3\,124 & $0{,}041$ & $1{,}01$ & $16{,}4$ & $-0{,}41$ & $9{,}5$ & $-
 \end{center}
 \begin{itemize}
     \item Randamente logaritmice zilnice pînă pe 18 septembrie 2026; volatilitatea anuală $= \sqrt{A}\,s$ cu frecvența reală $A$ a fiecărei serii; aurul: XAU/USD
+    \begin{itemize}
+        \item asimetria: media lui $((r_t - \bar r)/s)^3$; excesul de boltire: media lui $((r_t - \bar r)/s)^4$ minus 3 (ambele 0 pentru distribuția Normală)
+    \end{itemize}
     \item Interpretare
     \begin{itemize}
         \item Bitcoin este de 3{,}8 ori mai volatil decît S\&P 500 (66{,}6\% față de 17{,}6\%); Ethereum de 5{,}4 ori, Solana de 6{,}7 ori
@@ -696,14 +699,15 @@ Aur & $0{,}010$ & $0{,}047$ & $0{,}947$ & $0{,}994$ & 113 & $4{,}13$ & $-0{,}051
         \item autocorelația de ordinul întîi $\hat\rho(1)$ și statistica Ljung--Box $Q(10)$
         \item raportul varianțelor \refLM: $\mathrm{VR}(q) = \mathrm{Var}(r_t + \dots + r_{t-q+1})/(q\,\mathrm{Var}(r_t))$, egal cu 1 pentru un mers aleator
         \item $q$: orizontul, în zile; $r_t + \dots + r_{t-q+1}$: randamentul logaritmic pe $q$ zile; fără autocorelație, varianța lui este de $q$ ori cea zilnică
-        \item $Z^*(q)$: varianta robustă la volatility clustering; respingem la 5\% dacă $|Z^*| > 1{,}96$
+        \item $Z^*(q) = (\widehat{\mathrm{VR}}(q) - 1)/\sqrt{\hat\theta^*(q)}$; $\hat\theta^*$: varianța lui $\widehat{\mathrm{VR}}$, robustă la volatility clustering
+        \item $Z^* \approx N(0, 1)$ pentru un mers aleator (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol7_piete_eficiente_mers_aleator_vr.pdf}{Capitolul 7}); respingem la 5\% dacă $|Z^*| > 1{,}96$
     \end{itemize}
     \item VR $> 1$: momentum (tendințe); VR $< 1$: revenire la medie
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Testele raportului varianțelor pe întregul eșantion}
-\itemsize{\scriptsize}
+\itemsize{\footnotesize}
 \begin{center}
 \scriptsize
 \begin{tabular}{lrrrrrr}
@@ -1375,7 +1379,7 @@ algoritmic & fără rezerve: un algoritm emite și retrage din circulație (burn
 \end{frame}
 
 \begin{frame}{Patru metode, trei active}
-\itemsize{\scriptsize}
+\itemsize{\footnotesize}
 \begin{center}
 \scriptsize
 \begin{tabular}{lrrrrrrrr}
@@ -1425,6 +1429,23 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Backtesting: testul Kupiec}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{Depășire}: o zi cu $r_{t+1} < -\widehat{\mathrm{VaR}}_t$; $x$ depășiri în $n$ zile, rata observată $\hat\pi = x/n$
+    \begin{itemize}
+        \item cu un VaR 1\% corect, fiecare zi este o depășire cu probabilitatea $\alpha = 0{,}01$: se așteaptă circa $\alpha n$ depășiri
+    \end{itemize}
+    \item \textbf{Testul Kupiec} \refKupiec: este rata depășirilor egală cu $\alpha$? \begin{equation*} LR_{uc} = -2\ln\frac{(1 - \alpha)^{n - x}\,\alpha^{x}}{(1 - \hat\pi)^{n - x}\,\hat\pi^{x}} \end{equation*}
+    \item Interpretarea
+    \begin{itemize}
+        \item numărătorul: verosimilitatea celor $x$ depășiri cu rata $\alpha$; numitorul: cu rata observată $\hat\pi$
+        \item $LR_{uc} \sim \chi^2(1)$ dacă rata este $\alpha$; respingem la 5\% dacă $LR_{uc} > 3{,}84$ (p-value sub 0,05)
+        \item testul numără doar depășirile; gruparea lor cere testul Christoffersen (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Backtesting pentru VaR 1\% al Bitcoin}
 \itemsize{\footnotesize}
 \begin{center}
@@ -1433,7 +1454,7 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \vspace{-0.25cm}
 \begin{itemize}
     \item Prognoze pe o zi din 1 ianuarie 2018: HS pe ultimele 365 de zile; GARCH(1,1)-t reestimat la fiecare 365 de zile pe toate datele anterioare
-    \item Depășiri (așteptat 31{,}8): HS 29 (0{,}91\%), GARCH-t 41 (1{,}29\%); Kupiec \refKupiec: $LR = 0{,}26$ (p $= 0{,}61$) și $2{,}45$ (p $= 0{,}12$); $LR \sim \chi^2(1)$ dacă rata depășirilor este 1\%
+    \item Depășiri (așteptat 31{,}8): HS 29 (0{,}91\%), GARCH-t 41 (1{,}29\%); Kupiec: $LR_{uc} = 0{,}26$ (p $= 0{,}61$) și $2{,}45$ (p $= 0{,}12$)
     \item Interpretare: ambele trec testul Kupiec; HS cere în medie un VaR mai mare (9{,}5\% față de 8{,}5\%), GARCH-t reacționează mai repede, dar este depășit mai des (2018: 9 depășiri)
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_crypto_var}

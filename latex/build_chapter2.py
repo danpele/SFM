@@ -394,7 +394,7 @@ D.frame(T('Carl Friedrich Gauss and the Normal Distribution', 'Carl Friedrich Ga
       'În finanțe a devenit modelul implicit al randamentelor, pentru că sumele de variabile Normale rămîn Normale')),
     ph('gauss', 'Carl Friedrich Gauss (1777--1855)', h='0.56\\textheight'), wl='0.58', wr='0.38'))
 
-D.frame(T('Definition', 'Definiție'), items(
+D.frame(T('The Normal Distribution: Definition', 'Distribuția Normală: definiție'), items(
     (T('$X \\sim N(\\mu, \\sigma^2)$ has the \\textbf{PDF} (probability density function)', '$X \\sim N(\\mu, \\sigma^2)$ are \\textbf{PDF} (probability density function, densitatea de probabilitate)'),
      [T('$f(x) = \\dfrac{1}{\\sigma\\sqrt{2\\pi}} \\exp\\Big(-\\dfrac{(x - \\mu)^2}{2\\sigma^2}\\Big)$, \\quad $x \\in \\mathbb{R}$',
         '$f(x) = \\dfrac{1}{\\sigma\\sqrt{2\\pi}} \\exp\\Big(-\\dfrac{(x - \\mu)^2}{2\\sigma^2}\\Big)$, \\quad $x \\in \\mathbb{R}$'),
@@ -695,7 +695,7 @@ D.frame(T('"Student": William Sealy Gosset', '„Student”: William Sealy Gosse
       'În finanțe este folosită din alt motiv: cozile ei sînt mai groase decît cele ale distribuției Normale \\refPraetz, \\refBG')),
     ph('gosset', 'William Sealy Gosset (1876--1937)', h='0.56\\textheight'), wl='0.58', wr='0.38'))
 
-D.frame(T('Definition', 'Definiție'), items(
+D.frame(T('The Student-$t$ Distribution: Definition', 'Distribuția Student-$t$: definiție'), items(
     (T('$T = Z/\\sqrt{V/\\nu}$ with $Z \\sim N(0,1)$ independent of $V \\sim \\chi^2(\\nu)$: $T \\sim t(\\nu)$', '$T = Z/\\sqrt{V/\\nu}$, cu $Z \\sim N(0,1)$ independentă de $V \\sim \\chi^2(\\nu)$: $T \\sim t(\\nu)$'),
      [T('$\\nu > 0$: the \\textbf{degrees of freedom}, which control the tails', '$\\nu > 0$: \\textbf{gradele de libertate}, care controlează cozile'),
       T('$\\chi^2(\\nu)$: the distribution of a sum of $\\nu$ squared independent $N(0,1)$ variables; $\\Gamma$: the gamma function, $\\Gamma(k) = (k-1)!$ for integer $k$',
@@ -936,7 +936,7 @@ side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare 
     T('Bitcoin, @{yr.first}--@{yr.last}: yearly $\\hat\\nu$ between @{yr.numin} and @{yr.numax}; rank correlation with the year $@{yr.rho}$ (p-value $@{yr.p}$)',
       'Bitcoin, @{yr.first}--@{yr.last}: $\\hat\\nu$ anual între @{yr.numin} și @{yr.numax}; corelația rangurilor cu anul $@{yr.rho}$ (p-value $@{yr.p}$)'),
     T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de boltire @{yr.k2020}) dominat de o singură zi'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.52)
+    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.50, h='0.72\\textheight')
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: find studies of tail indices of crypto assets and summarise their methods', '\\textbf{Literatura}: găsirea studiilor despre tail index-urile activelor cripto și rezumarea metodelor lor'),

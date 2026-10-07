@@ -580,7 +580,8 @@ chart(T('Neural-Network ARCH for GBP/USD', 'ARCH cu rețea neuronală pentru GBP
 D.frame(T('Interpretation: Flexible Shape, Short Memory', 'Interpretare: formă flexibilă, memorie scurtă'), items(
     (T('After the Brexit vote, GARCH peaks at @{na.max_garch}\\% (@{na.dmax}); the network only at @{na.max_rbf}\\%', 'După votul pentru Brexit, GARCH atinge maximul de @{na.max_garch}\\% (@{na.dmax}); rețeaua doar @{na.max_rbf}\\%'),
      [T('the network sees only the last 3 returns: one large return raises its variance for 3 days, then the effect is gone', 'rețeaua vede doar ultimele 3 randamente: un randament mare îi crește varianța timp de 3 zile, apoi efectul dispare'),
-      T('GARCH carries the whole past through $\\beta\\,\\sigma_{t-1}^2$: volatility clustering needs memory, not only flexibility', 'GARCH transmite tot trecutul prin $\\beta\\,\\sigma_{t-1}^2$: volatility clustering are nevoie de memorie, nu doar de flexibilitate')]),
+      T('GARCH(1,1) (Chapter 9): $\\sigma_t^2 = \\omega + \\alpha\\,r_{t-1}^2 + \\beta\\,\\sigma_{t-1}^2$, with $\\sigma_{t-1}^2$ yesterday\'s conditional variance', 'GARCH(1,1) (Capitolul 9): $\\sigma_t^2 = \\omega + \\alpha\\,r_{t-1}^2 + \\beta\\,\\sigma_{t-1}^2$, cu $\\sigma_{t-1}^2$ varianța condiționată de ieri'),
+      T('the term $\\beta\\,\\sigma_{t-1}^2$ carries the whole past: volatility clustering needs memory, not only flexibility', 'termenul $\\beta\\,\\sigma_{t-1}^2$ transmite tot trecutul: volatility clustering are nevoie de memorie, nu doar de flexibilitate')]),
     (T('The mean network explains $@{na.r2}\\%$ of the returns in sample: exchange rates are close to a random walk', 'Rețeaua pentru medie explică $@{na.r2}\\%$ din randamente în eșantion: cursurile de schimb sînt aproape un mers aleator'),
      [T('the useful part of NN-ARCH is the variance, as for GARCH', 'partea utilă a modelului NN-ARCH este varianța, ca la GARCH')]),
     T('Lesson: good features (HAR averages, Section 7) matter more than the type of network', 'Lecția: variabilele bune (mediile HAR, secțiunea 7) contează mai mult decît tipul de rețea')))
@@ -802,15 +803,28 @@ def vrow(k, m):
 
 
 VH = T('& Method & $x$ & rate (\\%) & p Kupiec & p ind. & loss $\\times 100$ & mean VaR', '& Metoda & $x$ & rata (\\%) & p Kupiec & p ind. & pierdere $\\times 100$ & VaR mediu')
-D.frame(T('Backtest of VaR 1\\%: Quantile Methods against HS and GARCH-t', 'Backtesting pentru VaR 1\\%: metode cuantilice, HS și GARCH-t'), table(
+D.frame(T('Backtest of VaR 1\\%: Quantile Methods, HS and GARCH-t (1/2)', 'Backtesting pentru VaR 1\\%: metode cuantilice, HS și GARCH-t (1/2)'), table(
     'llrrrrrr', VH, [vrow('sp500', m) for m in ['QR', 'QGB', 'HS', 'GARCH-t']] + ['\\midrule'] +
     [vrow('btc', m) for m in ['QR', 'QGB', 'HS', 'GARCH-t']], size='scriptsize').replace('\\midrule \\\\', '\\midrule') + items(
-    T('QR: linear quantile regression; QGB: quantile gradient boosting; HS: historical simulation on 500 days; GARCH-t: re-estimated each January (Chapter 10); p ind.: Christoffersen independence test',
-      'QR: regresie cuantilică liniară; QGB: quantile gradient boosting; HS: simulare istorică pe 500 de zile; GARCH-t: reestimat în fiecare ianuarie (Capitolul 10); p ind.: testul de independență Christoffersen'),
-    T('S\\&P 500 (@{qv.sp500.n} days from @{qv.sp500.first}): QR has the right rate (@{qv.sp500.QR.rate}\\%) and the smallest loss, but its exceptions are not fully independent (p ind.\\ @{qv.sp500.QR.pind}); GARCH-t is exceeded too often (@{qv.sp500.GARCH-t.rate}\\%)',
-      'S\\&P 500 (@{qv.sp500.n} zile de la @{qv.sp500.first}): QR are rata corectă (@{qv.sp500.QR.rate}\\%) și cea mai mică pierdere, dar depășirile lui nu sînt complet independente (p ind.\\ @{qv.sp500.QR.pind}); GARCH-t este depășit prea des (@{qv.sp500.GARCH-t.rate}\\%)'),
-    T('Bitcoin (@{qv.btc.n} days): HS has the best rate (@{qv.btc.HS.rate}\\%); QGB is rejected (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})',
-      'Bitcoin (@{qv.btc.n} de zile): HS are cea mai bună rată (@{qv.btc.HS.rate}\\%); QGB este respins (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})')) + ql('SFM_ch13_quantile_var'), 'footnotesize')
+    (T('Columns', 'Coloanele'),
+     [T('$x$: the number of exceptions ($r_{t+1} < -\\widehat{\\mathrm{VaR}}_t$) in $n$ test days; rate $= x/n$, target 1\\%', '$x$: numărul depășirilor ($r_{t+1} < -\\widehat{\\mathrm{VaR}}_t$) în cele $n$ zile de test; rata $= x/n$, ținta 1\\%'),
+      T('p Kupiec: p-value of the Kupiec test of the rate; p ind.: p-value of the Christoffersen test of independence (Chapter 10)', 'p Kupiec: p-value-ul testului Kupiec al ratei; p ind.: p-value-ul testului de independență Christoffersen (Capitolul 10)'),
+      T('loss $\\times 100$: the mean quantile loss (smaller is better); mean VaR: the average VaR 1\\%, in \\%', 'pierdere $\\times 100$: pierderea cuantilică medie (mai mică este mai bună); VaR mediu: media VaR 1\\%, în \\%')]),
+    (T('Methods', 'Metodele'),
+     [T('QR: linear quantile regression; QGB: quantile gradient boosting', 'QR: regresie cuantilică liniară; QGB: quantile gradient boosting'),
+      T('HS: historical simulation on 500 days; GARCH-t: re-estimated each January (Chapter 10)', 'HS: simulare istorică pe 500 de zile; GARCH-t: reestimat în fiecare ianuarie (Capitolul 10)')])) + ql('SFM_ch13_quantile_var'), 'footnotesize')
+
+D.frame(T('Backtest of VaR 1\\%: Quantile Methods, HS and GARCH-t (2/2)', 'Backtesting pentru VaR 1\\%: metode cuantilice, HS și GARCH-t (2/2)'), items(
+    (T('S\\&P 500 (@{qv.sp500.n} days from @{qv.sp500.first}): QR has the right rate (@{qv.sp500.QR.rate}\\%) and the smallest loss',
+       'S\\&P 500 (@{qv.sp500.n} zile de la @{qv.sp500.first}): QR are rata corectă (@{qv.sp500.QR.rate}\\%) și cea mai mică pierdere'),
+     [T('its exceptions are not fully independent (p ind.\\ @{qv.sp500.QR.pind})', 'depășirile lui nu sînt complet independente (p ind.\\ @{qv.sp500.QR.pind})'),
+      T('GARCH-t is exceeded too often (@{qv.sp500.GARCH-t.rate}\\%)', 'GARCH-t este depășit prea des (@{qv.sp500.GARCH-t.rate}\\%)')]),
+    (T('Bitcoin (@{qv.btc.n} days): HS has the best rate (@{qv.btc.HS.rate}\\%)', 'Bitcoin (@{qv.btc.n} de zile): HS are cea mai bună rată (@{qv.btc.HS.rate}\\%)'),
+     [T('QGB is rejected by the Kupiec test (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})', 'QGB este respins de testul Kupiec (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})'),
+      T('at 1\\% each leaf of the boosted trees sees few tail days: high variance (Section 2)', 'la 1\\% fiecare frunză a arborilor din boosting vede puține zile din coadă: varianță mare (secțiunea 2)')]),
+    (T('Reading the p-values', 'Interpretarea p-value-urilor'),
+     [T('p Kupiec below 0.05: the exception rate differs significantly from 1\\%', 'p Kupiec sub 0,05: rata depășirilor diferă semnificativ de 1\\%'),
+      T('p ind.\\ below 0.05: the exceptions come in clusters, so the VaR reacts too slowly', 'p ind.\\ sub 0,05: depășirile apar grupat, deci VaR reacționează prea lent')])), 'footnotesize')
 
 chart(T('VaR 1\\% Forecasts in 2020 and 2025', 'Prognozele VaR 1\\% în 2020 și 2025'), 'sfm_ch13_qvar', 'SFM_ch13_quantile_var', [
     T('S\\&P 500: next-day returns and minus VaR 1\\% of the four methods; dots: exceedances of the quantile-regression VaR',
@@ -868,7 +882,8 @@ D.frame(T('The Deflated Sharpe Ratio (2/2)', 'Raportul Sharpe deflatat (2/2)'), 
     (T('\\textbf{Step by step}: the best MA rule, $N = @{sn.N}$, $T = @{sn.T}$ days', '\\textbf{Pas cu pas}: cea mai bună regulă MA, $N = @{sn.N}$, $T = @{sn.T}$ de zile'),
      [T('$\\widehat{SR} = @{sn.ispp}$ per day ($\\times\\sqrt{252} = @{sn.is}$); $\\hat\\gamma_3 = @{sn.skew}$, $\\hat\\gamma_4 = @{sn.kurt}$', '$\\widehat{SR} = @{sn.ispp}$ pe zi ($\\times\\sqrt{252} = @{sn.is}$); $\\hat\\gamma_3 = @{sn.skew}$, $\\hat\\gamma_4 = @{sn.kurt}$'),
       T('$SR_0 = @{sn.sdpp}\\,[(1 - \\gamma)\\,@{sn.zN1} + \\gamma\\,@{sn.zN2}] = @{sn.sr0}$ (annual $@{sn.sr0a}$)', '$SR_0 = @{sn.sdpp}\\,[(1 - \\gamma)\\,@{sn.zN1} + \\gamma\\,@{sn.zN2}] = @{sn.sr0}$ (anual $@{sn.sr0a}$)'),
-      T('$z = @{sn.z}$, DSR $= @{sn.dsr}$; without the correction for $N$ (PSR, $SR_0 = 0$): $@{sn.psr}$', '$z = @{sn.z}$, DSR $= @{sn.dsr}$; fără corecția pentru $N$ (PSR, $SR_0 = 0$): $@{sn.psr}$')]),
+      T('$z$, the argument of $\\Phi$ in the DSR formula: $z = @{sn.z}$, so DSR $= \\Phi(z) = @{sn.dsr}$', '$z$, argumentul lui $\\Phi$ din formula DSR: $z = @{sn.z}$, deci DSR $= \\Phi(z) = @{sn.dsr}$'),
+      T('without the correction for $N$ (PSR, probabilistic Sharpe ratio, $SR_0 = 0$): $@{sn.psr}$', 'fără corecția pentru $N$ (PSR, probabilistic Sharpe ratio, cu $SR_0 = 0$): $@{sn.psr}$')]),
     T('Interpretation: alone the rule looks significant; after @{sn.N} trials it is not (DSR below 0.95), as its later performance confirms',
       'Interpretare: luată singură, regula pare semnificativă; după @{sn.N} de încercări nu mai este (DSR sub 0,95), așa cum confirmă și rezultatele ulterioare')))
 
@@ -888,7 +903,8 @@ D.frame(T('Empirical Asset Pricing via Machine Learning', 'Empirical Asset Prici
         'aproape 30\\,000 de acțiuni, 1957--2016; 94 de caracteristici ale firmelor, în interacțiune cu 8 variabile macroeconomice, plus 74 de variabile indicatoare de industrie: 920 de variabile')]),
     (T('Design: 18 years of training (1957--1974), 12 of validation (1975--1986), 30 of test (1987--2016)', 'Schema de estimare: 18 ani de antrenare (1957--1974), 12 de validare (1975--1986), 30 de test (1987--2016)'),
      [T('refit once a year; the training window grows, the validation window rolls forward: a walk-forward design', 'reestimare o dată pe an; fereastra de antrenare crește, cea de validare avansează: o schemă walk-forward'),
-      T('models: OLS, penalised and dimension-reduction regressions, random forest, boosted trees, networks with 1 to 5 hidden layers', 'modele: OLS, regresii penalizate și cu reducerea dimensiunii, random forest, arbori în boosting, rețele cu 1--5 straturi ascunse')])),
+      T('models: OLS, penalised and dimension-reduction regressions, random forest, boosted trees', 'modele: OLS, regresii penalizate și cu reducerea dimensiunii, random forest, arbori în boosting'),
+      T('networks NN1--NN5: NN$k$ has $k$ hidden layers', 'rețelele NN1--NN5: NN$k$ are $k$ straturi ascunse')])),
     ph('harper', T('Charles M.\\ Harper Center, Chicago Booth, where Gu and Xiu worked', 'Charles M.\\ Harper Center, Chicago Booth, unde au lucrat Gu și Xiu'), h='0.36\\textheight'),
     wl='0.60', wr='0.36'), 'footnotesize')
 
@@ -997,7 +1013,7 @@ D.frame(T('Check Yourself', 'Autoevaluare'), items(
      [T('\\textbf{Answer}: no: ``always up\'\' is right on 54\\% of the days', '\\textbf{Răspuns}: nu: „mereu creștere” are dreptate în 54\\% din zile')]),
     T('Next: Chapter 14, crypto assets', 'Urmează: Capitolul 14, activele cripto')))
 
-D.references(bib([k for k in BIBKEYS if k not in ('BHL', 'Boll')]))
+D.references(bib([k for k in BIBKEYS if k not in ('BHL', 'Boll')]), per=12)
 
 if __name__ == '__main__':
     D.write(V)

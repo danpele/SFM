@@ -615,10 +615,17 @@ def fits_table(fits):
     return pd.DataFrame(rows).T
 
 
-def fig_fit_density(fits, save=True):
+def _grid(names):
+    """Four series: a 2 x 2 grid (notebooks); two series: one row of two panels, readable on a slide."""
+    if len(names) == 2:
+        return plt.subplots(1, 2, figsize=(10, 3.9))
+    return plt.subplots(2, 2, figsize=(10, 6.4))
+
+
+def fig_fit_density(fits, save=True, names=ASSETS, name='sfm_ch3_fit_density'):
     """Empirical density (log scale) of daily log returns vs the fitted Normal, Student-t and stable densities."""
-    fig, axes = plt.subplots(2, 2, figsize=(10, 6.4))
-    for ax, k in zip(axes.flat, ASSETS):
+    fig, axes = _grid(names)
+    for ax, k in zip(axes.flat, names):
         r = returns(k).values
         f = fits[k]
         lo, hi = np.quantile(r, 0.0005), np.quantile(r, 0.9995)
@@ -632,21 +639,21 @@ def fig_fit_density(fits, save=True):
         ax.semilogy(x, stats.t.pdf(x, f['t']['nu'], f['t']['loc'], f['t']['scale']), color=MODEL_COL['Student-t'], label='Student-t')
         ax.semilogy(x, stable_pdf(x, s['alpha'], s['beta'], s['gamma'], s['delta0']), color=MODEL_COL['Stable'], label='Stable (ML)')
         ax.set_ylim(max(h[h > 0].min() / 3, 1e-4), h.max() * 3)
-        ax.set_title(f"{LABELS[k]}: alpha-hat = {s['alpha']:.2f}")
+        ax.set_title(rf"{LABELS[k]}: $\hat\alpha$ = {s['alpha']:.2f}")
         ax.set_xlabel('Daily log return (%)')
     st.fig_legend_bottom(fig, ncol=4, y=0.0)
-    fig.tight_layout(rect=(0, 0.02, 1, 1))
+    fig.tight_layout(rect=(0, 0.02 if len(names) > 2 else 0.06, 1, 1))
     st.check_no_grey(fig)
     if save:
-        st.save_fig('sfm_ch3_fit_density')
+        st.save_fig(name)
 
 
-def fig_qq_real(fits, save=True):
+def fig_qq_real(fits, save=True, names=ASSETS, name='sfm_ch3_qq_real'):
     """QQ plots: empirical quantiles of daily log returns against the quantiles of the three fitted models."""
-    fig, axes = plt.subplots(2, 2, figsize=(10, 6.6))
+    fig, axes = _grid(names)
     p = (np.arange(1, 400) - 0.5) / 399
     p = np.concatenate([[0.001, 0.002], p[(p > 0.003) & (p < 0.997)], [0.998, 0.999]])
-    for ax, k in zip(axes.flat, ASSETS):
+    for ax, k in zip(axes.flat, names):
         r = returns(k).values
         emp = np.quantile(r, p)
         for m, mk in [('Normal', 'o'), ('Student-t', 's'), ('Stable', '^')]:
@@ -657,16 +664,16 @@ def fig_qq_real(fits, save=True):
         ax.set_xlabel('Model quantile (%)')
         ax.set_ylabel('Empirical quantile (%)')
     st.fig_legend_bottom(fig, ncol=4, y=0.0)
-    fig.tight_layout(rect=(0, 0.02, 1, 1))
+    fig.tight_layout(rect=(0, 0.02 if len(names) > 2 else 0.06, 1, 1))
     st.check_no_grey(fig)
     if save:
-        st.save_fig('sfm_ch3_qq_real')
+        st.save_fig(name)
 
 
-def fig_tails_real(fits, save=True):
+def fig_tails_real(fits, save=True, names=ASSETS, name='sfm_ch3_tails_real'):
     """Left tail on log-log axes: share of days with a loss above x, data vs the three fitted models."""
-    fig, axes = plt.subplots(2, 2, figsize=(10, 6.4))
-    for ax, k in zip(axes.flat, ASSETS):
+    fig, axes = _grid(names)
+    for ax, k in zip(axes.flat, names):
         r = returns(k).values
         loss = np.sort(-r[r < 0])[::-1]
         emp = np.arange(1, len(loss) + 1) / len(r)
@@ -683,12 +690,12 @@ def fig_tails_real(fits, save=True):
         ax.set_xlim(0.5, 4 * loss[0])
         ax.set_title(LABELS[k])
         ax.set_xlabel('Loss x (%, log scale)')
-        ax.set_ylabel('P(loss > x)')
-    st.fig_legend_bottom(fig, ncol=3, y=0.0)
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
+        ax.set_ylabel(r'$P(\mathrm{loss} > x)$')
+    st.fig_legend_bottom(fig, ncol=3 if len(names) > 2 else 5, y=0.0)
+    fig.tight_layout(rect=(0, 0.04 if len(names) > 2 else 0.08, 1, 1))
     st.check_no_grey(fig)
     if save:
-        st.save_fig('sfm_ch3_tails_real')
+        st.save_fig(name)
 
 
 def tail_counts(fits, thresholds=(3, 5, 7, 10, 15, 20)):
@@ -813,6 +820,10 @@ if __name__ == '__main__':
     fig_fit_density(fits)
     fig_qq_real(fits)
     fig_tails_real(fits)
+    for i, pair in enumerate((ASSETS[:2], ASSETS[2:]), 1):      # the same charts, two series per slide
+        fig_fit_density(fits, names=pair, name=f'sfm_ch3_fit_density_{i}')
+        fig_qq_real(fits, names=pair, name=f'sfm_ch3_qq_real_{i}')
+        fig_tails_real(fits, names=pair, name=f'sfm_ch3_tails_real_{i}')
     N['tail_counts'] = tail_counts(fits)
     agg = aggregation_alpha()
     N['aggregation'] = agg

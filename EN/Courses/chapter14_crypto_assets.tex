@@ -437,6 +437,9 @@ Gold & 2014 & 3\,124 & $0.041$ & $1.01$ & $16.4$ & $-0.41$ & $9.5$ & $-11.1$ \\
 \end{center}
 \begin{itemize}
     \item Daily log returns until 18 September 2026; annual volatility $= \sqrt{A}\,s$ with the actual frequency $A$ of each series; gold: XAU/USD
+    \begin{itemize}
+        \item skewness: the mean of $((r_t - \bar r)/s)^3$; excess kurtosis: the mean of $((r_t - \bar r)/s)^4$ minus 3 (both 0 for the Normal distribution)
+    \end{itemize}
     \item Interpretation
     \begin{itemize}
         \item Bitcoin is 3.8 times as volatile as the S\&P 500 (66.6\% against 17.6\%); Ethereum 5.4 times, Solana 6.7 times
@@ -695,14 +698,15 @@ Gold & $0.010$ & $0.047$ & $0.947$ & $0.994$ & 113 & $4.13$ & $-0.051$ ($-3.33$)
         \item first-order autocorrelation $\hat\rho(1)$ and Ljung--Box $Q(10)$
         \item variance ratio \refLM: $\mathrm{VR}(q) = \mathrm{Var}(r_t + \dots + r_{t-q+1})/(q\,\mathrm{Var}(r_t))$, equal to 1 under a random walk
         \item $q$: the horizon in days; $r_t + \dots + r_{t-q+1}$: the $q$-day log return; without autocorrelation its variance is $q$ times the daily one
-        \item $Z^*(q)$: the version robust to volatility clustering; reject at 5\% if $|Z^*| > 1.96$
+        \item $Z^*(q) = (\widehat{\mathrm{VR}}(q) - 1)/\sqrt{\hat\theta^*(q)}$; $\hat\theta^*$: the variance of $\widehat{\mathrm{VR}}$, robust to volatility clustering
+        \item $Z^* \approx N(0, 1)$ under a random walk (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf}{Chapter 7}); reject at 5\% if $|Z^*| > 1.96$
     \end{itemize}
     \item VR $> 1$: momentum (trends); VR $< 1$: mean reversion
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Variance-Ratio Tests on the Whole Sample}
-\itemsize{\scriptsize}
+\itemsize{\footnotesize}
 \begin{center}
 \scriptsize
 \begin{tabular}{lrrrrrr}
@@ -1374,7 +1378,7 @@ algorithmic & no reserves: an algorithm mints and burns a second coin to keep th
 \end{frame}
 
 \begin{frame}{Four Methods, Three Assets}
-\itemsize{\scriptsize}
+\itemsize{\footnotesize}
 \begin{center}
 \scriptsize
 \begin{tabular}{lrrrrrrrr}
@@ -1424,6 +1428,23 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Backtesting: the Kupiec Test}
+\itemsize{\small}
+\begin{itemize}
+    \item \textbf{Exception}: a day with $r_{t+1} < -\widehat{\mathrm{VaR}}_t$; $x$ exceptions in $n$ days, observed rate $\hat\pi = x/n$
+    \begin{itemize}
+        \item with a correct VaR 1\%, each day is an exception with probability $\alpha = 0.01$: about $\alpha n$ exceptions are expected
+    \end{itemize}
+    \item \textbf{Kupiec test} \refKupiec: is the exception rate equal to $\alpha$? \begin{equation*} LR_{uc} = -2\ln\frac{(1 - \alpha)^{n - x}\,\alpha^{x}}{(1 - \hat\pi)^{n - x}\,\hat\pi^{x}} \end{equation*}
+    \item Reading
+    \begin{itemize}
+        \item numerator: the likelihood of the $x$ exceptions under the rate $\alpha$; denominator: under the observed rate $\hat\pi$
+        \item $LR_{uc} \sim \chi^2(1)$ if the rate is $\alpha$; reject at 5\% if $LR_{uc} > 3.84$ (p-value below 0.05)
+        \item the test counts the exceptions only; their clustering needs the Christoffersen test (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Backtesting Bitcoin VaR 1\%}
 \itemsize{\footnotesize}
 \begin{center}
@@ -1432,7 +1453,7 @@ S\&P 500 & 3\,204 & 3\,438 & 2\,506 & 9\,049 \\
 \vspace{-0.25cm}
 \begin{itemize}
     \item One-day forecasts since 1 January 2018: HS on the last 365 days; GARCH(1,1)-t re-estimated every 365 days on all earlier data
-    \item Exceptions (expected 31.8): HS 29 (0.91\%), GARCH-t 41 (1.29\%); Kupiec \refKupiec: $LR = 0.26$ (p $= 0.61$) and $2.45$ (p $= 0.12$); $LR \sim \chi^2(1)$ if the exception rate is 1\%
+    \item Exceptions (expected 31.8): HS 29 (0.91\%), GARCH-t 41 (1.29\%); Kupiec: $LR_{uc} = 0.26$ (p $= 0.61$) and $2.45$ (p $= 0.12$)
     \item Interpretation: both pass the Kupiec test; HS needs a higher VaR on average (9.5\% against 8.5\%), GARCH-t reacts faster but is exceeded more often (2018: 9 exceptions)
 \end{itemize}
 \sfmquantlet{Ch_14}{SFM_ch14_crypto_var}

@@ -317,7 +317,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "about 3.65%"
                 ],
                 "correctExplanation": "Volatility scales with the square root of time: $\\sqrt{252} \\times 1\\% \\approx 15.9\\%$.",
-                "incorrectExplanation": "Use $\\sigma_{year} = \\sqrt{q}\\,\\sigma$, not $q\\,\\sigma$: $\\sqrt{252} \\times 1\\% \\approx 15.9\\%$."
+                "incorrectExplanation": "Use $\\sigma_{year} = \\sqrt{A}\\,\\sigma$, not $A\\,\\sigma$, with $A = 252$ trading days a year: $\\sqrt{252} \\times 1\\% \\approx 15.9\\%$."
             },
             "ro": {
                 "title": "Anualizarea volatilității",
@@ -329,7 +329,7 @@ window.SFM_DATA.quizzes['returns'] = {
                     "aproximativ 3,65%"
                 ],
                 "correctExplanation": "Volatilitatea crește cu rădăcina pătrată a timpului: $\\sqrt{252} \\times 1\\% \\approx 15{,}9\\%$.",
-                "incorrectExplanation": "Folosiți $\\sigma_{an} = \\sqrt{q}\\,\\sigma$, nu $q\\,\\sigma$: $\\sqrt{252} \\times 1\\% \\approx 15{,}9\\%$."
+                "incorrectExplanation": "Folosiți $\\sigma_{an} = \\sqrt{A}\\,\\sigma$, nu $A\\,\\sigma$, cu $A = 252$ de zile de tranzacționare pe an: $\\sqrt{252} \\times 1\\% \\approx 15{,}9\\%$."
             }
         },
         {
@@ -478,8 +478,8 @@ window.SFM_DATA.quizzes['returns'] = {
                     "$0.05 \\times \\sqrt{252} \\approx 0.79$",
                     "$0.05/\\sqrt{252}$"
                 ],
-                "correctExplanation": "The mean scales with $q$ and the volatility with $\\sqrt{q}$, so the Sharpe ratio scales with $\\sqrt{q}$.",
-                "incorrectExplanation": "Annual SR $= \\sqrt{q} \\times$ daily SR $= \\sqrt{252} \\times 0.05 \\approx 0.79$."
+                "correctExplanation": "The mean scales with $A$ (the number of periods per year) and the volatility with $\\sqrt{A}$, so the Sharpe ratio scales with $\\sqrt{A}$.",
+                "incorrectExplanation": "Annual SR $= \\sqrt{A} \\times$ daily SR $= \\sqrt{252} \\times 0.05 \\approx 0.79$."
             },
             "ro": {
                 "title": "Anualizarea raportului Sharpe",
@@ -490,8 +490,8 @@ window.SFM_DATA.quizzes['returns'] = {
                     "$0{,}05 \\times \\sqrt{252} \\approx 0{,}79$",
                     "$0{,}05/\\sqrt{252}$"
                 ],
-                "correctExplanation": "Media crește proporțional cu $q$, iar volatilitatea cu $\\sqrt{q}$, deci raportul Sharpe crește proporțional cu $\\sqrt{q}$.",
-                "incorrectExplanation": "SR anual $= \\sqrt{q} \\times$ SR zilnic $= \\sqrt{252} \\times 0{,}05 \\approx 0{,}79$."
+                "correctExplanation": "Media crește proporțional cu $A$ (numărul de perioade pe an), iar volatilitatea cu $\\sqrt{A}$, deci raportul Sharpe crește proporțional cu $\\sqrt{A}$.",
+                "incorrectExplanation": "SR anual $= \\sqrt{A} \\times$ SR zilnic $= \\sqrt{252} \\times 0{,}05 \\approx 0{,}79$."
             }
         },
         {

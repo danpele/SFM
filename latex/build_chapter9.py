@@ -206,7 +206,7 @@ D.frame(T('Why Model the Conditional Variance?', 'Utilitatea modelării varianț
     T('\\textbf{Portfolios}: weights depend on variances and covariances, which change over time', '\\textbf{Portofolii}: ponderile depind de varianțe și covarianțe, care se schimbă în timp'),
     T('\\textbf{Derivatives}: option prices depend on the volatility expected until maturity', '\\textbf{Derivate}: prețurile opțiunilor depind de volatilitatea așteptată pînă la scadență'),
     (T('\\textbf{Inference}: tests and confidence intervals that assume a constant variance can be wrong', '\\textbf{Inferență}: testele și intervalele de încredere care presupun varianță constantă pot fi greșite'),
-     [T('this is why Chapter 7 needed robust tests ($\\tilde Q$, $Z^*$)', 'de aceea Capitolul 7 a avut nevoie de teste robuste ($\\tilde Q$, $Z^*$)')])))
+     [T('this is why Chapter 7 needed tests that remain valid under heteroskedasticity', 'de aceea Capitolul 7 a avut nevoie de teste valide și în prezența heteroscedasticității')])))
 
 D.frame(T('Stylised Facts a Volatility Model Must Reproduce', 'Faptele stilizate pe care un model de volatilitate trebuie să le reproducă'), items(
     (T('\\textbf{Volatility clustering}: the ACF (autocorrelation function) of $r_t^2$ is positive and decays slowly (Chapter 8)',
@@ -247,7 +247,7 @@ D.frame(T('The Basic Decomposition', 'Descompunerea de bază'), items(
      [T('$E[\\varepsilon_t \\mid \\mathcal{F}_{t-1}] = \\sigma_t E[z_t] = 0$: the shocks are a martingale difference, hence uncorrelated', '$E[\\varepsilon_t \\mid \\mathcal{F}_{t-1}] = \\sigma_t E[z_t] = 0$: șocurile sînt o diferență de martingal, deci sînt necorelate'),
       T('$\\mathrm{Var}(\\varepsilon_t \\mid \\mathcal{F}_{t-1}) = \\sigma_t^2$: the variance is predictable', '$\\mathrm{Var}(\\varepsilon_t \\mid \\mathcal{F}_{t-1}) = \\sigma_t^2$: varianța este previzibilă'),
       T('the $\\varepsilon_t$ are uncorrelated but not independent: $\\varepsilon_t^2$ is correlated with $\\varepsilon_{t-1}^2$', '$\\varepsilon_t$ sînt necorelate, dar nu independente: $\\varepsilon_t^2$ este corelat cu $\\varepsilon_{t-1}^2$')]),
-    T('In the terms of Chapter 7: RW1 is rejected, the martingale (RW3) is kept', 'În termenii Capitolului 7: RW1 este respinsă, martingalul (RW3) rămîne valabil')))
+    T('In the terms of Chapter 7: RW1 (i.i.d. increments) is rejected, RW3 (uncorrelated increments) is kept', 'În termenii Capitolului 7: RW1 (creșteri i.i.d.) este respinsă, RW3 (creșteri necorelate) rămîne valabilă')))
 
 D.frame(T('Worked Example: Conditional and Unconditional Variance', 'Exemplu rezolvat: varianța condiționată și varianța necondiționată'), items(
     (T('A market has calm days ($\\sigma_t^2 = 0.5$) and stormy days ($\\sigma_t^2 = 4.5$), each with probability $1/2$; the mean is 0',
@@ -550,7 +550,7 @@ D.frame(T('GARCH(1,1)-t Estimates', 'Estimările GARCH(1,1)-t'), table(
     T('Daily log returns in \\% to @{end}; robust SE of $\\hat\\alpha$ and $\\hat\\beta$ between @{m.se.min} and @{m.se.max}; half-life in days; volatilities annualised with the actual number of observations per year, in \\%',
       'Randamente logaritmice zilnice în \\% pînă la @{end}; SE robuste pentru $\\hat\\alpha$ și $\\hat\\beta$ între @{m.se.min} și @{m.se.max}; timpul de înjumătățire în zile; volatilitățile anualizate cu numărul efectiv de observații pe an, în \\%'),
     T('Indices: $\\alpha + \\beta$ between @{m.bet.pers} and @{m.sp500.pers}, half-lives of @{m.bet.hl}--@{m.sp500.hl} trading days; BVB stocks: shorter memory (TLV @{m.tlv.hl} days, SNP @{m.snp.hl} days)',
-      'Indicii: $\\alpha + \\beta$ între @{m.bet.pers} și @{m.sp500.pers}, timpi de înjumătățire de @{m.bet.hl}--@{m.sp500.hl} zile de tranzacționare; acțiunile BVB: memorie mai scurtă (TLV @{m.tlv.hl} zile, SNP @{m.snp.hl} zile)'),
+      'Indicii: $\\alpha + \\beta$ între @{m.bet.pers} și @{m.sp500.pers}, timpi de înjumătățire de @{m.bet.hl}--@{m.sp500.hl} de zile de tranzacționare; acțiunile BVB: memorie mai scurtă (TLV @{m.tlv.hl} zile, SNP @{m.snp.hl} zile)'),
     T('BET: the largest $\\alpha$ (@{m.bet.a}): a stronger reaction to news; all $\\hat\\nu$ between @{m.nu.min} and @{m.nu.max}: heavy tails everywhere',
       'BET: cel mai mare $\\alpha$ (@{m.bet.a}): o reacție mai puternică la știri; toate valorile $\\hat\\nu$ sînt între @{m.nu.min} și @{m.nu.max}: cozi groase peste tot')) + ql('SFM_ch9_volatility_markets'), 'footnotesize')
 
@@ -801,7 +801,7 @@ D.frame(T('Conditional VaR', 'VaR condiționat'), items(
       T('the VaR moves every day with $\\sigma_{t+1}$: high in storms, low in calm periods', 'VaR se schimbă în fiecare zi odată cu $\\sigma_{t+1}$: mare în perioadele turbulente, mic în perioadele liniștite')]),
     (T('\\textbf{Worked example}: S\\&P 500 on @{end}, GARCH(1,1)-t: $\\hat\\mu = @{var.mu}$, $\\sigma_{t+1} = @{var.sig}$, $\\hat\\nu = @{var.nu}$',
        '\\textbf{Exemplu rezolvat}: S\\&P 500 la @{end}, GARCH(1,1)-t: $\\hat\\mu = @{var.mu}$, $\\sigma_{t+1} = @{var.sig}$, $\\hat\\nu = @{var.nu}$'),
-     [T('$q = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$', '$q = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$'),
+     [T('$q_{0.01}(z) = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$', '$q_{0{,}01}(z) = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$'),
       T('with Normal $z_t$: $@{var.vn}\\%$; over 10 days (sum of variances, $\\mu$ ignored): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, about $@{var.v10}\\%$',
         'cu $z_t$ Normale: $@{var.vn}\\%$; pe 10 zile (suma varianțelor, fără $\\mu$): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, circa $@{var.v10}\\%$')])))
 
@@ -824,7 +824,7 @@ D.frame(T('Exceedances 2015--2026: a Preview of Backtesting', 'Depășiri 2015--
     T('EWMA-Normal: @{fe.ee.min}--@{fe.ee.max}\\%: the Normal quantile is too small for heavy tails', 'EWMA-Normal: @{fe.ee.min}--@{fe.ee.max}\\%: cuantila Normală este prea mică pentru cozi groase'),
     T('GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: much closer to 1\\%, but still above it for the S\\&P 500 and the DAX (the leverage effect is missing)',
       'GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: mult mai aproape de 1\\%, dar tot peste 1\\% pentru S\\&P 500 și DAX (lipsește efectul de levier)'),
-    T('Are these differences significant? Chapter 10: Kupiec\'s test \\refKupiec, ES 2.5\\%, backtesting', 'Sînt aceste diferențe semnificative? Capitolul 10: testul Kupiec \\refKupiec, ES 2,5\\%, backtesting'),
+    T('Are these differences significant? Chapter 10: the test of \\refKupiec, ES 2.5\\%, backtesting', 'Sînt aceste diferențe semnificative? Capitolul 10: testul \\refKupiec, ES 2,5\\%, backtesting'),
     T('Further reading on VaR forecasting for Bitcoin: \\refPeleB', 'Lectură suplimentară despre prognoza VaR pentru Bitcoin: \\refPeleB')) + ql('SFM_ch9_forecasts'), 'footnotesize')
 
 D.recap(('VaR 1\\% from a GARCH Model', 'VaR 1\\% dintr-un model GARCH'), [
@@ -843,7 +843,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('since 2024, spot Bitcoin ETFs (exchange-traded funds) bring equity investors to the crypto market', 'din 2024, ETF-urile (exchange-traded funds, fonduri tranzacționate la bursă) pe Bitcoin aduc investitorii din piața de acțiuni pe piața cripto')]),
     T('Earlier evidence on crypto assets as an asset class: \\refPeleC; volatility as information: \\refPeleA', 'Dovezi anterioare despre activele cripto ca o clasă de active: \\refPeleC; volatilitatea ca informație: \\refPeleA'),
     T('Why it is open: regime changes, the 2022 crypto crash and the ETF launch overlap; the answer depends on the window', 'Întrebarea rămîne deschisă: schimbările de regim, prăbușirea pieței cripto din 2022 și lansarea ETF-urilor se suprapun; răspunsul depinde de fereastra aleasă'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
+    T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: a list of studies on GARCH models for crypto assets and the models they use', '\\textbf{Literatura}: o listă a studiilor despre modelele GARCH pentru active cripto și a modelelor folosite'),
@@ -895,7 +895,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      T('Forecast', 'Prognoza') + ' & $E_t[\\sigma_{t+h}^2] = \\bar\\sigma^2 + (\\alpha + \\beta)^{h-1}(\\sigma_{t+1}^2 - \\bar\\sigma^2)$',
      'QLIKE & $L = r_t^2/h_t + \\ln h_t$',
      'VaR 1\\% & $-(\\mu + \\sigma_{t+1}\\,q_{0.01}(z))$'],
-    size='scriptsize') + '}')
+    size='small') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\omega = 0.05$, $\\alpha = 0.05$, $\\beta = 0.90$. What are the long-run variance and the half-life?', '\\textbf{Întrebare}: $\\omega = 0{,}05$, $\\alpha = 0{,}05$, $\\beta = 0{,}90$. Care sînt varianța pe termen lung și timpul de înjumătățire?'),

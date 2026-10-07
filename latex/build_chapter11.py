@@ -451,7 +451,7 @@ D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu rezolvat: ARFIMA(0; 0,3;
       T('$\\rho(10) = @{af3.r10}$, $\\rho(100) = @{af3.r100}$', '$\\rho(10) = @{af3.r10}$, $\\rho(100) = @{af3.r100}$')]),
     T('AR(1) with $\\phi = @{af3.r1}$: $\\rho(10) = @{af3.ar10}$', 'AR(1) cu $\\phi = @{af3.r1}$: $\\rho(10) = @{af3.ar10}$'),
     T('The autocorrelation falls below 0.05 after @{af3.firstar} lags for the AR(1) and after @{af3.first} lags for ARFIMA; $H = d + 0.5 = 0.8$',
-      'Autocorelația scade sub 0,05 după @{af3.firstar} laguri pentru AR(1) și după @{af3.first} laguri pentru ARFIMA; $H = d + 0.5 = 0.8$')))
+      'Autocorelația scade sub 0,05 după @{af3.firstar} laguri pentru AR(1) și după @{af3.first} de laguri pentru ARFIMA; $H = d + 0.5 = 0.8$')))
 
 D.recap(('Long Memory', 'memoria lungă'), [
     T('Long memory: $\\rho(k) \\sim C k^{2d - 1}$, not summable; short memory: exponential decay', 'Memorie lungă: $\\rho(k) \\sim C k^{2d - 1}$, nesumabile; memorie scurtă: scădere exponențială'),
@@ -751,6 +751,7 @@ D.frame(T('Scaling Risk with $h^H$', 'Scalarea riscului cu $h^H$'), items(
 
 D.recap(('Long Memory and Risk', 'memoria lungă și riscul'), [
     T('Multi-day risk scales like $h^H$; small changes in $H$ matter at long horizons', 'Riscul pe mai multe zile se scalează ca $h^H$; schimbări mici ale lui $H$ contează la orizonturi lungi'),
+    T('S\\&P 500: the $\\sqrt{h}$ rule overstates the 10-day risk; BET: it understates it', 'S\\&P 500: regula $\\sqrt{h}$ supraestimează riscul pe 10 zile; BET: îl subestimează'),
     T('Long memory in volatility makes risk forecasts informative for months', 'Memoria lungă a volatilității face ca prognozele de risc să fie informative luni de zile')])
 
 # =============================================================================
@@ -764,7 +765,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('a rolling window contains the crisis only after it starts: is there any signal before?', 'o fereastră mobilă conține criza doar după ce aceasta începe: există vreun semnal înainte?')]),
     T('Earlier evidence: \\refKrisB\\ (horizons in 2008); \\refCT\\ (emerging markets)', 'Dovezi anterioare: \\refKrisB\\ (orizonturile în 2008); \\refCT\\ (piețe emergente)'),
     T('Why it is open: few crises, overlapping windows, volatility regimes, many possible estimators', 'Întrebarea rămîne deschisă: puține crize, ferestre suprapuse, regimuri de volatilitate, mulți estimatori posibili'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
+    T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: a list of studies on Hurst exponents as early-warning indicators, with their data and estimators', '\\textbf{Literatura}: o listă a studiilor despre exponenții Hurst ca indicatori de avertizare timpurie, cu datele și estimatorii folosiți'),
@@ -815,7 +816,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'GPH & $\\ln I(\\lambda_j) = c - d\\ln(4\\sin^2(\\lambda_j/2)) + e_j$, \\quad $j \\le m = T^{0.5}$, \\quad SE $= \\pi/\\sqrt{24m}$',
      'Lo & $V_N(q) = R_N/(\\sqrt{N}\\hat\\sigma_N(q))$; ' + T('reject at 5\\% outside', 'respingem la 5\\% în afara') + ' $[⁅0.809⁆, ⁅1.862⁆]$',
      'VaR 1\\% & $-z_{0.01}\\,\\sigma\\,h^H$'],
-    size='scriptsize') + '}')
+    size='small') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: an R/S estimate on 1000 i.i.d.\\ returns is $\\hat H = 0.56$. Is this evidence of long memory?', '\\textbf{Întrebare}: o estimare R/S pe 1000 de randamente i.i.d.\\ este $\\hat H = 0{,}56$. Este o dovadă de memorie lungă?'),

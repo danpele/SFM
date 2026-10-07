@@ -944,7 +944,8 @@ $2.20$ & $1.22$ & $2.20$ & $1.468$ \\
     \item After the Brexit vote, GARCH peaks at 37.3\% (28 June 2016); the network only at 22.0\%
     \begin{itemize}
         \item the network sees only the last 3 returns: one large return raises its variance for 3 days, then the effect is gone
-        \item GARCH carries the whole past through $\beta\,\sigma_{t-1}^2$: volatility clustering needs memory, not only flexibility
+        \item GARCH(1,1) (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{Chapter 9}): $\sigma_t^2 = \omega + \alpha\,r_{t-1}^2 + \beta\,\sigma_{t-1}^2$, with $\sigma_{t-1}^2$ yesterday's conditional variance
+        \item the term $\beta\,\sigma_{t-1}^2$ carries the whole past: volatility clustering needs memory, not only flexibility
     \end{itemize}
     \item The mean network explains $0.08\%$ of the returns in sample: exchange rates are close to a random walk
     \begin{itemize}
@@ -1316,7 +1317,7 @@ Bitcoin & HAR & $44.0$ & -- & $3.111$ & -- \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Backtest of VaR 1\%: Quantile Methods against HS and GARCH-t}
+\begin{frame}{Backtest of VaR 1\%: Quantile Methods, HS and GARCH-t (1/2)}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -1337,10 +1338,39 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item QR: linear quantile regression; QGB: quantile gradient boosting; HS: historical simulation on 500 days; GARCH-t: re-estimated each January (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}); p ind.: Christoffersen independence test
-    \item S\&P 500 (3\,448 days from 2 January 2013): QR has the right rate (0.81\%) and the smallest loss, but its exceptions are not fully independent (p ind.\ 0.020); GARCH-t is exceeded too often (1.51\%)
-    \item Bitcoin (3\,182 days): HS has the best rate (1.01\%); QGB is rejected (1.48\%, p 0.012)
+    \item Columns
+    \begin{itemize}
+        \item $x$: the number of exceptions ($r_{t+1} < -\widehat{\mathrm{VaR}}_t$) in $n$ test days; rate $= x/n$, target 1\%
+        \item p Kupiec: p-value of the Kupiec test of the rate; p ind.: p-value of the Christoffersen test of independence (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10})
+        \item loss $\times 100$: the mean quantile loss (smaller is better); mean VaR: the average VaR 1\%, in \%
+    \end{itemize}
+    \item Methods
+    \begin{itemize}
+        \item QR: linear quantile regression; QGB: quantile gradient boosting
+        \item HS: historical simulation on 500 days; GARCH-t: re-estimated each January (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10})
+    \end{itemize}
 \end{itemize}\sfmquantlet{Ch_13}{SFM_ch13_quantile_var}
+\end{frame}
+
+\begin{frame}{Backtest of VaR 1\%: Quantile Methods, HS and GARCH-t (2/2)}
+\itemsize{\footnotesize}
+\begin{itemize}
+    \item S\&P 500 (3\,448 days from 2 January 2013): QR has the right rate (0.81\%) and the smallest loss
+    \begin{itemize}
+        \item its exceptions are not fully independent (p ind.\ 0.020)
+        \item GARCH-t is exceeded too often (1.51\%)
+    \end{itemize}
+    \item Bitcoin (3\,182 days): HS has the best rate (1.01\%)
+    \begin{itemize}
+        \item QGB is rejected by the Kupiec test (1.48\%, p 0.012)
+        \item at 1\% each leaf of the boosted trees sees few tail days: high variance (Section 2)
+    \end{itemize}
+    \item Reading the p-values
+    \begin{itemize}
+        \item p Kupiec below 0.05: the exception rate differs significantly from 1\%
+        \item p ind.\ below 0.05: the exceptions come in clusters, so the VaR reacts too slowly
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{VaR 1\% Forecasts in 2020 and 2025}
@@ -1440,7 +1470,8 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
     \begin{itemize}
         \item $\widehat{SR} = 0.0416$ per day ($\times\sqrt{252} = 0.66$); $\hat\gamma_3 = -0.44$, $\hat\gamma_4 = 12.0$
         \item $SR_0 = 0.0105\,[(1 - \gamma)\,1.834 + \gamma\,2.249] = 0.0219$ (annual $0.35$)
-        \item $z = 1.20$, DSR $= 0.88$; without the correction for $N$ (PSR, $SR_0 = 0$): $0.994$
+        \item $z$, the argument of $\Phi$ in the DSR formula: $z = 1.20$, so DSR $= \Phi(z) = 0.88$
+        \item without the correction for $N$ (PSR, probabilistic Sharpe ratio, $SR_0 = 0$): $0.994$
     \end{itemize}
     \item Interpretation: alone the rule looks significant; after 30 trials it is not (DSR below 0.95), as its later performance confirms
 \end{itemize}
@@ -1472,7 +1503,8 @@ Bitcoin & QR & 23 & $0.72$ & 0.098 & 0.563 & $13.03$ & $10.46$ \\
     \item Design: 18 years of training (1957--1974), 12 of validation (1975--1986), 30 of test (1987--2016)
     \begin{itemize}
         \item refit once a year; the training window grows, the validation window rolls forward: a walk-forward design
-        \item models: OLS, penalised and dimension-reduction regressions, random forest, boosted trees, networks with 1 to 5 hidden layers
+        \item models: OLS, penalised and dimension-reduction regressions, random forest, boosted trees
+        \item networks NN1--NN5: NN$k$ has $k$ hidden layers
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -1676,16 +1708,16 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Engle, R.F. (1982). \href{https://doi.org/10.2307/1912773}{Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation}. \textit{Econometrica}, 50(4), 987--1007.
     \item Engle, R.F., Manganelli, S. (2004). \href{https://doi.org/10.1198/073500104000000370}{CAViaR: conditional autoregressive value at risk by regression quantiles}. \textit{Journal of Business \& Economic Statistics}, 22(4), 367--381.
     \item Franke, J., Härdle, W.K., Hafner, C.M. (2019). \href{https://doi.org/10.1007/978-3-030-13751-9}{\textit{Statistics of Financial Markets: An Introduction}}, 5th ed. Springer.
-    \item Friedman, J.H. (2001). \href{https://doi.org/10.1214/aos/1013203451}{Greedy function approximation: a gradient boosting machine}. \textit{Annals of Statistics}, 29(5), 1189--1232.
-    \item Garman, M.B., Klass, M.J. (1980). \href{https://doi.org/10.1086/296072}{On the estimation of security price volatilities from historical data}. \textit{Journal of Business}, 53(1), 67--78.
-    \item Gu, S., Kelly, B., Xiu, D. (2020). \href{https://doi.org/10.1093/rfs/hhaa009}{Empirical asset pricing via machine learning}. \textit{Review of Financial Studies}, 33(5), 2223--2273.
-    \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \href{https://doi.org/10.1093/rfs/hhv059}{\ldots and the cross-section of expected returns}. \textit{Review of Financial Studies}, 29(1), 5--68.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{References (2/3)}
 \itemsize{\tiny}
 \begin{itemize}
+    \item Friedman, J.H. (2001). \href{https://doi.org/10.1214/aos/1013203451}{Greedy function approximation: a gradient boosting machine}. \textit{Annals of Statistics}, 29(5), 1189--1232.
+    \item Garman, M.B., Klass, M.J. (1980). \href{https://doi.org/10.1086/296072}{On the estimation of security price volatilities from historical data}. \textit{Journal of Business}, 53(1), 67--78.
+    \item Gu, S., Kelly, B., Xiu, D. (2020). \href{https://doi.org/10.1093/rfs/hhaa009}{Empirical asset pricing via machine learning}. \textit{Review of Financial Studies}, 33(5), 2223--2273.
+    \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \href{https://doi.org/10.1093/rfs/hhv059}{\ldots and the cross-section of expected returns}. \textit{Review of Financial Studies}, 29(1), 5--68.
     \item Hastie, T., Tibshirani, R., Friedman, J. (2009). \href{https://doi.org/10.1007/978-0-387-84858-7}{\textit{The Elements of Statistical Learning}}, 2nd ed. Springer.
     \item Hoerl, A.E., Kennard, R.W. (1970). \href{https://doi.org/10.1080/00401706.1970.10488634}{Ridge regression: biased estimation for nonorthogonal problems}. \textit{Technometrics}, 12(1), 55--67.
     \item Hornik, K., Stinchcombe, M., White, H. (1989). \href{https://doi.org/10.1016/0893-6080(89)90020-8}{Multilayer feedforward networks are universal approximators}. \textit{Neural Networks}, 2(5), 359--366.
@@ -1694,6 +1726,12 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Koenker, R., Bassett, G. (1978). \href{https://doi.org/10.2307/1913643}{Regression quantiles}. \textit{Econometrica}, 46(1), 33--50.
     \item Kupiec, P.H. (1995). \href{https://doi.org/10.3905/jod.1995.407942}{Techniques for verifying the accuracy of risk measurement models}. \textit{Journal of Derivatives}, 3(2), 73--84.
     \item Lundberg, S.M., Lee, S.-I. (2017). \href{https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html}{A unified approach to interpreting model predictions}. \textit{Advances in Neural Information Processing Systems}, 30.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{References (3/3)}
+\itemsize{\tiny}
+\begin{itemize}
     \item López de Prado, M. (2018). \href{https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086}{\textit{Advances in Financial Machine Learning}}. Wiley.
     \item Patton, A.J. (2011). \href{https://doi.org/10.1016/j.jeconom.2010.03.034}{Volatility forecast comparison using imperfect volatility proxies}. \textit{Journal of Econometrics}, 160(1), 246--256.
     \item Pele, D.T., Mazurencu-Marinescu-Pele, M. (2026). \href{https://doi.org/10.3390/math14132316}{Finite-sample precision limits for expected shortfall forecast comparisons}. \textit{Mathematics}, 14(13), 2316.
@@ -1702,12 +1740,6 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Rumelhart, D.E., Hinton, G.E., Williams, R.J. (1986). \href{https://doi.org/10.1038/323533a0}{Learning representations by back-propagating errors}. \textit{Nature}, 323, 533--536.
     \item Tibshirani, R. (1996). \href{https://doi.org/10.1111/j.2517-6161.1996.tb02080.x}{Regression shrinkage and selection via the lasso}. \textit{Journal of the Royal Statistical Society, Series B}, 58(1), 267--288.
     \item Wang, H., Fu, T., Du, Y., Gao, W., et al. (2023). \href{https://doi.org/10.1038/s41586-023-06221-2}{Scientific discovery in the age of artificial intelligence}. \textit{Nature}, 620, 47--60.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{References (3/3)}
-\itemsize{\tiny}
-\begin{itemize}
     \item Welch, I., Goyal, A. (2008). \href{https://doi.org/10.1093/rfs/hhm014}{A comprehensive look at the empirical performance of equity premium prediction}. \textit{Review of Financial Studies}, 21(4), 1455--1508.
     \item White, H. (2000). \href{https://doi.org/10.1111/1468-0262.00152}{A reality check for data snooping}. \textit{Econometrica}, 68(5), 1097--1126.
 \end{itemize}

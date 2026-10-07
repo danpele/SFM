@@ -68,17 +68,16 @@ MSCA Digital Finance}
     \item \textbf{CDF}: Cumulative Distribution Function
     \item \textbf{CLT}: Central Limit Theorem
     \item \textbf{CRR}: Cox–Ross–Rubinstein (binomial model)
-    \item \textbf{ES}: Expected Shortfall
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity
     \item \textbf{GBM}: Geometric Brownian Motion
     \item \textbf{IBM}: International Business Machines (company)
     \item \textbf{LCG}: Linear Congruential Generator
     \item \textbf{LLN}: Law of Large Numbers
+    \item \textbf{PCG64}: Permuted Congruential Generator, 64-bit (NumPy default)
 \end{itemize}
 \end{column}
 \begin{column}{0.49\textwidth}
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item \textbf{PCG64}: Permuted Congruential Generator, 64-bit (NumPy default)
     \item \textbf{PMF}: Probability Mass Function
     \item \textbf{RANDU}: RANDU (IBM random number generator of the 1960s)
     \item \textbf{SFE}: Statistics of Financial Markets, Exercises (Quantlet collection of the textbook)
@@ -404,7 +403,9 @@ MSCA Digital Finance}
     \end{itemize}
     \item Moments: $E[X^k]$ for $k = 1, 2, \dots$
     \begin{itemize}
-        \item skewness and kurtosis use $k = 3, 4$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
+        \item skewness $E[(X - \mu)^3]/\sigma^3$: the asymmetry of the distribution (0 for the Normal distribution)
+        \item kurtosis $E[(X - \mu)^4]/\sigma^4$: equals 3 for the Normal distribution
+        \item excess kurtosis = kurtosis $-\,3$; positive for heavy tails (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -576,11 +577,9 @@ MSCA Digital Finance}
     \begin{itemize}
         \item $\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $0.31$, $0.15$, $0.14$
         \item band $\pm 1.96/\sqrt{n}$: the values compatible with zero correlation at the 5\% level
-    \end{itemize}
-    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0.109$, an effect of thin trading
-    \begin{itemize}
         \item the negative S\&P 500 value comes mostly from crisis days
     \end{itemize}
+    \item BET: $\text{Corr}(r_t, r_{t-1}) = 0.109$, an effect of thin trading
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_dependence}
 \end{frame}
@@ -769,7 +768,7 @@ MSCA Digital Finance}
     \item Named after the Monaco casino by Ulam and von Neumann, Los Alamos, 1940s \refMU
     \item In finance \refGlasserman
     \begin{itemize}
-        \item prices of path-dependent options, VaR and ES of portfolios, stress scenarios
+        \item prices of path-dependent options, portfolio VaR (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}), stress scenarios
         \item any expectation without a closed form
     \end{itemize}
     \item Two ingredients: uniform random numbers and a way to turn them into any distribution
@@ -964,7 +963,7 @@ MSCA Digital Finance}
         \item $uu$: 144 with $p^2 = 0.36$; $ud$ or $du$: 96 with $2p(1-p) = 0.48$; $dd$: 64 with $(1-p)^2 = 0.16$
     \end{itemize}
     \item $E[S_2] = 100 \times (0.6 \times 1.2 + 0.4 \times 0.8)^2 = 100 \times 1.04^2 = 108.16$
-    \item $P(S_2 < 100) = 0.48 + 0.16$
+    \item $P(S_2 < 100) = 0.48 + 0.16 = 0.64$
     \begin{itemize}
         \item one up and one down move lose money, because $ud = 0.96 < 1$
     \end{itemize}
@@ -1088,7 +1087,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item Martingale $\ne$ i.i.d. increments: the conditional \textbf{variance} may change, as in GARCH
     \begin{itemize}
-        \item the efficient-market idea in its weak form \refFama: excess returns are a martingale difference
+        \item the efficient-market idea in its weak form \refFama: excess returns (above the risk-free rate) are a martingale difference
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1347,8 +1346,8 @@ MSCA Digital Finance}
     \item BET: outside the band 24\% of the time
     \begin{itemize}
         \item the 2000--2007 boom and the 2008 crash are not GBM-like
-        \item Bitcoin: $\sigma = 66.6\%$ a year makes the fan enormous
     \end{itemize}
+    \item Bitcoin: $\sigma = 66.6\%$ a year makes the fan enormous
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
 \end{frame}
@@ -1362,7 +1361,10 @@ MSCA Digital Finance}
 \begin{itemize}
     \item Excess kurtosis: S\&P 500 10.7, BET 11.1, Bitcoin 12.0; 90\% of 300 GBM simulations lie within $[-0.10, 0.09]$
     \item Volatility clustering: $\text{Corr}(r_t^2, r_{t-1}^2) = 0.31$, $0.33$, $0.14$ vs at most $0.03$ under GBM
-    \item Maximum drawdown: S\&P 500 -57\% is ordinary for GBM; BET -83\% is beyond all but 5\% of the paths (5\% quantile -61\%)
+    \item Maximum drawdown $\min_t \left(S_t/\max_{s \le t} S_s - 1\right)$: the largest fall from a previous peak
+    \begin{itemize}
+        \item S\&P 500 -57\% is ordinary for GBM; BET -83\% is beyond all but 5\% of the paths (5\% quantile -61\%)
+    \end{itemize}
     \item 4-sigma days: 46 (S\&P 500) vs at most 1 in 95\% of the GBM paths; crypto has the same problem \refPeleCrypto
 \end{itemize}
 \sfmquantlet{Ch_04}{SFM_ch4_wiener_gbm}
@@ -1413,7 +1415,7 @@ MSCA Digital Finance}
     \item \textbf{Design}: propose a test that compares the observed number of bad years with the model probability
     \item Example prompt
     \begin{itemize}
-        \item \aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\&P 500 returns under GBM and under an i.i.d. bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\% and 40\% within the year.}
+        \item \aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\&P 500 returns under GBM and under an i.i.d.\ bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\% and 40\% within the year.}
     \end{itemize}
 \end{itemize}
 \end{frame}

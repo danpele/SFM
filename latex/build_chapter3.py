@@ -692,25 +692,34 @@ D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
     T('McCulloch gives lower $\\hat\\alpha$ than ML for every series: the two methods weigh the tails differently',
       'McCulloch dă un $\\hat\\alpha$ mai mic decît ML pentru fiecare serie: cele două metode ponderează diferit cozile')))
 
-chart(T('Fitted Densities on a Log Scale', 'Densități estimate, pe scară logaritmică'), 'sfm_ch3_fit_density', 'SFM_ch3_fit_returns', [
+chart(T('Fitted Densities on a Log Scale (1/2)', 'Densități estimate, pe scară logaritmică (1/2)'), 'sfm_ch3_fit_density_1', 'SFM_ch3_fit_returns', [
     T('Normal (red): far too few large returns; Student-t (green) and stable (blue) both follow the body',
-      'Distribuția Normală (roșu): mult prea puține randamente mari; distribuțiile Student-t (verde) și stabilă (albastru) descriu bine corpul'),
-    T('Far tails: the stable density stays above the data points; the Student-t is closer', 'Cozile îndepărtate: densitatea stabilă rămîne deasupra punctelor; distribuția Student-t este mai aproape de ele')],
-    h='0.66\\textheight')
+      'Distribuția Normală (roșu): mult prea puține randamente mari; distribuțiile Student-t (verde) și stabilă (albastru) descriu bine corpul')],
+    h='0.70\\textheight')
 
-chart(T('QQ Plots against the Three Models', 'QQ plots față de cele trei modele'), 'sfm_ch3_qq_real', 'SFM_ch3_fit_returns', [
+chart(T('Fitted Densities on a Log Scale (2/2)', 'Densități estimate, pe scară logaritmică (2/2)'), 'sfm_ch3_fit_density_2', 'SFM_ch3_fit_returns', [
+    T('Far tails: the stable density stays above the data points; the Student-t is closer', 'Cozile îndepărtate: densitatea stabilă rămîne deasupra punctelor; distribuția Student-t este mai aproape de ele')],
+    h='0.70\\textheight')
+
+chart(T('QQ Plots against the Three Models (1/2)', 'QQ plots față de cele trei modele (1/2)'), 'sfm_ch3_qq_real_1', 'SFM_ch3_fit_returns', [
     T('A QQ (quantile--quantile) plot puts the empirical quantiles against the model quantiles; a good model lies on the 45-degree line',
-      'Un QQ plot (graficul cuantilă--cuantilă) reprezintă cuantilele empirice în funcție de cele ale modelului; pentru un model bun, punctele se află pe prima bisectoare'),
+      'Un QQ plot (graficul cuantilă--cuantilă) reprezintă cuantilele empirice în funcție de cele ale modelului; pentru un model bun, punctele se află pe prima bisectoare')],
+    h='0.70\\textheight')
+
+chart(T('QQ Plots against the Three Models (2/2)', 'QQ plots față de cele trei modele (2/2)'), 'sfm_ch3_qq_real_2', 'SFM_ch3_fit_returns', [
     T('Normal: too-short tails (steep ends); stable: too-long tails (flat ends, model quantiles far beyond the data); Student-t: the closest',
       'Distribuția Normală: cozi prea scurte (capete abrupte); distribuția stabilă: cozi prea lungi (capete plate, cuantile ale modelului mult dincolo de date); Student-t: cea mai apropiată')],
-    h='0.62\\textheight')
+    h='0.70\\textheight')
 
-chart(T('The Left Tail on Log-Log Axes', 'Coada stîngă pe axe log-log'), 'sfm_ch3_tails_real', 'SFM_ch3_fit_returns', [
+chart(T('The Left Tail on Log-Log Axes (1/2)', 'Coada stîngă pe axe log-log (1/2)'), 'sfm_ch3_tails_real_1', 'SFM_ch3_fit_returns', [
     T('Points: share of days with a loss above $x$; lines: the same probability under each fitted model',
-      'Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate conform fiecărui model estimat'),
+      'Punctele: proporția zilelor cu o pierdere peste $x$; liniile: aceeași probabilitate conform fiecărui model estimat')],
+    h='0.70\\textheight')
+
+chart(T('The Left Tail on Log-Log Axes (2/2)', 'Coada stîngă pe axe log-log (2/2)'), 'sfm_ch3_tails_real_2', 'SFM_ch3_fit_returns', [
     T('The empirical tail bends down faster than the stable line: the tail index of the data is larger than $\\hat\\alpha$',
       'Coada empirică se curbează în jos mai repede decît dreapta stabilă: tail index-ul datelor este mai mare decît $\\hat\\alpha$')],
-    h='0.66\\textheight')
+    h='0.70\\textheight')
 
 
 def tcrow(k, x):

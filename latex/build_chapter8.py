@@ -244,7 +244,7 @@ D.frame(T('Worked Example: Annualising Volatility', 'Exemplu rezolvat: anualizar
       T('wrong, with the equity convention: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$', 'greșit, cu convenția de la acțiuni: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$')]),
     T('Comparing assets: annualise each with its own calendar, then compare', 'Pentru a compara active: anualizați fiecare serie cu propriul calendar, apoi comparați')))
 
-D.recap(('What Is Volatility?', 'volatilitatea: definiție și caracter latent'), [
+D.recap(('What Is Volatility?', 'volatilitatea și caracterul ei latent'), [
     T('Volatility = standard deviation of returns; annualise with $\\sqrt{A}$, $A$ the actual number of observations per year',
       'Volatilitatea = abaterea standard a randamentelor; se anualizează cu $\\sqrt{A}$, unde $A$ este numărul real de observații pe an'),
     T('Conditional volatility $\\sigma_t$ changes over time and is never observed: we can only estimate it', 'Volatilitatea condiționată $\\sigma_t$ variază în timp și nu este observată niciodată: o putem doar estima'),
@@ -821,7 +821,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
         'QLIKE al prognozelor pentru ziua următoare, cu fereastra de 21 de zile, CC față de YZ: TLV @{bv.tlv.qcc} față de @{bv.tlv.qyz}; TGN @{bv.tgn.qcc} față de @{bv.tgn.qyz}')]),
     T('Open: the answer differs by stock; is it liquidity, the opening auction, or the size of the overnight move?',
       'Întrebarea rămîne deschisă: răspunsul diferă de la o acțiune la alta; contează lichiditatea, licitația de deschidere sau mărimea mișcării overnight?'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')) + ql('SFM_ch8_bvb_range'))
+    T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')) + ql('SFM_ch8_bvb_range'))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies of range-based and realised volatility in emerging and thin markets, with their data and estimators',
@@ -881,7 +881,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'McLeod--Li & $Q(m) = T(T+2)\\sum_{k=1}^m \\hat\\rho_k(r^2)^2/(T-k) \\sim \\chi^2(m)$',
      'ARCH-LM & $\\mathrm{LM} = nR^2 \\sim \\chi^2(q)$',
      'MSE, QLIKE & $(\\hat\\sigma_t^2 - h_t)^2$, \\quad $\\hat\\sigma_t^2/h_t + \\ln h_t$'],
-    size='scriptsize') + '}')
+    size='small') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a stock has $H = 102$, $L = 98$ on one day; what is the Parkinson daily volatility?', '\\textbf{Întrebare}: o acțiune are $H = 102$, $L = 98$ într-o zi; care este volatilitatea zilnică Parkinson?'),

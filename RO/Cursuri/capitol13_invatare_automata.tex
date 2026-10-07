@@ -944,7 +944,8 @@ $2{,}20$ & $1{,}22$ & $2{,}20$ & $1{,}468$ \\
     \item După votul pentru Brexit, GARCH atinge maximul de 37{,}3\% (28 iunie 2016); rețeaua doar 22{,}0\%
     \begin{itemize}
         \item rețeaua vede doar ultimele 3 randamente: un randament mare îi crește varianța timp de 3 zile, apoi efectul dispare
-        \item GARCH transmite tot trecutul prin $\beta\,\sigma_{t-1}^2$: volatility clustering are nevoie de memorie, nu doar de flexibilitate
+        \item GARCH(1,1) (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol9_modele_arch_garch.pdf}{Capitolul 9}): $\sigma_t^2 = \omega + \alpha\,r_{t-1}^2 + \beta\,\sigma_{t-1}^2$, cu $\sigma_{t-1}^2$ varianța condiționată de ieri
+        \item termenul $\beta\,\sigma_{t-1}^2$ transmite tot trecutul: volatility clustering are nevoie de memorie, nu doar de flexibilitate
     \end{itemize}
     \item Rețeaua pentru medie explică $0{,}08\%$ din randamente în eșantion: cursurile de schimb sînt aproape un mers aleator
     \begin{itemize}
@@ -1316,7 +1317,7 @@ Bitcoin & HAR & $44{,}0$ & -- & $3{,}111$ & -- \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Backtesting pentru VaR 1\%: metode cuantilice, HS și GARCH-t}
+\begin{frame}{Backtesting pentru VaR 1\%: metode cuantilice, HS și GARCH-t (1/2)}
 \itemsize{\footnotesize}
 \begin{center}
 \scriptsize
@@ -1337,10 +1338,39 @@ Bitcoin & QR & 23 & $0{,}72$ & 0{,}098 & 0{,}563 & $13{,}03$ & $10{,}46$ \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item QR: regresie cuantilică liniară; QGB: quantile gradient boosting; HS: simulare istorică pe 500 de zile; GARCH-t: reestimat în fiecare ianuarie (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10}); p ind.: testul de independență Christoffersen
-    \item S\&P 500 (3\,448 de zile de la 2 ianuarie 2013): QR are rata corectă (0{,}81\%) și cea mai mică pierdere, dar depășirile lui nu sînt complet independente (p ind.\ 0{,}020); GARCH-t este depășit prea des (1{,}51\%)
-    \item Bitcoin (3\,182 de zile): HS are cea mai bună rată (1{,}01\%); QGB este respins (1{,}48\%, p 0{,}012)
+    \item Coloanele
+    \begin{itemize}
+        \item $x$: numărul depășirilor ($r_{t+1} < -\widehat{\mathrm{VaR}}_t$) în cele $n$ zile de test; rata $= x/n$, ținta 1\%
+        \item p Kupiec: p-value-ul testului Kupiec al ratei; p ind.: p-value-ul testului de independență Christoffersen (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10})
+        \item pierdere $\times 100$: pierderea cuantilică medie (mai mică este mai bună); VaR mediu: media VaR 1\%, în \%
+    \end{itemize}
+    \item Metodele
+    \begin{itemize}
+        \item QR: regresie cuantilică liniară; QGB: quantile gradient boosting
+        \item HS: simulare istorică pe 500 de zile; GARCH-t: reestimat în fiecare ianuarie (\sfmchlink{https://danpele.github.io/SFM/RO/Cursuri/capitol10_var_es_backtesting.pdf}{Capitolul 10})
+    \end{itemize}
 \end{itemize}\sfmquantlet{Ch_13}{SFM_ch13_quantile_var}
+\end{frame}
+
+\begin{frame}{Backtesting pentru VaR 1\%: metode cuantilice, HS și GARCH-t (2/2)}
+\itemsize{\footnotesize}
+\begin{itemize}
+    \item S\&P 500 (3\,448 de zile de la 2 ianuarie 2013): QR are rata corectă (0{,}81\%) și cea mai mică pierdere
+    \begin{itemize}
+        \item depășirile lui nu sînt complet independente (p ind.\ 0{,}020)
+        \item GARCH-t este depășit prea des (1{,}51\%)
+    \end{itemize}
+    \item Bitcoin (3\,182 de zile): HS are cea mai bună rată (1{,}01\%)
+    \begin{itemize}
+        \item QGB este respins de testul Kupiec (1{,}48\%, p 0{,}012)
+        \item la 1\% fiecare frunză a arborilor din boosting vede puține zile din coadă: varianță mare (secțiunea 2)
+    \end{itemize}
+    \item Interpretarea p-value-urilor
+    \begin{itemize}
+        \item p Kupiec sub 0,05: rata depășirilor diferă semnificativ de 1\%
+        \item p ind.\ sub 0,05: depășirile apar grupat, deci VaR reacționează prea lent
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Prognozele VaR 1\% în 2020 și 2025}
@@ -1440,7 +1470,8 @@ Bitcoin & QR & 23 & $0{,}72$ & 0{,}098 & 0{,}563 & $13{,}03$ & $10{,}46$ \\
     \begin{itemize}
         \item $\widehat{SR} = 0{,}0416$ pe zi ($\times\sqrt{252} = 0{,}66$); $\hat\gamma_3 = -0{,}44$, $\hat\gamma_4 = 12{,}0$
         \item $SR_0 = 0{,}0105\,[(1 - \gamma)\,1{,}834 + \gamma\,2{,}249] = 0{,}0219$ (anual $0{,}35$)
-        \item $z = 1{,}20$, DSR $= 0{,}88$; fără corecția pentru $N$ (PSR, $SR_0 = 0$): $0{,}994$
+        \item $z$, argumentul lui $\Phi$ din formula DSR: $z = 1{,}20$, deci DSR $= \Phi(z) = 0{,}88$
+        \item fără corecția pentru $N$ (PSR, probabilistic Sharpe ratio, cu $SR_0 = 0$): $0{,}994$
     \end{itemize}
     \item Interpretare: luată singură, regula pare semnificativă; după 30 de încercări nu mai este (DSR sub 0,95), așa cum confirmă și rezultatele ulterioare
 \end{itemize}
@@ -1472,7 +1503,8 @@ Bitcoin & QR & 23 & $0{,}72$ & 0{,}098 & 0{,}563 & $13{,}03$ & $10{,}46$ \\
     \item Schema de estimare: 18 ani de antrenare (1957--1974), 12 de validare (1975--1986), 30 de test (1987--2016)
     \begin{itemize}
         \item reestimare o dată pe an; fereastra de antrenare crește, cea de validare avansează: o schemă walk-forward
-        \item modele: OLS, regresii penalizate și cu reducerea dimensiunii, random forest, arbori în boosting, rețele cu 1--5 straturi ascunse
+        \item modele: OLS, regresii penalizate și cu reducerea dimensiunii, random forest, arbori în boosting
+        \item rețelele NN1--NN5: NN$k$ are $k$ straturi ascunse
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -1676,16 +1708,16 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Engle, R.F. (1982). \href{https://doi.org/10.2307/1912773}{Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation}. \textit{Econometrica}, 50(4), 987--1007.
     \item Engle, R.F., Manganelli, S. (2004). \href{https://doi.org/10.1198/073500104000000370}{CAViaR: conditional autoregressive value at risk by regression quantiles}. \textit{Journal of Business \& Economic Statistics}, 22(4), 367--381.
     \item Franke, J., Härdle, W.K., Hafner, C.M. (2019). \href{https://doi.org/10.1007/978-3-030-13751-9}{\textit{Statistics of Financial Markets: An Introduction}}, 5th ed. Springer.
-    \item Friedman, J.H. (2001). \href{https://doi.org/10.1214/aos/1013203451}{Greedy function approximation: a gradient boosting machine}. \textit{Annals of Statistics}, 29(5), 1189--1232.
-    \item Garman, M.B., Klass, M.J. (1980). \href{https://doi.org/10.1086/296072}{On the estimation of security price volatilities from historical data}. \textit{Journal of Business}, 53(1), 67--78.
-    \item Gu, S., Kelly, B., Xiu, D. (2020). \href{https://doi.org/10.1093/rfs/hhaa009}{Empirical asset pricing via machine learning}. \textit{Review of Financial Studies}, 33(5), 2223--2273.
-    \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \href{https://doi.org/10.1093/rfs/hhv059}{\ldots and the cross-section of expected returns}. \textit{Review of Financial Studies}, 29(1), 5--68.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Bibliografie (2/3)}
 \itemsize{\tiny}
 \begin{itemize}
+    \item Friedman, J.H. (2001). \href{https://doi.org/10.1214/aos/1013203451}{Greedy function approximation: a gradient boosting machine}. \textit{Annals of Statistics}, 29(5), 1189--1232.
+    \item Garman, M.B., Klass, M.J. (1980). \href{https://doi.org/10.1086/296072}{On the estimation of security price volatilities from historical data}. \textit{Journal of Business}, 53(1), 67--78.
+    \item Gu, S., Kelly, B., Xiu, D. (2020). \href{https://doi.org/10.1093/rfs/hhaa009}{Empirical asset pricing via machine learning}. \textit{Review of Financial Studies}, 33(5), 2223--2273.
+    \item Harvey, C.R., Liu, Y., Zhu, H. (2016). \href{https://doi.org/10.1093/rfs/hhv059}{\ldots and the cross-section of expected returns}. \textit{Review of Financial Studies}, 29(1), 5--68.
     \item Hastie, T., Tibshirani, R., Friedman, J. (2009). \href{https://doi.org/10.1007/978-0-387-84858-7}{\textit{The Elements of Statistical Learning}}, 2nd ed. Springer.
     \item Hoerl, A.E., Kennard, R.W. (1970). \href{https://doi.org/10.1080/00401706.1970.10488634}{Ridge regression: biased estimation for nonorthogonal problems}. \textit{Technometrics}, 12(1), 55--67.
     \item Hornik, K., Stinchcombe, M., White, H. (1989). \href{https://doi.org/10.1016/0893-6080(89)90020-8}{Multilayer feedforward networks are universal approximators}. \textit{Neural Networks}, 2(5), 359--366.
@@ -1694,6 +1726,12 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Koenker, R., Bassett, G. (1978). \href{https://doi.org/10.2307/1913643}{Regression quantiles}. \textit{Econometrica}, 46(1), 33--50.
     \item Kupiec, P.H. (1995). \href{https://doi.org/10.3905/jod.1995.407942}{Techniques for verifying the accuracy of risk measurement models}. \textit{Journal of Derivatives}, 3(2), 73--84.
     \item Lundberg, S.M., Lee, S.-I. (2017). \href{https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html}{A unified approach to interpreting model predictions}. \textit{Advances in Neural Information Processing Systems}, 30.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bibliografie (3/3)}
+\itemsize{\tiny}
+\begin{itemize}
     \item López de Prado, M. (2018). \href{https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086}{\textit{Advances in Financial Machine Learning}}. Wiley.
     \item Patton, A.J. (2011). \href{https://doi.org/10.1016/j.jeconom.2010.03.034}{Volatility forecast comparison using imperfect volatility proxies}. \textit{Journal of Econometrics}, 160(1), 246--256.
     \item Pele, D.T., Mazurencu-Marinescu-Pele, M. (2026). \href{https://doi.org/10.3390/math14132316}{Finite-sample precision limits for expected shortfall forecast comparisons}. \textit{Mathematics}, 14(13), 2316.
@@ -1702,12 +1740,6 @@ DSR & $\Phi\big((\widehat{SR} - SR_0)\sqrt{T - 1}/\sqrt{1 - \hat\gamma_3\widehat
     \item Rumelhart, D.E., Hinton, G.E., Williams, R.J. (1986). \href{https://doi.org/10.1038/323533a0}{Learning representations by back-propagating errors}. \textit{Nature}, 323, 533--536.
     \item Tibshirani, R. (1996). \href{https://doi.org/10.1111/j.2517-6161.1996.tb02080.x}{Regression shrinkage and selection via the lasso}. \textit{Journal of the Royal Statistical Society, Series B}, 58(1), 267--288.
     \item Wang, H., Fu, T., Du, Y., Gao, W., et al. (2023). \href{https://doi.org/10.1038/s41586-023-06221-2}{Scientific discovery in the age of artificial intelligence}. \textit{Nature}, 620, 47--60.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Bibliografie (3/3)}
-\itemsize{\tiny}
-\begin{itemize}
     \item Welch, I., Goyal, A. (2008). \href{https://doi.org/10.1093/rfs/hhm014}{A comprehensive look at the empirical performance of equity premium prediction}. \textit{Review of Financial Studies}, 21(4), 1455--1508.
     \item White, H. (2000). \href{https://doi.org/10.1111/1468-0262.00152}{A reality check for data snooping}. \textit{Econometrica}, 68(5), 1097--1126.
 \end{itemize}

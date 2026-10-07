@@ -41,8 +41,9 @@ COLOURS_RR = {'sp500': st.MainBlue, 'ndx': st.Teal, 'dax': st.Forest, 'stoxx50':
               'eth': st.Purple}
 MARKERS_RR = {'tlt': 's', 'btc': 's', 'eth': 's', 'gold': 'D'}
 # label offsets (points) so that the names of nearby markets do not overlap
-OFFSETS_RR = {'sp500': (-8, 8), 'gold': (-38, -14), 'dax': (6, -12), 'stoxx50': (-30, -16), 'wig20': (6, -10),
-              'nikkei': (6, 2), 'ndx': (6, 4), 'bettr': (6, 4), 'tlt': (6, 4), 'btc': (6, 4), 'eth': (-62, -4)}
+OFFSETS_RR = {'sp500': (0, 12, 'center'), 'gold': (-9, -3, 'right'), 'dax': (-9, -4, 'right'),
+              'stoxx50': (-9, -9, 'right'), 'wig20': (9, -6, 'left'), 'nikkei': (9, 0, 'left'), 'ndx': (9, 0, 'left'),
+              'bettr': (9, -2, 'left'), 'tlt': (9, -2, 'left'), 'btc': (9, -2, 'left'), 'eth': (-9, -4, 'right')}
 
 
 def market_table(names=MARKETS_CH0, start=START_CH0):
@@ -77,13 +78,14 @@ def fig_markets(names=MARKETS_CH0, start=START_CH0, save=True):
 def fig_risk_return(names=RISK_RETURN, start=START_CH0, save=True):
     """Annualised volatility (x) against annualised mean log return (y), each series on its own calendar."""
     tab = market_table(names, start)
-    fig, ax = plt.subplots(figsize=(10, 4.6))
+    fig, ax = plt.subplots(figsize=(10, 4.4))
     for k in names:
         row = tab.loc[LABELS[k]]
         ax.scatter(row['ann_vol'], row['ann_return'], s=70, color=COLOURS_RR[k], marker=MARKERS_RR.get(k, 'o'),
                    label=LABELS[k], zorder=3)
-        ax.annotate(LABELS[k].split(' (')[0], (row['ann_vol'], row['ann_return']), xytext=OFFSETS_RR.get(k, (6, 4)),
-                    textcoords='offset points', fontsize=10, color='black', ha='left')
+        dx, dy, ha = OFFSETS_RR.get(k, (9, 0, 'left'))
+        ax.annotate(LABELS[k].split(' (')[0], (row['ann_vol'], row['ann_return']), xytext=(dx, dy),
+                    textcoords='offset points', fontsize=10.5, color=st.DarkText, ha=ha, va='center')
     ax.axhline(0, color=st.MainBlue, lw=0.6, ls='--')
     ax.set_xscale('log')
     ax.set_xticks([10, 15, 20, 30, 50, 70, 100])

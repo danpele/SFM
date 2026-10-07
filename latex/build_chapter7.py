@@ -480,8 +480,8 @@ D.frame(T('Autocorrelation Tests on Real Data', 'Teste de autocorelație pe date
     'lrrrrrrrrr', T('& $T$ & $\\hat\\rho(1)$ & $Q_{LB}(10)$ & p & $\\tilde Q(10)$ & p & $Q_{LB}(10)$, $r^2$ & runs $z$ & p',
                     '& $T$ & $\\hat\\rho(1)$ & $Q_{LB}(10)$ & p & $\\tilde Q(10)$ & p & $Q_{LB}(10)$, $r^2$ & runs $z$ & p'),
     [trow(k) for k in ASSETS + STOCKS], size='scriptsize') + items(
-    T('Classic LB: all eight series reject at 5\\%; robust $\\tilde Q$: only the S\\&P 500 (p = @{t.sp500.p_rob}) and the BET (p = @{t.bet.p_rob})',
-      'LB clasic: toate cele opt serii resping la 5\\%; $\\tilde Q$ robust: doar S\\&P 500 (p = @{t.sp500.p_rob}) și BET (p = @{t.bet.p_rob})'),
+    T('Classic LB: all eight series reject at 5\\%; robust $\\tilde Q$: only the S\\&P 500 (p-value: @{t.sp500.p_rob}) and the BET (p-value: @{t.bet.p_rob})',
+      'LB clasic: toate cele opt serii resping la 5\\%; $\\tilde Q$ robust: doar S\\&P 500 (p-value: @{t.sp500.p_rob}) și BET (p-value: @{t.bet.p_rob})'),
     T('Squared returns: huge $Q_{LB}$ everywhere: RW1 and RW2 are rejected for every series (volatility clustering)', 'Randamentele la pătrat: $Q_{LB}$ uriaș peste tot: RW1 și RW2 sînt respinse pentru fiecare serie (volatility clustering)'),
     T('Start of the series: S\\&P 500 and DAX 1990; BET 1997; Bitcoin 2014; BVB stocks 2010 (TLV without 30--31 May 2016, a data error, Chapter 2)',
       'Începutul seriilor: S\\&P 500 și DAX 1990; BET 1997; Bitcoin 2014; acțiuni BVB 2010 (TLV fără 30--31 mai 2016, o eroare de date, Capitolul 2)')) + ql('SFM_ch7_autocorrelation_tests'), 'footnotesize')
@@ -544,10 +544,10 @@ D.frame(T('The Dickey--Fuller Test', 'Testul Dickey--Fuller'), items(
 
 D.frame(T('The Augmented Test and a Worked Example', 'Testul augmentat și un exemplu lucrat'), items(
     (T('\\textbf{ADF} (augmented Dickey--Fuller) \\refSD: add lagged differences to remove autocorrelation from $\\varepsilon_t$',
-       '\\textbf{ADF} (augmented Dickey--Fuller, Dickey--Fuller augmentat) \\refSD: adăugăm diferențe decalate ca să eliminăm autocorelația din $\\varepsilon_t$'),
+       '\\textbf{ADF} (augmented Dickey--Fuller, Dickey--Fuller augmentat) \\refSD: adăugăm laguri ale diferențelor ca să eliminăm autocorelația din $\\varepsilon_t$'),
      [T('$\\Delta p_t = c + bt + \\gamma\\, p_{t-1} + \\sum_{j=1}^{L} \\delta_j \\Delta p_{t-j} + \\varepsilon_t$; same $\\tau$, same critical values',
         '$\\Delta p_t = c + bt + \\gamma\\, p_{t-1} + \\sum_{j=1}^{L} \\delta_j \\Delta p_{t-j} + \\varepsilon_t$; același $\\tau$, aceleași valori critice'),
-      T('$bt$: a linear trend; $\\delta_j$: the coefficients of the $L$ lagged differences', '$bt$: o tendință liniară; $\\delta_j$: coeficienții celor $L$ diferențe decalate în timp'),
+      T('$bt$: a linear trend; $\\delta_j$: the coefficients of the $L$ lagged differences', '$bt$: o tendință liniară; $\\delta_j$: coeficienții celor $L$ laguri ale diferenței $\\Delta p_t$'),
       T('$L$ chosen by AIC (Akaike information criterion, Chapter 6), at most $12(T/100)^{1/4}$', '$L$ ales prin AIC (Akaike information criterion, criteriul informațional Akaike, Capitolul 6), cel mult $12(T/100)^{1/4}$')]),
     (T('\\textbf{Worked example}: BET log price, constant, no lags, $T = @{df.n}$', '\\textbf{Exemplu lucrat}: prețul logaritmic BET, constantă, fără laguri, $T = @{df.n}$'),
      [T('OLS: $\\hat\\gamma = @{df.g}$, $\\mathrm{SE}(\\hat\\gamma) = @{df.se}$', 'OLS: $\\hat\\gamma = @{df.g}$, $\\mathrm{SE}(\\hat\\gamma) = @{df.se}$'),
@@ -559,7 +559,9 @@ D.frame(T('Phillips--Perron and KPSS', 'Phillips--Perron și KPSS'), items(
     (T('\\textbf{PP} (Phillips--Perron) \\refPP: the Dickey--Fuller regression without lags; $\\tau$ is corrected for autocorrelation and heteroskedasticity',
        '\\textbf{PP} (Phillips--Perron) \\refPP: regresia Dickey--Fuller fără laguri; $\\tau$ este corectat pentru autocorelație și heteroscedasticitate'),
      [T('the correction uses a long-run variance with Bartlett weights \\refNW; same $H_0$ and critical values as ADF',
-        'corecția folosește o varianță pe termen lung cu ponderi Bartlett \\refNW; aceeași $H_0$ și aceleași valori critice ca ADF')]),
+        'corecția folosește o varianță pe termen lung cu ponderi Bartlett \\refNW; aceeași $H_0$ și aceleași valori critice ca ADF'),
+      T('long-run variance $\\hat\\lambda^2 = \\hat\\gamma(0) + 2\\sum_{j=1}^{L}\\left(1 - \\frac{j}{L+1}\\right)\\hat\\gamma(j)$, with $\\hat\\gamma(j)$ the autocovariances of the residuals',
+        'varianța pe termen lung $\\hat\\lambda^2 = \\hat\\gamma(0) + 2\\sum_{j=1}^{L}\\left(1 - \\frac{j}{L+1}\\right)\\hat\\gamma(j)$, cu $\\hat\\gamma(j)$ autocovarianțele reziduurilor')]),
     (T('\\textbf{KPSS} (Kwiatkowski--Phillips--Schmidt--Shin) \\refKPSS: the hypotheses are \\textbf{reversed}', '\\textbf{KPSS} (Kwiatkowski--Phillips--Schmidt--Shin) \\refKPSS: ipotezele sînt \\textbf{inversate}'),
      [T('$H_0$: stationary (around a constant or a trend); $H_1$: unit root', '$H_0$: staționară (în jurul unei constante sau al unei tendințe); $H_1$: rădăcină unitară'),
       T('$\\mathrm{KPSS} = \\sum_{t=1}^{T} S_t^2/(T^2\\hat\\lambda^2)$, $S_t$ the partial sums of the residuals, $\\hat\\lambda^2$ their long-run variance',
@@ -859,7 +861,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('difference of the two VR(5): $z = @{up.z}$: no evidence of a change', 'diferența celor două VR(5): $z = @{up.z}$: nicio dovadă de schimbare')]),
     (T('Why it is open: COVID-19, new large listings and higher volumes happened at the same time', 'Întrebarea rămîne deschisă: pandemia COVID-19, noile listări mari și volumele mai mari s-au produs în același timp'),
      [T('is the index or each stock the right unit?', 'care este unitatea potrivită de analiză, indicele sau fiecare acțiune?')]),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')) + ql('SFM_ch7_adaptive_markets'))
+    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')) + ql('SFM_ch7_adaptive_markets'))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies of efficiency in Central and Eastern European markets and the tests they use',
@@ -916,7 +918,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'VR & $\\mathrm{VR}(q) = 1 + 2\\sum_{k=1}^{q-1}(1 - k/q)\\rho(k)$',
      T('Robust VR test', 'Testul VR robust') + ' & $Z^*(q) = (\\widehat{\\mathrm{VR}}(q) - 1)/\\sqrt{\\hat\\theta(q)/T}$, \\quad $\\hat\\theta(q) = \\sum_{j<q}[2(q-j)/q]^2\\hat\\delta(j)$',
      'Chow--Denning & $\\max_i |Z^*(q_i)|$, \\quad $P(\\mathrm{CD} \\le c) = (2\\Phi(c) - 1)^m$'],
-    size='scriptsize') + '}')
+    size='footnotesize') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\hat\\rho(1) = 0.10$ and $\\hat\\rho(k) = 0$ for $k \\ge 2$; what does VR(2) tell us?', '\\textbf{Întrebare}: $\\hat\\rho(1) = 0{,}10$ și $\\hat\\rho(k) = 0$ pentru $k \\ge 2$; ce ne spune VR(2)?'),

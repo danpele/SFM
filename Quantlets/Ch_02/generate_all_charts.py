@@ -184,11 +184,12 @@ def fig_normal_pdf(save=True):
     x = np.linspace(-4.2, 4.2, 600)
     fig, ax = plt.subplots(figsize=(9, 3.9))
     ax.plot(x, stats.norm.pdf(x), color=PAL['blue'], lw=2, label='Standard Normal density')
-    for k, c, a in [(3, PAL['teal'], 0.18), (2, PAL['green'], 0.25), (1, PAL['blue'], 0.30)]:
-        xx = x[np.abs(x) <= k]
+    for k, c, a in [(3, PAL['amber'], 0.35), (2, PAL['green'], 0.35), (1, PAL['teal'], 0.40)]:
         p = 1 - 2 * stats.norm.sf(k)
-        ax.fill_between(xx, stats.norm.pdf(xx), color=c, alpha=a, label=f'within {k} sd: {100 * p:.2f}%')
-    ax.set_xlabel('z = (x - mu) / sigma')
+        ax.fill_between(x, stats.norm.pdf(x), where=(np.abs(x) <= k) & (np.abs(x) >= k - 1), interpolate=True,
+                        color=c, alpha=a, lw=0)
+        ax.fill_between([], [], color=c, alpha=a, lw=0, label=f'within {k} sd: {100 * p:.2f}%')
+    ax.set_xlabel(r'$z = (x - \mu)/\sigma$')
     ax.set_ylabel('Density')
     st.legend_outside_bottom(ax, ncol=4, y=-0.17)
     st.check_no_grey(fig)
@@ -203,14 +204,14 @@ def fig_lognormal(sigmas=(0.25, 0.5, 1.0), save=True):
     fig, ax = plt.subplots(figsize=(9, 3.9))
     out = {}
     for s, c in zip(sigmas, [PAL['blue'], PAL['red'], PAL['green']]):
-        ax.plot(x, stats.lognorm.pdf(x, s), color=c, lw=1.8, label=f'sigma = {s}')
+        ax.plot(x, stats.lognorm.pdf(x, s), color=c, lw=1.8, label=rf'$s = {s}$')
         mean = np.exp(s ** 2 / 2)
         ax.axvline(mean, color=c, lw=0.9, ls='--')
         out[s] = {'mode': np.exp(-s ** 2), 'median': 1.0, 'mean': mean, 'sd': np.sqrt((np.exp(s ** 2) - 1) * np.exp(s ** 2)),
                   'skew': (np.exp(s ** 2) + 2) * np.sqrt(np.exp(s ** 2) - 1)}
-    ax.axvline(1, color='black', lw=0.8, ls=':', label='median = 1 (all three)')
-    ax.plot([], [], color='black', lw=0.9, ls='--', label='mean exp(sigma^2/2)')
-    ax.set_xlabel('x = P_T / P_0')
+    ax.axvline(1, color=st.DarkText, lw=1.0, ls=':', label='median = 1 (all three)')
+    ax.plot([], [], color=st.DarkText, lw=0.9, ls='--', label=r'mean $e^{s^2/2}$ (colour of its curve)')
+    ax.set_xlabel(r'$x = P_T/P_0$')
     ax.set_ylabel('Density')
     st.legend_outside_bottom(ax, ncol=5, y=-0.17)
     st.check_no_grey(fig)
@@ -459,12 +460,14 @@ def fig_sigma_days(names=ASSETS, start=START, k=4, save=True):
         out[k_] = sd
         obs.append(sd[k]['obs'])
         exp.append(sd[k]['exp'])
-    ax.bar(x - 0.2, obs, width=0.4, color=[COLORS[k_] for k_ in names], label=f'observed days beyond {k} sd')
-    ax.bar(x + 0.2, exp, width=0.4, color=PAL['blue'], alpha=0.35, hatch='//', edgecolor=PAL['blue'],
-           label=f'expected under the Normal distribution')
+    cols_ = [COLORS[k_] for k_ in names]
+    ax.bar(x - 0.2, obs, width=0.4, color=cols_, label='_')
+    ax.bar(x + 0.2, exp, width=0.4, facecolor='none', hatch='////', edgecolor=cols_, lw=1.0, label='_')
+    ax.bar([0], [0], color=st.DarkText, label=f'observed days beyond {k} sd (solid)')
+    ax.bar([0], [0], facecolor='none', hatch='////', edgecolor=st.DarkText, label='expected under the Normal distribution (hatched)')
     for xi, o, e in zip(x, obs, exp):
-        ax.text(xi - 0.2, o * 1.08, str(o), ha='center', va='bottom', fontsize=10, color='black')
-        ax.text(xi + 0.2, e * 1.08, f'{e:.2f}', ha='center', va='bottom', fontsize=9, color=PAL['blue'])
+        ax.text(xi - 0.2, o * 1.08, str(o), ha='center', va='bottom', fontsize=10, color=st.DarkText)
+        ax.text(xi + 0.2, e * 1.08, f'{e:.2f}', ha='center', va='bottom', fontsize=9, color=st.DarkText)
     ax.set_yscale('log')
     ax.set_ylim(0.05, 80)
     ax.set_xticks(x)
@@ -555,12 +558,12 @@ def fig_acf(names=('sp500', 'bet', 'btc'), start=START, nlags=50, save=True):
                   'rho1_ex2020': float(acf(r.drop(r.loc['2020-02-20':'2020-04-30'].index), 1)[0])}
     b = 1.96 / np.sqrt(nmin)
     for ax in axes:
-        ax.axhspan(-b, b, color=PAL['blue'], alpha=0.12, label='_')
+        ax.axhspan(-b, b, color=PAL['green'], alpha=0.18, lw=0, label='_')
         ax.axhline(0, color='black', lw=0.6)
         ax.set_xlabel('Lag (days)')
-    axes[0].plot([], [], color=PAL['blue'], alpha=0.3, lw=6, label='95% band under independence')
-    axes[0].set_title('Returns r_t')
-    axes[1].set_title('Absolute returns |r_t|')
+    axes[0].plot([], [], color=PAL['green'], alpha=0.35, lw=6, label='95% band under independence')
+    axes[0].set_title(r'Returns $r_t$')
+    axes[1].set_title(r'Absolute returns $|r_t|$')
     axes[0].set_ylabel('Autocorrelation')
     st.fig_legend_bottom(fig, ncol=4, y=0.0)
     fig.tight_layout(rect=(0, 0.08, 1, 1))
@@ -582,11 +585,12 @@ def fig_leverage(names=INDICES, start=START, lags=20, save=True):
         ax.plot(np.arange(1, lags + 1), L, marker='o', ms=3.5, color=COLORS[k], lw=1.2, label=SHORT[k])
         out[k] = {'L': L.tolist(), 'mean5': float(L[:5].mean()), 'band': 1.96 / np.sqrt(len(r))}
     b = 1.96 / np.sqrt(nmin)
-    ax.axhspan(-b, b, color=PAL['blue'], alpha=0.12)
-    ax.plot([], [], color=PAL['blue'], alpha=0.3, lw=6, label='95% band under independence')
+    ax.axhspan(-b, b, color=PAL['green'], alpha=0.18, lw=0)
+    ax.plot([], [], color=PAL['green'], alpha=0.35, lw=6, label='95% band under independence')
+    ax.set_xticks(range(1, lags + 1))
     ax.axhline(0, color='black', lw=0.6)
     ax.set_xlabel('Lag k (days)')
-    ax.set_ylabel('corr(r_t, |r_{t+k}|)')
+    ax.set_ylabel(r'$L(k) = \mathrm{corr}(r_t, |r_{t+k}|)$')
     st.legend_outside_bottom(ax, ncol=5, y=-0.17)
     st.check_no_grey(fig)
     if save:
@@ -640,7 +644,7 @@ def tlv_check(start=START):
 
 def fig_tails_by_year(names=('btc', 'sp500'), save=True):
     """Excess kurtosis and the fitted Student-t degrees of freedom of daily log returns, by calendar year."""
-    fig, axes = plt.subplots(1, 2, figsize=(10, 3.7))
+    fig, axes = plt.subplots(2, 1, figsize=(4.8, 5.4), sharex=True)
     out = {}
     for k in names:
         r = returns(k, '2015-01-01')
@@ -652,11 +656,10 @@ def fig_tails_by_year(names=('btc', 'sp500'), save=True):
         axes[1].plot(yrs, np.minimum(nu, 30), marker='o', color=COLORS[k], lw=1.4, label='_')
         out[k] = {int(y): {'exkurt': float(a), 'nu': float(b)} for y, a, b in zip(yrs, ku, nu)}
     axes[0].set_title('Excess kurtosis by year')
-    axes[1].set_title('Student-t degrees of freedom by year (capped at 30)')
-    for ax in axes:
-        ax.set_xlabel('Year')
+    axes[1].set_title(r'Student-t $\hat\nu$ by year (capped at 30)')
+    axes[1].set_xlabel('Year')
     st.fig_legend_bottom(fig, ncol=2, y=0.0)
-    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
     st.check_no_grey(fig)
     if save:
         st.save_fig('sfm_ch2_tails_by_year')

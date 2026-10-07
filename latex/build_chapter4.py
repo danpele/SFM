@@ -202,6 +202,7 @@ V.put('t2.dd', S0 * d2 * d2, 0)
 V.put('t2.puu', p2 * p2, 2)
 V.put('t2.pud', 2 * p2 * (1 - p2), 2)
 V.put('t2.pdd', (1 - p2) ** 2, 2)
+V.put('t2.ploss', 2 * p2 * (1 - p2) + (1 - p2) ** 2, 2)
 V.put('t2.E', S0 * (p2 * u2 + (1 - p2) * d2) ** 2, 2)
 V.put('t2.g', p2 * u2 + (1 - p2) * d2, 2)
 V.put('t2.pstar', (1 - d2) / (u2 - d2), 2)
@@ -463,7 +464,9 @@ D.frame(T('Variance and Moments', 'Varianța și momentele'), items(
     (T('$\\text{Var}(aX + b) = a^2\\,\\text{Var}(X)$', '$\\text{Var}(aX + b) = a^2\\,\\text{Var}(X)$'),
      [T('adding a constant $b$ does not change risk; multiplying by $a$ multiplies the variance by $a^2$', 'adăugarea unei constante $b$ nu schimbă riscul; înmulțirea cu $a$ înmulțește varianța cu $a^2$')]),
     (T('Moments: $E[X^k]$ for $k = 1, 2, \\dots$', 'Momentele: $E[X^k]$, pentru $k = 1, 2, \\dots$'),
-     [T('skewness and kurtosis use $k = 3, 4$ (Chapter 2)', 'asimetria și boltirea folosesc $k = 3, 4$ (Capitolul 2)')])))
+     [T('skewness $E[(X - \\mu)^3]/\\sigma^3$: the asymmetry of the distribution (0 for the Normal distribution)', 'asimetria $E[(X - \\mu)^3]/\\sigma^3$: lipsa de simetrie a distribuției (0 pentru distribuția Normală)'),
+      T('kurtosis $E[(X - \\mu)^4]/\\sigma^4$: equals 3 for the Normal distribution', 'boltirea $E[(X - \\mu)^4]/\\sigma^4$: egală cu 3 pentru distribuția Normală'),
+      T('excess kurtosis = kurtosis $-\\,3$; positive for heavy tails (Chapter 2)', 'excesul de boltire = boltirea $-\\,3$; pozitiv pentru cozi groase (Capitolul 2)')])))
 
 D.frame(T('Worked Example: Annual Mean and Volatility', 'Exemplu lucrat: media și volatilitatea anuale'), items(
     (T('S\\&P 500, daily log returns $r_t$', 'S\\&P 500, randamentele logaritmice zilnice $r_t$'),
@@ -549,9 +552,9 @@ chart(T('Returns Are Uncorrelated, Squared Returns Are Not', 'Randamentele sînt
     T('Left: simulated $Y = X^2$, sample correlation $@{dep.xy}$, yet $Y$ is determined by $X$', 'Stînga: $Y = X^2$ simulat, corelația de selecție $@{dep.xy}$, deși $Y$ este determinat de $X$'),
     (T('Right: $\\text{Corr}(r_t, r_{t-1})$ is small: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$', 'Dreapta: $\\text{Corr}(r_t, r_{t-1})$ este mică: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$'),
      [T('$\\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$', '$\\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$'),
-      T('band $\\pm 1.96/\\sqrt{n}$: the values compatible with zero correlation at the 5\\% level', 'banda $\\pm 1.96/\\sqrt{n}$: valorile compatibile cu o corelație nulă, la pragul de 5\\%')]),
-    (T('BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, an effect of thin trading', 'BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, un efect al lichidității reduse'),
-     [T('the negative S\\&P 500 value comes mostly from crisis days', 'valoarea negativă pentru S\\&P 500 provine mai ales din zilele de criză')])], h='0.46\\textheight', size='scriptsize')
+      T('band $\\pm 1.96/\\sqrt{n}$: the values compatible with zero correlation at the 5\\% level', 'banda $\\pm 1.96/\\sqrt{n}$: valorile compatibile cu o corelație nulă, la pragul de 5\\%'),
+      T('the negative S\\&P 500 value comes mostly from crisis days', 'valoarea negativă pentru S\\&P 500 provine mai ales din zilele de criză')]),
+    T('BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, an effect of thin trading', 'BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, un efect al lichidității reduse')], h='0.46\\textheight', size='scriptsize')
 
 D.recap(('Joint Distributions', 'Distribuții comune'), [
     T('Covariance enters the variance of every portfolio', 'Covarianța intră în varianța oricărui portofoliu'),
@@ -654,7 +657,7 @@ D.frame(T('The Monte Carlo Idea', 'Ideea Monte Carlo'), items(
       T('the LLN makes $\\hat\\theta_N \\to \\theta$; the CLT gives the error $\\text{sd}(g(X))/\\sqrt{N}$', 'LLN face ca $\\hat\\theta_N \\to \\theta$; CLT dă eroarea $\\text{sd}(g(X))/\\sqrt{N}$, unde $\\text{sd}$ este abaterea standard')]),
     T('Named after the Monaco casino by Ulam and von Neumann, Los Alamos, 1940s \\refMU', 'Ulam și von Neumann au numit metoda după cazinoul din Monaco (Los Alamos, anii 1940) \\refMU'),
     (T('In finance \\refGlasserman', 'În finanțe \\refGlasserman'),
-     [T('prices of path-dependent options, VaR and ES of portfolios, stress scenarios', 'prețuri de opțiuni dependente de traiectorie, VaR și ES ale portofoliilor, scenarii de stres'),
+     [T('prices of path-dependent options, portfolio VaR (Chapter 10), stress scenarios', 'prețuri de opțiuni dependente de traiectorie, VaR-ul portofoliilor (Capitolul 10), scenarii de stres'),
       T('any expectation without a closed form', 'orice speranță matematică fără formulă analitică')]),
     T('Two ingredients: uniform random numbers and a way to turn them into any distribution', 'Două ingrediente: numere aleatoare uniforme și o metodă de a le transforma în extrageri din orice distribuție')), 'footnotesize')
 
@@ -754,7 +757,7 @@ D.frame(T('Worked Example: a Two-Step Tree', 'Exemplu lucrat: un arbore cu doi p
      [T('$uu$: @{t2.uu} with $p^2 = @{t2.puu}$; $ud$ or $du$: @{t2.ud} with $2p(1-p) = @{t2.pud}$; $dd$: @{t2.dd} with $(1-p)^2 = @{t2.pdd}$',
         '$uu$: @{t2.uu} cu $p^2 = @{t2.puu}$; $ud$ sau $du$: @{t2.ud} cu $2p(1-p) = @{t2.pud}$; $dd$: @{t2.dd} cu $(1-p)^2 = @{t2.pdd}$')]),
     T('$E[S_2] = 100 \\times (0.6 \\times 1.2 + 0.4 \\times 0.8)^2 = 100 \\times @{t2.g}^2 = @{t2.E}$', '$E[S_2] = 100 \\times (0.6 \\times 1.2 + 0.4 \\times 0.8)^2 = 100 \\times @{t2.g}^2 = @{t2.E}$'),
-    (T('$P(S_2 < 100) = @{t2.pud} + @{t2.pdd}$', '$P(S_2 < 100) = @{t2.pud} + @{t2.pdd}$'),
+    (T('$P(S_2 < 100) = @{t2.pud} + @{t2.pdd} = @{t2.ploss}$', '$P(S_2 < 100) = @{t2.pud} + @{t2.pdd} = @{t2.ploss}$'),
      [T('one up and one down move lose money, because $ud = 0.96 < 1$', 'o creștere și o scădere, în orice ordine, aduc o pierdere, pentru că $ud = 0.96 < 1$')]),
     (T('With $p^* = (1 - d)/(u - d) = @{t2.pstar}$ the price is a fair game: $E[S_{t+1} \\mid S_t] = S_t$ (Section 9)', 'Cu $p^* = (1 - d)/(u - d) = @{t2.pstar}$ prețul este un joc echitabil: $E[S_{t+1} \\mid S_t] = S_t$ (secțiunea 9)'),
      [T('$p^*$ solves $p^*u + (1 - p^*)d = 1$: the expected growth factor of a step equals 1', '$p^*$ este soluția ecuației $p^*u + (1 - p^*)d = 1$: factorul de creștere așteptat al unui pas este 1')])), 'footnotesize')
@@ -816,7 +819,7 @@ D.frame(T('Martingales', 'Martingale'), items(
     (T('Examples', 'Exemple'),
      [T('a random walk without drift; $S_t^2 - t\\sigma^2$ for the same walk; the binomial price under $p^*$', 'un mers aleator fără tendință; $S_t^2 - t\\sigma^2$ pentru același mers; prețul binomial cu $p^*$')]),
     (T('Martingale $\\ne$ i.i.d. increments: the conditional \\textbf{variance} may change, as in GARCH', 'Martingal $\\ne$ creșteri i.i.d.: \\textbf{varianța} condiționată se poate schimba, ca în GARCH'),
-     [T('the efficient-market idea in its weak form \\refFama: excess returns are a martingale difference', 'forma slabă a ipotezei pieței eficiente \\refFama: randamentele în exces sînt o diferență de martingal')])), 'footnotesize')
+     [T('the efficient-market idea in its weak form \\refFama: excess returns (above the risk-free rate) are a martingale difference', 'forma slabă a ipotezei pieței eficiente \\refFama: randamentele în exces (peste dobînda fără risc) sînt o diferență de martingal')])), 'footnotesize')
 
 D.frame(T('The AR(1) Process', 'Procesul AR(1)'), items(
     (T('\\textbf{AR(1)} (autoregressive of order 1): $X_t = c + \\phi X_{t-1} + \\varepsilon_t$, $\\varepsilon_t$ white noise', '\\textbf{AR(1)} (autoregresiv de ordinul 1): $X_t = c + \\phi X_{t-1} + \\varepsilon_t$, $\\varepsilon_t$ zgomot alb'),
@@ -934,16 +937,17 @@ chart(T('Real Paths in the GBM Fan', 'Traiectorii reale în evantaiul GBM'), 'sf
     (T('S\\&P 500: the path reached the @{f.sp500.minr}\\% quantile on @{f.sp500.mind}, then the median at the end', 'S\\&P 500: traiectoria reală a coborît pînă la cuantila de @{f.sp500.minr}\\% pe @{f.sp500.mind} și a încheiat perioada în jurul medianei'),
      [T('outside the 90\\% band @{f.sp500.out}\\% of the time', 'în afara benzii de 90\\% în @{f.sp500.out}\\% din timp')]),
     (T('BET: outside the band @{f.bet.out}\\% of the time', 'BET: în afara benzii @{f.bet.out}\\% din timp'),
-     [T('the 2000--2007 boom and the 2008 crash are not GBM-like', 'avîntul din 2000--2007 și crahul din 2008 nu seamănă cu GBM'),
-      T('Bitcoin: $\\sigma = @{f.btc.sigma}\\%$ a year makes the fan enormous', 'Bitcoin: cu $\\sigma = @{f.btc.sigma}\\%$ pe an, evantaiul este foarte larg')])], h='0.46\\textheight', size='scriptsize')
+     [T('the 2000--2007 boom and the 2008 crash are not GBM-like', 'avîntul din 2000--2007 și crahul din 2008 nu seamănă cu GBM')]),
+    T('Bitcoin: $\\sigma = @{f.btc.sigma}\\%$ a year makes the fan enormous', 'Bitcoin: cu $\\sigma = @{f.btc.sigma}\\%$ pe an, evantaiul este foarte larg')], h='0.46\\textheight', size='scriptsize')
 
 chart(T('What GBM Misses', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_ch4_wiener_gbm', [
     T('Excess kurtosis: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% of 300 GBM simulations lie within $[@{ck.sp500.klo}, @{ck.sp500.khi}]$',
       'Excesul de boltire: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% din 300 de simulări GBM sînt în $[@{ck.sp500.klo}, @{ck.sp500.khi}]$'),
     T('Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ vs at most $@{ck.btc.ahi}$ under GBM',
       'Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ față de cel mult $@{ck.btc.ahi}$ în GBM'),
-    T('Maximum drawdown: S\\&P 500 @{ck.sp500.dd}\\% is ordinary for GBM; BET @{ck.bet.dd}\\% is beyond all but 5\\% of the paths (5\\% quantile @{ck.bet.ddlo}\\%)',
-      'Drawdown-ul maxim: $@{ck.sp500.dd}\\%$ la S\\&P 500 este obișnuit în GBM; $@{ck.bet.dd}\\%$ la BET depășește 95\\% din traiectorii (cuantila de 5\\%: $@{ck.bet.ddlo}\\%$)'),
+    (T('Maximum drawdown $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: the largest fall from a previous peak', 'Drawdown-ul maxim $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: cea mai mare scădere față de un maxim anterior'),
+     [T('S\\&P 500 @{ck.sp500.dd}\\% is ordinary for GBM; BET @{ck.bet.dd}\\% is beyond all but 5\\% of the paths (5\\% quantile @{ck.bet.ddlo}\\%)',
+        '$@{ck.sp500.dd}\\%$ la S\\&P 500 este obișnuit în GBM; $@{ck.bet.dd}\\%$ la BET depășește 95\\% din traiectorii (cuantila de 5\\%: $@{ck.bet.ddlo}\\%$)')]),
     T('4-sigma days: @{ck.sp500.four} (S\\&P 500) vs at most @{ck.sp500.fourhi} in 95\\% of the GBM paths; crypto has the same problem \\refPeleCrypto',
       'Zile de 4 sigma: @{ck.sp500.four} (S\\&P 500) față de cel mult @{ck.sp500.fourhi} în 95\\% din traiectoriile GBM; criptomonedele au aceeași problemă \\refPeleCrypto')], h='0.46\\textheight', size='scriptsize')
 
@@ -970,8 +974,8 @@ D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Code}: draft simulations of yearly drawdowns under GBM, the i.i.d. bootstrap and a GARCH model', '\\textbf{Cod}: o primă versiune a simulărilor drawdown-urilor anuale în GBM, în bootstrap i.i.d. și într-un model GARCH'),
     T('\\textbf{Design}: propose a test that compares the observed number of bad years with the model probability', '\\textbf{Design}: propunerea unui test care compară numărul observat de ani nefavorabili cu probabilitatea din model'),
     (T('Example prompt', 'Exemplu de prompt'),
-     [T('\\aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\\&P 500 returns under GBM and under an i.i.d. bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\\% and 40\\% within the year.}',
-        '\\aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\\&P 500 returns under GBM and under an i.i.d. bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\\% and 40\\% within the year.}')])), 'footnotesize')
+     [T('\\aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\\&P 500 returns under GBM and under an i.i.d.\\ bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\\% and 40\\% within the year.}',
+        '\\aiprompt{Write Python code that simulates 10,000 one-year paths of daily S\\&P 500 returns under GBM and under an i.i.d.\\ bootstrap of 2000-2026 returns, and returns the probability of a drawdown beyond 20\\% and 40\\% within the year.}')])), 'footnotesize')
 
 D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Definitions: drawdown from the running peak within the year, not from the first day of the year', 'Definițiile: drawdown-ul se calculează față de maximul atins pînă atunci în cursul anului, nu față de prima zi a anului'),

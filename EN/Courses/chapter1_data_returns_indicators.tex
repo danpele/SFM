@@ -288,12 +288,12 @@ Date & Open & High & Low & Close & Volume \\
 \itemsize{\small}
 \begin{itemize}
     \item The traded close $P_t$ jumps on the day of a corporate action; the value of a holding does not
-    \item \textbf{Adjustment factor} $A$ on the event day
+    \item \textbf{Adjustment factor} $F$ on the event day
     \begin{itemize}
-        \item cash dividend $D$: $A = 1 - D/P_{t-1}$
-        \item split $m$-for-$n$ ($m$ new shares for $n$ old): $A = n/m$; a consolidation is a split with $m < n$
+        \item cash dividend $D$: $F = 1 - D/P_{t-1}$
+        \item split $m$-for-$n$ ($m$ new shares for $n$ old): $F = n/m$; a consolidation is a split with $m < n$
     \end{itemize}
-    \item \textbf{Adjusted close}: every earlier price is multiplied by the factors of all later events, $P^{\text{adj}}_t = P_t \prod_{k:\, t_k > t} A_{t_k}$
+    \item \textbf{Adjusted close}: every earlier price is multiplied by the factors of all later events, $P^{\text{adj}}_t = P_t \prod_{k:\, t_k > t} F_{t_k}$
     \begin{itemize}
         \item $t_k$: the day of event $k$; the product runs over all events after day $t$, so the last prices stay unchanged
         \item returns computed from adjusted prices include the dividend and have no artificial jumps
@@ -308,7 +308,7 @@ Date & Open & High & Low & Close & Volume \\
     \item A share trades at 100; on day 5 it pays a cash dividend of 2; on day 10 it splits 2-for-1
     \item Adjustment factors
     \begin{itemize}
-        \item dividend: $A_5 = 1 - 2/100 = 0.98$; split: $A_{10} = 1/2 = 0.50$
+        \item dividend: $F_5 = 1 - 2/100 = 0.98$; split: $F_{10} = 1/2 = 0.50$
     \end{itemize}
     \item Adjusted prices
     \begin{itemize}
@@ -684,7 +684,7 @@ Daily data, small moves & either & the difference is about $R^2/2$ \\
         \item \textbf{simple}: $R_p = \sum_i w_i R_i$, exact
         \item \textbf{log}: $r_p = \ln\big(\sum_i w_i e^{r_i}\big) \neq \sum_i w_i r_i$
     \end{itemize}
-    \item Example: 60\% in A ($R_A = 10\%$), 40\% in B ($R_B = -5\%$)
+    \item Example: 60\% in asset 1 ($R_1 = 10\%$), 40\% in asset 2 ($R_2 = -5\%$)
     \begin{itemize}
         \item $R_p = 0.6 \times 10\% + 0.4 \times (-5\%) = 4.0\%$; exact $r_p = \ln(1 + R_p) = 3.92\%$
         \item weighted log returns: $0.6 \times 9.53\% + 0.4 \times (-5.13\%) = 3.67\%$, too low
@@ -729,15 +729,15 @@ Daily data, small moves & either & the difference is about $R^2/2$ \\
 \begin{frame}{Annualising the Mean and the Volatility}
 \itemsize{\small}
 \begin{itemize}
-    \item $q$ = number of observations per year: about 252 for exchanges, 365 for crypto, 52 for weekly, 12 for monthly data
+    \item $A$ = number of observations per year: about 252 for exchanges, 365 for crypto, 52 for weekly, 12 for monthly data
     \item $\mu$, $\sigma$: the mean and the standard deviation of the returns at the frequency of the data (for example, daily)
-    \item \textbf{Mean}: log returns add, so $\mu_{\text{year}} = q\,\mu$
+    \item \textbf{Mean}: log returns add, so $\mu_{\text{year}} = A\,\mu$
     \begin{itemize}
         \item the same rule is used for the mean of simple returns (arithmetic annualisation)
     \end{itemize}
-    \item \textbf{Volatility} = standard deviation of returns: $\sigma_{\text{year}} = \sqrt{q}\,\sigma$, the \textbf{square-root-of-time rule}
+    \item \textbf{Volatility} = standard deviation of returns: $\sigma_{\text{year}} = \sqrt{A}\,\sigma$, the \textbf{square-root-of-time rule}
     \begin{itemize}
-        \item valid when returns are uncorrelated with constant variance: then $\Var(r_1 + \dots + r_q) = q\,\sigma^2$, and the square root gives $\sqrt{q}\,\sigma$
+        \item valid when returns are uncorrelated with constant variance: then $\Var(r_1 + \dots + r_A) = A\,\sigma^2$, and the square root gives $\sqrt{A}\,\sigma$
     \end{itemize}
     \item S\&P 500: daily $\sigma = 1.12\%$, so $\sigma_{\text{year}} = 1.12\% \times 15.87 = 17.7\%$
     \begin{itemize}
@@ -798,8 +798,8 @@ Daily data, small moves & either & the difference is about $R^2/2$ \\
 \begin{frame}{Recap: Annualisation}
 \itemsize{\small}
 \begin{itemize}
-    \item Mean $\times\, q$, volatility $\times \sqrt{q}$, with $q$ the actual observations per year
-    \item $\sqrt{q}$ assumes uncorrelated returns with constant variance
+    \item Mean $\times\, A$, volatility $\times \sqrt{A}$, with $A$ the actual observations per year
+    \item $\sqrt{A}$ assumes uncorrelated returns with constant variance
     \item CAGR $= (P_T/P_0)^{1/Y} - 1$, the exponential of the annual mean log return minus 1
     \item Mean returns are imprecise: SE $= \sigma_{\text{year}}/\sqrt{Y}$
 \end{itemize}
@@ -960,7 +960,7 @@ Transgaz (TGN) & $0.091$ & $1.55$ & $0.01$ & $5.3$ & $-10.1$ (19 Dec 2018) & $11
     \item \textbf{Sharpe ratio} \refSharpeA, \refSharpeB: excess return per unit of total risk
     \begin{itemize}
         \item $\text{SR} = \dfrac{\mu - r_f}{\sigma}$; $\mu$ mean return, $r_f$ risk-free rate, $\sigma$ volatility
-        \item from daily to annual: $\text{SR}_{\text{year}} = \sqrt{q}\,\text{SR}_{\text{day}}$
+        \item from daily to annual: $\text{SR}_{\text{year}} = \sqrt{A}\,\text{SR}_{\text{day}}$
     \end{itemize}
     \item Here: mean of daily simple returns, $r_f = 0$
     \begin{itemize}
@@ -984,8 +984,8 @@ Transgaz (TGN) & $0.091$ & $1.55$ & $0.01$ & $5.3$ & $-10.1$ (19 Dec 2018) & $11
 \begin{itemize}
     \item Standard error for i.i.d. (independent, identically distributed) returns \refLo
     \begin{itemize}
-        \item $\text{SE}(\widehat{\text{SR}}) \approx \sqrt{(1 + \text{SR}^2/2)/n}$ per period; annual: multiply by $\sqrt{q}$
-        \item $\widehat{\text{SR}}$: the Sharpe ratio estimated from the sample; $n$: the number of returns; $q$: returns per year
+        \item $\text{SE}(\widehat{\text{SR}}) \approx \sqrt{(1 + \text{SR}^2/2)/n}$ per period; annual: multiply by $\sqrt{A}$
+        \item $\widehat{\text{SR}}$: the Sharpe ratio estimated from the sample; $n$: the number of returns; $A$: returns per year
         \item roughly $1/\sqrt{Y}$ for the annual Sharpe ratio: about $0.3$ with 12 years of data
     \end{itemize}
     \item S\&P 500, 2015--2026: $\text{SR} = 0.72$, SE $0.29$
@@ -1297,7 +1297,7 @@ Transgaz (TGN) & $22.0$ & $23.0$ & $0.98$ & $1.49$ & $-44.8$ & $0.49$ & $2.65$ \
 \begin{itemize}
     \item Check the data first: source, adjusted prices, calendar, jumps
     \item Log returns add over time; simple returns add across assets
-    \item Annualise with the actual frequency: mean $\times\,q$, volatility $\times\sqrt{q}$
+    \item Annualise with the actual frequency: mean $\times\,A$, volatility $\times\sqrt{A}$
     \item Returns have heavy tails, negative skewness and changing volatility
     \item Judge performance with several indicators: CAGR, volatility, Sharpe, Sortino, MDD, Calmar
     \item Volatility costs growth: $\sigma^2/2$ a year
@@ -1317,7 +1317,7 @@ Simple return & $R_t = P_t/P_{t-1} - 1$ \\
 Log return & $r_t = \ln(P_t/P_{t-1}) = \ln(1 + R_t)$ \\
 $k$-period returns & $1 + R_t(k) = \prod_{j=0}^{k-1}(1 + R_{t-j})$, \quad $r_t(k) = \sum_{j=0}^{k-1} r_{t-j}$ \\
 Portfolio & $R_p = \sum_i w_i R_i$ \\
-Annualisation & $\mu_{\text{year}} = q\,\mu$, \quad $\sigma_{\text{year}} = \sqrt{q}\,\sigma$ \\
+Annualisation & $\mu_{\text{year}} = A\,\mu$, \quad $\sigma_{\text{year}} = \sqrt{A}\,\sigma$ \\
 CAGR & $(P_T/P_0)^{1/Y} - 1$ \\
 Sharpe, Sortino & $(\mu - r_f)/\sigma$, \quad $(\mu - \tau)/\sigma_D$ \\
 MDD, Calmar & $\min_t \big(P_t / \max_{s \le t} P_s - 1\big)$, \quad $\text{CAGR}/|\text{MDD}|$ \\

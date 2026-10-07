@@ -217,8 +217,9 @@ D.frame(T('How Rare Are the Worst Days under the Normal Law?', 'Raritatea celor 
     'llrrrrr', T('& worst day & loss (\\%) & $z$ & Normal: once in (years) & days below $-4\\sigma$ & expected',
                  '& cea mai proastă zi & pierdere (\\%) & $z$ & distribuția Normală: o dată la (ani) & zile sub $-4\\sigma$ & așteptat'),
     [crow(k) for k in ASSETS], size='scriptsize') + items(
-    T('$z = (r - \\hat\\mu)/\\hat\\sigma$ with the mean and the standard deviation of the whole sample; once in $1/(p \\times 252)$ years (365 days for Bitcoin)',
-      '$z = (r - \\hat\\mu)/\\hat\\sigma$ cu media și abaterea standard a întregului eșantion; o dată la $1/(p \\times 252)$ ani (365 de zile pentru Bitcoin)'),
+    (T('$z = (r - \\hat\\mu)/\\hat\\sigma$ with the mean and the standard deviation of the whole sample', '$z = (r - \\hat\\mu)/\\hat\\sigma$, cu media și abaterea standard ale întregului eșantion'),
+     [T('$p = \\Phi(z)$: the Normal probability of a day at least as bad, with $\\Phi$ the $N(0, 1)$ CDF', '$p = \\Phi(z)$: probabilitatea, în distribuția Normală, a unei zile cel puțin la fel de proaste; $\\Phi$: funcția de repartiție $N(0, 1)$'),
+      T('once in $1/(p \\times 252)$ years (365 days a year for Bitcoin)', 'o dată la $1/(p \\times 252)$ ani (365 de zile pe an pentru Bitcoin)')]),
     T('The Normal waiting times are absurd: far longer than the history of any market',
       'Timpii de așteptare implicați de distribuția Normală sînt absurzi: mult mai lungi decît istoria oricărei piețe'),
     T('Losses beyond $4\\sigma$: the Normal law expects fewer than one day per series; we see between @{n4.min} and @{n4.max}',
@@ -243,7 +244,7 @@ D.frame(T('Why the Tail Matters for Risk', 'Rolul cozii în măsurarea riscului'
      [T('$\\mathrm{VaR}_p = -q_p(r)$, with $q_p$ the $p$-quantile of the return; for example VaR 1\\%', '$\\mathrm{VaR}_p = -q_p(r)$, cu $q_p$ cuantila de ordin $p$ a randamentului; de exemplu VaR 1\\%')]),
     (T('\\textbf{ES} (expected shortfall) at level $p$: the average loss on the worst $p$ share of days',
        '\\textbf{ES} (expected shortfall, pierderea așteptată în coadă) la nivelul $p$: pierderea medie din cele mai proaste $p$ dintre zile'),
-     [T('$\\mathrm{ES}_p = -E[r \\mid r \\le q_p(r)]$; banks report ES 2.5\\% under the \\refBasel', '$\\mathrm{ES}_p = -E[r \\mid r \\le q_p(r)]$; băncile raportează ES 2,5\\% conform \\refBasel'),
+     [T('$\\mathrm{ES}_p = -E[r \\mid r \\le q_p(r)]$; banks report ES 2.5\\% under the \\refBasel', '$\\mathrm{ES}_p = -E[r \\mid r \\le q_p(r)]$; băncile raportează ES 2,5\\% \\refBasel'),
       T('ES looks inside the tail and is a coherent risk measure \\refAT', 'ES ține seama de întreaga coadă dincolo de VaR și este o măsură de risc coerentă \\refAT')]),
     T('Both live in the tail: a model that misses the tail misses the risk', 'Ambele sînt mărimi definite în coadă: un model care descrie greșit coada descrie greșit riscul'),
     T('\\textbf{Question for the room}: with 250 trading days a year, how many years of data contain about 10 days below VaR 0.1\\%?',
@@ -440,7 +441,7 @@ D.frame(T('Four Stocks of the Bucharest Stock Exchange', 'Patru acțiuni de la B
     pic('ch5_bvb_palace_2019.jpg', 'The Stock Exchange Palace, Bucharest', 'Palatul Bursei, București',
         'https://commons.wikimedia.org/wiki/File:Stock_Exchange_Palace_(Bucharest).jpg',
         'Photo: Neoclassicism Enthusiast (2019); CC BY-SA 4.0; Wikimedia Commons', 'Foto: Neoclassicism Enthusiast (2019); CC BY-SA 4.0; Wikimedia Commons',
-        h='0.32\\textheight'), wl='0.60', wr='0.36') + ql('SFM_ch5_hill'), 'footnotesize')
+        h='0.30\\textheight'), wl='0.65', wr='0.31') + ql('SFM_ch5_hill'), 'footnotesize')
 
 chart(T('Hill Plots of the BVB Stocks', 'Grafice Hill pentru acțiunile BVB'), 'sfm_ch5_hill_bvb', 'SFM_ch5_hill', [
     T('Shorter samples ($n \\approx 3\\,800$): wider bands (TLV shown) and more wiggles at small $k$', 'Eșantioane mai scurte ($n \\approx 3\\,800$): benzi mai largi (afișată pentru TLV) și mai multe oscilații la $k$ mic'),
@@ -649,7 +650,7 @@ D.frame(T('Choosing the Threshold', 'Alegerea pragului'), items(
       T('parameter stability plot: $\\hat\\xi$ should not change much when $u$ is raised further', 'graficul stabilității parametrilor: $\\hat\\xi$ nu ar trebui să se schimbe mult cînd $u$ crește în continuare')]),
     (T('Rule used here: $u =$ the 90\\% quantile of the losses, i.e.\\ the 10\\% largest losses', 'Regula folosită aici: $u =$ cuantila de 90\\% a pierderilor, adică cele mai mari 10\\% dintre pierderi'),
      [T('\\refMF\\ use $k = 100$ excesses in windows of $n = 1000$ days, the same share', '\\refMF\\ folosesc $k = 100$ de excese în ferestre de $n = 1000$ de zile, aceeași proporție'),
-      T('for the S\\&P 500: $u = @{r.sp500.u}\\%$ and $N_u = @{r.sp500.nu}$ excesses', 'pentru S\\&P 500: $u = @{r.sp500.u}\\%$ și $N_u = @{r.sp500.nu}$ excese')])))
+      T('for the S\\&P 500: $u = @{r.sp500.u}\\%$ and $N_u = @{r.sp500.nu}$ excesses', 'pentru S\\&P 500: $u = @{r.sp500.u}\\%$ și $N_u = @{r.sp500.nu}$ de excese')])))
 
 chart(T('Parameter Stability', 'Stabilitatea parametrilor'), 'sfm_ch5_threshold_stability', 'SFM_ch5_pot_gpd', [
     T('Left: $\\hat\\xi$ with 95\\% interval for $u$ from the 80\\% to the 99\\% quantile; right: the EVT VaR 1\\% for the same thresholds',
@@ -699,7 +700,7 @@ def wrow(k):
 
 
 D.frame(T('Back to the Crashes: How Often?', 'Înapoi la crahuri: cît de des?'), table(
-    'llrrr', T('& day & loss (\\%) & Normal: once in (years) & EVT: once in (years)', '& ziua & pierdere (\\%) & distribuția Normală: o dată la (ani) & EVT: o dată la (ani)'),
+    'llrrr', T('& & & \\multicolumn{2}{c}{once in (years)} \\\\ & day & loss (\\%) & Normal law & EVT', '& & & \\multicolumn{2}{c}{o dată la (ani)} \\\\ & ziua & pierdere (\\%) & distribuția Normală & EVT'),
     [wrow(k) for k in ASSETS] + [T('S\\&P 500, Black Monday', 'S\\&P 500, Lunea Neagră') + T(' & 19 October 1987', ' & 19 octombrie 1987') + ' & $@{c87.lr}$ & $10^{@{c87.ly}}$ & $@{w.1987}$'],
     size='footnotesize') + items(
     T('EVT waiting time: $1/(\\hat{\\bar F}(x) \\times 252)$ years (365 for Bitcoin), with the POT fit of the whole sample',
@@ -805,8 +806,8 @@ D.frame(T('Counting the Exceedances', 'Numărarea depășirilor'), table(
     [orow(k) for k in ASSETS], size='scriptsize') + items(
     T('The Normal VaR is exceeded far too often, especially at 0.1\\%: @{o.sp500.var01.Normal.x} days instead of $@{o.sp500.var01.exp}$ for the S\\&P 500',
       'VaR Normal este depășit mult prea des, mai ales la 0,1\\%: @{o.sp500.var01.Normal.x} zile în loc de $@{o.sp500.var01.exp}$ pentru S\\&P 500'),
-    T('EVT and historical VaR are close to each other; S\\&P 500 above the target (the 2020 cluster), BET below it (calm years)',
-      'VaR EVT și VaR istoric sînt apropiate între ele; S\\&P 500 peste valoarea așteptată (episodul din 2020), BET sub ea (ani liniștiți)'),
+    T('EVT and historical (hist.) VaR are close to each other; S\\&P 500 above the target (the 2020 cluster), BET below it (calm years)',
+      'VaR EVT și VaR istoric (ist.) sînt apropiate între ele; S\\&P 500 peste valoarea așteptată (episodul din 2020), BET sub ea (ani liniștiți)'),
     T('A VaR estimated once ignores the changing volatility: conditional EVT (GARCH + POT) \\refMF, Chapters 9 and 10',
       'Un VaR estimat o singură dată ignoră variația volatilității în timp: EVT condiționată (GARCH + POT) \\refMF, Capitolele 9 și 10')) + ql('SFM_ch5_evt_var'), 'footnotesize')
 
@@ -839,7 +840,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('$z = (\\hat\\alpha_1 - \\hat\\alpha_2)/\\sqrt{\\mathrm{SE}_1^2 + \\mathrm{SE}_2^2} = @{bp.z}$: a heavier tail after 2010, but not significant at 5\\% ($|z| < 1.96$)', '$z = (\\hat\\alpha_1 - \\hat\\alpha_2)/\\sqrt{\\mathrm{SE}_1^2 + \\mathrm{SE}_2^2} = @{bp.z}$: o coadă mai groasă după 2010, dar nesemnificativă la 5\\% ($|z| < 1.96$)')]),
     (T('Why it is open: the threshold fell from $@{bp.before.u}\\%$ to $@{bp.after.u}\\%$ with the volatility', 'Motivul pentru care rămîne deschisă: pragul a scăzut de la $@{bp.before.u}\\%$ la $@{bp.after.u}\\%$ odată cu volatilitatea'),
      [T('is the change in the tail or in the volatility?', 'schimbarea este în coadă sau în volatilitate?')]),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')) + ql('SFM_ch5_hill'))
+    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')) + ql('SFM_ch5_hill'))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: list studies of tail indices in emerging markets and summarise their methods',
@@ -894,7 +895,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'GPD & $G(y) = 1 - (1 + \\xi y/\\beta)^{-1/\\xi}$',
      'VaR (POT) & $u + \\frac{\\beta}{\\xi}[(np/N_u)^{-\\xi} - 1]$',
      'ES (POT) & $(\\mathrm{VaR}_p + \\beta - \\xi u)/(1 - \\xi)$'],
-    size='scriptsize') + '}')
+    size='footnotesize') + '}')
 
 D.frame(T('Check Yourself', 'Verificați-vă'), items(
     (T('\\textbf{Question}: a GPD fit gives $\\hat\\xi = 0.25$; which moments of the losses exist?', '\\textbf{Întrebare}: o ajustare GPD dă $\\hat\\xi = 0{,}25$; ce momente ale pierderilor există?'),

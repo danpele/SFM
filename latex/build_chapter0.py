@@ -270,8 +270,8 @@ def ch_rows(rng):
 
 
 D.frame('⟦Course Map: Chapters 0--16||Harta cursului: Capitolele 0--16⟧', cols(
-    table('rl', '\\textbf{⟦No.||Nr.⟧} & \\textbf{⟦Chapter||Capitol⟧}', ch_rows(range(0, 9)), size='footnotesize'),
-    table('rl', '\\textbf{⟦No.||Nr.⟧} & \\textbf{⟦Chapter||Capitol⟧}', ch_rows(range(9, 17)), size='footnotesize'),
+    table('r>{\\raggedright\\arraybackslash}p{5.6cm}', '\\textbf{⟦No.||Nr.⟧} & \\textbf{⟦Chapter||Capitol⟧}', ch_rows(range(0, 9)), size='footnotesize'),
+    table('r>{\\raggedright\\arraybackslash}p{5.6cm}', '\\textbf{⟦No.||Nr.⟧} & \\textbf{⟦Chapter||Capitol⟧}', ch_rows(range(9, 17)), size='footnotesize'),
     '0.49', '0.49') + '\n' + items(
     '⟦Data and distributions (1--6), market efficiency (7), volatility and risk (8--11), applications (12--15), review (16)||Date și distribuții (1--6), eficiența pieței (7), volatilitate și risc (8--11), aplicații (12--15), recapitulare (16)⟧'),
     size='footnotesize')
@@ -341,16 +341,17 @@ D.frame('⟦What a Financial Market Does||Rolul unei piețe financiare⟧', item
 
 D.frame('⟦Who Trades||Participanții la piață⟧', cols(
     r"""\centering
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[font=\scriptsize, bx/.style={text=black, rounded corners, thick, align=center, minimum width=2.1cm, minimum height=0.9cm}]
 \node[bx, draw=Forest, fill=Forest!8] (s) at (0,0) {⟦Savers||Economisitori⟧\\{\tiny ⟦households, pension funds||gospodării, fonduri de pensii⟧}};
-\node[bx, draw=MainBlue, fill=MainBlue!8] (i) at (2.75,0) {⟦Intermediaries||Intermediari⟧\\{\tiny ⟦banks, funds, brokers||bănci, fonduri, brokeri⟧}};
-\node[bx, draw=IDAred, fill=IDAred!8] (f) at (5.5,0) {⟦Issuers||Emitenți⟧\\{\tiny ⟦firms, governments||firme, state⟧}};
-\node[bx, draw=Purple, fill=Purple!8, minimum width=6.6cm] (v) at (2.75,-1.7) {⟦Venues: exchanges, dealers, clearing houses||Locuri de tranzacționare: burse, dealeri, case de compensare⟧};
+\node[bx, draw=MainBlue, fill=MainBlue!8] (i) at (3.2,0) {⟦Intermediaries||Intermediari⟧\\{\tiny ⟦banks, funds, brokers||bănci, fonduri, brokeri⟧}};
+\node[bx, draw=IDAred, fill=IDAred!8] (f) at (6.4,0) {⟦Issuers||Emitenți⟧\\{\tiny ⟦firms, governments||firme, state⟧}};
+\node[bx, draw=Purple, fill=Purple!8, minimum width=7.4cm] (v) at (3.2,-1.7) {⟦Venues: exchanges, dealers, clearing houses||Locuri de tranzacționare: burse, dealeri, case de compensare⟧};
 \draw[-{Latex}, thick, Forest] (s) -- node[above]{⟦money||bani⟧} (i);
 \draw[-{Latex}, thick, Forest] (i) -- node[above]{⟦capital||capital⟧} (f);
 \draw[-{Latex}, thick, IDAred] (f.north) to[bend right=30] node[above]{⟦shares, bonds||acțiuni, obligațiuni⟧} (s.north);
 \draw[{Latex}-{Latex}, thick, Purple] (i) -- (v);
-\end{tikzpicture}""",
+\end{tikzpicture}}""",
     items('⟦\\textbf{Buy side}: investors who buy assets: individuals (retail), pension funds, insurers, asset managers||\\textbf{Buy side}: investitorii care cumpără active: persoane fizice (retail), fonduri de pensii, asigurători, administratori de fonduri⟧',
           ('⟦\\textbf{Passive} or \\textbf{active} investing||Investiții \\textbf{pasive} sau \\textbf{active}⟧',
            ['⟦passive: copy an index, for example through an ETF (exchange-traded fund, a fund traded like a share)||pasivă: copierea unui indice, de exemplu printr-un ETF (exchange-traded fund, fond tranzacționat ca o acțiune)⟧',
@@ -367,7 +368,7 @@ ASSET_ROWS = [
     '⟦Crypto assets||Active cripto⟧ & Bitcoin, Ether & ⟦none||niciunul⟧ & ⟦volatility, regulation||volatilitate, reglementare⟧',
 ]
 D.frame('⟦Asset Classes||Clase de active⟧', table(
-    '>{\\raggedright\\arraybackslash}p{2.4cm}>{\\raggedright\\arraybackslash}p{4.2cm}>{\\raggedright\\arraybackslash}p{3.0cm}>{\\raggedright\\arraybackslash}p{3.4cm}',
+    '>{\\raggedright\\arraybackslash}p{2.2cm}>{\\raggedright\\arraybackslash}p{4.0cm}>{\\raggedright\\arraybackslash}p{2.8cm}>{\\raggedright\\arraybackslash}p{3.2cm}',
     '\\textbf{⟦Class||Clasă⟧} & \\textbf{⟦Examples||Exemple⟧} & \\textbf{⟦Cash flow||Flux de numerar⟧} & \\textbf{⟦Main risks||Riscuri principale⟧}',
     ASSET_ROWS, size='footnotesize') + items(
     '⟦FX (foreign exchange): the currency market; EUR/RON = lei paid for one euro||FX (foreign exchange, piața valutară): EUR/RON = lei plătiți pentru un euro⟧',
@@ -377,9 +378,9 @@ D.frame('⟦Asset Classes||Clase de active⟧', table(
 BOOK = r"""\centering
 \begin{tikzpicture}[x=0.5cm, y=0.36cm]
 \foreach \p/\q in {1/3, 2/5, 3/4} { \fill[Forest!70] (-\q, -\p) rectangle (0, -\p+0.8); \node[left, font=\tiny] at (-\q, -\p+0.4) {\q}; }
-\node[right, font=\tiny] at (0.1, -0.6) {99.99}; \node[right, font=\tiny] at (0.1, -1.6) {99.98}; \node[right, font=\tiny] at (0.1, -2.6) {99.97};
+\node[right, font=\tiny] at (0.1, -0.6) {⟦99.99||99,99⟧}; \node[right, font=\tiny] at (0.1, -1.6) {⟦99.98||99,98⟧}; \node[right, font=\tiny] at (0.1, -2.6) {⟦99.97||99,97⟧};
 \foreach \p/\q in {1/2, 2/4, 3/6} { \fill[IDAred!70] (-\q, \p) rectangle (0, \p+0.8); \node[left, font=\tiny] at (-\q, \p+0.4) {\q}; }
-\node[right, font=\tiny] at (0.1, 1.4) {100.01}; \node[right, font=\tiny] at (0.1, 2.4) {100.02}; \node[right, font=\tiny] at (0.1, 3.4) {100.03};
+\node[right, font=\tiny] at (0.1, 1.4) {⟦100.01||100,01⟧}; \node[right, font=\tiny] at (0.1, 2.4) {⟦100.02||100,02⟧}; \node[right, font=\tiny] at (0.1, 3.4) {⟦100.03||100,03⟧};
 \draw[dashed, MainBlue] (-7, 0.4) -- (2.5, 0.4);
 \node[font=\scriptsize, IDAred] at (-3.5, 5) {⟦asks (sell orders)||oferte de vînzare (ask)⟧};
 \node[font=\scriptsize, Forest] at (-3.5, -4.2) {⟦bids (buy orders)||oferte de cumpărare (bid)⟧};
@@ -427,7 +428,7 @@ DATA_ROWS = [
     'VIX & ⟦expected S\\&P 500 volatility||volatilitatea așteptată a S\\&P 500⟧ & ⟦close||închidere⟧ & ⟦US trading days||zilele de tranzacționare din SUA⟧',
 ]
 D.frame('⟦Data Used in This Course||Datele folosite în curs⟧', table(
-    '>{\\raggedright\\arraybackslash}p{2.0cm}>{\\raggedright\\arraybackslash}p{4.6cm}>{\\raggedright\\arraybackslash}p{2.8cm}>{\\raggedright\\arraybackslash}p{3.6cm}',
+    '>{\\raggedright\\arraybackslash}p{1.9cm}>{\\raggedright\\arraybackslash}p{4.3cm}>{\\raggedright\\arraybackslash}p{2.7cm}>{\\raggedright\\arraybackslash}p{3.4cm}',
     '\\textbf{⟦Series||Serie⟧} & \\textbf{⟦What it measures||Descriere⟧} & \\textbf{⟦Price||Preț⟧} & \\textbf{⟦Calendar||Calendar⟧}',
     DATA_ROWS, size='footnotesize') + items(
     '⟦Daily data from EODHD (EOD Historical Data), saved in the course repository, until 18 September 2026||Date zilnice de la EODHD (EOD Historical Data), salvate în repository-ul cursului, pînă la 18 septembrie 2026⟧',
@@ -539,11 +540,12 @@ D.recap(('markets in 2026', 'piețele în 2026'), [
 D.section('A Short History of Markets', 'O scurtă istorie a piețelor')
 # ===============================================================================================================
 TIMELINE = r"""\begin{center}
-\begin{tikzpicture}[x=0.031cm, y=0.6cm, font=\tiny]
+\begin{tikzpicture}[x=0.0295cm, y=0.6cm, font=\tiny]
 \draw[-{Latex}, thick, MainBlue] (1590,0) -- (2035,0);
-\foreach \y in {1600,1700,1800,1900,2000} { \draw[MainBlue] (\y,-0.08) -- (\y,0.08); \node[below, text=black] at (\y,-0.1) {\y}; }
-\foreach \y/\t/\c/\h in {1602/{⟦VOC shares, Amsterdam||acțiuni VOC, Amsterdam⟧}/Forest/0.9, 1637/{⟦tulip mania||mania lalelelor⟧}/IDAred/1.8, 1720/{⟦South Sea bubble||bula South Sea⟧}/IDAred/0.9, 1792/{⟦NYSE origins||originile NYSE⟧}/Forest/1.8, 1882/{⟦Bucharest exchange||Bursa București⟧}/Forest/0.9, 1900/{Bachelier}/MainBlue/2.7, 1929/{⟦Black Tuesday||Marțea Neagră⟧}/IDAred/1.8, 1970/{Fama}/MainBlue/2.7, 1987/{⟦Black Monday||Lunea Neagră⟧}/IDAred/1.8, 2008/{⟦Lehman; Bitcoin||Lehman; Bitcoin⟧}/IDAred/3.6, 2020/{COVID-19}/IDAred/0.9}
+\foreach \y in {1600,1700,1800,1900,2000} { \draw[MainBlue] (\y,-0.08) -- (\y,0.08); \node[anchor=north west, xshift=1pt, text=black] at (\y,-0.1) {\y}; }
+\foreach \y/\t/\c/\h in {1602/{⟦VOC shares,\\Amsterdam||acțiuni VOC,\\Amsterdam⟧}/Forest/0.9, 1637/{⟦tulip mania||mania lalelelor⟧}/IDAred/1.8, 1720/{⟦South Sea bubble||bula South Sea⟧}/IDAred/0.9, 1792/{⟦NYSE origins||originile NYSE⟧}/Forest/1.8, 1882/{⟦Bucharest\\exchange||Bursa\\București⟧}/Forest/0.9, 1900/{Bachelier}/MainBlue/2.7, 1929/{⟦Black\\Tuesday||Marțea\\Neagră⟧}/IDAred/1.5, 1970/{Fama}/MainBlue/2.7, 1987/{⟦Black\\Monday||Lunea\\Neagră⟧}/IDAred/1.4, 2008/{⟦Lehman; Bitcoin||Lehman; Bitcoin⟧}/IDAred/3.6}
 { \draw[\c, thick] (\y,0) -- (\y,\h); \fill[\c] (\y,0) circle (1.2pt); \node[above, text=black, align=center] at (\y,\h) {\y\\\t}; }
+\draw[IDAred, thick] (2020,0) -- (2020,0.9); \fill[IDAred] (2020,0) circle (1.2pt); \node[anchor=south west, text=black, align=left, xshift=-3pt] at (2020,0.9) {2020\\COVID-19};
 \foreach \y/\t/\c/\h in {1952/{Markowitz}/MainBlue/-0.9, 1995/{⟦BVB reopens||BVB se redeschide⟧}/Forest/-1.6}
 { \draw[\c, thick] (\y,0) -- (\y,\h); \fill[\c] (\y,0) circle (1.2pt); \node[below, text=black, align=center] at (\y,\h) {\y\\\t}; }
 \end{tikzpicture}

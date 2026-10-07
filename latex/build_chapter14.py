@@ -250,7 +250,8 @@ D.frame(T('Five Assets Side by Side', 'Cinci active comparate'), table(
                    '& din & $n$ & media (\\%) & ab.\\ std.\\ (\\%) & vol.\\ anuală (\\%) & asim. & exces de boltire & min (\\%)'),
     [f'{NM[k]} & @{{s.{k}.y0}} & @{{s.{k}.n}} & $@{{s.{k}.mean}}$ & $@{{s.{k}.sd}}$ & $@{{s.{k}.av}}$ & $@{{s.{k}.skew}}$ & $@{{s.{k}.k}}$ & $@{{s.{k}.min}}$' for k in ASSETS],
     size='scriptsize') + items(
-    T('Daily log returns until @{end}; annual volatility $= \\sqrt{A}\\,s$ with the actual frequency $A$ of each series; gold: XAU/USD', 'Randamente logaritmice zilnice pînă pe @{end}; volatilitatea anuală $= \\sqrt{A}\\,s$ cu frecvența reală $A$ a fiecărei serii; aurul: XAU/USD'),
+    (T('Daily log returns until @{end}; annual volatility $= \\sqrt{A}\\,s$ with the actual frequency $A$ of each series; gold: XAU/USD', 'Randamente logaritmice zilnice pînă pe @{end}; volatilitatea anuală $= \\sqrt{A}\\,s$ cu frecvența reală $A$ a fiecărei serii; aurul: XAU/USD'),
+     [T('skewness: the mean of $((r_t - \\bar r)/s)^3$; excess kurtosis: the mean of $((r_t - \\bar r)/s)^4$ minus 3 (both 0 for the Normal distribution)', 'asimetria: media lui $((r_t - \\bar r)/s)^3$; excesul de boltire: media lui $((r_t - \\bar r)/s)^4$ minus 3 (ambele 0 pentru distribuția Normală)')]),
     (T('Interpretation', 'Interpretare'),
      [T('Bitcoin is @{ratio.btc} times as volatile as the S\\&P 500 (@{s.btc.av}\\% against @{s.sp500.av}\\%); Ethereum @{ratio.eth} times, Solana @{ratio.sol} times', 'Bitcoin este de @{ratio.btc} ori mai volatil decît S\\&P 500 (@{s.btc.av}\\% față de @{s.sp500.av}\\%); Ethereum de @{ratio.eth} ori, Solana de @{ratio.sol} ori'),
       T('on @{s.btc.sh5}\\% of the days Bitcoin moves by more than 5\\%; the worst day: $@{s.btc.min}\\%$ on @{s.btc.mind}', 'în @{s.btc.sh5}\\% din zile, Bitcoin se mișcă cu peste 5\\%; cea mai proastă zi: $@{s.btc.min}\\%$ pe @{s.btc.mind}'),
@@ -388,7 +389,8 @@ D.frame(T('Weak-Form Efficiency: What We Test', 'Eficiența în formă slabă: i
      [T('first-order autocorrelation $\\hat\\rho(1)$ and Ljung--Box $Q(10)$', 'autocorelația de ordinul întîi $\\hat\\rho(1)$ și statistica Ljung--Box $Q(10)$'),
       T('variance ratio \\refLM: $\\mathrm{VR}(q) = \\mathrm{Var}(r_t + \\dots + r_{t-q+1})/(q\\,\\mathrm{Var}(r_t))$, equal to 1 under a random walk', 'raportul varianțelor \\refLM: $\\mathrm{VR}(q) = \\mathrm{Var}(r_t + \\dots + r_{t-q+1})/(q\\,\\mathrm{Var}(r_t))$, egal cu 1 pentru un mers aleator'),
       T('$q$: the horizon in days; $r_t + \\dots + r_{t-q+1}$: the $q$-day log return; without autocorrelation its variance is $q$ times the daily one', '$q$: orizontul, în zile; $r_t + \\dots + r_{t-q+1}$: randamentul logaritmic pe $q$ zile; fără autocorelație, varianța lui este de $q$ ori cea zilnică'),
-      T('$Z^*(q)$: the version robust to volatility clustering; reject at 5\\% if $|Z^*| > 1.96$', '$Z^*(q)$: varianta robustă la volatility clustering; respingem la 5\\% dacă $|Z^*| > 1{,}96$')]),
+      T('$Z^*(q) = (\\widehat{\\mathrm{VR}}(q) - 1)/\\sqrt{\\hat\\theta^*(q)}$; $\\hat\\theta^*$: the variance of $\\widehat{\\mathrm{VR}}$, robust to volatility clustering', '$Z^*(q) = (\\widehat{\\mathrm{VR}}(q) - 1)/\\sqrt{\\hat\\theta^*(q)}$; $\\hat\\theta^*$: varianța lui $\\widehat{\\mathrm{VR}}$, robustă la volatility clustering'),
+      T('$Z^* \\approx N(0, 1)$ under a random walk (Chapter 7); reject at 5\\% if $|Z^*| > 1.96$', '$Z^* \\approx N(0, 1)$ pentru un mers aleator (Capitolul 7); respingem la 5\\% dacă $|Z^*| > 1{,}96$')]),
     T('VR $> 1$: momentum (trends); VR $< 1$: mean reversion', 'VR $> 1$: momentum (tendințe); VR $< 1$: revenire la medie')))
 
 EF = ['btc', 'eth', 'sp500']
@@ -401,7 +403,7 @@ D.frame(T('Variance-Ratio Tests on the Whole Sample', 'Testele raportului varian
      for k, y in [('btc', '2014'), ('btc', '2018'), ('btc', '2022'), ('eth', '2016'), ('eth', '2018'), ('eth', '2022')]],
     size='scriptsize') + items(
     T('Interpretation: no VR test rejects the random walk, in any sub-period; the Ljung--Box test rejects weakly for crypto because it ignores volatility clustering',
-      'Interpretare: niciun test VR nu respinge mersul aleator, în nicio subperioadă; testul Ljung--Box respinge slab la cripto deoarece ignoră volatility clustering')), 'scriptsize')
+      'Interpretare: niciun test VR nu respinge mersul aleator, în nicio subperioadă; testul Ljung--Box respinge slab la cripto deoarece ignoră volatility clustering')), 'footnotesize')
 
 chart(T('Efficiency Through Time', 'Eficiența în timp'), 'sfm_ch14_rolling_vr', 'SFM_ch14_garch_efficiency', [
     T('Robust $Z^*(5)$ on windows of 500 observations, one window every 21 observations (as in Chapter 7)', 'Statistica robustă $Z^*(5)$ pe ferestre de 500 de observații, o fereastră la fiecare 21 de observații (ca în Capitolul 7)'),
@@ -726,7 +728,7 @@ D.frame(T('Four Methods, Three Assets', 'Patru metode, trei active'), table(
     size='scriptsize') + table(
     'lrrrr', T('Position of 100\\,000 USD & VaR 1\\% HS & ES 2.5\\% HS & VaR 1\\% Normal & 10-day VaR 1\\% HS', 'Poziție de 100\\,000 USD & VaR 1\\% HS & ES 2,5\\% HS & VaR 1\\% Normal & VaR 1\\% HS pe 10 zile'),
     [f'{NM[k]} & @{{v.{k}.hs_v.usd}} & @{{v.{k}.hs_e.usd}} & @{{v.{k}.n_v.usd}} & @{{v.{k}.hs10.usd}}' for k in RK], size='scriptsize') + items(
-    T('Whole samples until @{end}; t: Student-t by maximum likelihood ($\\hat\\nu = @{v.btc.nu}$ for Bitcoin); GARCH-t: the forecast for the next day ($\\hat\\sigma = @{v.btc.g_sigma}\\%$)', 'Eșantioanele complete pînă pe @{end}; t: Student-t prin verosimilitate maximă ($\\hat\\nu = @{v.btc.nu}$ pentru Bitcoin); GARCH-t: prognoza pentru ziua următoare ($\\hat\\sigma = @{v.btc.g_sigma}\\%$)')), 'scriptsize')
+    T('Whole samples until @{end}; t: Student-t by maximum likelihood ($\\hat\\nu = @{v.btc.nu}$ for Bitcoin); GARCH-t: the forecast for the next day ($\\hat\\sigma = @{v.btc.g_sigma}\\%$)', 'Eșantioanele complete pînă pe @{end}; t: Student-t prin verosimilitate maximă ($\\hat\\nu = @{v.btc.nu}$ pentru Bitcoin); GARCH-t: prognoza pentru ziua următoare ($\\hat\\sigma = @{v.btc.g_sigma}\\%$)')), 'footnotesize')
 
 D.frame(T('Interpretation of the Risk Numbers', 'Interpretarea cifrelor de risc'), items(
     (T('A Bitcoin position is about three times as risky as an S\\&P 500 position: VaR 1\\% @{v.btc.hs_v}\\% against @{v.sp500.hs_v}\\%', 'O poziție în Bitcoin este de circa trei ori mai riscantă decît una în S\\&P 500: VaR 1\\% @{v.btc.hs_v}\\% față de @{v.sp500.hs_v}\\%'),
@@ -738,10 +740,20 @@ D.frame(T('Interpretation of the Risk Numbers', 'Interpretarea cifrelor de risc'
       T('the rule overstates: with tail index $\\alpha > 2$, an extreme quantile of a sum of $h$ returns grows roughly like $h^{1/\\alpha}$, more slowly than $\\sqrt{h}$', 'regula supraestimează: cu tail index-ul $\\alpha > 2$, o cuantilă extremă a sumei a $h$ randamente crește aproximativ ca $h^{1/\\alpha}$, mai lent decît $\\sqrt{h}$')]),
     T('ES 2.5\\% (HS) is close to VaR 1\\% (HS) for Bitcoin, as in Chapter 10 for equities', 'ES 2,5\\% (HS) este apropiat de VaR 1\\% (HS) pentru Bitcoin, ca în Capitolul 10 pentru acțiuni')))
 
+D.frame(T('Backtesting: the Kupiec Test', 'Backtesting: testul Kupiec'), items(
+    (T('\\textbf{Exception}: a day with $r_{t+1} < -\\widehat{\\mathrm{VaR}}_t$; $x$ exceptions in $n$ days, observed rate $\\hat\\pi = x/n$', '\\textbf{Depășire}: o zi cu $r_{t+1} < -\\widehat{\\mathrm{VaR}}_t$; $x$ depășiri în $n$ zile, rata observată $\\hat\\pi = x/n$'),
+     [T('with a correct VaR 1\\%, each day is an exception with probability $\\alpha = 0.01$: about $\\alpha n$ exceptions are expected', 'cu un VaR 1\\% corect, fiecare zi este o depășire cu probabilitatea $\\alpha = 0{,}01$: se așteaptă circa $\\alpha n$ depășiri')]),
+    T('\\textbf{Kupiec test} \\refKupiec: is the exception rate equal to $\\alpha$?', '\\textbf{Testul Kupiec} \\refKupiec: este rata depășirilor egală cu $\\alpha$?')
+    + ' \\begin{equation*} LR_{uc} = -2\\ln\\frac{(1 - \\alpha)^{n - x}\\,\\alpha^{x}}{(1 - \\hat\\pi)^{n - x}\\,\\hat\\pi^{x}} \\end{equation*}',
+    (T('Reading', 'Interpretarea'),
+     [T('numerator: the likelihood of the $x$ exceptions under the rate $\\alpha$; denominator: under the observed rate $\\hat\\pi$', 'numărătorul: verosimilitatea celor $x$ depășiri cu rata $\\alpha$; numitorul: cu rata observată $\\hat\\pi$'),
+      T('$LR_{uc} \\sim \\chi^2(1)$ if the rate is $\\alpha$; reject at 5\\% if $LR_{uc} > 3.84$ (p-value below 0.05)', '$LR_{uc} \\sim \\chi^2(1)$ dacă rata este $\\alpha$; respingem la 5\\% dacă $LR_{uc} > 3{,}84$ (p-value sub 0,05)'),
+      T('the test counts the exceptions only; their clustering needs the Christoffersen test (Chapter 10)', 'testul numără doar depășirile; gruparea lor cere testul Christoffersen (Capitolul 10)')])))
+
 chart(T('Backtesting Bitcoin VaR 1\\%', 'Backtesting pentru VaR 1\\% al Bitcoin'), 'sfm_ch14_btc_var', 'SFM_ch14_crypto_var', [
     T('One-day forecasts since @{bt.start}: HS on the last 365 days; GARCH(1,1)-t re-estimated every 365 days on all earlier data', 'Prognoze pe o zi din @{bt.start}: HS pe ultimele 365 de zile; GARCH(1,1)-t reestimat la fiecare 365 de zile pe toate datele anterioare'),
-    T('Exceptions (expected @{bt.hs.exp}): HS @{bt.hs.x} (@{bt.hs.rate}\\%), GARCH-t @{bt.g.x} (@{bt.g.rate}\\%); Kupiec \\refKupiec: $LR = @{bt.hs.lr}$ (p $= @{bt.hs.p}$) and $@{bt.g.lr}$ (p $= @{bt.g.p}$); $LR \\sim \\chi^2(1)$ if the exception rate is 1\\%',
-      'Depășiri (așteptat @{bt.hs.exp}): HS @{bt.hs.x} (@{bt.hs.rate}\\%), GARCH-t @{bt.g.x} (@{bt.g.rate}\\%); Kupiec \\refKupiec: $LR = @{bt.hs.lr}$ (p $= @{bt.hs.p}$) și $@{bt.g.lr}$ (p $= @{bt.g.p}$); $LR \\sim \\chi^2(1)$ dacă rata depășirilor este 1\\%'),
+    T('Exceptions (expected @{bt.hs.exp}): HS @{bt.hs.x} (@{bt.hs.rate}\\%), GARCH-t @{bt.g.x} (@{bt.g.rate}\\%); Kupiec: $LR_{uc} = @{bt.hs.lr}$ (p $= @{bt.hs.p}$) and $@{bt.g.lr}$ (p $= @{bt.g.p}$)',
+      'Depășiri (așteptat @{bt.hs.exp}): HS @{bt.hs.x} (@{bt.hs.rate}\\%), GARCH-t @{bt.g.x} (@{bt.g.rate}\\%); Kupiec: $LR_{uc} = @{bt.hs.lr}$ (p $= @{bt.hs.p}$) și $@{bt.g.lr}$ (p $= @{bt.g.p}$)'),
     T('Interpretation: both pass the Kupiec test; HS needs a higher VaR on average (@{bt.hs.mv}\\% against @{bt.g.mv}\\%), GARCH-t reacts faster but is exceeded more often (2018: @{bt.g.y2018} exceptions)',
       'Interpretare: ambele trec testul Kupiec; HS cere în medie un VaR mai mare (@{bt.hs.mv}\\% față de @{bt.g.mv}\\%), GARCH-t reacționează mai repede, dar este depășit mai des (2018: @{bt.g.y2018} depășiri)')],
     h='0.44\\textheight')

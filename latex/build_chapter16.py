@@ -80,7 +80,7 @@ NOTE = {
         T('$F_n$: the empirical distribution function; $F$: the model; $D_n$: their largest vertical distance; smaller AIC or BIC is better', '$F_n$: funcția de repartiție empirică; $F$: modelul; $D_n$: cea mai mare distanță verticală dintre ele; un AIC sau BIC mai mic este mai bun')],
     7: [T('$\\rho(k)$: the autocorrelation at lag $k$; $q$: the horizon of the variance ratio; VR $= 1$ under a random walk', '$\\rho(k)$: autocorelația la lagul $k$; $q$: orizontul raportului varianțelor; VR $= 1$ pentru un mers aleator'),
         T('$T$: the number of returns; $\\hat\\theta$: a variance estimate robust to volatility clustering; $Z^* \\approx N(0, 1)$ under the null', '$T$: numărul de randamente; $\\hat\\theta$: o estimație a varianței robustă la volatility clustering; $Z^* \\approx N(0, 1)$ în ipoteza nulă')],
-    8: [T('$\\lambda \\in (0, 1)$: the decay factor; $r_{t-1}$: yesterday\'s return; $H_t$, $L_t$: the high and the low of day $t$', '$\\lambda \\in (0, 1)$: factorul de descompunere; $r_{t-1}$: randamentul de ieri; $H_t$, $L_t$: maximul și minimul zilei $t$'),
+    8: [T('$\\lambda \\in (0, 1)$: the decay factor; $r_{t-1}$: yesterday\'s return; $H_t$, $L_t$: the high and the low of day $t$', '$\\lambda \\in (0, 1)$: factorul de atenuare (decay); $r_{t-1}$: randamentul de ieri; $H_t$, $L_t$: maximul și minimul zilei $t$'),
         T('ARCH-LM: $R^2$ of the regression of $r_t^2$ on its $q$ lags, times $n$; a large value: volatility clustering', 'ARCH-LM: $R^2$ al regresiei lui $r_t^2$ pe $q$ laguri ale sale, înmulțit cu $n$; o valoare mare: volatility clustering')],
     9: [T('$\\omega$: the constant; $\\alpha$: the reaction to yesterday\'s shock $\\varepsilon_{t-1}$; $\\beta$: the memory; $\\bar\\sigma^2$: the long-run variance', '$\\omega$: constanta; $\\alpha$: reacția la șocul de ieri, $\\varepsilon_{t-1}$; $\\beta$: memoria; $\\bar\\sigma^2$: varianța pe termen lung'),
         T('$E_t$: the forecast made at day $t$; $h$: the horizon in days; $\\alpha + \\beta$: the speed at which the forecast returns to $\\bar\\sigma^2$', '$E_t$: prognoza făcută în ziua $t$; $h$: orizontul, în zile; $\\alpha + \\beta$: viteza cu care prognoza revine la $\\bar\\sigma^2$')],
@@ -616,7 +616,7 @@ D.frame(T('The Written Exam: Format', 'Examenul scris: formatul'), cols(items(
 
 D.frame(T('Content Assessed', 'Conținutul evaluat'), items(
     (T('\\textbf{Chapters 0--15}: lectures and seminars', '\\textbf{Capitolele 0--15}: cursuri și seminarii'),
-     [T('the definitions and formulas of the ``What You Need for Today\'\' slides of every seminar', 'definițiile și formulele de pe slide-urile „Noțiuni necesare azi” ale fiecărui seminar'),
+     [T('the definitions and formulas of the ``Prerequisites for Today\'\' slides of every seminar', 'definițiile și formulele de pe slide-urile „Noțiuni necesare azi” ale fiecărui seminar'),
       T('the computations of Part A of the seminars, on paper', 'calculele din Partea A a seminariilor, pe hîrtie')]),
     (T('\\textbf{Reading software output}', '\\textbf{Interpretarea rezultatelor obținute cu software}'),
      [T('tables and charts like those of Part B: estimates, test statistics, $p$-values, backtests', 'tabele și grafice ca în Partea B: estimări, statistici de test, p-value-uri, backtesting'),

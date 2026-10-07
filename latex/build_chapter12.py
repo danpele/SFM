@@ -222,7 +222,7 @@ D.frame(T('PD, LGD, EAD and the Expected Loss', 'PD, LGD, EAD și pierderea așt
       T('\\textbf{EAD} (exposure at default): the amount owed at the moment of default', '\\textbf{EAD} (exposure at default): suma datorată în momentul nerambursării')]),
     (T('\\textbf{Expected loss}: $\\mathrm{EL} = \\mathrm{PD} \\times \\mathrm{LGD} \\times \\mathrm{EAD}$ (with independent PD and LGD)', '\\textbf{Pierderea așteptată}: $\\mathrm{EL} = \\mathrm{PD} \\times \\mathrm{LGD} \\times \\mathrm{EAD}$ (cu PD și LGD independente)'),
      [T('\\textbf{Example}: a loan of 100\\,000 RON with PD $= 2\\%$, LGD $= 45\\%$: EL $= 0.02 \\times 0.45 \\times 100\\,000 = @{el.el}$ RON',
-        '\\textbf{Exemplu}: un credit de 100\\,000 de lei cu PD $= 2\\%$, LGD $= 45\\%$: EL $= 0.02 \\times 0.45 \\times 100\\,000 = @{el.el}$ lei'),
+        '\\textbf{Exemplu}: un credit de 100\\,000 de lei cu PD $= 2\\%$, LGD $= 45\\%$: EL $= 0.02 \\times 0.45 \\times 100\\,000 = @{el.el}$ de lei'),
       T('EL is a cost of doing business: it is priced into the interest rate and covered by provisions', 'EL este un cost al activității: intră în dobîndă și este acoperită prin provizioane')]),
     T('Capital covers the \\textbf{unexpected loss}: losses above EL in a bad year', 'Capitalul acoperă \\textbf{pierderea neașteptată}: pierderile de peste EL într-un an prost')))
 
@@ -253,10 +253,10 @@ D.frame(T('Worked Example: IRB Capital of a Retail Loan', 'Exemplu rezolvat: cap
     (T('\\textbf{Step by step}', '\\textbf{Pas cu pas}'),
      [T('argument: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: the PD in a bad year',
         'argumentul: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: PD într-un an prost'),
-      T('$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ of EAD: @{el.k} RON for a loan of 100\\,000 RON', '$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ din EAD: @{el.k} lei pentru un credit de 100\\,000 de lei'),
-      T('RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ RON: a risk weight of @{el.rw}\\%', 'RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ lei: o pondere de risc de @{el.rw}\\%')]),
+      T('$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ of EAD: @{el.k} RON for a loan of 100\\,000 RON', '$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ din EAD: @{el.k} de lei pentru un credit de 100\\,000 de lei'),
+      T('RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ RON: a risk weight of @{el.rw}\\%', 'RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ de lei: o pondere de risc de @{el.rw}\\%')]),
     T('Interpretation: EL ($@{el.el}$ RON) is priced in; the capital ($@{el.k}$ RON) absorbs a year in which defaults reach @{el.cpd}\\% instead of 2\\%',
-      'Interpretare: EL ($@{el.el}$ lei) intră în preț; capitalul ($@{el.k}$ lei) absoarbe un an în care nerambursările ajung la @{el.cpd}\\% în loc de 2\\%')), 'footnotesize')
+      'Interpretare: EL ($@{el.el}$ de lei) intră în preț; capitalul ($@{el.k}$ de lei) absoarbe un an în care nerambursările ajung la @{el.cpd}\\% în loc de 2\\%')), 'footnotesize')
 
 chart(T('Expected Loss and IRB Capital as Functions of PD', 'Pierderea așteptată și capitalul IRB în funcție de PD'), 'sfm_ch12_irb', 'SFM_ch12_validation_irb', [
     T('LGD $= 45\\%$; capital $K$ for other retail ($R$ from 0.16 to 0.03), residential mortgages ($R = 0.15$) and revolving retail exposures ($R = 0.04$)',
@@ -265,7 +265,7 @@ chart(T('Expected Loss and IRB Capital as Functions of PD', 'Pierderea așteptat
       'Interpretare: EL crește liniar cu PD; $K$ crește repede la PD mici și apoi se aplatizează, deoarece un credit foarte riscant este în mare parte o pierdere așteptată (inclusă în preț)')],
     h='0.50\\textheight')
 
-D.recap(('What a Credit Score Is', 'scorul de credit: definiție'), [
+D.recap(('What a Credit Score Is', 'definiția scorului de credit'), [
     T('A score orders applicants by risk; a PD also gives the level of risk', 'Un scor ordonează solicitanții după risc; o PD dă și nivelul riscului'),
     T('EL $=$ PD $\\times$ LGD $\\times$ EAD is priced in; Basel capital covers the unexpected loss (a credit VaR 0.1\\% minus EL)', 'EL $=$ PD $\\times$ LGD $\\times$ EAD intră în preț; capitalul Basel acoperă pierderea neașteptată (VaR 0,1\\% al creditului minus EL)'),
     T('Statistical scoring started with Fisher\'s discriminant analysis (Durand, 1941)', 'Scoringul statistic a început cu analiza discriminantă a lui Fisher (Durand, 1941)')])
@@ -474,7 +474,7 @@ D.frame(T('Correcting for Oversampling', 'Corecția pentru suprareprezentarea r�
       T('the slopes are unchanged: the ranking of the applicants does not depend on the sampling', 'pantele rămîn neschimbate: ordonarea solicitanților nu depinde de eșantionare')]),
     (T('\\textbf{Step by step}: $\\pi_s = 0.30$, $\\pi = 0.05$: shift $= \\ln(0.05/0.95) - \\ln(0.30/0.70) = @{pr.ln} - (@{pr.ls}) = @{prior}$', '\\textbf{Pas cu pas}: $\\pi_s = 0.30$, $\\pi = 0.05$: corecția $= \\ln(0.05/0.95) - \\ln(0.30/0.70) = @{pr.ln} - (@{pr.ls}) = @{prior}$'),
      [T('a sample PD of 30\\% becomes 5\\%; a sample PD of 50\\% becomes @{pr.p50}\\%', 'o PD de 30\\% în eșantion devine 5\\%; o PD de 50\\% devine @{pr.p50}\\%'),
-      T('the applicant of the worked example: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ in the bank\'s population instead of @{ex.pd}\\%', 'solicitantul din exemplul lucrat: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ în populația băncii, în loc de @{ex.pd}\\%')]),
+      T('the applicant of the worked example: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ in the bank\'s population instead of @{ex.pd}\\%', 'solicitantul din exemplul rezolvat: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ în populația băncii, în loc de @{ex.pd}\\%')]),
     T('Interpretation: AUC and Gini are unchanged by the correction; EL and capital are not', 'Interpretare: AUC și Gini nu sînt afectate de corecție; EL și capitalul sînt afectate')))
 
 D.recap(('Logistic Regression', 'regresia logistică'), [
@@ -693,7 +693,7 @@ D.frame(T('Out-of-Time Validation and Drift', 'Validarea out-of-time și deriva 
      [T('a shift with stable ranking calls for recalibration (the constant); a loss of ranking calls for a new model', 'o deplasare cu ordonare stabilă cere recalibrare (termenul liber); o pierdere a ordonării cere un model nou')]),
     T('Data limitation: neither data set of this chapter has application dates, so an out-of-time test is not possible here; random splits are the most we can do',
       'Limitarea datelor: niciunul dintre seturile de date ale capitolului nu conține data cererilor, deci un test out-of-time nu este posibil aici; putem folosi doar împărțiri aleatoare'),
-    T('Further reading, an out-of-time design for crypto ``zombie\'\' assets: \\refPeleZ', 'Lectură suplimentară despre un design out-of-time, pentru activele cripto „zombie”: \\refPeleZ')))
+    T('Further reading, an out-of-time design for crypto ``zombie\'\' assets: \\refPeleZ', 'Lectură suplimentară despre o validare out-of-time, pentru activele cripto „zombie”: \\refPeleZ')))
 
 D.frame(T('Case Study: Benchmarking Credit Scoring Methods', 'Studiu de caz: compararea metodelor de scoring'), items(
     (T('\\refLessmann: 41 classifiers, six accuracy measures, eight retail credit data sets (among them the German credit data of UCI)',
@@ -826,7 +826,7 @@ chart(T('Merton: Asset Paths and PD', 'Merton: traiectoriile activelor și PD'),
 
 D.frame(T('Case Study: How Good Is the Merton Model?', 'Studiu de caz: cît de bun este modelul Merton?'), items(
     (T('\\refBS: US firms; the Merton DD against a ``naive\'\' DD with the same functional form but without solving the model', '\\refBS: companii americane; DD Merton față de un DD „naiv”, cu aceeași formă funcțională, dar fără rezolvarea modelului'),
-     [T('design: hazard models of default and out-of-sample forecasts; comparison with CDS (credit default swap) spreads and bond yields', 'designul: modele de hazard ale nerambursării și prognoze în afara eșantionului; comparație cu spread-urile CDS (credit default swap) și randamentele obligațiunilor')]),
+     [T('design: hazard models of default and out-of-sample forecasts; comparison with CDS (credit default swap) spreads and bond yields', 'metoda: modele de hazard ale nerambursării și prognoze în afara eșantionului; comparație cu spread-urile CDS (credit default swap) și randamentele obligațiunilor')]),
     (T('Findings', 'Rezultatele'),
      [T('the naive DD performs slightly better than the Merton DD out of sample', 'DD naiv funcționează puțin mai bine decît DD Merton în afara eșantionului'),
       T('other variables (e.g.\\ past returns) add information: DD is not a sufficient statistic for PD', 'alte variabile (de exemplu randamentele trecute) aduc informație: DD nu este o statistică suficientă pentru PD'),
@@ -850,7 +850,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('the gains may be unequal across groups \\refFuster; support vector machines for default: \\refCHM', 'cîștigurile pot fi inegale între grupuri \\refFuster; mașini cu vectori suport pentru nerambursare: \\refCHM')]),
     T('Why it is open: gains depend on the data set, the measure and the population; the outcomes of rejected applicants are never seen',
       'Întrebarea rămîne deschisă: cîștigurile depind de setul de date, de măsură și de populație; rezultatele solicitanților respinși nu se văd niciodată'),
-    T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
+    T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
     T('\\textbf{Literature}: a list of benchmark studies of credit scoring and of studies on fairness in lending, with their data sets', '\\textbf{Literatura}: o listă a comparațiilor de metode de scoring și a studiilor despre echitatea creditării, cu seturile lor de date'),
@@ -900,11 +900,11 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'LDA & $w = S_W^{-1}(m_1 - m_0)$',
      T('Prior correction', 'Corecția a priori') + ' & $+\\ln\\frac{\\pi/(1 - \\pi)}{\\pi_s/(1 - \\pi_s)}$ ' + T('to the constant', 'la termenul liber'),
      'Scorecard & $\\text{Offset} + \\frac{\\text{PDO}}{\\ln 2}\\ln\\frac{1 - p}{p}$',
-     'AUC, Gini & $P(s_{\\text{bad}} > s_{\\text{good}})$, \\ $2\\,\\mathrm{AUC} - 1$',
-     'KS, Brier & $\\max_s|F_1(s) - F_0(s)|$, \\ $\\frac1n\\sum(p_i - y_i)^2$',
+     'AUC, Gini & ' + T('$P(s_{\\text{bad}} > s_{\\text{good}})$', '$P(s_{\\text{rău}} > s_{\\text{bun}})$') + ', \\ $2\\,\\mathrm{AUC} - 1$',
+     'KS, Brier & ' + T('$\\max_s|F_{\\text{bad}}(s) - F_{\\text{good}}(s)|$', '$\\max_s|F_{\\text{rău}}(s) - F_{\\text{bun}}(s)|$') + ', \\ $\\frac1n\\sum(p_i - y_i)^2$',
      T('Bayes cut-off', 'Pragul Bayes') + ' & $p > C_{FP}/(C_{FP} + C_{FN})$',
      'Merton & $\\mathrm{DD} = \\frac{\\ln(V/D) + (\\mu - \\sigma^2/2)T}{\\sigma\\sqrt{T}}$, \\ $\\mathrm{PD} = \\Phi(-\\mathrm{DD})$'],
-    size='scriptsize') + '}')
+    size='small') + '}')
 
 D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a model has an accuracy of 70\\% on the South German Credit test sample. Is it good?', '\\textbf{Întrebare}: un model are o acuratețe de 70\\% pe eșantionul de test South German Credit. Este bun?'),

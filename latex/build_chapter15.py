@@ -397,7 +397,9 @@ D.frame(T('Tail Dependence (Chapter 10) (2/2)', 'Dependența în cozi (Capitolul
      [T('$t_{\\nu+1}$: the distribution function of a Student-t with $\\nu + 1$ degrees of freedom', '$t_{\\nu+1}$: funcția de repartiție a distribuției Student-t cu $\\nu + 1$ grade de libertate'),
       T('$\\rho$: the correlation parameter of the copula; $\\nu$: its degrees of freedom; a small $\\nu$ gives strong joint crashes', '$\\rho$: parametrul de corelație al copulei; $\\nu$: gradele ei de libertate; un $\\nu$ mic înseamnă prăbușiri simultane puternice')]),
     (T('Estimation', 'Estimarea'),
-     [T('$\\rho = \\sin(\\pi\\tau/2)$ from Kendall\'s $\\tau$, a rank correlation; $\\nu$ by maximum likelihood', '$\\rho = \\sin(\\pi\\tau/2)$ din $\\tau$ al lui Kendall, o corelație a rangurilor; $\\nu$ prin verosimilitate maximă')])))
+     [T('$\\rho = \\sin(\\pi\\tau/2)$ from Kendall\'s $\\tau$, a rank correlation; $\\nu$ by maximum likelihood', '$\\rho = \\sin(\\pi\\tau/2)$ din $\\tau$ al lui Kendall, o corelație a rangurilor; $\\nu$ prin verosimilitate maximă'),
+      T('$\\tau = (C - D)/\\binom{n}{2}$; $C$, $D$: the numbers of concordant and discordant pairs of days (both series move in the same or in opposite directions)',
+        '$\\tau = (C - D)/\\binom{n}{2}$; $C$, $D$: numărul perechilor de zile concordante și discordante (cele două serii se mișcă în același sens sau în sensuri opuse)')])))
 
 D.frame(T('Tail Dependence of Banks and Markets', 'Dependența în cozi dintre bănci și piețe'), table(
     'lrrrrrr', T('\\textbf{Pair}', '\\textbf{Perechea}') + ' & $n$ & ' + T('corr.', 'corel.') + ' & $\\lambda(5\\%)$ & $\\lambda(1\\%)$ & $\\hat\\nu$ & $\\lambda_L$ (t)',
@@ -431,15 +433,15 @@ D.section('CoVaR and Delta-CoVaR', 'CoVaR și Delta-CoVaR')
 D.frame(T('From VaR to CoVaR', 'De la VaR la CoVaR'), items(
     (T('$X^i$: return of institution $i$; $X^{sys}$: return of the system; level $\\alpha$ = probability of the tail (Chapter 10)', '$X^i$: randamentul instituției $i$; $X^{sys}$: randamentul sistemului; nivelul $\\alpha$ = probabilitatea cozii (Capitolul 10)'),
      [T('$q_\\alpha(X^i)$: the $\\alpha$-quantile of $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: the loss of $i$ exceeded with probability $\\alpha$', '$q_\\alpha(X^i)$: cuantila de ordin $\\alpha$ a lui $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: pierderea lui $i$ depășită cu probabilitatea $\\alpha$')]),
-    (T('\\textbf{CoVaR} (conditional VaR of the system) \\refAB: $\\mathrm{CoVaR}^{sys|i}_\\alpha = -q_\\alpha\\big(X^{sys} \\mid X^i = q_\\alpha(X^i)\\big)$',
-       '\\textbf{CoVaR} (VaR-ul condiționat al sistemului) \\refAB: $\\mathrm{CoVaR}^{sys|i}_\\alpha = -q_\\alpha\\big(X^{sys} \\mid X^i = q_\\alpha(X^i)\\big)$'),
+    (T('\\textbf{CoVaR} (conditional VaR of the system) \\refAB', '\\textbf{CoVaR} (VaR-ul condiționat al sistemului) \\refAB')
+     + ' \\begin{equation*} \\mathrm{CoVaR}^{sys|i}_\\alpha = -q_\\alpha\\big(X^{sys} \\mid X^i = q_\\alpha(X^i)\\big) \\end{equation*}',
      [T('$q_\\alpha(X^{sys} \\mid \\cdot)$: the $\\alpha$-quantile of the system return, conditional on what follows the bar', '$q_\\alpha(X^{sys} \\mid \\cdot)$: cuantila de ordin $\\alpha$ a randamentului sistemului, condiționată de ce urmează după bară'),
       T('the VaR 1\\% of the system on a day when institution $i$ is at its own VaR 1\\%: ``CoVaR 1\\%\'\'', 'VaR 1\\% al sistemului într-o zi în care instituția $i$ se află la propriul VaR 1\\%: „CoVaR 1\\%”')]),
-    (T('\\textbf{$\\Delta$CoVaR}: $\\Delta\\mathrm{CoVaR}^{sys|i}_\\alpha = \\mathrm{CoVaR}^{sys|X^i = q_\\alpha}_\\alpha - \\mathrm{CoVaR}^{sys|X^i = q_{50\\%}}_\\alpha$',
-       '\\textbf{$\\Delta$CoVaR}: $\\Delta\\mathrm{CoVaR}^{sys|i}_\\alpha = \\mathrm{CoVaR}^{sys|X^i = q_\\alpha}_\\alpha - \\mathrm{CoVaR}^{sys|X^i = q_{50\\%}}_\\alpha$'),
+    (T('$\\boldsymbol{\\Delta}$\\textbf{CoVaR}: the contribution of $i$ to systemic risk', '$\\boldsymbol{\\Delta}$\\textbf{CoVaR}: contribuția lui $i$ la riscul sistemic')
+     + ' \\begin{equation*} \\Delta\\mathrm{CoVaR}^{sys|i}_\\alpha = \\mathrm{CoVaR}^{sys|X^i = q_\\alpha}_\\alpha - \\mathrm{CoVaR}^{sys|X^i = q_{50\\%}}_\\alpha \\end{equation*}',
      [T('$q_{50\\%}$: the median of $X^i$, a normal day of the institution', '$q_{50\\%}$: mediana lui $X^i$, o zi obișnuită pentru instituție'),
-      T('how much the VaR of the system rises when $i$ moves from a normal day (its median) to distress: the \\textbf{contribution} of $i$ to systemic risk',
-        'cu cît crește VaR-ul sistemului cînd $i$ trece de la o zi obișnuită (mediana sa) la o zi de criză: \\textbf{contribuția} lui $i$ la riscul sistemic')])))
+      T('reading: how much the VaR of the system rises when $i$ moves from a normal day (its median) to distress',
+        'interpretarea: cu cît crește VaR-ul sistemului cînd $i$ trece de la o zi obișnuită (mediana sa) la o zi de criză')])))
 
 D.frame(T('Quantile Regression (Chapter 13)', 'Regresia cuantilică (Capitolul 13)'), items(
     (T('Linear quantile regression \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$', 'Regresia cuantilică liniară \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$'),
@@ -490,7 +492,9 @@ D.frame(T('Interpretation of $\\Delta$CoVaR', 'Interpretarea $\\Delta$CoVaR'), i
     (T('European and Romanian banks have a larger $\\Delta$CoVaR than US banks', 'Băncile europene și cele românești au un $\\Delta$CoVaR mai mare decît băncile americane'),
      [T('banks weigh more in the Euro Stoxx 50 and in the BET than in the S\\&P 500: the index is closer to a banking system', 'băncile au o pondere mai mare în Euro Stoxx 50 și în BET decît în S\\&P 500: indicele este mai aproape de un sistem bancar'),
       T('TLV and BRD are among the largest stocks of the BET, so the BET partly measures themselves', 'TLV și BRD sînt printre cele mai mari acțiuni din BET, deci BET le măsoară parțial chiar pe ele')]),
-    T('Robustness: the ranking at 5\\% is close to the ranking at 1\\% (Spearman correlation $@{sp.15}$)', 'Robustețe: ordinea la 5\\% este apropiată de cea la 1\\% (corelația Spearman $@{sp.15}$)')))
+    (T('Robustness: the ranking at 5\\% is close to the ranking at 1\\% (Spearman correlation $@{sp.15}$)', 'Robustețe: ordinea la 5\\% este apropiată de cea la 1\\% (corelația Spearman $@{sp.15}$)'),
+     [T('Spearman: the correlation of the ranks, $\\rho_S = 1 - 6\\sum_i d_i^2/(N(N^2 - 1))$; $d_i$: the difference of the two ranks of bank $i$; $N$: the number of banks',
+        'Spearman: corelația rangurilor, $\\rho_S = 1 - 6\\sum_i d_i^2/(N(N^2 - 1))$; $d_i$: diferența celor două ranguri ale băncii $i$; $N$: numărul de bănci')])))
 
 D.frame(T('Worked Example: Banca Transilvania and the BET', 'Exemplu rezolvat: Banca Transilvania și BET'), items(
     (T('TLV and the BET, daily log returns since 2010 ($n = @{cvn.TLV}$); quantile regression at 1\\%: $\\hat b = @{cv.TLV.b}$', 'TLV și BET, randamente logaritmice zilnice din 2010 ($n = @{cvn.TLV}$); regresia cuantilică la 1\\%: $\\hat b = @{cv.TLV.b}$'),
@@ -663,7 +667,9 @@ chart(T('Two Networks: 2007--2009 and 2017--2019', 'Două rețele: 2007--2009 ș
 
 D.frame(T('Diebold--Yilmaz Connectedness', 'Conectivitatea Diebold--Yilmaz'), items(
     (T('Fit a VAR (vector autoregression) to the returns of $N$ banks; forecast $H$ days ahead', 'Estimăm un model VAR (vector autoregresiv) pe randamentele celor $N$ bănci; prognozăm pe $H$ zile'),
-     [T('$d_{ij}$: the share of the $H$-day forecast error variance of bank $i$ due to shocks to bank $j$ (generalized decomposition, \\refPS)', '$d_{ij}$: proporția din varianța erorii de prognoză pe $H$ zile a băncii $i$ datorată șocurilor băncii $j$ (descompunerea generalizată, \\refPS)'),
+     [T('VAR($p$): $x_t = c + \\Phi_1x_{t-1} + \\dots + \\Phi_px_{t-p} + u_t$; $x_t$: the vector of the $N$ returns; $\\Phi_j$: $N \\times N$ coefficient matrices; $u_t$: the shocks',
+        'VAR($p$): $x_t = c + \\Phi_1x_{t-1} + \\dots + \\Phi_px_{t-p} + u_t$; $x_t$: vectorul celor $N$ randamente; $\\Phi_j$: matrice de coeficienți $N \\times N$; $u_t$: șocurile'),
+      T('$d_{ij}$: the share of the $H$-day forecast error variance of bank $i$ due to shocks to bank $j$ (generalized decomposition, \\refPS)', '$d_{ij}$: proporția din varianța erorii de prognoză pe $H$ zile a băncii $i$ datorată șocurilor băncii $j$ (descompunerea generalizată, \\refPS)'),
       T('each row sums to 100\\%', 'fiecare rînd însumează 100\\%')]),
     (T('Measures \\refDYb; \\refDYc', 'Măsuri \\refDYb; \\refDYc'),
      [T('FROM others: $\\sum_{j \\ne i} d_{ij}$; TO others: $\\sum_{j \\ne i} d_{ji}$; NET $=$ TO $-$ FROM', 'FROM (de la celelalte): $\\sum_{j \\ne i} d_{ij}$; TO (către celelalte): $\\sum_{j \\ne i} d_{ji}$; NET $=$ TO $-$ FROM'),
