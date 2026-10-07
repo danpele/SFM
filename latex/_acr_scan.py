@@ -9,7 +9,7 @@ def body(tex):
         if j>0: s=s[:j]
     s=re.sub(r'(?<!\\)%.*','',s)
     s=re.sub(r'\\begin\{lstlisting\}.*?\\end\{lstlisting\}','',s,flags=re.S)
-    s=re.sub(r'\\\[.*?\\\]','',s,flags=re.S)
+    s=re.sub(r'(?<!\\)\\\[.*?(?<!\\)\\\]','',s,flags=re.S)   # display math \[...\], not the line break \\[1mm]
     s=re.sub(r'\\begin\{(equation|align|gather)\*?\}.*?\\end\{\1\*?\}','',s,flags=re.S)
     s=s.replace(r'\$',' ')  # dollar sign in text, not a math delimiter
     s=re.sub(r'\$[^$]*\$','',s)

@@ -547,7 +547,7 @@ def fig_delta_aic(fits, save=True):
     for i in range(len(names)):
         for j in range(len(MODELS)):
             v = D[i, j]
-            txt = '0' if v < 0.5 else f'{v:,.0f}'
+            txt = '0' if v < 0.5 else f'{v:.0f}'   # no comma separator: 2,425 reads as a decimal in RO
             ax.text(j, i, txt, ha='center', va='center', fontsize=10.5,
                     color='white' if v > 300 else 'black', fontweight='bold' if v < 0.5 else 'normal')
     ax.set_xticks(range(len(MODELS)))

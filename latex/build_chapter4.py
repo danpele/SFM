@@ -938,7 +938,8 @@ chart(T('Real Paths in the GBM Fan', 'Traiectorii reale în evantaiul GBM'), 'sf
      [T('outside the 90\\% band @{f.sp500.out}\\% of the time', 'în afara benzii de 90\\% în @{f.sp500.out}\\% din timp')]),
     (T('BET: outside the band @{f.bet.out}\\% of the time', 'BET: în afara benzii @{f.bet.out}\\% din timp'),
      [T('the 2000--2007 boom and the 2008 crash are not GBM-like', 'avîntul din 2000--2007 și crahul din 2008 nu seamănă cu GBM')]),
-    T('Bitcoin: $\\sigma = @{f.btc.sigma}\\%$ a year makes the fan enormous', 'Bitcoin: cu $\\sigma = @{f.btc.sigma}\\%$ pe an, evantaiul este foarte larg')], h='0.46\\textheight', size='scriptsize')
+    (T('Bitcoin: $\\sigma = @{f.btc.sigma}\\%$ a year makes the fan enormous', 'Bitcoin: cu $\\sigma = @{f.btc.sigma}\\%$ pe an, evantaiul este foarte larg'),
+     [T('annualised with $A = 365$: crypto trades every calendar day ($A = 252$ for the indices)', 'anualizată cu $A = 365$: activele cripto se tranzacționează în fiecare zi calendaristică ($A = 252$ pentru indici)')])], h='0.46\\textheight', size='scriptsize')
 
 chart(T('What GBM Misses', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_ch4_wiener_gbm', [
     T('Excess kurtosis: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% of 300 GBM simulations lie within $[@{ck.sp500.klo}, @{ck.sp500.khi}]$',
@@ -1020,7 +1021,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), table(
      'GBM & $S_t = S_0\\exp((\\mu - \\sigma^2/2)t + \\sigma W_t)$, $E[S_t] = S_0e^{\\mu t}$'],
     size='footnotesize'))
 
-D.frame(T('Check Yourself', 'Verificați-vă'), items(
+D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\sigma_1 = 2\\%$, $\\sigma_2 = 3\\%$, $\\rho = 0.5$; what is the volatility of the 50/50 portfolio?', '\\textbf{Întrebare}: $\\sigma_1 = 2\\%$, $\\sigma_2 = 3\\%$, $\\rho = 0.5$; cît este volatilitatea portofoliului 50/50?'),
      [T('\\textbf{Answer}: $\\sqrt{0.25 \\times 4 + 0.25 \\times 9 + 2 \\times 0.25 \\times 0.5 \\times 2 \\times 3} = \\sqrt{@{cy.var}} = @{cy.sd}\\%$', '\\textbf{Răspuns}: $\\sqrt{0.25 \\times 4 + 0.25 \\times 9 + 2 \\times 0.25 \\times 0.5 \\times 2 \\times 3} = \\sqrt{@{cy.var}} = @{cy.sd}\\%$')]),
     (T('\\textbf{Question}: GBM with $\\mu = 8\\%$, $\\sigma = 20\\%$, $S_0 = 100$; what are the mean and the median of $S_1$?', '\\textbf{Întrebare}: GBM cu $\\mu = 8\\%$, $\\sigma = 20\\%$, $S_0 = 100$; cît sînt media și mediana lui $S_1$?'),

@@ -97,9 +97,16 @@ class Values(dict):
         self[key] = f'{int(x):,}'.replace(',', '\\,')
 
 
-RO_NOUNS = ('zile|randamente|perechi|traiectorii|decalaje|observații|extrageri|prognoze|acțiuni|ferestre|'
-            'reziduuri|luni|ani|simulări|valori|companii|săptămîni|săptămâni|tranzacții|indici|serii')
-RO_NUM = re.compile(r'(?<![\d,.}{\\-])(⁅?)(\d{1,3}(?:(?:\\,|\\ )\d{3})+|\d+)(⁆?) (?=(?:' + RO_NOUNS + r')\b)')
+RO_NOUNS = ('zile|randamente|perechi|traiectorii|decalaje|laguri|observații|extrageri|prognoze|prognozatori|acțiuni|'
+            'ferestre|reziduuri|luni|ani|simulări|valori|companii|săptămîni|săptămâni|tranzacții|indici|serii|lei|'
+            'depășiri|puncte|trimestre|regresii|reguli|replicări|reeșantionări|țări|modele|iterații|parametri|'
+            'secvențe|credite|bănci|instituții|variabile|teste|eșantioane|straturi|neuroni|arbori|scenarii|firme|'
+            'cuantile|întrebări|ore|minute|secunde|dolari|euro|bucăți|clienți|solicitanți|active|titluri|'
+            'portofolii|contracte|ținte|praguri')
+# a numeral and its noun; a range "74--131 zile" takes „de” from its last number (74--131 de zile).
+# A single hyphen before the digits (a minus sign or a compound such as COVID-19) excludes the match.
+RO_NUM = re.compile(r'(?<![\d,.}{\\])(?<![^-]-)(⁅?)(\d{1,3}(?:(?:\\,|\\ )\d{3})+|\d+)(⁆?) (?=(?:' + RO_NOUNS + r')\b)')
+YEAR_CONTEXT = re.compile(r'(?:\b(?:în|din|anul|anii|după)|[–(])\s*$', re.I)
 
 
 def ro_de(tex):
@@ -107,8 +114,35 @@ def ro_de(tex):
     def f(m):
         v = int(re.sub(r'\D', '', m.group(2)))
         need = v >= 20 and (v % 100 >= 20 or v % 100 == 0)
+        # a bare year (1900-2099) after "în", "din", "anul"... is a date, not a count ("în 2008 bănci...")
+        if need and not m.group(1) and 1900 <= v <= 2099 and re.fullmatch(r'\d{4}', m.group(2)) \
+                and YEAR_CONTEXT.search(tex[max(0, m.start() - 20):m.start()]):
+            need = False
         return m.group(0) + ('de ' if need else '')
     return RO_NUM.sub(f, tex)
+
+
+# Text-mode negative numbers: a hyphen before digits becomes a math minus (\ensuremath{-}). Math, TikZ pictures,
+# code listings and comments are left alone; so are hyphens after a letter or digit (COVID-19, 2008--2009), after
+# an option or a coordinate separator ({-2mm}, =-1, [-1mm], (3,-1)) and after a control word (\vskip -2mm).
+_PROTECT = re.compile(r'\\begin\{(tikzpicture|lstlisting|verbatim|Verbatim|minted)\}.*?\\end\{\1\}'
+                      r'|\\begin\{(equation|align|gather|multline|eqnarray)(\*?)\}.*?\\end\{\2\3\}'
+                      r'|(?<!\\)\\\[.*?(?<!\\)\\\]|(?<!\\)\$\$.*?(?<!\\)\$\$|(?<!\\)\$.*?(?<!\\)\$|(?<!\\)%[^\n]*'
+                      r'|\\(?:href|url|includegraphics|input|label|ref|hyperlink|hypertarget|colaburl|qlurl)'
+                      r'(?:\[[^\]]*\])?\{[^}]*\}', re.S)
+_HYPHEN_NUM = re.compile(r'(\\[A-Za-z]+\*?\s*)?(?<![\w\-/.:;{}=\[\\<>+,*^_|~@\'])-(?=\d)')
+
+
+def fix_minus(tex):
+    def text(seg):
+        return _HYPHEN_NUM.sub(lambda m: m.group(0) if m.group(1) else r'\ensuremath{-}', seg)
+    out, last = [], 0
+    for m in _PROTECT.finditer(tex):
+        out.append(text(tex[last:m.start()]))
+        out.append(m.group(0))
+        last = m.end()
+    out.append(text(tex[last:]))
+    return ''.join(out)
 
 
 def render(tex, lang, values=None):
@@ -282,7 +316,10 @@ class Deck:
     def references(self, refs, per=16):
         """Bibliografia: intrari complete cu \\href (DOI verificat), in ordine alfabetica."""
         self.section('References', 'Bibliografie')
-        chunks = [refs[i:i + per] for i in range(0, len(refs), per)]
+        k = -(-len(refs) // per)                       # pages needed with at most `per` entries each,
+        q, r = divmod(len(refs), k)                    # balanced: no near-empty last page
+        cuts = [i * q + min(i, r) for i in range(k + 1)]
+        chunks = [refs[cuts[i]:cuts[i + 1]] for i in range(k)]
         for i, ch in enumerate(chunks, 1):
             num = f' ({i}/{len(chunks)})' if len(chunks) > 1 else ''
             self.FR.append(f'\\begin{{frame}}{{⟦References||Bibliografie⟧{num}}}\n\\itemsize{{\\tiny}}\n'
@@ -332,6 +369,7 @@ class Deck:
             tex = self.head(lang) + render(src.replace('@@TITLE@@', self.title_block(lang), 1), lang, values)
             # a citation macro followed by a space would swallow it (\refX text): add {} after it
             tex = re.sub(r'(\\ref[A-Z][A-Za-z]*)(?= [^\s])', r'\1{}', tex)
+            tex = fix_minus(tex)
             path = os.path.join(ROOT, rel)
             os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, 'w', encoding='utf-8') as f:

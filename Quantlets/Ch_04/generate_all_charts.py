@@ -72,11 +72,17 @@ def max_drawdown(prices):
     return float(np.min(p / np.maximum.accumulate(p) - 1))
 
 
+def annual_days(r):
+    """A, the number of periods per year used to annualise: 252 trading days for exchange-traded series,
+    365 for crypto assets, which trade every calendar day."""
+    return 365 if periods_per_year(r) > 300 else 252
+
+
 def gbm_params(r, ppy=None):
     """Calibrate GBM to daily log returns r (in %): annual log drift mu_log, volatility sigma, arithmetic drift
     mu = mu_log + sigma^2/2 (so that E[S_t] = S_0 exp(mu t) and median S_0 exp(mu_log t))."""
     r = pd.Series(r).dropna() / 100
-    ppy = ppy or periods_per_year(r)
+    ppy = ppy or annual_days(r)
     m, s = r.mean() * ppy, r.std() * np.sqrt(ppy)
     return {'mu_log': m, 'sigma': s, 'mu': m + s ** 2 / 2, 'ppy': ppy, 'n': len(r)}
 
@@ -402,7 +408,7 @@ def fig_lln(name='sp500', n_sim=5, seed=11, save=True):
     st.check_no_grey(fig)
     if save:
         st.save_fig('sfm_ch4_lln')
-    ppy = periods_per_year(r)
+    ppy = annual_days(r)
     se = s / np.sqrt(len(r))
     return {'n': len(r), 'mean': m, 'sd': s, 'se': se, 't': m / se, 'ppy': ppy, 'years': len(r) / ppy,
             'mean_ann': m * ppy, 'se_ann': se * ppy, 'n_needed_halfse': 4 * len(r),

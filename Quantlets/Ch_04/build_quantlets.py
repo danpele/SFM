@@ -24,7 +24,7 @@ DATA = ('Daily market data from EODHD (S&P 500, DAX, BET, Bitcoin), data/market 
         'random numbers (NumPy PCG64 and the RANDU generator)')
 CONSTS = [f'START = {g.START!r}', 'ASSETS = ' + repr(g.ASSETS), 'COLORS = ' + repr(g.COLORS), 'SHORT = ' + repr(g.SHORT),
           'PAL = ' + repr(g.PAL), f'RANDU_A, RANDU_M = {g.RANDU_A}, {g.RANDU_M}']
-CORE = [g.returns, g.joint_returns, g.acf, g.max_drawdown, g.gbm_params, g.simulate_gbm, g.lcg, g.lcg_period, g.randu,
+CORE = [g.returns, g.joint_returns, g.acf, g.max_drawdown, g.annual_days, g.gbm_params, g.simulate_gbm, g.lcg, g.lcg_period, g.randu,
         g.binomial_crr, g.ar1]
 
 QUANTLETS = [

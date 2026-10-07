@@ -293,8 +293,11 @@ def fig_crash_days(save=True):
         ax.axhline(lvl, color='black', lw=0.9, ls='--', label='Normal model: loss seen once in 100 years')
         worst = r.nsmallest(20)
         worst = worst[~pd.Series(worst.index.to_period('M'), index=worst.index).duplicated()].iloc[:3]   # one per month
-        for d, v in worst.items():
-            ax.annotate(d.strftime('%d %b %Y'), (d, v), xytext=(8, -2), textcoords='offset points', fontsize=9.5, color='black')
+        last, dy = None, -2
+        for d, v in worst.sort_index().items():          # labels of nearby dates are stacked, not overprinted
+            dy = dy + 11 if last is not None and (d - last).days < 2200 else -2
+            ax.annotate(d.strftime('%d %b %Y'), (d, v), xytext=(8, dy), textcoords='offset points', fontsize=9.5, color='black')
+            last = d
         ax.set_ylabel('%')
         ax.set_title(LABELS[k], loc='left', fontsize=12)
         out[k] = {'level100': float(lvl), 'n_below': int((r < lvl).sum())}

@@ -29,7 +29,7 @@ A = {
     'ACF': ('Autocorrelation Function', 'en', 'funcția de autocorelație', None),
     'ADF': ('Augmented Dickey–Fuller (test)', 'en', 'testul Dickey–Fuller augmentat', None),
     'VAR': ('Vector AutoRegression', 'en', 'model vector autoregresiv', None),
-    'AR': ('AutoRegressive (model); in event studies: Abnormal Return', 'en', 'model autoregresiv; în studiile de eveniment: randament anormal', None),
+    'AR': ('AutoRegressive (model); Abnormal Return', 'en', 'model autoregresiv; randament anormal, în studiile de eveniment', None),
     'ARCH': ('AutoRegressive Conditional Heteroskedasticity', 'en', 'heteroscedasticitate condiționată autoregresivă', None),
     'ARCH-LM': ('ARCH Lagrange Multiplier (test)', 'en', 'testul multiplicatorului Lagrange pentru efecte ARCH', None),
     'BDS': ('Brock–Dechert–Scheinkman (test)', 'en', 'testul Brock–Dechert–Scheinkman de independență', None),
@@ -92,11 +92,11 @@ A = {
     'FF5': ('Fama–French five-factor model', 'en', 'modelul Fama–French cu cinci factori', None),
     'HML': ('High Minus Low (value factor)', 'en', 'factorul valoare: B/M mare minus mic', None),
     'IPCA': ('Instrumented Principal Component Analysis', 'en', 'analiza componentelor principale instrumentată', None),
-    'MDD': ('Maximum DrawDown', 'en', 'drawdown maxim', None),
+    'MDD': ('Maximum DrawDown', 'en', 'drawdown-ul maxim', None),
     'MKT': ('MarKeT factor (market excess return)', 'en', 'factorul piață (randamentul în exces al pieței)', None),
     'MOM': ('MOMentum factor', 'en', 'factorul momentum', None),
     'OHLC': ('Open, High, Low, Close', 'en', 'deschidere, maxim, minim, închidere', None),
-    'RF': ('Risk-Free rate (Fama–French data) / Random Forest (machine learning)', 'en', 'rata fără risc (datele Fama–French) / pădure aleatoare (machine learning)', None),
+    'RF': ('Risk-Free rate (Fama–French data) / Random Forest (machine learning)', 'en', 'rata fără risc (datele Fama–French) / pădure aleatoare (învățare automată)', None),
     'RMW': ('Robust Minus Weak (profitability factor)', 'en', 'factorul profitabilitate: firme robuste minus slabe', None),
     'ROE': ('Return On Equity', 'en', 'rentabilitatea capitalului propriu', None),
     'SDF': ('Stochastic Discount Factor', 'en', 'factorul stochastic de actualizare', None),
@@ -206,7 +206,9 @@ A = {
     'CSIE': ('Facultatea de Cibernetică, Statistică și Informatică Economică', 'ro', None, 'the Faculty of Cybernetics, Statistics and Economic Informatics'),
     'WIG20': ('Warszawski Indeks Giełdowy 20', 'pl', 'indicele celor mai mari 20 de companii de la Bursa din Varșovia', 'the Warsaw Stock Exchange index of the 20 largest companies'),
 }
-IGNORE = set("""CC CC0 BY BY-SA EDHAC QK VQ NDSR RS RISK SA AG SUM SIGKDD TB3MS DE""".split())   # licente, credite, simboluri matematice
+IGNORE = set("""CC CC0 BY BY-SA EDHAC QK VQ NDSR RS RISK SA AG SUM SIGKDD TB3MS DE
+                 LUNA DAI FROM TO NET""".split())   # licente, credite, simboluri matematice; nume de token-uri
+# (LUNA, DAI) si etichetele de conectivitate (FROM, TO, NET), definite in text: nu sint acronime
 
 
 OVERRIDE = {  # acelasi acronim, sens diferit in capitole diferite: (capitol, acronim) -> tuplu
@@ -234,7 +236,7 @@ def entry(key, lang, chap=None):
         tr = ro if olang != 'ro' else None
     else:
         tr = en if olang != 'en' else None
-    tex = origin if not tr else (f'{origin} — {tr}' if origin.endswith(')') else f'{origin} ({tr})')   # no doubled parentheses
+    tex = origin if not tr else (f'{origin} — {tr}' if origin.endswith(')') or tr.endswith(')') else f'{origin} ({tr})')   # no doubled parentheses
     return r'\item \textbf{' + key + '}: ' + tex.replace('&', r'\&')
 
 
@@ -248,16 +250,50 @@ def found_in(tex_path):
     return [a for a in m.scan(tex_path) if a not in IGNORE]
 
 
-def glossary_frames(keys, lang, per_col=13, chap=None):
+def _weight(key, lang, chap, width=56):
+    """Lines an entry takes in a half-width column at \footnotesize: greedy word wrap at about 56 characters, plus the space between items."""
+    txt = re.sub(r'\\[A-Za-z]+|[{}]', '', entry(key, lang, chap)).strip()
+    lines, cur = 1, 0
+    for w in txt.split():
+        if cur and cur + 1 + len(w) > width:
+            lines, cur = lines + 1, len(w)
+        else:
+            cur += (1 if cur else 0) + len(w)
+    return lines + 0.35            # an item also takes some vertical space between entries
+
+
+def _split(keys, weights, parts):
+    """Split `keys` (kept in order) into `parts` consecutive groups of nearly equal total weight."""
+    out, start, total = [], 0, sum(weights)
+    for p in range(1, parts):
+        target, best = total * p / parts, None
+        for i in range(start, len(keys) + 1):
+            d = abs(sum(weights[:i]) - target)
+            if best is None or d < best[0]:
+                best = (d, i)
+        out.append(keys[start:best[1]])
+        start = best[1]
+    out.append(keys[start:])
+    return out
+
+
+def glossary_frames(keys, lang, lines_per_col=20, chap=None):
+    """Glossary at \footnotesize, two columns, as few pages as fit, entries balanced across pages and columns."""
     title = 'Acronime folosite în acest material' if lang == 'ro' else 'Acronyms used in this material'
     keys = sorted(keys, key=lambda k: k.upper())
-    chunks = [keys[i:i + 2 * per_col] for i in range(0, len(keys), 2 * per_col)]
+    w = [_weight(k, lang, chap) for k in keys]
+    pages = max(1, int(-(-sum(w) // (2 * lines_per_col))))
+    while True:                       # one more page if a column of the balanced split would still be too long
+        chunks = _split(keys, w, pages)
+        cols_ = [_split(ch, [w[keys.index(k)] for k in ch], 2) for ch in chunks]
+        if all(sum(w[keys.index(k)] for k in c) <= lines_per_col for cc in cols_ for c in cc) or pages >= len(keys):
+            break
+        pages += 1
     out = ['% BEGIN-ACRONYMS (generat de latex/acronyms.py; nu editati manual)']
-    for n, ch in enumerate(chunks, 1):
-        t = title + (f' ({n}/{len(chunks)})' if len(chunks) > 1 else '')
-        left, right = ch[:per_col], ch[per_col:]
+    for n, (left, right) in enumerate(cols_, 1):
+        t = title + (f' ({n}/{len(cols_)})' if len(cols_) > 1 else '')
         out.append(r'\begin{frame}{' + t + '}')
-        out.append(r'\setbeamertemplate{itemize/enumerate body begin}{\tiny}')
+        out.append(r'\setbeamertemplate{itemize/enumerate body begin}{\footnotesize}')
         out.append(r'\begin{columns}[T]')
         for col in (left, right):
             out.append(r'\begin{column}{0.49\textwidth}')

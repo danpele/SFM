@@ -658,6 +658,8 @@ def fig_tails_by_year(names=('btc', 'sp500'), save=True):
     axes[0].set_title('Excess kurtosis by year')
     axes[1].set_title(r'Student-t $\hat\nu$ by year (capped at 30)')
     axes[1].set_xlabel('Year')
+    for ax in axes:
+        ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))   # calendar years, never 2017.5
     st.fig_legend_bottom(fig, ncol=2, y=0.0)
     fig.tight_layout(rect=(0, 0.04, 1, 1))
     st.check_no_grey(fig)

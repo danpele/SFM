@@ -897,7 +897,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'ES (POT) & $(\\mathrm{VaR}_p + \\beta - \\xi u)/(1 - \\xi)$'],
     size='footnotesize') + '}')
 
-D.frame(T('Check Yourself', 'Verificați-vă'), items(
+D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a GPD fit gives $\\hat\\xi = 0.25$; which moments of the losses exist?', '\\textbf{Întrebare}: o ajustare GPD dă $\\hat\\xi = 0{,}25$; ce momente ale pierderilor există?'),
      [T('\\textbf{Answer}: $\\alpha = 1/\\xi = 4$: mean, variance and skewness exist; the kurtosis does not ($m < 4$ only)',
         '\\textbf{Răspuns}: $\\alpha = 1/\\xi = 4$: există media, varianța și asimetria; boltirea nu (doar $m < 4$)')]),
