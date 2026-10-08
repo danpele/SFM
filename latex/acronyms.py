@@ -88,6 +88,7 @@ A = {
     'CML': ('Capital Market Line', 'en', 'dreapta pieței de capital', None),
     'EMH': ('Efficient Market Hypothesis', 'en', 'ipoteza pieței eficiente', None),
     'ES': ('Expected Shortfall', 'en', 'pierderea așteptată în coadă', None),
+    'VaR': ('Value-at-Risk', 'en', 'valoarea la risc: pragul de pierdere depășit cu o probabilitate dată', None),
     'FF3': ('Fama–French three-factor model', 'en', 'modelul Fama–French cu trei factori', None),
     'FF5': ('Fama–French five-factor model', 'en', 'modelul Fama–French cu cinci factori', None),
     'HML': ('High Minus Low (value factor)', 'en', 'factorul valoare: B/M mare minus mic', None),

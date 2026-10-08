@@ -3,6 +3,7 @@
 #   ex.: 'EVT': ('Extreme Value Theory', 'en', 'teoria valorilor extreme', None)
 # OVERRIDE_CH (optional): acronim -> tuplu, sens diferit doar in acest capitol.
 EXTRA = {
+    'CvM': ('Cramér–von Mises (test)', 'en', 'testul Cramér–von Mises', None),
     'AD': ('Anderson–Darling (test)', 'en', 'testul Anderson–Darling', None),
     'AIC': ('Akaike Information Criterion', 'en', 'criteriul informațional Akaike', None),
     'BIC': ('Bayesian Information Criterion', 'en', 'criteriul informațional bayesian', None),
