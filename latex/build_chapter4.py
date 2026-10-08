@@ -420,7 +420,7 @@ D.frame(T('Value at Risk and the Empirical CDF', 'VaR și funcția de repartiți
     (T('The \\textbf{empirical CDF} of a sample: $\\hat F(x) = \\frac1n \\#\\{t : r_t \\le x\\}$', '\\textbf{CDF empirică} a unui eșantion: $\\hat F(x) = \\frac1n \\#\\{t : r_t \\le x\\}$'),
      [T('$r_1, \\dots, r_n$: the observed returns; $n$: the sample size', '$r_1, \\dots, r_n$: randamentele observate; $n$: volumul eșantionului'),
       T('$\\#\\{\\cdot\\}$: the number of days in the set; $\\hat F(x)$ is the share of days with a return at most $x$', '$\\#\\{\\cdot\\}$: numărul de zile din mulțime; $\\hat F(x)$ este proporția zilelor cu randamentul cel mult $x$'),
-      T('the hat marks an estimate computed from data', 'căciula marchează o estimare calculată din date')])))
+      T('the hat marks an estimate computed from data', 'notația $\hat{\ }$ indică o estimare calculată din date')])))
 
 chart(T('A Discrete and a Continuous Random Variable', 'O variabilă aleatoare discretă și una continuă'), 'sfm_ch4_random_variables', 'SFM_ch4_random_variables', [
     (T('Left: $K$ = number of up days in a full week of the S\\&P 500 (@{rv.weeks} weeks)', 'Stînga: $K$ = numărul zilelor de creștere dintr-o săptămînă completă a S\\&P 500 (@{rv.weeks} de săptămîni)'),

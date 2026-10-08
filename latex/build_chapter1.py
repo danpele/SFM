@@ -664,7 +664,7 @@ D.frame(T('How Precisely Do We Know the Mean?', 'Precizia estimării mediei'), i
     (T('Standard error of the annual mean: $\\text{SE}(\\hat\\mu_{\\text{year}}) = \\sigma_{\\text{year}} / \\sqrt{Y}$, with $Y$ years of data',
        'Eroarea standard a mediei anuale: $\\text{SE}(\\hat\\mu_{\\text{an}}) = \\sigma_{\\text{an}} / \\sqrt{Y}$, cu $Y$ ani de date'),
      [T('$\\hat\\mu_{\\text{year}}$: the estimated annual mean (a hat marks an estimate from the sample)',
-        '$\\hat\\mu_{\\text{an}}$: media anuală estimată (căciula marchează o valoare estimată din eșantion)'),
+        '$\\hat\\mu_{\\text{an}}$: media anuală estimată (notația $\\hat{\\ }$ indică o valoare estimată din eșantion)'),
       T('it depends on the number of \\textbf{years}, not on the number of observations', 'depinde de numărul de \\textbf{ani}, nu de numărul de observații'),
       T('95\\% confidence interval: $\\hat\\mu_{\\text{year}} \\pm 1.96\\,\\text{SE}$, with 1.96 the 97.5\\% quantile of the standard Normal distribution',
         'intervalul de încredere 95\\%: $\\hat\\mu_{\\text{an}} \\pm 1.96\\,\\text{SE}$, unde 1,96 este cuantila de 97,5\\% a distribuției Normale standard')]),
