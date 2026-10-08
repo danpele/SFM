@@ -380,6 +380,10 @@ class Deck:
             out.append(path)
         if glossary:
             run_acronyms(self.n)
+        if self.kind == 'seminar':          # clickable exercise codes + back buttons (latex/exercise_links.py)
+            import exercise_links
+            for p in out:
+                exercise_links.process(p)
         return out
 
 

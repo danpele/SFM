@@ -261,7 +261,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Log returns",
                     "Both"
                 ],
-                "correctExplanation": "Log returns telescope: the sum of daily log returns equals ln(PT/P0). Simple returns compound.",
+                "correctExplanation": "The sum of daily log returns equals ln(PT) - ln(P0) = ln(PT/P0), because all intermediate terms ln(Pt) cancel. Simple returns compound.",
                 "incorrectExplanation": "Log returns add up over time; simple returns must be compounded."
             },
             "ro": {
@@ -273,7 +273,7 @@ window.SFM_DATA.quizzes['intro'] = {
                     "Randamentele logaritmice",
                     "Ambele"
                 ],
-                "correctExplanation": "Suma randamentelor logaritmice zilnice se reduce telescopic la ln(PT/P0). Randamentele simple se compun.",
+                "correctExplanation": "Suma randamentelor logaritmice zilnice este ln(PT) - ln(P0) = ln(PT/P0), deoarece toți termenii intermediari ln(Pt) se anulează. Randamentele simple se compun.",
                 "incorrectExplanation": "Randamentele logaritmice se adună în timp; randamentele simple trebuie compuse."
             }
         },
