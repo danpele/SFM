@@ -149,7 +149,7 @@ D.frame(T('What the EMH Leaves Open', 'Întrebări lăsate deschise de EMH'), it
      [T('the random walk of prices implies independent increments: in this chapter, $H = 0.5$', 'mersul aleator al prețurilor implică creșteri independente: în acest capitol, $H = 0.5$')]),
     (T('Facts that the random walk with Normal increments does not explain', 'Fapte pe care mersul aleator cu creșteri Normale nu le explică'),
      [T('heavy tails (Chapters 2, 3, 5); volatility clustering (Chapters 8, 9)', 'cozi groase (Capitolele 2, 3, 5); volatility clustering (Capitolele 8, 9)'),
-      T('crashes: on 19 October 1987 the S\\&P 500 fell by about 20\\% in one day \\refCarlson', 'crahuri: pe 19 octombrie 1987, S\\&P 500 a scăzut cu circa 20\\% într-o singură zi \\refCarlson')]),
+      T('crashes such as that of 19 October 1987 (a few slides ahead)', 'crahuri precum cel din 19 octombrie 1987 (cîteva slide-uri mai departe)')]),
     T('The EMH says nothing about \\textbf{who} trades and at which \\textbf{horizon}: all investors are treated as one representative investor',
       'EMH nu spune nimic despre \\textbf{cine} tranzacționează și pe ce \\textbf{orizont}: toți investitorii sînt tratați ca un singur investitor reprezentativ')))
 
@@ -211,11 +211,6 @@ D.frame(T('EMH, FMH and AMH', 'EMH, FMH și AMH'), table(
     T('The three are not rival tests: the FMH and the AMH explain when and why the EMH approximation fails',
       'Cele trei nu sînt teste rivale: FMH și AMH explică unde și de ce aproximarea EMH nu mai funcționează')))
 
-D.recap(('From Efficient to Fractal Markets', 'de la piețe eficiente la piețe fractale'), [
-    T('FMH: stability comes from investors with different horizons, who supply liquidity to each other', 'FMH: stabilitatea vine de la investitori cu orizonturi diferite, care își oferă lichiditate unii altora'),
-    T('Crashes: horizons collapse into a single short horizon', 'Crahurile: orizonturile se reduc la un singur orizont scurt'),
-    T('Testable through scaling and memory, measured by the Hurst exponent $H$', 'Testabilă prin scalare și memorie, măsurate de exponentul Hurst $H$')])
-
 # =============================================================================
 # 2. AUTOSIMILARITATE ȘI FRACTALI
 # =============================================================================
@@ -267,11 +262,6 @@ D.frame(T('Interpretation: Scaling Exponents', 'Interpretarea exponenților de s
     T('Bitcoin: $@{sc.btc.r10}$ times, close to $\\sqrt{10}$', 'Bitcoin: de $@{sc.btc.r10}$ ori, aproape de $\\sqrt{10}$'),
     T('Caution: there are only a few dozen non-overlapping 250-day blocks; the slope is imprecise, so it needs a proper estimator and a band',
       'Atenție: există doar cîteva zeci de blocuri de 250 de zile fără suprapunere; panta este imprecisă, deci avem nevoie de un estimator adecvat și de o bandă de încredere')))
-
-D.recap(('Self-Similarity and Fractals', 'autosimilaritate și fractali'), [
-    T('Fractal: the parts resemble the whole; fractal dimension $D = \\ln N/\\ln s$', 'Fractal: părțile seamănă cu întregul; dimensiunea fractală $D = \\ln N/\\ln s$'),
-    T('Self-similar process: $X_{ct} \\overset{d}{=} c^H X_t$; Brownian motion has $H = 1/2$', 'Proces autosimilar: $X_{ct} \\overset{d}{=} c^H X_t$; mișcarea browniană are $H = 1/2$'),
-    T('Risk scales like $h^H$; the $\\sqrt{h}$ rule assumes $H = 1/2$', 'Riscul se scalează ca $h^H$; regula $\\sqrt{h}$ presupune $H = 1/2$')])
 
 # =============================================================================
 # 3. HURST, NILUL ȘI STATISTICA R/S
@@ -341,11 +331,6 @@ D.frame(T('Small Samples: the Bias of R/S', 'Eșantioane mici: deplasarea estima
       T('95\\% band for $N = 1000$: $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$', 'banda de 95\\% pentru $N = 1000$: $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$')]),
     T('Rule: compare $\\hat H$ with the distribution of $\\hat H$ under the null hypothesis for the same $N$, not with 0.5 (Section 5)',
       'Regulă: comparăm $\\hat H$ cu distribuția lui $\\hat H$ în ipoteza nulă, pentru același $N$, nu cu 0,5 (secțiunea 5)')))
-
-D.recap(('Hurst, the Nile and the R/S Statistic', 'Hurst, Nilul și statistica R/S'), [
-    T('$(R/S)_n$: range of the cumulative deviations divided by the standard deviation', '$(R/S)_n$: amplitudinea abaterilor cumulate împărțită la abaterea standard'),
-    T('$\\hat H$ = slope of $\\ln(R/S)_n$ on $\\ln n$; 0.5: no memory, above: persistence, below: anti-persistence', '$\\hat H$ = panta lui $\\ln(R/S)_n$ în funcție de $\\ln n$; 0,5: fără memorie, peste: persistență, sub: antipersistență'),
-    T('R/S is biased upwards in small samples: compare with a Monte Carlo band', 'R/S este deplasat în sus în eșantioane mici: comparăm cu o bandă Monte Carlo')])
 
 # =============================================================================
 # 4. MEMORIA LUNGĂ
@@ -453,11 +438,6 @@ D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu rezolvat: ARFIMA(0; 0,3;
     T('The autocorrelation falls below 0.05 after @{af3.firstar} lags for the AR(1) and after @{af3.first} lags for ARFIMA; $H = d + 0.5 = 0.8$',
       'Autocorelația scade sub 0,05 după @{af3.firstar} laguri pentru AR(1) și după @{af3.first} de laguri pentru ARFIMA; $H = d + 0.5 = 0.8$')))
 
-D.recap(('Long Memory', 'memoria lungă'), [
-    T('Long memory: $\\rho(k) \\sim C k^{2d - 1}$, not summable; short memory: exponential decay', 'Memorie lungă: $\\rho(k) \\sim C k^{2d - 1}$, nesumabile; memorie scurtă: scădere exponențială'),
-    T('fBm: self-similar, Gaussian; its increments, fGn, have long memory if $H > 1/2$', 'fBm: autosimilară, gaussiană; creșterile ei, fGn, au memorie lungă dacă $H > 1/2$'),
-    T('ARFIMA(0,$d$,0): $(1 - L)^d X_t = \\varepsilon_t$; $d = H - 1/2$', 'ARFIMA(0,$d$,0): $(1 - L)^d X_t = \\varepsilon_t$; $d = H - 1/2$')])
-
 # =============================================================================
 # 5. ESTIMAREA LUI H ȘI d
 # =============================================================================
@@ -564,11 +544,6 @@ D.frame(T('Interpretation: S\\&P 500', 'Interpretarea rezultatelor: S\\&P 500'),
      [T('the risk of a calm or turbulent period persists for months: the long-run version of volatility clustering', 'riscul unei perioade liniștite sau agitate persistă luni de zile: versiunea pe termen lung a volatility clustering')]),
     T('Before concluding ``long memory\'\', rule out spurious long memory: next section', 'Înainte de a concluziona că există memorie lungă, eliminăm memoria lungă aparentă: secțiunea următoare')))
 
-D.recap(('Estimators of Long Memory', 'estimatori ai memoriei lungi'), [
-    T('R/S and DFA: slopes of log-log plots; GPH: slope of a log-periodogram regression', 'R/S și DFA: pantele unor grafice log-log; GPH: panta unei regresii pe log-periodogramă'),
-    T("Lo's modified R/S corrects for short memory but loses power", 'R/S modificat al lui Lo corectează efectul memoriei scurte, dar pierde putere'),
-    T('Judge every estimate against a Monte Carlo band for the same $N$', 'Evaluăm fiecare estimare față de o bandă Monte Carlo pentru același $N$')])
-
 # =============================================================================
 # 6. MEMORIE LUNGĂ APARENTĂ
 # =============================================================================
@@ -622,11 +597,6 @@ D.frame(T('Checks against Spurious Long Memory', 'Verificări împotriva memorie
     T("\\textbf{Lo's modified R/S}: removes the effect of short memory", '\\textbf{R/S modificat al lui Lo}: elimină efectul memoriei scurte'),
     T('\\textbf{Model-based null}: Monte Carlo bands from a fitted AR or GARCH instead of i.i.d.\\ noise', '\\textbf{Ipoteză nulă pe baza unui model}: benzi Monte Carlo dintr-un AR sau GARCH estimat, în locul zgomotului i.i.d.')))
 
-D.recap(('Spurious Long Memory', 'memorie lungă aparentă'), [
-    T('Mean shifts and regime changes produce slowly decaying sample ACFs', 'Schimbările mediei și ale regimului produc ACF de selecție care scad lent'),
-    T('Persistent GARCH volatility looks like long memory in $|r_t|$ in finite samples', 'Volatilitatea GARCH persistentă arată ca memoria lungă în $|r_t|$ în eșantioane finite'),
-    T('Shuffle, split, compare estimators, use a model-based null', 'Permutăm, împărțim eșantionul, comparăm estimatorii, folosim o ipoteză nulă pe baza unui model')])
-
 # =============================================================================
 # 7. MEMORIA LUNGĂ A VOLATILITĂȚII
 # =============================================================================
@@ -673,11 +643,6 @@ D.frame(T('Models for Long Memory in Volatility', 'Modele pentru memoria lungă 
       T('\\refAB: many volatility components with different persistence add up to long memory', '\\refAB: multe componente de volatilitate cu persistențe diferite se însumează și dau memorie lungă'),
       T('\\refCorsi: HAR (heterogeneous autoregressive) model, tomorrow\'s volatility on the daily, weekly and monthly volatility: three horizons, approximate long memory',
         '\\refCorsi: modelul HAR (heterogeneous autoregressive, autoregresiv heterogen), volatilitatea de mîine în funcție de volatilitatea zilnică, săptămînală și lunară: trei orizonturi, memorie lungă aproximativă')])))
-
-D.recap(('Long Memory in Volatility', 'memoria lungă a volatilității'), [
-    T('$|r_t|$ and $r_t^2$: hyperbolically decaying ACF, $\\hat d$ around 0.2--0.5 in all six markets', '$|r_t|$ și $r_t^2$: ACF cu scădere hiperbolică, $\\hat d$ în jur de 0,2--0,5 pe toate cele șase piețe'),
-    T('Returns: no long memory, except the BET', 'Randamentele: fără memorie lungă, cu excepția BET'),
-    T('FIGARCH and HAR model it; HAR is a direct translation of heterogeneous horizons', 'FIGARCH și HAR o modelează; HAR este o traducere directă a orizonturilor eterogene')])
 
 # =============================================================================
 # 8. EXPONENȚI HURST PE FERESTRE MOBILE
@@ -726,11 +691,6 @@ D.frame(T('Pitfalls of Rolling Estimates', 'Capcanele estimărilor pe ferestre m
     T('\\textbf{Volatility regimes}: a crisis inside a window shifts the estimate for four years', '\\textbf{Regimurile de volatilitate}: o criză din interiorul unei ferestre deplasează estimarea timp de patru ani'),
     T('\\textbf{Dating}: date each estimate at the end of its window, never at the middle (no look-ahead)', '\\textbf{Datarea}: datăm fiecare estimare la sfîrșitul ferestrei, niciodată la mijloc (fără informație din viitor)')))
 
-D.recap(('Rolling Hurst Exponents', 'exponenți Hurst pe ferestre mobile'), [
-    T('Rolling $\\hat H$ with a Monte Carlo band shows how memory changes over time', '$\\hat H$ pe ferestre mobile, cu o bandă Monte Carlo, arată cum se schimbă memoria în timp'),
-    T('BET: persistent early, closer to 0.5 later; S\\&P 500: never persistent; Bitcoin: near 0.5 since 2017', 'BET: persistent la început, mai aproape de 0,5 ulterior; S\\&P 500: niciodată persistent; Bitcoin: aproape de 0,5 din 2017'),
-    T('Read runs, not single windows; date at the end of the window', 'Interpretăm perioade, nu ferestre izolate; datăm la sfîrșitul ferestrei')])
-
 # =============================================================================
 # 9. MEMORIA LUNGĂ ȘI RISCUL
 # =============================================================================
@@ -748,11 +708,6 @@ D.frame(T('Scaling Risk with $h^H$', 'Scalarea riscului cu $h^H$'), items(
       'Datele: raportul pe 10 zile este $@{sc.sp500.r10}$ pentru S\\&P 500 și $@{sc.bet.r10}$ pentru BET, față de $\\sqrt{10} = 3.16$: regula $\\sqrt{h}$ supraestimează riscul S\\&P 500 și subestimează riscul BET (Capitolul 10)'),
     T('Pricing: with fBm prices and $H \\neq 1/2$, a frictionless market admits arbitrage \\refRogers; long memory enters option models through volatility instead',
       'Evaluarea: cu prețuri fBm și $H \\neq 1/2$, o piață fără costuri de tranzacționare admite arbitraj \\refRogers; de aceea memoria lungă intră în modelele de opțiuni prin volatilitate')), 'footnotesize')
-
-D.recap(('Long Memory and Risk', 'memoria lungă și riscul'), [
-    T('Multi-day risk scales like $h^H$; small changes in $H$ matter at long horizons', 'Riscul pe mai multe zile se scalează ca $h^H$; schimbări mici ale lui $H$ contează la orizonturi lungi'),
-    T('S\\&P 500: the $\\sqrt{h}$ rule overstates the 10-day risk; BET: it understates it', 'S\\&P 500: regula $\\sqrt{h}$ supraestimează riscul pe 10 zile; BET: îl subestimează'),
-    T('Long memory in volatility makes risk forecasts informative for months', 'Memoria lungă a volatilității face ca prognozele de risc să fie informative luni de zile')])
 
 # =============================================================================
 # 10. AI

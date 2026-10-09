@@ -373,11 +373,6 @@ chart(T('Stylised Facts in One Chart', 'Faptele stilizate într-un singur grafic
     T('Uncorrelated is not independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)', 'Necorelat nu înseamnă independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)')],
     h='0.52\\textheight')
 
-D.recap(('The Course Map', 'harta cursului'), [
-    T('One chain in every chapter: data, distribution, dependence in time, risk, evaluation', 'Un singur lanț în fiecare capitol: date, distribuție, dependență în timp, risc, evaluare'),
-    T('Three series carry the course: the S\\&P 500 (a developed market), the BET (an emerging market), Bitcoin (a new asset class)', 'Trei serii străbat cursul: S\\&P 500 (o piață dezvoltată), BET (o piață emergentă), Bitcoin (o clasă nouă de active)'),
-    T('All three: heavy tails, almost uncorrelated returns, strongly dependent volatility', 'Toate trei: cozi groase, randamente aproape necorelate, volatilitate puternic dependentă în timp')])
-
 # =============================================================================
 # 2. CAPITOLELE 0--3
 # =============================================================================
@@ -415,11 +410,6 @@ review(3, ('$\\alpha$-Stable Distributions', 'distribuții $\\alpha$-stabile'),
        [T('using the standard deviation as a scale when $\\alpha < 2$ (the variance does not exist)', 'folosirea abaterii standard ca scală cînd $\\alpha < 2$ (varianța nu există)'),
         T('comparing $\\delta$ from two programs that use different parametrisations', 'compararea lui $\\delta$ din două programe care folosesc parametrizări diferite')])
 
-D.recap(('Chapters 0--3', 'Capitolele 0--3'), [
-    T('Clean data and log returns first; annualise with the actual frequency', 'Întîi date curate și randamente logaritmice; anualizarea se face cu frecvența reală'),
-    T('Returns are not Normal: negative skewness, large excess kurtosis, JB rejects everywhere', 'Randamentele nu sînt Normale: asimetrie negativă, exces de boltire mare, JB respinge peste tot'),
-    T('Stable laws fit the body well, but the variance of returns is finite', 'Legile stabile descriu bine corpul distribuției, dar varianța randamentelor este finită')])
-
 # =============================================================================
 # 3. CAPITOLELE 4--7
 # =============================================================================
@@ -456,11 +446,6 @@ review(7, ('Efficient Markets, Random Walk and VR Tests', 'piețe eficiente, mer
         T('S\\&P 500 since @{f7.y0.sp500}: VR(5) $= @{f7.vr.sp500}$, $Z^* = @{f7.zs.sp500}$ (mean reversion); Bitcoin: $Z^* = @{f7.zs.btc}$', 'S\\&P 500 din @{f7.y0.sp500}: VR(5) $= @{f7.vr.sp500}$, $Z^* = @{f7.zs.sp500}$ (revenire la medie); Bitcoin: $Z^* = @{f7.zs.btc}$')],
        [T('the i.i.d. statistic $Z(q)$ on returns with volatility clustering (it rejects too often)', 'statistica i.i.d.\\ $Z(q)$ pe randamente cu volatility clustering (respinge prea des)'),
         T('a unit root in prices read as proof of efficiency; predictability read as profit', 'rădăcina unitară a prețurilor considerată dovadă de eficiență; predictibilitatea considerată profit')])
-
-D.recap(('Chapters 4--7', 'Capitolele 4--7'), [
-    T('Probability gives the tools: covariance, conditional variance, Monte Carlo with its error', 'Probabilitățile dau instrumentele: covarianța, varianța condiționată, Monte Carlo cu eroarea lui'),
-    T('Tails are power laws with $\\alpha$ between 2 and 4; EVT gives VaR far in the tail', 'Cozile urmează legi de putere cu $\\alpha$ între 2 și 4; EVT dă VaR departe în coadă'),
-    T('Choose the model for its purpose and check it out of sample; test efficiency with robust statistics', 'Modelul se alege după scop și se verifică în afara eșantionului; eficiența se testează cu statistici robuste')])
 
 # =============================================================================
 # 4. CAPITOLELE 8--11
@@ -505,11 +490,6 @@ review(11, ('Fractal Markets Hypothesis and Long Memory', 'ipoteza piețelor fra
        [T('comparing $\\hat H$ with 0.5 instead of a Monte Carlo band for the same $N$ (R/S is biased upwards)', 'compararea lui $\\hat H$ cu 0,5 în locul unei benzi Monte Carlo pentru același $N$ (R/S este deplasat în sus)'),
         T('structural breaks or GARCH taken for long memory', 'rupturi structurale sau efecte GARCH considerate memorie lungă')])
 
-D.recap(('Chapters 8--11', 'Capitolele 8--11'), [
-    T('Volatility is latent, persistent and predictable: EWMA and GARCH forecast it', 'Volatilitatea este latentă, persistentă și previzibilă: EWMA și GARCH o prognozează'),
-    T('A risk number needs both a volatility forecast and a heavy-tailed quantile, and then a backtest', 'O măsură de risc are nevoie atît de o prognoză a volatilității, cît și de o cuantilă cu cozi groase, apoi de backtesting'),
-    T('Long memory: weak in returns, strong in volatility', 'Memoria lungă: slabă în randamente, puternică în volatilitate')])
-
 # =============================================================================
 # 5. CAPITOLELE 12--15
 # =============================================================================
@@ -546,11 +526,6 @@ review(15, ('Systemic Risk', 'risc sistemic'),
         T('11 US and European banks: total connectedness of about @{f15.dy}\\%', '11 bănci americane și europene: conectivitate totală de circa @{f15.dy}\\%')],
        [T('ranking banks by their own VaR: a large VaR need not mean a large contribution to the system', 'ordonarea băncilor după propriul VaR: un VaR mare nu înseamnă neapărat o contribuție mare la riscul sistemului'),
         T('correlations compared across calm and crisis periods without the Forbes--Rigobon adjustment', 'corelații comparate între perioade calme și de criză fără ajustarea Forbes--Rigobon')])
-
-D.recap(('Chapters 12--15', 'Capitolele 12--15'), [
-    T('Scoring: discrimination (AUC, Gini) and calibration, out of sample, with costs', 'Scoring: discriminare (AUC, Gini) și calibrare, în afara eșantionului, cu costuri'),
-    T('Machine learning: judged against a simple benchmark, with walk-forward validation', 'Machine learning: evaluat față de un reper simplu, cu validare walk-forward'),
-    T('Crypto and systemic risk: the same tools, with the right calendar and conditional tail measures', 'Cripto și risc sistemic: aceleași instrumente, cu calendarul corect și măsuri condiționate ale cozii')])
 
 # =============================================================================
 # 6. TRUSA DE INSTRUMENTE
@@ -770,11 +745,6 @@ solution(8, [
     [T('The model is barely more accurate than ``always good\'\', but it finds two thirds of the bad loans: judge it by AUC and costs', 'Modelul este doar puțin mai precis decît regula „mereu bun”, dar găsește două treimi dintre creditele neperformante: îl judecăm după AUC și costuri'),
      T('The distress of this bank raises the VaR of the system by @{e8.dcv} percentage points', 'Dificultățile acestei bănci cresc VaR-ul sistemului cu @{e8.dcv} puncte procentuale')])
 
-D.recap(('The Exam', 'examenul'), [
-    T('Written, 2 hours, calculator allowed; Chapters 0--15; computations and interpretations', 'Scris, 2 ore, cu calculator; Capitolele 0--15; calcule și interpretări'),
-    T('Points for the method, the result with its unit and sign, and the interpretation', 'Punctajul se acordă pentru metodă, pentru rezultat (cu unitate și semn) și pentru interpretare'),
-    T('Practise with Part A of every seminar and with the review seminar', 'Exersați cu Partea A a fiecărui seminar și cu seminarul de recapitulare')])
-
 # =============================================================================
 # 8. PROIECTUL DE ECHIPĂ
 # =============================================================================
@@ -816,11 +786,6 @@ D.frame(T('The File AI\\_USE.md', 'Fișierul AI\\_USE.md'), items(
       T('every reference: its DOI opened and its title checked', 'fiecare referință: DOI-ul deschis și titlul verificat')]),
     (T('\\textbf{Typical AI errors in this course}', '\\textbf{Erori AI tipice în acest curs}'),
      [T('``VaR 99\\%\'\' with a negative sign, Bitcoin annualised with 252 days, invented references, a test with the wrong distribution', '„VaR 99\\%” cu semn negativ, Bitcoin anualizat cu 252 de zile, referințe inventate, un test cu distribuția greșită')])))
-
-D.recap(('The Team Project', 'proiectul de echipă'), [
-    T('One question, real data, reproducible code, a short report, a presentation', 'O întrebare, date reale, cod reproductibil, un raport scurt, o prezentare'),
-    T('Graded on the question, the methods and checks, the interpretation and the oral defence', 'Evaluat după întrebare, metode și verificări, interpretare și susținerea orală'),
-    T('AI allowed, declared in \\texttt{AI\\_USE.md}, every number and reference checked', 'AI permis, declarat în \\texttt{AI\\_USE.md}, cu fiecare cifră și referință verificată')])
 
 # =============================================================================
 # 9. CONTRIBUȚIA POSIBILĂ A AI

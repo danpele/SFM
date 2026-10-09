@@ -193,9 +193,8 @@ D.frame(T('March 2020: the COVID-19 Crash', 'Martie 2020: crahul COVID-19'), col
       T('DAX: $@{c.dax.ret}\\%$ on @{c.dax.date}', 'DAX: $@{c.dax.ret}\\%$ pe @{c.dax.date}'),
       T('Bitcoin: $@{c.btc.ret}\\%$ on @{c.btc.date}', 'Bitcoin: $@{c.btc.ret}\\%$ pe @{c.btc.date}')]),
     (T('The data of this chapter', 'Datele acestui capitol'),
-     [T('the data: daily closes from EODHD; S\\&P 500 and DAX since 1990, BET since 1997, Bitcoin since 2014',
-        'prețuri de închidere zilnice de la EODHD; S\\&P 500 și DAX din 1990, BET din 1997, Bitcoin din 2014')]),
-    T('Question of the chapter: how often should we expect such a day?', 'Întrebarea capitolului: cît de des ar trebui să ne așteptăm la o astfel de zi?')),
+     [T('daily closes from EODHD; S\\&P 500 and DAX since 1990, BET since 1997, Bitcoin since 2014',
+        'prețuri de închidere zilnice de la EODHD; S\\&P 500 și DAX din 1990, BET din 1997, Bitcoin din 2014')])),
     pic('ch5_fidi_2020.jpg', 'The empty Financial District of New York, 29 March 2020', 'Districtul financiar din New York, pustiu, pe 29 martie 2020',
         'https://commons.wikimedia.org/wiki/File:Solitude_(50073346382).jpg',
         'Photo: Billie Grace Ward (2020); CC BY 2.0; Wikimedia Commons', 'Foto: Billie Grace Ward (2020); CC BY 2.0; Wikimedia Commons',
@@ -252,12 +251,6 @@ D.frame(T('Why the Tail Matters for Risk', 'Rolul cozii în măsurarea riscului'
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
      [T('$10 / (0.001 \\times 250) = 40$ years: historical data alone are too thin; EVT extrapolates the tail with a model',
         '$10 / (0.001 \\times 250) = 40$ de ani: doar datele istorice nu ajung; EVT extrapolează coada cu un model')])))
-
-D.recap(('Why Tails Matter', 'Importanța cozilor'), [
-    T('1987, 2008, 2020: daily losses of 10--20\\% for indices, almost 50\\% for Bitcoin', '1987, 2008, 2020: pierderi zilnice de 10--20\\% pentru indici, aproape 50\\% pentru Bitcoin'),
-    T('Under the Normal distribution these days should never happen', 'Pentru distribuția Normală, aceste zile nu ar trebui să se întîmple niciodată'),
-    T('VaR and ES are tail quantities; few observations lie that far out', 'VaR și ES sînt mărimi din coadă; puține observații se află atît de departe'),
-    T('EVT: a theory for the shape of the tail, from hydrology to finance', 'EVT: o teorie pentru forma cozii, de la hidrologie la finanțe')])
 
 # =============================================================================
 # 2. COZI GROASE ȘI VARIAȚIA REGULATĂ
@@ -338,12 +331,6 @@ D.frame(T('Worked Example: a Pareto Tail', 'Exemplu lucrat: o coadă Pareto'), i
         'rezolvăm $1\\% \\times (x/3)^{-3} = 0.1\\%$: $x = 3 \\times 10^{1/3} = 3 \\times @{ex.cuberoot} = @{ex.v01}\\%$'),
       T('a probability ten times smaller only moves the loss by a factor $10^{1/\\alpha}$', 'o probabilitate de zece ori mai mică crește pierderea doar cu factorul $10^{1/\\alpha}$')])))
 
-D.recap(('Heavy Tails', 'Cozi groase'), [
-    T('Heavy tail: $P(L > x) = x^{-\\alpha}\\ell(x)$, a straight line on log-log axes', 'Coadă groasă: $P(L > x) = x^{-\\alpha}\\ell(x)$, o dreaptă pe axe log-log'),
-    T('The tail index $\\alpha$ decides which moments exist: moments of order below $\\alpha$', 'Tail index-ul $\\alpha$ determină momentele care există: cele de ordin mai mic decît $\\alpha$'),
-    T('Daily index losses: slopes near 3, the inverse cubic law', 'Pierderile zilnice ale indicilor: pante în jur de 3, legea cubică inversă'),
-    T('Power law: the VaR moves only by $10^{1/\\alpha}$ when the probability falls tenfold', 'Lege de putere: VaR crește doar de $10^{1/\\alpha}$ ori cînd probabilitatea scade de zece ori')])
-
 # =============================================================================
 # 3. ESTIMATORUL HILL
 # =============================================================================
@@ -396,7 +383,7 @@ D.frame(T('Inference for the Hill Estimator', 'Inferența pentru estimatorul Hil
         '\\textbf{bootstrap pe blocuri mobile}: reeșantionăm blocuri de 20 de zile consecutive, recalculăm $\\hat\\alpha$ și calculăm abaterea standard a estimărilor'),
       T('the blocks keep the clusters together, so the standard error is honest about the dependence',
         'blocurile păstrează episoadele grupate, deci eroarea standard ține seama de dependență')]),
-    T('Same rule for every series: $k = 2.5\\%$ of $n$, 500 bootstrap samples', 'Aceeași regulă pentru fiecare serie: $k = 2.5\\%$ din $n$, 500 de eșantioane bootstrap')))
+    T('Every series: 500 bootstrap samples, with the $k$ fixed on the Hill-plot slide', 'Pentru fiecare serie: 500 de eșantioane bootstrap, cu $k$ fixat pe slide-ul graficului Hill')))
 
 
 def hrow(k):
@@ -447,12 +434,6 @@ chart(T('Hill Plots of the BVB Stocks', 'Grafice Hill pentru acțiunile BVB'), '
     T('Shorter samples ($n \\approx 3\\,800$): wider bands (TLV shown) and more wiggles at small $k$', 'Eșantioane mai scurte ($n \\approx 3\\,800$): benzi mai largi (afișată pentru TLV) și mai multe oscilații la $k$ mic'),
     T('No stock has $\\hat\\alpha$ below 2 in the flat region: variances are finite', 'Nicio acțiune nu are $\\hat\\alpha$ sub 2 în zona plată: varianțele sînt finite')], h='0.58\\textheight')
 
-D.recap(('The Hill Estimator', 'Estimatorul Hill'), [
-    T('$\\hat\\alpha_k = [\\frac1k\\sum_{i \\le k}\\ln(L_{(i)}/L_{(k+1)})]^{-1}$, the ML estimator of a Pareto tail', '$\\hat\\alpha_k = [\\frac1k\\sum_{i \\le k}\\ln(L_{(i)}/L_{(k+1)})]^{-1}$, estimatorul ML al unei cozi Pareto'),
-    T('Choose $k$ where the Hill plot is flat; fix the rule in advance', 'Alegeți $k$ acolo unde graficul Hill este plat; fixați regula dinainte'),
-    T('SE $\\approx \\hat\\alpha/\\sqrt{k}$; block bootstrap for dependent returns', 'SE $\\approx \\hat\\alpha/\\sqrt{k}$; bootstrap pe blocuri pentru randamente dependente'),
-    T('Indices and BVB stocks: $\\hat\\alpha$ between $@{ha.min}$ and $@{ha.max}$, finite variance, infinite kurtosis', 'Indici și acțiuni BVB: $\\hat\\alpha$ între $@{ha.min}$ și $@{ha.max}$, varianță finită, boltire infinită')])
-
 # =============================================================================
 # 4. FUNCȚIA MEAN EXCESS
 # =============================================================================
@@ -471,8 +452,8 @@ D.frame(T('The Mean Excess Function', 'Funcția mean excess'), items(
         'peste o pierdere de 2\\%, pierderea suplimentară medie este $@{me.e2}\\%$; peste 4\\% este $@{me.e4}\\%$: cu cît pragul este mai mare, cu atît excesul mediu este mai mare')])))
 
 chart(T('Empirical Mean Excess of Daily Losses', 'Mean excess empiric al pierderilor zilnice'), 'sfm_ch5_mean_excess', 'SFM_ch5_mean_excess', [
-    T('All four functions rise above the 90\\% quantile $u$ (dotted): a heavy, Pareto-type tail; black: the line implied by the GPD fitted above $u$',
-      'Toate cele patru funcții cresc peste cuantila de 90\\% $u$ (punctat): o coadă groasă, de tip Pareto; negru: dreapta implicată de GPD ajustată peste $u$'),
+    T('All four functions rise above the 90\\% quantile $u$ (dotted): a heavy, Pareto-type tail; black: the straight line of the tail model fitted above $u$ (Section 6)',
+      'Toate cele patru funcții cresc peste cuantila de 90\\% $u$ (punctat): o coadă groasă, de tip Pareto; negru: dreapta modelului de coadă ajustat peste $u$ (Secțiunea 6)'),
     T('The last points rest on very few losses and jump around: do not read them literally', 'Ultimele puncte se bazează pe foarte puține pierderi și sînt instabile: nu le interpretați literal')], h='0.62\\textheight')
 
 D.frame(T('Reading the Mean Excess Plot', 'Interpretarea graficului mean excess'), items(
@@ -599,14 +580,7 @@ D.frame(T('How Large Is a 10-Year Loss?', 'Mărimea pierderii de 10 ani'), table
     T('Daily loss (\\%) exceeded on average once in $T$ years; interval: bootstrap of the monthly maxima (200 samples)',
       'Pierderea zilnică (\\%) depășită în medie o dată la $T$ ani; intervalul: bootstrap al maximelor lunare (200 de eșantioane)'),
     (T('BET: $\\hat\\xi = @{g.bet.xi}$ makes the 50-year level $@{g.bet.rl50}\\%$, almost twice the largest loss seen', 'BET: cu $\\hat\\xi = @{g.bet.xi}$, nivelul de 50 de ani este $@{g.bet.rl50}\\%$, aproape dublul celei mai mari pierderi observate'),
-     [T('a small change in $\\hat\\xi$ gives a large change far in the tail', 'o mică modificare a lui $\\hat\\xi$ schimbă mult valorile din coada îndepărtată')]),
-    T('Block maxima use one loss per month: the peaks over threshold method uses all large losses', 'Metoda block maxima folosește o singură pierdere pe lună; metoda peaks over threshold folosește toate pierderile mari')) + ql('SFM_ch5_gev_block_maxima'), 'footnotesize')
-
-D.recap(('Block Maxima', 'Block maxima'), [
-    T('Maxima of i.i.d.\\ variables can only converge to a GEV law (Fisher--Tippett--Gnedenko)', 'Maximele variabilelor i.i.d.\\ pot converge doar către o lege GEV (Fisher--Tippett--Gnedenko)'),
-    T('$\\xi > 0$ Fréchet (heavy, $\\alpha = 1/\\xi$), $\\xi = 0$ Gumbel, $\\xi < 0$ Weibull', '$\\xi > 0$ Fréchet (groasă, $\\alpha = 1/\\xi$), $\\xi = 0$ Gumbel, $\\xi < 0$ Weibull'),
-    T('Monthly maxima of daily losses: Fréchet, $\\hat\\xi$ between $@{gxi.min}$ and $@{gxi.max}$', 'Maximele lunare ale pierderilor zilnice: Fréchet, $\\hat\\xi$ între $@{gxi.min}$ și $@{gxi.max}$'),
-    T('Return level: the loss exceeded once in $T$ years; far beyond the sample it is extrapolation', 'Return level: pierderea depășită o dată la $T$ ani; mult dincolo de lungimea eșantionului, este o extrapolare')])
+     [T('a small change in $\\hat\\xi$ gives a large change far in the tail', 'o mică modificare a lui $\\hat\\xi$ schimbă mult valorile din coada îndepărtată')])) + ql('SFM_ch5_gev_block_maxima'), 'footnotesize')
 
 # =============================================================================
 # 6. PEAKS OVER THRESHOLD ȘI GPD
@@ -649,8 +623,7 @@ D.frame(T('Choosing the Threshold', 'Alegerea pragului'), items(
      [T('mean excess plot: roughly linear above $u$', 'graficul mean excess: aproximativ liniar peste $u$'),
       T('parameter stability plot: $\\hat\\xi$ should not change much when $u$ is raised further', 'graficul stabilității parametrilor: $\\hat\\xi$ nu ar trebui să se schimbe mult cînd $u$ crește în continuare')]),
     (T('Rule used here: $u =$ the 90\\% quantile of the losses, i.e.\\ the 10\\% largest losses', 'Regula folosită aici: $u =$ cuantila de 90\\% a pierderilor, adică cele mai mari 10\\% dintre pierderi'),
-     [T('\\refMF\\ use $k = 100$ excesses in windows of $n = 1000$ days, the same share', '\\refMF\\ folosesc $k = 100$ de excese în ferestre de $n = 1000$ de zile, aceeași proporție'),
-      T('for the S\\&P 500: $u = @{r.sp500.u}\\%$ and $N_u = @{r.sp500.nu}$ excesses', 'pentru S\\&P 500: $u = @{r.sp500.u}\\%$ și $N_u = @{r.sp500.nu}$ de excese')])))
+     [T('\\refMF\\ use $k = 100$ excesses in windows of $n = 1000$ days, the same share', '\\refMF\\ folosesc $k = 100$ de excese în ferestre de $n = 1000$ de zile, aceeași proporție')])))
 
 chart(T('Parameter Stability', 'Stabilitatea parametrilor'), 'sfm_ch5_threshold_stability', 'SFM_ch5_pot_gpd', [
     T('Left: $\\hat\\xi$ with 95\\% interval for $u$ from the 80\\% to the 99\\% quantile; right: the EVT VaR 1\\% for the same thresholds',
@@ -710,20 +683,14 @@ D.frame(T('Back to the Crashes: How Often?', 'Înapoi la crahuri: cît de des?')
     T('1987 is outside our data: EVT extrapolates it to a waiting time of about @{w.1987} years, with a wide uncertainty',
       '1987 este în afara datelor noastre: EVT îl extrapolează la un timp de așteptare de circa @{w.1987} de ani, cu o incertitudine mare')) + ql('SFM_ch5_pot_gpd'), 'footnotesize')
 
-D.recap(('Peaks over Threshold', 'Peaks over threshold'), [
-    T('Excesses over a high threshold follow approximately a GPD (Pickands--Balkema--de Haan)', 'Excesele peste un prag înalt urmează aproximativ o GPD (Pickands--Balkema--de Haan)'),
-    T('Same shape $\\xi$ as the GEV; $\\xi > 0$: power tail with $\\alpha = 1/\\xi$', 'Aceeași formă $\\xi$ ca la GEV; $\\xi > 0$: coadă de tip putere cu $\\alpha = 1/\\xi$'),
-    T('Threshold: mean excess and parameter stability; here the 90\\% quantile', 'Pragul: mean excess și stabilitatea parametrilor; aici cuantila de 90\\%'),
-    T('Tail estimator: data up to $u$, GPD beyond; check with PP and QQ plots', 'Estimatorul cozii: datele pînă la $u$, GPD dincolo de $u$; verificare cu grafice PP și QQ')])
-
 # =============================================================================
 # 7. VaR ȘI ES PRIN EVT
 # =============================================================================
 D.section('VaR and ES by Extreme Value Theory', 'VaR și ES prin teoria valorilor extreme')
 
-D.frame(T('VaR and ES: Definitions', 'VaR și ES: definiții'), items(
-    (T('Losses $L = -r$ with distribution function $F_L$; level $p$ (e.g.\\ $p = 1\\%$)', 'Pierderile $L = -r$ cu funcția de repartiție $F_L$; nivelul $p$ (de ex.\\ $p = 1\\%$)'),
-     [T('$\\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$: the loss exceeded with probability $p$', '$\\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$: pierderea depășită cu probabilitatea $p$'),
+D.frame(T('Estimating VaR and ES', 'Estimarea VaR și ES'), items(
+    (T('VaR and ES of Section 1, written for the losses $L = -r$, with distribution function $F_L$', 'VaR și ES din Secțiunea 1, scrise pentru pierderile $L = -r$, cu funcția de repartiție $F_L$'),
+     [T('$\\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$', '$\\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$'),
       T('$\\mathrm{ES}_p = \\dfrac{1}{p}\\displaystyle\\int_0^p \\mathrm{VaR}_s\\,ds = E[L \\mid L \\ge \\mathrm{VaR}_p]$ for continuous laws', '$\\mathrm{ES}_p = \\dfrac{1}{p}\\displaystyle\\int_0^p \\mathrm{VaR}_s\\,ds = E[L \\mid L \\ge \\mathrm{VaR}_p]$ pentru distribuții continue')]),
     (T('Three ways to estimate them from daily losses', 'Trei moduri de a le estima din pierderile zilnice'),
      [T('\\textbf{historical simulation}: the empirical quantile and the mean of the losses beyond it', '\\textbf{simularea istorică}: cuantila empirică și media pierderilor de dincolo de ea'),
@@ -820,13 +787,6 @@ D.frame(T('What EVT Can and Cannot Do', 'Posibilitățile și limitele EVT'), it
      [T('apply EVT to returns divided by a GARCH volatility (Chapter 9) for daily risk; see also entropy-based ES \\refPeleA',
         'aplicați EVT pe randamente împărțite la o volatilitate GARCH (Capitolul 9) pentru riscul zilnic; pentru o alternativă, vedeți ES calculat pe baza entropiei \\refPeleA')]),
     T('Surveys of EVT in finance: \\refRocco; \\refQRM, Ch.~5', 'Sinteze despre EVT în finanțe: \\refRocco; \\refQRM, cap.~5')))
-
-D.recap(('VaR and ES by EVT', 'VaR și ES prin EVT'), [
-    T('$\\mathrm{VaR}_p = u + \\frac{\\beta}{\\xi}[(np/N_u)^{-\\xi} - 1]$; $\\mathrm{ES}_p = (\\mathrm{VaR}_p + \\beta - \\xi u)/(1 - \\xi)$',
-      '$\\mathrm{VaR}_p = u + \\frac{\\beta}{\\xi}[(np/N_u)^{-\\xi} - 1]$; $\\mathrm{ES}_p = (\\mathrm{VaR}_p + \\beta - \\xi u)/(1 - \\xi)$'),
-    T('VaR 1\\% and ES 2.5\\%: EVT $\\approx$ historical, Normal too low', 'VaR 1\\% și ES 2,5\\%: EVT $\\approx$ simularea istorică; distribuția Normală subestimează'),
-    T('VaR 0.1\\%: EVT about twice the Normal value; historical simulation rests on a few days', 'VaR 0,1\\%: VaR EVT este de circa două ori VaR-ul Normal; simularea istorică se bazează pe cîteva zile'),
-    T('Out of sample: the Normal VaR fails; unconditional EVT ignores volatility regimes', 'În afara eșantionului: VaR Normal eșuează; EVT necondiționată ignoră regimurile de volatilitate')])
 
 # =============================================================================
 # 8. AI PENTRU DESCOPERIRE ȘTIINȚIFICĂ

@@ -286,31 +286,25 @@ def mrow(k):
 
 
 def trow(k):
-    return f'{NAMES[k]} & $@{{m.{k}.nu}}$ & @{{m.{k}.jb}} & $@{{m.{k}.daic}}$'
+    return f'{NAMES[k]} & $@{{m.{k}.nu}}$ & $@{{m.{k}.daic}}$'
 
 
 # =============================================================================
 # DESCHIDERE
 # =============================================================================
-D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items(
+D.frame(T("Today's Question, Route and Learning Outcomes", 'Întrebarea de azi, traseul și rezultatele învățării'), items(
     (T('\\textbf{Question}: is the Normal distribution a good model for daily returns, and what do real returns look like?',
        '\\textbf{Întrebarea}: este distribuția Normală un model bun pentru randamentele zilnice și cum arată randamentele reale?'),
      [T('the answer decides how we measure risk, price options and test hypotheses',
         'de răspuns depind măsurarea riscului, evaluarea opțiunilor și testarea ipotezelor')]),
-    (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
-     [T('the Normal and the lognormal distributions, the central limit theorem (CLT)', 'distribuția Normală, distribuția lognormală și teorema limită centrală (CLT, central limit theorem)'),
-      T('moments, the Jarque--Bera test and QQ plots', 'momente, testul Jarque--Bera și QQ plots'),
-      T('the Student-$t$ distribution as a first heavy-tailed alternative', 'distribuția Student-$t$ ca primă alternativă cu cozi groase'),
-      T('six stylised facts of returns \\refCont', 'șase fapte stilizate ale randamentelor \\refCont')]),
+    (T('\\textbf{Route and outcomes}: after this chapter you can', '\\textbf{Traseul și rezultatele învățării}: la finalul capitolului veți putea'),
+     [T('compute probabilities and quantiles of the Normal and lognormal distributions', 'calcula probabilități și cuantile ale distribuțiilor Normală și lognormală'),
+      T('state the central limit theorem (CLT) and say when the Normal approximation works', 'enunța teorema limită centrală (CLT, central limit theorem) și preciza cînd funcționează aproximarea Normală'),
+      T('estimate skewness and excess kurtosis and test normality with the Jarque--Bera test', 'estima asimetria și excesul de boltire și testa normalitatea cu testul Jarque--Bera'),
+      T('read a QQ plot and fit a Student-$t$ distribution by maximum likelihood', 'citi un QQ plot și estima o distribuție Student-$t$ prin metoda verosimilității maxime'),
+      T('check six stylised facts of returns \\refCont and explain what each means for a model', 'verifica șase fapte stilizate ale randamentelor \\refCont și explica ce înseamnă fiecare pentru un model')]),
     T('Real data, @{y0}--@{y1}: S\\&P 500, DAX, BET, Bitcoin and four BVB stocks (SNP, BRD, SNN, SNG)',
       'Date reale, @{y0}--@{y1}: S\\&P 500, DAX, BET, Bitcoin și patru acțiuni BVB (SNP, BRD, SNN, SNG)')))
-
-D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
-    T('Compute probabilities and quantiles of the Normal and lognormal distributions', 'Calculați probabilități și cuantile ale distribuțiilor Normală și lognormală'),
-    T('State the CLT and say when the Normal approximation works', 'Enunțați CLT și precizați cînd funcționează aproximarea Normală'),
-    T('Estimate skewness and excess kurtosis and test normality with the Jarque--Bera test', 'Estimați asimetria și excesul de boltire și testați normalitatea cu testul Jarque--Bera'),
-    T('Read a QQ plot and fit a Student-$t$ distribution by maximum likelihood', 'Citiți un QQ plot și estimați o distribuție Student-$t$ prin metoda verosimilității maxime'),
-    T('Check six stylised facts on a return series and explain what each means for a model', 'Verificați șase fapte stilizate pe o serie de randamente și explicați ce înseamnă fiecare pentru un model')))
 
 D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Textbook: \\refFHH, \\textit{Statistics of Financial Markets}, 5th ed., Sec.~3.3 (Normal and lognormal) and Sec.~11.2 (stylised facts)',
@@ -376,8 +370,7 @@ D.frame(T('The Benchmark Model of This Chapter', 'Modelul de referință al capi
       T('prices follow a geometric random walk; $P_t$ is lognormal \\refOsborne', 'prețurile urmează un mers aleator geometric; $P_t$ este lognormal \\refOsborne'),
       T('the first model of this kind, for arithmetic price changes: \\refBachelier', 'primul model de acest fel, pentru variațiile aritmetice ale prețurilor: \\refBachelier')]),
     T('This chapter tests each assumption of the benchmark in turn: normality, identical distribution and independence',
-      'Capitolul verifică pe rînd ipotezele modelului de referință: normalitatea, distribuția identică și independența'),
-    T('Textbook: \\refFHH, Sec.~3.3 and Sec.~11.2', 'Manual: \\refFHH, secț.~3.3 și secț.~11.2')))
+      'Capitolul verifică pe rînd ipotezele modelului de referință: normalitatea, distribuția identică și independența')))
 
 # =============================================================================
 # 2. DISTRIBUȚIA NORMALĂ
@@ -461,7 +454,7 @@ D.frame(T('From Normal Log Returns to Lognormal Prices', 'De la randamente logar
     (T('Why lognormal and not Normal prices?', 'De ce prețuri lognormale și nu Normale?'),
      [T('prices cannot be negative; a Normal price could be', 'prețurile nu pot fi negative; un preț cu distribuție Normală ar putea fi negativ'),
       T('the simple return $R = e^r - 1 > -1$: you cannot lose more than you invested', 'randamentul simplu $R = e^r - 1 > -1$: nu puteți pierde mai mult decît ați investit')]),
-    T('Textbook: \\refFHH, Sec.~3.3; the Black--Scholes model is built on it', 'Manual: \\refFHH, secț.~3.3; modelul Black--Scholes se bazează pe ea')))
+    T('The Black--Scholes model is built on it', 'Modelul Black--Scholes se bazează pe ea')))
 
 D.frame(T('Mean, Median and Mode', 'Media, mediana și modul'), items(
     T('If $Y \\sim LN(m, s^2)$:', 'Dacă $Y \\sim LN(m, s^2)$:'),
@@ -587,8 +580,7 @@ D.frame(T('Sample Moments', 'Momentele de selecție'), items(
     (T('If the data are i.i.d. Normal: $S \\approx N(0, 6/n)$ and $K \\approx N(0, 24/n)$', 'Dacă datele sînt i.i.d. Normale: $S \\approx N(0, 6/n)$ și $K \\approx N(0, 24/n)$'),
      [T('with $n = @{m.sp500.n}$: standard errors $\\sqrt{6/n} = @{m.sp500.sesk}$ and $\\sqrt{24/n} = @{m.sp500.seku}$', 'cu $n = @{m.sp500.n}$: erorile standard $\\sqrt{6/n} = @{m.sp500.sesk}$ și $\\sqrt{24/n} = @{m.sp500.seku}$')]),
     T('These standard errors hold only under normality; for heavy-tailed data they are far too small (Seminar 2, B1)',
-      'Aceste erori standard sînt valabile doar în ipoteza de normalitate; pentru date cu cozi groase sînt mult prea mici (Seminarul 2, B1)'),
-    T('Textbook exercises: \\refFHHex', 'Exerciții din manual: \\refFHHex')))
+      'Aceste erori standard sînt valabile doar în ipoteza de normalitate; pentru date cu cozi groase sînt mult prea mici (Seminarul 2, B1)')))
 
 D.frame(T('Daily Log Returns: Moments, @{y0}--@{y1}', 'Randamente logaritmice zilnice: momente, @{y0}--@{y1}'),
         table('lrrrrrrr', T('Series', 'Seria') + ' & ' + T('from', 'din') + ' & $n$ & ' + T('Mean \\%', 'Media \\%') + ' & ' + T('S.d. \\%', 'Ab. std. \\%') + ' & '
@@ -645,8 +637,9 @@ D.frame(T('Worked Example: Jarque--Bera for the S\\&P 500', 'Exemplu lucrat: Jar
     T('$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$', '$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$'),
     T('Critical value @{jb.crit}: normality is rejected; the p-value is zero to any number of decimals', 'Valoarea critică @{jb.crit}: normalitatea este respinsă; p-value-ul este practic zero'),
     T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul de boltire domină: aproape toată valoarea JB provine din $K^2/4$'),
-    (T('JB for the other series: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}', 'JB pentru celelalte serii: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}, SNN @{m.snn.jb}'),
-     [T('all rejected at any usual level', 'toate respinse la orice nivel uzual')])))
+    (T('JB for the other series: all rejected at any usual level', 'JB pentru celelalte serii: toate respinse la orice nivel uzual'),
+     [T('indices and Bitcoin: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}', 'indici și Bitcoin: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}'),
+      T('BVB stocks: SNP @{m.snp.jb}, BRD @{m.brd.jb}, SNN @{m.snn.jb}, SNG @{m.sng.jb}', 'acțiuni BVB: SNP @{m.snp.jb}, BRD @{m.brd.jb}, SNN @{m.snn.jb}, SNG @{m.sng.jb}')])))
 
 D.frame(T('What Jarque--Bera Does Not Tell You', 'Limitele testului Jarque--Bera'), items(
     (T('With thousands of observations it rejects even tiny departures', 'Cu mii de observații respinge chiar și abateri foarte mici'),
@@ -733,7 +726,7 @@ D.frame(T('Fitting a Student-$t$ by Maximum Likelihood', 'Estimarea unei distrib
     T('Early evidence for stock prices: \\refPraetz, \\refBG', 'Primele rezultate empirice pentru prețurile acțiunilor: \\refPraetz, \\refBG')))
 
 D.frame(T('Fitted Student-$t$: Degrees of Freedom, @{y0}--@{y1}', 'Distribuția Student-$t$ estimată: gradele de libertate, @{y0}--@{y1}'),
-        cols(table('lrrr', T('Series', 'Seria') + ' & $\\hat\\nu$ & JB & $\\Delta$AIC', [trow(k) for k in ASSETS], size='footnotesize'), items(
+        cols(table('lrr', T('Series', 'Seria') + ' & $\\hat\\nu$ & $\\Delta$AIC', [trow(k) for k in ASSETS], size='footnotesize'), items(
             T('All $\\hat\\nu$ between @{nu.min} (@{nu.min.name}) and @{nu.max} (@{nu.max.name})', 'Toate valorile $\\hat\\nu$ între @{nu.min} (@{nu.min.name}) și @{nu.max} (@{nu.max.name})'),
             T('$\\hat\\nu < 4$ for @{nu.below4} of the @{nassets} series: the fitted model has infinite kurtosis', '$\\hat\\nu < 4$ pentru @{nu.below4} din cele @{nassets} serii: modelul estimat are boltire infinită'),
             T('$\\Delta$AIC is at least @{daic.min}: the $t$ beats the Normal distribution everywhere', '$\\Delta$AIC este cel puțin @{daic.min}: distribuția $t$ este preferată distribuției Normale pentru toate seriile')), wl='0.55', wr='0.41') + ql('SFM_ch2_student_t_fit'),
@@ -967,15 +960,6 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
 # REZUMAT
 # =============================================================================
 D.section('Summary', 'Rezumat')
-
-D.frame(T('Key Takeaways', 'Idei principale'), items(
-    T('The Normal distribution: two parameters, thin tails, closed under addition', 'Distribuția Normală: doi parametri, cozi subțiri, închisă la adunare'),
-    T('Normal log returns give lognormal prices; mean above median by the volatility drag', 'Randamentele logaritmice Normale conduc la prețuri lognormale; media depășește mediana prin volatility drag'),
-    T('The CLT needs independence, identical distribution and finite variance', 'CLT cere independență, distribuție identică și varianță finită'),
-    T('Daily returns: mostly negative skewness, excess kurtosis @{ku.min0}--@{ku.max0}, JB rejects, QQ plots bend at both ends', 'Randamentele zilnice: în general asimetrie negativă, exces de boltire @{ku.min0}--@{ku.max0}, JB respinge, QQ plots se curbează la ambele capete'),
-    T('The Student-$t$ with $\\hat\\nu$ between @{nu.min0} and @{nu.max0} fits the tails much better, but is symmetric and i.i.d.', 'Student-$t$ cu $\\hat\\nu$ între @{nu.min0} și @{nu.max0} descrie mult mai bine cozile, dar este simetrică și i.i.d.'),
-    T('Six stylised facts: heavy tails, aggregational Gaussianity, no linear autocorrelation, volatility clustering, leverage, gain/loss asymmetry',
-      'Șase fapte stilizate: cozi groase, gaussianitate agregată, fără autocorelație liniară, volatility clustering, efect de levier, asimetrie cîștig/pierdere')))
 
 D.frame(T('Key Formulas', 'Formule de reținut'), table(
     'll', T('\\textbf{Quantity}', '\\textbf{Mărimea}') + ' & ' + T('\\textbf{Formula}', '\\textbf{Formula}'),

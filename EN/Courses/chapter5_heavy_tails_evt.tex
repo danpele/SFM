@@ -90,7 +90,6 @@ MSCA Digital Finance}
     \item \textbf{GARCH}: Generalised AutoRegressive Conditional Heteroskedasticity
     \item \textbf{GEV}: Generalised Extreme Value (distribution)
     \item \textbf{GPD}: Generalised Pareto Distribution
-    \item \textbf{ML}: Maximum Likelihood
     \item \textbf{OMV}: Österreichische Mineralölverwaltung — Austrian Mineral Oil Administration (OMV group)
     \item \textbf{POT}: Peaks Over Threshold
     \item \textbf{PP}: Probability–Probability (plot)
@@ -223,9 +222,8 @@ MSCA Digital Finance}
     \end{itemize}
     \item The data of this chapter
     \begin{itemize}
-        \item the data: daily closes from EODHD; S\&P 500 and DAX since 1990, BET since 1997, Bitcoin since 2014
+        \item daily closes from EODHD; S\&P 500 and DAX since 1990, BET since 1997, Bitcoin since 2014
     \end{itemize}
-    \item Question of the chapter: how often should we expect such a day?
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -321,16 +319,6 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
     \begin{itemize}
         \item $10 / (0.001 \times 250) = 40$ years: historical data alone are too thin; EVT extrapolates the tail with a model
     \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Recap: Why Tails Matter}
-\itemsize{\small}
-\begin{itemize}
-    \item 1987, 2008, 2020: daily losses of 10--20\% for indices, almost 50\% for Bitcoin
-    \item Under the Normal distribution these days should never happen
-    \item VaR and ES are tail quantities; few observations lie that far out
-    \item EVT: a theory for the shape of the tail, from hydrology to finance
 \end{itemize}
 \end{frame}
 
@@ -459,16 +447,6 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Recap: Heavy Tails}
-\itemsize{\small}
-\begin{itemize}
-    \item Heavy tail: $P(L > x) = x^{-\alpha}\ell(x)$, a straight line on log-log axes
-    \item The tail index $\alpha$ decides which moments exist: moments of order below $\alpha$
-    \item Daily index losses: slopes near 3, the inverse cubic law
-    \item Power law: the VaR moves only by $10^{1/\alpha}$ when the probability falls tenfold
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{The Hill Estimator}
@@ -551,7 +529,7 @@ Bitcoin & 12 March 2020 & ${-46.5}$ & ${-13.4}$ & $10^{38}$ & 18 & $0.14$ \\
         \item \textbf{moving-block bootstrap}: resample blocks of 20 consecutive days, recompute $\hat\alpha$, take the standard deviation
         \item the blocks keep the clusters together, so the standard error is honest about the dependence
     \end{itemize}
-    \item Same rule for every series: $k = 2.5\%$ of $n$, 500 bootstrap samples
+    \item Every series: 500 bootstrap samples, with the $k$ fixed on the Hill-plot slide
 \end{itemize}
 \end{frame}
 
@@ -642,16 +620,6 @@ Transgaz (TGN) & 3\,725 & $3.02$ & $[2.41, 3.64]$ & $0.31$ & $3.56$ \\
 \quantlet{SFM\_ch5\_hill}{\qlurl{SFM_ch5_hill}}
 \end{frame}
 
-\begin{frame}{Recap: The Hill Estimator}
-\itemsize{\small}
-\begin{itemize}
-    \item $\hat\alpha_k = [\frac1k\sum_{i \le k}\ln(L_{(i)}/L_{(k+1)})]^{-1}$, the ML estimator of a Pareto tail
-    \item Choose $k$ where the Hill plot is flat; fix the rule in advance
-    \item SE $\approx \hat\alpha/\sqrt{k}$; block bootstrap for dependent returns
-    \item Indices and BVB stocks: $\hat\alpha$ between $2.49$ and $3.22$, finite variance, infinite kurtosis
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{The Mean Excess Function}
@@ -684,7 +652,7 @@ Transgaz (TGN) & 3\,725 & $3.02$ & $[2.41, 3.64]$ & $0.31$ & $3.56$ \\
 \end{center}
 \vspace{-0.25cm}
 \begin{itemize}
-    \item All four functions rise above the 90\% quantile $u$ (dotted): a heavy, Pareto-type tail; black: the line implied by the GPD fitted above $u$
+    \item All four functions rise above the 90\% quantile $u$ (dotted): a heavy, Pareto-type tail; black: the straight line of the tail model fitted above $u$ (Section 6)
     \item The last points rest on very few losses and jump around: do not read them literally
 \end{itemize}
 \quantlet{SFM\_ch5\_mean\_excess}{\qlurl{SFM_ch5_mean_excess}}
@@ -910,18 +878,7 @@ Bitcoin & $14.6$ & $30.3$ & $[21.2, 41.1]$ & $47.4$ & $46.5$ & $12$ \\
     \begin{itemize}
         \item a small change in $\hat\xi$ gives a large change far in the tail
     \end{itemize}
-    \item Block maxima use one loss per month: the peaks over threshold method uses all large losses
 \end{itemize}\quantlet{SFM\_ch5\_gev\_block\_maxima}{\qlurl{SFM_ch5_gev_block_maxima}}
-\end{frame}
-
-\begin{frame}{Recap: Block Maxima}
-\itemsize{\small}
-\begin{itemize}
-    \item Maxima of i.i.d.\ variables can only converge to a GEV law (Fisher--Tippett--Gnedenko)
-    \item $\xi > 0$ Fréchet (heavy, $\alpha = 1/\xi$), $\xi = 0$ Gumbel, $\xi < 0$ Weibull
-    \item Monthly maxima of daily losses: Fréchet, $\hat\xi$ between $0.17$ and $0.36$
-    \item Return level: the loss exceeded once in $T$ years; far beyond the sample it is extrapolation
-\end{itemize}
 \end{frame}
 
 
@@ -999,7 +956,6 @@ Bitcoin & $14.6$ & $30.3$ & $[21.2, 41.1]$ & $47.4$ & $46.5$ & $12$ \\
     \item Rule used here: $u =$ the 90\% quantile of the losses, i.e.\ the 10\% largest losses
     \begin{itemize}
         \item \refMF\ use $k = 100$ excesses in windows of $n = 1000$ days, the same share
-        \item for the S\&P 500: $u = 1.16\%$ and $N_u = 924$ excesses
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1111,27 +1067,17 @@ S\&P 500, Black Monday & 19 October 1987 & $-22.3$ & $10^{84}$ & $1\,600$ \\
 \end{itemize}\quantlet{SFM\_ch5\_pot\_gpd}{\qlurl{SFM_ch5_pot_gpd}}
 \end{frame}
 
-\begin{frame}{Recap: Peaks over Threshold}
-\itemsize{\small}
-\begin{itemize}
-    \item Excesses over a high threshold follow approximately a GPD (Pickands--Balkema--de Haan)
-    \item Same shape $\xi$ as the GEV; $\xi > 0$: power tail with $\alpha = 1/\xi$
-    \item Threshold: mean excess and parameter stability; here the 90\% quantile
-    \item Tail estimator: data up to $u$, GPD beyond; check with PP and QQ plots
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{VaR and ES by Extreme Value Theory}
 %=============================================================================
 
-\begin{frame}{VaR and ES: Definitions}
+\begin{frame}{Estimating VaR and ES}
 \itemsize{\small}
 \begin{itemize}
-    \item Losses $L = -r$ with distribution function $F_L$; level $p$ (e.g.\ $p = 1\%$)
+    \item VaR and ES of Section 1, written for the losses $L = -r$, with distribution function $F_L$
     \begin{itemize}
-        \item $\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$: the loss exceeded with probability $p$
+        \item $\mathrm{VaR}_p = F_L^{-1}(1 - p) = -q_p(r)$
         \item $\mathrm{ES}_p = \dfrac{1}{p}\displaystyle\int_0^p \mathrm{VaR}_s\,ds = E[L \mid L \ge \mathrm{VaR}_p]$ for continuous laws
     \end{itemize}
     \item Three ways to estimate them from daily losses
@@ -1281,16 +1227,6 @@ Bitcoin & 2\,453 & $24.5$ & 8 & 10 & 23 & $2.5$ & 1 & 1 & 8 \\
         \item apply EVT to returns divided by a GARCH volatility (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter9_arch_garch_models.pdf}{Chapter 9}) for daily risk; see also entropy-based ES \refPeleA
     \end{itemize}
     \item Surveys of EVT in finance: \refRocco; \refQRM, Ch.~5
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Recap: VaR and ES by EVT}
-\itemsize{\small}
-\begin{itemize}
-    \item $\mathrm{VaR}_p = u + \frac{\beta}{\xi}[(np/N_u)^{-\xi} - 1]$; $\mathrm{ES}_p = (\mathrm{VaR}_p + \beta - \xi u)/(1 - \xi)$
-    \item VaR 1\% and ES 2.5\%: EVT $\approx$ historical, Normal too low
-    \item VaR 0.1\%: EVT about twice the Normal value; historical simulation rests on a few days
-    \item Out of sample: the Normal VaR fails; unconditional EVT ignores volatility regimes
 \end{itemize}
 \end{frame}
 

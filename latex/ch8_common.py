@@ -76,7 +76,7 @@ def values(N):
     S = N['se']
     V.put('se.kappa', S['kappa'], 1)
     for n in ['21', '63', '252']:
-        V.put(f'se.{n}.n', 100 * S[n]['normal'], 0)
+        V.put(f'se.{n}.n', 100 * S[n]['normal'], 1)   # 1/sqrt(2n): 15.4, 8.9, 4.5 (the seminar primer quotes 4.5%)
         V.put(f'se.{n}.h', 100 * S[n]['heavy'], 0)
     for l, e in N['ewma'].items():
         t = l[2:]

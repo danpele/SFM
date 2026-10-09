@@ -224,15 +224,6 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Recap: Measuring Tail Risk}
-\itemsize{\small}
-\begin{itemize}
-    \item VaR was born as a daily summary of the next day's loss (RiskMetrics, 1994)
-    \item Basel: VaR 1\% for capital (1996), ES 2.5\% for capital and VaR 1\% for backtesting (FRTB, 2019)
-    \item Crises are the real test of a risk model
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{VaR and ES: Definitions}
@@ -247,8 +238,7 @@ MSCA Digital Finance}
     \end{itemize}
     \item The \textbf{level} $\alpha$ is the probability of the tail: $\alpha = 1\%$ or $\alpha = 2.5\%$
     \begin{itemize}
-        \item we write \textbf{VaR 1\%} and \textbf{ES 2.5\%}: the bad outcomes have probability 1\% and 2.5\%
-        \item the number in the name is always the tail probability: VaR 1\% is exceeded with probability 1\%
+        \item we write \textbf{VaR 1\%} and \textbf{ES 2.5\%}: the number in the name is always the tail probability
     \end{itemize}
     \item $q_\alpha(X) = \inf\{x : P(X \le x) > \alpha\}$: the $\alpha$-\textbf{quantile} of $X$ (\sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter2_classical_distributions_stylised_facts.pdf}{Chapter 2})
     \begin{itemize}
@@ -395,15 +385,6 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Recap: Definitions of VaR and ES}
-\itemsize{\small}
-\begin{itemize}
-    \item $\mathrm{VaR}_\alpha = -q_\alpha$: the loss exceeded with probability $\alpha$; $\mathrm{ES}_\alpha$: the average loss beyond it
-    \item Normal: ES 2.5\% $\approx$ VaR 1\%; heavy tails make ES 2.5\% larger
-    \item Scaling to 10 days by $\sqrt{10}$ is a convention, not a law
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{Coherent Risk Measures}
@@ -487,15 +468,6 @@ MSCA Digital Finance}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Recap: Coherent Risk Measures}
-\itemsize{\small}
-\begin{itemize}
-    \item Coherence: monotonicity, translation invariance, positive homogeneity, subadditivity
-    \item ES is coherent; VaR can penalise diversification (two bonds)
-    \item VaR is elicitable, ES only together with VaR
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{Estimating VaR and ES}
@@ -524,21 +496,14 @@ EVT (POT) & GPD above a high threshold (\sfmchlink{https://danpele.github.io/SFM
 \end{frame}
 
 \begin{frame}{Historical Simulation}
-\itemsize{\small}
+\itemsize{\footnotesize}
 \begin{itemize}
     \item \textbf{Algorithm}: take the last $n$ returns $r_{t-n+1}, \dots, r_t$, sort them: $r_{(1)} \le \dots \le r_{(n)}$
     \begin{itemize}
         \item $\widehat{\mathrm{VaR}}_\alpha = -r_{(k)}$, $k = \lceil n\alpha \rceil$; \quad $\widehat{\mathrm{ES}}_\alpha = -\frac{1}{k}\sum_{i=1}^{k} r_{(i)}$
         \item no distribution is assumed: the empirical distribution of the window is the forecast
     \end{itemize}
-    \item Ported from the SFE Quantlet VaRest
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Historical Simulation on the S\&P 500}
-\itemsize{\footnotesize}
-\begin{itemize}
-    \item S\&P 500 since 2000: $n = 6\,714$
+    \item \textbf{Worked example}: S\&P 500 since 2000, $n = 6\,714$
     \begin{itemize}
         \item VaR 1\%: $k = \lceil 67.14 \rceil = 68$, the 68-th worst day: $3.46\%$
         \item ES 2.5\%: the average of the $\lceil 167.85 \rceil = 168$ worst days: $3.76\%$
@@ -664,15 +629,6 @@ SNP & $4.70$ & $3.72$ & $4.57$ & $8.18$ & $4.71$ & ${8.9}$ & $0.22$ \\
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_var_methods}
 \end{frame}
 
-\begin{frame}{Recap: Estimating VaR and ES}
-\itemsize{\small}
-\begin{itemize}
-    \item HS: sorted window; Normal and Student-t: closed forms; Cornish--Fisher: moment correction; EVT: GPD tail
-    \item On daily data: Normal too low, Cornish--Fisher too high, HS, Student-t and EVT close at 1\%
-    \item All five ignore today's volatility
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{Conditional VaR: GARCH and Filtered Historical Simulation}
@@ -752,7 +708,6 @@ SNP & $4.29$ & $5.06$ & $5.39$ & $4.70$ & $5.31$ & $5.65$ & $1.966$ \\
         \item \textbf{GARCH-t} and \textbf{FHS}: GARCH(1,1)-t re-estimated every 250 days on all past data; $\sigma_t$ updated every day
     \end{itemize}
     \item Each day: VaR 1\% (for the backtests), VaR 2.5\% and ES 2.5\% (for the ES backtest)
-    \item Ported from SFEVaRtimeplot and SFEVaRbank
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_conditional_var}
 \end{frame}
 
@@ -810,15 +765,6 @@ moderate skewness and kurtosis & Cornish--Fisher & a quick correction of the Nor
 \begin{itemize}
     \item Never only the Normal for daily data; always report the method, the window and the level
     \item Whatever the method: backtest it (Section 7)
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Recap: Conditional VaR}
-\itemsize{\small}
-\begin{itemize}
-    \item $\mathrm{VaR}_{t+1} = -(\mu + \sigma_{t+1}q_\alpha(z))$: GARCH-t (parametric $z$) or FHS (empirical $z$)
-    \item Conditional VaR follows the storms; window-based VaR lags and keeps ghosts
-    \item In 2008 and 2020 the conditional methods had a few times fewer exceptions
 \end{itemize}
 \end{frame}
 
@@ -978,15 +924,6 @@ historical simulation (the data) & $3.08$ & $3.30$ & 0.19\% \\
     \item The Normal method misses both the heavy margins and the tail dependence; the copulas fix the margins, the t copula also the joint crashes
     \item Interpretation: the t copula still understates the historical VaR: the BET--S\&P 500 link is stronger in crises than any constant copula can describe
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_portfolio_copula}
-\end{frame}
-
-\begin{frame}{Recap: Portfolio VaR and Dependence}
-\itemsize{\small}
-\begin{itemize}
-    \item Variance--covariance: $\sigma_p^2 = w^\top\Sigma w$; diversification lowers VaR when $\rho < 1$
-    \item Correlation rises in crises; tail dependence is what matters for joint crashes
-    \item Copula = dependence on the uniform scale; the t copula has tail dependence, the Gaussian has none
-\end{itemize}
 \end{frame}
 
 
@@ -1157,7 +1094,7 @@ DAX & HS & 67 & $1.21$ & 0.121 & $<$\,0.001 & $<$\,0.001 & 12 & ${-0.26}$ (0.002
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item VaR 1\% since 3 January 2005 (about 5\,500 days); $x$: exceptions; p ind.: Christoffersen independence; p c.c.: conditional coverage; max 250 d.: the worst 250-day count
+    \item VaR 1\% since 3 January 2005 (about 5\,500 days); $x$: exceptions; p ind.: Christoffersen independence; p c.c.: conditional coverage; max 250 d.: the worst 250-day count; $Z_2$: the ES backtest at the end of this section
     \item Normal: rejected everywhere; HS: exceptions cluster; GARCH-t and FHS: independent exceptions, but a rate of 1.4--1.7\%
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_backtesting}
 \end{frame}
@@ -1183,7 +1120,7 @@ Bitcoin & HS & 33 & $0.93$ & 0.672 & 0.316 & 0.553 & 6 & ${-0.07}$ (0.224) \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-    \item VaR 1\% since 3 January 2005 (Bitcoin since 1 January 2017); $x$: exceptions; p ind.: Christoffersen independence; p c.c.: conditional coverage; max 250 d.: the worst 250-day count
+    \item VaR 1\% since 3 January 2005 (Bitcoin since 1 January 2017); the columns as on the previous slide
     \item BET: GARCH-t and FHS pass all three tests; Bitcoin: HS passes, FHS is too prudent ($0.68\%$)
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_backtesting}
 \end{frame}
@@ -1238,7 +1175,7 @@ Bitcoin & $13.57$ & $14.52$ & $13.53$ & $13.75$ & 3 & 4 & 2 & 2 \\
     \end{itemize}
     \item p-value by simulation: draw returns from each day's forecast distribution, recompute $Z_2$ 1000 times
     \begin{itemize}
-        \item S\&P 500: Normal $Z_2 = -1.15$, HS $-0.39$, GARCH-t $-0.54$, FHS $-0.20$ (p 0.013)
+        \item the values of $Z_2$ and their p-values: the last column of the two backtest tables
     \end{itemize}
     \item Interpretation: all four ES 2.5\% forecasts are too small for the equity indices; FHS is closest, because it takes the tail of $z$ from the data
 \end{itemize}\sfmquantlet{Ch_10}{SFM_ch10_backtesting}
@@ -1261,15 +1198,6 @@ Bitcoin & $13.57$ & $14.52$ & $13.53$ & $13.75$ & 3 & 4 & 2 & 2 \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Recap: Backtesting}
-\itemsize{\small}
-\begin{itemize}
-    \item Exceptions should be Bernoulli($\alpha$) and independent: Kupiec tests the rate, Christoffersen the clustering
-    \item Basel traffic light: 0--4 green, 5--9 yellow, 10 or more red in 250 days
-    \item ES is tested with VaR ($Z_2$); conditional methods pass more often than window methods
-\end{itemize}
-\end{frame}
-
 
 %=============================================================================
 \section{AI for Scientific Discovery}
@@ -1281,7 +1209,7 @@ Bitcoin & $13.57$ & $14.52$ & $13.53$ & $13.75$ & 3 & 4 & 2 & 2 \\
     \item \textbf{Does the tail dependence between the BVB and world markets jump in crises, and does it come back?}
     \begin{itemize}
         \item today: correlation $0.20$ in a calm year, $0.71$ in spring 2020; a constant t copula gives $\lambda_L = 0.096$
-        \item a portfolio VaR with a constant copula is still below the historical one (previous section)
+        \item a portfolio VaR with a constant copula is still below the historical one (Section 6)
     \end{itemize}
     \item Why it is open: crises are few, the BVB trades at other hours, and tail estimates need many observations
     \item Related work on entropy as a risk measure, as further reading: \refPeleA; \refPeleB

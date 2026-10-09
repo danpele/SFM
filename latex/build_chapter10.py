@@ -238,11 +238,6 @@ D.frame(T('Two Storms: 2008 and 2020', 'Două crize: 2008 și 2020'), cols(
     T('A risk measure must be judged in such periods: we use 2008 and 2020 as stress tests throughout the chapter',
       'O măsură de risc trebuie judecată în astfel de perioade: folosim 2008 și 2020 ca teste de stres în tot capitolul')), 'footnotesize')
 
-D.recap(('Measuring Tail Risk', 'măsurarea riscului din coadă'), [
-    T('VaR was born as a daily summary of the next day\'s loss (RiskMetrics, 1994)', 'VaR a apărut ca un rezumat zilnic al pierderii de a doua zi (RiskMetrics, 1994)'),
-    T('Basel: VaR 1\\% for capital (1996), ES 2.5\\% for capital and VaR 1\\% for backtesting (FRTB, 2019)', 'Basel: VaR 1\\% pentru capital (1996), ES 2,5\\% pentru capital și VaR 1\\% pentru backtesting (FRTB, 2019)'),
-    T('Crises are the real test of a risk model', 'Crizele sînt adevăratul test al unui model de risc')])
-
 # =============================================================================
 # 2. DEFINIȚII
 # =============================================================================
@@ -253,8 +248,7 @@ D.frame(T('Losses, Horizon and Level', 'Pierderi, orizont și nivel'), items(
        '$X$: \\textbf{P\\&L} (profit and loss, profitul sau pierderea) ori randamentul unei poziții pe un orizont $h$ (aici o zi, în \\%)'),
      [T('the loss is $L = -X$: a positive number when the position loses money', 'pierderea este $L = -X$: un număr pozitiv cînd poziția pierde bani')]),
     (T('The \\textbf{level} $\\alpha$ is the probability of the tail: $\\alpha = 1\\%$ or $\\alpha = 2.5\\%$', '\\textbf{Nivelul} $\\alpha$ este probabilitatea cozii: $\\alpha = 1\\%$ sau $\\alpha = 2{,}5\\%$'),
-     [T('we write \\textbf{VaR 1\\%} and \\textbf{ES 2.5\\%}: the bad outcomes have probability 1\\% and 2.5\\%', 'scriem \\textbf{VaR 1\\%} și \\textbf{ES 2,5\\%}: rezultatele proaste au probabilitatea de 1\\%, respectiv 2,5\\%'),
-      T('the number in the name is always the tail probability: VaR 1\\% is exceeded with probability 1\\%', 'numărul din denumire este întotdeauna probabilitatea cozii: VaR 1\\% este depășit cu probabilitatea 1\\%')]),
+     [T('we write \\textbf{VaR 1\\%} and \\textbf{ES 2.5\\%}: the number in the name is always the tail probability', 'scriem \\textbf{VaR 1\\%} și \\textbf{ES 2,5\\%}: numărul din denumire este întotdeauna probabilitatea cozii')]),
     (T('$q_\\alpha(X) = \\inf\\{x : P(X \\le x) > \\alpha\\}$: the $\\alpha$-\\textbf{quantile} of $X$ (Chapter 2)', '$q_\\alpha(X) = \\inf\\{x : P(X \\le x) > \\alpha\\}$: \\textbf{cuantila} de ordin $\\alpha$ a lui $X$ (Capitolul 2)'),
      [T('for a continuous distribution function $F$: $q_\\alpha = F^{-1}(\\alpha)$, a negative number for small $\\alpha$', 'pentru o funcție de repartiție continuă $F$: $q_\\alpha = F^{-1}(\\alpha)$, un număr negativ pentru $\\alpha$ mic')])))
 
@@ -341,11 +335,6 @@ D.frame(T('From One Day to Ten Days', 'De la o zi la zece zile'), items(
       T('volatility clustering: after a calm day the 10-day risk is larger than $\\sqrt{10}$ times today\'s, after a storm smaller (Chapter 9)',
         'volatility clustering: după o zi liniștită, riscul pe 10 zile este mai mare decît $\\sqrt{10}$ ori riscul de azi, după o perioadă turbulentă este mai mic (Capitolul 9)')])), 'footnotesize')
 
-D.recap(('Definitions of VaR and ES', 'definițiile VaR și ES'), [
-    T('$\\mathrm{VaR}_\\alpha = -q_\\alpha$: the loss exceeded with probability $\\alpha$; $\\mathrm{ES}_\\alpha$: the average loss beyond it', '$\\mathrm{VaR}_\\alpha = -q_\\alpha$: pierderea depășită cu probabilitatea $\\alpha$; $\\mathrm{ES}_\\alpha$: pierderea medie dincolo de ea'),
-    T('Normal: ES 2.5\\% $\\approx$ VaR 1\\%; heavy tails make ES 2.5\\% larger', 'Distribuția Normală: ES 2,5\\% $\\approx$ VaR 1\\%; cozile groase fac ES 2,5\\% mai mare'),
-    T('Scaling to 10 days by $\\sqrt{10}$ is a convention, not a law', 'Scalarea la 10 zile cu $\\sqrt{10}$ este o convenție, nu o lege')])
-
 # =============================================================================
 # 3. COERENȚĂ
 # =============================================================================
@@ -390,11 +379,6 @@ D.frame(T('Elicitability: Can a Forecast Be Scored?', 'Elicitabilitatea: evaluar
     (T('\\textbf{ES alone is not elicitable} \\refGneiting; the pair (VaR, ES) is \\refFZ', '\\textbf{ES singur nu este elicitabil} \\refGneiting; perechea (VaR, ES) este elicitabilă \\refFZ'),
      [T('consequence: ES forecasts are tested together with VaR forecasts (Section 7)', 'consecința: prognozele ES se testează împreună cu prognozele VaR (secțiunea 7)')])))
 
-D.recap(('Coherent Risk Measures', 'măsuri de risc coerente'), [
-    T('Coherence: monotonicity, translation invariance, positive homogeneity, subadditivity', 'Coerența: monotonie, invarianță la translație, omogenitate pozitivă, subaditivitate'),
-    T('ES is coherent; VaR can penalise diversification (two bonds)', 'ES este coerent; VaR poate penaliza diversificarea (cele două obligațiuni)'),
-    T('VaR is elicitable, ES only together with VaR', 'VaR este elicitabil, ES doar împreună cu VaR')])
-
 # =============================================================================
 # 4. METODE NECONDIȚIONATE
 # =============================================================================
@@ -417,10 +401,7 @@ D.frame(T('Historical Simulation', 'Simularea istorică'), items(
     (T('\\textbf{Algorithm}: take the last $n$ returns $r_{t-n+1}, \\dots, r_t$, sort them: $r_{(1)} \\le \\dots \\le r_{(n)}$', '\\textbf{Algoritmul}: luăm ultimele $n$ randamente $r_{t-n+1}, \\dots, r_t$ și le ordonăm: $r_{(1)} \\le \\dots \\le r_{(n)}$'),
      [T('$\\widehat{\\mathrm{VaR}}_\\alpha = -r_{(k)}$, $k = \\lceil n\\alpha \\rceil$; \\quad $\\widehat{\\mathrm{ES}}_\\alpha = -\\frac{1}{k}\\sum_{i=1}^{k} r_{(i)}$', '$\\widehat{\\mathrm{VaR}}_\\alpha = -r_{(k)}$, $k = \\lceil n\\alpha \\rceil$; \\quad $\\widehat{\\mathrm{ES}}_\\alpha = -\\frac{1}{k}\\sum_{i=1}^{k} r_{(i)}$'),
       T('no distribution is assumed: the empirical distribution of the window is the forecast', 'nu presupunem nicio distribuție: distribuția empirică a ferestrei este prognoza')]),
-    T('Ported from the SFE Quantlet VaRest', 'Portat din Quantlet-ul SFE VaRest')))
-
-D.frame(T('Worked Example: Historical Simulation on the S\\&P 500', 'Exemplu rezolvat: simularea istorică pentru S\\&P 500'), items(
-    (T('S\\&P 500 since 2000: $n = @{m.sp500.n}$', 'S\\&P 500 din 2000: $n = @{m.sp500.n}$'),
+    (T('\\textbf{Worked example}: S\\&P 500 since 2000, $n = @{m.sp500.n}$', '\\textbf{Exemplu rezolvat}: S\\&P 500 din 2000, $n = @{m.sp500.n}$'),
      [T('VaR 1\\%: $k = \\lceil @{hs.n1} \\rceil = @{hs.k1}$, the @{hs.k1}-th worst day: $@{m.sp500.hs.v}\\%$', 'VaR 1\\%: $k = \\lceil @{hs.n1} \\rceil = @{hs.k1}$, a @{hs.k1}-a cea mai proastă zi: $@{m.sp500.hs.v}\\%$'),
       T('ES 2.5\\%: the average of the $\\lceil @{hs.n25} \\rceil = @{hs.k25}$ worst days: $@{m.sp500.hs.e}\\%$', 'ES 2,5\\%: media celor mai proaste $\\lceil @{hs.n25} \\rceil = @{hs.k25}$ de zile: $@{m.sp500.hs.e}\\%$')]),
     (T('The window $n$ is a trade-off', 'Fereastra $n$ este un compromis'),
@@ -488,11 +469,6 @@ D.frame(T('ES 2.5\\% by Method on Six Series', 'ES 2,5\\% pe metode, pentru șas
     T('Interpretation: EVT and HS agree at 2.5\\%; the method matters more for ES than for VaR, because ES depends on the whole tail',
       'Interpretare: EVT și HS sînt de acord la 2,5\\%; metoda contează mai mult pentru ES decît pentru VaR, deoarece ES depinde de întreaga coadă')) + ql('SFM_ch10_var_methods'), 'footnotesize')
 
-D.recap(('Estimating VaR and ES', 'estimarea VaR și ES'), [
-    T('HS: sorted window; Normal and Student-t: closed forms; Cornish--Fisher: moment correction; EVT: GPD tail', 'HS: fereastra ordonată; Normală și Student-t: formule explicite; Cornish--Fisher: corecție prin momente; EVT: coada GPD'),
-    T('On daily data: Normal too low, Cornish--Fisher too high, HS, Student-t and EVT close at 1\\%', 'Pe date zilnice: distribuția Normală dă valori prea mici, Cornish--Fisher prea mari; HS, Student-t și EVT sînt apropiate la 1\\%'),
-    T('All five ignore today\'s volatility', 'Toate cele cinci metode ignoră volatilitatea de azi')])
-
 # =============================================================================
 # 5. VaR CONDIȚIONAT
 # =============================================================================
@@ -541,8 +517,7 @@ D.frame(T('Rolling Forecasts: the Design', 'Prognoze pe fereastră mobilă: sche
     (T('Four methods', 'Patru metode'),
      [T('\\textbf{HS} and \\textbf{Normal}: the last 500 days (about two years)', '\\textbf{HS} și \\textbf{Normală}: ultimele 500 de zile (circa doi ani)'),
       T('\\textbf{GARCH-t} and \\textbf{FHS}: GARCH(1,1)-t re-estimated every 250 days on all past data; $\\sigma_t$ updated every day', '\\textbf{GARCH-t} și \\textbf{FHS}: GARCH(1,1)-t reestimat la fiecare 250 de zile pe toate datele trecute; $\\sigma_t$ actualizat zilnic')]),
-    T('Each day: VaR 1\\% (for the backtests), VaR 2.5\\% and ES 2.5\\% (for the ES backtest)', 'În fiecare zi: VaR 1\\% (pentru backtesting), VaR 2,5\\% și ES 2,5\\% (pentru backtesting-ul ES)'),
-    T('Ported from SFEVaRtimeplot and SFEVaRbank', 'Portat din SFEVaRtimeplot și SFEVaRbank')) + ql('SFM_ch10_conditional_var'))
+    T('Each day: VaR 1\\% (for the backtests), VaR 2.5\\% and ES 2.5\\% (for the ES backtest)', 'În fiecare zi: VaR 1\\% (pentru backtesting), VaR 2,5\\% și ES 2,5\\% (pentru backtesting-ul ES)')) + ql('SFM_ch10_conditional_var'))
 
 chart(T('VaR 1\\% through 2008 and 2020', 'VaR 1\\% în 2008 și în 2020'), 'sfm_ch10_rolling_var', 'SFM_ch10_conditional_var', [
     T('S\\&P 500: daily returns and minus the VaR 1\\% forecasts of the four methods; dots: exceptions of the HS VaR', 'S\\&P 500: randamentele zilnice și minus prognozele VaR 1\\% ale celor patru metode; punctele: depășirile VaR HS'),
@@ -577,11 +552,6 @@ D.frame(T('Which Method When?', 'Alegerea metodei'), table(
     size='footnotesize') + items(
     T('Never only the Normal for daily data; always report the method, the window and the level', 'Niciodată doar distribuția Normală pentru date zilnice; raportăm întotdeauna metoda, fereastra și nivelul'),
     T('Whatever the method: backtest it (Section 7)', 'Indiferent de metodă: o testăm prin backtesting (secțiunea 7)')), 'footnotesize')
-
-D.recap(('Conditional VaR', 'VaR condiționat'), [
-    T('$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: GARCH-t (parametric $z$) or FHS (empirical $z$)', '$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: GARCH-t ($z$ parametric) sau FHS ($z$ empiric)'),
-    T('Conditional VaR follows the storms; window-based VaR lags and keeps ghosts', 'VaR condiționat urmărește perioadele turbulente; VaR pe fereastră reacționează cu întîrziere și păstrează ghost effect-ul'),
-    T('In 2008 and 2020 the conditional methods had a few times fewer exceptions', 'În 2008 și 2020, metodele condiționate au avut de cîteva ori mai puține depășiri')])
 
 # =============================================================================
 # 6. PORTOFOLIU
@@ -681,11 +651,6 @@ D.frame(T('Portfolio VaR 1\\% and ES 2.5\\% by Method', 'VaR 1\\% și ES 2,5\\% 
     T('Interpretation: the t copula still understates the historical VaR: the BET--S\\&P 500 link is stronger in crises than any constant copula can describe',
       'Interpretare: copula t subestimează în continuare VaR istoric: legătura BET--S\\&P 500 este mai puternică în crize decît poate descrie o copulă constantă')) + ql('SFM_ch10_portfolio_copula'), 'footnotesize')
 
-D.recap(('Portfolio VaR and Dependence', 'VaR de portofoliu și dependența'), [
-    T('Variance--covariance: $\\sigma_p^2 = w^\\top\\Sigma w$; diversification lowers VaR when $\\rho < 1$', 'Varianță--covarianță: $\\sigma_p^2 = w^\\top\\Sigma w$; diversificarea reduce VaR cînd $\\rho < 1$'),
-    T('Correlation rises in crises; tail dependence is what matters for joint crashes', 'Corelația crește în crize; pentru prăbușirile simultane contează dependența în cozi'),
-    T('Copula = dependence on the uniform scale; the t copula has tail dependence, the Gaussian has none', 'Copula = dependența pe scala uniformă; copula t are dependență în cozi, cea Gaussiană nu are')])
-
 # =============================================================================
 # 7. BACKTESTING
 # =============================================================================
@@ -784,8 +749,10 @@ for pair, en, ro in [(['sp500', 'dax'], 'S\\&P 500 and DAX', 'S\\&P 500 și DAX'
             rows.append('\\midrule')
     tab = table('llrrrrrrr', BH, rows, size='scriptsize').replace('\\midrule \\\\', '\\midrule')
     D.frame(T(f'Backtest Results: {en}', f'Rezultatele backtesting-ului: {ro}'), tab + items(
-        T('VaR 1\\% since @{bt.' + pair[0] + '.start} (' + ('Bitcoin since @{bt.btc.start}' if 'btc' in pair else 'about 5\\,500 days') + '); $x$: exceptions; p ind.: Christoffersen independence; p c.c.: conditional coverage; max 250 d.: the worst 250-day count',
-          'VaR 1\\% din @{bt.' + pair[0] + '.start} (' + ('Bitcoin din @{bt.btc.start}' if 'btc' in pair else 'circa 5\\,500 de zile') + '); $x$: depășirile; p ind.: independența Christoffersen; p ac.c.: acoperirea condiționată; max. 250 z.: cel mai mare număr pe 250 de zile'),
+        (T('VaR 1\\% since @{bt.' + pair[0] + '.start} (Bitcoin since @{bt.btc.start}); the columns as on the previous slide',
+           'VaR 1\\% din @{bt.' + pair[0] + '.start} (Bitcoin din @{bt.btc.start}); coloanele ca pe slide-ul precedent') if 'btc' in pair else
+         T('VaR 1\\% since @{bt.' + pair[0] + '.start} (about 5\\,500 days); $x$: exceptions; p ind.: Christoffersen independence; p c.c.: conditional coverage; max 250 d.: the worst 250-day count; $Z_2$: the ES backtest at the end of this section',
+           'VaR 1\\% din @{bt.' + pair[0] + '.start} (circa 5\\,500 de zile); $x$: depășirile; p ind.: independența Christoffersen; p ac.c.: acoperirea condiționată; max. 250 z.: cel mai mare număr pe 250 de zile; $Z_2$: backtesting-ul ES de la sfîrșitul acestei secțiuni')),
         (T('Normal: rejected everywhere; HS: exceptions cluster; GARCH-t and FHS: independent exceptions, but a rate of @{rg.g.lo}--@{rg.g.hi}\\%', 'Distribuția Normală: respinsă peste tot; HS: depășirile apar grupat; GARCH-t și FHS: depășiri independente, dar o rată de @{rg.g.lo}--@{rg.g.hi}\\%')
          if 'sp500' in pair else
          T('BET: GARCH-t and FHS pass all three tests; Bitcoin: HS passes, FHS is too prudent ($@{bt.btc.f.rate}\\%$)', 'BET: GARCH-t și FHS trec toate cele trei teste; Bitcoin: HS trece testele, FHS este prea prudent ($@{bt.btc.f.rate}\\%$)'))) + ql('SFM_ch10_backtesting'), 'footnotesize')
@@ -821,8 +788,7 @@ D.frame(T('Backtesting ES: Acerbi and Székely', 'Backtesting pentru ES: Acerbi 
       T('$T$: the number of test days; $\\mathrm{VaR}_t$, $\\mathrm{ES}_t$: the forecasts for day $t$; each exception adds $r_t/\\mathrm{ES}_t$', '$T$: numărul zilelor de test; $\\mathrm{VaR}_t$, $\\mathrm{ES}_t$: prognozele pentru ziua $t$; fiecare depășire adaugă $r_t/\\mathrm{ES}_t$'),
       T('if VaR and ES are right, $E[Z_2] = 0$; $Z_2 < 0$: the losses beyond VaR are larger than the forecast ES, or too frequent', 'dacă VaR și ES sînt corecte, $E[Z_2] = 0$; $Z_2 < 0$: pierderile de dincolo de VaR sînt mai mari decît ES prognozat sau prea dese')]),
     (T('p-value by simulation: draw returns from each day\'s forecast distribution, recompute $Z_2$ 1000 times', 'p-value-ul prin simulare: extragem randamente din distribuția prognozată a fiecărei zile și recalculăm $Z_2$ de 1000 de ori'),
-     [T('S\\&P 500: Normal $Z_2 = @{bt.sp500.n.z2}$, HS $@{bt.sp500.hs.z2}$, GARCH-t $@{bt.sp500.g.z2}$, FHS $@{bt.sp500.f.z2}$ (p @{bt.sp500.f.pz2})',
-        'S\\&P 500: Normală $Z_2 = @{bt.sp500.n.z2}$, HS $@{bt.sp500.hs.z2}$, GARCH-t $@{bt.sp500.g.z2}$, FHS $@{bt.sp500.f.z2}$ (p @{bt.sp500.f.pz2})')]),
+     [T('the values of $Z_2$ and their p-values: the last column of the two backtest tables', 'valorile $Z_2$ și p-value-urile lor: ultima coloană din cele două tabele de backtesting')]),
     T('Interpretation: all four ES 2.5\\% forecasts are too small for the equity indices; FHS is closest, because it takes the tail of $z$ from the data',
       'Interpretare: toate cele patru prognoze ES 2,5\\% sînt prea mici pentru indicii de acțiuni; FHS este cel mai aproape, deoarece preia coada lui $z$ din date')) + ql('SFM_ch10_backtesting'), 'footnotesize')
 
@@ -837,11 +803,6 @@ D.frame(T('Case Study: VaR Models at Commercial Banks', 'Studiu de caz: modelele
       'Același tipar ca în datele noastre: VaR-ul pe fereastră este fie prea mare în perioadele liniștite, fie prea lent în perioadele turbulente; VaR condiționat se adaptează'),
     T('Further reading on forecasting the quantile directly: CAViaR \\refCAViaR', 'Lectură suplimentară despre prognoza directă a cuantilei: CAViaR \\refCAViaR')))
 
-D.recap(('Backtesting', 'backtesting'), [
-    T('Exceptions should be Bernoulli($\\alpha$) and independent: Kupiec tests the rate, Christoffersen the clustering', 'Depășirile trebuie să fie Bernoulli($\\alpha$) și independente: Kupiec testează rata, Christoffersen gruparea'),
-    T('Basel traffic light: 0--4 green, 5--9 yellow, 10 or more red in 250 days', 'Semaforul Basel: 0--4 verde, 5--9 galben, 10 sau mai multe roșu, în 250 de zile'),
-    T('ES is tested with VaR ($Z_2$); conditional methods pass more often than window methods', 'ES se testează împreună cu VaR ($Z_2$); metodele condiționate trec testele mai des decît cele pe fereastră')])
-
 # =============================================================================
 # 8. AI
 # =============================================================================
@@ -850,7 +811,7 @@ D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     (T('\\textbf{Does the tail dependence between the BVB and world markets jump in crises, and does it come back?}', '\\textbf{Crește brusc dependența în cozi dintre BVB și piețele mondiale în crize și revine apoi la nivelul anterior?}'),
      [T('today: correlation $@{p.corrcalm}$ in a calm year, $@{p.corr2020}$ in spring 2020; a constant t copula gives $\\lambda_L = @{cop.lam}$', 'azi: corelația $@{p.corrcalm}$ într-un an liniștit, $@{p.corr2020}$ în primăvara lui 2020; o copulă t constantă dă $\\lambda_L = @{cop.lam}$'),
-      T('a portfolio VaR with a constant copula is still below the historical one (previous section)', 'un VaR de portofoliu cu o copulă constantă rămîne sub cel istoric (secțiunea precedentă)')]),
+      T('a portfolio VaR with a constant copula is still below the historical one (Section 6)', 'un VaR de portofoliu cu o copulă constantă rămîne sub cel istoric (secțiunea 6)')]),
     T('Why it is open: crises are few, the BVB trades at other hours, and tail estimates need many observations', 'Întrebarea rămîne deschisă: crizele sînt puține, BVB se tranzacționează la alte ore, iar estimările din coadă au nevoie de multe observații'),
     T('Related work on entropy as a risk measure, as further reading: \\refPeleA; \\refPeleB', 'Lucrări înrudite despre entropie ca măsură de risc, ca lectură suplimentară: \\refPeleA; \\refPeleB'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))

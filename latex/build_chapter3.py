@@ -84,32 +84,25 @@ V.raw('low.alpha', NAMES[best_alpha])
 # =============================================================================
 # DESCHIDERE
 # =============================================================================
-D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items(
+D.frame(T("Today's Question, Route and Learning Outcomes", 'Întrebarea de azi, traseul și rezultatele învățării'), items(
     (T('\\textbf{Question}: which probability laws can describe daily returns and also their weekly and monthly sums?',
        '\\textbf{Întrebarea}: ce legi de probabilitate pot descrie randamentele zilnice și, în același timp, sumele lor săptămînale și lunare?'),
      [T('Chapter 2: daily returns have heavier tails than the Normal distribution',
         'Capitolul 2: randamentele zilnice au cozi mai groase decît distribuția Normală'),
       T('log returns add up over time (Chapter 1): the law of a sum matters', 'randamentele logaritmice se adună în timp (Capitolul 1): legea unei sume contează')]),
-    (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
-     [T('Mandelbrot and the cotton prices: where the idea comes from', 'Mandelbrot și prețurile bumbacului: de unde vine ideea'),
-      T('stability under summation and the generalised central limit theorem', 'stabilitatea la adunare și teorema limită centrală generalizată'),
-      T('parameters, characteristic function, tails and moments', 'parametri, funcția caracteristică, cozi și momente'),
-      T('simulation and estimation; fits to BET, S\\&P 500, DAX and Bitcoin', 'simulare și estimare; aplicații pe BET, S\\&P 500, DAX și Bitcoin'),
-      T('the critique: do returns really have infinite variance?', 'critica: au randamentele chiar varianță infinită?')])))
-
-D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
-    T('State the stability property and compute the scale of a sum of stable variables',
-      'Enunțați proprietatea de stabilitate și calculați scala unei sume de variabile stabile'),
-    T('Explain the generalised central limit theorem and when sums do not approach the Normal distribution',
-      'Explicați teorema limită centrală generalizată și cînd sumele nu se apropie de distribuția Normală'),
-    T('Read the four parameters $(\\alpha, \\beta, \\gamma, \\delta)$ and convert between the S0 and S1 parameterisations',
-      'Interpretați cei patru parametri $(\\alpha, \\beta, \\gamma, \\delta)$ și faceți conversia între parametrizările S0 și S1'),
-    T('Say which moments exist for a given $\\alpha$ and compare tail probabilities with the Normal distribution',
-      'Stabiliți ce momente există pentru un $\\alpha$ dat și comparați probabilitățile din cozi cu cele ale distribuției Normale'),
-    T('Simulate stable variables and estimate their parameters by quantiles and by maximum likelihood',
-      'Simulați variabile stabile și estimați parametrii prin cuantile și prin verosimilitate maximă'),
-    T('Judge, on real returns, where the stable model works and where it fails',
-      'Evaluați, pe randamente reale, unde funcționează modelul stabil și unde eșuează')))
+    (T('\\textbf{Route and outcomes}: after this chapter you can', '\\textbf{Traseul și rezultatele învățării}: la finalul capitolului veți putea'),
+     [T('state the stability property and compute the scale of a sum of stable variables',
+        'enunța proprietatea de stabilitate și calcula scala unei sume de variabile stabile'),
+      T('explain the generalised central limit theorem and when sums do not approach the Normal distribution',
+        'explica teorema limită centrală generalizată și cînd sumele nu se apropie de distribuția Normală'),
+      T('read the four parameters $(\\alpha, \\beta, \\gamma, \\delta)$ and convert between the S0 and S1 parameterisations',
+        'interpreta cei patru parametri $(\\alpha, \\beta, \\gamma, \\delta)$ și face conversia între parametrizările S0 și S1'),
+      T('say which moments exist for a given $\\alpha$ and compare tail probabilities with the Normal distribution',
+        'stabili ce momente există pentru un $\\alpha$ dat și compara probabilitățile din cozi cu cele ale distribuției Normale'),
+      T('simulate stable variables and estimate their parameters by quantiles and by maximum likelihood',
+        'simula variabile stabile și estima parametrii lor prin cuantile și prin verosimilitate maximă'),
+      T('judge, on BET, S\\&P 500, DAX and Bitcoin returns, where the stable model works and where it fails',
+        'evalua, pe randamentele BET, S\\&P 500, DAX și Bitcoin, unde funcționează modelul stabil și unde eșuează')])))
 
 D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Main reference: \\refNolan, Ch.~1 (definitions, parameterisations, tails) and Ch.~4 (estimation)',
@@ -885,17 +878,6 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
 # REZUMAT
 # =============================================================================
 D.section('Summary', 'Rezumat')
-
-D.frame(T('Key Takeaways', 'Idei principale'), items(
-    T('Stable laws are the only laws whose sums keep the same shape, and the only limits of normalised sums (GCLT)',
-      'Legile stabile sînt singurele legi ale căror sume își păstrează forma și singurele limite ale sumelor normalizate (GCLT)'),
-    T('Four parameters: $\\alpha$ tails, $\\beta$ skewness, $\\gamma$ scale, $\\delta$ location; know your parameterisation (S0 or S1)',
-      'Patru parametri: $\\alpha$ cozi, $\\beta$ asimetrie, $\\gamma$ scală, $\\delta$ poziție; precizați întotdeauna parametrizarea (S0 sau S1)'),
-    T('$\\alpha < 2$: power-law tails and infinite variance; $\\alpha \\le 1$: no mean', '$\\alpha < 2$: cozi de tip putere și varianță infinită; $\\alpha \\le 1$: nu există media'),
-    T('Simulate with CMS; estimate with McCulloch quantiles or ML', 'Simulați cu CMS; estimați cu cuantilele McCulloch sau cu ML'),
-    T('Daily returns: $\\hat\\alpha \\approx 1.4$--$1.6$, much better than the Normal distribution in the body', 'Randamentele zilnice: $\\hat\\alpha \\approx 1{,}4$--$1{,}6$; legea stabilă descrie corpul distribuției mult mai bine decît distribuția Normală'),
-    T('But $\\hat\\alpha$ rises with aggregation and the variance settles: heavy tails, finite variance',
-      'Dar $\\hat\\alpha$ crește prin agregare, iar varianța se stabilizează: cozi groase, varianță finită')))
 
 D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretch}{1.45}' + table(
     'll', T('\\textbf{Quantity}', '\\textbf{Mărimea}') + ' & ' + T('\\textbf{Formula}', '\\textbf{Formula}'),

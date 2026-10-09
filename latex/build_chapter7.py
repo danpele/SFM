@@ -211,11 +211,6 @@ chart(T('Does Yesterday Predict Today?', 'Randamentul de ieri și randamentul de
       'S\\&P 500: $\\hat\\rho(1) = @{sc.sp500.rho}$ (o ușoară revenire); BET: $\\hat\\rho(1) = @{sc.bet.rho}$ (o ușoară continuare); sînt aceste valori diferite de zero?')],
     h='0.58\\textheight')
 
-D.recap(('Can Prices Be Predicted?', 'previzibilitatea prețurilor'), [
-    T('From Bachelier (1900) to Samuelson (1965): price changes look random, and economics explains why', 'De la Bachelier (1900) la Samuelson (1965): variațiile prețurilor par aleatoare, iar economia explică de ce'),
-    T('Professional investors rarely beat the market after costs', 'Investitorii profesioniști obțin rar randamente peste cele ale pieței, după costuri'),
-    T('Daily autocorrelations are small but not zero: we need tests, not impressions', 'Autocorelațiile zilnice sînt mici, dar nu nule: avem nevoie de teste, nu de impresii')])
-
 # =============================================================================
 # 2. PIEȚE EFICIENTE
 # =============================================================================
@@ -285,12 +280,6 @@ D.frame(T('2013: One Nobel Prize, Two Views', '2013: un Premiu Nobel, două pers
     T('Both are right, at different horizons: short-run returns are almost unpredictable; long-run returns are partly predictable from valuation ratios',
       'Amîndoi au dreptate, pe orizonturi diferite: randamentele pe termen scurt sînt aproape imprevizibile; cele pe termen lung sînt parțial previzibile din indicatorii de evaluare')), 'footnotesize')
 
-D.recap(('Efficient Markets', 'piețe eficiente'), [
-    T('Efficiency is defined relative to an information set: weak, semi-strong, strong', 'Eficiența se definește relativ la o mulțime de informații: slabă, semi-tare, tare'),
-    T('Fair game: excess returns are unpredictable given $\\Omega_t$', 'Joc echitabil: randamentele în exces sînt imprevizibile, condiționat de $\\Omega_t$'),
-    T('Every test is a joint test with a model of expected returns', 'Orice test este un test comun cu un model al randamentelor așteptate'),
-    T('Costly information makes perfect efficiency impossible \\refGS', 'Informația costisitoare face imposibilă eficiența perfectă \\refGS')])
-
 # =============================================================================
 # 3. IPOTEZELE MERSULUI ALEATOR
 # =============================================================================
@@ -352,11 +341,6 @@ D.frame(T('Worked Example: How Risk Grows with the Horizon', 'Exemplu lucrat: cu
     T('This is the ``square-root-of-time rule\'\' used to scale VaR and volatility', 'Aceasta este „regula rădăcinii pătrate a timpului”, folosită pentru a scala VaR și volatilitatea'),
     T('If returns are autocorrelated, the rule fails: the variance-ratio test of Section 7 measures by how much',
       'Dacă randamentele sînt autocorelate, regula nu mai funcționează: testul variance ratio din secțiunea 7 măsoară cu cît')))
-
-D.recap(('Random Walk Hypotheses', 'ipotezele mersului aleator'), [
-    T('$p_t = \\mu + p_{t-1} + \\varepsilon_t$: permanent shocks, $\\mathrm{Var}(r_t(q)) = q\\sigma^2$', '$p_t = \\mu + p_{t-1} + \\varepsilon_t$: șocuri permanente, $\\mathrm{Var}(r_t(q)) = q\\sigma^2$'),
-    T('RW1 (i.i.d.) $\\Rightarrow$ RW2 (independent) $\\Rightarrow$ RW3 (uncorrelated)', 'RW1 (i.i.d.) $\\Rightarrow$ RW2 (independente) $\\Rightarrow$ RW3 (necorelate)'),
-    T('Martingale: unpredictable mean, possibly predictable variance; the right null for efficiency', 'Martingal: media imprevizibilă, varianța posibil previzibilă; ipoteza nulă potrivită pentru eficiență')])
 
 # =============================================================================
 # 4. ZGOMOT ALB ȘI ACF
@@ -428,11 +412,6 @@ chart(T('Returns Are Almost Uncorrelated, Their Size Is Not', 'Randamentele sîn
       'Mișcările mari urmează după mișcări mari: RW1 și RW2 sînt respinse la prima vedere; graficul nu spune nimic despre RW3 și martingal')],
     h='0.56\\textheight')
 
-D.recap(('White Noise and the ACF', 'zgomotul alb și ACF'), [
-    T('White noise: uncorrelated; i.i.d.\\ noise: independent; GARCH returns: white noise, not i.i.d.', 'Zgomot alb: necorelat; zgomot i.i.d.: independent; randamentele GARCH: zgomot alb, nu i.i.d.'),
-    T('AR: geometric decay of the ACF; MA($q$): cut-off after $q$ lags', 'AR: scădere geometrică a ACF; MA($q$): anulare după $q$ laguri'),
-    T('Use the robust band $\\pm 1.96\\sqrt{\\hat\\delta(k)/T}$ for returns: the i.i.d.\\ band is too narrow', 'Folosiți banda robustă $\\pm 1{,}96\\sqrt{\\hat\\delta(k)/T}$ pentru randamente: banda i.i.d.\\ este prea îngustă')])
-
 # =============================================================================
 # 5. TESTE DE AUTOCORELAȚIE
 # =============================================================================
@@ -498,12 +477,6 @@ D.frame(T('The Runs Test', 'Testul runs'), items(
      [T('BET: @{t.bet.runs} runs against @{t.bet.rmean} expected, $z = @{t.bet.rz}$; S\\&P 500: @{t.sp500.runs} against @{t.sp500.rmean}, $z = @{t.sp500.rz}$',
         'BET: @{t.bet.runs} secvențe față de @{t.bet.rmean} așteptate, $z = @{t.bet.rz}$; S\\&P 500: @{t.sp500.runs} față de @{t.sp500.rmean}, $z = @{t.sp500.rz}$'),
       T('the same directions as $\\hat\\rho(1)$: continuation in the BET, reversal in the S\\&P 500', 'aceleași direcții ca $\\hat\\rho(1)$: continuare la BET, revenire la S\\&P 500')])) + ql('SFM_ch7_autocorrelation_tests'))
-
-D.recap(('Testing for Autocorrelation', 'testarea autocorelației'), [
-    T('$Q_{LB}(m) = T(T+2)\\sum \\hat\\rho(k)^2/(T-k) \\sim \\chi^2(m)$ under i.i.d.\\ returns', '$Q_{LB}(m) = T(T+2)\\sum \\hat\\rho(k)^2/(T-k) \\sim \\chi^2(m)$ pentru randamente i.i.d.'),
-    T('With volatility clustering use the robust $\\tilde Q$: the verdict changes for six of eight series', 'În prezența volatility clustering folosim $\\tilde Q$ robust: verdictul se schimbă pentru șase din opt serii'),
-    T('Runs test: signs only; too few runs means continuation', 'Testul runs: doar semnele; prea puține secvențe înseamnă continuare'),
-    T('$\\tilde Q$: reversal in the S\\&P 500, continuation in the BET; no rejection for the DAX, Bitcoin and the BVB stocks', '$\\tilde Q$: revenire la S\\&P 500, continuare la BET; nicio respingere pentru DAX, Bitcoin și acțiunile BVB')])
 
 # =============================================================================
 # 6. RĂDĂCINI UNITARE
@@ -573,10 +546,8 @@ D.frame(T('Phillips--Perron and KPSS', 'Phillips--Perron și KPSS'), items(
         'ADF nu respinge și KPSS respinge: $I(1)$; ADF respinge și KPSS nu: $I(0)$; ambele resping sau niciunul nu respinge: neconcludent')])))
 
 chart(T('The BET: Log Price and Returns', 'BET: prețul logaritmic și randamentele'), 'sfm_ch7_unit_root_bet', 'SFM_ch7_unit_roots', [
-    (T('Log price: ADF $@{ur.bet.price.adf}$ (p = @{ur.bet.price.adf.p}), KPSS $@{ur.bet.price.kpss}$ (p @{ur.bet.price.kpss.p})', 'Prețul logaritmic: ADF $@{ur.bet.price.adf}$ (p = @{ur.bet.price.adf.p}), KPSS $@{ur.bet.price.kpss}$ (p @{ur.bet.price.kpss.p})'),
-     [T('a unit root, not stationary', 'rădăcină unitară, nestaționar')]),
-    T('Returns: ADF $@{ur.bet.ret.adf}$ (p @{ur.bet.ret.adf.p}), KPSS $@{ur.bet.ret.kpss}$ (p @{ur.bet.ret.kpss.p}): stationary',
-      'Randamentele: ADF $@{ur.bet.ret.adf}$ (p @{ur.bet.ret.adf.p}), KPSS $@{ur.bet.ret.kpss}$ (p @{ur.bet.ret.kpss.p}): staționare'),
+    T('Log price: ADF does not reject a unit root (p = @{ur.bet.price.adf.p}), KPSS rejects stationarity: $I(1)$', 'Prețul logaritmic: ADF nu respinge rădăcina unitară (p = @{ur.bet.price.adf.p}), KPSS respinge staționaritatea: $I(1)$'),
+    T('Returns: ADF rejects, KPSS does not: stationary, $I(0)$; all statistics on the next slide', 'Randamentele: ADF respinge, KPSS nu: staționare, $I(0)$; toate statisticile sînt pe slide-ul următor'),
     T('The 2008 fall looks like a temporary deviation, but the tests say: permanent shocks, no return to a trend line',
       'Căderea din 2008 pare o abatere temporară, dar testele indică șocuri permanente, fără revenire la o dreaptă de tendință')],
     h='0.52\\textheight')
@@ -608,12 +579,6 @@ D.frame(T('A Unit Root Is Not Proof of Efficiency', 'O rădăcină unitară nu d
      [T('TLV: ADF rejects at 5\\% with a trend, KPSS also rejects: an inconclusive case, not a profitable rule', 'TLV: ADF respinge la 5\\% cu tendință, iar KPSS respinge și el: un caz neconcludent, nu o regulă profitabilă')]),
     T('Unit-root tests have low power against $\\phi$ close to 1: the efficiency question is about the increments, and needs tests on returns',
       'Testele de rădăcină unitară au putere mică împotriva unui $\\phi$ apropiat de 1: întrebarea eficienței privește creșterile și cere teste pe randamente')))
-
-D.recap(('Unit Roots', 'rădăcini unitare'), [
-    T('$I(1)$: shocks are permanent; $I(0)$: shocks fade; random walk = $I(1)$ prices, $I(0)$ returns', '$I(1)$: șocurile sînt permanente; $I(0)$: șocurile se sting; mers aleator = prețuri $I(1)$, randamente $I(0)$'),
-    T('ADF and PP: $H_0$ unit root, Dickey--Fuller critical values; KPSS: $H_0$ stationarity', 'ADF și PP: $H_0$ rădăcină unitară, valori critice Dickey--Fuller; KPSS: $H_0$ staționaritate'),
-    T('Our data: log prices $I(1)$, returns $I(0)$; regressions in levels can be spurious', 'Datele noastre: prețuri logaritmice $I(1)$, randamente $I(0)$; regresiile în nivel pot fi false'),
-    T('A unit root is necessary, not sufficient, for a random walk', 'Rădăcina unitară este necesară, nu suficientă, pentru un mers aleator')])
 
 # =============================================================================
 # 7. TESTUL VARIANCE RATIO
@@ -724,12 +689,6 @@ D.frame(T('Joint and Automatic Tests on Real Data', 'Teste comune și automate p
      [T('an autocorrelation of $@{sc.sp500.rho}$ explains $\\hat\\rho(1)^2$, less than 1\\%, of the variance of tomorrow\'s return', 'o autocorelație de $@{sc.sp500.rho}$ explică $\\hat\\rho(1)^2$, adică mai puțin de 1\\%, din varianța randamentului de mîine'),
       T('trading costs absorb most of it', 'costurile de tranzacționare absorb cea mai mare parte')])) + ql('SFM_ch7_variance_ratio'), 'footnotesize')
 
-D.recap(('The Variance-Ratio Test', 'testul variance ratio'), [
-    T('$\\mathrm{VR}(q) = 1 + 2\\sum_{k<q}(1 - k/q)\\rho(k)$; $> 1$ momentum, $< 1$ mean reversion', '$\\mathrm{VR}(q) = 1 + 2\\sum_{k<q}(1 - k/q)\\rho(k)$; $> 1$ momentum, $< 1$ mean reversion'),
-    T('Use $Z^*(q)$: the homoskedastic $Z(q)$ over-rejects under volatility clustering', 'Folosiți $Z^*(q)$: $Z(q)$ homoscedastic respinge prea des în prezența volatility clustering'),
-    T('Several horizons: Chow--Denning; data-driven horizon: automatic VR with wild bootstrap', 'Mai multe orizonturi: Chow--Denning; orizont ales de date: VR automat cu wild bootstrap'),
-    T('S\\&P 500 mean-reverting, BET trending; DAX, Bitcoin and most BVB stocks consistent with a random walk', 'S\\&P 500 revine la medie, BET are momentum; DAX, Bitcoin și majoritatea acțiunilor BVB sînt compatibile cu un mers aleator')])
-
 # =============================================================================
 # 8. EFICIENȚA PE PIEȚE ȘI ÎN TIMP
 # =============================================================================
@@ -801,12 +760,6 @@ D.frame(T('Why the Early BET Was Predictable', 'Previzibilitatea BET în primii 
     T('Crashes on the Bucharest Stock Exchange: \\refPeleA', 'Crahurile de la Bursa de Valori București: \\refPeleA')),
     ph('bvb', T('The Stock Exchange Palace, Bucharest', 'Palatul Bursei, București'), h='0.32\\textheight'), wl='0.60', wr='0.36'))
 
-D.recap(('Efficiency across Markets and over Time', 'eficiența pe piețe și în timp'), [
-    T('Over the last ten years most markets, including Bitcoin, are consistent with a random walk', 'În ultimii zece ani majoritatea piețelor, inclusiv Bitcoin, sînt compatibile cu un mers aleator'),
-    T('Efficiency changes over time: the AMH; rolling windows show it, but overlap', 'Eficiența se schimbă în timp: AMH; ferestrele mobile o arată, dar se suprapun'),
-    T('The early BET: thin trading and momentum; today: much closer to a random walk', 'BET în primii ani: tranzacționare redusă și momentum; azi: mult mai aproape de un mers aleator'),
-    T('Many markets, many tests: expect some false rejections', 'Multe piețe, multe teste: așteptați-vă la cîteva respingeri false')])
-
 # =============================================================================
 # 9. FORMA SEMI-TARE, FORMA TARE ȘI ANOMALII
 # =============================================================================
@@ -842,11 +795,6 @@ chart(T('Day-of-Week Returns: S\\&P 500 and BET', 'Randamentele pe zile ale săp
      [T('January: BET $@{cal.bet.jan}\\%$ per day against $@{cal.bet.oth}\\%$ ($t = @{cal.bet.jt}$, p = @{cal.bet.jp}); S\\&P 500: p = @{cal.sp500.jp}', 'ianuarie: BET $@{cal.bet.jan}\\%$ pe zi față de $@{cal.bet.oth}\\%$ ($t = @{cal.bet.jt}$, p = @{cal.bet.jp}); S\\&P 500: p = @{cal.sp500.jp}')]),
     T('No calendar effect survives at 5\\% in our data', 'Niciun efect calendaristic nu rezistă la 5\\% în datele noastre')],
     h='0.50\\textheight')
-
-D.recap(('Semi-Strong Form, Strong Form and Anomalies', 'forma semi-tare, forma tare și anomalii'), [
-    T('Event studies: prices react to public news at once, with no drift, in efficient markets', 'Studiile de eveniment: pe piețele eficiente prețurile reacționează imediat la știrile publice, fără derivă'),
-    T('Strong form fails for insiders, holds roughly for professional managers', 'Forma tare nu este valabilă pentru insideri, dar este aproximativ valabilă pentru administratorii profesioniști de fonduri'),
-    T('Calendar anomalies: weak in our data, and they fade after publication', 'Anomaliile calendaristice: slabe în datele noastre și se estompează după publicare')])
 
 # =============================================================================
 # 10. AI PENTRU DESCOPERIRE ȘTIINȚIFICĂ
@@ -925,8 +873,8 @@ D.frame(T('Check Yourself', 'Autoevaluare'), items(
      [T('\\textbf{Answer}: $1 + 0.10 = 1.10$: the two-day variance is 10\\% larger than under a random walk: momentum', '\\textbf{Răspuns}: $1 + 0{,}10 = 1{,}10$: varianța pe două zile este cu 10\\% mai mare decît în cazul unui mers aleator, deci momentum')]),
     (T('\\textbf{Question}: ADF does not reject on log prices and KPSS rejects; is the market efficient?', '\\textbf{Întrebare}: ADF nu respinge pe prețurile logaritmice, iar KPSS respinge; este piața eficientă?'),
      [T('\\textbf{Answer}: we only know that prices are $I(1)$; efficiency needs tests on the increments (ACF, VR)', '\\textbf{Răspuns}: știm doar că prețurile sînt $I(1)$; eficiența cere teste pe creșteri (ACF, VR)')]),
-    (T('\\textbf{Question}: $Q_{LB}(10)$ rejects strongly for squared returns; is weak-form efficiency rejected?', '\\textbf{Întrebare}: $Q_{LB}(10)$ respinge puternic pentru randamentele la pătrat; este respinsă eficiența în formă slabă?'),
-     [T('\\textbf{Answer}: no; this is volatility clustering; it rejects RW1 and RW2, not the martingale', '\\textbf{Răspuns}: nu; este vorba de volatility clustering, care respinge RW1 și RW2, nu martingalul')]),
+    (T('\\textbf{Question}: for the S\\&P 500 the homoskedastic $Z(q)$ is about twice the robust $Z^*(q)$; which one should we report?', '\\textbf{Întrebare}: pentru S\\&P 500, statistica homoscedastică $Z(q)$ este de circa două ori mai mare decît statistica robustă $Z^*(q)$; pe care o raportăm?'),
+     [T('\\textbf{Answer}: $Z^*(q)$: volatility clustering raises the variance of $\\widehat{\\mathrm{VR}}(q)$, which $Z(q)$ ignores, so $Z(q)$ rejects a true martingale too often', '\\textbf{Răspuns}: $Z^*(q)$: volatility clustering mărește varianța lui $\\widehat{\\mathrm{VR}}(q)$, pe care $Z(q)$ o ignoră, deci $Z(q)$ respinge prea des un martingal adevărat')]),
     T('Next: Chapter 8, volatility estimators and volatility clustering', 'Urmează: Capitolul 8, estimatori de volatilitate și volatility clustering')))
 
 D.references(BIB)

@@ -244,13 +244,9 @@ D.frame('⟦Evaluation||Evaluare⟧', items(
      ['⟦problems on real data and short interpretation questions, as in the seminars||probleme pe date reale și întrebări scurte de interpretare, ca la seminar⟧',
       '⟦covers the lectures and the seminars of Chapters 0--16||acoperă cursurile și seminariile Capitolelor 0--16⟧']),
     ('⟦\\textbf{Team project: 20\\%}||\\textbf{Proiect de echipă: 20\\%}⟧',
-     ['⟦one research question on real market data, answered with the methods of the course||o întrebare de cercetare pe date reale de piață, cu metodele cursului⟧',
-      '⟦a GitHub repository, a short report, a presentation and an oral defence||un repository GitHub, un raport scurt, o prezentare și o susținere orală⟧']),
+     ['⟦one research question on real market data, answered with the methods of the course||o întrebare de cercetare pe date reale de piață, cu metodele cursului⟧']),
     ('⟦\\textbf{Attendance: 10\\%}||\\textbf{Prezență: 10\\%}⟧',
-     ['⟦lectures and seminars||cursuri și seminarii⟧']),
-    ('⟦\\textbf{Self-assessment quizzes}||\\textbf{Quiz-uri de autoevaluare}⟧',
-     ['⟦one per chapter on the website: 20 questions drawn from a bank of 24, each answer explained||cîte unul pentru fiecare capitol, pe site: 20 de întrebări extrase dintr-o bancă de 24, cu explicație pentru fiecare răspuns⟧',
-      '⟦practice for the exam||pregătire pentru examen⟧'])))
+     ['⟦lectures and seminars||cursuri și seminarii⟧'])))
 
 D.frame('⟦Textbook and Further Reading||Manual și bibliografie suplimentară⟧', items(
     ('⟦\\textbf{Main textbook}||\\textbf{Manualul de bază}⟧',
@@ -280,10 +276,10 @@ D.frame('⟦Materials and Tools||Materiale și instrumente⟧', items(
     ('⟦\\textbf{For every chapter}||\\textbf{Pentru fiecare capitol}⟧',
      ['⟦lecture slides and seminar slides, in English and in Romanian||slide-urile de curs și de seminar, în engleză și în română⟧',
       '⟦a lecture notebook and a seminar notebook (Python), opened in Google Colab with one click||un notebook de curs și unul de seminar (Python), care se deschid în Google Colab cu un singur clic⟧',
-      '⟦a quiz of 20 questions||un quiz de 20 de întrebări⟧']),
+      '⟦a self-assessment quiz on the website: 20 questions drawn from a bank of 24, each answer explained||un quiz de autoevaluare pe site: 20 de întrebări extrase dintr-o bancă de 24, cu explicație pentru fiecare răspuns⟧']),
     ('⟦\\textbf{Quantlets}: every chart has a public folder with code, a description file (\\texttt{Metainfo.txt}) and the chart||\\textbf{Quantlets}: fiecare grafic are un folder public cu codul, un fișier de descriere (\\texttt{Metainfo.txt}) și graficul⟧',
      ['⟦the icon under each chart opens its Quantlet on GitHub||pictograma de sub fiecare grafic deschide Quantlet-ul corespunzător pe GitHub⟧']),
-    ('⟦\\textbf{Data}: daily market data from EODHD (EOD Historical Data), saved once in the course repository||\\textbf{Date}: date zilnice de piață de la EODHD (EOD Historical Data), salvate o singură dată în repository-ul cursului⟧',
+    ('\\hypertarget{ch0-materials}{}⟦\\textbf{Data}: daily market data from EODHD (EOD Historical Data), saved once in the course repository||\\textbf{Date}: date zilnice de piață de la EODHD (EOD Historical Data), salvate o singură dată în repository-ul cursului⟧',
      ['⟦the same numbers on every computer, until 18 September 2026||date pînă la 18 septembrie 2026, cu aceleași cifre pe orice calculator⟧',
       '⟦EUR/RON: the official reference rate of the BNR (National Bank of Romania)||EUR/RON: cursul de referință oficial al BNR⟧'])))
 
@@ -303,7 +299,7 @@ D.frame('⟦The Team Project||Proiectul de echipă⟧', items(
     ('⟦\\textbf{Deliverables}||\\textbf{Livrabile}⟧',
      ['⟦a GitHub repository whose code reproduces every number and every chart from the saved data||un repository GitHub al cărui cod reproduce fiecare cifră și fiecare grafic din datele salvate⟧',
       '⟦a short report and a presentation of the results||un raport scurt și o prezentare a rezultatelor⟧',
-      '⟦a file \\texttt{AI\\_USE.md} that declares every use of AI tools||un fișier \\texttt{AI\\_USE.md}, în care este declarată fiecare utilizare a instrumentelor AI⟧']),
+      '⟦the file \\texttt{AI\\_USE.md} described in the AI policy (next slide)||fișierul \\texttt{AI\\_USE.md}, descris în politica privind AI (slide-ul următor)⟧']),
     ('⟦\\textbf{What we grade}||\\textbf{Criterii de evaluare}⟧',
      ['⟦a clear question, correct methods and checks, an honest interpretation||o întrebare clară, metode și verificări corecte, o interpretare onestă⟧',
       '⟦\\textbf{oral defence}: each member explains the code and the results||\\textbf{susținere orală}: fiecare membru explică codul și rezultatele⟧']),
@@ -431,7 +427,7 @@ D.frame('⟦Data Used in This Course||Datele folosite în curs⟧', table(
     '>{\\raggedright\\arraybackslash}p{1.9cm}>{\\raggedright\\arraybackslash}p{4.3cm}>{\\raggedright\\arraybackslash}p{2.7cm}>{\\raggedright\\arraybackslash}p{3.4cm}',
     '\\textbf{⟦Series||Serie⟧} & \\textbf{⟦What it measures||Descriere⟧} & \\textbf{⟦Price||Preț⟧} & \\textbf{⟦Calendar||Calendar⟧}',
     DATA_ROWS, size='footnotesize') + items(
-    '⟦Daily data from EODHD (EOD Historical Data), saved in the course repository, until 18 September 2026||Date zilnice de la EODHD (EOD Historical Data), salvate în repository-ul cursului, pînă la 18 septembrie 2026⟧',
+    '⟦Daily closes until 18 September 2026; source: \\hyperlink{ch0-materials}{\\textcolor{MainBlue}{Materials and Tools}}||Închideri zilnice pînă la 18 septembrie 2026; sursa: \\hyperlink{ch0-materials}{\\textcolor{MainBlue}{Materiale și instrumente}}⟧',
     '⟦BET-TR (total return): BET with dividends reinvested; UTC: Coordinated Universal Time||BET-TR (total return): BET cu dividendele reinvestite; UTC (Coordinated Universal Time): ora universală coordonată⟧',
     '⟦Each series keeps its own calendar: Bitcoin trades 365 days a year, exchanges about 252||Fiecare serie își păstrează calendarul: Bitcoin se tranzacționează 365 de zile pe an, bursele aproximativ 252⟧'),
     size='footnotesize')
@@ -470,8 +466,8 @@ D.frame('⟦Risk and Return: Interpretation||Risc și randament: interpretare⟧
      ['⟦no: these are averages of one sample; a mean return over 11 years is estimated with a large error, as Chapter 1 shows||nu: sînt medii calculate pe un singur eșantion; randamentul mediu pe 11 ani este estimat cu o eroare mare, cum arată Capitolul 1⟧'])))
 
 chart(D, '⟦Crises and Drawdowns, 2000--2026||Crize și drawdown-uri, 2000--2026⟧', 'sfm_ch0_drawdowns', 'SFM_ch0_drawdowns', [
-    '⟦\\textbf{Drawdown}: the loss from the highest previous price, $DD_t = P_t / \\max_{s \\le t} P_s - 1$||\\textbf{Drawdown}: pierderea față de cel mai mare preț anterior, $DD_t = P_t / \\max_{s \\le t} P_s - 1$⟧',
-    '⟦$P_t$: the price on day $t$; $\\max_{s \\le t} P_s$: the highest price up to day $t$; $DD_t \\le 0$, and $DD_t = 0$ at a new high||$P_t$: prețul din ziua $t$; $\\max_{s \\le t} P_s$: cel mai mare preț pînă în ziua $t$, inclusiv; $DD_t \\le 0$, iar $DD_t = 0$ la un nou maxim⟧'],
+    '\\hypertarget{ch0-dd}{}⟦\\textbf{Drawdown}: the loss from the highest previous price, $DD_t = P_t / \\max_{s \\le t} P_s - 1$||\\textbf{Drawdown}: pierderea față de cel mai mare preț anterior, $DD_t = P_t / \\max_{s \\le t} P_s - 1$⟧',
+    '⟦$\\max_{s \\le t} P_s$: the highest price up to day $t$; $DD_t \\le 0$, and $DD_t = 0$ at a new high||$\\max_{s \\le t} P_s$: cel mai mare preț pînă în ziua $t$, inclusiv; $DD_t \\le 0$, iar $DD_t = 0$ la un nou maxim⟧'],
     h='0.56\\textheight')
 
 D.frame('⟦Drawdowns: Interpretation||Drawdown-uri: interpretare⟧', items(
@@ -720,7 +716,7 @@ D.frame('⟦Drawdown, Step by Step||Drawdown-ul, pas cu pas⟧', cols(
           ['0 & 100 & 100 & $0\\%$', '1 & 120 & 120 & $0\\%$', '2 & 90 & 120 & $-25\\%$',
            '3 & 110 & 120 & $-8.3\\%$', '4 & 130 & 130 & $0\\%$', '5 & 104 & 130 & $-20\\%$'], size='footnotesize'),
     items('⟦\\textbf{Running peak}: $M_t = \\max_{s \\le t} P_s$, the highest price over the days $s = 0, \\ldots, t$||\\textbf{Vîrful curent}: $M_t = \\max_{s \\le t} P_s$, cel mai mare preț din zilele $s = 0, \\ldots, t$⟧',
-          '⟦\\textbf{Drawdown}: $DD_t = P_t / M_t - 1$, never positive||\\textbf{Drawdown}: $DD_t = P_t / M_t - 1$, niciodată pozitiv⟧',
+          '⟦\\textbf{Drawdown} (\\hyperlink{ch0-dd}{\\textcolor{MainBlue}{defined with the crises chart}}): $DD_t = P_t / M_t - 1$||\\textbf{Drawdown} (\\hyperlink{ch0-dd}{\\textcolor{MainBlue}{definit la graficul crizelor}}): $DD_t = P_t / M_t - 1$⟧',
           '⟦\\textbf{Maximum drawdown} (MDD): the most negative $DD_t$; here $-25\\%$, from 120 to 90||\\textbf{Drawdown-ul maxim} (MDD, maximum drawdown): cea mai mică valoare a lui $DD_t$; aici $-25\\%$, de la 120 la 90⟧',
           ('⟦\\textbf{Why investors watch it}||\\textbf{De ce îl urmăresc investitorii}⟧',
            ['⟦it is the loss of someone who bought at the worst moment||este pierderea celui care a cumpărat în cel mai nefavorabil moment⟧',
@@ -786,16 +782,6 @@ D.frame('⟦Your Turn: a Project Seed||Rîndul dumneavoastră: o idee de proiect
 # ===============================================================================================================
 D.section('Conclusions', 'Concluzii')
 # ===============================================================================================================
-D.frame('⟦Key Takeaways||Idei principale⟧', items(
-    '⟦Grade: 70\\% exam, 20\\% project, 10\\% attendance; AI allowed and declared; seminars before lectures||Nota: 70\\% examen, 20\\% proiect, 10\\% prezență; AI permis și declarat; seminariile înaintea cursurilor⟧',
-    '⟦Financial markets allocate capital and risk; their prices are the data of this course||Piețele financiare alocă capitalul și riscul; prețurile lor sînt datele acestui curs⟧',
-    ('⟦\\textbf{2000--2026 in numbers}||\\textbf{2000--2026 în cifre}⟧',
-     ['⟦stock indices: about 15--22\\% volatility a year; Bitcoin: about @{btc_vol}\\%||indicii bursieri: circa 15--22\\% volatilitate pe an; Bitcoin: circa @{btc_vol}\\%⟧',
-      '⟦drawdowns of @{sp500_mdd}\\% (S\\&P 500) and @{bet_mdd}\\% (BET) in 2008--2009||drawdown-uri de @{sp500_mdd}\\% (S\\&P 500) și @{bet_mdd}\\% (BET) în 2008--2009⟧']),
-    '⟦Four centuries of bubbles and crashes; models moved from the Normal random walk to heavy tails and changing volatility||Patru secole de bule și crahuri; modelele au trecut de la mersul aleator Normal la cozi groase și volatilitate variabilă⟧',
-    '⟦Log returns add, simple returns compound; volatility scales with $\\sqrt{A}$||Randamentele logaritmice se adună, cele simple se compun; volatilitatea se anualizează cu factorul $\\sqrt{A}$⟧',
-    '⟦An AI-assisted result counts only after its references, numbers and rival explanations are checked||Un rezultat obținut cu ajutorul AI contează doar după ce referințele, cifrele și explicațiile concurente sînt verificate⟧'))
-
 D.frame('⟦Check Yourself, and Next: Chapter 1||Autoevaluare; urmează Capitolul 1⟧', cols(
     items(('⟦\\textbf{Check yourself}||\\textbf{Autoevaluare}⟧',
            ['⟦Why is the sum of simple returns not the total return?||De ce suma randamentelor simple nu este randamentul total?⟧',

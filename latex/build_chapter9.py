@@ -218,11 +218,6 @@ D.frame(T('Stylised Facts a Volatility Model Must Reproduce', 'Faptele stilizate
     T('\\textbf{Mean reversion of volatility}: after a storm, volatility returns to a long-run level', '\\textbf{Revenirea volatilității la medie}: după o perioadă turbulentă, volatilitatea revine la un nivel pe termen lung'),
     T('Almost no autocorrelation in $r_t$ itself (Chapter 7)', 'Aproape nicio autocorelație în $r_t$ însuși (Capitolul 7)')))
 
-D.recap(('Volatility Comes in Bursts', 'volatilitatea apare în episoade'), [
-    T('Calm periods and storms alternate; a storm lasts for months', 'Perioadele liniștite alternează cu perioadele turbulente; o perioadă turbulentă durează luni'),
-    T('Risk measures, portfolios, option prices and tests need the volatility of tomorrow', 'Măsurile de risc, portofoliile, prețurile opțiunilor și testele au nevoie de volatilitatea de mîine'),
-    T('A good model: clustering, heavy tails, leverage effect, mean reversion of volatility', 'Un model bun: clustering, cozi groase, efect de levier, revenirea volatilității la medie')])
-
 # =============================================================================
 # 2. MEDIA ȘI VARIANȚA CONDIȚIONATĂ
 # =============================================================================
@@ -260,11 +255,6 @@ D.frame(T('Worked Example: Conditional and Unconditional Variance', 'Exemplu rez
      [T('a calm day: $\\sigma_t = @{ltv.calm}\\%$; a stormy day: $\\sigma_t = @{ltv.storm}\\%$; the average $@{ltv.s}\\%$ fits neither', 'o zi liniștită: $\\sigma_t = @{ltv.calm}\\%$; o zi agitată: $\\sigma_t = @{ltv.storm}\\%$; media de $@{ltv.s}\\%$ nu descrie niciuna dintre ele')]),
     T('A mixture of Normal distributions with different variances has heavy tails: conditional heteroskedasticity creates kurtosis',
       'Un amestec de distribuții Normale cu varianțe diferite are cozi groase: heteroscedasticitatea condiționată creează boltire')))
-
-D.recap(('Conditional Mean and Conditional Variance', 'media condiționată și varianța condiționată'), [
-    T('$r_t = \\mu + \\sigma_t z_t$: constant mean, conditional volatility $\\sigma_t$ known one day ahead', '$r_t = \\mu + \\sigma_t z_t$: medie constantă, volatilitate condiționată $\\sigma_t$ cunoscută cu o zi înainte'),
-    T('Shocks are uncorrelated but dependent through their squares', 'Șocurile sînt necorelate, dar dependente prin pătratele lor'),
-    T('Unconditional variance = average of the conditional variances', 'Varianța necondiționată = media varianțelor condiționate')])
 
 # =============================================================================
 # 3. ARCH
@@ -332,11 +322,6 @@ D.frame(T('ARCH($q$) and Its Limits', 'ARCH($q$) și limitele lui'), items(
     size='footnotesize') + items(
     T('Interpretation: ARCH needs ten lags and still loses to GARCH(1,1), which has four parameters (AIC and BIC: smaller is better, Section 10)',
       'Interpretare: ARCH are nevoie de zece laguri și rămîne totuși inferior modelului GARCH(1,1), care are patru parametri (AIC și BIC: valoarea mai mică este mai bună, secțiunea 10)')) + ql('SFM_ch9_garch_estimation'), 'footnotesize')
-
-D.recap(('The ARCH Model', 'modelul ARCH'), [
-    T('$\\sigma_t^2 = \\omega + \\sum_i\\alpha_i\\varepsilon_{t-i}^2$: an AR model for the squared shocks', '$\\sigma_t^2 = \\omega + \\sum_i\\alpha_i\\varepsilon_{t-i}^2$: un model AR pentru pătratele șocurilor'),
-    T('Unconditional variance $\\omega/(1 - \\sum\\alpha_i)$; kurtosis above 3 even with Normal innovations', 'Varianța necondiționată $\\omega/(1 - \\sum\\alpha_i)$; boltire peste 3 chiar cu inovații Normale'),
-    T('Real clustering needs many lags: the motivation for GARCH', 'Clustering-ul real cere multe laguri: motivația pentru GARCH')])
 
 # =============================================================================
 # 4. GARCH(1,1)
@@ -414,11 +399,6 @@ D.frame(T('IGARCH and the EWMA Link', 'IGARCH și legătura cu EWMA'), items(
      [T('\\textbf{Answer}: EWMA keeps today\'s crisis level for the whole year; GARCH lets it decay towards the long-run level',
         '\\textbf{Răspuns}: EWMA păstrează nivelul de criză de azi pentru tot anul; GARCH îl lasă să scadă spre nivelul pe termen lung')])))
 
-D.recap(('The GARCH(1,1) Model', 'modelul GARCH(1,1)'), [
-    T('$\\sigma_t^2 = \\omega + \\alpha\\varepsilon_{t-1}^2 + \\beta\\sigma_{t-1}^2$: reaction $\\alpha$, memory $\\beta$', '$\\sigma_t^2 = \\omega + \\alpha\\varepsilon_{t-1}^2 + \\beta\\sigma_{t-1}^2$: reacția $\\alpha$, memoria $\\beta$'),
-    T('$\\alpha + \\beta < 1$: long-run variance $\\omega/(1 - \\alpha - \\beta)$, half-life $\\ln 0.5/\\ln(\\alpha + \\beta)$', '$\\alpha + \\beta < 1$: varianța pe termen lung $\\omega/(1 - \\alpha - \\beta)$, timpul de înjumătățire $\\ln 0{,}5/\\ln(\\alpha + \\beta)$'),
-    T('$\\alpha + \\beta = 1$: IGARCH; EWMA is an IGARCH without $\\omega$', '$\\alpha + \\beta = 1$: IGARCH; EWMA este un IGARCH fără $\\omega$')])
-
 # =============================================================================
 # 5. ESTIMARE
 # =============================================================================
@@ -483,11 +463,6 @@ D.frame(T('Quasi-Maximum Likelihood', 'Cvasi-verosimilitatea maximă'), items(
       T('an estimate on the boundary ($\\alpha + \\beta = 1$) has no usual standard error: report it as IGARCH', 'o estimare pe frontieră ($\\alpha + \\beta = 1$) nu are o eroare standard obișnuită: o raportăm ca IGARCH')]),
     T('A better innovation distribution gives more efficient estimates: next section', 'O distribuție mai potrivită a inovațiilor dă estimări mai eficiente: secțiunea următoare')))
 
-D.recap(('Estimation by Maximum Likelihood', 'estimarea prin verosimilitate maximă'), [
-    T('$\\ell(\\theta)$ = sum of conditional log-densities; $\\sigma_t^2(\\theta)$ computed recursively', '$\\ell(\\theta)$ = suma log-densităților condiționate; $\\sigma_t^2(\\theta)$ calculat recursiv'),
-    T('The likelihood surface has a ridge in $(\\alpha, \\beta)$: long samples needed', 'Suprafața verosimilității are o creastă în $(\\alpha, \\beta)$: sînt necesare eșantioane lungi'),
-    T('Report robust (Bollerslev--Wooldridge) standard errors', 'Raportăm erori standard robuste (Bollerslev--Wooldridge)')])
-
 # =============================================================================
 # 6. INOVAȚII
 # =============================================================================
@@ -526,11 +501,6 @@ chart(T('QQ Plots of the Standardised Residuals', 'Graficele QQ ale reziduurilor
       'Dreapta: reziduurile GARCH-t față de t standardizată cu $\\hat\\nu = @{qq.nu}$: $@{qq.t001}$ față de $@{qq.t001th}$, mult mai aproape; cele mai mari scăderi rămîn mai adînci'),
     T('Interpretation: the left tail is the problem: a reason for skewed innovations and for asymmetric models (Section 8)', 'Interpretare: problema este coada stîngă: un motiv pentru inovații asimetrice și pentru modele asimetrice (secțiunea 8)')],
     h='0.50\\textheight')
-
-D.recap(('Heavy-Tailed Innovations', 'inovații cu cozi groase'), [
-    T('GARCH explains part of the kurtosis; the rest comes from $z_t$', 'GARCH explică o parte din boltire; restul vine din $z_t$'),
-    T('Student-t ($\\nu$) and skewed t ($\\nu$, $\\lambda$) improve the likelihood strongly', 'Student-t ($\\nu$) și t asimetrică ($\\nu$, $\\lambda$) cresc puternic verosimilitatea'),
-    T('The distribution of $z_t$ decides the VaR quantile', 'Distribuția lui $z_t$ determină cuantila VaR')])
 
 # =============================================================================
 # 7. ȘASE PIEȚE
@@ -585,18 +555,13 @@ chart(T('How Long Does a Shock Last?', 'Durata unui șoc de volatilitate'), 'sfm
       'Interpretare: după o criză, S\\&P 500 are nevoie de circa jumătate de an ca să înjumătățească varianța în exces; OMV Petrom de circa două săptămîni; Bitcoin, niciodată')],
     h='0.52\\textheight')
 
-D.recap(('GARCH in Six Markets', 'GARCH pe șase piețe'), [
-    T('$\\alpha + \\beta$ close to 1 everywhere: volatility shocks last for months', '$\\alpha + \\beta$ apropiat de 1 peste tot: șocurile de volatilitate durează luni'),
-    T('BVB stocks: faster decay; Bitcoin: IGARCH, extreme tails', 'Acțiunile BVB: stingere mai rapidă; Bitcoin: IGARCH, cozi extreme'),
-    T('The long-run volatility is imprecise when $\\alpha + \\beta$ is near 1', 'Volatilitatea pe termen lung este imprecisă cînd $\\alpha + \\beta$ este aproape de 1')])
-
 # =============================================================================
 # 8. ASIMETRIE
 # =============================================================================
 D.section('Asymmetry and the Leverage Effect', 'Asimetria și efectul de levier')
 
 D.frame(T('The Leverage Effect', 'Efectul de levier'), items(
-    (T('Falls in stock prices are followed by larger increases in volatility than rises of the same size \\refChristie', 'Scăderile prețurilor acțiunilor sînt urmate de creșteri mai mari ale volatilității decît creșterile de aceeași mărime \\refChristie'),
+    (T('The leverage effect of Section 1 \\refChristie has two explanations', 'Efectul de levier din secțiunea 1 \\refChristie are două explicații'),
      [T('\\textbf{leverage} explanation: a lower share price raises the debt-to-equity ratio, so the equity becomes riskier', 'explicația prin \\textbf{levier}: un preț mai mic al acțiunii crește raportul datorii/capitaluri proprii, deci acțiunea devine mai riscantă'),
       T('\\textbf{volatility feedback}: news of higher risk lowers prices at once', '\\textbf{feedback-ul volatilității}: știrile despre un risc mai mare scad imediat prețurile')]),
     (T('GARCH(1,1) cannot see it: $\\sigma_t^2$ depends on $\\varepsilon_{t-1}^2$, not on the sign of $\\varepsilon_{t-1}$', 'GARCH(1,1) nu îl poate surprinde: $\\sigma_t^2$ depinde de $\\varepsilon_{t-1}^2$, nu de semnul lui $\\varepsilon_{t-1}$'),
@@ -642,11 +607,6 @@ D.frame(T('Asymmetry in Six Markets', 'Asimetria pe șase piețe'), table(
     T('Interpretation: leverage is a property of mature equity markets; in crypto, large rises are as ``frightening\'\' as large falls',
       'Interpretare: efectul de levier este o proprietate a piețelor mature de acțiuni; la cripto, creșterile mari cresc volatilitatea la fel de mult ca scăderile mari')) + ql('SFM_ch9_asymmetry'), 'footnotesize')
 
-D.recap(('Asymmetry and the Leverage Effect', 'asimetria și efectul de levier'), [
-    T('GJR: an extra slope $\\gamma$ for negative shocks; EGARCH: a sign term $\\gamma z_{t-1}$ in $\\ln\\sigma_t^2$', 'GJR: o pantă suplimentară $\\gamma$ pentru șocurile negative; EGARCH: un termen de semn $\\gamma z_{t-1}$ în $\\ln\\sigma_t^2$'),
-    T('The news impact curve shows the asymmetry at a glance', 'Curba de impact a știrilor arată asimetria dintr-o privire'),
-    T('Strong in the S\\&P 500 and the DAX, weak on the BVB, absent in Bitcoin', 'Puternică la S\\&P 500 și DAX, slabă la BVB, absentă la Bitcoin')])
-
 # =============================================================================
 # 9. DIAGNOSTIC
 # =============================================================================
@@ -684,11 +644,6 @@ D.frame(T('Diagnostics on Real Data', 'Diagnostic pe date reale'), table(
     T('Other markets, $Q(10)$ of $\\hat z_t^2$ (GARCH-t): p between @{dm.dax.z2p} (DAX) and @{dm.tlv.z2p} (TLV): no ARCH effect left anywhere',
       'Celelalte piețe, $Q(10)$ al lui $\\hat z_t^2$ (GARCH-t): p între @{dm.dax.z2p} (DAX) și @{dm.tlv.z2p} (TLV): nu a rămas niciun efect ARCH')) + ql('SFM_ch9_diagnostics'), 'footnotesize')
 
-D.recap(('Diagnostics', 'diagnostic'), [
-    T('Standardised residuals: no autocorrelation in $\\hat z_t$ and $\\hat z_t^2$, the right distribution', 'Reziduurile standardizate: fără autocorelație în $\\hat z_t$ și $\\hat z_t^2$, distribuția potrivită'),
-    T('GARCH(1,1)-t removes the ARCH effects in all six series', 'GARCH(1,1)-t elimină efectele ARCH în toate cele șase serii'),
-    T('The sign-bias test points to the missing asymmetry for equity indices', 'Testul de asimetrie arată asimetria care lipsește la indicii de acțiuni')])
-
 # =============================================================================
 # 10. ALEGEREA MODELULUI
 # =============================================================================
@@ -710,11 +665,6 @@ D.frame(T('Nine Models for the S\\&P 500', 'Nouă modele pentru S\\&P 500'), ite
       'Ambele alegeri contează: pornind de la GARCH cu inovații Normale, doar asimetria (EGARCH cu inovații Normale) reduce BIC cu @{ms.gain.asym}, doar cozile groase (GARCH cu t asimetrică) cu @{ms.gain.dist}, iar ambele împreună cu @{ms.gain.both}'),
     T('Interpretation: EGARCH with skewed-t innovations wins; with @{ret.n} observations even small improvements are ``significant\'\'; the forecast comparison in Section 11 is the real test',
       'Interpretare: EGARCH cu inovații t asimetrice cîștigă; cu @{ret.n} observații chiar și îmbunătățirile mici sînt „semnificative”; comparația prognozelor din secțiunea 11 este testul real')) + ql('SFM_ch9_diagnostics'), 'footnotesize')
-
-D.recap(('Model Selection', 'alegerea modelului'), [
-    T('Compare models fitted on the same data with AIC/BIC; BIC penalises parameters more', 'Comparăm modelele estimate pe aceleași date prin AIC/BIC; BIC penalizează mai mult parametrii'),
-    T('S\\&P 500: asymmetry and heavy tails both needed; EGARCH-skewed t is the best', 'S\\&P 500: sînt necesare atît asimetria, cît și cozile groase; EGARCH cu t asimetrică este cel mai bun'),
-    T('In-sample fit is not forecasting ability', 'Ajustarea în eșantion nu înseamnă capacitate de prognoză')])
 
 # =============================================================================
 # 11. PROGNOZE
@@ -779,12 +729,6 @@ D.frame(T('GARCH against EWMA, Out of Sample', 'GARCH față de EWMA, în afara 
     T('Interpretation: Bitcoin: no difference ($t = @{fe.btc.dm}$): its GARCH is an IGARCH, which is almost an EWMA (Section 7)',
       'Interpretare: Bitcoin: nicio diferență ($t = @{fe.btc.dm}$): GARCH-ul lui este un IGARCH, adică aproape un EWMA (secțiunea 7)')) + ql('SFM_ch9_forecasts'), 'scriptsize')
 
-D.recap(('Volatility Forecasts', 'prognoza volatilității'), [
-    T('$E_t[\\sigma_{t+h}^2] = \\bar\\sigma^2 + (\\alpha + \\beta)^{h-1}(\\sigma_{t+1}^2 - \\bar\\sigma^2)$; $H$-day variance = sum of daily forecasts',
-      '$E_t[\\sigma_{t+h}^2] = \\bar\\sigma^2 + (\\alpha + \\beta)^{h-1}(\\sigma_{t+1}^2 - \\bar\\sigma^2)$; varianța pe $H$ zile = suma prognozelor zilnice'),
-    T('Compare forecasts out of sample with QLIKE and the Diebold--Mariano test', 'Comparăm prognozele în afara eșantionului cu QLIKE și testul Diebold--Mariano'),
-    T('GARCH beats EWMA where volatility mean-reverts', 'GARCH este mai bun decît EWMA acolo unde volatilitatea revine la medie')])
-
 # =============================================================================
 # 12. VaR
 # =============================================================================
@@ -826,11 +770,6 @@ D.frame(T('Exceedances 2015--2026: a Preview of Backtesting', 'Depășiri 2015--
       'GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: mult mai aproape de 1\\%, dar tot peste 1\\% pentru S\\&P 500 și DAX (lipsește efectul de levier)'),
     T('Are these differences significant? Chapter 10: the test of \\refKupiec, ES 2.5\\%, backtesting', 'Sînt aceste diferențe semnificative? Capitolul 10: testul \\refKupiec, ES 2,5\\%, backtesting'),
     T('Further reading on VaR forecasting for Bitcoin: \\refPeleB', 'Lectură suplimentară despre prognoza VaR pentru Bitcoin: \\refPeleB')) + ql('SFM_ch9_forecasts'), 'footnotesize')
-
-D.recap(('VaR 1\\% from a GARCH Model', 'VaR 1\\% dintr-un model GARCH'), [
-    T('$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: dynamic volatility and the right quantile', '$\\mathrm{VaR}_{t+1} = -(\\mu + \\sigma_{t+1}q_\\alpha(z))$: volatilitate dinamică și cuantila potrivită'),
-    T('Normal quantiles underestimate the risk; Student-t is much closer to 1\\%', 'Cuantilele Normale subestimează riscul; Student-t este mult mai aproape de 1\\%'),
-    T('Formal backtests: Chapter 10', 'Testele formale (backtesting): Capitolul 10')])
 
 # =============================================================================
 # 13. AI

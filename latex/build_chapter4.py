@@ -291,23 +291,17 @@ V.put('cy.ar', 1 / (1 - 0.8 ** 2), 2)
 # =============================================================================
 # DESCHIDERE
 # =============================================================================
-D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items(
+D.frame(T("Today's Question, Route and Learning Outcomes", 'Întrebarea de azi, traseul și rezultatele învățării'), items(
     (T('\\textbf{Question}: which probability tools do we need to describe returns and to simulate prices?',
        '\\textbf{Întrebarea}: de ce instrumente de probabilitate avem nevoie pentru a descrie randamentele și pentru a simula prețuri?'),
      [T('every later chapter (tails, volatility, VaR, efficiency) is built on them', 'toate capitolele următoare (cozi, volatilitate, VaR, eficiență) se sprijină pe ele')]),
-    (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
-     [T('random variables, distributions, expectation, variance, covariance', 'variabile aleatoare, distribuții, speranță matematică, varianță, covarianță'),
-      T('independence vs uncorrelatedness, conditional expectation and conditional variance', 'independență și necorelare, speranța condiționată și varianța condiționată'),
-      T('random numbers and Monte Carlo; the binomial model', 'numere aleatoare și Monte Carlo; modelul binomial'),
-      T('random walk, martingale, white noise, AR(1); Wiener process and GBM', 'mers aleator, martingal, zgomot alb, AR(1); procesul Wiener și GBM')]),
+    (T('\\textbf{Route and outcomes}: after this chapter you can', '\\textbf{Traseul și rezultatele învățării}: la finalul capitolului veți putea'),
+     [T('compute expectations, variances, covariances and correlations, and the volatility of a portfolio', 'calcula speranțe matematice, varianțe, covarianțe și corelații, precum și volatilitatea unui portofoliu'),
+      T('explain why uncorrelated returns can still be dependent, and measure it', 'explica de ce randamente necorelate pot fi totuși dependente și măsura această dependență'),
+      T('use conditional expectation and conditional variance, the building blocks of GARCH', 'folosi speranța condiționată și varianța condiționată, elementele de bază ale modelelor GARCH'),
+      T('generate random numbers with the inverse transform and estimate a probability by Monte Carlo, with its standard error', 'genera numere aleatoare prin metoda transformării inverse și estima o probabilitate prin Monte Carlo, cu eroarea ei standard'),
+      T('define and simulate the binomial model, a random walk, a martingale, white noise, AR(1), the Wiener process and GBM', 'defini și simula modelul binomial, mersul aleator, martingalul, zgomotul alb, AR(1), procesul Wiener și GBM')]),
     T('Real data, @{y0}--@{y1}: S\\&P 500, DAX, BET and Bitcoin (from 2014)', 'Date reale, @{y0}--@{y1}: S\\&P 500, DAX, BET și Bitcoin (din 2014)')))
-
-D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
-    T('Compute expectations, variances, covariances and correlations, and the volatility of a portfolio', 'Calculați speranțe matematice, varianțe, covarianțe și corelații, precum și volatilitatea unui portofoliu'),
-    T('Explain why uncorrelated returns can still be dependent, and measure it', 'Explicați de ce randamente necorelate pot fi totuși dependente și măsurați acest lucru'),
-    T('Use conditional expectation and conditional variance, the building blocks of GARCH', 'Folosiți speranța condiționată și varianța condiționată, elementele de bază ale modelelor GARCH'),
-    T('Generate random numbers with the inverse transform and estimate a probability by Monte Carlo, with its standard error', 'Generați numere aleatoare prin metoda transformării inverse și estimați o probabilitate prin Monte Carlo, cu eroarea ei standard'),
-    T('Define a random walk, a martingale, white noise, the Wiener process and GBM, and simulate them', 'Definiți mersul aleator, martingalul, zgomotul alb, procesul Wiener și GBM și simulați-le')))
 
 D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Textbook: \\refFHH, \\textit{Statistics of Financial Markets}, 5th ed., Ch.~3 (Sec.~3.1--3.5) and Ch.~4 (discrete-time stochastic processes)',
@@ -946,7 +940,7 @@ chart(T('What GBM Misses', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_
       'Excesul de boltire: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% din 300 de simulări GBM sînt în $[@{ck.sp500.klo}, @{ck.sp500.khi}]$'),
     T('Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ vs at most $@{ck.btc.ahi}$ under GBM',
       'Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ față de cel mult $@{ck.btc.ahi}$ în GBM'),
-    (T('Maximum drawdown $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: the largest fall from a previous peak', 'Drawdown-ul maxim $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: cea mai mare scădere față de un maxim anterior'),
+    (T('\\hypertarget{ch4-dd}{}Maximum drawdown $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: the largest fall from a previous peak', '\\hypertarget{ch4-dd}{}Drawdown-ul maxim $\\min_t \\left(S_t/\\max_{s \\le t} S_s - 1\\right)$: cea mai mare scădere față de un maxim anterior'),
      [T('S\\&P 500 @{ck.sp500.dd}\\% is ordinary for GBM; BET @{ck.bet.dd}\\% is beyond all but 5\\% of the paths (5\\% quantile @{ck.bet.ddlo}\\%)',
         '$@{ck.sp500.dd}\\%$ la S\\&P 500 este obișnuit în GBM; $@{ck.bet.dd}\\%$ la BET depășește 95\\% din traiectorii (cuantila de 5\\%: $@{ck.bet.ddlo}\\%$)')]),
     T('4-sigma days: @{ck.sp500.four} (S\\&P 500) vs at most @{ck.sp500.fourhi} in 95\\% of the GBM paths; crypto has the same problem \\refPeleCrypto',
@@ -963,7 +957,7 @@ D.recap(('Wiener Process and GBM', 'Procesul Wiener și GBM'), [
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
 chart(T('An Open Question: Does GBM Get Drawdown Risk Right?', 'O întrebare deschisă: estimează GBM corect riscul de drawdown?'), 'sfm_ch4_drawdown_years', 'SFM_ch4_drawdown_open', [
-    (T('Drawdown: the fall from the highest price reached so far; here, within a calendar year', 'Drawdown: scăderea față de cel mai mare preț atins pînă atunci; aici, în cursul unui an calendaristic'),
+    (T('Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{What GBM Misses}}), here within a calendar year', 'Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitele modelului GBM}}), aici în cursul unui an calendaristic'),
      [T('beyond 20\\%: S\\&P 500 in @{dd.sp500.nh} of @{dd.sp500.ny} years (@{dd.sp500.sr}\\%) vs @{dd.sp500.pg}\\% under GBM; BET @{dd.bet.sr}\\% vs @{dd.bet.pg}\\%', 'peste 20\\%: S\\&P 500 în @{dd.sp500.nh} din @{dd.sp500.ny} ani (@{dd.sp500.sr}\\%), față de @{dd.sp500.pg}\\% în GBM; BET @{dd.bet.sr}\\% față de @{dd.bet.pg}\\%')]),
     (T('Beyond 40\\%: GBM expects @{dd.sp500.e40} such years for the S\\&P 500 and @{dd.bet.e40} for the BET', 'Peste 40\\%: GBM prevede, în medie, @{dd.sp500.e40} asemenea ani pentru S\\&P 500 și @{dd.bet.e40} pentru BET'),
      [T('both had @{dd.sp500.n40} (2008: @{dd.sp500.w}\\% and @{dd.bet.w}\\%)', 'fiecare indice a avut @{dd.sp500.n40} (2008: $@{dd.sp500.w}\\%$ și $@{dd.bet.w}\\%$)')]),
@@ -999,14 +993,6 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
 # REZUMAT
 # =============================================================================
 D.section('Summary', 'Rezumat')
-
-D.frame(T('Key Takeaways', 'Idei principale'), items(
-    T('Distributions: PMF, PDF, CDF and quantiles; VaR 1\\% is minus a quantile', 'Distribuții: PMF, PDF, CDF și cuantile; VaR 1\\% este minus o cuantilă'),
-    T('Covariance drives portfolio risk; uncorrelated returns are not independent', 'Covarianța determină riscul portofoliului; randamentele necorelate nu sînt independente'),
-    T('Conditional variance changes with yesterday\'s news: the starting point of GARCH', 'Varianța condiționată se schimbă cu știrile de ieri: punctul de plecare al GARCH'),
-    T('Monte Carlo: inverse transform plus the LLN; error $\\propto 1/\\sqrt{N}$', 'Monte Carlo: transformarea inversă plus LLN; eroarea $\\propto 1/\\sqrt{N}$'),
-    T('Binomial tree $\\to$ GBM; random walk, martingale, white noise, AR(1)', 'Arborele binomial $\\to$ GBM; mers aleator, martingal, zgomot alb, AR(1)'),
-    T('GBM fits price paths roughly, but misses heavy tails, clustering and extreme drawdowns', 'GBM reproduce aproximativ traiectoriile prețurilor, dar nu și cozile groase, volatility clustering și drawdown-urile extreme')))
 
 D.frame(T('Key Formulas', 'Formule de reținut'), table(
     'll', T('\\textbf{Quantity}', '\\textbf{Mărimea}') + ' & ' + T('\\textbf{Formula}', '\\textbf{Formula}'),

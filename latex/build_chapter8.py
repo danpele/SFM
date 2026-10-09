@@ -212,8 +212,6 @@ D.frame(T('Interpretation: Volatility in Four Markets', 'Interpretarea volatilit
                '& \\textbf{Volatilitate anuală} & \\textbf{Cea mai mare variație zilnică} & \\textbf{Data} & \\textbf{Excesul de boltire}'),
     [T(*[f'{NAMES[k]} & @{{b.{k}.vol}}\\% & ${{@{{b.{k}.max}}}}\\%$ & @{{b.{k}.maxd}} & @{{b.{k}.kurt}}'] * 2) for k in ['sp500', 'dax', 'bet', 'btc']],
     size='footnotesize') + items(
-    T('Bitcoin is about @{ex.btc.ratio}\\% more volatile per year than its daily figure suggests if one wrongly uses $\\sqrt{252}$: it trades 365 days a year',
-      'Bitcoin este cu circa @{ex.btc.ratio}\\% mai volatil pe an decît ar rezulta dacă s-ar folosi greșit $\\sqrt{252}$: se tranzacționează 365 de zile pe an'),
     T('The largest moves are @{ex.zmin} to @{ex.zmax} standard deviations: practically impossible under the Normal distribution (Chapter 2)',
       'Cele mai mari variații reprezintă @{ex.zmin}--@{ex.zmax} abateri standard: valori practic imposibile în cazul distribuției Normale (Capitolul 2)'),
     T('Excess kurtosis far above 0 (the Normal value): heavy tails; Section 6 shows that clustering is one cause',
@@ -243,12 +241,6 @@ D.frame(T('Worked Example: Annualising Volatility', 'Exemplu rezolvat: anualizar
      [T('correct: $@{b.btc.sd} \\times \\sqrt{@{b.btc.ppy}} = @{b.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$', 'corect: $@{b.btc.sd} \\times \\sqrt{@{b.btc.ppy}} = @{b.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$'),
       T('wrong, with the equity convention: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$', 'greșit, cu convenția de la acțiuni: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$')]),
     T('Comparing assets: annualise each with its own calendar, then compare', 'Pentru a compara active: anualizați fiecare serie cu propriul calendar, apoi comparați')))
-
-D.recap(('What Is Volatility?', 'volatilitatea și caracterul ei latent'), [
-    T('Volatility = standard deviation of returns; annualise with $\\sqrt{A}$, $A$ the actual number of observations per year',
-      'Volatilitatea = abaterea standard a randamentelor; se anualizează cu $\\sqrt{A}$, unde $A$ este numărul real de observații pe an'),
-    T('Conditional volatility $\\sigma_t$ changes over time and is never observed: we can only estimate it', 'Volatilitatea condiționată $\\sigma_t$ variază în timp și nu este observată niciodată: o putem doar estima'),
-    T('All markets show quiet and turbulent periods', 'Toate piețele au perioade liniștite și perioade agitate')])
 
 # =============================================================================
 # 2. VOLATILITATEA ISTORICĂ
@@ -300,11 +292,6 @@ D.frame(T('How Precise Is a Sample Volatility?', 'Precizia unei volatilități d
     (T('\\textbf{Worked example}: the last 21-day volatility of the S\\&P 500 is @{w.21.last}\\%', '\\textbf{Exemplu rezolvat}: ultima volatilitate pe 21 de zile a S\\&P 500 este @{w.21.last}\\%'),
      [T('approximate 95\\% interval, Normal returns: $[@{ex.ci.n.lo}\\%; @{ex.ci.n.hi}\\%]$; with the observed kurtosis: $[@{ex.ci.h.lo}\\%; @{ex.ci.h.hi}\\%]$',
         'interval aproximativ de 95\\%, randamente Normale: $[@{ex.ci.n.lo}\\%; @{ex.ci.n.hi}\\%]$; cu boltirea observată: $[@{ex.ci.h.lo}\\%; @{ex.ci.h.hi}\\%]$')])))
-
-D.recap(('Historical Volatility', 'volatilitatea istorică'), [
-    T('Rolling standard deviation on $n$ days; daily data: the mean can be set to zero', 'Abaterea standard pe o fereastră mobilă de $n$ zile; pentru date zilnice media poate fi fixată la zero'),
-    T('Short windows react fast but are noisy; long windows are smooth but slow', 'Ferestrele scurte reacționează repede, dar sînt zgomotoase; cele lungi sînt netede, dar lente'),
-    T('A 21-day volatility is uncertain by $\\pm$@{se.21.n}\\% or more: one decimal is already too much precision', 'O volatilitate pe 21 de zile are o incertitudine de $\\pm$@{se.21.n}\\% sau mai mult: chiar și o zecimală sugerează o precizie pe care estimarea nu o are')])
 
 # =============================================================================
 # 3. EWMA ȘI RISKMETRICS
@@ -379,11 +366,6 @@ D.frame(T('EWMA and GARCH: a Pointer to Chapter 9', 'EWMA și GARCH: trimitere l
       T('GARCH with $\\alpha + \\beta < 1$: pulled towards the long-run variance $\\omega/(1 - \\alpha - \\beta)$', 'GARCH cu $\\alpha + \\beta < 1$: atrasă spre varianța pe termen lung $\\omega/(1 - \\alpha - \\beta)$')]),
     T('Chapter 9 estimates $\\omega$, $\\alpha$, $\\beta$ by maximum likelihood; here $\\lambda$ is fixed or chosen by a forecast criterion (Section 8)',
       'Capitolul 9 estimează $\\omega$, $\\alpha$, $\\beta$ prin verosimilitate maximă; aici $\\lambda$ este fixat sau ales după un criteriu de prognoză (secțiunea 8)')))
-
-D.recap(('EWMA and RiskMetrics', 'EWMA și RiskMetrics'), [
-    T('$\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1-\\lambda)r_{t-1}^2$; RiskMetrics: $\\lambda = 0.94$ for daily data', '$\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1-\\lambda)r_{t-1}^2$; RiskMetrics: $\\lambda = 0{,}94$ pentru date zilnice'),
-    T('Geometric weights: half-life @{ew.94.hl} days for $\\lambda = 0.94$; no ghost effect', 'Ponderi geometrice: timp de înjumătățire @{ew.94.hl} zile pentru $\\lambda = 0{,}94$; fără ghost effect'),
-    T('EWMA = IGARCH(1,1) without a constant: flat forecasts, no mean reversion', 'EWMA = IGARCH(1,1) fără constantă: prognoze constante, fără revenire la medie')])
 
 # =============================================================================
 # 4. ESTIMATORI DE AMPLITUDINE
@@ -512,13 +494,6 @@ chart(T('S\\&P 500: Rolling 21-Day Estimates since 2019', 'S\\&P 500: estimări 
       'Liniile estimatorilor de amplitudine sînt mai netede: variația zilnică tipică a estimării logaritmice este @{rr.rough.park}\\% pentru Parkinson și @{rr.rough.yz}\\% pentru YZ, față de @{rr.rough.cc}\\% pentru CC')],
     h='0.54\\textheight')
 
-D.recap(('Range-Based Estimators', 'estimatori de amplitudine'), [
-    T('Parkinson uses the range, Garman--Klass adds the open-to-close return, Rogers--Satchell allows a drift, Yang--Zhang adds the night',
-      'Parkinson folosește amplitudinea, Garman--Klass adaugă randamentul deschidere--închidere, Rogers--Satchell permite o tendință, Yang--Zhang adaugă varianța nopții'),
-    T('In theory @{ef.lo} to @{ef.hi} times more efficient than close-to-close; in practice biased down by overnight jumps and discrete trading',
-      'În teorie de @{ef.lo}--@{ef.hi} ori mai eficienți decît estimatorul închidere--închidere; în practică subestimează varianța din cauza salturilor overnight și a tranzacționării discrete'),
-    T('Choose Yang--Zhang for markets that close at night; any range estimator for 24-hour markets', 'Alegeți Yang--Zhang pentru piețele care se închid noaptea; orice estimator de amplitudine pentru piețele deschise 24 de ore')])
-
 # =============================================================================
 # 5. VOLATILITATEA REALIZATĂ
 # =============================================================================
@@ -553,11 +528,6 @@ chart(T('Microstructure Noise and the Signature Plot', 'Zgomotul de microstructu
       'Cu zgomot, RV la un minut supraestimează varianța de @{sg.n1} ori; la 5 minute: @{sg.n5}; \\textbf{signature plot} arată RV în funcție de intervalul de eșantionare'),
     T('In practice, 5-minute RV is hard to beat \\refLPS', 'În practică, RV la 5 minute este greu de depășit \\refLPS')],
     h='0.46\\textheight')
-
-D.recap(('Realised Volatility', 'volatilitatea realizată'), [
-    T('$\\mathrm{RV}_t = \\sum_i r_{t,i}^2$ estimates the variance of one day almost without error', '$\\mathrm{RV}_t = \\sum_i r_{t,i}^2$ estimează varianța unei zile aproape fără eroare'),
-    T('Too frequent sampling picks up microstructure noise; 5 minutes is the usual compromise', 'Eșantionarea prea deasă preia zgomotul de microstructură; intervalul de 5 minute este compromisul uzual'),
-    T('Ranking of daily measures: RV $>$ range estimators $>$ squared daily return', 'Ordinea după precizie a măsurilor zilnice: RV $>$ estimatorii de amplitudine $>$ randamentul zilnic la pătrat')])
 
 # =============================================================================
 # 6. VOLATILITY CLUSTERING
@@ -657,11 +627,6 @@ chart(T('Clustering Creates Heavy Tails', 'Volatility clustering produce cozi gr
       'Dreapta: coeficientul de boltire al unui GARCH(1,1), $3 + 6\\alpha^2/(1 - \\beta^2 - 2\\alpha\\beta - 3\\alpha^2)$, ca în SFEkurgarch; $\\alpha = 0{,}10$, $\\beta = 0{,}85$: @{ku.g} (Capitolul 9)')],
     h='0.56\\textheight')
 
-D.recap(('Volatility Clustering', 'volatility clustering'), [
-    T('$r_t$ almost uncorrelated, $|r_t|$ and $r_t^2$ strongly and persistently correlated: clustering', '$r_t$ aproape necorelat, $|r_t|$ și $r_t^2$ corelate puternic și persistent: volatility clustering'),
-    T('Tests: Ljung--Box on $r_t^2$ (McLeod--Li) and ARCH-LM $= nR^2$; both reject in every market', 'Testele: Ljung--Box pe $r_t^2$ (McLeod--Li) și ARCH-LM $= nR^2$; ambele resping pe toate piețele'),
-    T('Clustering is about the order of returns, and it is one source of heavy tails', 'Volatility clustering ține de ordinea randamentelor și este una dintre sursele cozilor groase')])
-
 # =============================================================================
 # 7. TERMEN LUNG, VIX ȘI EFECTUL DE LEVIER
 # =============================================================================
@@ -736,11 +701,6 @@ chart(T('Nonparametric Volatility Given Yesterday\'s Return', 'Volatilitatea nep
       'S\\&P 500: $\\hat\\sigma(-2\\%) = @{np.sp500.m2}\\%$ față de $\\hat\\sigma(+2\\%) = @{np.sp500.p2}\\%$; minimul este la $x \\approx @{np.sp500.min}\\%$, nu la 0: un impact asimetric al știrilor')],
     h='0.48\\textheight')
 
-D.recap(('Long-Run Behaviour, the VIX and the Leverage Effect', 'comportamentul pe termen lung, VIX și efectul de levier'), [
-    T('Volatility is persistent but mean-reverting: half-life of about @{lt.hl} months for the S\\&P 500', 'Volatilitatea este persistentă, dar revine la medie: timp de înjumătățire de circa @{lt.hl} luni la S\\&P 500'),
-    T('VIX (implied) is above realised volatility on @{vx.share}\\% of days: a variance risk premium', 'VIX (volatilitatea implicită) este peste volatilitatea realizată în @{vx.share}\\% din zile: o primă de risc a varianței'),
-    T('Leverage effect: falls raise future volatility in equity indices; weaker and shorter-lived for Bitcoin', 'Efectul de levier: scăderile cresc volatilitatea viitoare la indicii bursieri; mai slab și de mai scurtă durată la Bitcoin')])
-
 # =============================================================================
 # 8. EVALUAREA PROGNOZELOR
 # =============================================================================
@@ -796,12 +756,6 @@ chart(T('Choosing $\\lambda$ by QLIKE', 'Alegerea lui $\\lambda$ după QLIKE'), 
       'Cel mai bun $\\lambda$: S\\&P 500 @{la.sp500.best}, BET @{la.bet.best}, Bitcoin @{la.btc.best}; valoarea RiskMetrics 0,94 are un QLIKE mai mare cu doar @{la.sp500.q94} la S\\&P 500'),
     T('One $\\lambda$ for all assets is a convenient compromise, not an optimum', 'Un singur $\\lambda$ pentru toate activele este un compromis comod, nu un optim')],
     h='0.48\\textheight')
-
-D.recap(('Evaluating Volatility Forecasts', 'evaluarea prognozelor de volatilitate'), [
-    T('Compare forecasts with a proxy; $r_t^2$ is unbiased but noisy, so $R^2$ values are low even for good forecasts',
-      'Comparăm prognozele cu o variabilă proxy; $r_t^2$ este nedeplasat, dar zgomotos, deci valorile $R^2$ sînt mici chiar și pentru prognoze bune'),
-    T('Use robust losses (MSE, QLIKE) and test the differences (Diebold--Mariano); a large comparison of volatility models: \\refHL', 'Folosiți pierderi robuste (MSE, QLIKE) și testați diferențele (Diebold--Mariano); o comparație amplă a modelelor de volatilitate: \\refHL'),
-    T('S\\&P 500: EWMA and VIX are the best simple forecasts; long windows are the worst', 'S\\&P 500: EWMA și VIX sînt cele mai bune prognoze simple; ferestrele lungi sînt cele mai slabe')])
 
 # =============================================================================
 # 9. AI PENTRU DESCOPERIRE ȘTIINȚIFICĂ

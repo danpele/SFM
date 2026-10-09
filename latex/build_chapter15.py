@@ -73,6 +73,14 @@ def ph(key, cap, h='0.50\\textheight'):
 # EXEMPLE LUCRATE (calculate aici)
 # =============================================================================
 Q = N['qr']
+# JPM worked example: computed from the estimates as displayed (2 decimals), the same inputs as Seminar 15, A1,
+# so that every product on the slide can be checked by hand and both decks give the same CoVaR 1%
+QA, QB, QQA, QQM = (round(Q[c], 2) for c in ('a', 'b', 'q_a', 'q_m'))
+V.put('qr.bqm', -QB * QQA, 2)
+V.put('qr.diff', QQM - QQA, 2)
+V.put('qr.covar', -(QA + QB * QQA), 2)
+V.put('qr.covar_med', -(QA + QB * QQM), 2)
+V.put('qr.dcovar', QB * (QQM - QQA), 2)
 # MES on a toy table of 10 days: market and bank returns (%), level 20% -> the two worst market days
 TOYM = [-4.0, 1.2, -0.5, 2.1, -6.0, 0.3, -1.1, 0.8, -2.2, 1.5]
 TOYB = [-6.5, 1.8, -0.2, 2.9, -9.0, 0.1, -2.0, 1.1, -3.1, 2.4]
@@ -89,7 +97,7 @@ V.put('ex.Lstar', 1 + 0.92 * (1 - lr_ex) / 0.08, 1)
 # Forbes-Rigobon: the correction step by step
 F = N['fr']
 V.put('fr.inside', 1 + F['delta'] * (1 - F['rho_crisis'] ** 2), 1)
-V.put('fr.r2', 1 - F['rho_crisis'] ** 2, 2)
+V.put('fr.r2', 1 - F['rho_crisis'] ** 2, 3)   # 3 decimals: 1 + delta x r2 then matches the displayed sum
 # ranges and extremes quoted in the text (computed, never typed)
 CT, MT = N['covar'], N['mes']
 dc_us = [CT[k]['dcovar'] for k in US]
@@ -235,11 +243,6 @@ D.frame(T('Measures of This Chapter at a Glance', 'Măsurile capitolului, pe scu
     T('All measures use only market prices: they are available daily, for any listed bank', 'Toate măsurile folosesc doar prețurile de piață: sînt disponibile zilnic, pentru orice bancă listată'),
     T('Their weakness: market prices can be calm while risk builds up (2006--2007)', 'Punctul lor slab: prețurile de piață pot fi liniștite în timp ce riscul se acumulează (2006--2007)')))
 
-D.recap(('What Is Systemic Risk?', 'definiția și canalele riscului sistemic'), [
-    T('Systemic risk: the system stops working; it is a property of the system, not of one balance sheet', 'Riscul sistemic: sistemul nu mai funcționează; este o proprietate a sistemului, nu a unui singur bilanț'),
-    T('Channels: direct contagion, common exposures and fire sales, runs and information contagion, all amplified by leverage', 'Canale: contagiunea directă, expunerile comune și vînzările forțate, retragerile masive și contagiunea informațională, toate amplificate de efectul de levier'),
-    T('Measures look at joint tails: the system given the bank (CoVaR) or the bank given the system (MES, SRISK)', 'Măsurile privesc cozile comune: sistemul condiționat de bancă (CoVaR) sau banca condiționat de sistem (MES, SRISK)')])
-
 # =============================================================================
 # 2. PATRU CRIZE
 # =============================================================================
@@ -334,11 +337,6 @@ chart(T('Four Episodes Side by Side', 'Patru episoade comparate'), 'sfm_ch15_epi
       'Interpretare: în 2008 și 2011--2012 băncile au scăzut mult mai mult decît S\\&P 500 (băncile erau problema); în 2020 au scăzut odată cu piața; în 2023 au scăzut în timp ce piața creștea')],
     h='0.64\\textheight')
 
-D.recap(('Four Crises', 'patru crize'), [
-    T('2008: contagion through derivatives, common mortgage exposures and a run on short-term funding', '2008: contagiune prin derivate, expuneri comune la creditele ipotecare și retragerea finanțării pe termen scurt'),
-    T('2011--2012: the bank--sovereign loop; stopped by a central-bank promise', '2011--2012: bucla bănci--stat; oprită de o promisiune a băncii centrale'),
-    T('2020: a shock from outside, met by better-capitalised banks; 2023: digital runs and information contagion', '2020: un șoc din exterior, întîmpinat de bănci mai bine capitalizate; 2023: retrageri digitale și contagiune informațională')])
-
 # =============================================================================
 # 3. CORELAȚIE ȘI DEPENDENȚĂ ÎN COZI
 # =============================================================================
@@ -420,11 +418,6 @@ chart(T('Joint Bad Days', 'Zile proaste comune'), 'sfm_ch15_tail_scatter', 'SFM_
       'SUA: @{tf.US.both} zile proaste comune, față de @{tf.US.exp} la independență (de circa @{tf.US.ratio} ori mai multe); România: @{tf.RO.both}, față de @{tf.RO.exp}')],
     h='0.60\\textheight')
 
-D.recap(('Correlation and Tail Dependence', 'corelația și dependența în cozi'), [
-    T('Bank correlations rise in crises; diversification across banks fails when it is needed', 'Corelațiile dintre bănci cresc în crize; diversificarea între bănci nu funcționează tocmai cînd este nevoie de ea'),
-    T('A rise in correlation is not proof of contagion: correct for the rise in volatility (Forbes--Rigobon)', 'O creștere a corelației nu este o dovadă de contagiune: corectați pentru creșterea volatilității (Forbes--Rigobon)'),
-    T('Tail dependence (t copula, $\\nu$ about 3--4) shows strong joint crashes of banks and markets', 'Dependența în cozi (copula t, $\\nu$ în jur de 3--4) arată prăbușiri simultane puternice ale băncilor și piețelor')])
-
 # =============================================================================
 # 4. CoVaR
 # =============================================================================
@@ -445,12 +438,12 @@ D.frame(T('From VaR to CoVaR', 'De la VaR la CoVaR'), items(
 
 D.frame(T('Quantile Regression (Chapter 13)', 'Regresia cuantilică (Capitolul 13)'), items(
     (T('Linear quantile regression \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$', 'Regresia cuantilică liniară \\refKB: $q_\\alpha(Y \\mid X = x) = a_\\alpha + b_\\alpha x$'),
-     [T('estimated by minimising $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, with the check loss $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$', 'estimată prin minimizarea $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, cu funcția de pierdere $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$'),
+     [T('$a_\\alpha$: the intercept (constant term); $b_\\alpha$: the slope', '$a_\\alpha$: termenul liber; $b_\\alpha$: panta'),
+      T('estimated by minimising $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, with the check loss $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$', 'estimată prin minimizarea $\\sum_t \\rho_\\alpha(y_t - a - bx_t)$, cu funcția de pierdere $\\rho_\\alpha(u) = u(\\alpha - \\mathbf{1}\\{u < 0\\})$'),
       T('$u$: the residual; $\\mathbf{1}\\{u < 0\\}$: 1 if the point is below the line, 0 otherwise', '$u$: reziduul; $\\mathbf{1}\\{u < 0\\}$: 1 dacă punctul este sub dreaptă, 0 în rest'),
       T('for $\\alpha = 1\\%$, a residual below the line costs 99 times more than one above it: the line passes below 99\\% of the points', 'pentru $\\alpha = 1\\%$, un reziduu sub dreaptă costă de 99 de ori mai mult decît unul deasupra ei: dreapta trece sub 99\\% dintre puncte')]),
     (T('Same idea as VaR 1\\% by quantile regression in Chapter 13, now with another institution as the regressor', 'Aceeași idee ca VaR 1\\% prin regresie cuantilică din Capitolul 13, acum cu o altă instituție ca variabilă explicativă'),
-     [T('the slope $b_\\alpha$ can differ from the OLS slope: the tail can react more strongly than the centre', 'panta $b_\\alpha$ poate diferi de panta OLS: coada poate reacționa mai puternic decît centrul')]),
-    T('$a_\\alpha$ is the intercept (constant term) of the regression, $b_\\alpha$ the slope', '$a_\\alpha$ este termenul liber al regresiei, iar $b_\\alpha$ este panta')))
+     [T('the slope $b_\\alpha$ can differ from the OLS slope: the tail can react more strongly than the centre', 'panta $b_\\alpha$ poate diferi de panta OLS: coada poate reacționa mai puternic decît centrul')])))
 
 D.frame(T('Estimating CoVaR in Three Steps', 'Estimarea CoVaR în trei pași'), items(
     (T('\\textbf{Step 1}: quantile regression of the system on the institution at level $\\alpha$: $X^{sys}_t = a + bX^i_t + \\varepsilon_t$ \\refAB',
@@ -537,11 +530,6 @@ D.frame(T('Case Study: Adrian and Brunnermeier (2016)', 'Studiu de caz: Adrian �
     cols(ph('adrian', 'Tobias Adrian', h='0.32\\textheight'), ph('brunn', 'Markus Brunnermeier', h='0.32\\textheight'), wl='0.48', wr='0.48'),
     wl='0.56', wr='0.42'), 'footnotesize')
 
-D.recap(('CoVaR', 'CoVaR'), [
-    T('CoVaR 1\\%: the VaR 1\\% of the system when the institution is at its own VaR 1\\%; $\\Delta$CoVaR: the rise from a normal day to distress', 'CoVaR 1\\%: VaR 1\\% al sistemului cînd instituția este la propriul VaR 1\\%; $\\Delta$CoVaR: creșterea de la o zi obișnuită la una de criză'),
-    T('Estimated by quantile regression: $\\Delta$CoVaR $= \\hat b\\,(\\hat q_{50\\%} - \\hat q_\\alpha)$', 'Estimat prin regresie cuantilică: $\\Delta$CoVaR $= \\hat b\\,(\\hat q_{50\\%} - \\hat q_\\alpha)$'),
-    T('A bank\'s own VaR and its systemic contribution rank banks differently; $\\Delta$CoVaR varies strongly in time', 'VaR-ul propriu al unei bănci și contribuția ei sistemică ordonează diferit băncile; $\\Delta$CoVaR variază puternic în timp')])
-
 # =============================================================================
 # 5. MES ȘI SRISK
 # =============================================================================
@@ -625,11 +613,6 @@ D.frame(T('Case Study: SRISK and V-Lab', 'Studiu de caz: SRISK și V-Lab'), cols
     cols(ph('acharya', 'Viral Acharya', h='0.30\\textheight'), ph('engle', 'Robert Engle', h='0.30\\textheight'), wl='0.48', wr='0.48'),
     wl='0.56', wr='0.42'), 'footnotesize')
 
-D.recap(('MES and SRISK', 'MES și SRISK'), [
-    T('MES 5\\%: the average loss of a bank on the market\'s worst 5\\% of days; LRMES $\\approx 1 - \\exp(-18\\,\\mathrm{MES})$', 'MES 5\\%: pierderea medie a unei bănci în cele mai proaste 5\\% dintre zilele pieței; LRMES $\\approx 1 - \\exp(-18\\,\\mathrm{MES})$'),
-    T('SRISK $= kD - (1 - k)(1 - \\mathrm{LRMES})W$: capital missing in a crisis, driven by leverage and LRMES', 'SRISK $= kD - (1 - k)(1 - \\mathrm{LRMES})W$: capitalul lipsă într-o criză, determinat de efectul de levier și de LRMES'),
-    T('MES, $\\Delta$CoVaR and VaR answer different questions and rank the banks differently', 'MES, $\\Delta$CoVaR și VaR răspund la întrebări diferite și ordonează diferit băncile')])
-
 # =============================================================================
 # 6. REȚELE
 # =============================================================================
@@ -704,11 +687,6 @@ D.frame(T('Further Reading: the Financial Risk Meter', 'Lectură suplimentară: 
      [T('TENET (tail-event driven network) \\refTENET: CoVaR with many banks, a network of tail links', 'TENET (tail-event driven network, rețea condusă de evenimentele din coadă) \\refTENET: CoVaR cu multe bănci, o rețea de legături în coadă'),
       T('FRM for emerging markets \\refFRMem; the video course on Quantinar (Reading and Tools)', 'FRM pentru piețele emergente \\refFRMem; cursul video de pe Quantinar (Bibliografie și instrumente)')])))
 
-D.recap(('Networks', 'rețele'), [
-    T('Granger networks: share of significant links (DGC) against the 5\\% expected by chance; it rose around 2008', 'Rețelele Granger: proporția legăturilor semnificative (DGC) comparată cu 5\\%, cît dă întîmplarea; a crescut în jurul anului 2008'),
-    T('Diebold--Yilmaz: shares of forecast error variance; TO, FROM, NET and the total index', 'Diebold--Yilmaz: proporții din varianța erorii de prognoză; TO, FROM, NET și indicele total'),
-    T('Statistical links show co-movement in the data; they do not reveal the contracts behind it', 'Legăturile statistice arată mișcarea comună din date; nu dezvăluie contractele din spatele ei')])
-
 # =============================================================================
 # 7. POLITICA MACROPRUDENȚIALĂ
 # =============================================================================
@@ -741,11 +719,6 @@ D.frame(T('Who Does It: the ESRB and the BNR', 'Autoritățile macroprudențiale
       T('the BNR also uses limits on borrowers (loan-to-value, debt service-to-income) and publishes a financial stability report', 'BNR folosește și limite pentru debitori (gradul de îndatorare, raportul dintre credit și valoarea garanției) și publică un raport asupra stabilității financiare')])),
     ph('bnr', T('The BNR palace in Bucharest', 'Palatul BNR din București'), h='0.36\\textheight'),
     wl='0.60', wr='0.36'), 'footnotesize')
-
-D.recap(('Macroprudential Policy', 'politica macroprudențială'), [
-    T('Macroprudential policy targets the system: buffers built in good times, extra capital for systemic banks', 'Politica macroprudențială vizează sistemul: amortizoare constituite în perioadele bune, capital suplimentar pentru băncile sistemice'),
-    T('Basel III: 4.5\\% CET1 + 2.5\\% conservation + 0--2.5\\% countercyclical + G-SIB / O-SII surcharges', 'Basel III: 4,5\\% CET1 + 2,5\\% conservare + 0--2,5\\% anticiclic + suplimente G-SIB / O-SII'),
-    T('EU: the ESRB; Romania: the CNSM, with the BNR applying the capital buffers', 'UE: ESRB; România: CNSM, cu BNR aplicînd amortizoarele de capital')])
 
 # =============================================================================
 # 8. AI

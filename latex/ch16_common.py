@@ -70,10 +70,14 @@ def facts(V):
     # Chapter 1: BET since 2015
     p = C[1]['perf']['bet']
     V.put('f1.cagr', 100 * p['cagr'], 1)
-    V.put('f1.vol', 100 * p['vol'], 1)
-    V.put('f1.sh', p['sharpe'], 2)
-    V.put('f1.shlo', p['sharpe_lo'], 2)
-    V.put('f1.shhi', p['sharpe_hi'], 2)
+    # volatility and Sharpe interval of the BET: the same numbers as the course table of this chapter
+    # (log returns, SE = sqrt((1 + SR^2/2)/Y), the formula quoted on the Chapter 1 slide), not Chapter 1's
+    # simple-return volatility and per-day SE, so that the deck quotes one value for one quantity
+    q = load()['summary']['bet']['perf']
+    V.put('f1.vol', q['vol'], 1)
+    V.put('f1.sh', q['sharpe'], 2)
+    V.put('f1.shlo', q['sharpe'] - 1.96 * q['sharpe_se'], 2)
+    V.put('f1.shhi', q['sharpe'] + 1.96 * q['sharpe_se'], 2)
     b = C[1]['perf']['btc']
     V.put('f1.btcar', 100 * b['mean_arith'], 1)
     V.put('f1.btccagr', 100 * b['cagr'], 1)

@@ -238,11 +238,6 @@ D.frame(T('Where ML Helps in Finance, and Where It Struggles', 'Unde ajută mach
       T('markets change (regimes, crises): the past is an imperfect training set', 'piețele se schimbă (regimuri, crize): trecutul este un set de antrenare imperfect'),
       T('one price history: we cannot repeat the experiment, and the observations are dependent', 'o singură istorie a prețurilor: experimentul nu poate fi repetat, iar observațiile sînt dependente')])))
 
-D.recap(('What Machine Learning Adds', 'contribuția machine learning'), [
-    T('ML judges a model by its error on new data, not by the significance of its coefficients', 'Machine learning judecă un model după eroarea pe date noi, nu după semnificația coeficienților'),
-    T('Features $x_t$, target $y_t$, loss $L$, hyperparameters chosen before the fit', 'Variabile explicative $x_t$, țintă $y_t$, pierdere $L$, hiperparametri aleși înainte de estimare'),
-    T('Finance: easy to predict volatility, hard to predict returns', 'Finanțe: volatilitatea se prezice ușor, randamentele greu')])
-
 # =============================================================================
 # 2. OVERFITTING
 # =============================================================================
@@ -293,11 +288,6 @@ D.frame(T('Interpretation: the U-Shaped Test Error', 'Interpretarea erorii de te
      [T('never select a model by its training error', 'nu alegeți niciodată un model după eroarea de antrenare'),
       T('complexity is a hyperparameter: choose it on data that were not used for the fit', 'complexitatea este un hiperparametru: se alege pe date care nu au fost folosite la estimare'),
       T('in finance the noise is large, so the best model is usually simpler than in this simulation', 'în finanțe zgomotul este mare, deci cel mai bun model este de obicei mai simplu decît în această simulare')])))
-
-D.recap(('Overfitting, Bias and Variance', 'overfitting, deplasare și varianță'), [
-    T('Test error = bias$^2$ + variance + noise', 'Eroarea de test = deplasare$^2$ + varianță + zgomot'),
-    T('More flexibility: less bias, more variance; the training error is always too optimistic', 'Mai multă flexibilitate: deplasare mai mică, varianță mai mare; eroarea de antrenare este întotdeauna prea optimistă'),
-    T('The amount of flexibility must be chosen on new data', 'Gradul de flexibilitate se alege pe date noi')])
 
 # =============================================================================
 # 3. VALIDARE
@@ -356,11 +346,6 @@ D.frame(T('Interpretation: a Forecast of Pure Noise with $R^2 > 30\\%$', 'Interp
     (T('Walk-forward gives a negative $R^2$: the forest fits noise and loses against the training mean', 'Walk-forward dă un $R^2$ negativ: random forest învață zgomotul și este inferior mediei de antrenare'),
      [T('purging (a gap of 21 days) changes little here, because in walk-forward only the boundary rows overlap', 'purging-ul (eliminarea a 21 de zile) schimbă puțin rezultatul, deoarece în walk-forward doar rîndurile de la graniță se suprapun')]),
     T('Rule: with overlapping targets or dependent data, never shuffle the time order', 'Regulă: cu ținte suprapuse sau date dependente, nu amestecați niciodată ordinea temporală')))
-
-D.recap(('Validation for Time Series', 'validarea pentru serii de timp'), [
-    T('Training, validation and test have different jobs; the test sample is used once', 'Antrenarea, validarea și testul au roluri diferite; eșantionul de test se folosește o singură dată'),
-    T('Walk-forward with purging respects the arrow of time; random K-fold leaks with overlapping targets', 'Walk-forward cu purging respectă ordinea timpului; K-fold aleator produce leakage atunci cînd țintele se suprapun'),
-    T('Look-ahead bias and leakage produce impressive but useless results', 'Look-ahead bias și leakage-ul produc rezultate impresionante, dar inutile')])
 
 # =============================================================================
 # 4. RIDGE ȘI LASSO
@@ -422,11 +407,6 @@ D.frame(T('Interpretation of the Paths', 'Interpretarea traiectoriilor'), items(
      [T('the weekly variance enters first: the most informative single feature', 'varianța săptămînală intră prima: cea mai informativă variabilă luată singură'),
       T('at the chosen $\\lambda$ the lasso keeps the HAR structure (day, week, month) plus the negative return, $@{sh.cv.r_neg}$', 'la $\\lambda$ ales, lasso păstrează structura HAR (zi, săptămînă, lună) plus randamentul negativ, $@{sh.cv.r_neg}$')]),
     T('The lasso selects; it does not test: a zero coefficient is not a p-value', 'Lasso selectează, nu testează: un coeficient zero nu este un p-value')))
-
-D.recap(('Ridge and Lasso', 'ridge și lasso'), [
-    T('Penalties trade a little bias for less variance: $\\lambda\\sum\\beta_j^2$ (ridge), $\\lambda\\sum|\\beta_j|$ (lasso)', 'Penalizările acceptă o deplasare mică în schimbul unei varianțe mai mici: $\\lambda\\sum\\beta_j^2$ (ridge), $\\lambda\\sum|\\beta_j|$ (lasso)'),
-    T('Ridge shrinks, lasso shrinks and selects; standardise first, choose $\\lambda$ by walk-forward CV', 'Ridge contractă, lasso contractă și selectează; standardizăm întîi și alegem $\\lambda$ prin CV walk-forward'),
-    T('For volatility, the penalised model keeps the HAR structure and the leverage effect', 'Pentru volatilitate, modelul penalizat păstrează structura HAR și efectul de levier')])
 
 # =============================================================================
 # 5. ARBORI
@@ -495,11 +475,6 @@ D.frame(T('Interpretation: Averaging and Early Stopping', 'Interpretare: media �
      [T('learning rate 0.3: minimum $@{en.gb3}$ after @{en.gb3.n} trees, $@{en.gb3.last}$ after 500', 'rata de învățare 0,3: minimul $@{en.gb3}$ după @{en.gb3.n} @{en.gb3.de}arbori, $@{en.gb3.last}$ după 500 de arbori'),
       T('learning rate 0.03: minimum $@{en.gb03}$ after @{en.gb03.n} trees, $@{en.gb03.last}$ after 500: smaller steps are safer', 'rata de învățare 0,03: minimul $@{en.gb03}$ după @{en.gb03.n} @{en.gb03.de}arbori, $@{en.gb03.last}$ după 500 de arbori: pașii mici sînt mai siguri')]),
     T('The number of trees of boosting is a hyperparameter; the number of trees of a forest is not', 'Numărul de arbori din boosting este un hiperparametru; numărul de arbori dintr-un random forest nu este')))
-
-D.recap(('Trees and Ensembles', 'arbori și ansambluri'), [
-    T('A tree splits greedily to minimise the SSE; alone it has high variance', 'Un arbore împarte greedy pentru a minimiza SSE; singur are varianță mare'),
-    T('Random forest averages decorrelated deep trees; boosting adds shallow trees fitted to residuals', 'Random forest face media unor arbori adînci decorelați; boosting adaugă arbori mici estimați pe reziduuri'),
-    T('Forest: robust to its hyperparameters; boosting: needs a small learning rate and a validated number of trees', 'Random forest: robust la hiperparametri; boosting: are nevoie de o rată de învățare mică și de un număr de arbori validat')])
 
 # =============================================================================
 # 6. REȚELE NEURONALE
@@ -603,11 +578,6 @@ chart(T('The RBF Network against the Random Walk', 'Rețeaua RBF comparată cu m
     T('Interpretation: out of sample the network is @{jp.ratio} times worse than ``tomorrow = today\'\'; on returns the same network has an out-of-sample $R^2$ of $@{jp.r2ret}\\%$',
       'Interpretare: în afara eșantionului rețeaua este de @{jp.ratio} @{jp.de}ori mai slabă decît „mîine = azi”; pe randamente, aceeași rețea are un $R^2$ în afara eșantionului de $@{jp.r2ret}\\%$')],
     h='0.50\\textheight')
-
-D.recap(('Neural Networks', 'rețele neuronale'), [
-    T('An MLP is a linear model in learned nonlinear features; trained by gradient descent and back-propagation', 'Un MLP este un model liniar în variabile neliniare învățate; se antrenează prin coborîre pe gradient și retropropagare'),
-    T('NN-ARCH: a flexible variance function, but without the memory of GARCH and without positivity', 'NN-ARCH: o funcție a varianței flexibilă, dar fără memoria GARCH și fără garanția pozitivității'),
-    T('Forecast returns, not levels, and always compare with the random walk', 'Prognozați randamente, nu niveluri, și comparați întotdeauna cu mersul aleator')])
 
 # =============================================================================
 # 7. VOLATILITATEA REALIZATĂ
@@ -720,11 +690,6 @@ chart(T('The Features Used by the Forest', 'Variabilele folosite de random fores
       'Dreapta: valorile Shapley exacte ale unui random forest pe cele 3 variabile HAR; media $|\\phi|$: săptămîna $@{im.phi.w}$, luna $@{im.phi.m}$, ziua $@{im.phi.d}$; efectul este neliniar și crește cu nivelul volatilității')],
     h='0.48\\textheight')
 
-D.recap(('Forecasting Realised Volatility', 'prognoza volatilității realizate'), [
-    T('HAR is a strong benchmark; penalised and neural models add a few per cent on the S\\&P 500, nothing on Bitcoin', 'HAR este un reper puternic; modelele penalizate și rețelele adaugă cîteva procente la S\\&P 500, nimic la Bitcoin'),
-    T('Evaluate with out-of-sample $R^2$, QLIKE and Diebold--Mariano, on a walk-forward design', 'Evaluăm prin $R^2$ în afara eșantionului, QLIKE și Diebold--Mariano, într-un design walk-forward'),
-    T('The weekly variance carries most of the information; importance measures describe the model, not causes', 'Varianța săptămînală conține cea mai mare parte din informație; măsurile de importanță descriu modelul, nu cauzele')])
-
 # =============================================================================
 # 8. SEMNUL RANDAMENTULUI
 # =============================================================================
@@ -767,11 +732,6 @@ D.frame(T('Interpretation: Why Sign Prediction Mostly Fails', 'Interpretare: eș
      [T('flexible models find patterns in the noise of the training years (Section 2); the logit is close to the baseline because it hardly moves', 'modelele flexibile găsesc tipare în zgomotul anilor de antrenare (secțiunea 2); logit este aproape de reper deoarece aproape nu se mișcă')]),
     (T('Even a real edge of one point would rarely survive costs: a daily sign strategy trades very often', 'Chiar și un avantaj real de un punct procentual ar rămîne rareori profitabil după costurile de tranzacționare: o strategie zilnică bazată pe semn tranzacționează foarte des'),
      [T('ML gains in returns come from large cross-sections at monthly horizons, not from one index tomorrow (Section 11)', 'cîștigurile aduse de machine learning în prognoza randamentelor provin din secțiuni transversale mari, pe orizonturi lunare, nu dintr-un singur indice pentru ziua următoare (secțiunea 11)')])))
-
-D.recap(("The Sign of Tomorrow's Return", 'semnul randamentului de mîine'), [
-    T('Always compare accuracy with the majority-class baseline, and test the difference', 'Comparați întotdeauna acuratețea cu reperul clasei majoritare și testați diferența'),
-    T('On the S\\&P 500, BET and Bitcoin no model beats ``always up\'\' significantly', 'Pe S\\&P 500, BET și Bitcoin niciun model nu este semnificativ superior regulii „mereu creștere”'),
-    T('Weak-form efficiency (Chapter 7) predicts this result', 'Eficiența în formă slabă (Capitolul 7) prezice acest rezultat')])
 
 # =============================================================================
 # 9. VaR PRIN REGRESIE CUANTILICĂ
@@ -820,8 +780,7 @@ D.frame(T('Backtest of VaR 1\\%: Quantile Methods, HS and GARCH-t (2/2)', 'Backt
      [T('its exceptions are not fully independent (p ind.\\ @{qv.sp500.QR.pind})', 'depășirile lui nu sînt complet independente (p ind.\\ @{qv.sp500.QR.pind})'),
       T('GARCH-t is exceeded too often (@{qv.sp500.GARCH-t.rate}\\%)', 'GARCH-t este depășit prea des (@{qv.sp500.GARCH-t.rate}\\%)')]),
     (T('Bitcoin (@{qv.btc.n} days): HS has the best rate (@{qv.btc.HS.rate}\\%)', 'Bitcoin (@{qv.btc.n} de zile): HS are cea mai bună rată (@{qv.btc.HS.rate}\\%)'),
-     [T('QGB is rejected by the Kupiec test (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})', 'QGB este respins de testul Kupiec (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})'),
-      T('at 1\\% each leaf of the boosted trees sees few tail days: high variance (Section 2)', 'la 1\\% fiecare frunză a arborilor din boosting vede puține zile din coadă: varianță mare (secțiunea 2)')]),
+     [T('QGB is rejected by the Kupiec test (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})', 'QGB este respins de testul Kupiec (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})')]),
     (T('Reading the p-values', 'Interpretarea p-value-urilor'),
      [T('p Kupiec below 0.05: the exception rate differs significantly from 1\\%', 'p Kupiec sub 0,05: rata depășirilor diferă semnificativ de 1\\%'),
       T('p ind.\\ below 0.05: the exceptions come in clusters, so the VaR reacts too slowly', 'p ind.\\ sub 0,05: depășirile apar grupat, deci VaR reacționează prea lent')])), 'footnotesize')
@@ -832,11 +791,6 @@ chart(T('VaR 1\\% Forecasts in 2020 and 2025', 'Prognozele VaR 1\\% în 2020 și
     T('Interpretation: QR and GARCH-t move with volatility; HS reacts only slowly; in 2020 HS was exceeded @{qv.sp500.HS.x20} times, QR @{qv.sp500.QR.x20} times, and the HS exceptions cluster (p ind.\\ @{qv.sp500.HS.pind})',
       'Interpretare: QR și GARCH-t urmează volatilitatea; HS reacționează lent; în 2020, HS a fost depășit de @{qv.sp500.HS.x20} ori, QR de @{qv.sp500.QR.x20} ori, iar depășirile HS apar grupat (p ind.\\ @{qv.sp500.HS.pind})')],
     h='0.48\\textheight')
-
-D.recap(('VaR 1\\% by Quantile Methods', 'VaR 1\\% prin metode cuantilice'), [
-    T('Quantile regression minimises the pinball loss: VaR without a distributional assumption', 'Regresia cuantilică minimizează pierderea cuantilică: VaR fără o ipoteză despre distribuție'),
-    T('A linear quantile model on volatility features passes the Kupiec test for the S\\&P 500', 'Un model cuantilic liniar pe variabile de volatilitate trece testul Kupiec pentru S\\&P 500'),
-    T('Flexible quantile models at 1\\% need much more tail data than we have', 'Modelele cuantilice flexibile la 1\\% au nevoie de mult mai multe date din coadă decît avem')])
 
 # =============================================================================
 # 10. DATA SNOOPING
@@ -855,7 +809,8 @@ D.frame(T('The Best of $N$ Strategies (2/2)', 'Cea mai bună dintre $N$ strategi
     (T('Expected maximum of $N$ independent zero-skill trials \\refBLdP', 'Maximul așteptat al celor $N$ încercări independente, fără abilitate \\refBLdP') + ' \\[ \\mathrm{E}[\\max] \\approx \\sigma\\Big[(1 - \\gamma)\\,\\Phi^{-1}\\big(1 - \\tfrac1N\\big) + \\gamma\\,\\Phi^{-1}\\big(1 - \\tfrac{1}{Ne}\\big)\\Big] \\]',
      [T('$\\sigma$: the standard deviation of the Sharpe ratios across trials ($1/\\sqrt{Y}$ above); $N$: the number of trials', '$\\sigma$: abaterea standard a rapoartelor Sharpe între încercări ($1/\\sqrt{Y}$ mai sus); $N$: numărul de încercări'),
       T('$\\Phi^{-1}$: the quantile function of the standard Normal distribution; $e \\approx 2.718$; $\\gamma = 0.5772$: the Euler--Mascheroni constant',
-        '$\\Phi^{-1}$: funcția cuantilă a distribuției Normale standard; $e \\approx 2{,}718$; $\\gamma = 0{,}5772$: constanta Euler--Mascheroni')]),
+        '$\\Phi^{-1}$: funcția cuantilă a distribuției Normale standard; $e \\approx 2{,}718$; $\\gamma = 0{,}5772$: constanta Euler--Mascheroni'),
+      T('$\\Phi^{-1}(1 - 1/N)$ grows roughly like $\\sqrt{2\\ln N}$: the luck premium rises slowly, but without limit', '$\\Phi^{-1}(1 - 1/N)$ crește aproximativ ca $\\sqrt{2\\ln N}$: avantajul dat de noroc crește lent, dar fără limită')]),
     (T('Example: 10 years, $\\sigma = 1/\\sqrt{10} = @{ms.sd}$, $N = 100$', 'Exemplu: 10 ani, $\\sigma = 1/\\sqrt{10} = @{ms.sd}$, $N = 100$'),
      [T('$@{ms.sd}\\,[(1 - \\gamma)\\,@{ms.z1} + \\gamma\\,@{ms.z2}] = @{ms.100.f}$: a Sharpe ratio this large is expected from pure luck', '$@{ms.sd}\\,[(1 - \\gamma)\\,@{ms.z1} + \\gamma\\,@{ms.z2}] = @{ms.100.f}$: un asemenea raport Sharpe apare, în medie, doar prin noroc'),
       T('simulation: the best of 10, 100 and 1000 zero-skill strategies has an average Sharpe ratio of $@{ms.10}$, $@{ms.100}$, $@{ms.1000}$', 'simulare: cea mai bună dintre 10, 100 și 1000 de strategii fără abilitate are un raport Sharpe mediu de $@{ms.10}$; $@{ms.100}$; $@{ms.1000}$')])))
@@ -886,11 +841,6 @@ D.frame(T('The Deflated Sharpe Ratio (2/2)', 'Raportul Sharpe deflatat (2/2)'), 
       T('without the correction for $N$ (PSR, probabilistic Sharpe ratio, $SR_0 = 0$): $@{sn.psr}$', 'fără corecția pentru $N$ (PSR, probabilistic Sharpe ratio, cu $SR_0 = 0$): $@{sn.psr}$')]),
     T('Interpretation: alone the rule looks significant; after @{sn.N} trials it is not (DSR below 0.95), as its later performance confirms',
       'Interpretare: luată singură, regula pare semnificativă; după @{sn.N} de încercări nu mai este (DSR sub 0,95), așa cum confirmă și rezultatele ulterioare')))
-
-D.recap(('Data Snooping', 'data snooping'), [
-    T('The best of many trials is biased upwards; the bias grows like $\\sqrt{2\\ln N}$', 'Cel mai bun rezultat dintre multe încercări este deplasat în sus; deplasarea crește proporțional cu $\\sqrt{2\\ln N}$'),
-    T('Report the number of trials and deflate the Sharpe ratio', 'Raportați numărul de încercări și deflatați raportul Sharpe'),
-    T('A final test sample used only once is the simplest protection', 'Un eșantion de test final folosit o singură dată este protecția cea mai simplă')])
 
 # =============================================================================
 # 11. STUDIU DE CAZ

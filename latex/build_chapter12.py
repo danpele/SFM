@@ -265,11 +265,6 @@ chart(T('Expected Loss and IRB Capital as Functions of PD', 'Pierderea așteptat
       'Interpretare: EL crește liniar cu PD; $K$ crește repede la PD mici și apoi se aplatizează, deoarece un credit foarte riscant este în mare parte o pierdere așteptată (inclusă în preț)')],
     h='0.50\\textheight')
 
-D.recap(('What a Credit Score Is', 'definiția scorului de credit'), [
-    T('A score orders applicants by risk; a PD also gives the level of risk', 'Un scor ordonează solicitanții după risc; o PD dă și nivelul riscului'),
-    T('EL $=$ PD $\\times$ LGD $\\times$ EAD is priced in; Basel capital covers the unexpected loss (a credit VaR 0.1\\% minus EL)', 'EL $=$ PD $\\times$ LGD $\\times$ EAD intră în preț; capitalul Basel acoperă pierderea neașteptată (VaR 0,1\\% al creditului minus EL)'),
-    T('Statistical scoring started with Fisher\'s discriminant analysis (Durand, 1941)', 'Scoringul statistic a început cu analiza discriminantă a lui Fisher (Durand, 1941)')])
-
 # =============================================================================
 # 2. DATE
 # =============================================================================
@@ -328,11 +323,6 @@ D.frame(T('Training and Test Samples', 'Eșantionul de estimare și eșantionul 
      [T('it makes the test result too optimistic; with 300 test credits one split is also noisy, so we add cross-validation (Section 7)',
         'face rezultatul testului prea optimist; cu 300 de credite de test, o singură împărțire este și zgomotoasă, așa că adăugăm validarea încrucișată (secțiunea 7)')])))
 
-D.recap(('Default Data', 'datele de nerambursare'), [
-    T('South German Credit: @{n} credits, @{badpct}\\% bad by design; the widely used version had wrong labels', 'South German Credit: @{n} de credite, @{badpct}\\% neperformante prin construcție; versiunea larg folosită avea etichete greșite'),
-    T('Imbalance makes accuracy misleading; oversampling changes the level of PD, not the ranking', 'Dezechilibrul face acuratețea înșelătoare; suprareprezentarea schimbă nivelul PD, nu ordonarea'),
-    T('Estimate on the training sample, judge on the test sample', 'Estimăm pe eșantionul de estimare, judecăm pe eșantionul de test')])
-
 # =============================================================================
 # 3. WOE ȘI IV
 # =============================================================================
@@ -385,11 +375,6 @@ chart(T('Information Value of the 20 Variables', 'Information Value pentru cele 
       'Interpretare: contul curent (IV $= @{iv.status}$) și istoricul de credit ($@{iv.credit_history}$) domină; telefonul, vechimea la adresă și persoanele în întreținere nu aduc informație'),
     T('IV looks at one variable at a time: two strong but correlated variables do not add their information', 'IV privește o singură variabilă: două variabile puternice, dar corelate, nu își adună informația')],
     h='0.48\\textheight')
-
-D.frame(T('Recap: Weight of Evidence and Information Value', 'Recapitulare: Weight of Evidence și Information Value'), items(
-    T('WoE: log share of goods over share of bads in a bin; positive means safer than average', 'WoE: logaritmul raportului dintre ponderea bun-platnicilor și a rău-platnicilor într-un interval; pozitiv înseamnă mai sigur decît media'),
-    T('IV ranks the variables; 0.1 and 0.3 mark medium and strong', 'IV ordonează variabilele; 0,1 și 0,3 marchează variabilele medii și puternice'),
-    T('Bins, WoE and the selection of variables belong to the training sample', 'Intervalele, WoE și selecția variabilelor aparțin eșantionului de estimare')))
 
 # =============================================================================
 # 4. REGRESIA LOGISTICĂ
@@ -477,11 +462,6 @@ D.frame(T('Correcting for Oversampling', 'Corecția pentru suprareprezentarea r�
       T('the applicant of the worked example: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ in the bank\'s population instead of @{ex.pd}\\%', 'solicitantul din exemplul rezolvat: $@{ex.eta} - @{prior.abs} = @{ex.etapop}$, PD $= @{ex.pdpop}\\%$ în populația băncii, în loc de @{ex.pd}\\%')]),
     T('Interpretation: AUC and Gini are unchanged by the correction; EL and capital are not', 'Interpretare: AUC și Gini nu sînt afectate de corecție; EL și capitalul sînt afectate')))
 
-D.recap(('Logistic Regression', 'regresia logistică'), [
-    T('The logit models the log-odds linearly; $e^{\\beta_j}$ is an odds ratio', 'Modelul logit modelează liniar logaritmul șansei; $e^{\\beta_j}$ este un raport al șanselor'),
-    T('Estimated by maximum likelihood; the effect on PD is $p(1 - p)\\beta_j$', 'Se estimează prin verosimilitate maximă; efectul asupra PD este $p(1 - p)\\beta_j$'),
-    T('Oversampling moves only the constant: correct it before using PDs for EL or capital', 'Suprareprezentarea mută doar termenul liber: o corectăm înainte de a folosi PD pentru EL sau capital')])
-
 # =============================================================================
 # 5. LDA
 # =============================================================================
@@ -537,11 +517,6 @@ D.frame(T('Logit or LDA?', 'Logit sau LDA?'), table(
       'Eșantionul de test: corelația dintre cele două scoruri (logaritmul șansei) este $@{v.corr_logit_lda}$; testul DeLong de egalitate a AUC: $z = @{v.dl.z}$, p $= @{v.dl.p}$ \\refDeLong'),
     T('Interpretation: for ranking, the two methods are practically identical; the logit is preferred for PDs because it does not need Normal inputs',
       'Interpretare: pentru ordonare, cele două metode sînt practic identice; logit-ul este preferat pentru PD, deoarece nu cere variabile Normale')) + ql('SFM_ch12_logit_lda'), 'footnotesize')
-
-D.recap(('Linear Discriminant Analysis', 'analiza discriminantă liniară'), [
-    T('Fisher: $w \\propto S_W^{-1}(m_1 - m_0)$ maximises the separation of the groups', 'Fisher: $w \\propto S_W^{-1}(m_1 - m_0)$ maximizează separarea grupurilor'),
-    T('With Normal classes and a common covariance, LDA has linear log-odds, like the logit', 'Cu clase Normale și covarianță comună, LDA are logaritmul șansei liniar, ca logit-ul'),
-    T('On our data both rank equally well; the logit gives more reliable PDs', 'Pe datele noastre, ambele ordonează la fel de bine; logit-ul dă PD mai fiabile')])
 
 # =============================================================================
 # 6. SCORECARD
@@ -675,7 +650,7 @@ D.frame(T('Out-of-Sample and Cross-Validation', 'Validarea în afara eșantionul
     (T('\\textbf{$k$-fold cross-validation}: split into $k = 5$ folds; estimate on four, test on the fifth; rotate; repeat 20 times', '\\textbf{Validarea încrucișată în $k$ părți}: împărțim în $k = 5$ părți; estimăm pe patru, testăm pe a cincea; rotim; repetăm de 20 de ori'),
      [T('the whole procedure is repeated inside every fold: bins, WoE, IV selection and coefficients', 'întreaga procedură se repetă în fiecare parte: intervale, WoE, selecția după IV și coeficienții'),
       T('report the mean and the spread of the 100 test AUCs, and the gap between training and test AUC', 'raportăm media și dispersia celor 100 de AUC de test, precum și diferența dintre AUC de estimare și de test')]),
-    T('\\textbf{Out-of-time} validation: estimate on older applications, test on later ones (next slide)', 'Validarea \\textbf{out-of-time}: estimăm pe cereri mai vechi, testăm pe cereri ulterioare (slide-ul următor)')))
+    T('\\textbf{Out-of-time} validation: estimate on older applications, test on later ones (two slides ahead)', 'Validarea \\textbf{out-of-time}: estimăm pe cereri mai vechi, testăm pe cereri ulterioare (peste două slide-uri)')))
 
 chart(T('Training and Test AUC in Repeated Cross-Validation', 'AUC de estimare și de test în validarea încrucișată repetată'), 'sfm_ch12_cv_auc', 'SFM_ch12_validation_irb', [
     T('20 repetitions of 5 folds; dots: training folds, crosses: test folds; black lines: means', '20 de repetări a cîte 5 părți; puncte: părțile de estimare, cruci: părțile de test; liniile negre: mediile'),
@@ -705,11 +680,6 @@ D.frame(T('Case Study: Benchmarking Credit Scoring Methods', 'Studiu de caz: com
       T('the common accuracy measures give similar signals; random forests are recommended as the benchmark for any new method', 'măsurile uzuale de acuratețe dau semnale asemănătoare; random forests sînt recomandate ca reper pentru orice metodă nouă')]),
     T('Beating the logit alone is no longer evidence of progress; on our 1000 credits, logit and LDA differ by less than one standard error of AUC; Chapter 13 adds trees and neural networks',
       'A învinge doar logit-ul nu mai este o dovadă de progres; pe cele 1000 de credite, logit și LDA diferă cu mai puțin de o eroare standard a AUC; Capitolul 13 adaugă arbori și rețele neuronale')))
-
-D.recap(('Validation', 'validarea'), [
-    T('Discrimination: ROC, AUC, Gini $=$ AR, KS; calibration: reliability diagram, Hosmer--Lemeshow, Brier score', 'Discriminarea: ROC, AUC, Gini $=$ AR, KS; calibrarea: diagrama de calibrare, Hosmer--Lemeshow, scorul Brier'),
-    T('Choose the cut-off from the costs, not from the accuracy', 'Alegem pragul din costuri, nu din acuratețe'),
-    T('Test out of sample, repeat with cross-validation, and test out of time whenever the data have dates', 'Testăm în afara eșantionului, repetăm cu validarea încrucișată și testăm out-of-time ori de cîte ori setul de date conține data cererilor')])
 
 # =============================================================================
 # 8. REJECT INFERENCE ȘI FAIRNESS
@@ -765,11 +735,6 @@ D.frame(T('Case Study: Machine Learning and Unequal Credit', 'Studiu de caz: în
       T('Black and Hispanic borrowers are less likely to gain from the new technology', 'debitorii de culoare și cei hispanici au mai puține șanse să cîștige din noua tehnologie'),
       T('in an equilibrium model, the disparity in interest rates between and within groups increases, mainly because of the greater flexibility', 'într-un model de echilibru, disparitatea dobînzilor între grupuri și în interiorul lor crește, mai ales din cauza flexibilității mai mari')]),
     T('Lesson: accuracy and fairness must be measured together; a better AUC is not a sufficient argument', 'Lecția: acuratețea și echitatea trebuie măsurate împreună; un AUC mai bun nu este un argument suficient')))
-
-D.recap(('Reject Inference and Fairness', 'reject inference și echitatea'), [
-    T('Outcomes exist only for accepted applicants: a model trained on them extrapolates to the rejected', 'Rezultatele există doar pentru solicitanții acceptați: un model estimat pe ei extrapolează la cei respinși'),
-    T('Fairness criteria (parity, equal opportunity, calibration) conflict when base rates differ', 'Criteriile de echitate (paritate, egalitate de șanse, calibrare) intră în conflict cînd ratele de bază diferă'),
-    T('Removing a protected variable does not remove its influence', 'Eliminarea unei variabile protejate nu îi elimină influența')])
 
 # =============================================================================
 # 9. ALTMAN ȘI MERTON
@@ -832,11 +797,6 @@ D.frame(T('Case Study: How Good Is the Merton Model?', 'Studiu de caz: cît de b
       T('other variables (e.g.\\ past returns) add information: DD is not a sufficient statistic for PD', 'alte variabile (de exemplu randamentele trecute) aduc informație: DD nu este o statistică suficientă pentru PD'),
       T('its functional form (leverage scaled by volatility) is what makes it useful', 'forma sa funcțională (îndatorarea raportată la volatilitate) este ceea ce îl face util')]),
     T('Lesson: theory gives a good variable, statistics decides how to use it; the same holds for the Z-score', 'Lecția: teoria dă o variabilă bună, statistica decide cum o folosim; la fel pentru scorul Z')))
-
-D.frame(T('Recap: Altman and Merton', 'Recapitulare: Altman și Merton'), items(
-    T('Altman: LDA on five accounting ratios; zones 1.81 and 2.99', 'Altman: LDA pe cinci indicatori contabili; pragurile 1,81 și 2,99'),
-    T('Merton: equity is a call on the assets; DD $= [\\ln(V/D) + (\\mu - \\sigma^2/2)T]/(\\sigma\\sqrt{T})$, PD $= \\Phi(-\\mathrm{DD})$', 'Merton: capitalurile proprii sînt un call pe active; DD $= [\\ln(V/D) + (\\mu - \\sigma^2/2)T]/(\\sigma\\sqrt{T})$, PD $= \\Phi(-\\mathrm{DD})$'),
-    T('Both are best used as inputs of a statistical PD model', 'Ambele sînt folosite cel mai bine ca variabile ale unui model statistic de PD')))
 
 # =============================================================================
 # 10. AI

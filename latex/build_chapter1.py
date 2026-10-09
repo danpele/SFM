@@ -167,7 +167,7 @@ V.int('ohlc.flatvol', OH[flat[0]]['volume'] if flat else 0)
 V.put('se.sp.ann', N['desc']['sp500']['ann_vol'] / math.sqrt(N['desc']['sp500']['n'] / N['desc']['sp500']['obs_per_year']), 1)
 V.put('sp.daily.sd', N['desc']['sp500']['sd'], 2)
 V.put('sp.ann.from', N['desc']['sp500']['sd'] * math.sqrt(252), 1)
-V.put('btc.ann.from', N['desc']['btc']['sd'] * math.sqrt(365), 1)
+V.put('btc.ann.from', N['desc']['btc']['ann_vol'], 1)   # the same 66.7% as in Chapter 0 and Seminars 0-1
 V.put('btc.ann.wrong', N['desc']['btc']['sd'] * math.sqrt(252), 1)
 V.put('sqrt252', math.sqrt(252), 2)
 V.put('sqrt365', math.sqrt(365), 2)
@@ -203,36 +203,26 @@ V.put('cy.need', 100 * 0.6 / 0.4, 0)
 # =============================================================================
 # TITLU, TRASEU
 # =============================================================================
-D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), items(
+D.frame(T("Today's Question, Route and Learning Outcomes", 'Întrebarea de azi, traseul și rezultatele învățării'), items(
     (T('\\textbf{Question}: how do we turn raw market data into numbers that let us compare investments?',
        '\\textbf{Întrebarea}: cum transformăm datele brute de piață în cifre care permit compararea investițiilor?'),
      [T('a price level says little; a return, a risk measure and a drawdown say a lot',
         'un nivel de preț spune puțin; un randament, o măsură a riscului și un drawdown sînt mult mai informative')]),
-    (T('\\textbf{Route} of the chapter', '\\textbf{Traseul} capitolului'),
-     [T('data sources and data quality: where prices come from and what can go wrong',
-        'surse de date și calitatea datelor: de unde provin prețurile și ce erori pot apărea'),
-      T('simple and log returns, over several periods and for portfolios',
-        'randamente simple și logaritmice, pe mai multe perioade și pentru portofolii'),
-      T('annualisation and descriptive statistics of returns',
-        'anualizarea și statisticile descriptive ale randamentelor'),
-      T('performance indicators: CAGR, volatility, Sharpe, Sortino, maximum drawdown, Calmar, volatility drag',
-        'indicatori de performanță: CAGR, volatilitate, Sharpe, Sortino, drawdown maxim, Calmar, volatility drag')]),
+    (T('\\textbf{Route and outcomes}: after this chapter you can', '\\textbf{Traseul și rezultatele învățării}: la finalul capitolului veți putea'),
+     [T('choose a reliable data source and check a price series before using it',
+        'alege o sursă de date de încredere și verifica o serie de prețuri înainte de utilizare'),
+      T('compute simple and log returns, and aggregate them over time and across assets',
+        'calcula randamente simple și logaritmice și le agrega în timp și între active'),
+      T('annualise means and volatilities with the actual frequency of the data',
+        'anualiza mediile și volatilitățile cu frecvența reală a datelor'),
+      T('describe a return series by its moments, quantiles and extremes',
+        'descrie o serie de randamente prin momente, cuantile și valori extreme'),
+      T('compute and interpret CAGR, Sharpe, Sortino, maximum drawdown, Calmar and the volatility drag',
+        'calcula și interpreta CAGR, Sharpe, Sortino, drawdown-ul maxim, Calmar și volatility drag'),
+      T('judge whether a difference between two indicators is larger than its estimation error',
+        'compara diferența dintre doi indicatori cu eroarea lor de estimare')]),
     T('Real data throughout: BET, S\\&P 500, DAX, Bitcoin and five stocks of the BVB',
       'Date reale în tot capitolul: BET, S\\&P 500, DAX, Bitcoin și cinci acțiuni de la BVB')))
-
-D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
-    T('Choose a reliable data source and check a price series before using it',
-      'Alegerea unei surse de date de încredere și verificarea unei serii de prețuri înainte de utilizare'),
-    T('Compute simple and log returns, and aggregate them over time and across assets',
-      'Calculul randamentelor simple și logaritmice și agregarea lor în timp și între active'),
-    T('Annualise means and volatilities with the actual frequency of the data',
-      'Anualizarea mediilor și a volatilităților cu frecvența reală a datelor'),
-    T('Describe a return series by its moments, quantiles and extremes',
-      'Descrierea unei serii de randamente prin momente, cuantile și valori extreme'),
-    T('Compute and interpret CAGR, Sharpe, Sortino, maximum drawdown, Calmar and the volatility drag',
-      'Calculul și interpretarea indicatorilor CAGR, Sharpe, Sortino, drawdown maxim, Calmar și volatility drag'),
-    T('Judge whether a difference between two indicators is larger than its estimation error',
-      'Compararea diferenței dintre doi indicatori cu eroarea lor de estimare')))
 
 D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
     (T('Textbook: \\refFHH, \\textit{Statistics of Financial Markets}, 5th ed., Ch.~11 (returns, definitions)',
@@ -316,7 +306,8 @@ D.frame(T('The Data of This Course', 'Datele acestui curs'), items(
         '@{nseries} de serii: indici, ETF-uri, acțiuni (BVB, SUA, Europa), cripto, cursuri de schimb, randamente ale obligațiunilor'),
       T('columns: date, open, high, low, close, adjusted close, volume', 'coloane: data, deschidere, maxim, minim, închidere, închidere ajustată, volum')]),
     (T('EUR/RON: the official \\textbf{BNR} reference rate', 'EUR/RON: cursul oficial de referință al \\textbf{BNR}'),
-     [T('the EUR/RON series from EODHD has erroneous quotes (next slides)', 'seria EUR/RON de la EODHD are cotații eronate (slide-urile următoare)')]),
+     [T('the EUR/RON series from EODHD has erroneous quotes (\\hyperlink{ch1-eurron}{\\textcolor{MainBlue}{Data Errors: Two EUR/RON Series}})',
+        'seria EUR/RON de la EODHD are cotații eronate (\\hyperlink{ch1-eurron}{\\textcolor{MainBlue}{Erori în date: două serii EUR/RON}})')]),
     (T('Conventions', 'Convenții'),
      [T('indices, exchange rates, crypto: \\textit{close}; stocks and ETFs: \\textit{adjusted close}',
         'indici, cursuri de schimb, cripto: \\textit{close}; acțiuni și ETF-uri: \\textit{adjusted close}'),
@@ -386,10 +377,10 @@ chart(T('Dividends Matter: BET vs BET-TR', 'Dividendele contează: BET și BET-T
       'Comparați lucruri comparabile: DAX este un indice de randament total, S\\&P 500 și BET sînt indici de preț')])
 
 chart(T('Data Errors: Two EUR/RON Series', 'Erori în date: două serii EUR/RON'), 'sfm_ch1_eurron_check', 'SFM_ch1_data_quality', [
-    T('Same exchange rate, @{eur.n} common days: the EODHD series moves by more than 1 percentage point more than the BNR rate on @{eur.days} days',
-      'Același curs, @{eur.n} de zile comune: variația zilnică a seriei EODHD diferă cu peste 1 punct procentual de cea a cursului BNR în @{eur.days} zile'),
-    T('Annualised volatility: @{eur.vole}\\% (EODHD) vs @{eur.volb}\\% (BNR); largest EODHD move $@{eur.maxe}\\%$ on @{eur.maxedate}',
-      'Volatilitatea anualizată: @{eur.vole}\\% (EODHD), față de @{eur.volb}\\% (BNR); cea mai mare variație zilnică a seriei EODHD: $@{eur.maxe}\\%$, pe @{eur.maxedate}'),
+    T('\\hypertarget{ch1-eurron}{}Same exchange rate, @{eur.n} common days: the EODHD series moves by more than 1 percentage point more than the BNR rate on @{eur.days} days',
+      '\\hypertarget{ch1-eurron}{}Același curs, @{eur.n} de zile comune: variația zilnică a seriei EODHD diferă cu peste 1 punct procentual de cea a cursului BNR în @{eur.days} zile'),
+    T('Annualised volatility: @{eur.vole}\\% (EODHD) vs @{eur.volb}\\% (BNR); largest absolute EODHD move $@{eur.maxe}\\%$ on @{eur.maxedate}, the reversal of a wrong quote of the previous day',
+      'Volatilitatea anualizată: @{eur.vole}\\% (EODHD), față de @{eur.volb}\\% (BNR); cea mai mare variație zilnică a seriei EODHD, în valoare absolută: $@{eur.maxe}\\%$, pe @{eur.maxedate}, revenirea după o cotație greșită din ziua precedentă'),
     T('Fix: use the primary source of the number, the BNR reference rate', 'Soluția: folosiți sursa primară a cifrei, cursul de referință BNR')],
     h='0.54\\textheight')
 
@@ -590,8 +581,8 @@ D.frame(T('Cumulative Return and Wealth', 'Randamentul cumulat și averea'), ite
       'Scara logaritmică pe grafice: distanțe verticale egale corespund unor variații procentuale egale')))
 
 chart(T('Growth of 100 Invested, @{y0}--@{y1}', 'Evoluția a 100 de unități investite, @{y0}--@{y1}'), 'sfm_ch1_growth', 'SFM_ch1_portfolio_returns', [
-    T('Final values: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}',
-      'Valori finale: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}'),
+    T('100 invested on the first day of @{y0} with prices for all four series; final values: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}',
+      '100 de unități investite în prima zi din @{y0} cu prețuri pentru toate cele patru serii; valori finale: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}'),
     T('Bitcoin: cumulative simple return @{g.btc.cs}\\%, cumulative log return @{g.btc.cl}; BET: @{g.bet.cs}\\% and @{g.bet.cl}',
       'Bitcoin: randament simplu cumulat @{g.btc.cs}\\%, randament logaritmic cumulat @{g.btc.cl}; BET: @{g.bet.cs}\\% și @{g.bet.cl}'),
     T('Without the log scale, every series except Bitcoin would look flat', 'Fără scara logaritmică, toate seriile, cu excepția Bitcoin, ar părea plate')])
@@ -917,7 +908,7 @@ PHEAD = ('& CAGR \\% & ' + T('Vol.', 'Vol.') + ' \\% & Sharpe & Sortino & MDD \\
 
 D.frame(T('Performance Indicators: Indices and Bitcoin, @{y0}--@{y1}', 'Indicatori de performanță: indici și Bitcoin, @{y0}--@{y1}'),
         table('lrrrrrrr', PHEAD, [prow(k) for k in INDICES], size='footnotesize') + items(
-            T('Annualised with the actual frequency of each series; Sharpe and Sortino with $r_f = 0$', 'Anualizate cu frecvența reală a fiecărei serii; Sharpe și Sortino cu $r_f = 0$'),
+            T('Annualised with the actual frequency of each series; Vol.: volatility of daily simple returns; Sharpe and Sortino with $r_f = 0$', 'Anualizate cu frecvența reală a fiecărei serii; Vol.: volatilitatea randamentelor simple zilnice; Sharpe și Sortino cu $r_f = 0$'),
             T('Bitcoin: by far the highest CAGR, the highest volatility and the deepest drawdown', 'Bitcoin: de departe cel mai mare CAGR, cea mai mare volatilitate și cel mai adînc drawdown'),
             T('BET-TR vs BET: same risk, dividends lift every return-based indicator', 'BET-TR față de BET: același risc, dar dividendele cresc toți indicatorii calculați pe baza randamentului')) + ql('SFM_ch1_performance'))
 
@@ -997,15 +988,6 @@ D.frame(T('Project Seed', 'Idee de proiect'), items(
 # REZUMAT
 # =============================================================================
 D.section('Summary', 'Rezumat')
-
-D.frame(T('Key Takeaways', 'Idei principale'), items(
-    T('Check the data first: source, adjusted prices, calendar, jumps', 'Verificați întîi datele: sursa, prețurile ajustate, calendarul, salturile'),
-    T('Log returns add over time; simple returns add across assets', 'Randamentele logaritmice se adună în timp; cele simple se adună între active'),
-    T('Annualise with the actual frequency: mean $\\times\\,A$, volatility $\\times\\sqrt{A}$', 'Anualizați cu frecvența reală: media $\\times\\,A$, volatilitatea $\\times\\sqrt{A}$'),
-    T('Returns have heavy tails, negative skewness and changing volatility', 'Randamentele au cozi groase, asimetrie negativă și volatilitate variabilă'),
-    T('Judge performance with several indicators: CAGR, volatility, Sharpe, Sortino, MDD, Calmar', 'Evaluați performanța cu mai mulți indicatori: CAGR, volatilitate, Sharpe, Sortino, MDD, Calmar'),
-    T('Volatility costs growth: $\\sigma^2/2$ a year', 'Volatilitatea reduce creșterea cu $\\sigma^2/2$ pe an'),
-    T('Mean returns and Sharpe ratios are imprecise: report standard errors', 'Randamentele medii și rapoartele Sharpe sînt imprecise: raportați erorile standard')))
 
 D.frame(T('Key Formulas', 'Formule de reținut'), table(
     'll', T('\\textbf{Quantity}', '\\textbf{Mărimea}') + ' & ' + T('\\textbf{Formula}', '\\textbf{Formula}'),

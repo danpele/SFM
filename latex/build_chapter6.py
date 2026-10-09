@@ -410,11 +410,6 @@ D.frame(T('Data Before Models: Two Bad Days', 'Datele înaintea modelelor: două
     T('Rule: check the largest returns against the close and the news before any model selection; the two days are removed in the rest of the chapter',
       'Regula: înainte de orice selecție de model, comparați cele mai mari randamente cu prețurile de închidere și cu știrile; în restul capitolului, cele două zile sînt eliminate')))
 
-D.recap(('The Candidates', 'Candidații'), [
-    T('Seven candidates with 2 to 5 parameters; they agree in the centre and disagree in the tails', 'Șapte candidați cu 2 pînă la 5 parametri; aproape identici în centru, foarte diferiți în cozi'),
-    T('Any model must reproduce skewness and kurtosis well above 3, even for monthly returns', 'Orice model trebuie să reproducă asimetria și o boltire mult peste 3, chiar și pentru randamentele lunare'),
-    T('Clean the data first: two wrong prices raised the TLV kurtosis by about $@{tlv.kdrop}\\%$ of its value', 'Curățați întîi datele: fără cele două prețuri greșite, boltirea TLV scade cu circa $@{tlv.kdrop}\\%$')])
-
 # =============================================================================
 # 2. VEROSIMILITATEA MAXIMĂ
 # =============================================================================
@@ -485,12 +480,6 @@ D.frame(T('Pitfalls of Numerical ML', 'Capcanele ML numerice'), items(
     T('\\textbf{Check}: compare $\\ell(\\hat\\theta)$ of nested models; a larger model can never have a lower maximum',
       '\\textbf{Verificare}: comparați $\\ell(\\hat\\theta)$ pentru modelele imbricate; un model mai general nu poate avea un maxim mai mic')))
 
-D.recap(('Maximum Likelihood', 'Verosimilitatea maximă'), [
-    T('$\\ell(\\theta) = \\sum_t \\ln f(r_t; \\theta)$; the ML estimate maximises it', '$\\ell(\\theta) = \\sum_t \\ln f(r_t; \\theta)$; estimarea ML o maximizează'),
-    T('Normal: closed form, $\\ell(\\hat\\theta) = -\\frac{n}{2}[\\ln(2\\pi\\hat\\sigma^2) + 1]$; the others: numerical', 'Normală: soluție analitică, $\\ell(\\hat\\theta) = -\\frac{n}{2}[\\ln(2\\pi\\hat\\sigma^2) + 1]$; celelalte: numeric'),
-    T('Precision from the curvature of $\\ell$ or from the profile log-likelihood', 'Precizia rezultă din curbura lui $\\ell$ sau din log-verosimilitatea profil'),
-    T('Watch local maxima, boundaries and parameterisations', 'Atenție la maxime locale, frontiere și parametrizări')])
-
 # =============================================================================
 # 3. TESTUL RAPORTULUI DE VEROSIMILITATE
 # =============================================================================
@@ -552,12 +541,6 @@ D.frame(T('Non-Nested Models: the Vuong Test', 'Modele neimbricate: testul Vuong
     T('Student-t beats the stable law everywhere; NIG beats the skewed-t on the S\\&P 500 and the DAX; Student-t vs GED splits by market',
       'Student-t este preferat distribuției stabile pe toate piețele; NIG este preferat distribuției skewed-t pentru S\\&P 500 și DAX; comparația Student-t--GED diferă de la o piață la alta')) + ql('SFM_ch6_lr_aic'), size='footnotesize')
 
-D.recap(('Likelihood-Ratio and Vuong Tests', 'Testele raportului de verosimilitate și Vuong'), [
-    T('Nested models: $LR = 2(\\ell_1 - \\ell_0) \\approx \\chi^2(k_1 - k_0)$ (Wilks)', 'Modele imbricate: $LR = 2(\\ell_1 - \\ell_0) \\approx \\chi^2(k_1 - k_0)$ (Wilks)'),
-    T('On a boundary (Normal inside Student-t): 50:50 mixture, critical value $@{chi90}$', 'La frontieră (Normală în Student-t): amestec 50:50, valoarea critică $@{chi90}$'),
-    T('Non-nested models: Vuong test on the pointwise log-likelihood differences', 'Modele neimbricate: testul Vuong pe diferențele punctuale de log-verosimilitate'),
-    T('Skewness matters for the S\\&P 500 and DAX, not for the BET and Bitcoin', 'Asimetria contează pentru S\\&P 500 și DAX, nu pentru BET și Bitcoin')])
-
 # =============================================================================
 # 4. CRITERII INFORMAȚIONALE
 # =============================================================================
@@ -570,8 +553,8 @@ D.frame(T('Akaike\'s Idea', 'Ideea lui Akaike'), cols(items(
       T('$R$: a new return drawn from the truth $g$; $E_g$: the mean under $g$', '$R$: un randament nou, generat de distribuția adevărată $g$; $E_g$: media calculată sub $g$')]),
     (T('$\\ell(\\hat\\theta)$ is too optimistic: the same data choose $\\hat\\theta$ and judge it', '$\\ell(\\hat\\theta)$ este prea optimistă: aceleași date servesc și la estimarea lui $\\hat\\theta$, și la evaluarea lui'),
      [T('the optimism is about $k$, the number of parameters \\refAkaike', 'supraestimarea este, în medie, de circa $k$, numărul de parametri \\refAkaike')]),
-    T('Result: $\\mathrm{AIC} = -2\\ell(\\hat\\theta) + 2k$, an estimate of the expected out-of-sample fit (lower is better)',
-      'Rezultatul: $\\mathrm{AIC} = -2\\ell(\\hat\\theta) + 2k$, o estimare a calității ajustării așteptate în afara eșantionului (valoarea mai mică este preferată)')),
+    T('Result: a penalty of 2 per parameter corrects the optimism; the criterion, AIC, is on the next slide',
+      'Rezultatul: o penalizare de 2 pentru fiecare parametru corectează supraestimarea; criteriul obținut, AIC, este pe slide-ul următor')),
     pic('ch6_akaike.jpg', 'Hirotugu Akaike (1927--2009)', 'Hirotugu Akaike (1927--2009)',
         'https://commons.wikimedia.org/wiki/File:Akaike.jpg',
         'Photo: The Institute of Statistical Mathematics; CC BY-SA 4.0; Wikimedia Commons',
@@ -596,7 +579,7 @@ D.frame(T('$\\Delta$AIC and Akaike Weights', '$\\Delta$AIC și ponderile Akaike'
       T('two models with $\\Delta = 0$ and $\\Delta = 2$: $w = 1/(1 + e^{-1}) \\approx 0.73$ and $@{ex.d2.w}$', 'două modele cu $\\Delta = 0$ și $\\Delta = 2$: $w = 1/(1 + e^{-1}) \\approx 0{,}73$ și $@{ex.d2.w}$')]),
     T('\\textbf{What do you think?} Is $\\Delta = 2$ a ``significant\'\' difference?', '\\textbf{Ce credeți?} Este $\\Delta = 2$ o diferență „semnificativă”?'),
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
-     [T('no: AIC is not a test; a gap of 2 means both models remain plausible (roughly 73\\% vs 27\\%)', 'nu: AIC nu este un test; o diferență de 2 înseamnă că ambele modele rămîn plauzibile (circa 73\\% față de 27\\%)')])))
+     [T('no: AIC is not a test; a gap of 2 means both models remain plausible (the weights above)', 'nu: AIC nu este un test; o diferență de 2 înseamnă că ambele modele rămîn plauzibile (ponderile de mai sus)')])))
 
 
 def icrow(k, m):
@@ -627,12 +610,6 @@ D.frame(T('Reading the $\\Delta$AIC Map', 'Interpretarea hărții $\\Delta$AIC')
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
      [T('the Student-t: one parameter less saves $\\ln n \\approx @{lnn.brd}$ BIC points, more than the gain in fit; with $\\Delta \\approx 1$ the two are practically tied',
         'Student-t: un parametru în minus reduce BIC cu $\\ln n \\approx @{lnn.brd}$, mai mult decît cîștigul de ajustare; cu $\\Delta \\approx 1$, cele două sînt practic la egalitate')])))
-
-D.recap(('Information Criteria', 'Criteriile informaționale'), [
-    T('AIC $= -2\\ell + 2k$ (prediction); BIC $= -2\\ell + k\\ln n$ (true model, heavier penalty)', 'AIC $= -2\\ell + 2k$ (predicție); BIC $= -2\\ell + k\\ln n$ (modelul adevărat, penalizare mai mare)'),
-    T('Read $\\Delta$AIC and Akaike weights, not the AIC level; $\\Delta \\le 2$ is a tie', 'Citiți $\\Delta$AIC și ponderile Akaike, nu nivelul AIC; $\\Delta \\le 2$ înseamnă practic egalitate'),
-    T('Indices: NIG; Bitcoin: GED; BVB stocks: Student-t; Normal and stable: never', 'Indici: NIG; Bitcoin: GED; acțiuni BVB: Student-t; Normală și stabilă: niciodată'),
-    T('AIC ranks the candidates; it does not say whether the best one is good enough', 'AIC ordonează candidații; nu spune dacă cel mai bun este suficient de bun')])
 
 # =============================================================================
 # 5. TESTE DE CONCORDANȚĂ
@@ -677,7 +654,7 @@ D.frame(T('Estimated Parameters: the Lilliefors Problem', 'Parametri estimați: 
      [T('the fit pulls $F$ towards $F_n$: $D_n$ is smaller than under a known $F$', 'estimarea apropie $F$ de $F_n$: $D_n$ este mai mic decît pentru o $F$ cunoscută'),
       T('the usual critical values are too large: the test almost never rejects', 'valorile critice obișnuite sînt prea mari: testul aproape că nu mai respinge')]),
     (T('\\refLilliefors: critical values by simulation for the Normal law with $\\hat\\mu$, $\\hat\\sigma$ (5\\% level)', '\\refLilliefors: valori critice obținute prin simulare pentru distribuția Normală cu $\\hat\\mu$, $\\hat\\sigma$ (nivelul 5\\%)'),
-     [T('$n = 5$: $@{li.5}$ instead of $@{a5.crit}$; $n = 1000$: $@{li.1000}$ instead of $@{ks.asy.1000}$', '$n = 5$: $@{li.5}$ în loc de $@{a5.crit}$; $n = 1000$: $@{li.1000}$ în loc de $@{ks.asy.1000}$')]),
+     [T('$n = 5$: $@{a5.lil}$ instead of $@{a5.crit}$; $n = 1000$: $@{li.1000}$ instead of $@{ks.asy.1000}$', '$n = 5$: $@{a5.lil}$ în loc de $@{a5.crit}$; $n = 1000$: $@{li.1000}$ în loc de $@{ks.asy.1000}$')]),
     (T('Any model: \\textbf{parametric bootstrap} \\refSGQ', 'Orice model: \\textbf{bootstrap parametric} \\refSGQ'),
      [T('simulate $n$ draws from $F(\\cdot; \\hat\\theta)$, refit, recompute the statistic; repeat $B$ times', 'simulăm $n$ extrageri din $F(\\cdot; \\hat\\theta)$, reestimăm parametrii, recalculăm statistica; repetăm de $B$ ori'),
       T('$p$-value $= (1 + \\#\\{\\text{bootstrap statistics} \\ge \\text{observed}\\})/(B + 1)$: the share of simulated statistics at least as large as the observed one', 'p-value $= (1 + \\#\\{\\text{statistici bootstrap} \\ge \\text{cea observată}\\})/(B + 1)$: proporția statisticilor simulate cel puțin egale cu cea observată')])))
@@ -724,25 +701,18 @@ D.frame(T('EDF Tests on the S\\&P 500', 'Teste EDF pe S\\&P 500'), cols(table(
     T('Normal, Student-t, skewed-t: bootstrap $p = @{gb.pmin}$, the smallest possible: all rejected', 'Normală, Student-t, skewed-t: $p$ bootstrap $= @{gb.pmin}$, cel mai mic posibil: toate respinse'),
     T('Student-t, naive KS $p$-value (as if $\\theta$ were known): $@{gb.Student-t.naive}$', 'Student-t, p-value-ul KS naiv (ca și cum $\\theta$ ar fi cunoscut): $@{gb.Student-t.naive}$')),
     wl='0.44', wr='0.52') + items(
-    T('KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; smaller is better', 'KS: Kolmogorov--Smirnov; CvM: Cramér--von Mises; AD: Anderson--Darling; valorile mai mici indică o ajustare mai bună')) + ql('SFM_ch6_gof_tests'), size='footnotesize')
+    T('Smaller statistics mean a better fit', 'Valorile mai mici ale statisticilor indică o ajustare mai bună')) + ql('SFM_ch6_gof_tests'), size='footnotesize')
 
 D.frame(T('Statistical vs Practical Significance', 'Semnificație statistică și semnificație practică'), items(
     (T('With $n = @{n.sp500}$ every model is rejected: tests detect tiny departures', 'Cu $n = @{n.sp500}$, toate modelele sînt respinse: testele detectează abateri minuscule'),
      [T('and real returns are not i.i.d.\\ (volatility clustering), so no i.i.d.\\ law can pass', 'în plus, randamentele reale nu sînt i.i.d.\\ (volatility clustering), deci nicio distribuție i.i.d.\\ nu poate trece testul')]),
     (T('Use the statistics to \\textbf{rank} the models', 'Folosiți statisticile pentru a \\textbf{ordona} modelele'),
-     [T('AD: Normal $@{g.Normal.ad}$, Student-t $@{g.Student-t.ad}$, skewed-t $@{g.Skewed-t.ad}$, NIG $@{g.NIG.ad}$', 'AD: Normală $@{g.Normal.ad}$, Student-t $@{g.Student-t.ad}$, skewed-t $@{g.Skewed-t.ad}$, NIG $@{g.NIG.ad}$'),
-      T('as with AIC: NIG first, the Normal model far behind', 'ca la AIC: NIG pe primul loc, modelul Normal mult în urmă')]),
+     [T('the AD column of the previous table gives the AIC order: NIG first, the Normal model far behind', 'coloana AD din tabelul anterior dă ordinea AIC: NIG pe primul loc, modelul Normal mult în urmă')]),
     T('\\textbf{Question for the room}: a KS test on 50 daily returns does not reject the Normal law; is the Normal law then fine for VaR 1\\%?',
       '\\textbf{Întrebare pentru sală}: un test KS pe 50 de randamente zilnice nu respinge distribuția Normală; este atunci distribuția Normală potrivită pentru VaR 1\\%?'),
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
      [T('no: with $n = 50$ the test rarely rejects even Student-t data ($@{pw.t5.100.ks}\\%$ of the time at $n = 100$), and KS barely looks at the tail',
         'nu: cu $n = 50$, testul respinge rar chiar și date Student-t (în $@{pw.t5.100.ks}\\%$ din cazuri la $n = 100$), iar KS aproape ignoră coada')])))
-
-D.recap(('Goodness-of-Fit Tests', 'Testele de concordanță'), [
-    T('KS: largest gap; CvM: integrated squared gap; AD: the same, weighted towards the tails', 'KS: cea mai mare distanță; CvM: pătratul distanței, integrat; AD: aceeași mărime, cu pondere mai mare în cozi'),
-    T('Estimated parameters: Lilliefors tables or a parametric bootstrap; never the textbook KS table', 'Parametri estimați: tabelele Lilliefors sau un bootstrap parametric; niciodată tabelul KS clasic'),
-    T('Power: AD > CvM > KS for heavy-tailed alternatives', 'Puterea: AD > CvM > KS pentru alternative cu cozi groase'),
-    T('Large samples reject everything: rank by the statistic and look at the plots', 'Pe eșantioane mari, testele resping orice model: ordonați modelele după statistică și examinați graficele')])
 
 # =============================================================================
 # 6. GRAFICE PP ȘI QQ
@@ -772,11 +742,6 @@ chart(T('QQ Plots for BET, Bitcoin and Banca Transilvania', 'Grafice QQ pentru B
       'Normală (roșu): capete abrupte pentru toate cele trei serii; Student-t și skewed-t urmăresc datele pînă departe în cozi'),
     T('The last few points are single days (the largest crashes): there the fitted tails disagree most and the uncertainty is widest',
       'Ultimele cîteva puncte sînt zile izolate (cele mai mari crahuri): acolo cozile estimate diferă cel mai mult, iar incertitudinea este cea mai mare')], h='0.54\\textheight')
-
-D.recap(('PP and QQ Plots', 'Graficele PP și QQ'), [
-    T('PP: probabilities, good for the centre; QQ: quantiles, good for the tails', 'PP: probabilități, util pentru centru; QQ: cuantile, util pentru cozi'),
-    T('Heavy-tailed models that look the same in PP plots differ widely in QQ plots', 'Modelele cu cozi groase care arată la fel în graficele PP diferă mult în graficele QQ'),
-    T('Always show the QQ plot of the chosen model next to its AIC', 'Prezentați întotdeauna graficul QQ al modelului ales alături de valoarea AIC')])
 
 # =============================================================================
 # 7. COZILE: VaR 1%
@@ -837,11 +802,6 @@ D.frame(T('Counting Exceedances: the Kupiec Test', 'Numărarea depășirilor: te
      [T('NIG, the AIC winner, @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)', 'NIG, cîștigătorul AIC: @{x.sp500.NIG} ($p = @{xp.sp500.NIG}$)')]),
     T('The best model for the whole density is not always the best for one quantile; tail-focused scores exist \\refDPD',
       'Cel mai bun model pentru întreaga densitate nu este întotdeauna cel mai bun pentru o cuantilă; există scoruri axate pe coadă \\refDPD')) + ql('SFM_ch6_tail_var'), size='footnotesize')
-
-D.recap(('VaR 1\\% in Sample', 'VaR 1\\% în eșantion'), [
-    T('VaR 1\\% $= -q_{1\\%}$, ES 2.5\\% = average loss beyond $q_{2.5\\%}$', 'VaR 1\\% $= -q_{1\\%}$, ES 2,5\\% = pierderea medie dincolo de $q_{2{,}5\\%}$'),
-    T('Normal: VaR 1\\% $@{rat.n.lo}$--$@{rat.n.hi}\\%$ too low; stable: much too high; Student-t, skewed-t, NIG: close', 'Normală: VaR 1\\% cu $@{rat.n.lo}$--$@{rat.n.hi}\\%$ prea mic; stabilă: mult prea mare; Student-t, skewed-t, NIG: apropiate'),
-    T('Judge a risk model by its exceedances (Kupiec), not only by AIC', 'Judecați un model de risc după depășirile lui (Kupiec), nu doar după AIC')])
 
 # =============================================================================
 # 8. ÎN AFARA EȘANTIONULUI ȘI SUPRAAJUSTARE
@@ -928,11 +888,6 @@ chart(T('The VaR Reliability Plot (SFEVaRqqplot)', 'Graficul de fiabilitate VaR 
     (T('A straight line would mean a reliable VaR; both curve upwards at the right end', 'O dreaptă ar însemna un VaR fiabil; ambele se curbează în sus la capătul drept'),
      [T('the losses beyond VaR are too large and too frequent ($@{vq.rma.rate}\\%$ and $@{vq.ema.rate}\\%$ exceedances)', 'pierderile dincolo de VaR sînt prea mari și prea frecvente ($@{vq.rma.rate}\\%$ și $@{vq.ema.rate}\\%$ depășiri)')])], h='0.46\\textheight', size='scriptsize')
 
-D.recap(('Out of Sample', 'În afara eșantionului'), [
-    T('Judge models on data they have not seen: log score, exceedances, pinball loss', 'Judecați modelele pe date pe care nu le-au văzut: scor logaritmic, depășiri, pierdere pinball'),
-    T('Overfitting: in-sample fit rises with parameters, out-of-sample fit does not; BIC protected us, AIC did not', 'Supraajustarea: calitatea ajustării în eșantion crește cu numărul de parametri, cea din afara lui nu; BIC ne-a protejat, AIC nu'),
-    T('Heavy tails help, but static models fail in crises: volatility must be modelled (GARCH)', 'Cozile groase ajută, dar modelele statice eșuează în crize: volatilitatea trebuie modelată (GARCH)')])
-
 # =============================================================================
 # 9. INCERTITUDINEA DE MODEL
 # =============================================================================
@@ -974,11 +929,6 @@ D.frame(T('A Model-Selection Workflow', 'Etapele selecției modelului'), items(
     T('\\textbf{5. Validate}: out of sample, with the loss that matches the purpose (exceedances for VaR)', '\\textbf{5. Validare}: în afara eșantionului, cu funcția de pierdere potrivită scopului (depășiri pentru VaR)'),
     T('\\textbf{6. Report}: the winner, the runners-up and the range of the risk number across them', '\\textbf{6. Raportare}: cîștigătorul, modelele de pe locurile următoare și intervalul valorilor de risc între acestea')))
 
-D.recap(('Model Uncertainty', 'Incertitudinea de model'), [
-    T('The AIC winner can be stable across resamples while the VaR is not', 'Cîștigătorul AIC poate fi stabil între reeșantionări, în timp ce VaR nu este'),
-    T('Report the range across plausible models, or average with Akaike weights', 'Raportați intervalul dintre modelele plauzibile sau mediați cu ponderile Akaike'),
-    T('Model risk is part of risk: a single number hides it', 'Riscul de model face parte din risc: o singură cifră îl ascunde')])
-
 # =============================================================================
 # 10. AI PENTRU DESCOPERIRE ȘTIINȚIFICĂ
 # =============================================================================
@@ -990,7 +940,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       T('returns divided by a volatility forecast (for example EMA, $\\lambda = 0.96$) have lighter tails; which candidate fits them best?',
         'randamentele împărțite la o prognoză de volatilitate (de exemplu EMA, $\\lambda = 0{,}96$) au cozi mai subțiri; care candidat li se potrivește cel mai bine?')]),
     T('Why it is open: the answer differs across markets, and the volatility model itself is a choice', 'Motivul pentru care este deschisă: răspunsul diferă de la o piață la alta, iar modelul de volatilitate este el însuși o alegere'),
-    T('Raw daily returns: NIG wins for the three indices, GED for Bitcoin, Student-t for BVB stocks (this chapter)', 'Randamentele zilnice brute: NIG cîștigă pentru cei trei indici, GED pentru Bitcoin, Student-t pentru acțiunile BVB (acest capitol)'),
+    T('Starting point: on raw returns the winner depends on the market (the $\\Delta$AIC map of Section 4)', 'Punctul de plecare: pe randamentele brute, modelul cîștigător depinde de piață (harta $\\Delta$AIC din Secțiunea 4)'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')))
 
 D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
