@@ -101,7 +101,7 @@
     // ------------------------------------------------------------
     // CHAPTER CARDS
     // ------------------------------------------------------------
-    const LINK_CLASS = { slides: 'btn-primary', web: 'btn-outline', interactive: 'btn-outline', slidesExtra: 'btn-primary', seminar: 'btn-secondary', seminarExtra: 'btn-secondary', notebook: 'btn-outline', quantlets: 'btn-outline' };
+    const LINK_CLASS = { slides: 'btn-primary', web: 'btn-outline', interactive: 'btn-outline', slidesExtra: 'btn-primary', seminar: 'btn-secondary', seminarExtra: 'btn-secondary', notebook: 'btn-outline', quantlets: 'btn-outline', seminarQl: 'btn-outline' };
 
     // A link is { type, href[, colab][, label: {en, ro}] } or { type, soon: true[, label] } for an item still in preparation
     const linkLabel = l => (l.label && l.label[LANG]) || T.links[l.type];
@@ -127,9 +127,17 @@
     }
 
     // chapter buttons in labelled rows, as on the BA site: lecture (slides, web page, interactive), seminar, code
-    const LINK_ROWS = [['course', ['slides', 'slidesExtra', 'web', 'interactive']], ['seminar', ['seminar', 'seminarExtra', 'seminarNb']], ['code', ['lectureNb', 'quantlets']]];
+    const LINK_ROWS = [['course', ['slides', 'slidesExtra', 'web', 'interactive']], ['seminar', ['seminar', 'seminarExtra', 'seminarNb', 'seminarQl']], ['code', ['lectureNb', 'quantlets']]];
     const ROW_LABEL = { en: { course: 'Lecture', seminar: 'Seminar', code: 'Code' }, ro: { course: 'Curs', seminar: 'Seminar', code: 'Cod' } }[LANG];
     const rowType = l => l.type !== 'notebook' ? l.type : (/seminar/i.test(l.href || '') ? 'seminarNb' : 'lectureNb');
+
+    // seminar Quantlets: Quantlets/Ch_NN/SFM_chN_seminar, for the chapters that have that folder on GitHub
+    const SEM_QL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    function withSemQl(links, num) {
+        const q = links.find(l => l.type === 'quantlets' && !l.soon);
+        if (!q || !SEM_QL.includes(num) || links.some(l => l.type === 'seminarQl')) return links;
+        return links.concat([{ type: 'seminarQl', href: q.href.replace(/\/$/, '') + '/SFM_ch' + num + '_seminar', label: { en: 'Quantlets', ro: 'Quantlets' } }]);
+    }
 
     function linkRows(links) {
         const known = new Set(LINK_ROWS.flatMap(r => r[1]));
@@ -145,7 +153,7 @@
             const available = all.some(l => !l.soon);
             const badge = (available ? '' : `<span class="badge badge-soon">${T.comingSoon}</span>`) +
                 (ch.selfStudy ? `<span class="badge badge-self">${T.selfStudy}</span>` : '');
-            const links = available ? linkRows(all) : `<p class="chapter-soon">${T.chapterSoon}</p>`;
+            const links = available ? linkRows(withSemQl(all, ch.num)) : `<p class="chapter-soon">${T.chapterSoon}</p>`;
             const qn = (ch.quantinar || []).length
                 ? `<div class="quantinar-box"><h4><img src="logos/qr_logo.png" alt="">${T.quantinar}</h4><ul>` +
                   ch.quantinar.map(c => `<li><a href="${c.url}" target="_blank" rel="noopener">${esc(c.title)}</a></li>`).join('') +
