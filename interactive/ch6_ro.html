@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 6 · Selecția modelului și managementul riscului</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch6.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch6_data.js?v=20261101a", "ch6_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch6.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 6 · Selecția modelului și managementul riscului</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_06" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch6.html" class="lang-btn">EN</a><a href="ch6_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el.</p>
+<p class="toc"><a href="#s-cand">Candidații</a> · <a href="#s-ml">Recapitulare: metoda verosimilității maxime</a> · <a href="#s-lr">Modele imbricate: testul raportului de verosimilitate</a> · <a href="#s-ic">Criterii informaționale: AIC și BIC</a> · <a href="#s-gof">Teste de concordanță</a> · <a href="#s-ppqq">Grafice PP și QQ</a> · <a href="#s-var">Scopul decide: ce model estimează corect VaR 1%?</a> · <a href="#s-oos">În afara eșantionului: validare și supraajustare</a> · <a href="#s-unc">Incertitudinea de model</a></p>
+<h2 class="sec" id="s-cand">Candidații</h2>
+<section class="blk" id="candidates">
+  <h3>Candidații comparați</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch6_candidates_ro.jpg" alt="Slide-ul 8: Candidații comparați" loading="lazy"></a>
+      <figcaption>Slide-ul 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ca-x">Pragul x: probabilitatea P(X < −x): <b id="ca-x-v"></b></label><input type="range" id="ca-x" min="0" max="8" step="1" value="4"></div><button class="btn play" id="ca-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt td.l{white-space:normal;min-width:16rem}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}.xt .x{font-style:italic}
+.xt tr.sel td{background:#EEF3FB}.xt .pv{font-size:.76rem;color:#1F2A44}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.ctl input[type=range]:disabled{opacity:.4}
+</style><div class="charts "><div class="chart" id="ca-chart"></div></div><p class="xh">P(X < −x) pentru fiecare candidat (media 0, varianța 1)</p><div class="tw" id="ca-tab"></div><ul class="out" id="ca-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La x = 4, distribuția Student-t (ν = 4) dă o probabilitate P(X < −4) de 76 de ori mai mare decît distribuția Normală. Butonul ▶ mută pragul de la 2 la 6. De cîte ori mai mare este probabilitatea Student-t la x = 6?</div>
+  <details><summary>Răspuns</summary><p>De circa 536 000 de ori: 5,3 × 10<sup>−4</sup> față de 9,9 × 10<sup>−10</sup>. La x = 2 cele două probabilități sînt aproape egale (raportul 1,0), la x = 3 raportul este 4,9, la x = 5 este 3 682. Coada Normală scade ca e<sup>−x²/2</sup>, coada Student-t ca o putere a lui x, deci raportul crește tot mai repede cu pragul. Media și varianța sînt aceleași; diferența stă numai în coadă, acolo unde se află VaR 1%.</p></details>
+</section>
+<section class="blk" id="dax-monthly">
+  <h3>Statisticile SFESumm: reperele oricărui model</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=11" target="_blank" rel="noopener"><img src="slides/sfm_ch6_dax_monthly_ro.jpg" alt="Slide-ul 10: Statisticile SFESumm: reperele oricărui model" loading="lazy"></a>
+      <figcaption>Slide-ul 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dm-n">Sfîrșitul eșantionului (luna): <b id="dm-n-v"></b></label><input type="range" id="dm-n" min="119" max="266" step="1" value="266"></div><button class="btn play" id="dm-play" type="button"></button></div><div class="charts "><div class="chart" id="dm-chart"></div></div><p class="xh">Statistici descriptive, randamente logaritmice lunare DAX (%)</p><div class="tw" id="dm-tab"></div><ul class="out" id="dm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Boltirea randamentelor lunare DAX este 4,60 pe eșantionul SFESumm (iulie 2004 – mai 2014) și 5,06 pe 2004–2026. Butonul ▶ extinde eșantionul cu cîte un an. Crește boltirea treptat, pe măsură ce se adaugă ani?</div>
+  <details><summary>Răspuns</summary><p>Nu. Între 2014 și 2019 scade, pînă la 4,30 în mai 2016, pentru că lunile adăugate sînt liniștite. Urcă brusc la 4,93 cînd intră randamentul dintre începutul lui martie și începutul lui aprilie 2020, −21,70%, noul minim al eșantionului (cel vechi era −19,35%). Boltirea depinde de cîteva luni extreme, nu de numărul de luni. Pe 2004–2026 asimetria rămîne negativă (−0,72), iar testul Jarque–Bera respinge normalitatea cu JB = 70,2.</p></details>
+</section>
+<section class="blk" id="desc-stats">
+  <h3>Statistici descriptive: DAX lunar și randamente zilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch6_desc-stats_ro.jpg" alt="Slide-ul 11: Statistici descriptive: DAX lunar și randamente zilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-b">Banca Transilvania (TLV)</label><select id="ds-b"><option value="clean" selected>fără cele două zile greșite</option><option value="raw">cu cele două zile greșite</option></select></div><div class="ctl"><label for="ds-s">Seria exemplului lucrat</label><select id="ds-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ds-play" type="button"></button></div><p class="xh">Randamente logaritmice zilnice (%)</p><div class="tw" id="ds-tab"></div><div class="we" id="ds-we-box"><p class="we-h">Exemplu lucrat: testul Jarque–Bera</p><div class="we-f">\[JB = \frac{n}{6}\Big[S^2 + \frac{(K-3)^2}{4}\Big] \approx \chi^2(2)\]</div><ol id="ds-we"></ol></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Fără cele două zile greșite din mai 2016, boltirea randamentelor zilnice TLV este 16,5. Cît devine dacă cele două zile, −15,0% și +20,5%, rămîn în date?</div><details><summary>Răspuns</summary><p>20,5. Boltirea folosește puterea a patra a abaterilor de la medie, deci două zile extreme o mută mult, chiar dacă suma lor, +5,5%, este mică. Asimetria trece de la −0,87 la −0,58. În curs, ν̂ al distribuției Student-t scade de la 3,44 la 3,33, iar clasamentul AIC nu se schimbă (cîștigă Student-t în ambele cazuri). JB al TLV crește și el, pentru că (K − 3)² crește.</p></details>
+</section><h2 class="sec" id="s-ml">Recapitulare: metoda verosimilității maxime</h2>
+<section class="blk" id="ml-table">
+  <h3>Estimarea ML numerică pentru ceilalți candidați (S&P 500)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch6_ml-table_ro.jpg" alt="Slide-ul 15: Estimarea ML numerică pentru ceilalți candidați (S&P 500)" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ml-s">Seria</label><select id="ml-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ml-play" type="button"></button></div><p class="xh">Estimări ML și log-verosimilitatea maximizată</p><div class="tw" id="ml-tab"></div><div class="we" id="ml-we-box"><p class="we-h">Exemplu lucrat: modelul Normal, pas cu pas</p><div class="we-f">\[\ell(\hat\mu, \hat\sigma) = -\frac{n}{2}\big[\ln(2\pi\hat\sigma^2) + 1\big], \quad \hat\sigma^2 = \frac{1}{n}\sum_t (r_t - \bar r)^2\]</div><ol id="ml-we"></ol></div><ul class="out" id="ml-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, ν̂ al distribuției Student-t este 2,67. Bitcoin are o boltire de selecție mai mare (15,0 față de 13,7). Este ν̂ al Bitcoin mai mic sau mai mare?</div><details><summary>Răspuns</summary><p>Mai mic: 2,23, cel mai mic dintre cele șapte serii, deci coada cea mai groasă. BET are 2,43, DAX 3,09, BRD 4,67. Un ν̂ apropiat de 2 înseamnă o varianță abia finită. Abaterea standard mare a Bitcoin (3,5% pe zi) intră în scală, nu în ν: scala Student-t a Bitcoin este 1,85, iar abaterea standard implicată, scală·√(ν/(ν − 2)), este 5,75%, peste abaterea standard de selecție (3,49%), pentru că ν̂ este aproape de 2.</p></details>
+</section>
+<section class="blk" id="profile-nu">
+  <h3>Precizia lui ν: log-verosimilitatea profil</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=18" target="_blank" rel="noopener"><img src="slides/sfm_ch6_profile_nu_ro.jpg" alt="Slide-ul 17: Precizia lui ν: log-verosimilitatea profil" loading="lazy"></a>
+      <figcaption>Slide-ul 17</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pn-s">Seria</label><select id="pn-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="pn-c">Nivelul de încredere</label><select id="pn-c"><option value="0.9">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></div><div class="ctl"><label for="pn-y">Axa verticală</label><select id="pn-y"><option value="slide" selected>tăiată la −40, ca pe slide</option><option value="full">completă</option></select></div><div class="ctl"><label for="pn-nu">ν testat (punctul portocaliu): <b id="pn-nu-v"></b></label><input type="range" id="pn-nu" min="2.2" max="6" step="0.1" value="3"></div><button class="btn play" id="pn-play" type="button"></button></div><div class="charts "><div class="chart" id="pn-chart"></div></div><div class="we" id="pn-we-box"><p class="we-h">Exemplu lucrat: este ν testat în interval?</p><div class="we-f">\[LR(\nu) = 2\big[\ell(\hat\nu) - \ell(\nu)\big] \le \chi^2_{1-a}(1)\]</div><ol id="pn-we"></ol></div><ul class="out" id="pn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Slide-ul dă intervalul de 95% pentru ν al S&P 500, [2,5; 2,8], citit pe grila cu pasul 0,1. Ce interval dă o grilă cu pasul 0,01?</div>
+  <details><summary>Răspuns</summary><p>[2,47; 2,89]. Pe grila de 0,1, capetele sînt cele mai depărtate puncte ale grilei aflate încă în interval; capetele adevărate se află între punctele grilei (2,4–2,5 și 2,8–2,9). Intervalul nu este simetric în jurul lui ν̂ = 2,67: 0,20 la stînga, 0,22 la dreapta, pentru că profilul nu este o parabolă. La ν = 5, log-verosimilitatea profil este cu 92,3 sub maxim, mult sub marginea de jos a axei slide-ului (−40).</p></details>
+</section><h2 class="sec" id="s-lr">Modele imbricate: testul raportului de verosimilitate</h2>
+<section class="blk" id="lr-test">
+  <h3>Exemplu lucrat: este necesar parametrul de asimetrie?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=22" target="_blank" rel="noopener"><img src="slides/ch6_lr-test_ro.jpg" alt="Slide-ul 21: Exemplu lucrat: este necesar parametrul de asimetrie?" loading="lazy"></a>
+      <figcaption>Slide-ul 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lr-p">Perechea de modele imbricate</label><select id="lr-p"><option value="t_vs_skt" selected>Student-t în skewed-t (λ = 0)</option><option value="n_vs_ged">Normală în GED (β = 2)</option><option value="n_vs_t">Normală în Student-t (1/ν = 0, frontieră)</option></select></div><div class="ctl"><label for="lr-s">Seria</label><select id="lr-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="lr-play" type="button"></button></div><div class="we" id="lr-we-box"><p class="we-h">Exemplu lucrat: testul raportului de verosimilitate</p><div class="we-f">\[LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \approx \chi^2(k_1 - k_0)\]</div><ol id="lr-we"></ol></div><p class="xh">Același test pe cele șapte serii</p><div class="tw" id="lr-tab"></div><p class="xh">p-value ca funcție de LR</p><div class="charts "><div class="chart" id="lr-chart"></div></div><ul class="out" id="lr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru BRD, testul Student-t în skewed-t (λ = 0) dă LR = 3,01. Este parametrul de asimetrie necesar la 5%?</div><details><summary>Răspuns</summary><p>Nu: 3,01 < 3,84, p = 0,083. Valoarea fixată λ = 0 este în interiorul intervalului (−1, 1), deci teorema lui Wilks se aplică și valoarea critică este 3,84; 2,71 este valoarea pentru frontieră (Normală în Student-t). AIC preferă totuși skewed-t (ΔAIC al Student-t: 1,0), pentru că AIC nu este un test: penalizează un parametru cu 2, iar LR > 2. Asimetria este semnificativă doar pentru S&P 500 (LR = 19,63) și DAX (20,92).</p></details>
+</section>
+<section class="blk" id="vuong">
+  <h3>Modele neimbricate: testul Vuong</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch6_vuong_ro.jpg" alt="Slide-ul 23: Modele neimbricate: testul Vuong" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vu-p">Perechea de modele neimbricate</label><select id="vu-p"><option value="vu_t_ged" selected>Student-t față de GED</option><option value="vu_t_stable">Student-t față de stabilă</option><option value="vu_skt_nig">skewed-t față de NIG</option></select></div><div class="ctl"><label for="vu-s">Seria</label><select id="vu-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="vu-play" type="button"></button></div><div class="we" id="vu-we-box"><p class="we-h">Exemplu lucrat: statistica Vuong</p><div class="we-f">\[m_t = \ln f_1(r_t) - \ln f_2(r_t), \qquad V = \frac{\sqrt{n}\,\bar m}{s_m} \approx N(0, 1)\]</div><ol id="vu-we"></ol></div><p class="xh">Statistica V și p-value pe cele șapte serii</p><div class="tw" id="vu-tab"></div><p class="xh">Suma cumulată a diferențelor zilnice m<sub>t</sub></p><div class="charts "><div class="chart" id="vu-chart"></div></div><ul class="out" id="vu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, Student-t este preferat distribuției stabile pe toate cele patru piețe. Pentru BRD, V = 1,89. Este preferința semnificativă la 5%?</div><details><summary>Răspuns</summary><p>Nu: |V| = 1,89 < 1,96, p = 0,059. Student-t explică în medie mai bine zilele BRD, dar diferența nu este separată de zgomot. Ziua cu cea mai mare |m<sub>t</sub>| este 19 decembrie 2018 (m<sub>t</sub> = −2,48: distribuția stabilă explică mai bine această cădere). Pentru TLV și SNP, V = 3,77 și 4,16. Suma diferențelor zilnice este exact diferența log-verosimilităților, ℓ(Student-t) − ℓ(stabilă).</p></details>
+</section><h2 class="sec" id="s-ic">Criterii informaționale: AIC și BIC</h2>
+<section class="blk" id="aic-table">
+  <h3>Exemplu lucrat: șapte modele pentru S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch6_aic-table_ro.jpg" alt="Slide-ul 27: Exemplu lucrat: șapte modele pentru S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ai-s">Seria</label><select id="ai-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="ai-m">Modelul exemplului lucrat</label><select id="ai-m"><option value="Normal">Normală</option><option value="Student-t">Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="Mixture">amestec Normal</option><option value="NIG" selected>NIG</option><option value="Stable">stabilă</option></select></div><button class="btn play" id="ai-play" type="button"></button></div><div class="tw" id="ai-tab"></div><div class="we" id="ai-we-box"><p class="we-h">Exemplu lucrat: AIC, BIC și ponderea Akaike</p><div class="we-f">\[\mathrm{AIC} = -2\ell(\hat\theta) + 2k, \quad \mathrm{BIC} = -2\ell(\hat\theta) + k\ln n, \quad w_i = \frac{e^{-\Delta_i/2}}{\sum_j e^{-\Delta_j/2}}\]</div><ol id="ai-we"></ol></div><ul class="out" id="ai-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru BRD, AIC preferă skewed-t, iar Student-t are ΔAIC = 1,0. Ce ponderi Akaike primesc cele două modele?</div><details><summary>Răspuns</summary><p>0,62 pentru skewed-t și 0,38 pentru Student-t (celelalte cinci modele au ponderi practic nule): w = e<sup>−Δ/2</sup>/Σ e<sup>−Δ<sub>j</sub>/2</sup>, cu e<sup>−0,5</sup> = 0,61. O diferență de 1 lasă ambele modele plauzibile; AIC nu este un test. Cu ponderile BIC, ordinea se inversează: 0,93 pentru Student-t.</p></details>
+</section>
+<section class="blk" id="delta-aic">
+  <h3>ΔAIC pentru șapte serii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch6_delta_aic_ro.jpg" alt="Slide-ul 28: ΔAIC pentru șapte serii" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="da-c">Criteriul</label><select id="da-c"><option value="aic" selected>ΔAIC</option><option value="bic">ΔBIC</option></select></div><button class="btn play" id="da-play" type="button"></button></div><div class="charts "><div class="chart" id="da-chart"></div></div><p class="xh">Cel mai bun model după fiecare criteriu</p><div class="tw" id="da-tab"></div><ul class="out" id="da-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru BRD, AIC preferă skewed-t (ΔAIC al Student-t: 1,0). Butonul ▶ trece la BIC. Ce model preferă BIC?</div>
+  <details><summary>Răspuns</summary><p>Student-t, cu ΔBIC = 5,2 pentru skewed-t. BIC penalizează parametrul suplimentar cu ln 3 771 = 8,24, mai mult decît cîștigul de ajustare (LR = 3,01). Pentru TLV și SNP, ambele criterii aleg Student-t; pentru BET, S&P 500 și DAX, NIG; pentru Bitcoin, GED. Modelul Normal are ΔBIC între 472 și 2 412.</p></details>
+</section><h2 class="sec" id="s-gof">Teste de concordanță</h2>
+<section class="blk" id="ks-five">
+  <h3>Exemplu lucrat: KS pe cinci randamente</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch6_ks-five_ro.jpg" alt="Slide-ul 32: Exemplu lucrat: KS pe cinci randamente" loading="lazy"></a>
+      <figcaption>Slide-ul 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="k5-h">Ipoteza nulă</label><select id="k5-h"><option value="known" selected>N(0, σ²), complet specificată</option><option value="est">Normală cu μ și σ estimate (Lilliefors)</option></select></div><div class="ctl"><label for="k5-s">σ în ipoteza nulă: <b id="k5-s-v"></b></label><input type="range" id="k5-s" min="0.5" max="2" step="0.1" value="1"></div><button class="btn play" id="k5-play" type="button"></button></div><div class="tw" id="k5-tab"></div><div class="we" id="k5-we-box"><p class="we-h">Exemplu lucrat: statistica KS</p><div class="we-f">\[D_n = \max_i \max\Big\{\frac{i}{n} - u_{(i)},\ u_{(i)} - \frac{i-1}{n}\Big\}, \quad u_{(i)} = F(r_{(i)})\]</div><ol id="k5-we"></ol></div><div class="charts "><div class="chart" id="k5-chart"></div></div><ul class="out" id="k5-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu H<sub>0</sub>: N(0, 1), D<sub>5</sub> = 0,218 < 0,563. Butonul ▶ mută σ din ipoteza nulă de la 0,5 la 2. Pentru ce σ din acest interval respinge testul la 5%?</div><details><summary>Răspuns</summary><p>Pentru niciunul: D<sub>5</sub> este între 0,188 (σ = 1,4) și 0,364 (σ = 0,5), mereu sub 0,563. Cu cinci observații, testul nu separă o abatere standard de 0,5% de una de 2%: puterea lui este foarte mică. Cu μ și σ estimate din cele cinci randamente (Lilliefors), D<sub>5</sub> = 0,175, iar valoarea critică scade la 0,351 (simularea din curs; slide-ul indică 0,354).</p></details>
+</section>
+<section class="blk" id="ks-tail">
+  <h3>Slăbiciunea testului KS în cozi</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch6_ks_tail_ro.jpg" alt="Slide-ul 35: Slăbiciunea testului KS în cozi" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kt-s">Seria</label><select id="kt-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="kt-play" type="button"></button></div><div class="charts "><div class="chart" id="kt-chart"></div></div><div class="we" id="kt-we-box"><p class="we-h">Exemplu lucrat: distanța KS în punctul de maxim</p><div class="we-f">\[D_n = \max_i \max\Big\{\frac{i}{n} - u_{(i)},\ u_{(i)} - \frac{i-1}{n}\Big\}, \qquad c_{0{,}05} = \frac{1{,}358}{\sqrt n}\]</div><ol id="kt-we"></ol></div><ul class="out" id="kt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, distanța KS dintre distribuția empirică și distribuția Normală estimată are maximul la x = −0,41%, aproape de centru. Unde este maximul pentru Bitcoin?</div>
+  <details><summary>Răspuns</summary><p>Tot în corpul distribuției: la x = −1,69% (F = 30%), cu D<sub>n</sub> = 0,099. Pentru toate cele șapte serii, maximul KS este între x = −1,7% și +1,0%, unde funcțiile de repartiție au pante mari. Distanța ponderată Anderson–Darling are maximul în coadă: −6,9% pentru S&P 500, −20,1% pentru Bitcoin. KS măsoară forma corpului, AD forma cozilor.</p></details>
+</section>
+<section class="blk" id="gof-power">
+  <h3>Puterea celor trei teste</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch6_gof_power_ro.jpg" alt="Slide-ul 36: Puterea celor trei teste" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-n">Mărimea eșantionului n (linia punctată): <b id="gp-n-v"></b></label><input type="range" id="gp-n" min="0" max="4" step="1" value="2"></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><p class="xh">Puterea la 5%: date Student-t (ν = 5) și date Normale cu 2% din zile de 4 ori mai volatile</p><div class="tw" id="gp-tab"></div><p class="xh">Valori critice KS la 5%: parametri estimați (simulare, 4 000 de eșantioane) și F cunoscută</p><div class="tw" id="gp-tab2"></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La n = 250, cînd abaterile de la distribuția Normală sînt doar în cozi, puterea este 38% (KS), 50% (CvM) și 57% (AD). Butonul ▶ crește n pînă la 1 000. Cît devine puterea testului KS?</div>
+  <details><summary>Răspuns</summary><p>82,5%, sub cea a testului AD (95,6%) și CvM (92,0%). Cu date Student-t (ν = 5), la n = 1 000 toate trei resping aproape mereu (99,9%–100%). Testul AD pune o pondere mai mare pe cozi, acolo unde se află abaterea. La n = 100, KS respinge datele Student-t doar în 30% din eșantioane: un test KS pe 100 de randamente care nu respinge distribuția Normală nu spune mare lucru despre VaR 1%.</p></details>
+</section>
+<section class="blk" id="edf-table">
+  <h3>Teste EDF pe S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch6_edf-table_ro.jpg" alt="Slide-ul 37: Teste EDF pe S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ed-s">Seria</label><select id="ed-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ed-play" type="button"></button></div><p class="xh">Statisticile EDF ale modelelor estimate; clasamentul după AD și după AIC</p><div class="tw" id="ed-tab"></div><ul class="out" id="ed-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ordonează statistica AD modelele S&P 500 în aceeași ordine ca AIC?</div><details><summary>Răspuns</summary><p>Nu exact. După AD: NIG (0,88), skewed-t (2,25), GED (3,94), stabilă (4,61), Student-t (4,69), amestec Normal (5,80), Normală (127,35). După AIC: NIG, skewed-t, Student-t, GED, stabilă, amestec Normal, Normală. Primele două și ultimele două locuri coincid; Student-t coboară de pe locul 3 pe locul 5. AD și AIC măsoară lucruri diferite: AD distanța ponderată dintre funcțiile de repartiție, AIC densitatea în punctele observate.</p></details>
+</section><h2 class="sec" id="s-ppqq">Grafice PP și QQ</h2>
+<section class="blk" id="pp">
+  <h3>Grafice PP: S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch6_pp_ro.jpg" alt="Slide-ul 40: Grafice PP: S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pp-s">Seria</label><select id="pp-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="pp-4">Al patrulea panou</label><select id="pp-4"><option value="Stable" selected>stabilă</option><option value="NIG">NIG</option><option value="GED">GED</option><option value="Mixture">amestec Normal</option></select></div><button class="btn play" id="pp-play" type="button"></button></div><div class="charts "><div class="chart" id="pp-chart"></div></div><ul class="out" id="pp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În graficul PP al S&P 500, cea mai mare distanță pe verticală a modelului Normal este 0,093. Cît este pentru Student-t?</div>
+  <details><summary>Răspuns</summary><p>0,018, practic statistica KS (0,018). Skewed-t are 0,017, distribuția stabilă 0,022: în graficul PP cele trei nu se pot deosebi, deși cozile lor diferă cu ordine de mărime. Graficul PP comprimă cozile în colțuri; graficul QQ de pe slide-ul următor le dilată.</p></details>
+</section>
+<section class="blk" id="qq">
+  <h3>Grafice QQ: S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch6_qq_ro.jpg" alt="Slide-ul 41: Grafice QQ: S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qq-s">Seria</label><select id="qq-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="qq-4">Al patrulea panou</label><select id="qq-4"><option value="Stable" selected>stabilă</option><option value="NIG">NIG</option><option value="GED">GED</option><option value="Mixture">amestec Normal</option></select></div><button class="btn play" id="qq-play" type="button"></button></div><div class="charts "><div class="chart" id="qq-chart"></div></div><p class="xh">Cuantila fiecărui model la probabilitatea celui mai mic randament, 0,5/n (%)</p><div class="tw" id="qq-tab"></div><ul class="out" id="qq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, cuantila distribuției stabile la probabilitatea celui mai mic randament (−12,8%) este −116,1%. Pentru Bitcoin, cu cel mai mic randament −46,5% (12 martie 2020), cît dă distribuția stabilă?</div>
+  <details><summary>Răspuns</summary><p>−385,6%, de peste 8 ori mai mult decît s-a observat. Student-t dă −85,0%, NIG −31,3%, GED −24,2%, modelul Normal −12,7%. La probabilitatea 0,5/n = 1,1 × 10<sup>−4</sup>, modelele diferă cel mai mult, iar datele conțin un singur punct: acolo incertitudinea este cea mai mare.</p></details>
+</section>
+<section class="blk" id="qq-assets">
+  <h3>Grafice QQ pentru BET, Bitcoin și Banca Transilvania</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch6_qq_assets_ro.jpg" alt="Slide-ul 42: Grafice QQ pentru BET, Bitcoin și Banca Transilvania" loading="lazy"></a>
+      <figcaption>Slide-ul 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qa-k">Randamentul marcat: al k-lea cel mai mic: <b id="qa-k-v"></b></label><input type="range" id="qa-k" min="1" max="10" step="1" value="1"></div><button class="btn play" id="qa-play" type="button"></button></div><div class="charts "><div class="chart" id="qa-chart"></div></div><ul class="out" id="qa-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru Bitcoin, cea mai mare scădere zilnică (12 martie 2020, −46,5%) are în modelul Student-t cuantila −85,0%. Butonul ▶ trece la al doilea, al treilea… cel mai mic randament. Ce cuantilă Student-t are al doilea cel mai mic randament, −23,8%?</div>
+  <details><summary>Răspuns</summary><p>−51,9%, de peste două ori randamentul observat; la al zecelea (−15,5%), −22,5%. Coada Student-t estimată pe Bitcoin (ν̂ = 2,23) este mai lungă decît cea a datelor. Pentru TLV situația este inversă: cea mai mare scădere, −22,2%, are cuantila Student-t −17,8%. Modelul Normal rămîne mult sub date pentru toate cele trei serii (Bitcoin: −12,7%).</p></details>
+</section><h2 class="sec" id="s-var">Scopul decide: ce model estimează corect VaR 1%?</h2>
+<section class="blk" id="var-es">
+  <h3>VaR 1% și ES 2,5% pentru fiecare model (în eșantion)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=45" target="_blank" rel="noopener"><img src="slides/ch6_var-es_ro.jpg" alt="Slide-ul 44: VaR 1% și ES 2,5% pentru fiecare model (în eșantion)" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ve-a">Nivelul VaR</label><select id="ve-a"><option value="0">0,1%</option><option value="1">0,25%</option><option value="2">0,5%</option><option value="3" selected>1%</option><option value="4">2,5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ve-e">Nivelul ES</label><select id="ve-e"><option value="0">0,1%</option><option value="1">0,25%</option><option value="2">0,5%</option><option value="3">1%</option><option value="4" selected>2,5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ve-k">Seria exemplului lucrat</label><select id="ve-k"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ve-play" type="button"></button></div><p class="xh" id="ve-h1"></p><div class="tw" id="ve-tab"></div><p class="xh" id="ve-h2"></p><div class="tw" id="ve-tab2"></div><div class="we" id="ve-we-box"><p class="we-h">Exemplu lucrat: VaR și ES ale modelului Normal</p><div class="we-f">\[\mathrm{VaR}_\alpha = -(\hat\mu + \hat\sigma z_\alpha), \qquad \mathrm{ES}_\alpha = -\hat\mu + \hat\sigma\,\frac{\varphi(z_\alpha)}{\alpha}\]</div><ol id="ve-we"></ol></div><ul class="out" id="ve-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La VaR 1%, modelul Normal dă pentru S&P 500 2,80%, iar datele 3,45%. Butonul ▶ trece prin niveluri. La VaR 0,1%, cît dă modelul Normal și cît dau datele?</div><details><summary>Răspuns</summary><p>Modelul Normal 3,72%, datele 7,22%: la 0,1% modelul Normal acoperă doar jumătate din pierdere. Student-t dă 8,58%, NIG 6,98%, distribuția stabilă 19,70%. La VaR 5%, ordinea se inversează: modelul Normal dă 1,97%, peste datele (1,85%). ES 2,5% al modelului Normal din formula φ(z)/α (2,81%) coincide cu valoarea obținută prin integrarea cuantilei.</p></details>
+</section>
+<section class="blk" id="var-models">
+  <h3>VaR 1% al modelelor raportat la date</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch6_var_models_ro.jpg" alt="Slide-ul 45: VaR 1% al modelelor raportat la date" loading="lazy"></a>
+      <figcaption>Slide-ul 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vm-a">Nivelul VaR</label><select id="vm-a"><option value="0">0,1%</option><option value="1">0,25%</option><option value="2">0,5%</option><option value="3" selected>1%</option><option value="4">2,5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="vm-x">Modelele</label><select id="vm-x"><option value="six" selected>cele șase din slide</option><option value="mix">și amestecul Normal</option></select></div><button class="btn play" id="vm-play" type="button"></button></div><div class="charts "><div class="chart" id="vm-chart"></div></div><ul class="out" id="vm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La VaR 1%, raportul dintre VaR al modelului Normal și VaR empiric este între 0,76 și 0,86 pe cele șapte serii. Butonul ▶ trece prin niveluri. Ce devine raportul la VaR 5%?</div>
+  <details><summary>Răspuns</summary><p>Peste 1 pe toate seriile, între 1,03 (DAX) și 1,16 (BET): la 5% modelul Normal supraestimează pierderea. Aceeași abatere standard σ̂ este prea mare pentru corpul distribuției și prea mică pentru coada ei; cele două erori se compensează pe undeva între 2,5% și 5%. La 0,1% raportul scade la 0,45–0,65.</p></details>
+</section>
+<section class="blk" id="left-tail">
+  <h3>Coada stîngă pe axe log-log (S&P 500)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch6_left_tail_ro.jpg" alt="Slide-ul 46: Coada stîngă pe axe log-log (S&P 500)" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lt-s">Seria</label><select id="lt-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="lt-x">Pierderea x (linia punctată verticală): <b id="lt-x-v"></b></label><input type="range" id="lt-x" min="0" max="10" step="1" value="4"></div><button class="btn play" id="lt-play" type="button"></button></div><div class="charts "><div class="chart" id="lt-chart"></div></div><ul class="out" id="lt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500 are o singură zi cu o pierdere de peste 10% (16 martie 2020) în 6 714 zile. Cîte astfel de zile așteaptă în eșantion distribuția stabilă estimată?</div>
+  <details><summary>Răspuns</summary><p>Circa 19. Modelul Normal așteaptă practic zero (probabilitatea 7 × 10<sup>−17</sup>), Student-t 4,5, NIG 1,0, GED 0,08. Pentru pierderi de peste 5%, datele au 23 de zile, stabila așteaptă 57, Student-t 27, NIG 26. Coada stabilă (α̂ = 1,54) este mult prea groasă pentru S&P 500.</p></details>
+</section>
+<section class="blk" id="kupiec">
+  <h3>Numărarea depășirilor: testul Kupiec</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch6_kupiec_ro.jpg" alt="Slide-ul 47: Numărarea depășirilor: testul Kupiec" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ku-a">Nivelul VaR</label><select id="ku-a"><option value="0">0,1%</option><option value="1">0,25%</option><option value="2">0,5%</option><option value="3" selected>1%</option><option value="4">2,5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ku-k">Seria</label><select id="ku-k"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="ku-m">Modelul</label><select id="ku-m"><option value="Normal">Normală</option><option value="Student-t">Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="NIG" selected>NIG</option><option value="Stable">stabilă</option></select></div><button class="btn play" id="ku-play" type="button"></button></div><p class="xh">Depășiri în eșantion (p-value Kupiec în paranteză)</p><div class="tw" id="ku-tab"></div><div class="we" id="ku-we-box"><p class="we-h">Exemplu lucrat: testul Kupiec</p><div class="we-f">\[LR_{uc} = -2\ln\frac{(1-\alpha)^{n-x}\alpha^x}{(1 - x/n)^{n-x}(x/n)^x} \approx \chi^2(1)\]</div><ol id="ku-we"></ol></div><div class="charts "><div class="chart" id="ku-chart"></div></div><ul class="out" id="ku-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La VaR 1%, NIG (cîștigătorul AIC) are pentru S&P 500 52 de depășiri față de 67 așteptate (p = 0,053). Butonul ▶ trece prin niveluri. La VaR 2,5%, este numărul depășirilor NIG respins la 5%?</div><details><summary>Răspuns</summary><p>Nu: 151 de depășiri față de 167,9 așteptate, p = 0,18. Student-t, perfect la 1% (67 față de 67), este respins la 2,5%: 211 depășiri, p = 0,001. Un model bun pentru o cuantilă nu este neapărat bun pentru alta. La VaR 0,1%, NIG are 7 depășiri față de 6,7 așteptate, iar modelul Normal 52.</p></details>
+</section><h2 class="sec" id="s-oos">În afara eșantionului: validare și supraajustare</h2>
+<section class="blk" id="oos">
+  <h3>Rezultate în afara eșantionului, 2020–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=50" target="_blank" rel="noopener"><img src="slides/sfm_ch6_oos_ro.jpg" alt="Slide-ul 49: Rezultate în afara eșantionului, 2020–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="oo-r">Panoul din dreapta</label><select id="oo-r"><option value="rate" selected>rata depășirilor</option><option value="pin">pierderea pinball</option><option value="kup">statistica Kupiec</option></select></div><div class="ctl"><label for="oo-s">Seria exemplului lucrat</label><select id="oo-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="oo-m">Metoda exemplului lucrat</label><select id="oo-m"><option value="Normal">Normală</option><option value="Student-t" selected>Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="Mixture">amestec Normal</option><option value="NIG">NIG</option><option value="Stable">stabilă</option><option value="Historical">simulare istorică</option></select></div><button class="btn play" id="oo-play" type="button"></button></div><div class="charts "><div class="chart" id="oo-chart"></div></div><p class="xh">Depășiri ale VaR 1% în zilele de test, 2020–2026 (p-value Kupiec în paranteză)</p><div class="tw" id="oo-tab"></div><div class="we" id="oo-we-box"><p class="we-h">Exemplu lucrat: pierderea pinball a cuantilei de 1%</p><div class="we-f">\[\frac{1}{n}\sum_t \big(\alpha - \mathbf{1}\{r_t < q\}\big)(r_t - q), \qquad \alpha = 0{,}01\]</div><ol id="oo-we"></ol></div><ul class="out" id="oo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe perioada de test 2020–2026, care metodă are cea mai mică pierdere pinball a cuantilei de 1% pentru BET?</div>
+  <details><summary>Răspuns</summary><p>Modelul Normal (0,0475), urmat de GED (0,0494); Student-t, cel mai bun după scorul logaritmic, are 0,0517, iar NIG, cîștigătorul AIC pe 2000–2019, 0,0513. Perioada de test a fost mai calmă pentru BET, iar VaR Normal, mai mic, a avut 17 depășiri față de 16,7 așteptate. Numărul potrivit vine dintr-un motiv greșit: un model static nu urmărește volatilitatea.</p></details>
+</section>
+<section class="blk" id="overfit">
+  <h3>Supraajustare: amestecuri Normale cu 1 pînă la 6 componente</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch6_overfit_ro.jpg" alt="Slide-ul 51: Supraajustare: amestecuri Normale cu 1 pînă la 6 componente" loading="lazy"></a>
+      <figcaption>Slide-ul 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="of-p">Penalizarea pe parametru (2 = AIC, ln 501 = 6,22 = BIC): <b id="of-p-v"></b></label><input type="range" id="of-p" min="0" max="10" step="0.1" value="2"></div><div class="ctl"><label for="of-c">Numărul de componente al exemplului lucrat</label><select id="of-c"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div><button class="btn play" id="of-play" type="button"></button></div><div class="charts "><div class="chart" id="of-chart"></div></div><div class="tw" id="of-tab"></div><div class="we" id="of-we-box"><p class="we-h">Exemplu lucrat: AIC și BIC</p><div class="we-f">\[\mathrm{AIC} = -2\ell + 2k, \quad \mathrm{BIC} = -2\ell + k\ln n, \quad k = 3c - 1\]</div><ol id="of-we"></ol></div><ul class="out" id="of-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu penalizarea 2 pe parametru (AIC), criteriul alege c = 5 componente; cu ln 501 = 6,22 (BIC), c = 3. Butonul ▶ crește penalizarea de la 0 la 10. De la ce penalizare alegerea coboară la c = 3?</div>
+  <details><summary>Răspuns</summary><p>De la 5,71 (pe pașii de 0,1 ai cursorului, de la 5,8): trecerea de la 3 la 4 componente aduce 2(ℓ<sub>4</sub> − ℓ<sub>3</sub>) = 17,14 pentru 3 parametri în plus, adică 5,71 pe parametru. Sub 0,8 se alege c = 6, între 0,8 și 3 c = 5, între 3 și 5,71 c = 4. În afara eșantionului cel mai bun este c = 3 (−1,608 pe zi), iar c = 6 dă −1,698.</p></details>
+</section>
+<section class="blk" id="rolling-var">
+  <h3>VaR 1% pe fereastră mobilă: reestimare lunară</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=54" target="_blank" rel="noopener"><img src="slides/sfm_ch6_rolling_var_ro.jpg" alt="Slide-ul 53: VaR 1% pe fereastră mobilă: reestimare lunară" loading="lazy"></a>
+      <figcaption>Slide-ul 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-s">Seria</label><select id="rv-s"><option value="sp500" selected>S&P 500</option><option value="bet">BET</option></select></div><div class="ctl"><label for="rv-f">Perioada afișată</label><select id="rv-f"><option value="2003-01-01">2003–2026</option><option value="2008-01-01">2008–2026</option><option value="2018-01-01" selected>2018–2026 (slide)</option><option value="2020-01-01">2020–2026</option></select></div><div class="ctl"><label for="rv-m">Depășirile marcate</label><select id="rv-m"><option value="Normal">Normală</option><option value="Student-t" selected>Student-t</option><option value="Skewed-t">skewed-t</option><option value="Historical">simulare istorică</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><p class="xh">Depășiri pe an</p><div class="charts "><div class="chart" id="rv-bar"></div></div><p class="xh">Backtesting pe toată perioada de test</p><div class="tw" id="rv-tab"></div><div class="we" id="rv-we-box"><p class="we-h">Exemplu lucrat: testul de independență Christoffersen (rulare suplimentară)</p><div class="we-f">\[LR_{ind} = -2\ln\frac{(1-\hat\pi)^{n_{00}+n_{10}}\,\hat\pi^{\,n_{01}+n_{11}}}{(1-\hat\pi_{01})^{n_{00}}\hat\pi_{01}^{\,n_{01}}(1-\hat\pi_{11})^{n_{10}}\hat\pi_{11}^{\,n_{11}}} \approx \chi^2(1)\]</div><ol id="rv-we"></ol></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, VaR 1% Student-t pe fereastră mobilă: 89 de depășiri în 5 714 zile (1,56%), Kupiec p < 0,001. Sînt depășirile independente în timp? (testul Christoffersen, rulare suplimentară)</div>
+  <details><summary>Răspuns</summary><p>Nu: LR<sub>ind</sub> = 19,81, p < 0,001. După o zi cu depășire urmează o altă depășire în 10,1% din cazuri (9 din 89), față de 1,4% după o zi fără depășire. Depășirile se adună în august 2007, septembrie–noiembrie 2008 (6, 9 și 6) și martie 2020 (9). Pentru BET, simularea istorică trece testul Kupiec (p = 0,066), dar nu și testul de independență (p = 0,014).</p></details>
+</section>
+<section class="blk" id="var-qqplot">
+  <h3>Graficul de fiabilitate VaR (SFEVaRqqplot)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch6_var_qqplot_ro.jpg" alt="Slide-ul 55: Graficul de fiabilitate VaR (SFEVaRqqplot)" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vq-l">λ al EMA: <b id="vq-l-v"></b></label><input type="range" id="vq-l" min="0.9" max="0.99" step="0.01" value="0.96"></div><div class="ctl"><label for="vq-h">Fereastra h (zile)</label><select id="vq-h"><option value="125">125</option><option value="250" selected>250</option><option value="500">500</option></select></div><button class="btn play" id="vq-play" type="button"></button></div><div class="charts "><div class="chart" id="vq-chart"></div></div><div class="tw" id="vq-tab"></div><ul class="out" id="vq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu λ = 0,96, VaR Normal cu volatilitatea EMA este depășit în 2,07% din zilele DAX. Butonul ▶ mută λ de la 0,90 la 0,99. Se apropie rata de 1% pentru vreun λ?</div>
+  <details><summary>Răspuns</summary><p>Nu: rata rămîne între 1,96% (λ = 0,97) și 2,40% (λ = 0,99). Volatilitatea EMA se adaptează, dar cuantila Normală z<sub>0,01</sub> = −2,326 rămîne prea mică pentru randamentele standardizate, care au cozi mai groase decît distribuția Normală: capătul drept al graficului QQ se curbează în sus pentru orice λ. RMA cu h = 250 are 2,13%; cu h = 125, 2,21%.</p></details>
+</section><h2 class="sec" id="s-unc">Incertitudinea de model</h2>
+<section class="blk" id="model-uncertainty">
+  <h3>Stabilitatea cîștigătorului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch6_model_uncertainty_ro.jpg" alt="Slide-ul 56: Stabilitatea cîștigătorului" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mu-b">Numărul de reeșantionări B: <b id="mu-b-v"></b></label><input type="range" id="mu-b" min="20" max="200" step="20" value="200"></div><button class="btn play" id="mu-play" type="button"></button></div><div class="charts "><div class="chart" id="mu-chart"></div></div><p class="xh">Reeșantionările bootstrap pe blocuri mobile, S&P 500</p><div class="tw" id="mu-tab"></div><ul class="out" id="mu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu toate cele 200 de reeșantionări, NIG are cel mai mic AIC în 93,5% dintre ele. Butonul ▶ crește B de la 20 la 200. Ce proporție dau primele 20 de reeșantionări?</div>
+  <details><summary>Răspuns</summary><p>100%: NIG cîștigă în toate primele 20. Cu B = 40, 95%; cu B = 100, 95%; cu B = 200, 93,5% (GED 3,5%, skewed-t 3%). Un număr mic de reeșantionări supraestimează siguranța cîștigătorului. Intervalele de 90% ale VaR 1% (Student-t [3,14; 3,87]%, NIG [3,34; 4,18]%) se suprapun: incertitudinea dintre modele este comparabilă cu cea din interiorul unui model.</p></details>
+</section>
+<section class="blk" id="model-avg">
+  <h3>Medierea modelelor și riscul de model</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol6_selectia_modelului_managementul_riscului.pdf#page=59" target="_blank" rel="noopener"><img src="slides/ch6_model-avg_ro.jpg" alt="Slide-ul 58: Medierea modelelor și riscul de model" loading="lazy"></a>
+      <figcaption>Slide-ul 58</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="av-a">Nivelul VaR</label><select id="av-a"><option value="0">0,1%</option><option value="1">0,25%</option><option value="2">0,5%</option><option value="3" selected>1%</option><option value="4">2,5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="av-w">Ponderile</label><select id="av-w"><option value="aic" selected>Akaike (AIC)</option><option value="bic">BIC</option></select></div><div class="ctl"><label for="av-x">Intervalul cozilor groase</label><select id="av-x"><option value="mix" selected>șase modele nenormale (slide)</option><option value="nomix">fără amestecul Normal</option></select></div><div class="ctl"><label for="av-s">Seria exemplului lucrat</label><select id="av-s"><option value="bet">BET</option><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv" selected>Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="av-play" type="button"></button></div><p class="xh">VaR (%) al datelor, al modelelor și mediat</p><div class="tw" id="av-tab"></div><div class="we" id="av-we-box"><p class="we-h">Exemplu lucrat: VaR mediat</p><div class="we-f">\[\mathrm{VaR}^{avg}_\alpha = \sum_i w_i\,\mathrm{VaR}_{\alpha,i}, \qquad \text{interval} = \frac{\max_i \mathrm{VaR}_i}{\min_i \mathrm{VaR}_i} - 1\]</div><ol id="av-we"></ol></div><ul class="out" id="av-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru TLV, intervalul VaR 1% al modelelor cu cozi groase este [4,49; 5,41]. În tabelul VaR din curs, cel mai mare VaR 1% al TLV este 4,92% (distribuția stabilă). Ce model dă capătul de sus, 5,41%?</div><details><summary>Răspuns</summary><p>Amestecul Normal, care lipsește din tabelul VaR al cursului, dar intră în intervalul celor șase modele nenormale. Fără el, intervalul TLV devine [4,49; 4,92], adică 10% în loc de 21%. La fel pentru SNP (4,70%) și BRD (4,74%). Pentru indici și Bitcoin, capătul de sus vine de la distribuția stabilă.</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: BET, S&P 500 și DAX din ianuarie 2000, Bitcoin din septembrie 2014 (7 zile pe săptămînă), Banca Transilvania (TLV), OMV Petrom (SNP) și BRD din 2010, din prețul ajustat, pînă la 18 septembrie 2026; cele două zile greșite ale TLV din mai 2016 sînt eliminate. DAX lunar: prima zi de tranzacționare a fiecărei luni (SFESumm). Prețuri de închidere EODHD. Parametrii estimați, log-verosimilitățile, cuantilele modelelor, VaR pe fereastră mobilă și reeșantionările bootstrap sînt cele din curs (același cod, aceeași sămînță a generatorului); statisticile descriptive, VaR și ES empirice, depășirile, testele Kupiec, scorurile pinball și graficul SFEVaRqqplot sînt recalculate în browser din aceleași randamente. Nivelurile VaR diferite de 1%, celelalte serii ale profilului lui ν, testul Christoffersen și ponderile BIC sînt rulări suplimentare ale aceluiași cod.</p>
+</main>
+</body>
+</html>

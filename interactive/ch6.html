@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 6 · Model Selection and Risk Management</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch6.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch6_data.js?v=20261101a", "ch6_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch6.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistics of Financial Markets</h1><p>Chapter 6 · Model Selection and Risk Management</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_06" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch6.html" class="lang-btn active">EN</a><a href="ch6_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it.</p>
+<p class="toc"><a href="#s-cand">The Candidates</a> · <a href="#s-ml">Maximum Likelihood, Recalled</a> · <a href="#s-lr">Nested Models: the Likelihood-Ratio Test</a> · <a href="#s-ic">Information Criteria: AIC and BIC</a> · <a href="#s-gof">Goodness-of-Fit Tests</a> · <a href="#s-ppqq">PP and QQ Plots</a> · <a href="#s-var">The Purpose Decides: Which Model Gets VaR 1% Right?</a> · <a href="#s-oos">Out of Sample: Validation and Overfitting</a> · <a href="#s-unc">Model Uncertainty</a></p>
+<h2 class="sec" id="s-cand">The Candidates</h2>
+<section class="blk" id="candidates">
+  <h3>The Candidates Side by Side</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=8" target="_blank" rel="noopener"><img src="slides/sfm_ch6_candidates_en.jpg" alt="Slide 7: The Candidates Side by Side" loading="lazy"></a>
+      <figcaption>Slide 7</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ca-x">Threshold x: the probability P(X < −x): <b id="ca-x-v"></b></label><input type="range" id="ca-x" min="0" max="8" step="1" value="4"></div><button class="btn play" id="ca-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt td.l{white-space:normal;min-width:16rem}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}.xt .x{font-style:italic}
+.xt tr.sel td{background:#EEF3FB}.xt .pv{font-size:.76rem;color:#1F2A44}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.ctl input[type=range]:disabled{opacity:.4}
+</style><div class="charts "><div class="chart" id="ca-chart"></div></div><p class="xh">P(X < −x) for each candidate (mean 0, variance 1)</p><div class="tw" id="ca-tab"></div><ul class="out" id="ca-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At x = 4, the Student-t distribution (ν = 4) gives a probability P(X < −4) 76 times that of the Normal distribution. The ▶ button moves the threshold from 2 to 6. How many times larger is the Student-t probability at x = 6?</div>
+  <details><summary>Answer</summary><p>About 536,000 times: 5.3 × 10<sup>−4</sup> against 9.9 × 10<sup>−10</sup>. At x = 2 the two probabilities are almost equal (ratio 1.0), at x = 3 the ratio is 4.9, at x = 5 it is 3,682. The Normal tail falls as e<sup>−x²/2</sup>, the Student-t tail as a power of x, so the ratio grows ever faster with the threshold. The mean and the variance are the same; the difference lies only in the tail, where VaR 1% sits.</p></details>
+</section>
+<section class="blk" id="dax-monthly">
+  <h3>What Every Model Must Reproduce: the SFESumm Statistics</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=10" target="_blank" rel="noopener"><img src="slides/sfm_ch6_dax_monthly_en.jpg" alt="Slide 9: What Every Model Must Reproduce: the SFESumm Statistics" loading="lazy"></a>
+      <figcaption>Slide 9</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dm-n">End of the sample (month): <b id="dm-n-v"></b></label><input type="range" id="dm-n" min="119" max="266" step="1" value="266"></div><button class="btn play" id="dm-play" type="button"></button></div><div class="charts "><div class="chart" id="dm-chart"></div></div><p class="xh">Summary statistics, DAX monthly log returns (%)</p><div class="tw" id="dm-tab"></div><ul class="out" id="dm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The kurtosis of the DAX monthly returns is 4.60 on the SFESumm sample (July 2004 – May 2014) and 5.06 on 2004–2026. The ▶ button extends the sample one year at a time. Does the kurtosis rise gradually as years are added?</div>
+  <details><summary>Answer</summary><p>No. Between 2014 and 2019 it falls, to 4.30 in May 2016, because the months added are calm. It jumps to 4.93 when the return from early March to early April 2020 enters, −21.70%, the new minimum of the sample (the old one was −19.35%). The kurtosis depends on a few extreme months, not on the number of months. On 2004–2026 the skewness stays negative (−0.72), and the Jarque–Bera test rejects Normality with JB = 70.2.</p></details>
+</section>
+<section class="blk" id="desc-stats">
+  <h3>Summary Statistics: Monthly DAX and Daily Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=11" target="_blank" rel="noopener"><img src="slides/ch6_desc-stats_en.jpg" alt="Slide 10: Summary Statistics: Monthly DAX and Daily Returns" loading="lazy"></a>
+      <figcaption>Slide 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-b">Banca Transilvania (TLV)</label><select id="ds-b"><option value="clean" selected>without the two erroneous days</option><option value="raw">with the two erroneous days</option></select></div><div class="ctl"><label for="ds-s">Series of the worked example</label><select id="ds-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ds-play" type="button"></button></div><p class="xh">Daily log returns (%)</p><div class="tw" id="ds-tab"></div><div class="we" id="ds-we-box"><p class="we-h">Worked example: the Jarque–Bera test</p><div class="we-f">\[JB = \frac{n}{6}\Big[S^2 + \frac{(K-3)^2}{4}\Big] \approx \chi^2(2)\]</div><ol id="ds-we"></ol></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Without the two erroneous days of May 2016, the kurtosis of the TLV daily returns is 16.5. What does it become if the two days, −15.0% and +20.5%, stay in the data?</div><details><summary>Answer</summary><p>20.5. Kurtosis uses the fourth power of the deviations from the mean, so two extreme days move it a lot, even though their sum, +5.5%, is small. The skewness moves from −0.87 to −0.58. In the lecture, ν̂ of the Student-t falls from 3.44 to 3.33, and the AIC ranking does not change (Student-t wins in both cases). The JB of TLV rises too, because (K − 3)² rises.</p></details>
+</section><h2 class="sec" id="s-ml">Maximum Likelihood, Recalled</h2>
+<section class="blk" id="ml-table">
+  <h3>Numerical ML for the Other Candidates (S&P 500)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=15" target="_blank" rel="noopener"><img src="slides/ch6_ml-table_en.jpg" alt="Slide 14: Numerical ML for the Other Candidates (S&P 500)" loading="lazy"></a>
+      <figcaption>Slide 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ml-s">Series</label><select id="ml-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ml-play" type="button"></button></div><p class="xh">ML estimates and the maximised log-likelihood</p><div class="tw" id="ml-tab"></div><div class="we" id="ml-we-box"><p class="we-h">Worked example: the Normal model, step by step</p><div class="we-f">\[\ell(\hat\mu, \hat\sigma) = -\frac{n}{2}\big[\ln(2\pi\hat\sigma^2) + 1\big], \quad \hat\sigma^2 = \frac{1}{n}\sum_t (r_t - \bar r)^2\]</div><ol id="ml-we"></ol></div><ul class="out" id="ml-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, ν̂ of the Student-t distribution is 2.67. Bitcoin has a larger sample kurtosis (15.0 against 13.7). Is the ν̂ of Bitcoin smaller or larger?</div><details><summary>Answer</summary><p>Smaller: 2.23, the smallest of the seven series, hence the heaviest tail. BET has 2.43, DAX 3.09, BRD 4.67. A ν̂ close to 2 means a variance that is barely finite. The large standard deviation of Bitcoin (3.5% per day) goes into the scale, not into ν: the Student-t scale of Bitcoin is 1.85, and the implied standard deviation, scale·√(ν/(ν − 2)), is 5.75%, above the sample standard deviation (3.49%), because ν̂ is close to 2.</p></details>
+</section>
+<section class="blk" id="profile-nu">
+  <h3>How Precise Is ν? The Profile Log-Likelihood</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch6_profile_nu_en.jpg" alt="Slide 16: How Precise Is ν? The Profile Log-Likelihood" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pn-s">Series</label><select id="pn-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="pn-c">Confidence level</label><select id="pn-c"><option value="0.9">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></div><div class="ctl"><label for="pn-y">Vertical axis</label><select id="pn-y"><option value="slide" selected>cut at −40, as on the slide</option><option value="full">full</option></select></div><div class="ctl"><label for="pn-nu">Tested ν (orange point): <b id="pn-nu-v"></b></label><input type="range" id="pn-nu" min="2.2" max="6" step="0.1" value="3"></div><button class="btn play" id="pn-play" type="button"></button></div><div class="charts "><div class="chart" id="pn-chart"></div></div><div class="we" id="pn-we-box"><p class="we-h">Worked example: is the tested ν inside the interval?</p><div class="we-f">\[LR(\nu) = 2\big[\ell(\hat\nu) - \ell(\nu)\big] \le \chi^2_{1-a}(1)\]</div><ol id="pn-we"></ol></div><ul class="out" id="pn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The slide gives the 95% interval for ν of the S&P 500, [2.5, 2.8], read on the grid of step 0.1. What interval does a grid of step 0.01 give?</div>
+  <details><summary>Answer</summary><p>[2.47, 2.89]. On the 0.1 grid, the end points are the outermost grid points still inside the interval; the true end points lie between grid points (2.4–2.5 and 2.8–2.9). The interval is not symmetric around ν̂ = 2.67: 0.20 to the left, 0.22 to the right, because the profile is not a parabola. At ν = 5, the profile log-likelihood is 92.3 below its maximum, far below the bottom of the slide's axis (−40).</p></details>
+</section><h2 class="sec" id="s-lr">Nested Models: the Likelihood-Ratio Test</h2>
+<section class="blk" id="lr-test">
+  <h3>Worked Example: Is the Skewness Parameter Needed?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=21" target="_blank" rel="noopener"><img src="slides/ch6_lr-test_en.jpg" alt="Slide 20: Worked Example: Is the Skewness Parameter Needed?" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lr-p">Pair of nested models</label><select id="lr-p"><option value="t_vs_skt" selected>Student-t inside skewed-t (λ = 0)</option><option value="n_vs_ged">Normal inside GED (β = 2)</option><option value="n_vs_t">Normal inside Student-t (1/ν = 0, boundary)</option></select></div><div class="ctl"><label for="lr-s">Series</label><select id="lr-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="lr-play" type="button"></button></div><div class="we" id="lr-we-box"><p class="we-h">Worked example: the likelihood-ratio test</p><div class="we-f">\[LR = 2\,[\ell_1(\hat\theta_1) - \ell_0(\hat\theta_0)] \approx \chi^2(k_1 - k_0)\]</div><ol id="lr-we"></ol></div><p class="xh">The same test on the seven series</p><div class="tw" id="lr-tab"></div><p class="xh">The p-value as a function of LR</p><div class="charts "><div class="chart" id="lr-chart"></div></div><ul class="out" id="lr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For BRD, the test of Student-t inside skewed-t (λ = 0) gives LR = 3.01. Is the skewness parameter needed at 5%?</div><details><summary>Answer</summary><p>No: 3.01 < 3.84, p = 0.083. The fixed value λ = 0 lies inside the interval (−1, 1), so Wilks' theorem applies and the critical value is 3.84; 2.71 is the boundary value (Normal inside Student-t). AIC still prefers skewed-t (ΔAIC of Student-t: 1.0), because AIC is not a test: it charges 2 for a parameter, and LR > 2. The skewness is significant only for the S&P 500 (LR = 19.63) and the DAX (20.92).</p></details>
+</section>
+<section class="blk" id="vuong">
+  <h3>Non-Nested Models: the Vuong Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=23" target="_blank" rel="noopener"><img src="slides/ch6_vuong_en.jpg" alt="Slide 22: Non-Nested Models: the Vuong Test" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vu-p">Pair of non-nested models</label><select id="vu-p"><option value="vu_t_ged" selected>Student-t against GED</option><option value="vu_t_stable">Student-t against stable</option><option value="vu_skt_nig">skewed-t against NIG</option></select></div><div class="ctl"><label for="vu-s">Series</label><select id="vu-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="vu-play" type="button"></button></div><div class="we" id="vu-we-box"><p class="we-h">Worked example: the Vuong statistic</p><div class="we-f">\[m_t = \ln f_1(r_t) - \ln f_2(r_t), \qquad V = \frac{\sqrt{n}\,\bar m}{s_m} \approx N(0, 1)\]</div><ol id="vu-we"></ol></div><p class="xh">The statistic V and its p-value on the seven series</p><div class="tw" id="vu-tab"></div><p class="xh">Cumulative sum of the daily differences m<sub>t</sub></p><div class="charts "><div class="chart" id="vu-chart"></div></div><ul class="out" id="vu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, Student-t is preferred to the stable distribution on all four markets. For BRD, V = 1.89. Is the preference significant at 5%?</div><details><summary>Answer</summary><p>No: |V| = 1.89 < 1.96, p = 0.059. Student-t explains the BRD days better on average, but the difference is not separated from noise. The day with the largest |m<sub>t</sub>| is 19 December 2018 (m<sub>t</sub> = −2.48: the stable distribution explains this fall better). For TLV and SNP, V = 3.77 and 4.16. The sum of the daily differences is exactly the difference of the log-likelihoods, ℓ(Student-t) − ℓ(stable).</p></details>
+</section><h2 class="sec" id="s-ic">Information Criteria: AIC and BIC</h2>
+<section class="blk" id="aic-table">
+  <h3>Worked Example: Seven Models for the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch6_aic-table_en.jpg" alt="Slide 26: Worked Example: Seven Models for the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ai-s">Series</label><select id="ai-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="ai-m">Model of the worked example</label><select id="ai-m"><option value="Normal">Normal</option><option value="Student-t">Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="Mixture">Normal mixture</option><option value="NIG" selected>NIG</option><option value="Stable">stable</option></select></div><button class="btn play" id="ai-play" type="button"></button></div><div class="tw" id="ai-tab"></div><div class="we" id="ai-we-box"><p class="we-h">Worked example: AIC, BIC and the Akaike weight</p><div class="we-f">\[\mathrm{AIC} = -2\ell(\hat\theta) + 2k, \quad \mathrm{BIC} = -2\ell(\hat\theta) + k\ln n, \quad w_i = \frac{e^{-\Delta_i/2}}{\sum_j e^{-\Delta_j/2}}\]</div><ol id="ai-we"></ol></div><ul class="out" id="ai-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For BRD, AIC prefers skewed-t, and Student-t has ΔAIC = 1.0. What Akaike weights do the two models get?</div><details><summary>Answer</summary><p>0.62 for skewed-t and 0.38 for Student-t (the other five models have weights of practically zero): w = e<sup>−Δ/2</sup>/Σ e<sup>−Δ<sub>j</sub>/2</sup>, with e<sup>−0.5</sup> = 0.61. A difference of 1 leaves both models plausible; AIC is not a test. With BIC weights the order reverses: 0.93 for Student-t.</p></details>
+</section>
+<section class="blk" id="delta-aic">
+  <h3>ΔAIC across Seven Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch6_delta_aic_en.jpg" alt="Slide 27: ΔAIC across Seven Series" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="da-c">Criterion</label><select id="da-c"><option value="aic" selected>ΔAIC</option><option value="bic">ΔBIC</option></select></div><button class="btn play" id="da-play" type="button"></button></div><div class="charts "><div class="chart" id="da-chart"></div></div><p class="xh">The best model under each criterion</p><div class="tw" id="da-tab"></div><ul class="out" id="da-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For BRD, AIC prefers skewed-t (ΔAIC of Student-t: 1.0). The ▶ button switches to BIC. Which model does BIC prefer?</div>
+  <details><summary>Answer</summary><p>Student-t, with ΔBIC = 5.2 for skewed-t. BIC charges the extra parameter ln 3,771 = 8.24, more than the gain in fit (LR = 3.01). For TLV and SNP, both criteria choose Student-t; for BET, S&P 500 and DAX, NIG; for Bitcoin, GED. The Normal model has ΔBIC between 472 and 2,412.</p></details>
+</section><h2 class="sec" id="s-gof">Goodness-of-Fit Tests</h2>
+<section class="blk" id="ks-five">
+  <h3>Worked Example: KS on Five Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch6_ks-five_en.jpg" alt="Slide 31: Worked Example: KS on Five Returns" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="k5-h">Null hypothesis</label><select id="k5-h"><option value="known" selected>N(0, σ²), fully specified</option><option value="est">Normal with estimated μ and σ (Lilliefors)</option></select></div><div class="ctl"><label for="k5-s">σ under the null: <b id="k5-s-v"></b></label><input type="range" id="k5-s" min="0.5" max="2" step="0.1" value="1"></div><button class="btn play" id="k5-play" type="button"></button></div><div class="tw" id="k5-tab"></div><div class="we" id="k5-we-box"><p class="we-h">Worked example: the KS statistic</p><div class="we-f">\[D_n = \max_i \max\Big\{\frac{i}{n} - u_{(i)},\ u_{(i)} - \frac{i-1}{n}\Big\}, \quad u_{(i)} = F(r_{(i)})\]</div><ol id="k5-we"></ol></div><div class="charts "><div class="chart" id="k5-chart"></div></div><ul class="out" id="k5-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With H<sub>0</sub>: N(0, 1), D<sub>5</sub> = 0.218 < 0.563. The ▶ button moves σ of the null from 0.5 to 2. For which σ in this range does the test reject at 5%?</div><details><summary>Answer</summary><p>None: D<sub>5</sub> lies between 0.188 (σ = 1.4) and 0.364 (σ = 0.5), always below 0.563. With five observations, the test cannot separate a standard deviation of 0.5% from one of 2%: its power is very low. With μ and σ estimated from the five returns (Lilliefors), D<sub>5</sub> = 0.175, and the critical value falls to 0.351 (the lecture's simulation; the slide gives 0.354).</p></details>
+</section>
+<section class="blk" id="ks-tail">
+  <h3>Why KS Is Weak in the Tails</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch6_ks_tail_en.jpg" alt="Slide 34: Why KS Is Weak in the Tails" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kt-s">Series</label><select id="kt-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="kt-play" type="button"></button></div><div class="charts "><div class="chart" id="kt-chart"></div></div><div class="we" id="kt-we-box"><p class="we-h">Worked example: the KS distance at its maximum</p><div class="we-f">\[D_n = \max_i \max\Big\{\frac{i}{n} - u_{(i)},\ u_{(i)} - \frac{i-1}{n}\Big\}, \qquad c_{0.05} = \frac{1.358}{\sqrt n}\]</div><ol id="kt-we"></ol></div><ul class="out" id="kt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, the KS distance between the empirical distribution and the fitted Normal distribution is largest at x = −0.41%, close to the centre. Where is the maximum for Bitcoin?</div>
+  <details><summary>Answer</summary><p>Also in the body of the distribution: at x = −1.69% (F = 30%), with D<sub>n</sub> = 0.099. For all seven series, the KS maximum lies between x = −1.7% and +1.0%, where the distribution functions are steep. The Anderson–Darling weighted distance is largest in the tail: −6.9% for the S&P 500, −20.1% for Bitcoin. KS measures the shape of the body, AD the shape of the tails.</p></details>
+</section>
+<section class="blk" id="gof-power">
+  <h3>Power of the Three Tests</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch6_gof_power_en.jpg" alt="Slide 35: Power of the Three Tests" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-n">Sample size n (dotted line): <b id="gp-n-v"></b></label><input type="range" id="gp-n" min="0" max="4" step="1" value="2"></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><p class="xh">Power at 5%: Student-t data (ν = 5) and Normal data with 2% of days 4 times as volatile</p><div class="tw" id="gp-tab"></div><p class="xh">KS critical values at 5%: estimated parameters (simulation, 4,000 samples) and known F</p><div class="tw" id="gp-tab2"></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At n = 250, when the departures from the Normal distribution are only in the tails, the power is 38% (KS), 50% (CvM) and 57% (AD). The ▶ button raises n to 1,000. What does the power of the KS test become?</div>
+  <details><summary>Answer</summary><p>82.5%, below that of AD (95.6%) and CvM (92.0%). With Student-t data (ν = 5), at n = 1,000 all three reject almost always (99.9%–100%). The AD test puts more weight on the tails, where the departure is. At n = 100, KS rejects Student-t data in only 30% of the samples: a KS test on 100 returns that does not reject the Normal distribution says little about VaR 1%.</p></details>
+</section>
+<section class="blk" id="edf-table">
+  <h3>EDF Tests on the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=37" target="_blank" rel="noopener"><img src="slides/ch6_edf-table_en.jpg" alt="Slide 36: EDF Tests on the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ed-s">Series</label><select id="ed-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ed-play" type="button"></button></div><p class="xh">EDF statistics of the fitted models; ranks by AD and by AIC</p><div class="tw" id="ed-tab"></div><ul class="out" id="ed-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Does the AD statistic rank the S&P 500 models in the same order as AIC?</div><details><summary>Answer</summary><p>Not exactly. By AD: NIG (0.88), skewed-t (2.25), GED (3.94), stable (4.61), Student-t (4.69), Normal mixture (5.80), Normal (127.35). By AIC: NIG, skewed-t, Student-t, GED, stable, Normal mixture, Normal. The first two and the last two places agree; Student-t drops from 3rd to 5th. AD and AIC measure different things: AD the weighted distance between distribution functions, AIC the density at the observed points.</p></details>
+</section><h2 class="sec" id="s-ppqq">PP and QQ Plots</h2>
+<section class="blk" id="pp">
+  <h3>PP Plots: S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch6_pp_en.jpg" alt="Slide 39: PP Plots: S&P 500" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pp-s">Series</label><select id="pp-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="pp-4">Fourth panel</label><select id="pp-4"><option value="Stable" selected>stable</option><option value="NIG">NIG</option><option value="GED">GED</option><option value="Mixture">Normal mixture</option></select></div><button class="btn play" id="pp-play" type="button"></button></div><div class="charts "><div class="chart" id="pp-chart"></div></div><ul class="out" id="pp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In the PP plot of the S&P 500, the largest vertical distance of the Normal model is 0.093. What is it for the Student-t?</div>
+  <details><summary>Answer</summary><p>0.018, practically the KS statistic (0.018). Skewed-t has 0.017, the stable distribution 0.022: in the PP plot the three cannot be told apart, although their tails differ by orders of magnitude. The PP plot squeezes the tails into the corners; the QQ plot on the next slide stretches them.</p></details>
+</section>
+<section class="blk" id="qq">
+  <h3>QQ Plots: S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch6_qq_en.jpg" alt="Slide 40: QQ Plots: S&P 500" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qq-s">Series</label><select id="qq-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="qq-4">Fourth panel</label><select id="qq-4"><option value="Stable" selected>stable</option><option value="NIG">NIG</option><option value="GED">GED</option><option value="Mixture">Normal mixture</option></select></div><button class="btn play" id="qq-play" type="button"></button></div><div class="charts "><div class="chart" id="qq-chart"></div></div><p class="xh">Quantile of each model at the probability of the smallest return, 0.5/n (%)</p><div class="tw" id="qq-tab"></div><ul class="out" id="qq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, the quantile of the stable distribution at the probability of the smallest return (−12.8%) is −116.1%. For Bitcoin, with the smallest return −46.5% (12 March 2020), what does the stable distribution give?</div>
+  <details><summary>Answer</summary><p>−385.6%, more than 8 times the observed value. Student-t gives −85.0%, NIG −31.3%, GED −24.2%, the Normal model −12.7%. At the probability 0.5/n = 1.1 × 10<sup>−4</sup>, the models differ most and the data hold a single point: the uncertainty is largest there.</p></details>
+</section>
+<section class="blk" id="qq-assets">
+  <h3>QQ Plots for BET, Bitcoin and Banca Transilvania</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch6_qq_assets_en.jpg" alt="Slide 41: QQ Plots for BET, Bitcoin and Banca Transilvania" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qa-k">Marked return: the k-th smallest: <b id="qa-k-v"></b></label><input type="range" id="qa-k" min="1" max="10" step="1" value="1"></div><button class="btn play" id="qa-play" type="button"></button></div><div class="charts "><div class="chart" id="qa-chart"></div></div><ul class="out" id="qa-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For Bitcoin, the largest daily fall (12 March 2020, −46.5%) has the Student-t quantile −85.0%. The ▶ button moves to the second, third… smallest return. What Student-t quantile does the second smallest return, −23.8%, get?</div>
+  <details><summary>Answer</summary><p>−51.9%, more than twice the observed return; at the tenth (−15.5%), −22.5%. The Student-t tail fitted to Bitcoin (ν̂ = 2.23) is longer than that of the data. For TLV it is the other way round: the largest fall, −22.2%, has the Student-t quantile −17.8%. The Normal model stays far inside the data for all three series (Bitcoin: −12.7%).</p></details>
+</section><h2 class="sec" id="s-var">The Purpose Decides: Which Model Gets VaR 1% Right?</h2>
+<section class="blk" id="var-es">
+  <h3>VaR 1% and ES 2.5% under Each Model (In Sample)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch6_var-es_en.jpg" alt="Slide 43: VaR 1% and ES 2.5% under Each Model (In Sample)" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ve-a">VaR level</label><select id="ve-a"><option value="0">0.1%</option><option value="1">0.25%</option><option value="2">0.5%</option><option value="3" selected>1%</option><option value="4">2.5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ve-e">ES level</label><select id="ve-e"><option value="0">0.1%</option><option value="1">0.25%</option><option value="2">0.5%</option><option value="3">1%</option><option value="4" selected>2.5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ve-k">Series of the worked example</label><select id="ve-k"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="ve-play" type="button"></button></div><p class="xh" id="ve-h1"></p><div class="tw" id="ve-tab"></div><p class="xh" id="ve-h2"></p><div class="tw" id="ve-tab2"></div><div class="we" id="ve-we-box"><p class="we-h">Worked example: VaR and ES of the Normal model</p><div class="we-f">\[\mathrm{VaR}_\alpha = -(\hat\mu + \hat\sigma z_\alpha), \qquad \mathrm{ES}_\alpha = -\hat\mu + \hat\sigma\,\frac{\varphi(z_\alpha)}{\alpha}\]</div><ol id="ve-we"></ol></div><ul class="out" id="ve-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At VaR 1%, the Normal model gives 2.80% for the S&P 500 and the data 3.45%. The ▶ button goes through the levels. At VaR 0.1%, what do the Normal model and the data give?</div><details><summary>Answer</summary><p>The Normal model 3.72%, the data 7.22%: at 0.1% the Normal model covers only half of the loss. Student-t gives 8.58%, NIG 6.98%, the stable distribution 19.70%. At VaR 5% the order reverses: the Normal model gives 1.97%, above the data (1.85%). The Normal ES 2.5% from the formula φ(z)/α (2.81%) equals the value obtained by integrating the quantile.</p></details>
+</section>
+<section class="blk" id="var-models">
+  <h3>Model VaR 1% Relative to the Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch6_var_models_en.jpg" alt="Slide 44: Model VaR 1% Relative to the Data" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vm-a">VaR level</label><select id="vm-a"><option value="0">0.1%</option><option value="1">0.25%</option><option value="2">0.5%</option><option value="3" selected>1%</option><option value="4">2.5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="vm-x">Models</label><select id="vm-x"><option value="six" selected>the six of the slide</option><option value="mix">and the Normal mixture</option></select></div><button class="btn play" id="vm-play" type="button"></button></div><div class="charts "><div class="chart" id="vm-chart"></div></div><ul class="out" id="vm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At VaR 1%, the ratio of the Normal VaR to the empirical VaR lies between 0.76 and 0.86 on the seven series. The ▶ button goes through the levels. What does the ratio become at VaR 5%?</div>
+  <details><summary>Answer</summary><p>Above 1 on every series, between 1.03 (DAX) and 1.16 (BET): at 5% the Normal model overstates the loss. The same standard deviation σ̂ is too large for the body of the distribution and too small for its tail; the two errors cancel somewhere between 2.5% and 5%. At 0.1% the ratio falls to 0.45–0.65.</p></details>
+</section>
+<section class="blk" id="left-tail">
+  <h3>The Left Tail on Log-Log Axes (S&P 500)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch6_left_tail_en.jpg" alt="Slide 45: The Left Tail on Log-Log Axes (S&P 500)" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lt-s">Series</label><select id="lt-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="lt-x">Loss x (dashed line): <b id="lt-x-v"></b></label><input type="range" id="lt-x" min="0" max="10" step="1" value="4"></div><button class="btn play" id="lt-play" type="button"></button></div><div class="charts "><div class="chart" id="lt-chart"></div></div><ul class="out" id="lt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The S&P 500 has a single day with a loss above 10% (16 March 2020) in 6,714 days. How many such days does the fitted stable distribution expect in the sample?</div>
+  <details><summary>Answer</summary><p>About 19. The Normal model expects practically zero (probability 7 × 10<sup>−17</sup>), Student-t 4.5, NIG 1.0, GED 0.08. For losses above 5%, the data have 23 days, the stable expects 57, Student-t 27, NIG 26. The stable tail (α̂ = 1.54) is far too heavy for the S&P 500.</p></details>
+</section>
+<section class="blk" id="kupiec">
+  <h3>Counting Exceedances: the Kupiec Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=47" target="_blank" rel="noopener"><img src="slides/ch6_kupiec_en.jpg" alt="Slide 46: Counting Exceedances: the Kupiec Test" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ku-a">VaR level</label><select id="ku-a"><option value="0">0.1%</option><option value="1">0.25%</option><option value="2">0.5%</option><option value="3" selected>1%</option><option value="4">2.5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="ku-k">Series</label><select id="ku-k"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><div class="ctl"><label for="ku-m">Model</label><select id="ku-m"><option value="Normal">Normal</option><option value="Student-t">Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="NIG" selected>NIG</option><option value="Stable">stable</option></select></div><button class="btn play" id="ku-play" type="button"></button></div><p class="xh">In-sample exceedances (Kupiec p-value in brackets)</p><div class="tw" id="ku-tab"></div><div class="we" id="ku-we-box"><p class="we-h">Worked example: the Kupiec test</p><div class="we-f">\[LR_{uc} = -2\ln\frac{(1-\alpha)^{n-x}\alpha^x}{(1 - x/n)^{n-x}(x/n)^x} \approx \chi^2(1)\]</div><ol id="ku-we"></ol></div><div class="charts "><div class="chart" id="ku-chart"></div></div><ul class="out" id="ku-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At VaR 1%, NIG (the AIC winner) has 52 exceedances for the S&P 500 against 67 expected (p = 0.053). The ▶ button goes through the levels. At VaR 2.5%, is the number of NIG exceedances rejected at 5%?</div><details><summary>Answer</summary><p>No: 151 exceedances against 167.9 expected, p = 0.18. Student-t, perfect at 1% (67 against 67), is rejected at 2.5%: 211 exceedances, p = 0.001. A model that is good for one quantile is not necessarily good for another. At VaR 0.1%, NIG has 7 exceedances against 6.7 expected, the Normal model 52.</p></details>
+</section><h2 class="sec" id="s-oos">Out of Sample: Validation and Overfitting</h2>
+<section class="blk" id="oos">
+  <h3>Out-of-Sample Results, 2020–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch6_oos_en.jpg" alt="Slide 48: Out-of-Sample Results, 2020–2026" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="oo-r">Right panel</label><select id="oo-r"><option value="rate" selected>exceedance rate</option><option value="pin">pinball loss</option><option value="kup">Kupiec statistic</option></select></div><div class="ctl"><label for="oo-s">Series of the worked example</label><select id="oo-s"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="oo-m">Method of the worked example</label><select id="oo-m"><option value="Normal">Normal</option><option value="Student-t" selected>Student-t</option><option value="Skewed-t">skewed-t</option><option value="GED">GED</option><option value="Mixture">Normal mixture</option><option value="NIG">NIG</option><option value="Stable">stable</option><option value="Historical">historical simulation</option></select></div><button class="btn play" id="oo-play" type="button"></button></div><div class="charts "><div class="chart" id="oo-chart"></div></div><p class="xh">VaR 1% exceedances on the test days, 2020–2026 (Kupiec p-value in brackets)</p><div class="tw" id="oo-tab"></div><div class="we" id="oo-we-box"><p class="we-h">Worked example: the pinball loss of the 1% quantile</p><div class="we-f">\[\frac{1}{n}\sum_t \big(\alpha - \mathbf{1}\{r_t < q\}\big)(r_t - q), \qquad \alpha = 0.01\]</div><ol id="oo-we"></ol></div><ul class="out" id="oo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the test period 2020–2026, which method has the lowest pinball loss of the 1% quantile for BET?</div>
+  <details><summary>Answer</summary><p>The Normal model (0.0475), followed by GED (0.0494); Student-t, the best by log score, has 0.0517, and NIG, the AIC winner on 2000–2019, 0.0513. The test period was calmer for BET, and the smaller Normal VaR had 17 exceedances against 16.7 expected. The right number for the wrong reason: a static model does not follow the volatility.</p></details>
+</section>
+<section class="blk" id="overfit">
+  <h3>Overfitting: Normal Mixtures with 1 to 6 Components</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch6_overfit_en.jpg" alt="Slide 50: Overfitting: Normal Mixtures with 1 to 6 Components" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="of-p">Penalty per parameter (2 = AIC, ln 501 = 6.22 = BIC): <b id="of-p-v"></b></label><input type="range" id="of-p" min="0" max="10" step="0.1" value="2"></div><div class="ctl"><label for="of-c">Components in the worked example</label><select id="of-c"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div><button class="btn play" id="of-play" type="button"></button></div><div class="charts "><div class="chart" id="of-chart"></div></div><div class="tw" id="of-tab"></div><div class="we" id="of-we-box"><p class="we-h">Worked example: AIC and BIC</p><div class="we-f">\[\mathrm{AIC} = -2\ell + 2k, \quad \mathrm{BIC} = -2\ell + k\ln n, \quad k = 3c - 1\]</div><ol id="of-we"></ol></div><ul class="out" id="of-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a penalty of 2 per parameter (AIC), the criterion selects c = 5 components; with ln 501 = 6.22 (BIC), c = 3. The ▶ button raises the penalty from 0 to 10. From which penalty does the choice fall to c = 3?</div>
+  <details><summary>Answer</summary><p>From 5.71 (in the slider's steps of 0.1, from 5.8): going from 3 to 4 components gains 2(ℓ<sub>4</sub> − ℓ<sub>3</sub>) = 17.14 for 3 extra parameters, i.e. 5.71 per parameter. Below 0.8, c = 6 is selected, between 0.8 and 3 c = 5, between 3 and 5.71 c = 4. Out of sample the best is c = 3 (−1.608 per day), while c = 6 gives −1.698.</p></details>
+</section>
+<section class="blk" id="rolling-var">
+  <h3>Rolling VaR 1%: Refit Every Month</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch6_rolling_var_en.jpg" alt="Slide 52: Rolling VaR 1%: Refit Every Month" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-s">Series</label><select id="rv-s"><option value="sp500" selected>S&P 500</option><option value="bet">BET</option></select></div><div class="ctl"><label for="rv-f">Period shown</label><select id="rv-f"><option value="2003-01-01">2003–2026</option><option value="2008-01-01">2008–2026</option><option value="2018-01-01" selected>2018–2026 (slide)</option><option value="2020-01-01">2020–2026</option></select></div><div class="ctl"><label for="rv-m">Marked exceedances</label><select id="rv-m"><option value="Normal">Normal</option><option value="Student-t" selected>Student-t</option><option value="Skewed-t">skewed-t</option><option value="Historical">historical simulation</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><p class="xh">Exceedances per year</p><div class="charts "><div class="chart" id="rv-bar"></div></div><p class="xh">Backtest over the whole test period</p><div class="tw" id="rv-tab"></div><div class="we" id="rv-we-box"><p class="we-h">Worked example: the Christoffersen independence test (extra run)</p><div class="we-f">\[LR_{ind} = -2\ln\frac{(1-\hat\pi)^{n_{00}+n_{10}}\,\hat\pi^{\,n_{01}+n_{11}}}{(1-\hat\pi_{01})^{n_{00}}\hat\pi_{01}^{\,n_{01}}(1-\hat\pi_{11})^{n_{10}}\hat\pi_{11}^{\,n_{11}}} \approx \chi^2(1)\]</div><ol id="rv-we"></ol></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, rolling Student-t VaR 1%: 89 exceedances in 5,714 days (1.56%), Kupiec p < 0.001. Are the exceedances independent over time? (the Christoffersen test, extra run)</div>
+  <details><summary>Answer</summary><p>No: LR<sub>ind</sub> = 19.81, p < 0.001. After a day with an exceedance, another follows in 10.1% of the cases (9 of 89), against 1.4% after a day without. The exceedances pile up in August 2007, September–November 2008 (6, 9 and 6) and March 2020 (9). For BET, historical simulation passes the Kupiec test (p = 0.066) but not the independence test (p = 0.014).</p></details>
+</section>
+<section class="blk" id="var-qqplot">
+  <h3>The VaR Reliability Plot (SFEVaRqqplot)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch6_var_qqplot_en.jpg" alt="Slide 54: The VaR Reliability Plot (SFEVaRqqplot)" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vq-l">λ of the EMA: <b id="vq-l-v"></b></label><input type="range" id="vq-l" min="0.9" max="0.99" step="0.01" value="0.96"></div><div class="ctl"><label for="vq-h">Window h (days)</label><select id="vq-h"><option value="125">125</option><option value="250" selected>250</option><option value="500">500</option></select></div><button class="btn play" id="vq-play" type="button"></button></div><div class="charts "><div class="chart" id="vq-chart"></div></div><div class="tw" id="vq-tab"></div><ul class="out" id="vq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With λ = 0.96, the Normal VaR with EMA volatility is exceeded on 2.07% of the DAX days. The ▶ button moves λ from 0.90 to 0.99. Does the rate approach 1% for any λ?</div>
+  <details><summary>Answer</summary><p>No: the rate stays between 1.96% (λ = 0.97) and 2.40% (λ = 0.99). The EMA volatility adapts, but the Normal quantile z<sub>0.01</sub> = −2.326 remains too small for the standardised returns, whose tails are heavier than those of the Normal distribution: the right end of the QQ plot bends upwards for every λ. RMA with h = 250 has 2.13%; with h = 125, 2.21%.</p></details>
+</section><h2 class="sec" id="s-unc">Model Uncertainty</h2>
+<section class="blk" id="model-uncertainty">
+  <h3>How Sure Are We of the Winner?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch6_model_uncertainty_en.jpg" alt="Slide 55: How Sure Are We of the Winner?" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mu-b">Number of resamples B: <b id="mu-b-v"></b></label><input type="range" id="mu-b" min="20" max="200" step="20" value="200"></div><button class="btn play" id="mu-play" type="button"></button></div><div class="charts "><div class="chart" id="mu-chart"></div></div><p class="xh">Moving-block bootstrap resamples, S&P 500</p><div class="tw" id="mu-tab"></div><ul class="out" id="mu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With all 200 resamples, NIG has the lowest AIC in 93.5% of them. The ▶ button raises B from 20 to 200. What share do the first 20 resamples give?</div>
+  <details><summary>Answer</summary><p>100%: NIG wins all of the first 20. With B = 40, 95%; with B = 100, 95%; with B = 200, 93.5% (GED 3.5%, skewed-t 3%). A small number of resamples overstates the certainty about the winner. The 90% intervals of VaR 1% (Student-t [3.14, 3.87]%, NIG [3.34, 4.18]%) overlap: the uncertainty between models is comparable to the uncertainty within a model.</p></details>
+</section>
+<section class="blk" id="model-avg">
+  <h3>Model Averaging and Model Risk</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter6_model_selection_risk_management.pdf#page=58" target="_blank" rel="noopener"><img src="slides/ch6_model-avg_en.jpg" alt="Slide 57: Model Averaging and Model Risk" loading="lazy"></a>
+      <figcaption>Slide 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="av-a">VaR level</label><select id="av-a"><option value="0">0.1%</option><option value="1">0.25%</option><option value="2">0.5%</option><option value="3" selected>1%</option><option value="4">2.5%</option><option value="5">5%</option></select></div><div class="ctl"><label for="av-w">Weights</label><select id="av-w"><option value="aic" selected>Akaike (AIC)</option><option value="bic">BIC</option></select></div><div class="ctl"><label for="av-x">Heavy-tailed range</label><select id="av-x"><option value="mix" selected>the six non-Normal models (slide)</option><option value="nomix">without the Normal mixture</option></select></div><div class="ctl"><label for="av-s">Series of the worked example</label><select id="av-s"><option value="bet">BET</option><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv" selected>Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option></select></div><button class="btn play" id="av-play" type="button"></button></div><p class="xh">VaR (%) of the data, of the models and averaged</p><div class="tw" id="av-tab"></div><div class="we" id="av-we-box"><p class="we-h">Worked example: the averaged VaR</p><div class="we-f">\[\mathrm{VaR}^{avg}_\alpha = \sum_i w_i\,\mathrm{VaR}_{\alpha,i}, \qquad \text{range} = \frac{\max_i \mathrm{VaR}_i}{\min_i \mathrm{VaR}_i} - 1\]</div><ol id="av-we"></ol></div><ul class="out" id="av-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For TLV, the VaR 1% range of the heavy-tailed models is [4.49, 5.41]. In the lecture's VaR table, the largest VaR 1% of TLV is 4.92% (the stable distribution). Which model gives the upper end, 5.41%?</div><details><summary>Answer</summary><p>The Normal mixture, which is missing from the lecture's VaR table but enters the range of the six non-Normal models. Without it, the TLV range becomes [4.49, 4.92], 10% instead of 21%. The same holds for SNP (4.70%) and BRD (4.74%). For the indices and Bitcoin, the upper end comes from the stable distribution.</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: BET, S&P 500 and DAX from January 2000, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV), OMV Petrom (SNP) and BRD from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. Monthly DAX: first trading day of each month (SFESumm). EODHD closing prices. The fitted parameters, log-likelihoods, model quantiles, rolling VaR and bootstrap resamples are those of the lecture (the same code and the same generator seed); the summary statistics, empirical VaR and ES, exceedances, Kupiec tests, pinball losses and the SFEVaRqqplot chart are recomputed in the browser from the same returns. VaR levels other than 1%, the profile of ν for the other series, the Christoffersen test and the BIC weights are extra runs of the same code.</p>
+</main>
+</body>
+</html>
