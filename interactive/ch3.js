@@ -382,6 +382,10 @@ function mcBlock() {
     xaxis: XT(''), yaxis: XT('alpha-hat'), legend: LEG(nw, -0.2) }));
   const it = n => { const a = res.find(r => r.n === n && r.name === 'McCulloch'), b = res.find(r => r.n === n && r.name === 'ML'); return T.mcItem(n === '500' ? '500' : fint(2500), nf(a.m, 3), nf(a.sd, 3), nf(b.m, 3), nf(b.sd, 3), nf(a.sd / b.sd, 2)); };
   out('mc-out', [T.mc(R), it('500'), it('2500')]);
+  table('mc-tab', ['n', T.h.estimator, T.h.mean, T.h.bias, T.h.sd, 'RMSE', T.h.sdRatio], ['500', '2500'].flatMap(n => res.filter(r => r.n === n).map(r => {
+    const v = D.mc[n][r.name === 'ML' ? 'ml' : 'mcculloch'].slice(0, R), rmse = Math.sqrt(mean(v.map(x => (x - 1.7) ** 2))), o = res.find(q => q.n === n && q.name !== r.name);
+    return row([fint(+n), r.name, nf(r.m, 3), nf(r.m - 1.7, 3), nf(r.sd, 3), nf(rmse, 3), r.name === 'McCulloch' ? nf(r.sd / o.sd, 2) : '']);
+  })), T.mcNote(R));
 }
 
 // ================================================================= 12-13. fitted densities on a log scale
@@ -507,8 +511,228 @@ function runVarReal() {
   out('rr-out', [T.rr(SH[k], nf(f.alpha, 3), nf(v[n - 1], 2), S.dates[0] < '2010-01-01' ? nf(v[i10], 2) : null, P.paths.map(p => nf(p[p.length - 1], 1)).join(', '))]);
 }
 
+// ================================================================= tables and worked examples (blocks of the table frames)
+function table(id, head, rows, foot) {    // head: array of cells or an HTML string of header rows; a cell is a string or { v, c, s } (class, colspan)
+  const cell = (x, tag) => { const o = typeof x === 'object' && x !== null ? x : { v: x }; return `<${tag}${o.c ? ` class="${o.c}"` : ''}${o.s ? ` colspan="${o.s}"` : ''}>${o.v}</${tag}>`; };
+  const H = typeof head === 'string' ? head : `<tr>${head.map(h => cell(h, 'th')).join('')}</tr>`;
+  $(id).innerHTML = `<table class="xt"><thead>${H}</thead><tbody>` +
+    rows.map(r => `<tr${r.cls ? ` class="${r.cls}"` : ''}>${r.map(x => cell(x, 'td')).join('')}</tr>`).join('') + '</tbody></table>' + (foot ? `<p class="tnote">${foot}</p>` : '');
+}
+const steps = (id, items) => { $(id).innerHTML = items.map(s => `<li>${s}</li>`).join(''); };
+const row = (cells, cls) => Object.assign(cells, { cls });
+const sciN = (x, d) => { let e = Math.floor(Math.log10(Math.abs(x))), m = +(x / 10 ** e).toFixed(d - 1); if (Math.abs(m) >= 10) { m /= 10; e += 1; } return `${nf(m, d - 1)} × 10<sup>${e < 0 ? '−' : ''}${Math.abs(e)}</sup>`; };
+const sgn = (x, d) => (x < 0 ? '− ' + nf(-x, d) : '+ ' + nf(x, d));          // "+ 0.093" / "− 0.093" inside a sum
+const par = (x, d) => (x < 0 ? `(${nf(x, d)})` : nf(x, d));                   // negative factors in parentheses
+const cplx = (re, im, d) => `${nf(re, d)} ${im < 0 ? '−' : '+'} ${nf(Math.abs(im), d)}i`;
+const cAlpha = a => Math.exp(lgamma(a)) * Math.sin(Math.PI * a / 2) / Math.PI;
+const LEV = [0.05, 0.025, 0.01, 0.005, 0.001, 0.0005];
+const plab = p => { const s = String(+(100 * p).toFixed(2)); return (LANG === 'ro' ? s.replace('.', ',') : s) + '%'; };
+const tpct = v => (v >= 0.1 ? nf(v, 2) : v >= 1e-4 ? sig(v, 2) : sciN(v, 2));    // a percentage as in the slide's tail table
+const texp = e => (e < 0.05 ? '≈ 0' : nf(e, 1));                                   // expected number of days, as in the slides
+
+// ----------------------------------------------------------------- X1. horizons and diversification (frame 13)
+const HZ_A = [2, 1.7, 1.5, 1];
+function horizons() {
+  const n = +$('hz-n').value, N = +$('hz-N').value, k = $('hz-a').value; label('hz-n').textContent = n; label('hz-N').textContent = N;
+  const f = D.fits[k].stable, ah = f.alpha, g = f.gamma;
+  const r = a => [nf(n ** (1 / a), 2), nf(n ** (1 / a - 0.5), 2), nf(N ** (1 / a - 1), 2)];
+  table('hz-tab', ['α', `n<sup>1/α</sup> (n = ${n})`, 'n<sup>1/α</sup>/√n', `N<sup>1/α − 1</sup> (N = ${N})`],
+    [...HZ_A.map(a => row([nf(a, 1) + (a === 2 ? ` (${T.h.normal})` : a === 1 ? ' (Cauchy)' : ''), ...r(a)])), row([`α̂ = ${nf(ah, 3)} (${SH[k]})`, ...r(ah)], 'sel')]);
+  const nw = single('hz-chart'), ns = logspace(0, Math.log10(250), 80), tr = HZ_A.map((a, i) => ({ x: ns, y: ns.map(v => v ** (1 / a)), mode: 'lines', name: `alpha = ${a}` + (a === 2 ? ' (square-root-of-time rule)' : ''),
+    line: { color: [DBLUE, TEAL, GREEN, ORANGE][i], width: 1.6 }, hovertemplate: `alpha = ${a}<br>n = %{x:.0f}<br>n^(1/alpha) = %{y:.2f}<extra></extra>` }));
+  tr.push({ x: ns, y: ns.map(v => v ** (1 / ah)), mode: 'lines', name: `${SH[k]}: fitted alpha = ${ah.toFixed(3)}`, line: { color: COL[k], width: 3, dash: 'dot' }, hovertemplate: 'n = %{x:.0f}<br>n^(1/alpha) = %{y:.2f}<extra></extra>' });
+  plot('hz-chart', tr, layout({ shapes: [vl(n, C.navy)], xaxis: XT('Horizon n (days, log scale)', { type: 'log', tickvals: [1, 2, 5, 10, 20, 50, 100, 250] }),
+    yaxis: LOGY('Scale of the n-day sum / daily scale (log scale)', logTicks(nw)), legend: LEG(nw, -0.18) }));
+  const gn = n ** (1 / ah) * g;
+  steps('hz-we', [T.hzw1(SH[k], nf(ah, 3), nf(g, 3)),
+    T.hzw2(n, nf(ah, 3), nf(1 / ah, 3), nf(n ** (1 / ah), 2), nf(g, 3), nf(gn, 2)),
+    T.hzw3(n, nf(g, 3), nf(Math.sqrt(n) * g, 2), nf(n ** (1 / ah - 0.5), 2), nf(1 / ah - 0.5, 3)),
+    T.hzw4(N, nf(1 / ah - 1, 3), nf(N ** (1 / ah - 1), 3), nf(g, 3), nf(N ** (1 / ah - 1) * g, 3), nf(g / Math.sqrt(N), 3))]);
+  out('hz-out', [T.hz(n, nf(n ** (1 / 1.5), 2), nf(Math.sqrt(n), 2), N, nf(N ** (1 / 1.5 - 1), 2), nf(N ** -0.5, 2))]);
+}
+
+// ----------------------------------------------------------------- X2. S1 vs S0 at a given t (frame 29)
+const CF_A = [0.8, 0.9, 0.95, 1.05, 1.2, 1.5, 1.7, 1.9];
+function cfParts(a, b, t) {          // gamma = 1, delta = 0: log phi = re + i im in S1 and in S0
+  const ta = Math.tan(Math.PI * a / 2), A = Math.abs(t) ** a, s = Math.sign(t);
+  return { ta, A, re: -A, im1: A * b * s * ta, im0: -A * b * s * ta * (Math.abs(t) ** (1 - a) - 1) };
+}
+function cfS0S1() {
+  const a = +$('cf-a').value, b = +$('cf-b').value, t = +$('cf-t').value; label('cf-a').textContent = nf(a, 2); label('cf-b').textContent = nf(b, 1); label('cf-t').textContent = nf(t, 2);
+  const P = cfParts(a, b, t), m = Math.exp(P.re);
+  table('cf-tab', ['α', 'tan(πα/2)', `δ<sub>0</sub> − δ<sub>1</sub> = βγ tan(πα/2) (β = ${nf(b, 1)}, γ = 1)`, `|φ(${nf(t, 2)})| = e<sup>−|t|<sup>α</sup></sup>`],
+    [...new Set([...CF_A, a])].sort((x, y) => x - y).map(v => { const ta = Math.tan(Math.PI * v / 2); return row([nf(v, 2), nf(ta, 3), nf(b * ta, 3), nf(Math.exp(-(Math.abs(t) ** v)), 3)], Math.abs(v - a) < 1e-9 ? 'sel' : ''); }));
+  const ts = linspace(-3, 3, 241).filter(v => Math.abs(v) > 1e-9), Q = ts.map(v => cfParts(a, b, v)), nw = single('cf-chart');
+  plot('cf-chart', [
+    { x: ts, y: Q.map(q => q.im1), mode: 'lines', name: 'S1: arg phi(t), delta1 = 0', line: { color: DBLUE, width: 1.8 }, hovertemplate: 't %{x:.2f}<br>arg %{y:.3f}<extra></extra>' },
+    { x: ts, y: Q.map(q => q.im0), mode: 'lines', name: 'S0: arg phi(t), delta0 = 0', line: { color: ORANGE, width: 1.8 }, hovertemplate: 't %{x:.2f}<br>arg %{y:.3f}<extra></extra>' },
+    { x: ts, y: ts.map(v => -b * Math.tan(Math.PI * a / 2) * v), mode: 'lines', name: 'difference S0 − S1 = −beta tan(pi alpha/2) t', line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' }
+  ], layout({ shapes: [vl(t, C.navy, null, 'dot')], xaxis: XT('t'), yaxis: XT('Imaginary part of log phi(t)'), legend: LEG(nw, -0.18) }));
+  const c1 = [m * Math.cos(P.im1), m * Math.sin(P.im1)], c0 = [m * Math.cos(P.im0), m * Math.sin(P.im0)];
+  steps('cf-we', [T.cfw1(nf(a, 2), nf(b, 1), nf(t, 2), nf(a / 2, 3), nf(P.ta, 3), nf(Math.abs(t) ** a, 3)),
+    T.cfw2(cplx(P.re, P.im1, 3), nf(P.re, 3), nf(P.im1, 3), cplx(c1[0], c1[1], 3), nf(m, 3)),
+    T.cfw3(nf(t, 2), nf(Math.abs(t) ** (1 - a) - 1, 3), cplx(P.re, P.im0, 3), cplx(c0[0], c0[1], 3)),
+    T.cfw4(nf(P.im0 - P.im1, 3), nf(b * P.ta, 3))]);
+  out('cf-out', [T.cf(nf(a, 2), nf(b, 1), nf(b * P.ta, 3))]);
+}
+
+// ----------------------------------------------------------------- X3. tail probabilities: stable vs Normal (frame 35)
+const TT_K = [2, 3, 5, 10];
+function tailTable() {
+  const a = +$('tt-a').value, k = +$('tt-k').value; label('tt-a').textContent = nf(a, 2); label('tt-k').textContent = nf(k, 1);
+  const G = grid(a, 0), c = cAlpha(a), P = v => ({ n: 2 * normSf(v / Math.SQRT2), s: 2 * G.sf(v), pl: 2 * c * v ** -a });
+  const ks = [...new Set([...TT_K, k])].sort((x, y) => x - y);
+  const rt = r => (r < 1000 ? nf(r, 1) : sciN(r, 2));
+  table('tt-tab', ['k', T.h.ttN, T.h.ttS(nf(a, 2)), T.h.ratio, T.h.ttPL], ks.map(v => { const p = P(v); return row([nf(v, v % 1 ? 1 : 0), tpct(100 * p.n), tpct(100 * p.s), rt(p.s / p.n), tpct(100 * p.pl)], v === k && !TT_K.includes(k) ? 'sel' : ''); }));
+  const xs = linspace(0.5, 20, 196), nw = single('tt-chart'), tr = [];
+  [[1.5, GREEN], [1.9, TEAL]].forEach(([v, col]) => { const H = grid(v, 0); tr.push({ x: xs, y: xs.map(z => 2 * H.sf(z) / (2 * normSf(z / Math.SQRT2))), mode: 'lines', name: `alpha = ${v}`, line: { color: col, width: 1.4 }, hovertemplate: `alpha = ${v}<br>k %{x:.1f}<br>ratio %{y:.3g}<extra></extra>` }); });
+  tr.push({ x: xs, y: xs.map(z => P(z).s / P(z).n), mode: 'lines', name: `chosen alpha = ${a.toFixed(2)}`, line: { color: PURPLE, width: 3 }, hovertemplate: 'k %{x:.1f}<br>ratio %{y:.3g}<extra></extra>' });
+  plot('tt-chart', tr, layout({ shapes: [vl(k, C.navy)], xaxis: XT('Threshold k'), yaxis: LOGY('P(|X| > k), stable / Normal (log scale)', { dtick: 5 }), legend: LEG(nw, -0.18) }));
+  const p = P(k);
+  out('tt-out', [T.tt(nf(a, 2), nf(k, 1), tpct(100 * p.n) + '%', tpct(100 * p.s) + '%', rt(p.s / p.n), nf(c, 4), tpct(100 * p.pl) + '%', nf(100 * p.pl / p.s, 0) + '%')]);
+}
+
+// ----------------------------------------------------------------- X4. one CMS draw step by step (frame 40)
+function cmsOne(U, W, a, b) {
+  const V = Math.PI * (U - 0.5), ta = Math.tan(Math.PI * a / 2), B = Math.atan(b * ta) / a, S = (1 + b * b * ta * ta) ** (1 / (2 * a));
+  const s1 = Math.sin(a * (V + B)), c1 = Math.cos(V) ** (1 / a), c2 = (Math.cos(V - a * (V + B)) / W) ** ((1 - a) / a);
+  return { V, B, S, s1, c1, c2, X: S * s1 / c1 * c2 };
+}
+function cmsDraw() {
+  const U = +$('cd-u').value, W = +$('cd-w').value, a = +$('cd-a').value, b = +$('cd-b').value;
+  label('cd-u').textContent = nf(U, 2); label('cd-w').textContent = nf(W, 2); label('cd-a').textContent = nf(a, 1); label('cd-b').textContent = nf(b, 1);
+  const R = cmsOne(U, W, a, b), G = grid(a, b), sh = s1Shift(a, b), F = G.cdf(R.X - sh);
+  const us = linspace(0.005, 0.995, 199), nw = single('cd-chart'), tr = [];
+  [[0.5, TEAL], [2, GOLD]].forEach(([w, col]) => tr.push({ x: us, y: us.map(u => cmsOne(u, w, a, b).X), mode: 'lines', name: `W = ${w}`, line: { color: col, width: 1.2, dash: 'dash' }, hovertemplate: `W = ${w}<br>U %{x:.3f}<br>X %{y:.3f}<extra></extra>` }));
+  tr.push({ x: us, y: us.map(u => cmsOne(u, W, a, b).X), mode: 'lines', name: `chosen W = ${W.toFixed(2)}`, line: { color: DBLUE, width: 2 }, hovertemplate: 'U %{x:.3f}<br>X %{y:.3f}<extra></extra>' });
+  tr.push({ x: [U], y: [R.X], mode: 'markers', name: 'the draw', marker: { color: RED, size: 11, line: { color: '#fff', width: 1.5 } }, hovertemplate: 'U %{x:.2f}<br>X %{y:.3f}<extra></extra>' });
+  plot('cd-chart', tr, layout({ xaxis: XT('Uniform draw U'), yaxis: XT(`CMS draw X of S1(${a.toFixed(1)}, ${b.toFixed(1)}, 1, 0)`, { range: [-12, 12] }), legend: LEG(nw, -0.18) }));
+  const items = [T.cdw1(nf(U, 2), nf(R.V, 3))];
+  if (Math.abs(b) > 1e-9) items.push(T.cdwB(nf(a, 1), nf(b, 1), nf(Math.tan(Math.PI * a / 2), 3), nf(R.B, 3), nf(R.S, 3)));
+  items.push(T.cdw2(Math.abs(b) > 1e-9, nf(R.s1, 3), nf(R.c1, 3)), T.cdw3(Math.abs(b) > 1e-9, nf(W, 2), nf(R.c2, 3)),
+    T.cdw4(Math.abs(b) > 1e-9 ? nf(R.S, 3) + ' × ' : '', nf(R.s1, 3), nf(R.c1, 3), nf(R.c2, 3), nf(R.X, 3)));
+  steps('cd-we', items);
+  out('cd-out', [T.cd(nf(R.X, 3), nf(a, 1), nf(b, 1), nf(100 * F, 1))]);
+}
+
+// ----------------------------------------------------------------- X5. McCulloch's method on real quantiles (frame 46)
+function mccInterp(nu) {             // Table III, column nu_beta = 0: the two nodes around nu and the linear interpolation
+  const N = D.mcc_line.nodes, A = D.mcc_line.nodes_alpha;
+  let j = 0; while (j < N.length - 2 && nu > N[j + 1]) j++;
+  return { n0: N[j], n1: N[j + 1], a0: A[j], a1: A[j + 1], a: A[j] + (nu - N[j]) / (N[j + 1] - N[j]) * (A[j + 1] - A[j]) };
+}
+function mccBet() {
+  const k = $('mb-a').value, y = +$('mb-y').value; label('mb-y').textContent = String(y);
+  table('mb-tab', [T.h.series, 'n', ...[0.05, 0.25, 0.5, 0.75, 0.95].map(p => `q̂<sub>${nf(p, p === 0.5 ? 1 : 2)}</sub>`), 'ν<sub>α</sub>', 'ν<sub>β</sub>', 'α̂', 'β̂', 'γ̂', 'δ̂<sub>0</sub>'],
+    D.assets.map(a => { const m = D.mcc[a][y]; return row([SH[a], fint(m.n), ...m.q.map(v => nf(v, 2)), nf(m.nu_a, 3), nf(m.nu_b, 3), nf(m.alpha, 3), nf(m.beta, 3), nf(m.gamma, 2), nf(m.delta0, 3)], a === k ? 'sel' : ''); }),
+    T.mbNote);
+  const m = D.mcc[k][y], q = m.q.map(v => Math.round(v * 1e4) / 1e4), w = q[4] - q[0], iqr = q[3] - q[1], I = mccInterp(m.nu_a);   // 4 decimals: the arithmetic of the steps adds up
+  steps('mb-we', [T.mbw1(SH[k], y, fint(m.n), ...q.map(v => nf(v, 4))),
+    T.mbw2(nf(q[4], 4), par(q[0], 4), nf(w, 4), nf(q[3], 4), par(q[1], 4), nf(iqr, 4), nf(w / iqr, 3), nf(q[4] + q[0] - 2 * q[2], 4), nf((q[4] + q[0] - 2 * q[2]) / w, 3)),
+    T.mbw3(nf(I.n0, 1), nf(I.a0, 3), nf(I.n1, 1), nf(I.a1, 3), nf(m.nu_a, 3), nf(I.a, 3), nf(Math.abs(m.nu_b), 3), nf(m.alpha, 3)),
+    T.mbw4(nf(iqr, 4), nf((m.q[3] - m.q[1]) / m.gamma, 3), nf(m.gamma, 3), nf(m.beta, 3), nf(m.delta0, 3))]);
+  out('mb-out', [T.mb(y, D.assets.map(a => `${SH[a]} ${nf(D.mcc[a][y].alpha, 3)}`).join(', '))]);
+}
+
+// ----------------------------------------------------------------- X6. stable fits of daily log returns (frame 50)
+function fitsTable() {
+  const ml = $('fs-m').value === 'ml', lv = AG_L[+$('fs-c').value], z = normPpf(0.5 + lv / 2), k = $('fs-a').value;
+  const lvl = (LANG === 'ro' ? String(100 * lv).replace('.', ',') : String(+(100 * lv).toFixed(1))) + '%'; label('fs-c').textContent = lvl;
+  const est = a => (ml ? D.fits[a].stable : D.fits[a].mcculloch);
+  if (ml) table('fs-tab', ['', 'n', T.h.aMcc, T.h.aML, T.h.bML, 'γ̂', 'δ̂<sub>0</sub>', 'δ̂<sub>1</sub>', T.h.ci(lvl), '(2 − α̂)/SE'], D.assets.map(a => {
+    const s = D.fits[a].stable;
+    return row([SH[a], fint(D.fits[a].n), nf(D.fits[a].mcculloch.alpha, 3), `${nf(s.alpha, 3)} (${nf(s.se_alpha, 3)})`, `${nf(s.beta, 3)} (${nf(s.se_beta, 3)})`, nf(s.gamma, 2), nf(s.delta0, 3), nf(s.delta1, 3),
+      `[${nf(s.alpha - z * s.se_alpha, 3)}; ${nf(s.alpha + z * s.se_alpha, 3)}]`, nf((2 - s.alpha) / s.se_alpha, 1)], a === k ? 'sel' : '');
+  }), T.fsNote);
+  else table('fs-tab', ['', 'n', T.h.aMLs, T.h.aMccs, T.h.bMcc, 'γ̂', 'δ̂<sub>0</sub>', 'δ̂<sub>1</sub>', T.h.dMcc], D.assets.map(a => {
+    const m = D.fits[a].mcculloch;
+    return row([SH[a], fint(D.fits[a].n), nf(D.fits[a].stable.alpha, 3), nf(m.alpha, 3), nf(m.beta, 3), nf(m.gamma, 2), nf(m.delta0, 3), nf(m.delta1, 3), nf(m.alpha - D.fits[a].stable.alpha, 3)], a === k ? 'sel' : '');
+  }), T.fsNoteM);
+  const nw = single('fs-chart'), xs = D.assets.map(a => SH[a]);
+  plot('fs-chart', [
+    { x: xs, y: D.assets.map(a => D.fits[a].stable.alpha), mode: 'markers', name: `ML, ${lvl} interval`, marker: { color: DBLUE, size: 10 },
+      error_y: { type: 'data', array: D.assets.map(a => z * D.fits[a].stable.se_alpha), visible: true, color: DBLUE, thickness: 1.5, width: 6 }, hovertemplate: '%{x}<br>ML alpha-hat %{y:.3f}<extra></extra>' },
+    { x: xs, y: D.assets.map(a => D.fits[a].mcculloch.alpha), mode: 'markers', name: 'McCulloch', marker: { color: ORANGE, size: 11, symbol: 'diamond' }, hovertemplate: '%{x}<br>McCulloch alpha-hat %{y:.3f}<extra></extra>' },
+    { x: [null], y: [null], mode: 'lines', name: 'alpha = 2 (Normal)', line: { color: C.navy, dash: 'dash', width: 1 } }
+  ], layout({ shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 2, y1: 2, line: { color: C.navy, width: 1, dash: 'dash' } }],
+    xaxis: XT(''), yaxis: XT('alpha-hat', { range: [1.25, 2.05] }), legend: LEG(nw, -0.14) }));
+  const e = est(k), ta = Math.tan(Math.PI * e.alpha / 2), sh = e.beta * e.gamma * ta;
+  steps('fs-we', [T.fsw1(SH[k], ml ? 'ML' : 'McCulloch', nf(e.alpha, 3), nf(e.beta, 3), nf(e.gamma, 3), nf(e.delta0, 3)),
+    T.fsw2(nf(e.alpha / 2, 3), nf(ta, 3), par(e.beta, 3), nf(e.gamma, 3), par(ta, 3), nf(sh, 3)),
+    T.fsw3(nf(e.delta0, 3), par(sh, 3), nf(e.delta0 - sh, 3), nf(e.delta1, 3)),
+    T.fsw4(nf(Math.abs(sh), 3))]);
+  const out1 = D.assets.map(a => { const s = D.fits[a].stable; return `${SH[a]} [${nf(s.alpha - z * s.se_alpha, 3)}; ${nf(s.alpha + z * s.se_alpha, 3)}]`; }).join(', ');
+  out('fs-out', [T.fs(lvl, out1, D.assets.filter(a => D.fits[a].mcculloch.alpha < D.fits[a].stable.alpha - z * D.fits[a].stable.se_alpha).map(a => SH[a]).join(', ') || '—')]);
+}
+
+// ----------------------------------------------------------------- X7. counting large losses (frame 58)
+const LC_ROWS = [['sp500', 5], ['sp500', 10], ['sp500', 15], ['bet', 10], ['btc', 10], ['btc', 20]];
+function lossRow(a, x) { const r = ser(a).r, n = r.length, M = model(D.fits[a]); let o = 0; for (const v of r) if (v < -x) o++; return { n, o, e: MODELS.map(m => n * M[m].cdf(-x)) }; }
+function lossCount() {
+  const k = $('lc-a').value, x = +$('lc-x').value; label('lc-x').textContent = nf(x, 1) + '%';
+  const rows = LC_ROWS.slice(), has = rows.some(([a, v]) => a === k && v === x);
+  if (!has) rows.push([k, x]);
+  table('lc-tab', ['', T.h.lossAbove, T.h.observed, T.h.nrm, 'Student-t', T.h.stable, T.h.stObs], rows.map(([a, v]) => {
+    const L = lossRow(a, v); return row([SH[a], nf(v, v % 1 ? 1 : 0) + '%', fint(L.o), ...L.e.map(texp), L.o ? nf(L.e[2] / L.o, 1) : '—'], a === k && v === x ? 'sel' : '');
+  }));
+  const f = D.fits[k].stable, L = lossRow(k, x), zz = (x + f.delta0) / f.gamma, c = cAlpha(f.alpha), pa = c * (1 - f.beta) * zz ** -f.alpha, pe = L.e[2] / L.n;
+  steps('lc-we', [T.lcw1(SH[k], fint(L.n), nf(f.alpha, 3), nf(f.beta, 3), nf(f.gamma, 3), nf(f.delta0, 3)),
+    T.lcw2(nf(x, 1), nf(f.delta0, 3), nf(f.gamma, 3), nf(zz, 2)),
+    T.lcw3(nf(f.alpha, 3), nf(c, 4), par(f.beta, 3), nf(zz, 2), sig(pa, 3), fint(L.n), nf(L.n * pa, 1)),
+    T.lcw4(sig(pe, 3), nf(L.e[2], 1), nf(100 * pa / pe, 0) + '%', fint(L.o))]);
+  out('lc-out', [T.lc(SH[k], nf(x, 1), fint(L.o), ...L.e.map(texp))]);
+}
+
+// ----------------------------------------------------------------- X8. VaR 1% and VaR 0.1% under the three models (frame 59)
+function varOf(a, p) { const M = model(D.fits[a]); return { data: -quantile(ser(a).s, p), m: MODELS.map(m => -M[m].ppf(p)) }; }
+function varTable() {
+  const p1 = +$('vt-p1').value, p2 = +$('vt-p2').value, k = $('vt-a').value;
+  const head = `<tr><th></th><th colspan="4">VaR ${plab(p1)} (%)</th><th colspan="4">VaR ${plab(p2)} (%)</th></tr><tr><th></th>${[0, 1].map(() => `<th>${T.h.data}</th><th>${T.h.nrm}</th><th>t</th><th>${T.h.stable}</th>`).join('')}</tr>`;
+  table('vt-tab', head, D.assets.map(a => { const A = varOf(a, p1), B = varOf(a, p2); return row([SH[a], ...[A, B].flatMap(v => [nf(v.data, 1), ...v.m.map(z => nf(z, 1))])], a === k ? 'sel' : ''); }));
+  const ps = logspace(Math.log10(0.1), Math.log10(0.0002), 60), nw = single('vt-chart'), V = ps.map(p => varOf(k, p)), n = ser(k).r.length;
+  const pd = ps.filter(p => p >= 2 / n);
+  plot('vt-chart', [
+    { x: ps.map(p => 100 * p), y: V.map(v => v.m[2] / v.m[0]), mode: 'lines', name: 'stable / Normal', line: { color: MC.Stable, width: 2 }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' },
+    { x: ps.map(p => 100 * p), y: V.map(v => v.m[1] / v.m[0]), mode: 'lines', name: 'Student-t / Normal', line: { color: MC['Student-t'], width: 2 }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' },
+    { x: pd.map(p => 100 * p), y: pd.map(p => varOf(k, p)).map(v => v.data / v.m[0]), mode: 'lines', name: 'data / Normal', line: { color: MC.Data, width: 2, dash: 'dot' }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' }
+  ], layout({ shapes: [vl(100 * p1, C.navy), vl(100 * p2, C.navy, null, 'dot')], xaxis: XT(`${SH[k]}: level p (%, log scale)`, { type: 'log', autorange: 'reversed', tickvals: [10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02] }),
+    yaxis: XT('VaR / VaR of the fitted Normal', { rangemode: 'tozero' }), legend: LEG(nw, -0.2) }));
+  const nm = D.fits[k].normal, st = D.fits[k].stable, G = grid(st.alpha, st.beta), W = [p1, p2].map(p => ({ p, z: normPpf(p), zs: G.ppf(p), v: varOf(k, p) }));
+  steps('vt-we', [T.vtw1(SH[k], nf(nm.mu, 3), nf(nm.sigma, 3), nf(st.alpha, 3), nf(st.beta, 3), nf(st.gamma, 3), nf(st.delta0, 3)),
+    ...W.map(w => T.vtw2(plab(w.p), nf(w.z, 3), nf(nm.mu, 3), nf(nm.sigma, 3), par(w.z, 3), nf(w.v.m[0], 2), nf(w.zs, 3), nf(st.delta0, 3), nf(st.gamma, 3), par(w.zs, 3), nf(w.v.m[2], 2),
+      nf(w.v.m[2] / w.v.m[0], 2), nf(w.v.data, 2)))]);
+  out('vt-out', [T.vt(plab(p2), D.assets.map(a => { const v = varOf(a, p2); return `${SH[a]} ${nf(v.m[2] / v.data, 1)}`; }).join(', '))]);
+}
+
+// ----------------------------------------------------------------- X9. which model fits best? (frame 60)
+const IC_K = [2, 3, 4];
+function icOf(a, crit) { const f = D.fits[a], n = f.n; return [f.normal.loglik, f.t.loglik, f.stable.loglik].map((ll, i) => crit === 'aic' ? 2 * IC_K[i] - 2 * ll : IC_K[i] * Math.log(n) - 2 * ll); }
+function aicTable() {
+  const crit = $('ai-c').value, nm = crit.toUpperCase();
+  table('ai-tab', ['', `${nm} ${T.h.nrm}`, `${nm} Student-t`, `${nm} ${T.h.stable}`, 'ν̂ (Student-t)', `${T.h.nrm} − t`, `${T.h.stable} − t`], D.assets.map(a => {
+    const v = icOf(a, crit); return row([SH[a], fint(v[0]), fint(v[1]), fint(v[2]), nf(D.fits[a].t.nu, 2), fint(v[0] - v[1]), nf(v[2] - v[1], 1)]);
+  }), T.aiNote(nm));
+  const nw = single('ai-chart'), xs = D.assets.map(a => SH[a]);
+  plot('ai-chart', [
+    { x: xs, y: D.assets.map(a => { const v = icOf(a, crit); return v[0] - v[1]; }), type: 'bar', name: `${nm} Normal − ${nm} Student-t`, marker: { color: MC.Normal }, hovertemplate: '%{x}<br>%{y:,.1f}<extra></extra>' },
+    { x: xs, y: D.assets.map(a => { const v = icOf(a, crit); return v[2] - v[1]; }), type: 'bar', name: `${nm} stable − ${nm} Student-t`, marker: { color: MC.Stable }, hovertemplate: '%{x}<br>%{y:,.1f}<extra></extra>' }
+  ], layout({ barmode: 'group', xaxis: XT(''), yaxis: LOGY(`Excess ${nm} over the Student-t (log scale)`, { range: [1, 3.6], tickvals: [10, 20, 50, 100, 200, 500, 1000, 2000], ticktext: ['10', '20', '50', '100', '200', '500', '1000', '2000'] }), legend: LEG(nw, -0.14) }));
+  const d = D.assets.map(a => { const v = icOf(a, crit); return [a, v[0] - v[1], v[2] - v[1]]; });
+  out('ai-out', [T.ai(nm, d.map(x => `${SH[x[0]]} ${fint(x[1])}`).join(', '), d.map(x => `${SH[x[0]]} ${nf(x[2], 1)}`).join(', '))]);
+}
+
+// ----------------------------------------------------------------- web lecture: table blocks travel inside a chart block
+function placeExtras() {
+  document.querySelectorAll('.xhold > section.xblk').forEach(sec => {
+    const art = document.getElementById('s' + sec.dataset.frame), head = art && art.querySelector('.fhead');
+    if (head) head.after(sec); else sec.closest('section.blk').after(sec);
+  });
+  document.querySelectorAll('.xhold').forEach(h => { if (!h.children.length) h.remove(); });
+}
+
 // ================================================================= wiring
 function init() {
+  placeExtras();
   const on = (ids, f) => ids.forEach(id => { $(id).addEventListener('input', f); if ($(id).tagName === 'SELECT') $(id).addEventListener('change', f); });
   const players = {}, PL = (btn, id, vals, ms) => (players[btn] = new Player(btn, $(id), vals, ms));
   const fd1 = () => fitDensity('f1', ['bet', 'sp500']), fd2 = () => fitDensity('f2', ['dax', 'btc']);
@@ -533,17 +757,30 @@ function init() {
   on(['t2-x'], tr2); PL('t2-play', 't2-x', range(2, 25, 1), 500);
   on(['ag-e', 'ag-c'], aggregationBlock); PL('ag-play', 'ag-c', range(0, 4, 1), 1000);
   on(['rr-a'], runVarReal); PL('rr-play', 'rr-a', ['bet', 'sp500', 'dax', 'btc'], 1500);
+  on(['hz-n', 'hz-N', 'hz-a'], horizons); PL('hz-play', 'hz-n', [1, 2, 5, 10, 20, 50, 100, 250], 900);
+  on(['cf-a', 'cf-b', 'cf-t'], cfS0S1); PL('cf-play', 'cf-a', range(1.1, 1.9, 0.05), 450);
+  on(['tt-a', 'tt-k'], tailTable); PL('tt-play', 'tt-k', range(1, 20, 1), 500);
+  on(['cd-u', 'cd-w', 'cd-a', 'cd-b'], cmsDraw); PL('cd-play', 'cd-u', range(0.05, 0.95, 0.05), 450);
+  on(['mb-a', 'mb-y'], mccBet); PL('mb-play', 'mb-y', range(2000, 2020, 1), 700);
+  on(['fs-m', 'fs-c', 'fs-a'], fitsTable); PL('fs-play', 'fs-c', range(0, 4, 1), 1000);
+  on(['lc-a', 'lc-x'], lossCount); PL('lc-play', 'lc-x', range(2, 25, 1), 600);
+  on(['vt-p1', 'vt-p2', 'vt-a'], varTable); PL('vt-play', 'vt-p2', ['0.05', '0.025', '0.01', '0.005', '0.001', '0.0005'], 1000);
+  on(['ai-c'], aicTable); PL('ai-play', 'ai-c', ['aic', 'bic'], 1500);
   const PFX = { 'stability-qq': 'sq', gclt: 'gc', 'density-alpha': 'da', 'density-beta': 'db', 's0-s1': 'ss', 'special-cases': 'sc', 'tails-loglog': 'tl', 'running-var-sim': 'rv',
     cms: 'cm', 'mcculloch-map': 'mm', 'estimators-mc': 'mc', 'fit-density-1': 'f1', 'fit-density-2': 'f2', 'qq-real-1': 'q1', 'qq-real-2': 'q2', 'tails-real-1': 't1',
-    'tails-real-2': 't2', aggregation: 'ag', 'running-var-real': 'rr' };
-  const VEIL = { 'density-alpha': { out: true, charts: true }, 'special-cases': { out: true, charts: true }, 'tails-loglog': { out: true, charts: true } };
+    'tails-real-2': 't2', aggregation: 'ag', 'running-var-real': 'rr', horizons: 'hz', 'cf-s0s1': 'cf', 'tail-table': 'tt', 'cms-draw': 'cd', 'mcc-bet': 'mb',
+    'fits-table': 'fs', 'loss-count': 'lc', 'var-table': 'vt', 'aic-table': 'ai' };
+  const VEIL = Object.assign({ 'density-alpha': { out: true, charts: true }, 'special-cases': { out: true, charts: true }, 'tails-loglog': { out: true, charts: true } }, T.veil || {});
   if (T.predict && predict) Object.entries(T.predict).forEach(([b, sp]) => { if ($(b)) predict(b, Object.assign({ player: players[PFX[b] + '-play'], veil: VEIL[b] || { out: true } }, sp)); });
   if (T.ticket && exitTicket) exitTicket(T.ticket);
-  const all = [stabQQ, gcltBlock, densityAlpha, densityBeta, s0s1, specialCases, tailsLoglog, runVarSim, cmsBlock, mccMap, mcBlock, fd1, fd2, qq1, qq2, tr1, tr2, aggregationBlock, runVarReal];
+  const all = [stabQQ, horizons, gcltBlock, densityAlpha, densityBeta, s0s1, specialCases, cfS0S1, tailsLoglog, runVarSim, tailTable, cmsDraw, cmsBlock, mccMap, mccBet, mcBlock, fitsTable,
+    fd1, fd2, qq1, qq2, tr1, tr2, lossCount, varTable, aicTable, aggregationBlock, runVarReal];
   all.forEach(f => { try { f(); } catch (e) { console.error(e); throw e; } });
 }
 window.CH3 = { grid, s1Shift, model, ser, quantile, histDensity, normPpf, normSf, tPpf, tCdf, levySf, qqData, tailData, linspace, logspace, mean, sdev, init,
-  blocks: { stabQQ, gcltBlock, densityAlpha, densityBeta, s0s1, specialCases, tailsLoglog, runVarSim, cmsBlock, mccMap, mcBlock, fitDensity, qqReal, tailsReal, aggregationBlock, runVarReal } };
+  cAlpha, cfParts, cmsOne, mccInterp, lossRow, varOf, icOf,
+  blocks: { stabQQ, gcltBlock, densityAlpha, densityBeta, s0s1, specialCases, tailsLoglog, runVarSim, cmsBlock, mccMap, mcBlock, fitDensity, qqReal, tailsReal, aggregationBlock, runVarReal,
+    horizons, cfS0S1, tailTable, cmsDraw, mccBet, fitsTable, lossCount, varTable, aicTable } };
 if (window.CH3_NO_INIT) return;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
