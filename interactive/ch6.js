@@ -154,6 +154,11 @@ function candBlock() {
     tr.push(on2(a, { x: xs.filter((_, j) => inLin[j]), y: Cd.f[m].filter((_, j) => inLin[j]), mode: 'lines', line: { color: MC[m], width: 1.5 }, name: lab[m], legendgroup: m, hovertemplate: `${MEN(m)}<br>x = %{x:.2f}<br>f(x) = %{y:.4f}<extra></extra>` }));
     tr.push(on2(b, { x: xs, y: Cd.f[m].map(v => Math.max(v, 1e-12)), mode: 'lines', line: { color: MC[m], width: 1.5 }, showlegend: false, legendgroup: m, hovertemplate: `${MEN(m)}<br>x = %{x:.2f}<br>f(x) = %{y:.2e}<extra></extra>` }));
   });
+  // the tail beyond -x: shaded area P(X < -x) for the Normal and the Student-t (linear panel), thick tail segments of every model (log panel)
+  const tl = xs.map(v => v <= -x + 1e-9);
+  [['Normal', 0.35], ['Student-t', 0.3]].forEach(([m, op]) => tr.push(on2(a, { x: xs.filter((_, j) => tl[j] && inLin[j]).concat([-x]), y: Cd.f[m].filter((_, j) => tl[j] && inLin[j]).concat([0]), mode: 'lines', fill: 'tozeroy',
+    fillcolor: hexA(MC[m], op), line: { color: MC[m], width: 2.6 }, name: `P(X < -x), ${MEN(m)}`, legendgroup: 'tail' + m, hoverinfo: 'skip' })));
+  MOD.forEach(m => tr.push(on2(b, { x: xs.filter((_, j) => tl[j]), y: Cd.f[m].filter((_, j) => tl[j]).map(v => Math.max(v, 1e-12)), mode: 'lines', line: { color: MC[m], width: 4 }, opacity: 0.55, showlegend: false, legendgroup: m, hoverinfo: 'skip' })));
   setAx(Pn, 0, AX('x (standardised return)', { range: [-4, 4] }), AX(''));
   setAx(Pn, 1, AX('x (standardised return)', { range: [-7, 7] }), AX('', LOGP([-7, 0])));
   const shapes = [vln(-x, DARK, b, 'dash', 1.2)]; if (x <= 4) shapes.push(vln(-x, DARK, a, 'dash', 1.2));
@@ -170,8 +175,12 @@ function candBlock() {
 function daxMonthlyBlock() {
   const M = D.dax_m, e = +$('dm-n').value, b0 = M.book[0], b1 = M.book[1], nw = single('dm-chart', 380);
   label('dm-n').textContent = M.ym[e].slice(0, 7);
-  const tr = [{ x: M.ym, y: M.x, mode: 'lines', line: { color: TEAL, width: 1.2 }, name: 'DAX monthly log return, 2004-2026', hovertemplate: '%{x}<br>%{y:.2f}%<extra></extra>' },
+  const wk = M.x.slice(b0, e + 1).reduce((j, v, i, arr) => (v < arr[j] ? i : j), 0) + b0;
+  const tr = [{ x: M.ym, y: M.x, mode: 'lines', line: { color: '#B0B0B0', width: 1 }, name: 'DAX monthly log return, 2004-2026', hovertemplate: '%{x}<br>%{y:.2f}%<extra></extra>' },
+    { x: M.ym.slice(b0, e + 1), y: M.x.slice(b0, e + 1), mode: 'lines', line: { color: TEAL, width: 1.4 }, name: `selected sample, ${M.ym[b0].slice(0, 7)} - ${M.ym[e].slice(0, 7)}`, hovertemplate: '%{x}<br>%{y:.2f}%<extra></extra>' },
     { x: M.ym.slice(b0, b1 + 1), y: M.x.slice(b0, b1 + 1), mode: 'lines', line: { color: BLUE, width: 1.6 }, name: 'SFESumm period, July 2004 - May 2014', hoverinfo: 'skip' },
+    { x: [M.ym[wk]], y: [M.x[wk]], mode: 'markers+text', text: [`min ${M.x[wk].toFixed(2)}%`], textposition: 'middle right', textfont: { size: 11, color: RED }, marker: { size: 10, color: RED, symbol: 'diamond' },
+      name: 'lowest month of the selected sample', hovertemplate: '%{x}<br>%{y:.2f}%<extra></extra>' },
     { x: [M.ym[0], M.ym[M.ym.length - 1]], y: [0, 0], mode: 'lines', line: { color: GREEN, width: 1, dash: 'dash' }, name: 'zero', hoverinfo: 'skip' }];
   const shapes = [{ type: 'rect', xref: 'x', yref: 'paper', x0: M.ym[b0], x1: M.ym[e], y0: 0, y1: 1, fillcolor: 'rgba(23,162,184,0.08)', line: { width: 0 } }, vln(M.ym[e], DARK, A0, 'dot', 1.4)];
   plot('dm-chart', tr, layout({ xaxis: AX(''), yaxis: AX('Log return (%)'), shapes, legend: LEG(nw, -0.12), margin: { l: 56, r: 12, t: 16, b: 30 } }));
@@ -261,6 +270,9 @@ function lrBlock() {
     { x: all.map(([, r]) => Math.max(r.lr, 0.011)), y: all.map(([, r]) => Math.max(r.p, floor)), text: all.map(([n, r]) => (r.p < floor ? '' : SH[n])), mode: 'markers+text', textposition: 'top center',
       textfont: { size: 10, color: DARK }, marker: { size: 9, color: all.map(([n]) => SC[n]), symbol: all.map(([, r]) => (r.p < floor ? 'triangle-down' : 'circle')), line: { color: DARK, width: 1 } },
       name: 'the seven series (p below 1e-12 drawn at 1e-12)', customdata: all.map(([n, r]) => [r.lr, r.p, SH[n]]), hovertemplate: '%{customdata[2]}<br>LR = %{customdata[0]:.2f}<br>p = %{customdata[1]:.3g}<extra></extra>' }];
+  const sx = Math.max(R.lr, 0.011), sy = Math.max(R.p, floor);      // the series of the worked example: its LR and p read off the axes
+  tr.push({ x: [0.01, sx, sx], y: [sy, sy, floor], mode: 'lines', line: { color: SC[k], width: 1.6, dash: 'dot' }, name: `${SH[k]}: LR = ${R.lr.toFixed(2)}, p = ${R.p < 1e-3 ? R.p.toExponential(1) : R.p.toFixed(3)}`, hoverinfo: 'skip' },
+    { x: [sx], y: [sy], mode: 'markers', marker: { size: 18, color: 'rgba(0,0,0,0)', line: { color: SC[k], width: 2.5 } }, showlegend: false, hoverinfo: 'skip' });
   plot('lr-chart', tr, layout({ xaxis: AX('LR statistic (log scale)', { type: 'log', tickvals: [0.01, 0.1, 1, 3.84, 10, 100, 1000, 10000], ticktext: ['0.01', '0.1', '1', '3.84', '10', '100', '1000', '10000'] }),
     yaxis: AX('p-value (log scale)', Object.assign(LOGP([-12.3, 0.1]), { dtick: 2 })), shapes: [vln(R.crit, RED, A0, 'dash', 1.1)], legend: LEG(nw, -0.18), margin: { l: 64, r: 12, t: 14, b: 40 } }));
   out('lr-out', [T.lr(MN(R.m0), MN(R.m1), R.bnd, all.filter(([, r]) => r.lr > r.crit).length)]);
@@ -379,7 +391,12 @@ function powerBlock() {
   const Pn = panels('gp-chart', 2, { h: 380, hs: 270, extra: 140 }), [a, b] = Pn.ax, tr = [];
   const lab = { ks: 'Kolmogorov-Smirnov', cvm: 'Cramer-von Mises', ad: 'Anderson-Darling' }, col = { ks: RED, cvm: ORANGE, ad: BLUE };
   [['t5', a], ['contam', b]].forEach(([alt, ax], j) => {
-    ['ks', 'cvm', 'ad'].forEach(s => tr.push(on2(ax, { x: GPN, y: GPN.map(v => Pw[alt][v][s]), mode: 'lines+markers', line: { color: col[s], width: 1.6 }, marker: { size: 7 }, name: lab[s], showlegend: j === 0, legendgroup: s, hovertemplate: `${lab[s]}<br>n = %{x}<br>%{y:.3f}<extra></extra>` })));
+    const upto = GPN.filter(v => v <= n);      // the full curves stay faint; the solid part grows up to the selected n
+    ['ks', 'cvm', 'ad'].forEach(s => {
+      tr.push(on2(ax, { x: GPN, y: GPN.map(v => Pw[alt][v][s]), mode: 'lines', line: { color: col[s], width: 1.2, dash: 'dot' }, opacity: 0.35, showlegend: false, legendgroup: s, hoverinfo: 'skip' }));
+      tr.push(on2(ax, { x: upto, y: upto.map(v => Pw[alt][v][s]), mode: 'lines+markers', line: { color: col[s], width: 1.8 }, marker: { size: 7 }, name: lab[s], showlegend: j === 0, legendgroup: s, hovertemplate: `${lab[s]}<br>n = %{x}<br>%{y:.3f}<extra></extra>` }));
+    });
+    tr.push(on2(ax, { x: [n, n, n], y: ['ks', 'cvm', 'ad'].map(s => Pw[alt][n][s]), mode: 'markers', marker: { size: 12, color: ['ks', 'cvm', 'ad'].map(s => col[s]), line: { color: DARK, width: 1 } }, showlegend: false, hoverinfo: 'skip' }));
     tr.push(on2(ax, { x: [40, 1250], y: [0.05, 0.05], mode: 'lines', line: { color: GREEN, width: 1, dash: 'dash' }, name: '5% level', showlegend: j === 0, hoverinfo: 'skip' }));
   });
   const xa = AX('Sample size n (log scale)', { type: 'log', tickvals: GPN, ticktext: GPN.map(String), range: [Math.log10(40), Math.log10(1250)] });
@@ -501,11 +518,15 @@ function leftTailBlock() {
   const tr = [{ x: px, y: py, mode: 'markers', marker: { size: 4, color: '#000' }, name: 'data', hovertemplate: 'loss %{x:.2f}%<br>share %{y:.2e}<extra></extra>' }];
   mods.forEach(m => tr.push({ x: Lt.grid, y: Lt.m[m], mode: 'lines', line: { color: MC[m], width: 1.6 }, name: MEN(m), hovertemplate: `${MEN(m)}<br>x = %{x:.2f}%<br>P = %{y:.2e}<extra></extra>` }));
   const xr = [Math.log10(0.5), Math.log10(Lt.grid[Lt.grid.length - 1])];
+  const P = m => { const g = Lt.grid; let j = g.findIndex(v => v >= xv); if (j <= 0) return Lt.m[m][Math.max(j, 0)];
+    const t = (Math.log(xv) - Math.log(g[j - 1])) / (Math.log(g[j]) - Math.log(g[j - 1])); return Math.exp(Math.log(Lt.m[m][j - 1]) + t * (Math.log(Lt.m[m][j]) - Math.log(Lt.m[m][j - 1]))); };
+  const ix = px.map((v, i) => i).filter(i => px[i] > xv);      // the observed days with a loss above x, and each model's P(loss > x)
+  tr.push({ x: ix.map(i => px[i]), y: ix.map(i => py[i]), mode: 'markers', marker: { size: 7, color: RED, line: { color: '#000', width: 0.6 } }, name: `data, loss > ${xv}% (${ix.length} day${ix.length === 1 ? '' : 's'})`, hovertemplate: 'loss %{x:.2f}%<br>share %{y:.2e}<extra></extra>' },
+    { x: mods.map(() => xv), y: mods.map(P), mode: 'markers', marker: { size: 10, symbol: 'diamond', color: mods.map(m => MC[m]), line: { color: DARK, width: 1 } }, name: `models at x = ${xv}%`, customdata: mods.map(MEN), hovertemplate: '%{customdata}<br>P(loss > x) = %{y:.2e}<extra></extra>' });
   plot('lt-chart', tr, layout({ xaxis: AX('Daily loss x (%, log scale)', Object.assign(pctTicks([0.5, 1, 2, 5, 10, 20, 50, 100]), { range: xr })), yaxis: AX('P(loss > x) (log scale)', LOGP([Math.log10(0.5 / n), Math.log10(0.6)])),
     shapes: [hln(0.01, GREEN, A0, 'dot', 1), vln(xv, DARK, A0, 'dot', 1.4)], annotations: [{ x: Math.log10(0.6), y: Math.log10(0.0125), xref: 'x', yref: 'y', text: '1% (VaR 1%)', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { size: 11, color: GREEN } }],
     legend: LEG(nw, -0.16), margin: { l: 64, r: 12, t: 14, b: 40 } }));
-  const cnt = L.filter(v => v > xv).length, P = m => { const g = Lt.grid; let j = g.findIndex(v => v >= xv); if (j <= 0) return Lt.m[m][Math.max(j, 0)];
-    const t = (Math.log(xv) - Math.log(g[j - 1])) / (Math.log(g[j]) - Math.log(g[j - 1])); return Math.exp(Math.log(Lt.m[m][j - 1]) + t * (Math.log(Lt.m[m][j]) - Math.log(Lt.m[m][j - 1]))); };
+  const cnt = L.filter(v => v > xv).length;
   const fp0 = FIT(k, 'Normal').params, PP = m => (m === 'Normal' ? Phi((-xv - fp0.mu) / fp0.sigma) : P(m));     // the chart clips model probabilities at 1e-9
   out('lt-out', [T.lt(SH[k], String(xv), cnt, fint(n), sig(cnt / n, 2)), T.ltItem(mods.map(m => { const q = PP(m), low = m !== 'Normal' && q <= 1.0001e-9;
     return [MN(m), low ? '&lt; 10<sup>−9</sup>' : sig(q, 2), low ? '0,0'.replace(',', LANG === 'ro' ? ',' : '.') : fnum(q * n, q * n < 10 ? 1 : 0)]; }))]);
@@ -543,15 +564,20 @@ function oosBlock() {
   const met = $('oo-r').value, ks = D.assets, O = NUM.oos, Pn = panels('oo-chart', 2, { h: 380, hs: 270, extra: 150 }), [a, b] = Pn.ax, tr = [];
   const xs = ks.map(k => LAB[k]);
   OOS_M.forEach(m => {
-    tr.push(on2(a, { type: 'bar', x: xs, y: ks.map(k => O[k][m].logscore - O[k].Normal.logscore), marker: { color: MC[m] }, name: MEN(m), legendgroup: m, hovertemplate: `${MEN(m)}<br>%{x}: %{y:.3f}<extra></extra>` }));
-    tr.push(on2(b, { type: 'bar', x: xs, y: ks.map(k => (met === 'rate' ? 100 * O[k][m].kupiec.rate : met === 'pin' ? O[k][m].pinball : O[k][m].kupiec.lr)), marker: { color: MC[m] }, showlegend: false, legendgroup: m,
+    tr.push(on2(a, { type: 'bar', x: xs, y: ks.map(k => O[k][m].logscore - O[k].Normal.logscore), marker: { color: MC[m] }, name: MEN(m), legendgroup: m, offsetgroup: m, hovertemplate: `${MEN(m)}<br>%{x}: %{y:.3f}<extra></extra>` }));
+    tr.push(on2(b, { type: 'bar', x: xs, y: ks.map(k => (met === 'rate' ? 100 * O[k][m].kupiec.rate : met === 'pin' ? O[k][m].pinball : O[k][m].kupiec.lr)), marker: { color: MC[m] }, showlegend: false, legendgroup: m, offsetgroup: m,
       hovertemplate: `${MEN(m)}<br>%{x}: %{y:.3f}<extra></extra>` }));
   });
-  if (met === 'pin') tr.push(on2(b, { type: 'bar', x: xs, y: ks.map(k => O[k].Historical.pinball), marker: { color: MC.Historical, pattern: { shape: '/' } }, name: 'historical simulation', hovertemplate: 'historical<br>%{x}: %{y:.4f}<extra></extra>' }));
+  if (met === 'pin') tr.push(on2(b, { type: 'bar', x: xs, y: ks.map(k => O[k].Historical.pinball), marker: { color: MC.Historical, pattern: { shape: '/' } }, name: 'historical simulation', offsetgroup: 'Historical', hovertemplate: 'historical<br>%{x}: %{y:.4f}<extra></extra>' }));
+  // the series and the method of the worked example: a marker on that bar in both panels
+  const k0 = $('oo-s').value, m0 = $('oo-m').value, H = m0 === 'Historical', rv = mm => (met === 'rate' ? 100 * O[k0][mm].kupiec.rate : met === 'pin' ? O[k0][mm].pinball : O[k0][mm].kupiec.lr);
+  const mk = (ax, y, own) => on2(ax, Object.assign({ x: [LAB[k0]], y: [y], mode: 'markers+text', text: [H ? 'historical' : MEN(m0)], textposition: 'top center', textfont: { size: 11, color: DARK },
+    marker: { size: 13, symbol: 'triangle-down', color: DARK }, showlegend: false, cliponaxis: false, hoverinfo: 'skip' }, own ? { offsetgroup: m0 } : {}));
+  tr.push(mk(a, H ? Math.max(...OOS_M.map(mm => O[k0][mm].logscore - O[k0].Normal.logscore)) : O[k0][m0].logscore - O[k0].Normal.logscore, !H), mk(b, rv(m0), !H || met === 'pin'));
   const yb = met === 'rate' ? 'VaR 1% exceedances on the test days (%)' : met === 'pin' ? 'Pinball loss of the 1% quantile (lower = better)' : 'Kupiec LR statistic';
   setAx(Pn, 0, AX(''), AX('')); setAx(Pn, 1, AX(''), AX(''));
   const shp = met === 'rate' ? [hln(1, '#000', b, 'dash', 1)] : met === 'kup' ? [hln(3.84, '#000', b, 'dash', 1)] : [];
-  plot('oo-chart', tr, layout(Object.assign(Pn.L, { barmode: 'group', bargap: 0.18, shapes: shp, annotations: [ptitle(a, 'Out-of-sample log score minus Normal'), ptitle(b, yb)], legend: LEG(Pn.stack, Pn.stack ? -0.07 : -0.2) })));
+  plot('oo-chart', tr, layout(Object.assign(Pn.L, { barmode: 'group', scattermode: 'group', bargap: 0.18, shapes: shp, annotations: [ptitle(a, 'Out-of-sample log score minus Normal'), ptitle(b, yb)], legend: LEG(Pn.stack, Pn.stack ? -0.07 : -0.2) })));
   const cm = ['Normal', 'Student-t', 'Skewed-t', 'NIG', 'Stable', 'Historical'];
   table('oo-tab', ['', T.h.expct, ...cm.map(m => (m === 'Historical' ? T.h.hist : MN(m))), T.h.bestAIC, T.h.bestLS, T.h.bestPin], ks.map(k => {
     const t = oosTest(k);
@@ -575,6 +601,8 @@ function overfitBlock() {
   const dl = f => { const v = cs.map(f), m = Math.min(...v); return v.map(x => x - m); };
   const tr = [on2(a, { x: cs, y: cs.map(c => R[c].in), mode: 'lines+markers', marker: { symbol: 'circle', size: 7 }, line: { color: BLUE }, name: 'in sample (estimation years)', hovertemplate: 'c = %{x}<br>%{y:.3f}<extra></extra>' }),
     on2(a, { x: cs, y: cs.map(c => R[c].out), mode: 'lines+markers', marker: { symbol: 'square', size: 7 }, line: { color: RED }, name: 'out of sample (later years)', hovertemplate: 'c = %{x}<br>%{y:.3f}<extra></extra>' }),
+    on2(a, { x: [chosen, chosen], y: [R[chosen].in, R[chosen].out], mode: 'lines+markers+text', text: [`in ${R[chosen].in.toFixed(3)}`, `out ${R[chosen].out.toFixed(3)}`], textposition: 'middle right',
+      textfont: { size: 11, color: ORANGE }, line: { color: ORANGE, width: 2.5 }, marker: { size: 13, color: 'rgba(0,0,0,0)', line: { color: ORANGE, width: 2 } }, name: `selected c = ${chosen}: gap in - out = ${(R[chosen].in - R[chosen].out).toFixed(3)}`, hoverinfo: 'skip' }),
     on2(b, { x: cs, y: dl(c => R[c].aic), mode: 'lines+markers', marker: { symbol: 'circle', size: 7 }, line: { color: GREEN }, name: 'Delta AIC', hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
     on2(b, { x: cs, y: dl(c => R[c].bic), mode: 'lines+markers', marker: { symbol: 'square', size: 7 }, line: { color: PURPLE }, name: 'Delta BIC', hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
     on2(b, { x: cs, y: dl(crit), mode: 'lines+markers', marker: { symbol: 'diamond', size: 8 }, line: { color: ORANGE, dash: 'dot' }, name: `penalty ${pen.toFixed(1)} per parameter`, hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
@@ -637,15 +665,18 @@ function varQQBlock() {
   const lam = +$('vq-l').value, h = +$('vq-h').value; label('vq-l').textContent = nf(lam, 2);
   const S = ser('dax'), y = S.x.map(v => v / 100), V = varRmaEma(y, h, lam), p = y.slice(h), N = p.length;
   const Pn = panels('vq-chart', 2, { h: 400, hs: 290, extra: 150 }), tr = [], ann = [], rows = [];
+  const sel = []; for (let i = 0; i < N; i += Math.max(1, Math.floor(N / 700))) sel.push(i); for (let i = Math.max(0, N - 40); i < N; i++) sel.push(i); for (let i = 0; i < 40; i++) sel.push(i);
+  const S2 = [...new Set(sel)].sort((s, t) => s - t), qn = S2.map(i => normPpf((i + 0.5) / N));
+  const RAT = { RMA: p.map((x, i) => x / V.rma[i]).sort((s, t) => s - t), EMA: p.map((x, i) => x / V.ema[i]).sort((s, t) => s - t) };
   [['RMA', V.rma, BLUE, `RMA, h = ${h}`], ['EMA', V.ema, ORANGE, `EMA, lambda = ${lam.toFixed(2)}`]].forEach(([nm, v, col, tt], j) => {
-    const ratio = p.map((x, i) => x / v[i]).sort((s, t) => s - t), ax = Pn.ax[j];
-    const sel = []; for (let i = 0; i < N; i += Math.max(1, Math.floor(N / 700))) sel.push(i); for (let i = Math.max(0, N - 40); i < N; i++) sel.push(i); for (let i = 0; i < 40; i++) sel.push(i);
-    const S2 = [...new Set(sel)].sort((s, t) => s - t), qn = S2.map(i => normPpf((i + 0.5) / N));
+    const ratio = RAT[nm], ax = Pn.ax[j], oth = nm === 'RMA' ? ['EMA', `EMA, lambda = ${lam.toFixed(2)}`] : ['RMA', `RMA, h = ${h}`];
+    // the other method in grey, for comparison: the RMA panel thus also follows lambda
+    tr.push(on2(ax, { x: qn, y: S2.map(i => RAT[oth[0]][i]), mode: 'markers', marker: { size: 3, color: '#B0B0B0' }, name: `grey: the other panel (${oth[1]})`, showlegend: false, hovertemplate: `${oth[1]}<br>Normal quantile %{x:.2f}<br>L/VaR %{y:.2f}<extra></extra>` }));
     const b0 = quantile(ratio, 0.25), b1 = quantile(ratio, 0.75), qb = normPpf(0.75), sl = (b1 - b0) / (2 * qb);
     tr.push(on2(ax, { x: qn, y: S2.map(i => ratio[i]), mode: 'markers', marker: { size: 3, color: col }, name: `L/VaR, ${tt}`, hovertemplate: 'Normal quantile %{x:.2f}<br>L/VaR %{y:.2f}<extra></extra>' }));
     tr.push(on2(ax, { x: [qn[0], qn[qn.length - 1]], y: [b0 + sl * (qn[0] + qb), b0 + sl * (qn[qn.length - 1] + qb)], mode: 'lines', line: { color: '#000', width: 0.9, dash: 'dash' }, name: 'line through the quartiles', showlegend: j === 0, hoverinfo: 'skip' }));
     setAx(Pn, j, AX('Normal quantiles'), AX(j === 0 || Pn.stack ? 'L/VaR quantiles' : ''));
-    ann.push(ptitle(ax, tt));
+    ann.push(ptitle(ax, `${tt} (grey: ${oth[1]})`));
     const x = p.reduce((s, r, i) => s + (r < v[i] ? 1 : 0), 0), K = kupiec(x, N, 0.01);
     rows.push([nm, fint(x), nf(100 * K.rate, 2) + '%', nf(K.lr, 1), { v: fp(K.p), c: K.p < 0.05 ? 'bad' : '' }, nf(ratio[N - 1], 2)]);
   });
