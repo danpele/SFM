@@ -376,6 +376,13 @@ function tDensities() {
     tr.push({ x, y: x.map(phi), mode: 'lines', xaxis: a.x, yaxis: a.y, name: 'Normal', showlegend: i === 0, line: { color: P.blue, width: 2 }, hovertemplate: 'Normal %{x:.2f}: %{y:.3g}<extra></extra>' });
     TD_NU.forEach(([nu, c]) => { const s = tUnit(nu); tr.push({ x, y: x.map(v => tpdf(v / s, nu) / s), mode: 'lines', xaxis: a.x, yaxis: a.y, name: `t(${nu}), unit variance`, showlegend: i === 0, line: { color: c, width: 1.5 }, hovertemplate: `t(${nu}) %{x:.2f}: %{y:.3g}<extra></extra>` }); });
   });
+  const s5 = tUnit(5), f5 = v => tpdf(v / s5, 5) / s5, xs = range(k, 7, (7 - k) / 80);
+  Pn.ax.forEach((a, i) => {                // the two tails beyond ±k: t(5) and the Normal; the densities at ±k
+    const lo = i ? 1e-7 : 0, poly = f => ({ x: [k, ...xs, 7, k, null, -k, ...xs.map(v => -v), -7, -k], y: [lo, ...xs.map(f), lo, lo, null, lo, ...xs.map(f), lo, lo] });
+    tr.push(Object.assign(poly(f5), { mode: 'lines', fill: 'toself', xaxis: a.x, yaxis: a.y, name: `P(|X| > ${+k.toFixed(2)}), t(5)`, showlegend: i === 0, line: { width: 0 }, fillcolor: 'rgba(181,133,63,0.4)', hoverinfo: 'skip' }));
+    tr.push(Object.assign(poly(phi), { mode: 'lines', fill: 'toself', xaxis: a.x, yaxis: a.y, name: `P(|X| > ${+k.toFixed(2)}), Normal`, showlegend: i === 0, line: { width: 0 }, fillcolor: 'rgba(26,58,110,0.45)', hoverinfo: 'skip' }));
+    tr.push({ x: [-k, k, -k, k], y: [f5(k), f5(k), phi(k), phi(k)], mode: 'markers', xaxis: a.x, yaxis: a.y, showlegend: false, marker: { color: [P.amber, P.amber, P.blue, P.blue], size: 8, line: { color: '#fff', width: 1.2 } }, hovertemplate: '%{x:.2f}: %{y:.3g}<extra></extra>' });
+  });
   const vl = a => [-k, k].map(v => ({ type: 'line', xref: a.x, yref: a.y + ' domain', x0: v, x1: v, y0: 0, y1: 1, line: { color: C.navy, width: 1.2, dash: 'dot' } }));
   setAx(Pn, 0, XT('Standardised value', { range: [-Math.max(4, k + 0.5), Math.max(4, k + 0.5)] }), XT('Density', { rangemode: 'tozero' }));
   setAx(Pn, 1, XT('Standardised value', { range: [-7, 7] }), XT(Pn.stack ? 'Density (log scale)' : '', { type: 'log', range: [-7, 0], exponentformat: 'power' }));
@@ -451,17 +458,23 @@ function aggregation() {
 // ================================================================= 13. QQ plots, daily vs h-day
 function qqHorizons() {
   const k = $('qh-a').value, h = +$('qh-h').value; label('qh-h').textContent = h;
-  const r = ser(k).r, Pn = panels('qh-chart', 2), tr = [], ann = [], res = [];
-  [1, h].forEach((q, i) => {
-    const x = aggregate(r, q), Q = qqNormal(x), a = Pn.ax[i], lo = Math.min(Q.tq[0], Q.eq[0]), hi = Math.max(Q.tq[Q.tq.length - 1], Q.eq[Q.eq.length - 1]);
-    const lab = q === 1 ? 'daily' : q === 21 ? 'monthly (21 days)' : `${q}-day`;
-    res.push(mom(x));
-    tr.push({ x: Q.tq, y: Q.eq, mode: 'markers', xaxis: a.x, yaxis: a.y, name: `${SH[k]}, ${lab}`, marker: { color: i ? P.purple : COL[k], size: i ? 6 : 4 }, hovertemplate: 'N(0,1) %{x:.2f}<br>empirical %{y:.2f}<extra></extra>' });
-    tr.push({ x: [lo, hi], y: [lo, hi], mode: 'lines', xaxis: a.x, yaxis: a.y, name: '45-degree line', showlegend: i === 0, line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' });
-    ann.push(ptitle(a, `${lab}, n = ${x.length}`));
-    setAx(Pn, i, XT('N(0,1) quantile'), XT(i === 0 || Pn.stack ? 'Standardised empirical quantile' : ''));
+  const r = ser(k).r, Pn = panels('qh-chart', 2), [a, b] = Pn.ax, tr = [], res = [];
+  const lab = q => (q === 1 ? 'daily' : q === 21 ? 'monthly (21 days)' : `${q}-day`);
+  let lo = 0, hi = 0;
+  [1, h].forEach((q, i) => {                // left: the daily QQ plot in grey as the benchmark, the h-day one in purple
+    const x = aggregate(r, q), Q = qqNormal(x);
+    lo = Math.min(lo, Q.tq[0], Q.eq[0]); hi = Math.max(hi, Q.tq[Q.tq.length - 1], Q.eq[Q.eq.length - 1]);
+    res.push(Object.assign(mom(x), { z: Q.eq }));
+    if (i && h === 1) return;
+    tr.push({ x: Q.tq, y: Q.eq, mode: 'markers', xaxis: a.x, yaxis: a.y, name: `${SH[k]}, ${lab(q)} (n = ${x.length})`, marker: { color: i || h === 1 ? P.purple : '#b8b8b8', size: i ? 6 : 4 }, hovertemplate: 'N(0,1) %{x:.2f}<br>empirical %{y:.2f}<extra></extra>' });
   });
-  plot('qh-chart', tr, layout(Object.assign({ annotations: ann }, Pn.L)));
+  tr.push({ x: [lo, hi], y: [lo, hi], mode: 'lines', xaxis: a.x, yaxis: a.y, name: '45-degree line', line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' });
+  const z = res[1].z, nb = Math.max(8, Math.min(60, Math.round(2 * Math.cbrt(z.length)))), Hh = hist(z, nb), gx = range(-5, 5, 0.05);
+  tr.push({ x: Hh.mid, y: Hh.dens, type: 'bar', width: Hh.w, xaxis: b.x, yaxis: b.y, name: `${lab(h)} returns, standardised (histogram)`, marker: { color: P.purple, opacity: 0.55 }, hovertemplate: '%{x:.2f}: %{y:.3f}<extra></extra>' });
+  tr.push({ x: gx, y: gx.map(phi), mode: 'lines', xaxis: b.x, yaxis: b.y, name: 'N(0,1) density', line: { color: C.navy, width: 1.6, dash: 'dash' }, hoverinfo: 'skip' });
+  setAx(Pn, 0, XT('N(0,1) quantile'), XT('Standardised empirical quantile'));
+  setAx(Pn, 1, XT(`Standardised ${lab(h)} return`, { range: [-5, 5] }), XT('Density', { range: [0, 0.75] }));
+  plot('qh-chart', tr, layout(Object.assign({ bargap: 0, annotations: [ptitle(a, `QQ plot: daily (grey) and ${lab(h)}`), ptitle(b, `${lab(h)}, n = ${z.length}: histogram vs N(0,1)`)] }, Pn.L)));
   const m = res[1], jp = m.jb_p < 1e-4 ? '< 0' + (LANG === 'ro' ? ',' : '.') + '0001' : '= ' + nf(m.jb_p, 4);
   out('qh-out', [T.qh(SH[k], h, m.n, nf(m.skew, 2), nf(m.exkurt, 1), jp, nf(res[0].exkurt, 1))]);
 }
@@ -469,19 +482,17 @@ function qqHorizons() {
 // ================================================================= 14. ACF of returns and of |r|^delta
 function acfBlock() {
   const dl = +$('ac-d').value, ex = $('ac-s').value === 'ex'; label('ac-d').textContent = nf(dl, 2);
-  const Pn = panels('ac-chart', 2), [a, b] = Pn.ax, lags = range(1, 50, 1), tr = [], res = {};
+  const lags = range(1, 50, 1), tr = [], res = {}, pw = dl === 1 ? '|r<sub>t</sub>|' : `|r<sub>t</sub>|<sup>${dl}</sup>`;
   let nmin = 1e9;
-  QQ3.forEach(k => {
+  QQ3.forEach((k, i) => {                  // returns in grey (the benchmark), |r_t|^δ in colour, on the same axes
     const r = sample(k, { ex }).r; nmin = Math.min(nmin, r.length);
     const ar = acf(r, 50), aa = acf(r.map(v => Math.pow(Math.abs(v), dl)), 50); res[k] = { ar, aa, n: r.length };
-    tr.push({ x: lags, y: ar, mode: 'lines+markers', xaxis: a.x, yaxis: a.y, name: SH[k], line: { color: COL[k], width: 0.8 }, marker: { size: 4 }, hovertemplate: SH[k] + ', lag %{x}: %{y:.3f}<extra></extra>' });
-    tr.push({ x: lags, y: aa, mode: 'lines+markers', xaxis: b.x, yaxis: b.y, showlegend: false, line: { color: COL[k], width: 0.8 }, marker: { size: 4 }, hovertemplate: SH[k] + ', lag %{x}: %{y:.3f}<extra></extra>' });
+    tr.push({ x: lags, y: ar, mode: 'lines+markers', name: 'returns r<sub>t</sub> (grey)', legendgroup: 'r', showlegend: i === 0, line: { color: '#b8b8b8', width: 0.8 }, marker: { size: 3, color: '#b8b8b8' }, hovertemplate: SH[k] + ', r<sub>t</sub>, lag %{x}: %{y:.3f}<extra></extra>' });
   });
+  QQ3.forEach(k => tr.push({ x: lags, y: res[k].aa, mode: 'lines+markers', name: `${SH[k]}, ${pw}`, line: { color: COL[k], width: 1 }, marker: { size: 4 }, hovertemplate: SH[k] + ', ' + pw + ', lag %{x}: %{y:.3f}<extra></extra>' }));
   const bd = 1.96 / Math.sqrt(nmin);
   tr.push({ x: [null], y: [null], mode: 'lines', name: '95% band under independence', line: { color: P.green, width: 8 }, opacity: 0.35 });
-  setAx(Pn, 0, XT('Lag (days)'), XT('Autocorrelation', { range: [-0.15, 0.5] })); setAx(Pn, 1, XT('Lag (days)'), XT(Pn.stack ? 'Autocorrelation' : '', { range: [-0.15, 0.5], matches: 'y' }));
-  plot('ac-chart', tr, layout(Object.assign({ shapes: [band(0, bd, a), band(0, bd, b), zline(a), zline(b)],
-    annotations: [ptitle(a, 'Returns r<sub>t</sub>'), ptitle(b, dl === 1 ? 'Absolute returns |r<sub>t</sub>|' : `|r<sub>t</sub>|<sup>${dl}</sup>`)] }, Pn.L)));
+  plot('ac-chart', tr, layout({ shapes: [band(0, bd), zline()], xaxis: XT('Lag (days)'), yaxis: XT('Autocorrelation', { range: [-0.15, 0.5] }) }));
   const s = res.sp500;
   out('ac-out', [T.ac(ex ? T.agEx : T.agAll, QQ3.map(k => `${SH[k]} ${nf(res[k].ar[0], 2)}`).join(', '), nf(dl, 2), nf(s.aa[0], 2), nf(s.aa[9], 2), nf(s.aa[49], 2), nf(bd, 3))]);
 }
@@ -682,6 +693,8 @@ function momentsBlock() {
   }));
   const tr = D.assets.map(a => ({ x: YRS, y: YRS.map(v => momOf(a, v, ex).exkurt), mode: 'lines+markers', name: SH[a], line: { color: COL[a], width: a === k ? 2.6 : 1.3 }, marker: { size: a === k ? 7 : 4 },
     hovertemplate: SH[a] + ', from %{x}: %{y:.1f}<extra></extra>' }));
+  tr.push({ x: D.assets.map(() => y), y: D.assets.map(a => X[a].exkurt), mode: 'markers+text', name: `samples from ${y}`, text: D.assets.map(a => a === k ? nf(X[a].exkurt, 1) : ''), textposition: 'middle right', textfont: { color: C.navy, size: 11 }, cliponaxis: false,
+    marker: { color: D.assets.map(a => COL[a]), size: D.assets.map(a => (a === k ? 13 : 9)), symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hovertemplate: '%{y:.1f}<extra></extra>' });
   plot('mo-chart', tr, layout({ shapes: [{ type: 'line', x0: y, x1: y, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } }],
     xaxis: XT('Sample starts on 1 January of', { dtick: 2 }), yaxis: XT('Excess kurtosis of daily log returns', { rangemode: 'tozero' }) }));
   const m = X[k], n = m.n; let m2 = 0, m3 = 0, m4 = 0;
@@ -706,8 +719,8 @@ function jbBlock() {
   }));
   plot('jb-chart', [
     { x: D.assets.map(a => SH[a]), y: D.assets.map(a => X[a].jb), type: 'bar', marker: { color: D.assets.map(a => COL[a]) }, name: 'JB statistic, daily log returns', text: D.assets.map(a => Math.round(X[a].jb).toLocaleString('en-US')), textposition: 'outside', cliponaxis: false, textfont: { color: C.navy, size: 11 }, hovertemplate: '%{x}: JB = %{y:,.0f}<extra></extra>' },
-    { x: [-0.5, 7.5], y: [5.99, 5.99], xaxis: 'x2', mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: '5% critical value of χ²(2): 5.99', hoverinfo: 'skip' }
-  ], layout({ bargap: 0.35, xaxis: XT(''), xaxis2: { overlaying: 'x', anchor: 'y', range: [-0.5, 7.5], visible: false }, yaxis: XT('JB (log scale)', { type: 'log', range: [0, 5.3], exponentformat: 'power' }) }));
+    { x: [null], y: [null], mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: '5% critical value of χ²(2): 5.99', hoverinfo: 'skip' }
+  ], layout({ bargap: 0.35, shapes: [{ type: 'line', xref: 'x domain', yref: 'y', x0: 0, x1: 1, y0: 5.99, y1: 5.99, line: { color: C.navy, width: 1.2, dash: 'dash' } }], xaxis: XT(''), yaxis: XT('JB (log scale)', { type: 'log', range: [0, 5.3], exponentformat: 'power' }) }));
   const m = X[k], a6 = m.n / 6, s2 = m.skew ** 2, k4 = m.exkurt ** 2 / 4;
   steps('jb-we', [T.jbw1(SH[k], fdate(m.dates[0]), fint(m.n), nf(m.skew, 3), nf(m.exkurt, 2)),
     T.jbw2(fint(m.n), nf(a6, 1), nf(m.skew, 3), nf(s2, 3), nf(m.exkurt, 2), nf(k4, 2)),
@@ -727,6 +740,8 @@ function tFitTable() {
     return row([LONG[a], { v: nf(f.nu, 2), c: f.nu < 4 ? 'bad' : '' }, nf(f.loc, 3), nf(f.scale, 3), fnum(f.ll_t, 1), fnum(f.ll_n, 1), fint(2 * (f.ll_t - f.ll_n) - 2), isFinite(sdt) ? nf(sdt, 2) : '∞', nf(m.sd, 2)], a === k ? 'sel' : '');
   }), T.ttNote);
   const tr = D.assets.map(a => ({ x: YRS, y: YRS.map(v => fitOf(a, v).nu), mode: 'lines+markers', name: SH[a], line: { color: COL[a], width: a === k ? 2.6 : 1.3 }, marker: { size: a === k ? 7 : 4 }, hovertemplate: SH[a] + ', from %{x}: ν̂ = %{y:.2f}<extra></extra>' }));
+  tr.push({ x: D.assets.map(() => y), y: D.assets.map(a => F[a].nu), mode: 'markers+text', name: `samples from ${y}`, text: D.assets.map(a => a === k ? nf(F[a].nu, 2) : ''), textposition: 'middle right', textfont: { color: C.navy, size: 11 }, cliponaxis: false,
+    marker: { color: D.assets.map(a => COL[a]), size: D.assets.map(a => (a === k ? 13 : 9)), symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hovertemplate: 'ν̂ = %{y:.2f}<extra></extra>' });
   tr.push({ x: [null], y: [null], mode: 'lines', name: 'ν = 4: finite kurtosis above the line', line: { color: C.navy, width: 1, dash: 'dash' } });
   plot('tt-chart', tr, layout({ shapes: [{ type: 'line', x0: y, x1: y, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } },
     { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 4, y1: 4, line: { color: C.navy, width: 1, dash: 'dash' } }],
@@ -841,6 +856,7 @@ function init() {
   on(['ln-s'], lognormal); PL('ln-play', 'ln-s', range(0.1, 1.5, 0.05), 250);
   on(['cl-p', 'cl-n'], () => { clt(); cltWE(); }); PL('cl-play', 'cl-p', range(0.5, 0.02, -0.02), 350);
   on(['na-n', 'na-p'], normalApprox); PL('na-play', 'na-n', range(5, 200, 5), 300);
+  $('sh-a').addEventListener('input', () => { if (players['sh-play'] && players['sh-play'].timer) $('sh-nu').value = (40 - 1.775 * +$('sh-a').value).toFixed(1); });   // ▶: α 0 -> 20 and ν 40 -> 4.5 together
   on(['sh-nu', 'sh-a'], shapes); PL('sh-play', 'sh-a', range(0, 20, 0.5), 200);
   on(['dx-a', 'dx-bw'], daxDensity); PL('dx-play', 'dx-bw', range(0.25, 3, 0.25), 700);
   on(['qn-y'], qqNormalBlock); PL('qn-play', 'qn-y', range(2010, 2024, 1), 900);
@@ -853,7 +869,10 @@ function init() {
   on(['ac-d', 'ac-s'], acfBlock); PL('ac-play', 'ac-d', range(0.25, 3, 0.25), 600);
   on(['vc-w'], clustering); PL('vc-play', 'vc-w', [5, 10, 21, 42, 63, 126, 252], 1000);
   on(['lv-y', 'lv-s'], leverageBlock); PL('lv-play', 'lv-y', range(2010, 2022, 1), 700);
+  $('gl-a').addEventListener('input', () => { if (players['gl-play'] && players['gl-play'].timer) $('gl-k').value = (-normPpf(GL_A[+$('gl-a').value])).toFixed(1); });   // ▶: k = z_α, the Normal quantile of the same tail
   on(['gl-a', 'gl-k'], gainLoss); PL('gl-play', 'gl-a', range(0, 4, 1), 1000);
+  const from0 = (btn, id, v0, v) => $(btn).addEventListener('click', () => { if (!players[btn].timer && +$(id).value === v0) $(id).value = v; }, true);   // ▶ from the slide state: start the sweep at its first value
+  from0('sh-play', 'sh-a', 5, 20); from0('gl-play', 'gl-a', 2, 4);
   on(['rm-a', 'rm-y'], rareMoves); PL('rm-play', 'rm-y', range(2010, 2024, 1), 900);
   on(['ll-a', 'll-x', 'll-y'], largeLosses); PL('ll-play', 'll-x', range(1, 10, 0.5), 600);
   on(['b1-a', 'b1-T', 'b1-q', 'b1-y'], bet100); PL('b1-play', 'b1-T', range(1, 20, 1), 500);
