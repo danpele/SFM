@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 2 · Distribuții clasice și fapte stilizate</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch2.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch2_data.js?v=20261101a", "ch2_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch2.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 2 · Distribuții clasice și fapte stilizate</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_02" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch2.html" class="lang-btn">EN</a><a href="ch2_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas.</p>
+<p class="toc"><a href="#s-norm">Distribuția Normală</a> · <a href="#s-logn">Distribuția lognormală</a> · <a href="#s-clt">Teorema limită centrală</a> · <a href="#s-mom">Momentele și forma unei distribuții</a> · <a href="#s-jb">Testarea normalității: Jarque–Bera și QQ plots</a> · <a href="#s-t">Distribuția Student-t</a> · <a href="#s-sf">Faptele stilizate ale randamentelor</a></p>
+<h2 class="sec" id="s-norm">Distribuția Normală</h2>
+<section class="blk" id="normal-pdf">
+  <h3>Regula 68–95–99,7</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=13" target="_blank" rel="noopener"><img src="slides/sfm_ch2_normal_pdf_ro.jpg" alt="Slide-ul 12: Regula 68–95–99,7" loading="lazy"></a>
+      <figcaption>Slide-ul 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="np-k">Pragul k (abateri standard): <b id="np-k-v"></b></label><input type="range" id="np-k" min="0.5" max="6" step="0.1" value="3"></div><button class="btn play" id="np-play" type="button"></button></div><div class="charts "><div class="chart" id="np-chart"></div></div><ul class="out" id="np-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> După distribuția Normală, o zi dincolo de 3 abateri standard apare o dată la 370 de zile. Butonul ▶ mută pragul pînă la 6. De cîte ori mai rară este o zi dincolo de 4 abateri standard?</div>
+  <details><summary>Răspuns</summary><p>De circa 43 de ori. P(|Z| > 4) = 0,0063%, adică o zi din 15 787, aproximativ 63 de ani de tranzacționare cu 252 de zile pe an; P(|Z| > 3) = 0,27%, o zi din 370. Raportul densităților în 3 și 4, φ(3)/φ(4) = 33, nu este raportul probabilităților din coadă. La 6 abateri standard, distribuția Normală dă o zi din 507 milioane.</p></details>
+</section><h2 class="sec" id="s-logn">Distribuția lognormală</h2>
+<section class="blk" id="lognormal">
+  <h3>Densități lognormale (SFElognormal)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=19" target="_blank" rel="noopener"><img src="slides/sfm_ch2_lognormal_ro.jpg" alt="Slide-ul 18: Densități lognormale (SFElognormal)" loading="lazy"></a>
+      <figcaption>Slide-ul 18</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ln-s">Parametrul s = σ√T al curbei alese: <b id="ln-s-v"></b></label><input type="range" id="ln-s" min="0.05" max="1.5" step="0.05" value="1"></div><button class="btn play" id="ln-play" type="button"></button></div><div class="charts "><div class="chart" id="ln-chart"></div></div><ul class="out" id="ln-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ crește s de la 0,1 la 1,5. Ce se întîmplă cu modul, mediana și media distribuției lognormale LN(0, s²)?</div>
+  <details><summary>Răspuns</summary><p>Mediana rămîne 1, deoarece e<sup>m</sup> nu depinde de s. Media e<sup>s²/2</sup> crește pînă la 3,08, iar modul e<sup>−s²</sup> scade pînă la 0,105. La s = 1, media este 1,65, modul 0,37 și asimetria 6,18. Distanța dintre medie și mediană crește cu volatilitatea și cu orizontul, prin s = σ√T.</p></details>
+</section><h2 class="sec" id="s-clt">Teorema limită centrală</h2>
+<section class="blk" id="clt">
+  <h3>CLT în practică (SFEclt)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=24" target="_blank" rel="noopener"><img src="slides/sfm_ch2_clt_ro.jpg" alt="Slide-ul 23: CLT în practică (SFEclt)" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cl-p">Probabilitatea p a extragerii Bernoulli: <b id="cl-p-v"></b></label><input type="range" id="cl-p" min="0.02" max="0.5" step="0.01" value="0.2"></div><button class="btn play" id="cl-play" type="button"></button></div><div class="charts "><div class="chart" id="cl-chart"></div></div><ul class="out" id="cl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide p = 0,2, iar asimetria mediei standardizate este 0,27 pentru n = 30. Butonul ▶ scade p de la 0,5 la 0,02. Cu p = 0,02, este asimetria pentru n = 300 mai mică decît 0,27?</div>
+  <details><summary>Răspuns</summary><p>Nu. Asimetria mediei este (1 − 2p)/√(np(1 − p)) = 0,96/√5,88 = 0,40 pentru n = 300 și p = 0,02, mai mare decît 0,27 pentru n = 30 și p = 0,2. Asimetria scade ca 1/√n, dar pornește de la un nivel care depinde de p: cu cît p este mai departe de 0,5, cu atît trebuie mai multe extrageri. Pagina calculează distribuția exactă a mediei; ponderea peste 1,96 pentru p = 0,2 este 5,8%, 2,6% și 2,8% (n = 5, 30, 300), iar în cele 20 000 de simulări ale slide-ului 5,8%, 2,7% și 2,8%.</p></details>
+</section>
+<section class="blk" id="normal-approx">
+  <h3>Aproximarea Normală a distribuției binomiale (SFENormalApprox)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch2_normal_approx_ro.jpg" alt="Slide-ul 24: Aproximarea Normală a distribuției binomiale (SFENormalApprox)" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="na-n">Numărul de încercări n: <b id="na-n-v"></b></label><input type="range" id="na-n" min="2" max="200" step="1" value="20"></div><div class="ctl"><label for="na-p">Probabilitatea de succes p: <b id="na-p-v"></b></label><input type="range" id="na-p" min="0.01" max="0.99" step="0.01" value="0.1"></div><button class="btn play" id="na-play" type="button"></button></div><div class="charts "><div class="chart" id="na-pmf"></div><div class="chart" id="na-err"></div></div><ul class="out" id="na-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu p = 0,1, butonul ▶ crește n de la 5 la 200. Regula practică cere np(1 − p) de cel puțin circa 9, adică n = 100. Ajunge eroarea maximă a CDF sub 0,01 pînă la n = 200?</div>
+  <details><summary>Răspuns</summary><p>Nu. Cu corecția de continuitate, eroarea maximă a CDF este 0,037 la n = 20, 0,017 la n = 100 și 0,012 la n = 200. Regula np(1 − p) ≥ 9 indică de unde aproximarea devine utilizabilă, nu o precizie garantată; eroarea scade lent, aproximativ ca 1/√n, cu mici oscilații de la un n la altul. Fără corecția de continuitate, eroarea la n = 20 este 0,177.</p></details>
+</section><h2 class="sec" id="s-mom">Momentele și forma unei distribuții</h2>
+<section class="blk" id="shapes">
+  <h3>Asimetria și boltirea în grafice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch2_shapes_ro.jpg" alt="Slide-ul 28: Asimetria și boltirea în grafice" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-nu">Gradele de libertate ν ale distribuției Student-t: <b id="sh-nu-v"></b></label><input type="range" id="sh-nu" min="4.2" max="40" step="0.1" value="5"></div><div class="ctl"><label for="sh-a">Parametrul de formă α al densității skew-Normal: <b id="sh-a-v"></b></label><input type="range" id="sh-a" min="0" max="20" step="0.5" value="5"></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, parametrul de formă α = 5 dă o densitate skew-Normal cu asimetria 0,85. Butonul ▶ crește α pînă la 20. Ce asimetrie are densitatea la α = 20?</div>
+  <details><summary>Răspuns</summary><p>0,99. Asimetria familiei skew-Normal crește cu α, dar are o limită de circa 0,995: la α = 10 este 0,96, la α = 20 este 0,99. O asimetrie mai mare nu se poate obține cu această familie. Excesul de boltire al distribuției Student-t cu varianța 1 este 6/(ν − 4): 6 pentru ν = 5, 1 pentru ν = 10.</p></details>
+</section>
+<section class="blk" id="dax-density">
+  <h3>Randamentele DAX față de densitatea Normală (SFEDaxReturnDistribution)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch2_dax_density_ro.jpg" alt="Slide-ul 31: Randamentele DAX față de densitatea Normală (SFEDaxReturnDistribution)" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dx-a">Seria</label><select id="dx-a"><option value="sp500">S&P 500</option><option value="dax" selected>DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="snp">SNP</option><option value="brd">BRD</option><option value="snn">SNN</option><option value="sng">SNG</option></select></div><div class="ctl"><label for="dx-bw">Lățimea de bandă (multiplu al regulii Scott): <b id="dx-bw-v"></b></label><input type="range" id="dx-bw" min="0.25" max="3" step="0.05" value="1"></div><button class="btn play" id="dx-play" type="button"></button></div><div class="charts "><div class="chart" id="dx-chart"></div></div><ul class="out" id="dx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La −6%, densitatea estimată a randamentelor DAX este de 439 de ori mai mare decît densitatea Normală, cu lățimea de bandă dată de regula Scott. Ce se întîmplă cu acest raport dacă lățimea de bandă se înjumătățește?</div>
+  <details><summary>Răspuns</summary><p>Crește la circa 580; la un sfert din lățimea Scott ajunge la 1 100, iar la dublu este 522. În coadă sînt puține observații, iar estimarea densității acolo depinde de lățimea de bandă. Pentru orice lățime încercată, raportul rămîne de ordinul sutelor: concluzia că DAX are cozi mult mai groase decît distribuția Normală nu depinde de această alegere. Vîrful densității estimate scade de la 0,47 la 0,34 cînd lățimea crește de la 0,5 la 3 ori regula Scott.</p></details>
+</section><h2 class="sec" id="s-jb">Testarea normalității: Jarque–Bera și QQ plots</h2>
+<section class="blk" id="qq-normal">
+  <h3>QQ plots față de distribuția Normală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_normal_ro.jpg" alt="Slide-ul 38: QQ plots față de distribuția Normală" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qn-y">Eșantionul începe în: <b id="qn-y-v"></b></label><input type="range" id="qn-y" min="2010" max="2024" step="1" value="2010"></div><button class="btn play" id="qn-play" type="button"></button></div><div class="charts "><div class="chart" id="qn-chart"></div></div><ul class="out" id="qn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută începutul eșantionului de la 2010 la 2024. Dacă eșantionul începe în 2021, după martie 2020, mai depășește cel mai mic randament standardizat al S&P 500 cuantila Normală corespunzătoare?</div>
+  <details><summary>Răspuns</summary><p>Da. De la începutul lui 2021, cel mai mic randament al S&P 500 este −6,2%, pe 4 aprilie 2025: −6,0 abateri standard, față de cuantila Normală −3,4. Pe tot eșantionul, ziua de 16 martie 2020 dă −11,8 față de −3,7. Martie 2020 mărește abaterea, dar nu o produce: și BET (−6,1) și Bitcoin (−5,8) rămîn departe de dreaptă după 2021.</p></details>
+</section><h2 class="sec" id="s-t">Distribuția Student-t</h2>
+<section class="blk" id="t-densities">
+  <h3>Densități Student-t cu varianța 1</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=44" target="_blank" rel="noopener"><img src="slides/sfm_ch2_t_densities_ro.jpg" alt="Slide-ul 43: Densități Student-t cu varianța 1" loading="lazy"></a>
+      <figcaption>Slide-ul 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="td-k">Pragul k (abateri standard): <b id="td-k-v"></b></label><input type="range" id="td-k" min="1" max="6" step="0.1" value="4"></div><button class="btn play" id="td-play" type="button"></button></div><div class="charts "><div class="chart" id="td-chart"></div></div><ul class="out" id="td-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ν = 5 și varianța 1, o zi dincolo de 4 abateri standard este de 56 de ori mai probabilă decît în cazul distribuției Normale. Butonul ▶ crește pragul pînă la 6. Ce se întîmplă cu acest raport?</div>
+  <details><summary>Răspuns</summary><p>Crește: 2 316 la 5 abateri standard și circa 290 000 la 6. Coada distribuției Student-t scade ca o putere, |x|<sup>−ν</sup>, iar coada Normală ca e<sup>−x²/2</sup>, deci raportul crește fără limită. La 6 abateri standard, P(|X| > 6) este 0,057% pentru t(5) și 0,0000002% pentru distribuția Normală.</p></details>
+</section>
+<section class="blk" id="t-fit">
+  <h3>S&P 500: distribuția Normală și distribuția Student-t estimate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch2_t_fit_sp500_ro.jpg" alt="Slide-ul 46: S&P 500: distribuția Normală și distribuția Student-t estimate" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tf-a">Seria</label><select id="tf-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="snp">SNP</option><option value="brd">BRD</option><option value="snn">SNN</option><option value="sng">SNG</option></select></div><div class="ctl"><label for="tf-nu">ν fixat (locația și scala reestimate): <b id="tf-nu-v"></b></label><input type="range" id="tf-nu" min="2.1" max="30" step="0.01" value="2.78"></div><button class="btn play" id="tf-play" type="button"></button></div><div class="charts "><div class="chart" id="tf-chart"></div></div><ul class="out" id="tf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ fixează ν la valori de la 2,2 la 30 și reestimează locația și scala pentru S&P 500. Care valoare dă o log-verosimilitate mai mare: ν = 2,2 sau ν = 4?</div>
+  <details><summary>Răspuns</summary><p>ν = 2,2: log-verosimilitatea este −5 704,8, față de −5 714,6 la ν = 4. Maximul, −5 693,8, este la estimația ν̂ = 2,78, iar profilul nu este simetric în jurul ei: scade încet spre ν mic și mai repede spre ν mare. La ν = 30 log-verosimilitatea este −6 054,5, spre −6 301,2, valoarea distribuției Normale. Diferența de AIC dintre distribuția Normală și distribuția t este 12 606,4 − 11 393,6 = 1 212,8 în favoarea distribuției t.</p></details>
+</section>
+<section class="blk" id="qq-t">
+  <h3>QQ plots față de distribuția Student-t estimată</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_t_ro.jpg" alt="Slide-ul 47: QQ plots față de distribuția Student-t estimată" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qt-nu">Gradele de libertate ν: <b id="qt-nu-v"></b></label><input type="range" id="qt-nu" min="0" max="9" step="1" value="0"></div><button class="btn play" id="qt-play" type="button"></button></div><div class="charts "><div class="chart" id="qt-chart"></div></div><ul class="out" id="qt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ν estimat (2,78), distribuția t prevede pentru S&P 500 un minim de −15,8%, sub minimul observat de −12,8%. Butonul ▶ fixează ν la valori mai mari. Pentru ce ν se apropie minimul prevăzut de cel observat?</div>
+  <details><summary>Răspuns</summary><p>Între ν = 3 și ν = 4. Cu locația și scala reestimate, minimul prevăzut este −13,6% la ν = 3 și −8,7% la ν = 4, față de −12,8% observat. Un ν mai mare înseamnă cozi mai subțiri. La ν = 4, centrul se potrivește la fel de bine, dar extremele observate ies din nou sub dreaptă; nicio valoare unică a lui ν nu potrivește simultan centrul și extremele.</p></details>
+</section><h2 class="sec" id="s-sf">Faptele stilizate ale randamentelor</h2>
+<section class="blk" id="sigma-days">
+  <h3>Faptul 1: zile de 4 sigma pe toate piețele</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=54" target="_blank" rel="noopener"><img src="slides/sfm_ch2_sigma_days_ro.jpg" alt="Slide-ul 53: Faptul 1: zile de 4 sigma pe toate piețele" loading="lazy"></a>
+      <figcaption>Slide-ul 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-k">Pragul k (abateri standard): <b id="sg-k-v"></b></label><input type="range" id="sg-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La 4 abateri standard, S&P 500 are 28 de zile, față de 0,27 așteptate după distribuția Normală. Butonul ▶ ridică pragul pînă la 6. Cîte zile dincolo de 6 abateri standard are S&P 500?</div>
+  <details><summary>Răspuns</summary><p>8 zile, față de 0,0000083 așteptate (o zi din 507 milioane). BET are 11, DAX 4, Bitcoin 4. Raportul dintre zilele observate și cele așteptate crește cu pragul: 5,5 la 3 abateri standard, 105 la 4, circa un milion la 6.</p></details>
+</section>
+<section class="blk" id="aggregation">
+  <h3>Faptul 2: boltirea scade cu orizontul</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch2_aggregation_ro.jpg" alt="Slide-ul 55: Faptul 2: boltirea scade cu orizontul" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-s">Eșantionul</label><select id="ag-s"><option value="all" selected>Tot eșantionul</option><option value="ex">Fără 20 februarie–30 aprilie 2020</option></select></div><div class="ctl"><label for="ag-h">Orizontul h (zile): <b id="ag-h-v"></b></label><input type="range" id="ag-h" min="1" max="63" step="1" value="21"></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Excesul de boltire al randamentelor zilnice ale S&P 500 este 13,5. Cît devine dacă eliminăm perioada 20 februarie–30 aprilie 2020, adică 50 dintre cele 4 201 zile?</div>
+  <details><summary>Răspuns</summary><p>Circa 5,4. Excesul de boltire lunar (h = 21) scade de la 3,7 la 0,8. Momentul de ordinul 4 depinde mult de cîteva valori extreme: 50 de zile, 1,2% din eșantion, explică mai mult de jumătate din excesul de boltire zilnic. Nici fără ele randamentele zilnice nu sînt Normale: 5,4 este mult peste 0.</p></details>
+</section>
+<section class="blk" id="qq-horizons">
+  <h3>Faptul 2: S&P 500, QQ plots pentru randamentele zilnice și lunare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_horizons_ro.jpg" alt="Slide-ul 56: Faptul 2: S&P 500, QQ plots pentru randamentele zilnice și lunare" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qh-a">Seria</label><select id="qh-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="qh-h">Orizontul h al panoului din dreapta (zile): <b id="qh-h-v"></b></label><input type="range" id="qh-h" min="1" max="63" step="1" value="21"></div><button class="btn play" id="qh-play" type="button"></button></div><div class="charts "><div class="chart" id="qh-chart"></div></div><ul class="out" id="qh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La h = 63 de zile (un trimestru, n = 66), mai respinge testul Jarque–Bera normalitatea randamentelor S&P 500 la 5%?</div>
+  <details><summary>Răspuns</summary><p>Da: p-value 0,00004, cu asimetria −1,13 și excesul de boltire 1,5. Pentru BET (p-value 0,07) și Bitcoin (0,22), testul nu mai respinge la acest orizont. Nerespingerea nu arată că randamentele trimestriale sînt Normale: cu 66 de observații, testul are putere mică.</p></details>
+</section>
+<section class="blk" id="acf">
+  <h3>Faptele 3 și 4: ACF a randamentelor și a randamentelor absolute</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=59" target="_blank" rel="noopener"><img src="slides/sfm_ch2_acf_ro.jpg" alt="Slide-ul 58: Faptele 3 și 4: ACF a randamentelor și a randamentelor absolute" loading="lazy"></a>
+      <figcaption>Slide-ul 58</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ac-s">Eșantionul</label><select id="ac-s"><option value="all" selected>Tot eșantionul</option><option value="ex">Fără 20 februarie–30 aprilie 2020</option></select></div><div class="ctl"><label for="ac-d">Puterea δ din |r<sub>t</sub>|<sup>δ</sup> (panoul din dreapta): <b id="ac-d-v"></b></label><input type="range" id="ac-d" min="0.25" max="3" step="0.25" value="1"></div><button class="btn play" id="ac-play" type="button"></button></div><div class="charts "><div class="chart" id="ac-chart"></div></div><ul class="out" id="ac-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe tot eșantionul, ρ̂(1) al randamentelor S&P 500 este −0,11, iar banda de 95% este ±0,03. Cît devine ρ̂(1) fără perioada 20 februarie–30 aprilie 2020?</div>
+  <details><summary>Răspuns</summary><p>−0,04, aproape de marginea benzii ±0,03. Cea mai mare parte a valorii −0,11 vine din martie 2020, cînd scăderile mari și revenirile au alternat. Autocorelațiile randamentelor absolute rămîn mari și fără această perioadă. Puterea δ arată același lucru pentru |r<sub>t</sub>|<sup>δ</sup>: la S&P 500, autocorelația la lagul 10 este 0,20 pentru δ = 0,5, 0,26 pentru δ = 1 și 0,22 pentru δ = 2.</p></details>
+</section>
+<section class="blk" id="clustering">
+  <h3>Faptul 4: perioade calme și perioade agitate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=62" target="_blank" rel="noopener"><img src="slides/sfm_ch2_clustering_ro.jpg" alt="Slide-ul 61: Faptul 4: perioade calme și perioade agitate" loading="lazy"></a>
+      <figcaption>Slide-ul 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vc-w">Fereastra abaterii standard mobile: <b id="vc-w-v"></b></label><input type="range" id="vc-w" min="0" max="252" step="1" value="0"></div><button class="btn play" id="vc-play" type="button"></button></div><div class="charts "><div class="chart" id="vc-chart"></div></div><ul class="out" id="vc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu o fereastră de 63 de zile (un trimestru), de cîte ori este mai mare cea mai mare abatere standard mobilă a S&P 500 decît cea mai mică?</div>
+  <details><summary>Răspuns</summary><p>De circa 12 ori: 3,94% pe zi în fereastra care se termină pe 20 mai 2020, față de 0,32% în fereastra care se termină pe 13 decembrie 2017. Raportul varianțelor este circa 154. La BET raportul abaterilor standard este 8,2, la Bitcoin 8,3. Volatilitatea unei zile depinde de perioada în care se află.</p></details>
+</section>
+<section class="blk" id="leverage">
+  <h3>Faptul 5: corelațiile de levier</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch2_leverage_ro.jpg" alt="Slide-ul 63: Faptul 5: corelațiile de levier" loading="lazy"></a>
+      <figcaption>Slide-ul 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lv-s">Eșantionul</label><select id="lv-s"><option value="all" selected>Tot eșantionul</option><option value="ex">Fără 20 februarie–30 aprilie 2020</option></select></div><div class="ctl"><label for="lv-y">Eșantionul începe în: <b id="lv-y-v"></b></label><input type="range" id="lv-y" min="2010" max="2022" step="1" value="2010"></div><button class="btn play" id="lv-play" type="button"></button></div><div class="charts "><div class="chart" id="lv-chart"></div></div><ul class="out" id="lv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută începutul eșantionului de la 2010 la 2022. Dacă eșantionul începe în 2021, rămîne media L(1..5) a S&P 500 negativă și în afara benzii de 95%?</div>
+  <details><summary>Răspuns</summary><p>Da. De la începutul lui 2021, media L(1..5) a S&P 500 este −0,10 (−0,12 pe tot eșantionul), iar banda este ±0,05. Efectul de levier nu vine dintr-o singură criză: fără 20 februarie–30 aprilie 2020, media pe tot eșantionul este −0,11. La Bitcoin, media rămîne aproape de zero în toate variantele.</p></details>
+</section>
+<section class="blk" id="gain-loss">
+  <h3>Faptul 6: asimetria cîștig/pierdere</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol2_distributii_clasice_fapte_stilizate.pdf#page=65" target="_blank" rel="noopener"><img src="slides/sfm_ch2_gain_loss_ro.jpg" alt="Slide-ul 64: Faptul 6: asimetria cîștig/pierdere" loading="lazy"></a>
+      <figcaption>Slide-ul 64</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gl-a">Probabilitatea din coadă α: <b id="gl-a-v"></b></label><input type="range" id="gl-a" min="0" max="4" step="1" value="2"></div><div class="ctl"><label for="gl-k">Pragul k (abateri standard): <b id="gl-k-v"></b></label><input type="range" id="gl-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="gl-play" type="button"></button></div><div class="charts "><div class="chart" id="gl-chart"></div></div><ul class="out" id="gl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La 1%, pierderea depășită într-o zi din 100 este mai mare decît cîștigul la S&P 500, DAX, BET și Bitcoin. Butonul ▶ schimbă probabilitatea α. La α = 5%, este pierderea mai mare decît cîștigul la toți cei patru indici?</div>
+  <details><summary>Răspuns</summary><p>Nu. La 5%, S&P 500 (1,65% față de 1,54%) și DAX (1,94% față de 1,82%) au încă pierderea mai mare, dar la BET (1,48% față de 1,52%) și Bitcoin (5,33% față de 5,35%) cîștigul este puțin mai mare. Asimetria cîștig/pierdere se vede în coada îndepărtată; la α = 0,1%, pierderea este mai mare la toți patru (S&P 500 6,14% față de 6,01%).</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %, din 2010 (Bitcoin din septembrie 2014, SNN și SNG din noiembrie 2013) pînă la 18 septembrie 2026. Prețuri EODHD: indicii și Bitcoin la închidere, acțiunile BVB ajustate pentru dividende și operațiuni corporative.</p>
+</main>
+</body>
+</html>

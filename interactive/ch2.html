@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2 · Classical Distributions and Stylised Facts</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch2.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch2_data.js?v=20261101a", "ch2_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch2.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistics of Financial Markets</h1><p>Chapter 2 · Classical Distributions and Stylised Facts</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_02" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch2.html" class="lang-btn active">EN</a><a href="ch2_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step.</p>
+<p class="toc"><a href="#s-norm">The Normal Distribution</a> · <a href="#s-logn">The Lognormal Distribution</a> · <a href="#s-clt">The Central Limit Theorem</a> · <a href="#s-mom">Moments and the Shape of a Distribution</a> · <a href="#s-jb">Testing Normality: Jarque–Bera and QQ Plots</a> · <a href="#s-t">The Student-t Distribution</a> · <a href="#s-sf">Stylised Facts of Returns</a></p>
+<h2 class="sec" id="s-norm">The Normal Distribution</h2>
+<section class="blk" id="normal-pdf">
+  <h3>The 68–95–99.7 Rule</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=12" target="_blank" rel="noopener"><img src="slides/sfm_ch2_normal_pdf_en.jpg" alt="Slide 11: The 68–95–99.7 Rule" loading="lazy"></a>
+      <figcaption>Slide 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="np-k">Threshold k (standard deviations): <b id="np-k-v"></b></label><input type="range" id="np-k" min="0.5" max="6" step="0.1" value="3"></div><button class="btn play" id="np-play" type="button"></button></div><div class="charts "><div class="chart" id="np-chart"></div></div><ul class="out" id="np-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Under the Normal distribution, a day beyond 3 standard deviations occurs once in 370 days. The ▶ button moves the threshold up to 6. How many times rarer is a day beyond 4 standard deviations?</div>
+  <details><summary>Answer</summary><p>About 43 times. P(|Z| > 4) = 0.0063%, one day in 15,787, about 63 years of trading at 252 days a year; P(|Z| > 3) = 0.27%, one day in 370. The ratio of the densities at 3 and 4, φ(3)/φ(4) = 33, is not the ratio of the tail probabilities. At 6 standard deviations, the Normal distribution gives one day in 507 million.</p></details>
+</section><h2 class="sec" id="s-logn">The Lognormal Distribution</h2>
+<section class="blk" id="lognormal">
+  <h3>Lognormal Densities (SFElognormal)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=18" target="_blank" rel="noopener"><img src="slides/sfm_ch2_lognormal_en.jpg" alt="Slide 17: Lognormal Densities (SFElognormal)" loading="lazy"></a>
+      <figcaption>Slide 17</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ln-s">Parameter s = σ√T of the chosen curve: <b id="ln-s-v"></b></label><input type="range" id="ln-s" min="0.05" max="1.5" step="0.05" value="1"></div><button class="btn play" id="ln-play" type="button"></button></div><div class="charts "><div class="chart" id="ln-chart"></div></div><ul class="out" id="ln-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button raises s from 0.1 to 1.5. What happens to the mode, the median and the mean of the lognormal distribution LN(0, s²)?</div>
+  <details><summary>Answer</summary><p>The median stays at 1, because e<sup>m</sup> does not depend on s. The mean e<sup>s²/2</sup> rises to 3.08 and the mode e<sup>−s²</sup> falls to 0.105. At s = 1, the mean is 1.65, the mode 0.37 and the skewness 6.18. The gap between mean and median grows with volatility and with the horizon, through s = σ√T.</p></details>
+</section><h2 class="sec" id="s-clt">The Central Limit Theorem</h2>
+<section class="blk" id="clt">
+  <h3>The CLT at Work (SFEclt)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch2_clt_en.jpg" alt="Slide 22: The CLT at Work (SFEclt)" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cl-p">Probability p of the Bernoulli draw: <b id="cl-p-v"></b></label><input type="range" id="cl-p" min="0.02" max="0.5" step="0.01" value="0.2"></div><button class="btn play" id="cl-play" type="button"></button></div><div class="charts "><div class="chart" id="cl-chart"></div></div><ul class="out" id="cl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide p = 0.2, and the skewness of the standardised mean is 0.27 for n = 30. The ▶ button lowers p from 0.5 to 0.02. With p = 0.02, is the skewness for n = 300 below 0.27?</div>
+  <details><summary>Answer</summary><p>No. The skewness of the mean is (1 − 2p)/√(np(1 − p)) = 0.96/√5.88 = 0.40 for n = 300 and p = 0.02, above the 0.27 for n = 30 and p = 0.2. The skewness falls as 1/√n, but from a level that depends on p: the further p is from 0.5, the more draws are needed. The page computes the exact distribution of the mean; the share above 1.96 for p = 0.2 is 5.8%, 2.6% and 2.8% (n = 5, 30, 300), and in the 20,000 simulations of the slide 5.8%, 2.7% and 2.8%.</p></details>
+</section>
+<section class="blk" id="normal-approx">
+  <h3>The Normal Approximation of the Binomial (SFENormalApprox)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=24" target="_blank" rel="noopener"><img src="slides/sfm_ch2_normal_approx_en.jpg" alt="Slide 23: The Normal Approximation of the Binomial (SFENormalApprox)" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="na-n">Number of trials n: <b id="na-n-v"></b></label><input type="range" id="na-n" min="2" max="200" step="1" value="20"></div><div class="ctl"><label for="na-p">Success probability p: <b id="na-p-v"></b></label><input type="range" id="na-p" min="0.01" max="0.99" step="0.01" value="0.1"></div><button class="btn play" id="na-play" type="button"></button></div><div class="charts "><div class="chart" id="na-pmf"></div><div class="chart" id="na-err"></div></div><ul class="out" id="na-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With p = 0.1, the ▶ button raises n from 5 to 200. The rule of thumb asks for np(1 − p) of at least about 9, that is n = 100. Does the largest CDF error fall below 0.01 by n = 200?</div>
+  <details><summary>Answer</summary><p>No. With the continuity correction, the largest CDF error is 0.037 at n = 20, 0.017 at n = 100 and 0.012 at n = 200. The rule np(1 − p) ≥ 9 says where the approximation becomes usable, not a guaranteed accuracy; the error falls slowly, roughly as 1/√n, with small oscillations from one n to the next. Without the continuity correction, the error at n = 20 is 0.177.</p></details>
+</section><h2 class="sec" id="s-mom">Moments and the Shape of a Distribution</h2>
+<section class="blk" id="shapes">
+  <h3>What Skewness and Kurtosis Look Like</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch2_shapes_en.jpg" alt="Slide 27: What Skewness and Kurtosis Look Like" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-nu">Degrees of freedom ν of the Student-t: <b id="sh-nu-v"></b></label><input type="range" id="sh-nu" min="4.2" max="40" step="0.1" value="5"></div><div class="ctl"><label for="sh-a">Shape parameter α of the skew-Normal density: <b id="sh-a-v"></b></label><input type="range" id="sh-a" min="0" max="20" step="0.5" value="5"></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, the shape parameter α = 5 gives a skew-Normal density with skewness 0.85. The ▶ button raises α up to 20. What is the skewness of the density at α = 20?</div>
+  <details><summary>Answer</summary><p>0.99. The skewness of the skew-Normal family grows with α but has a limit of about 0.995: at α = 10 it is 0.96, at α = 20 it is 0.99. A larger skewness cannot be obtained with this family. The excess kurtosis of the unit-variance Student-t distribution is 6/(ν − 4): 6 for ν = 5, 1 for ν = 10.</p></details>
+</section>
+<section class="blk" id="dax-density">
+  <h3>DAX Returns vs the Normal Density (SFEDaxReturnDistribution)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=31" target="_blank" rel="noopener"><img src="slides/sfm_ch2_dax_density_en.jpg" alt="Slide 30: DAX Returns vs the Normal Density (SFEDaxReturnDistribution)" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dx-a">Series</label><select id="dx-a"><option value="sp500">S&P 500</option><option value="dax" selected>DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="snp">SNP</option><option value="brd">BRD</option><option value="snn">SNN</option><option value="sng">SNG</option></select></div><div class="ctl"><label for="dx-bw">Bandwidth (multiple of Scott’s rule): <b id="dx-bw-v"></b></label><input type="range" id="dx-bw" min="0.25" max="3" step="0.05" value="1"></div><button class="btn play" id="dx-play" type="button"></button></div><div class="charts "><div class="chart" id="dx-chart"></div></div><ul class="out" id="dx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At −6%, the estimated density of DAX returns is 439 times the Normal density, with the bandwidth given by Scott’s rule. What happens to this ratio if the bandwidth is halved?</div>
+  <details><summary>Answer</summary><p>It rises to about 580; at a quarter of Scott’s bandwidth it reaches 1,100, and at twice the bandwidth it is 522. There are few observations in the tail, and the density estimate there depends on the bandwidth. For every bandwidth tried, the ratio stays in the hundreds: the conclusion that the DAX has much heavier tails than the Normal distribution does not depend on this choice. The peak of the estimated density falls from 0.47 to 0.34 as the bandwidth rises from 0.5 to 3 times Scott’s rule.</p></details>
+</section><h2 class="sec" id="s-jb">Testing Normality: Jarque–Bera and QQ Plots</h2>
+<section class="blk" id="qq-normal">
+  <h3>QQ Plots against the Normal Distribution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=38" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_normal_en.jpg" alt="Slide 37: QQ Plots against the Normal Distribution" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qn-y">Sample starts in: <b id="qn-y-v"></b></label><input type="range" id="qn-y" min="2010" max="2024" step="1" value="2010"></div><button class="btn play" id="qn-play" type="button"></button></div><div class="charts "><div class="chart" id="qn-chart"></div></div><ul class="out" id="qn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the start of the sample from 2010 to 2024. If the sample starts in 2021, after March 2020, does the smallest standardised S&P 500 return still lie beyond the corresponding Normal quantile?</div>
+  <details><summary>Answer</summary><p>Yes. Since the start of 2021, the smallest S&P 500 return is −6.2%, on 4 April 2025: −6.0 standard deviations, against the Normal quantile −3.4. Over the whole sample, 16 March 2020 gives −11.8 against −3.7. March 2020 makes the deviation larger but does not create it: BET (−6.1) and Bitcoin (−5.8) also stay far from the line after 2021.</p></details>
+</section><h2 class="sec" id="s-t">The Student-t Distribution</h2>
+<section class="blk" id="t-densities">
+  <h3>Student-t Densities with Unit Variance</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch2_t_densities_en.jpg" alt="Slide 42: Student-t Densities with Unit Variance" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="td-k">Threshold k (standard deviations): <b id="td-k-v"></b></label><input type="range" id="td-k" min="1" max="6" step="0.1" value="4"></div><button class="btn play" id="td-play" type="button"></button></div><div class="charts "><div class="chart" id="td-chart"></div></div><ul class="out" id="td-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With ν = 5 and unit variance, a day beyond 4 standard deviations is 56 times more likely than under the Normal distribution. The ▶ button raises the threshold up to 6. What happens to this ratio?</div>
+  <details><summary>Answer</summary><p>It rises: 2,316 at 5 standard deviations and about 290,000 at 6. The Student-t tail decays as a power, |x|<sup>−ν</sup>, and the Normal tail as e<sup>−x²/2</sup>, so the ratio grows without bound. At 6 standard deviations, P(|X| > 6) is 0.057% for t(5) and 0.0000002% for the Normal distribution.</p></details>
+</section>
+<section class="blk" id="t-fit">
+  <h3>S&P 500: Normal vs Student-t Fit</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch2_t_fit_sp500_en.jpg" alt="Slide 45: S&P 500: Normal vs Student-t Fit" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tf-a">Series</label><select id="tf-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="snp">SNP</option><option value="brd">BRD</option><option value="snn">SNN</option><option value="sng">SNG</option></select></div><div class="ctl"><label for="tf-nu">Fixed ν (location and scale re-estimated): <b id="tf-nu-v"></b></label><input type="range" id="tf-nu" min="2.1" max="30" step="0.01" value="2.78"></div><button class="btn play" id="tf-play" type="button"></button></div><div class="charts "><div class="chart" id="tf-chart"></div></div><ul class="out" id="tf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button fixes ν at values from 2.2 to 30 and re-estimates the location and scale for the S&P 500. Which value gives the higher log-likelihood: ν = 2.2 or ν = 4?</div>
+  <details><summary>Answer</summary><p>ν = 2.2: the log-likelihood is −5,704.8, against −5,714.6 at ν = 4. The maximum, −5,693.8, is at the estimate ν̂ = 2.78, and the profile is not symmetric around it: it falls slowly towards small ν and faster towards large ν. At ν = 30 the log-likelihood is −6,054.5, towards −6,301.2, the value of the Normal distribution. The AIC difference between the Normal and the t distribution is 12,606.4 − 11,393.6 = 1,212.8 in favour of the t distribution.</p></details>
+</section>
+<section class="blk" id="qq-t">
+  <h3>QQ Plots against the Fitted Student-t</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_t_en.jpg" alt="Slide 46: QQ Plots against the Fitted Student-t" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qt-nu">Degrees of freedom ν: <b id="qt-nu-v"></b></label><input type="range" id="qt-nu" min="0" max="9" step="1" value="0"></div><button class="btn play" id="qt-play" type="button"></button></div><div class="charts "><div class="chart" id="qt-chart"></div></div><ul class="out" id="qt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the estimated ν (2.78), the t distribution predicts a minimum of −15.8% for the S&P 500, below the observed minimum of −12.8%. The ▶ button fixes ν at larger values. For which ν does the predicted minimum come close to the observed one?</div>
+  <details><summary>Answer</summary><p>Between ν = 3 and ν = 4. With the location and scale re-estimated, the predicted minimum is −13.6% at ν = 3 and −8.7% at ν = 4, against −12.8% observed. A larger ν means thinner tails. At ν = 4 the centre fits as well, but the observed extremes again fall below the line; no single value of ν fits the centre and the extremes at the same time.</p></details>
+</section><h2 class="sec" id="s-sf">Stylised Facts of Returns</h2>
+<section class="blk" id="sigma-days">
+  <h3>Fact 1: 4-Sigma Days in Every Market</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch2_sigma_days_en.jpg" alt="Slide 52: Fact 1: 4-Sigma Days in Every Market" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-k">Threshold k (standard deviations): <b id="sg-k-v"></b></label><input type="range" id="sg-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At 4 standard deviations, the S&P 500 has 28 days, against 0.27 expected under the Normal distribution. The ▶ button raises the threshold up to 6. How many days beyond 6 standard deviations does the S&P 500 have?</div>
+  <details><summary>Answer</summary><p>8 days, against 0.0000083 expected (one day in 507 million). BET has 11, DAX 4, Bitcoin 4. The ratio of observed to expected days grows with the threshold: 5.5 at 3 standard deviations, 105 at 4, about one million at 6.</p></details>
+</section>
+<section class="blk" id="aggregation">
+  <h3>Fact 2: Kurtosis Falls with the Horizon</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch2_aggregation_en.jpg" alt="Slide 54: Fact 2: Kurtosis Falls with the Horizon" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-s">Sample</label><select id="ag-s"><option value="all" selected>Full sample</option><option value="ex">Without 20 February–30 April 2020</option></select></div><div class="ctl"><label for="ag-h">Horizon h (days): <b id="ag-h-v"></b></label><input type="range" id="ag-h" min="1" max="63" step="1" value="21"></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The excess kurtosis of daily S&P 500 returns is 13.5. What does it become if we remove the period 20 February–30 April 2020, that is 50 of the 4,201 days?</div>
+  <details><summary>Answer</summary><p>About 5.4. The monthly excess kurtosis (h = 21) falls from 3.7 to 0.8. The fourth moment depends heavily on a few extreme values: 50 days, 1.2% of the sample, account for more than half of the daily excess kurtosis. Even without them, daily returns are not Normal: 5.4 is far above 0.</p></details>
+</section>
+<section class="blk" id="qq-horizons">
+  <h3>Fact 2: S&P 500, Daily vs Monthly QQ Plots</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch2_qq_horizons_en.jpg" alt="Slide 55: Fact 2: S&P 500, Daily vs Monthly QQ Plots" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qh-a">Series</label><select id="qh-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="qh-h">Horizon h of the right panel (days): <b id="qh-h-v"></b></label><input type="range" id="qh-h" min="1" max="63" step="1" value="21"></div><button class="btn play" id="qh-play" type="button"></button></div><div class="charts "><div class="chart" id="qh-chart"></div></div><ul class="out" id="qh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At h = 63 days (a quarter, n = 66), does the Jarque–Bera test still reject normality of S&P 500 returns at 5%?</div>
+  <details><summary>Answer</summary><p>Yes: p-value 0.00004, with skewness −1.13 and excess kurtosis 1.5. For BET (p-value 0.07) and Bitcoin (0.22), the test no longer rejects at this horizon. Not rejecting does not show that quarterly returns are Normal: with 66 observations, the test has little power.</p></details>
+</section>
+<section class="blk" id="acf">
+  <h3>Facts 3 and 4: ACF of Returns and of Absolute Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch2_acf_en.jpg" alt="Slide 57: Facts 3 and 4: ACF of Returns and of Absolute Returns" loading="lazy"></a>
+      <figcaption>Slide 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ac-s">Sample</label><select id="ac-s"><option value="all" selected>Full sample</option><option value="ex">Without 20 February–30 April 2020</option></select></div><div class="ctl"><label for="ac-d">Power δ in |r<sub>t</sub>|<sup>δ</sup> (right panel): <b id="ac-d-v"></b></label><input type="range" id="ac-d" min="0.25" max="3" step="0.25" value="1"></div><button class="btn play" id="ac-play" type="button"></button></div><div class="charts "><div class="chart" id="ac-chart"></div></div><ul class="out" id="ac-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over the full sample, ρ̂(1) of S&P 500 returns is −0.11, and the 95% band is ±0.03. What is ρ̂(1) without the period 20 February–30 April 2020?</div>
+  <details><summary>Answer</summary><p>−0.04, close to the edge of the ±0.03 band. Most of the −0.11 comes from March 2020, when large falls and rebounds alternated. The autocorrelations of absolute returns stay large without this period too. The power δ shows the same for |r<sub>t</sub>|<sup>δ</sup>: for the S&P 500, the autocorrelation at lag 10 is 0.20 for δ = 0.5, 0.26 for δ = 1 and 0.22 for δ = 2.</p></details>
+</section>
+<section class="blk" id="clustering">
+  <h3>Fact 4: Calm and Turbulent Periods</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=61" target="_blank" rel="noopener"><img src="slides/sfm_ch2_clustering_en.jpg" alt="Slide 60: Fact 4: Calm and Turbulent Periods" loading="lazy"></a>
+      <figcaption>Slide 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vc-w">Window of the rolling standard deviation: <b id="vc-w-v"></b></label><input type="range" id="vc-w" min="0" max="252" step="1" value="0"></div><button class="btn play" id="vc-play" type="button"></button></div><div class="charts "><div class="chart" id="vc-chart"></div></div><ul class="out" id="vc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 63-day window (a quarter), how many times larger is the largest rolling standard deviation of the S&P 500 than the smallest?</div>
+  <details><summary>Answer</summary><p>About 12 times: 3.94% a day in the window ending on 20 May 2020, against 0.32% in the window ending on 13 December 2017. The ratio of the variances is about 154. For BET the ratio of standard deviations is 8.2, for Bitcoin 8.3. The volatility of a day depends on the period it falls in.</p></details>
+</section>
+<section class="blk" id="leverage">
+  <h3>Fact 5: Leverage Correlations</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=63" target="_blank" rel="noopener"><img src="slides/sfm_ch2_leverage_en.jpg" alt="Slide 62: Fact 5: Leverage Correlations" loading="lazy"></a>
+      <figcaption>Slide 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lv-s">Sample</label><select id="lv-s"><option value="all" selected>Full sample</option><option value="ex">Without 20 February–30 April 2020</option></select></div><div class="ctl"><label for="lv-y">Sample starts in: <b id="lv-y-v"></b></label><input type="range" id="lv-y" min="2010" max="2022" step="1" value="2010"></div><button class="btn play" id="lv-play" type="button"></button></div><div class="charts "><div class="chart" id="lv-chart"></div></div><ul class="out" id="lv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the start of the sample from 2010 to 2022. If the sample starts in 2021, does the mean L(1..5) of the S&P 500 stay negative and outside the 95% band?</div>
+  <details><summary>Answer</summary><p>Yes. Since the start of 2021, the mean L(1..5) of the S&P 500 is −0.10 (−0.12 over the full sample), and the band is ±0.05. The leverage effect does not come from a single crisis: without 20 February–30 April 2020, the full-sample mean is −0.11. For Bitcoin, the mean stays close to zero in every variant.</p></details>
+</section>
+<section class="blk" id="gain-loss">
+  <h3>Fact 6: Gain/Loss Asymmetry</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter2_classical_distributions_stylised_facts.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch2_gain_loss_en.jpg" alt="Slide 63: Fact 6: Gain/Loss Asymmetry" loading="lazy"></a>
+      <figcaption>Slide 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gl-a">Tail probability α: <b id="gl-a-v"></b></label><input type="range" id="gl-a" min="0" max="4" step="1" value="2"></div><div class="ctl"><label for="gl-k">Threshold k (standard deviations): <b id="gl-k-v"></b></label><input type="range" id="gl-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="gl-play" type="button"></button></div><div class="charts "><div class="chart" id="gl-chart"></div></div><ul class="out" id="gl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At 1%, the loss exceeded on one day in 100 is larger than the gain for the S&P 500, DAX, BET and Bitcoin. The ▶ button changes the probability α. At α = 5%, is the loss larger than the gain for all four indices?</div>
+  <details><summary>Answer</summary><p>No. At 5%, the S&P 500 (1.65% against 1.54%) and the DAX (1.94% against 1.82%) still have the larger loss, but for BET (1.48% against 1.52%) and Bitcoin (5.33% against 5.35%) the gain is slightly larger. The gain/loss asymmetry shows in the far tail; at α = 0.1%, the loss is larger for all four (S&P 500 6.14% against 6.01%).</p></details>
+</section>
+<p class="src foot">Daily log returns, in %, from 2010 (Bitcoin from September 2014, SNN and SNG from November 2013) to 18 September 2026. EODHD prices: indices and Bitcoin at the close, BVB stocks adjusted for dividends and corporate actions.</p>
+</main>
+</body>
+</html>

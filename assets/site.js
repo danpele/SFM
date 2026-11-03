@@ -101,7 +101,7 @@
     // ------------------------------------------------------------
     // CHAPTER CARDS
     // ------------------------------------------------------------
-    const LINK_CLASS = { slides: 'btn-primary', slidesExtra: 'btn-primary', seminar: 'btn-secondary', seminarExtra: 'btn-secondary', notebook: 'btn-outline', quantlets: 'btn-outline' };
+    const LINK_CLASS = { slides: 'btn-primary', web: 'btn-outline', interactive: 'btn-outline', slidesExtra: 'btn-primary', seminar: 'btn-secondary', seminarExtra: 'btn-secondary', notebook: 'btn-outline', quantlets: 'btn-outline' };
 
     // A link is { type, href[, colab][, label: {en, ro}] } or { type, soon: true[, label] } for an item still in preparation
     const linkLabel = l => (l.label && l.label[LANG]) || T.links[l.type];
@@ -116,9 +116,19 @@
         return `<span class="link-group">${main}<a href="${l.colab}" class="btn btn-colab" target="_blank" rel="noopener" title="${T.links.colab}">Colab</a></span>`;
     }
 
+    // web lecture (web/chN.html) for every chapter and interactive page (interactive/chN.html) where ready, right after the slides
+    const INTERACTIVE_READY = [2];
+    function withWeb(links) {
+        const s = links.find(l => l.type === 'slides' && !l.soon), m = s && /(?:chapter|capitol)(\d+)_/.exec(s.href);
+        if (!m) return links;
+        const n = +m[1], sfx = `ch${n}${LANG === 'ro' ? '_ro' : ''}.html`, i = links.indexOf(s);
+        const extra = [{ type: 'web', href: `web/${sfx}` }].concat(INTERACTIVE_READY.includes(n) ? [{ type: 'interactive', href: `interactive/${sfx}` }] : []);
+        return [...links.slice(0, i + 1), ...extra, ...links.slice(i + 1)];
+    }
+
     function renderChapters() {
         $('chapters-grid').innerHTML = D.chapters.map(ch => {
-            const all = (ch.links && ch.links[LANG]) || [];
+            const all = withWeb((ch.links && ch.links[LANG]) || []);
             const available = all.some(l => !l.soon);
             const badge = (available ? '' : `<span class="badge badge-soon">${T.comingSoon}</span>`) +
                 (ch.selfStudy ? `<span class="badge badge-self">${T.selfStudy}</span>` : '');

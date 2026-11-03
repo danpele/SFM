@@ -70,7 +70,7 @@
                 selfStudy: 'Self-study',
                 quantinar: 'Go deeper on Quantinar',
                 links: {
-                    slides: 'Lecture Slides', slidesExtra: 'Additional Slides', seminar: 'Seminar', seminarExtra: 'Additional Seminar',
+                    slides: 'Lecture Slides', web: 'Web page', interactive: 'Interactive', slidesExtra: 'Additional Slides', seminar: 'Seminar', seminarExtra: 'Additional Seminar',
                     notebook: 'Notebook', quantlets: 'Quantlets', colab: 'Open in Colab'
                 },
                 projectTitle: 'Team Project',
@@ -137,7 +137,7 @@
                 selfStudy: 'Studiu individual',
                 quantinar: 'Aprofundare pe Quantinar',
                 links: {
-                    slides: 'Slide-urile cursului', slidesExtra: 'Slide-uri suplimentare', seminar: 'Seminar', seminarExtra: 'Seminar suplimentar',
+                    slides: 'Slide-urile cursului', web: 'Pagina web', interactive: 'Interactiv', slidesExtra: 'Slide-uri suplimentare', seminar: 'Seminar', seminarExtra: 'Seminar suplimentar',
                     notebook: 'Notebook', quantlets: 'Quantlets', colab: 'Deschide în Colab'
                 },
                 projectTitle: 'Proiect de echipă',
