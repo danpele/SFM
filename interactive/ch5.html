@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 5 · Heavy Tails and Extreme Value Theory</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch5.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch5_data.js?v=20261101a", "ch5_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch5.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistics of Financial Markets</h1><p>Chapter 5 · Heavy Tails and Extreme Value Theory</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_05" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch5.html" class="lang-btn active">EN</a><a href="ch5_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step.</p>
+<p class="toc"><a href="#s-why">Why Tails Matter</a> · <a href="#s-heavy">Heavy Tails and Regular Variation</a> · <a href="#s-hill">The Hill Estimator</a> · <a href="#s-me">The Mean Excess Function</a> · <a href="#s-gev">Block Maxima and the GEV Distribution</a> · <a href="#s-pot">Peaks over Threshold and the GPD</a> · <a href="#s-var">VaR and ES by Extreme Value Theory</a></p>
+<h2 class="sec" id="s-why">Why Tails Matter</h2>
+<section class="blk" id="crash-days">
+  <h3>Crash Days against the Normal Distribution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch5_crash_days_en.jpg" alt="Slide 8: Crash Days against the Normal Distribution" loading="lazy"></a>
+      <figcaption>Slide 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cd-t">Normal level: the loss exceeded once in T years: <b id="cd-t-v"></b></label><input type="range" id="cd-t" min="0" max="4" step="1" value="2"></div><button class="btn play" id="cd-play" type="button"></button></div><div class="charts "><div class="chart" id="cd-chart"></div></div><ul class="out" id="cd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Below the level of the loss exceeded once in 100 years under the Normal distribution, the S&P 500 has 35 days since 1990. The ▶ button moves the period T from 1 year to 10,000 years. How many S&P 500 days are below the level of a "once in 10,000 years" loss?</div>
+  <details><summary>Answer</summary><p>17 days, below −5.56%. The Normal distribution expects 0.0037 such days in 9,240 (probability 1/(10,000 × 252) per day). The level only moves from −4.44% to −5.56%: the tail of the Normal distribution falls so fast that a period 100 times longer moves the threshold by little more than one percentage point. BET has 22 days below its 10,000-year level (−7.25%). At T = 1 year, the S&P 500 has 120 days below −2.98%, against 36.7 expected.</p></details>
+</section><h2 class="sec" id="s-heavy">Heavy Tails and Regular Variation</h2>
+<section class="blk" id="light-heavy">
+  <h3>Power Laws Fall Much More Slowly</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch5_light_heavy_en.jpg" alt="Slide 13: Power Laws Fall Much More Slowly" loading="lazy"></a>
+      <figcaption>Slide 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lh-x">Threshold x (dotted line): <b id="lh-x-v"></b></label><input type="range" id="lh-x" min="0" max="5" step="1" value="3"></div><button class="btn play" id="lh-play" type="button"></button></div><div class="charts "><div class="chart" id="lh-chart"></div></div><ul class="out" id="lh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At x = 10, P(X > 20)/P(X > 10) = 0.128 for the Student-t distribution with 3 degrees of freedom. What does the ratio P(X > 2x)/P(X > x) of the Student-t become at x = 50?</div>
+  <details><summary>Answer</summary><p>0.125 = 2<sup>−3</sup>: for a regularly varying tail, P(X > tx)/P(X > x) → t<sup>−α</sup>, with α = 3 for the Student-t with 3 degrees of freedom. At x = 2 the ratio is still 0.201, at x = 20 it is 0.126. For the exponential distribution the ratio is e<sup>−x</sup>, 1.9 × 10<sup>−22</sup> at x = 50, and for the Normal distribution about 10<sup>−1629</sup>: light tails vanish at every doubling of the threshold, the power-law tail always loses the same factor 8.</p></details>
+</section>
+<section class="blk" id="loglog-real">
+  <h3>Real Losses on Log-Log Axes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch5_loglog_real_en.jpg" alt="Slide 16: Real Losses on Log-Log Axes" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ll-k">Least-squares line through the largest k/n of the losses: <b id="ll-k-v"></b></label><input type="range" id="ll-k" min="0.5" max="10" step="0.5" value="2.5"></div><button class="btn play" id="ll-play" type="button"></button></div><div class="charts "><div class="chart" id="ll-chart"></div></div><ul class="out" id="ll-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Through the largest 2.5% of the losses, the slope of the S&P 500 is −3.00. The ▶ button raises the share to 10%. What slope does the line through the largest 10% of the losses give?</div>
+  <details><summary>Answer</summary><p>−2.50: the line reaches into the body of the distribution, where the points bend and flatten the line. At 10%, the Hill estimator also falls, to 2.04. DAX: from −3.57 to −2.65; BET: −2.17; Bitcoin: −2.31. At 0.5% (46 losses for the S&P 500), the slope of the DAX is −4.39: few points, high variability. The power law describes only the tail, and the estimate depends on how many losses enter it.</p></details>
+</section><h2 class="sec" id="s-hill">The Hill Estimator</h2>
+<section class="blk" id="hill-plot">
+  <h3>Hill Plots of Daily Losses</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch5_hill_plot_en.jpg" alt="Slide 22: Hill Plots of Daily Losses" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hp-k">Marked k/n (dotted line): <b id="hp-k-v"></b></label><input type="range" id="hp-k" min="0.5" max="10" step="0.25" value="2.5"></div><div class="ctl"><label for="hp-b">95% band</label><select id="hp-b"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="hp-play" type="button"></button></div><div class="charts "><div class="chart" id="hp-chart"></div></div><ul class="out" id="hp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At k = 2.5% of n, α̂ of the S&P 500 is 2.97, with the 95% interval [2.59, 3.35]. The ▶ button moves k/n from 0.5% to 10%. What is α̂ of the S&P 500 at k = 10% of n?</div>
+  <details><summary>Answer</summary><p>2.04, with the i.i.d. interval [1.91, 2.18], which no longer contains 2.97. With a large k the body of the distribution enters and biases the estimate downwards; the interval narrows (SE = α̂/√k), so a large k gives a precise estimate of a biased quantity. BET falls to 1.82, below 2, although it is 2.57 in the flat zone. The i.i.d. interval also understates the uncertainty: at k = 2.5%, the i.i.d. SE of the S&P 500 is 0.20 and the moving-block bootstrap SE (blocks of 20 days) 0.30, 1.5 times larger, because large losses come in clusters; for the DAX the two coincide (0.20).</p></details>
+</section>
+<section class="blk" id="hill-bvb">
+  <h3>Hill Plots of the BVB Stocks</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch5_hill_bvb_en.jpg" alt="Slide 27: Hill Plots of the BVB Stocks" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hb-k">Marked k/n (dotted line): <b id="hb-k-v"></b></label><input type="range" id="hb-k" min="0.5" max="10" step="0.25" value="2.5"></div><div class="ctl"><label for="hb-b">95% band</label><select id="hb-b"><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tlv" selected>Banca Transilvania (TLV)</option><option value="tgn">Transgaz (TGN)</option></select></div><button class="btn play" id="hb-play" type="button"></button></div><div class="charts "><div class="chart" id="hb-chart"></div></div><ul class="out" id="hb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At k = 2.5% of n, TLV has α̂ = 2.49 and the 95% interval [1.98, 2.99], 1.01 wide. With n = 3,788, k = 1% of n means 37 losses. How wide is the TLV interval at k = 1% of n?</div>
+  <details><summary>Answer</summary><p>1.96, from 2.07 to 4.03, almost twice as wide. The width of the interval is 2 × 1.96 α̂/√k: k falls from 94 to 37 (√(94/37) = 1.59), and α̂ rises from 2.49 to 3.05. The BVB samples are 2.5 times shorter than those of the indices, so the same k/n gives fewer losses and wider bands; the S&P 500 has the interval [2.35, 3.56] at k = 1%. In the flat zone (1%–5%), none of the four stocks has α̂ below 2.</p></details>
+</section><h2 class="sec" id="s-me">The Mean Excess Function</h2>
+<section class="blk" id="mean-excess">
+  <h3>Empirical Mean Excess of Daily Losses</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=30" target="_blank" rel="noopener"><img src="slides/sfm_ch5_mean_excess_en.jpg" alt="Slide 29: Empirical Mean Excess of Daily Losses" loading="lazy"></a>
+      <figcaption>Slide 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="me-q">Threshold u: quantile of the losses: <b id="me-q-v"></b></label><input type="range" id="me-q" min="80" max="98" step="1" value="90"></div><button class="btn play" id="me-play" type="button"></button></div><div class="charts "><div class="chart" id="me-chart"></div></div><ul class="out" id="me-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At the threshold u = 90% quantile (1.16%), the mean excess of the S&P 500 losses is 0.92%. The ▶ button raises the threshold from the 80% to the 98% quantile. What is e(u) at the 98% quantile (u = 2.52%)?</div>
+  <details><summary>Answer</summary><p>1.22%: the mean excess grows with the threshold, as a heavy tail requires. For a Pareto tail, e(u) = u/(α − 1) grows linearly; for the exponential distribution it would be constant, for the Normal distribution it would fall towards 0. BET: from 1.30% to 1.79%. At the 98% quantile, the GPD is fitted to only 185 excesses of the S&P 500 (against 924 at 90%), and ξ̂ rises from 0.158 to 0.255: noisier estimates, as the last points of the chart also show.</p></details>
+</section><h2 class="sec" id="s-gev">Block Maxima and the GEV Distribution</h2>
+<section class="blk" id="gev-types">
+  <h3>The Three Extreme Value Laws</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gev_types_en.jpg" alt="Slide 35: The Three Extreme Value Laws" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gt-s">|ξ| of Fréchet (ξ > 0) and Weibull (ξ < 0): <b id="gt-s-v"></b></label><input type="range" id="gt-s" min="0.1" max="1" step="0.05" value="0.5"></div><button class="btn play" id="gt-play" type="button"></button></div><div class="charts "><div class="chart" id="gt-chart"></div></div><ul class="out" id="gt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With ξ = −0.5, the Weibull distribution stops at x = 2. Where does it stop for ξ = −0.25?</div>
+  <details><summary>Answer</summary><p>At x = 4: the upper endpoint is μ − σ/ξ = 0 − 1/(−0.25). As |ξ| falls towards 0, the endpoint moves away and the Weibull distribution approaches the Gumbel; the Fréchet distribution with ξ = 0.25 has tail index 1/ξ = 4, and P(X > 5) falls from 0.078 (ξ = 0.5) to 0.038, against 0.0067 for the Gumbel. The sign of ξ decides the type of tail, its size decides how heavy or how short it is.</p></details>
+</section>
+<section class="blk" id="maxima-sim">
+  <h3>The Theorem in a Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch5_maxima_sim_en.jpg" alt="Slide 36: The Theorem in a Simulation" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-n">Size n of each sample: <b id="ms-n-v"></b></label><input type="range" id="ms-n" min="0" max="6" step="1" value="6"></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With n = 250, the mean of the exponential maxima minus ln n is 0.568, close to the mean of the Gumbel law, 0.577 (the Euler–Mascheroni constant). The ▶ button goes through n = 2, 5, 10, 21, 50, 100, 250. What is the mean for n = 2?</div>
+  <details><summary>Answer</summary><p>0.837 in the simulation; exactly, E[M<sub>2</sub>] − ln 2 = 1 + 1/2 − 0.693 = 0.807. In general E[M<sub>n</sub>] = 1 + 1/2 + … + 1/n, and its difference from ln n tends to 0.577: the convergence to the Gumbel is slow, of order 1/n. For the uniform distribution, the mean of n(M − 1) is exactly −n/(n + 1): −0.667 at n = 2, almost −1 at n = 250. At n = 21 (one trading month) the means are already 0.593, 1.373 and −0.957. The values n ≠ 250 are extra runs of the lecture's code, with the same seed.</p></details>
+</section>
+<section class="blk" id="gev-ppqq">
+  <h3>Does the GEV Fit? PP and QQ Plots</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gev_ppqq_en.jpg" alt="Slide 38: Does the GEV Fit? PP and QQ Plots" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gq-a">Series</label><select id="gq-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="gq-m">Model</label><select id="gq-m"><option value="gev" selected>GEV (ξ estimated)</option><option value="gumbel">Gumbel (ξ = 0)</option></select></div><button class="btn play" id="gq-play" type="button"></button></div><div class="charts "><div class="chart" id="gq-chart"></div></div><ul class="out" id="gq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In the QQ plot of the GEV, the month with the largest loss of the S&P 500 (March 2020, 12.77%) has the fitted quantile 12.43%. The ▶ button switches to the Gumbel fit (ξ = 0). What fitted quantile does the same month get?</div>
+  <details><summary>Answer</summary><p>6.99%: an exponential tail puts the most extreme month at half its observed value, and the top points of the QQ plot rise far above the diagonal. The 10-year level falls from 7.4% (GEV) to 5.3% (Gumbel), a level exceeded in 12 of the 440 months, more than three times as often as once in 10 years. The Gumbel fit is an extra run, for comparison; the 95% interval of ξ̂ in the lecture, [0.13, 0.29], excludes 0. For BET (ξ̂ = 0.36), the GEV puts the largest month at 26.1%, against 13.1% observed: the fitted tail is heavier than the data.</p></details>
+</section>
+<section class="blk" id="return-levels">
+  <h3>Return Level Plot</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch5_return_levels_en.jpg" alt="Slide 40: Return Level Plot" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rl-t">Return period T (dotted line): <b id="rl-t-v"></b></label><input type="range" id="rl-t" min="0" max="6" step="1" value="3"></div><button class="btn play" id="rl-play" type="button"></button></div><div class="charts "><div class="chart" id="rl-chart"></div></div><ul class="out" id="rl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The 10-year level of BET is 13.3%, and the largest loss observed in 28.5 years is 13.1%. The ▶ button moves T from 1 to 100 years. What is the 100-year level of BET?</div>
+  <details><summary>Answer</summary><p>32.2%, almost 2.5 times the largest observed loss. With ξ̂ = 0.36, the return level grows roughly as T<sup>ξ</sup>: every multiplication of T by 10 raises the level by a factor of about 2.4. It is an extrapolation to 3.5 times the length of the sample; already at 10 years the bootstrap interval is [10.3%, 17.5%]. S&P 500, with ξ̂ = 0.21: 13.4% at 100 years, close to the largest observed loss (12.8%).</p></details>
+</section><h2 class="sec" id="s-pot">Peaks over Threshold and the GPD</h2>
+<section class="blk" id="gpd-densities">
+  <h3>GPD Densities and Tails</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gpd_densities_en.jpg" alt="Slide 44: GPD Densities and Tails" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gd-x">ξ of the orange curve: <b id="gd-x-v"></b></label><input type="range" id="gd-x" min="-0.5" max="1" step="0.05" value="0.3"></div><button class="btn play" id="gd-play" type="button"></button></div><div class="charts "><div class="chart" id="gd-chart"></div></div><ul class="out" id="gd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With ξ = 0.3, the GPD tail has tail index 1/ξ ≈ 3.3: the mean and the variance of the excess are finite. From which value of ξ does the variance of the excess become infinite?</div>
+  <details><summary>Answer</summary><p>From ξ = 1/2: the variance exists only for α = 1/ξ > 2. The mean excess, β/(1 − ξ), exists up to ξ = 1. For ξ = 0.5, P(Y > 10) = 0.028 (β = 1), against 0.0098 for ξ = 0.3 and 4.5 × 10<sup>−5</sup> for ξ = 0. The GPD fits of the lecture have ξ̂ between 0.12 and 0.22 for the four series: heavy tails with finite variance.</p></details>
+</section>
+<section class="blk" id="threshold-stability">
+  <h3>Parameter Stability</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch5_threshold_stability_en.jpg" alt="Slide 46: Parameter Stability" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-q">Marked threshold u: quantile of the losses: <b id="ts-q-v"></b></label><input type="range" id="ts-q" min="80" max="99" step="1" value="90"></div><button class="btn play" id="ts-play" type="button"></button></div><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At the 90% threshold, ξ̂ of the S&P 500 is 0.158 and the EVT VaR 1% 3.30%. The ▶ button raises the threshold from the 80% to the 99% quantile. What do ξ̂ and VaR 1% become at the 99% threshold (93 excesses)?</div>
+  <details><summary>Answer</summary><p>ξ̂ = 0.203, with a 95% interval from −0.07 to 0.47 (SE 0.138, four times larger than at 90%), but VaR 1% stays at 3.16%. VaR 1% lies inside the data (92 days beyond it in the sample), so it depends little on the shape of the tail; ξ̂ depends strongly on the threshold. Between the 85% and 95% quantiles: ξ̂ between 0.13 and 0.22, VaR 1% between 3.25% and 3.33%. BET at 99%: ξ̂ = −0.07, VaR 1% 4.35%.</p></details>
+</section>
+<section class="blk" id="gpd-ppqq">
+  <h3>Does the GPD Fit? PP and QQ Plots</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gpd_ppqq_en.jpg" alt="Slide 48: Does the GPD Fit? PP and QQ Plots" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-a">Series</label><select id="gp-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="gp-q">Threshold u: quantile of the losses: <b id="gp-q-v"></b></label><input type="range" id="gp-q" min="80" max="98" step="1" value="90"></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At the 90% threshold, the largest excess of the S&P 500 (11.60%, March 2020) is above the fitted GPD quantile (11.11%). The ▶ button raises the threshold from the 80% to the 98% quantile. What happens to this point of the QQ plot at the 98% threshold?</div>
+  <details><summary>Answer</summary><p>It falls below the diagonal: the excess is 10.24% (the threshold rose to 2.52%), and the fitted quantile 12.65%, because ξ̂ rises to 0.255 on only 185 excesses. The last point of the QQ plot depends strongly on ξ̂, hence on the threshold. For BET, the GPD above the 90% quantile puts the largest excess at 18.56%, against 11.74% observed: the fitted tail is heavier than the largest losses of the sample.</p></details>
+</section>
+<section class="blk" id="tail-fit">
+  <h3>The Fitted Tails</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch5_tail_fit_en.jpg" alt="Slide 50: The Fitted Tails" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tf-p">Level p of VaR and ES: <b id="tf-p-v"></b></label><input type="range" id="tf-p" min="0" max="5" step="1" value="1"></div><button class="btn play" id="tf-play" type="button"></button></div><div class="charts "><div class="chart" id="tf-chart"></div></div><ul class="out" id="tf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button lowers the level p from 2.5% to 0.01%. With p = 0.01% (one day in 10,000), what is the VaR of the S&P 500 by EVT and by the Normal distribution?</div>
+  <details><summary>Answer</summary><p>EVT 10.79%, Normal 4.18%, 2.6 times less. At p = 1%, the ratio is 1.27 (3.30% against 2.60%). The sample of 9,240 days holds on average 0.9 days beyond VaR 0.01%, so the historical quantile (10.21%) is only an interpolation between the two largest losses. The Hill quantile gives 15.02%: far in the tail, the estimators differ a lot. BET: EVT 18.10%, Hill 26.16%, historical 12.24%.</p></details>
+</section><h2 class="sec" id="s-var">VaR and ES by Extreme Value Theory</h2>
+<section class="blk" id="oos">
+  <h3>Out of Sample: Estimate until 2019, Test 2020–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter5_heavy_tails_evt.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch5_oos_en.jpg" alt="Slide 57: Out of Sample: Estimate until 2019, Test 2020–2026" loading="lazy"></a>
+      <figcaption>Slide 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="os-a">Series</label><select id="os-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="os-p">Level</label><select id="os-p"><option value="var1" selected>VaR 1%</option><option value="var01">VaR 0.1%</option></select></div><button class="btn play" id="os-play" type="button"></button></div><div class="charts "><div class="chart" id="os-chart"></div></div><ul class="out" id="os-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, the VaR 1% of the Normal distribution is exceeded on 44 days of 2020–2026, against 16.9 expected. The ▶ button goes through the four series. How many times is the Normal VaR 1% of BET exceeded, where 16.7 exceedances are expected?</div>
+  <details><summary>Answer</summary><p>13 times, below the expected value; the EVT VaR 4 times, the historical one 5 times. The test period was calmer for BET than the estimation period 1997–2019. A VaR estimated once does not follow the volatility: there are too many exceedances after 2020 for the S&P 500 (EVT 25, historical 26) and too few for BET. At VaR 0.1%, the Normal distribution is still exceeded too often for all four series: S&P 500 23 days against 1.7, BET 4 against 1.7, Bitcoin 8 against 2.5.</p></details>
+</section>
+<p class="src foot">Daily losses L = −r, in %, from log returns: S&P 500 and DAX from January 1990, BET from September 1997, Bitcoin from September 2014 (7 days a week), to 18 September 2026; OMV Petrom, BRD, Banca Transilvania and Transgaz from 2010, from the adjusted price. EODHD closing prices. The GEV fits, the bootstrap intervals and the simulated maxima are those of the lecture (the same rules and the same generator seed); Hill, GPD, VaR and ES are recomputed in the browser from the same losses.</p>
+</main>
+</body>
+</html>

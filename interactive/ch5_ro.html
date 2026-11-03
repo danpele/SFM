@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 5 · Cozi groase și teoria valorilor extreme</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch5.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch5_data.js?v=20261101a", "ch5_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch5.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 5 · Cozi groase și teoria valorilor extreme</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_05" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch5.html" class="lang-btn">EN</a><a href="ch5_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas.</p>
+<p class="toc"><a href="#s-why">Importanța cozilor</a> · <a href="#s-heavy">Cozi groase și variația regulată</a> · <a href="#s-hill">Estimatorul Hill</a> · <a href="#s-me">Funcția mean excess</a> · <a href="#s-gev">Block maxima și distribuția GEV</a> · <a href="#s-pot">Peaks over threshold și distribuția GPD</a> · <a href="#s-var">VaR și ES prin teoria valorilor extreme</a></p>
+<h2 class="sec" id="s-why">Importanța cozilor</h2>
+<section class="blk" id="crash-days">
+  <h3>Zilele de crah față de distribuția Normală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch5_crash_days_ro.jpg" alt="Slide-ul 8: Zilele de crah față de distribuția Normală" loading="lazy"></a>
+      <figcaption>Slide-ul 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cd-t">Nivelul distribuției Normale: pierderea depășită o dată la T ani: <b id="cd-t-v"></b></label><input type="range" id="cd-t" min="0" max="4" step="1" value="2"></div><button class="btn play" id="cd-play" type="button"></button></div><div class="charts "><div class="chart" id="cd-chart"></div></div><ul class="out" id="cd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Sub nivelul pierderii depășite o dată la 100 de ani în distribuția Normală, S&P 500 are 35 de zile din 1990. Butonul ▶ mută perioada T de la 1 an la 10 000 de ani. Cîte zile ale S&P 500 sînt sub nivelul unei pierderi de „o dată la 10 000 de ani”?</div>
+  <details><summary>Răspuns</summary><p>17 zile, sub −5,56%. Distribuția Normală așteaptă 0,0037 astfel de zile în 9 240 (probabilitatea 1/(10 000 × 252) pe zi). Nivelul coboară doar de la −4,44% la −5,56%: coada distribuției Normale scade atît de repede încît o perioadă de 100 de ori mai lungă mută pragul cu puțin peste un punct procentual. BET are 22 de zile sub nivelul său de 10 000 de ani (−7,25%). La T = 1 an, S&P 500 are 120 de zile sub −2,98%, față de 36,7 așteptate.</p></details>
+</section><h2 class="sec" id="s-heavy">Cozi groase și variația regulată</h2>
+<section class="blk" id="light-heavy">
+  <h3>Legile de putere scad mult mai încet</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch5_light_heavy_ro.jpg" alt="Slide-ul 13: Legile de putere scad mult mai încet" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lh-x">Pragul x (linia punctată): <b id="lh-x-v"></b></label><input type="range" id="lh-x" min="0" max="5" step="1" value="3"></div><button class="btn play" id="lh-play" type="button"></button></div><div class="charts "><div class="chart" id="lh-chart"></div></div><ul class="out" id="lh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La x = 10, P(X > 20)/P(X > 10) = 0,128 pentru distribuția Student-t cu 3 grade de libertate. Cît devine raportul P(X > 2x)/P(X > x) al distribuției Student-t la x = 50?</div>
+  <details><summary>Răspuns</summary><p>0,125 = 2<sup>−3</sup>: pentru o coadă cu variație regulată, P(X > tx)/P(X > x) → t<sup>−α</sup>, cu α = 3 pentru Student-t cu 3 grade de libertate. La x = 2 raportul este încă 0,201, la x = 20 este 0,126. Pentru distribuția exponențială raportul este e<sup>−x</sup>, 1,9 × 10<sup>−22</sup> la x = 50, iar pentru distribuția Normală circa 10<sup>−1629</sup>: cozile subțiri dispar la fiecare dublare a pragului, coada de tip putere pierde mereu același factor 8.</p></details>
+</section>
+<section class="blk" id="loglog-real">
+  <h3>Pierderi reale pe axe log-log</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch5_loglog_real_ro.jpg" alt="Slide-ul 16: Pierderi reale pe axe log-log" loading="lazy"></a>
+      <figcaption>Slide-ul 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ll-k">Dreapta celor mai mici pătrate prin cele mai mari k/n dintre pierderi: <b id="ll-k-v"></b></label><input type="range" id="ll-k" min="0.5" max="10" step="0.5" value="2.5"></div><button class="btn play" id="ll-play" type="button"></button></div><div class="charts "><div class="chart" id="ll-chart"></div></div><ul class="out" id="ll-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Prin cele mai mari 2,5% dintre pierderi, panta S&P 500 este −3,00. Butonul ▶ mărește proporția pînă la 10%. Ce pantă dă dreapta prin cele mai mari 10% dintre pierderi?</div>
+  <details><summary>Răspuns</summary><p>−2,50: dreapta intră în corpul distribuției, unde punctele se curbează și aplatizează dreapta. La 10%, estimatorul Hill scade și el, la 2,04. DAX: de la −3,57 la −2,65; BET: −2,17; Bitcoin: −2,31. La 0,5% (46 de pierderi pentru S&P 500), panta DAX este −4,39: puține puncte, variabilitate mare. Legea de putere descrie doar coada, iar estimarea depinde de cîte pierderi intră în ea.</p></details>
+</section><h2 class="sec" id="s-hill">Estimatorul Hill</h2>
+<section class="blk" id="hill-plot">
+  <h3>Grafice Hill ale pierderilor zilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch5_hill_plot_ro.jpg" alt="Slide-ul 22: Grafice Hill ale pierderilor zilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hp-k">k/n marcat (linia punctată): <b id="hp-k-v"></b></label><input type="range" id="hp-k" min="0.5" max="10" step="0.25" value="2.5"></div><div class="ctl"><label for="hp-b">Banda de 95%</label><select id="hp-b"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="hp-play" type="button"></button></div><div class="charts "><div class="chart" id="hp-chart"></div></div><ul class="out" id="hp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La k = 2,5% din n, α̂ al S&P 500 este 2,97, cu intervalul de 95% [2,59; 3,35]. Butonul ▶ mută k/n de la 0,5% la 10%. Cît este α̂ al S&P 500 la k = 10% din n?</div>
+  <details><summary>Răspuns</summary><p>2,04, cu intervalul i.i.d. [1,91; 2,18], care nu mai conține 2,97. Cu k mare intră corpul distribuției, care deplasează estimarea în jos; intervalul se îngustează (SE = α̂/√k), deci un k mare dă o estimare precisă a unei mărimi deplasate. BET coboară la 1,82, sub 2, deși în zona plată este 2,57. Intervalul i.i.d. subestimează și incertitudinea: la k = 2,5%, SE i.i.d. a S&P 500 este 0,20, iar SE bootstrap pe blocuri de 20 de zile 0,30, de 1,5 ori mai mare, pentru că pierderile mari vin grupat; pentru DAX cele două coincid (0,20).</p></details>
+</section>
+<section class="blk" id="hill-bvb">
+  <h3>Grafice Hill pentru acțiunile BVB</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch5_hill_bvb_ro.jpg" alt="Slide-ul 27: Grafice Hill pentru acțiunile BVB" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hb-k">k/n marcat (linia punctată): <b id="hb-k-v"></b></label><input type="range" id="hb-k" min="0.5" max="10" step="0.25" value="2.5"></div><div class="ctl"><label for="hb-b">Banda de 95%</label><select id="hb-b"><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tlv" selected>Banca Transilvania (TLV)</option><option value="tgn">Transgaz (TGN)</option></select></div><button class="btn play" id="hb-play" type="button"></button></div><div class="charts "><div class="chart" id="hb-chart"></div></div><ul class="out" id="hb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La k = 2,5% din n, TLV are α̂ = 2,49 și intervalul de 95% [1,98; 2,99], lat de 1,01. Cu n = 3 788, k = 1% din n înseamnă 37 de pierderi. Cît de lat este intervalul TLV la k = 1% din n?</div>
+  <details><summary>Răspuns</summary><p>1,96, de la 2,07 la 4,03, aproape dublu. Lățimea intervalului este 2 × 1,96 α̂/√k: k scade de la 94 la 37 (√(94/37) = 1,59), iar α̂ crește de la 2,49 la 3,05. Eșantioanele BVB sînt de 2,5 ori mai scurte decît cele ale indicilor, deci același k/n dă mai puține pierderi și benzi mai largi; S&P 500 are la k = 1% intervalul [2,35; 3,56]. În zona plată (1%–5%), niciuna dintre cele patru acțiuni nu are α̂ sub 2.</p></details>
+</section><h2 class="sec" id="s-me">Funcția mean excess</h2>
+<section class="blk" id="mean-excess">
+  <h3>Mean excess empiric al pierderilor zilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=30" target="_blank" rel="noopener"><img src="slides/sfm_ch5_mean_excess_ro.jpg" alt="Slide-ul 29: Mean excess empiric al pierderilor zilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="me-q">Pragul u: cuantila pierderilor: <b id="me-q-v"></b></label><input type="range" id="me-q" min="80" max="98" step="1" value="90"></div><button class="btn play" id="me-play" type="button"></button></div><div class="charts "><div class="chart" id="me-chart"></div></div><ul class="out" id="me-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La pragul u = cuantila de 90% (1,16%), excesul mediu al pierderilor S&P 500 este 0,92%. Butonul ▶ ridică pragul de la cuantila de 80% la cea de 98%. Cît este e(u) la cuantila de 98% (u = 2,52%)?</div>
+  <details><summary>Răspuns</summary><p>1,22%: excesul mediu crește cu pragul, cum cere o coadă groasă. Pentru o coadă Pareto, e(u) = u/(α − 1) crește liniar; pentru distribuția exponențială ar fi constant, pentru distribuția Normală ar scădea spre 0. BET: de la 1,30% la 1,79%. La cuantila de 98%, GPD se ajustează pe doar 185 de excese ale S&P 500 (față de 924 la 90%), iar ξ̂ urcă de la 0,158 la 0,255: estimări mai zgomotoase, cum arată și ultimele puncte ale graficului.</p></details>
+</section><h2 class="sec" id="s-gev">Block maxima și distribuția GEV</h2>
+<section class="blk" id="gev-types">
+  <h3>Cele trei legi ale valorilor extreme</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gev_types_ro.jpg" alt="Slide-ul 35: Cele trei legi ale valorilor extreme" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gt-s">|ξ| pentru Fréchet (ξ > 0) și Weibull (ξ < 0): <b id="gt-s-v"></b></label><input type="range" id="gt-s" min="0.1" max="1" step="0.05" value="0.5"></div><button class="btn play" id="gt-play" type="button"></button></div><div class="charts "><div class="chart" id="gt-chart"></div></div><ul class="out" id="gt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ξ = −0,5, distribuția Weibull se oprește la x = 2. Unde se oprește pentru ξ = −0,25?</div>
+  <details><summary>Răspuns</summary><p>La x = 4: capătul superior este μ − σ/ξ = 0 − 1/(−0,25). Cînd |ξ| scade spre 0, capătul se depărtează și distribuția Weibull se apropie de Gumbel; distribuția Fréchet cu ξ = 0,25 are tail index-ul 1/ξ = 4, iar P(X > 5) scade de la 0,078 (ξ = 0,5) la 0,038, față de 0,0067 pentru Gumbel. Semnul lui ξ decide tipul cozii, mărimea lui decide cît de groasă sau cît de scurtă este.</p></details>
+</section>
+<section class="blk" id="maxima-sim">
+  <h3>Teorema într-o simulare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch5_maxima_sim_ro.jpg" alt="Slide-ul 36: Teorema într-o simulare" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-n">Mărimea n a fiecărui eșantion: <b id="ms-n-v"></b></label><input type="range" id="ms-n" min="0" max="6" step="1" value="6"></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu n = 250, media maximelor exponențiale minus ln n este 0,568, aproape de media legii Gumbel, 0,577 (constanta Euler–Mascheroni). Butonul ▶ trece prin n = 2, 5, 10, 21, 50, 100, 250. Cît este media pentru n = 2?</div>
+  <details><summary>Răspuns</summary><p>0,837 în simulare; exact, E[M<sub>2</sub>] − ln 2 = 1 + 1/2 − 0,693 = 0,807. În general E[M<sub>n</sub>] = 1 + 1/2 + … + 1/n, iar diferența față de ln n tinde la 0,577: convergența către Gumbel este lentă, de ordinul 1/n. Pentru distribuția uniformă, media lui n(M − 1) este exact −n/(n + 1): −0,667 la n = 2, aproape −1 la n = 250. La n = 21 (o lună de tranzacționare) mediile sînt deja 0,593, 1,373 și −0,957. Valorile n ≠ 250 sînt rulări suplimentare ale codului din curs, cu aceeași sămînță.</p></details>
+</section>
+<section class="blk" id="gev-ppqq">
+  <h3>Se potrivește GEV? Grafice PP și QQ</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gev_ppqq_ro.jpg" alt="Slide-ul 38: Se potrivește GEV? Grafice PP și QQ" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gq-a">Seria</label><select id="gq-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="gq-m">Modelul</label><select id="gq-m"><option value="gev" selected>GEV (ξ estimat)</option><option value="gumbel">Gumbel (ξ = 0)</option></select></div><button class="btn play" id="gq-play" type="button"></button></div><div class="charts "><div class="chart" id="gq-chart"></div></div><ul class="out" id="gq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În graficul QQ al GEV, luna cu cea mai mare pierdere a S&P 500 (martie 2020, 12,77%) are cuantila ajustată 12,43%. Butonul ▶ trece la ajustarea Gumbel (ξ = 0). Ce cuantilă ajustată primește aceeași lună?</div>
+  <details><summary>Răspuns</summary><p>6,99%: o coadă exponențială pune cea mai extremă lună la jumătate din valoarea observată, iar punctele de sus ale graficului QQ urcă mult deasupra bisectoarei. Nivelul de 10 ani scade de la 7,4% (GEV) la 5,3% (Gumbel), un nivel depășit în 12 dintre cele 440 de luni, adică de peste trei ori mai des decît o dată la 10 ani. Ajustarea Gumbel este o rulare suplimentară, pentru comparație; intervalul de 95% al lui ξ̂ din curs, [0,13; 0,29], exclude 0. Pentru BET (ξ̂ = 0,36), GEV pune cea mai mare lună la 26,1%, față de 13,1% observat: coada ajustată este mai groasă decît datele.</p></details>
+</section>
+<section class="blk" id="return-levels">
+  <h3>Graficul return levels</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch5_return_levels_ro.jpg" alt="Slide-ul 40: Graficul return levels" loading="lazy"></a>
+      <figcaption>Slide-ul 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rl-t">Perioada de revenire T (linia punctată): <b id="rl-t-v"></b></label><input type="range" id="rl-t" min="0" max="6" step="1" value="3"></div><button class="btn play" id="rl-play" type="button"></button></div><div class="charts "><div class="chart" id="rl-chart"></div></div><ul class="out" id="rl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Nivelul de 10 ani al BET este 13,3%, iar cea mai mare pierdere observată în 28,5 ani este 13,1%. Butonul ▶ mută T de la 1 la 100 de ani. Cît este nivelul de 100 de ani al BET?</div>
+  <details><summary>Răspuns</summary><p>32,2%, de aproape 2,5 ori cea mai mare pierdere observată. Cu ξ̂ = 0,36, return level crește aproximativ ca T<sup>ξ</sup>: fiecare înmulțire a lui T cu 10 mărește nivelul cu un factor de circa 2,4. Este o extrapolare la de 3,5 ori lungimea eșantionului; deja la 10 ani, intervalul bootstrap este [10,3%; 17,5%]. S&P 500, cu ξ̂ = 0,21: 13,4% la 100 de ani, aproape de cea mai mare pierdere observată (12,8%).</p></details>
+</section><h2 class="sec" id="s-pot">Peaks over threshold și distribuția GPD</h2>
+<section class="blk" id="gpd-densities">
+  <h3>Densități și cozi GPD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gpd_densities_ro.jpg" alt="Slide-ul 44: Densități și cozi GPD" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gd-x">ξ al curbei portocalii: <b id="gd-x-v"></b></label><input type="range" id="gd-x" min="-0.5" max="1" step="0.05" value="0.3"></div><button class="btn play" id="gd-play" type="button"></button></div><div class="charts "><div class="chart" id="gd-chart"></div></div><ul class="out" id="gd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ξ = 0,3, coada GPD are tail index-ul 1/ξ ≈ 3,3: media și varianța excesului sînt finite. De la ce valoare a lui ξ varianța excesului devine infinită?</div>
+  <details><summary>Răspuns</summary><p>De la ξ = 1/2: varianța există doar pentru α = 1/ξ > 2. Media excesului, β/(1 − ξ), există pînă la ξ = 1. Pentru ξ = 0,5, P(Y > 10) = 0,028 (β = 1), față de 0,0098 pentru ξ = 0,3 și 4,5 × 10<sup>−5</sup> pentru ξ = 0. Ajustările GPD din curs au ξ̂ între 0,12 și 0,22 pentru cele patru serii: cozi groase, cu varianță finită.</p></details>
+</section>
+<section class="blk" id="threshold-stability">
+  <h3>Stabilitatea parametrilor</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch5_threshold_stability_ro.jpg" alt="Slide-ul 46: Stabilitatea parametrilor" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-q">Pragul u marcat: cuantila pierderilor: <b id="ts-q-v"></b></label><input type="range" id="ts-q" min="80" max="99" step="1" value="90"></div><button class="btn play" id="ts-play" type="button"></button></div><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La pragul de 90%, ξ̂ al S&P 500 este 0,158, iar VaR 1% EVT 3,30%. Butonul ▶ ridică pragul de la cuantila de 80% la cea de 99%. Cît devin ξ̂ și VaR 1% la pragul de 99% (93 de excese)?</div>
+  <details><summary>Răspuns</summary><p>ξ̂ = 0,203, cu un interval de 95% de la −0,07 la 0,47 (SE 0,138, de patru ori mai mare decît la 90%), dar VaR 1% rămîne 3,16%. VaR 1% este în interiorul datelor (92 de zile dincolo de el în eșantion), deci depinde puțin de forma cozii; ξ̂ depinde mult de prag. Între cuantilele de 85% și 95%: ξ̂ între 0,13 și 0,22, VaR 1% între 3,25% și 3,33%. BET la 99%: ξ̂ = −0,07, VaR 1% 4,35%.</p></details>
+</section>
+<section class="blk" id="gpd-ppqq">
+  <h3>Se potrivește GPD? Grafice PP și QQ</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch5_gpd_ppqq_ro.jpg" alt="Slide-ul 48: Se potrivește GPD? Grafice PP și QQ" loading="lazy"></a>
+      <figcaption>Slide-ul 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-a">Seria</label><select id="gp-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="gp-q">Pragul u: cuantila pierderilor: <b id="gp-q-v"></b></label><input type="range" id="gp-q" min="80" max="98" step="1" value="90"></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La pragul de 90%, cel mai mare exces al S&P 500 (11,60%, martie 2020) este peste cuantila GPD ajustată (11,11%). Butonul ▶ ridică pragul de la cuantila de 80% la cea de 98%. Ce se întîmplă cu acest punct în graficul QQ la pragul de 98%?</div>
+  <details><summary>Răspuns</summary><p>Trece sub bisectoare: excesul este 10,24% (pragul a urcat la 2,52%), iar cuantila ajustată 12,65%, pentru că ξ̂ crește la 0,255 pe doar 185 de excese. Ultimul punct al graficului QQ depinde mult de ξ̂, deci de prag. Pentru BET, GPD de la cuantila de 90% pune cel mai mare exces la 18,56%, față de 11,74% observat: coada ajustată este mai groasă decît cele mai mari pierderi din eșantion.</p></details>
+</section>
+<section class="blk" id="tail-fit">
+  <h3>Cozile ajustate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch5_tail_fit_ro.jpg" alt="Slide-ul 50: Cozile ajustate" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tf-p">Nivelul p al VaR și ES: <b id="tf-p-v"></b></label><input type="range" id="tf-p" min="0" max="5" step="1" value="1"></div><button class="btn play" id="tf-play" type="button"></button></div><div class="charts "><div class="chart" id="tf-chart"></div></div><ul class="out" id="tf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ coboară nivelul p de la 2,5% la 0,01%. Cu p = 0,01% (o zi din 10 000), cît este VaR al S&P 500 după EVT și după distribuția Normală?</div>
+  <details><summary>Răspuns</summary><p>EVT 10,79%, Normal 4,18%, de 2,6 ori mai puțin. La p = 1%, raportul este 1,27 (3,30% față de 2,60%). Eșantionul de 9 240 de zile conține în medie 0,9 zile dincolo de VaR 0,01%, deci cuantila istorică (10,21%) este doar o interpolare între cele mai mari două pierderi. Cuantila Hill dă 15,02%: departe în coadă, estimatorii diferă mult. BET: EVT 18,10%, Hill 26,16%, istoric 12,24%.</p></details>
+</section><h2 class="sec" id="s-var">VaR și ES prin teoria valorilor extreme</h2>
+<section class="blk" id="oos">
+  <h3>În afara eșantionului: estimare pînă în 2019, test 2020–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol5_cozi_groase_evt.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch5_oos_ro.jpg" alt="Slide-ul 57: În afara eșantionului: estimare pînă în 2019, test 2020–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="os-a">Seria</label><select id="os-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="os-p">Nivelul</label><select id="os-p"><option value="var1" selected>VaR 1%</option><option value="var01">VaR 0,1%</option></select></div><button class="btn play" id="os-play" type="button"></button></div><div class="charts "><div class="chart" id="os-chart"></div></div><ul class="out" id="os-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, VaR 1% al distribuției Normale este depășit în 44 de zile din 2020–2026, față de 16,9 așteptate. Butonul ▶ trece prin cele patru serii. De cîte ori este depășit VaR 1% Normal al BET, unde sînt așteptate 16,7 depășiri?</div>
+  <details><summary>Răspuns</summary><p>De 13 ori, sub valoarea așteptată; VaR EVT de 4 ori, cel istoric de 5 ori. Perioada de test a fost mai liniștită pentru BET decît perioada de estimare 1997–2019. Un VaR estimat o singură dată nu urmărește volatilitatea: depășirile sînt prea multe după 2020 la S&P 500 (EVT 25, istoric 26) și prea puține la BET. La VaR 0,1%, distribuția Normală rămîne depășită prea des pentru toate cele patru serii: S&P 500 23 de zile față de 1,7, BET 4 față de 1,7, Bitcoin 8 față de 2,5.</p></details>
+</section>
+<p class="src foot">Pierderi zilnice L = −r, în %, din randamentele logaritmice: S&P 500 și DAX din ianuarie 1990, BET din septembrie 1997, Bitcoin din septembrie 2014 (7 zile pe săptămînă), pînă la 18 septembrie 2026; OMV Petrom, BRD, Banca Transilvania și Transgaz din 2010, din prețul ajustat. Prețuri de închidere EODHD. Ajustările GEV, intervalele bootstrap și maximele simulate sînt cele din curs (aceleași reguli și aceeași sămînță a generatorului); estimările Hill, GPD, VaR și ES sînt recalculate în browser din aceleași pierderi.</p>
+</main>
+</body>
+</html>
