@@ -1,4 +1,5 @@
-// Chapter 2 interactive page: one block per chart slide, computed in the browser from ch2_data.js.
+// Chapter 2 interactive page: one block per chart slide and one per results table or worked example of the lecture,
+// computed in the browser from ch2_data.js.
 (function () {
 'use strict';
 const D = window.CH2_DATA;
@@ -554,13 +555,291 @@ function gainLoss() {
     T.gl2(nf(k, 1), downBig.length, A.filter((_, i) => N[i].down <= N[i].up).map(x => SH[x]).join(', ') || '—')]);
 }
 
+// ================================================================= tables and worked examples
+function gser(a, x) {               // regularized lower incomplete gamma P(a, x), series (x < a + 1)
+  let ap = a, s = 1 / a, d = s;
+  for (let i = 0; i < 2000; i++) { ap += 1; d *= x / ap; s += d; if (Math.abs(d) < Math.abs(s) * 1e-15) break; }
+  return { v: s, lg: -x + a * Math.log(x) - lgamma(a) };
+}
+function gcf(a, x) {                // regularized upper incomplete gamma Q(a, x), continued fraction (x >= a + 1)
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 2000; i++) {
+    const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300; c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break;
+  }
+  return { v: h, lg: -x + a * Math.log(x) - lgamma(a) };
+}
+const gammaP = (a, x) => { if (x <= 0) return 0; if (x < a + 1) { const g = gser(a, x); return g.v * Math.exp(g.lg); } const g = gcf(a, x); return 1 - g.v * Math.exp(g.lg); };
+const gammaQ = (a, x) => { if (x <= 0) return 1; if (x < a + 1) { const g = gser(a, x); return 1 - g.v * Math.exp(g.lg); } const g = gcf(a, x); return g.v * Math.exp(g.lg); };
+const chi2Sf = (x, m) => gammaQ(m / 2, x / 2);
+function chi2Ppf(p, m) { let lo = 0, hi = 1000; for (let i = 0; i < 200; i++) { const md = (lo + hi) / 2; if (chi2Sf(md, m) > 1 - p) lo = md; else hi = md; } return (lo + hi) / 2; }
+const normSfX = x => (x >= 0 ? 0.5 * gammaQ(0.5, x * x / 2) : 1 - 0.5 * gammaQ(0.5, x * x / 2));   // P(Z > x) to ~1e-15 (tables)
+const poissonSf = (obs, lam) => (obs <= 0 ? 1 : gammaP(obs, lam));          // P(N >= obs), N ~ Poisson(lam)
+const binomSf = (k0, n, p) => { let s = 0; for (let k = Math.max(0, k0); k <= n; k++) s += binomPmf(k, n, p); return s; };   // P(S >= k0)
+function ljungBox(x, m) { const n = x.length, rho = acf(x, m); let q = 0; for (let h = 1; h <= m; h++) q += rho[h - 1] ** 2 / (n - h); q *= n * (n + 2); return { Q: q, p: chi2Sf(q, m), rho }; }
+const ppy = dates => dates.length / ((Date.parse(dates[dates.length - 1]) - Date.parse(dates[0])) / 864e5 / 365.25);    // periods_per_year()
+
+function table(id, head, rows, foot) {    // rows: arrays of cells; a cell is a string or { v, c } (class); rows may carry .cls
+  const cell = (x, tag) => { const o = typeof x === 'object' && x !== null ? x : { v: x }; return `<${tag}${o.c ? ` class="${o.c}"` : ''}>${o.v}</${tag}>`; };
+  $(id).innerHTML = `<table class="xt"><thead><tr>${head.map(h => cell(h, 'th')).join('')}</tr></thead><tbody>` +
+    rows.map(r => `<tr${r.cls ? ` class="${r.cls}"` : ''}>${r.map(x => cell(x, 'td')).join('')}</tr>`).join('') + '</tbody></table>' + (foot ? `<p class="tnote">${foot}</p>` : '');
+}
+const steps = (id, items) => { $(id).innerHTML = items.map(s => `<li>${s}</li>`).join(''); };
+const fnum = (x, d) => { const s = nf(x, d), i = s.search(/[.,]/), a = i < 0 ? s : s.slice(0, i), b = i < 0 ? '' : s.slice(i); return a.replace(/\B(?=(\d{3})+(?!\d))/g, sep) + b; };
+const row = (cells, cls) => Object.assign(cells, { cls });
+const LONG = { sp500: 'S&amp;P 500', dax: 'DAX', bet: 'BET', btc: 'Bitcoin', snp: 'OMV Petrom (SNP)', brd: 'BRD', snn: 'Nuclearelectrica (SNN)', sng: 'Romgaz (SNG)' };
+const SY = y => (y > 2010 ? y : null);
+const fsci = x => sciN(x, 2);
+const fexp = e => (e >= 100 ? fint(e) : e >= 10 ? nf(e, 1) : e >= 0.1 ? nf(e, 2) : e >= 0.01 ? nf(e, 3) : fsci(e));        // expected numbers of days
+const fratio = r => { if (r < 100) return nf(r, 1); if (r < 1e4) return fint(r); return sciN(r, 2); };   // observed / expected
+const sciN = (x, d) => { let e = Math.floor(Math.log10(x)), m = +(x / 10 ** e).toFixed(d - 1); if (m >= 10) { m /= 10; e += 1; } return `${nf(m, d - 1)} × 10<sup>${e < 0 ? '−' : ''}${Math.abs(e)}</sup>`; };   // d significant digits
+const fpv = p => (p >= 0.001 ? nf(p, 3) : p > 1e-300 ? sciN(p, 1) : '&lt; 10<sup>−300</sup>');
+const fyears = v => (v < 0.1 ? nf(v, 3) : v < 10 ? nf(v, 1) : fint(v));
+const tiny = lnp => { const e = lnp / Math.LN10, ex = Math.floor(e), m = 10 ** (e - ex); return `${nf(m, 1)} × 10<sup>−${fint(-ex)}</sup>`; };   // number given by its log
+const BVB = ['snp', 'brd', 'snn', 'sng'];
+const momCache = {};
+function momOf(k, y, ex) { const key = k + ':' + y + ':' + (ex ? 1 : 0); if (!momCache[key]) { const S = sample(k, { y0: SY(y), ex }); momCache[key] = Object.assign(mom(S.r), { r: S.r, dates: S.dates }); } return momCache[key]; }
+
+// ----------------------------------------------------------------- X1. How rare are large moves (frame 13)
+function rareMoves() {
+  const k = $('rm-a').value, y = +$('rm-y').value; label('rm-y').textContent = y;
+  const M = momOf(k, y), r = M.r, n = r.length, cnt = j => { let c = 0; for (const x of r) if (Math.abs(x - M.mean) > j * M.sd) c++; return c; };
+  const C = [1, 2, 3, 4, 5, 6].map(cnt);
+  table('rm-tab', ['k', 'P(|Z| &gt; k)', T.h.everyD, T.h.everyY, `${SH[k]}: ${T.h.obsDays}`, `${SH[k]}: ${T.h.everyD}`], [1, 2, 3, 4, 5, 6].map((j, i) => {
+    const p = 2 * normSfX(j);
+    return [String(j), p >= 0.01 ? nf(p, 4) : sig(p, 2), fint(1 / p), fyears(1 / p / 252), fint(C[i]), C[i] ? fint(n / C[i]) : '—'];
+  }));
+  const W = D.assets.map(a => { const m = momOf(a, y), w = [1, 2, 3].map(j => { let c = 0; for (const x of m.r) if (Math.abs(x - m.mean) <= j * m.sd) c++; return c / m.r.length; }); return { a, n: m.r.length, w }; });
+  table('rm-tab2', [T.h.series, 'n', T.h.within(1), T.h.within(2), T.h.within(3)], [
+    ...W.map(o => row([LONG[o.a], fint(o.n), ...o.w.map(v => pct(v, 2))], o.a === k ? 'sel' : '')),
+    row([T.h.normal, '', ...[1, 2, 3].map(j => pct(1 - 2 * normSf(j), 2))], 'nrm')]);
+  const o = W.find(v => v.a === k);
+  out('rm-out', [T.rm(SH[k], fdate(M.dates[0]), fint(n), pct(o.w[0], 1), pct(o.w[1], 1), C[2], nf(n * 2 * normSf(3), 1), C[3], nf(n * 2 * normSf(4), 2))]);
+}
+
+// ----------------------------------------------------------------- X2. Worked example: large losses (frame 14)
+function lossStats(M, x) { const z = (-x - M.mean) / M.sd, P = Phi(z); let obs = 0; for (const v of M.r) if (v < -x) obs++; return { z, P, exp: M.r.length * P, obs }; }
+function largeLosses() {
+  const k = $('ll-a').value, x = +$('ll-x').value, y = +$('ll-y').value; label('ll-x').textContent = '−' + nf(x, 1) + '%'; label('ll-y').textContent = y;
+  const M = momOf(k, y), L = lossStats(M, x), n = M.r.length;
+  table('ll-tab', [T.h.series, 'n', 'z', 'Φ(z)', T.h.expD, T.h.obsD, T.h.ratio], D.assets.map(a => {
+    const m = momOf(a, y), s = lossStats(m, x);
+    return row([LONG[a], fint(m.r.length), nf(s.z, 2), s.P >= 1e-4 ? pct(s.P, 2) : sig(s.P, 2), fexp(s.exp), fint(s.obs), s.exp > 0 ? fratio(s.obs / s.exp) : '—'], a === k ? 'sel' : '');
+  }));
+  const xs = range(0.5, 15, 0.1), ob = [], ex = [];
+  xs.forEach(v => { const s = lossStats(M, v); ob.push(s.obs || null); ex.push(s.exp); });
+  plot('ll-chart', [
+    { x: xs, y: ob, mode: 'lines', line: { color: COL[k], width: 2, shape: 'hv' }, name: `${SH[k]}: observed days below −x`, hovertemplate: '−%{x:.1f}%: %{y} days<extra></extra>' },
+    { x: xs, y: ex, mode: 'lines', line: { color: C.navy, width: 1.6, dash: 'dash' }, name: 'expected under the Normal distribution (same mean and sd)', hovertemplate: '−%{x:.1f}%: %{y:.3g} days<extra></extra>' },
+    { x: [x], y: [L.obs || null], mode: 'markers', showlegend: false, marker: { color: COL[k], size: 10, line: { color: '#fff', width: 1.5 } }, hoverinfo: 'skip' },
+    { x: [x], y: [L.exp], mode: 'markers', showlegend: false, marker: { color: C.navy, size: 10, symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hoverinfo: 'skip' }
+  ], layout({ shapes: [{ type: 'line', x0: x, x1: x, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } }],
+    xaxis: XT('Loss threshold x (%): days with r<sub>t</sub> < −x'), yaxis: XT('Number of days (log scale)', { type: 'log', range: [-4, Math.log10(4 * n)], exponentformat: 'power' }) }));
+  steps('ll-we', [T.llw1(SH[k], fdate(M.dates[0]), fint(n), nf(M.mean, 3), nf(M.sd, 2)),
+    T.llw2(nf(x, 1), M.mean >= 0 ? '− ' + nf(M.mean, 3) : '+ ' + nf(-M.mean, 3), nf(M.sd, 2), nf(L.z, 2)),
+    T.llw3(nf(L.z, 2), L.P >= 1e-4 ? pct(L.P, 2) : sig(L.P, 2), fint(n), fexp(L.exp)),
+    T.llw4(fint(L.obs), nf(x, 1), L.obs >= L.exp ? T.llMore(fratio(L.obs / L.exp)) : T.llLess(pct(L.obs / L.exp, 0), nf(-L.z, 2)))]);
+  out('ll-out', [T.ll(nf(x, 1), D.assets.filter(a => { const s = lossStats(momOf(a, y), x); return s.obs > s.exp; }).map(a => SH[a]).join(', ') || '—',
+    D.assets.filter(a => { const s = lossStats(momOf(a, y), x); return s.obs <= s.exp; }).map(a => SH[a]).join(', ') || '—')]);
+}
+
+// ----------------------------------------------------------------- X3. Worked example: 100 lei in the BET (frame 19)
+function lnStats(mu, s, Tt, za) { return { med: 100 * Math.exp(Tt * mu), mean: 100 * Math.exp(Tt * mu + Tt * s * s / 2), loss: Phi(-mu * Math.sqrt(Tt) / s), q: 100 * Math.exp(Tt * mu + za * s * Math.sqrt(Tt)), q2: 100 * Math.exp(Tt * mu - za * s * Math.sqrt(Tt)) }; }
+function bet100() {
+  const k = $('b1-a').value, Tt = +$('b1-T').value, al = +$('b1-q').value / 100, y = +$('b1-y').value; label('b1-T').textContent = Tt; label('b1-y').textContent = y;
+  const M = momOf(k, y), A = ppy(M.dates), mu = A * M.mean / 100, s = Math.sqrt(A) * M.sd / 100, za = normPpf(al), X = lnStats(mu, s, Tt, za);
+  const qa = pct(al, 0), qb = pct(1 - al, 0), HS = [1, 2, 5, 10, 20];
+  if (!HS.includes(Tt)) HS.push(Tt);
+  table('b1-tab', [T.h.T, T.h.median, T.h.meanV, T.h.ploss, `${T.h.quant} ${qa}`, `${T.h.quant} ${qb}`], HS.sort((a, b) => a - b).map(t => {
+    const v = lnStats(mu, s, t, za);
+    return row([String(t), fnum(v.med, 1), fnum(v.mean, 1), pct(v.loss, v.loss < 0.01 ? 2 : 1), fnum(v.q, 1), fnum(v.q2, 1)], t === Tt ? 'sel' : '');
+  }));
+  const ts = range(0.25, 20, 0.25), L = ts.map(t => lnStats(mu, s, t, za));
+  plot('b1-chart', [
+    { x: ts, y: L.map(v => v.q2), mode: 'lines', line: { color: P.green, width: 1.4, dash: 'dash' }, name: `${qb} quantile`, hovertemplate: 'T = %{x}: %{y:.1f}<extra></extra>' },
+    { x: ts, y: L.map(v => v.mean), mode: 'lines', line: { color: P.purple, width: 1.8 }, name: 'mean', hovertemplate: 'T = %{x}: %{y:.1f}<extra></extra>' },
+    { x: ts, y: L.map(v => v.med), mode: 'lines', line: { color: COL[k], width: 2.2 }, name: 'median', hovertemplate: 'T = %{x}: %{y:.1f}<extra></extra>' },
+    { x: ts, y: L.map(v => v.q), mode: 'lines', line: { color: P.red, width: 1.4, dash: 'dash' }, name: `${qa} quantile`, hovertemplate: 'T = %{x}: %{y:.1f}<extra></extra>' },
+    { x: [0, 20], y: [100, 100], mode: 'lines', line: { color: C.navy, width: 1, dash: 'dot' }, name: 'initial value 100', hoverinfo: 'skip' },
+    { x: [Tt, Tt, Tt, Tt], y: [X.q2, X.mean, X.med, X.q], mode: 'markers', showlegend: false, marker: { color: C.navy, size: 8 }, hovertemplate: '%{y:.1f}<extra></extra>' }
+  ], layout({ xaxis: XT(`Horizon T (years), ${SH[k]} from ${M.dates[0].slice(0, 4)}`, { range: [0, 20.5] }), yaxis: XT('Value of 100 invested (log scale)', { type: 'log' }) }));
+  const mT = Tt * mu, vT = Tt * s * s;
+  steps('b1-we', [T.b1w1(SH[k], fdate(M.dates[0]), nf(M.mean, 4), nf(M.sd, 3), nf(A, 1), nf(100 * mu, 2), nf(100 * s, 2)),
+    T.b1w2(Tt, nf(mT, 4), nf(vT, 4), fnum(X.med, 1), fnum(X.mean, 1)),
+    T.b1w3(nf(-mu * Math.sqrt(Tt) / s, 3), pct(X.loss, X.loss < 0.01 ? 2 : 1)),
+    T.b1w4(qa, nf(za, 3), nf(mT, 4), nf(s * Math.sqrt(Tt), 4), fnum(X.q, 1))]);
+  out('b1-out', [T.b1(SH[k], Tt, fnum(X.med, 1), fnum(X.mean, 1), pct(X.loss, X.loss < 0.01 ? 2 : 1), qa, fnum(X.q, 1))]);
+}
+
+// ----------------------------------------------------------------- X4. Moments table (frame 30)
+const YRS = range(2010, 2024, 1);
+function momentsBlock() {
+  const y = +$('mo-y').value, ex = $('mo-s').value === 'ex', k = $('mo-a').value; label('mo-y').textContent = y;
+  const X = Object.fromEntries(D.assets.map(a => [a, momOf(a, y, ex)]));
+  table('mo-tab', [T.h.series, T.h.from, 'n', T.h.mean, T.h.sd, T.h.skew, T.h.exk, T.h.min], D.assets.map(a => {
+    const m = X[a]; let j = 0; m.r.forEach((v, i) => { if (v < m.r[j]) j = i; });
+    return row([LONG[a], m.dates[0].slice(0, 4), fint(m.n), nf(m.mean, 3), nf(m.sd, 2), nf(m.skew, 2), nf(m.exkurt, 1), `${nf(m.r[j], 1)} <span class="pv">(${fdate(m.dates[j])})</span>`], a === k ? 'sel' : '');
+  }));
+  const tr = D.assets.map(a => ({ x: YRS, y: YRS.map(v => momOf(a, v, ex).exkurt), mode: 'lines+markers', name: SH[a], line: { color: COL[a], width: a === k ? 2.6 : 1.3 }, marker: { size: a === k ? 7 : 4 },
+    hovertemplate: SH[a] + ', from %{x}: %{y:.1f}<extra></extra>' }));
+  plot('mo-chart', tr, layout({ shapes: [{ type: 'line', x0: y, x1: y, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } }],
+    xaxis: XT('Sample starts on 1 January of', { dtick: 2 }), yaxis: XT('Excess kurtosis of daily log returns', { rangemode: 'tozero' }) }));
+  const m = X[k], n = m.n; let m2 = 0, m3 = 0, m4 = 0;
+  for (const v of m.r) { const d = v - m.mean, d2 = d * d; m2 += d2; m3 += d2 * d; m4 += d2 * d2; }
+  m2 /= n; m3 /= n; m4 /= n;
+  const se1 = Math.sqrt(6 / n), se2 = Math.sqrt(24 / n);
+  steps('mo-we', [T.mow1(SH[k], fdate(m.dates[0]), fint(n), nf(m.mean, 4)),
+    T.mow2(nf(m2, 4), nf(m3, 4), nf(m4, 2)),
+    T.mow3(nf(m3, 4), nf(m2, 4), nf(m.skew, 3), nf(m4, 2), nf(m.exkurt, 2)),
+    T.mow4(fint(n), nf(se1, 3), nf(se2, 3), nf(m.skew / se1, 1), fnum(m.exkurt / se2, 0))]);
+  const hk = D.assets.reduce((b, a) => (X[a].exkurt > X[b].exkurt ? a : b)), lk = D.assets.reduce((b, a) => (X[a].exkurt < X[b].exkurt ? a : b));
+  out('mo-out', [T.mo(y, ex ? T.agEx : T.agAll, SH[lk], nf(X[lk].exkurt, 1), SH[hk], nf(X[hk].exkurt, 1), D.assets.filter(a => X[a].skew < 0).length, D.assets.filter(a => X[a].skew >= 0).map(a => SH[a]).join(', ') || '—')]);
+}
+
+// ----------------------------------------------------------------- X5. Worked example: Jarque-Bera (frame 35)
+function jbBlock() {
+  const k = $('jb-a').value, y = +$('jb-y').value; label('jb-y').textContent = y;
+  const X = Object.fromEntries(D.assets.map(a => [a, momOf(a, y)]));
+  const pv = m => (m.jb / 2 > 700 ? tiny(-m.jb / 2) : fpv(Math.exp(-m.jb / 2)));
+  table('jb-tab', [T.h.series, 'n', 'S', 'K', 'S²', 'K²/4', 'JB', 'p-value'], D.assets.map(a => {
+    const m = X[a]; return row([LONG[a], fint(m.n), nf(m.skew, 2), nf(m.exkurt, 1), nf(m.skew ** 2, 3), nf(m.exkurt ** 2 / 4, 1), fint(m.jb), pv(m)], a === k ? 'sel' : '');
+  }));
+  plot('jb-chart', [
+    { x: D.assets.map(a => SH[a]), y: D.assets.map(a => X[a].jb), type: 'bar', marker: { color: D.assets.map(a => COL[a]) }, name: 'JB statistic, daily log returns', text: D.assets.map(a => Math.round(X[a].jb).toLocaleString('en-US')), textposition: 'outside', cliponaxis: false, textfont: { color: C.navy, size: 11 }, hovertemplate: '%{x}: JB = %{y:,.0f}<extra></extra>' },
+    { x: [-0.5, 7.5], y: [5.99, 5.99], xaxis: 'x2', mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: '5% critical value of χ²(2): 5.99', hoverinfo: 'skip' }
+  ], layout({ bargap: 0.35, xaxis: XT(''), xaxis2: { overlaying: 'x', anchor: 'y', range: [-0.5, 7.5], visible: false }, yaxis: XT('JB (log scale)', { type: 'log', range: [0, 5.3], exponentformat: 'power' }) }));
+  const m = X[k], a6 = m.n / 6, s2 = m.skew ** 2, k4 = m.exkurt ** 2 / 4;
+  steps('jb-we', [T.jbw1(SH[k], fdate(m.dates[0]), fint(m.n), nf(m.skew, 3), nf(m.exkurt, 2)),
+    T.jbw2(fint(m.n), nf(a6, 1), nf(m.skew, 3), nf(s2, 3), nf(m.exkurt, 2), nf(k4, 2)),
+    T.jbw3(nf(a6, 1), nf(s2, 3), nf(k4, 2), fint(m.jb), pct(k4 / (s2 + k4), 1)),
+    (m.jb > 5.99 ? T.jbw4 : T.jbw4n)(fint(m.jb), pv(m))]);
+  const lo = D.assets.reduce((b, a) => (X[a].jb < X[b].jb ? a : b));
+  out('jb-out', [T.jb(y, SH[lo], fint(X[lo].jb), D.assets.filter(a => X[a].jb > 5.99).length)]);
+}
+
+// ----------------------------------------------------------------- X6. Fitted Student-t table (frame 45)
+function fitOf(k, y) { if (y <= 2010) { const F = D.tfit[k]; return { nu: F.nu, loc: F.loc, scale: F.scale, ll_t: F.ll_t, ll_n: F.ll_n }; } const v = D.tfit_y[k][y]; return { nu: v[0], loc: v[1], scale: v[2], ll_t: v[3], ll_n: v[4] }; }
+function tFitTable() {
+  const y = +$('tt-y').value, k = $('tt-a').value, kk = +$('tt-k').value; label('tt-y').textContent = y; label('tt-k').textContent = nf(kk, 1);
+  const F = Object.fromEntries(D.assets.map(a => [a, fitOf(a, y)]));
+  table('tt-tab', [T.h.series, 'ν̂', T.h.loc, T.h.scale, T.h.llt, T.h.lln, 'ΔAIC', T.h.sdt, T.h.sds], D.assets.map(a => {
+    const f = F[a], m = momOf(a, y), sdt = f.nu > 2 ? f.scale * Math.sqrt(f.nu / (f.nu - 2)) : Infinity;
+    return row([LONG[a], { v: nf(f.nu, 2), c: f.nu < 4 ? 'bad' : '' }, nf(f.loc, 3), nf(f.scale, 3), fnum(f.ll_t, 1), fnum(f.ll_n, 1), fint(2 * (f.ll_t - f.ll_n) - 2), isFinite(sdt) ? nf(sdt, 2) : '∞', nf(m.sd, 2)], a === k ? 'sel' : '');
+  }), T.ttNote);
+  const tr = D.assets.map(a => ({ x: YRS, y: YRS.map(v => fitOf(a, v).nu), mode: 'lines+markers', name: SH[a], line: { color: COL[a], width: a === k ? 2.6 : 1.3 }, marker: { size: a === k ? 7 : 4 }, hovertemplate: SH[a] + ', from %{x}: ν̂ = %{y:.2f}<extra></extra>' }));
+  tr.push({ x: [null], y: [null], mode: 'lines', name: 'ν = 4: finite kurtosis above the line', line: { color: C.navy, width: 1, dash: 'dash' } });
+  plot('tt-chart', tr, layout({ shapes: [{ type: 'line', x0: y, x1: y, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } },
+    { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 4, y1: 4, line: { color: C.navy, width: 1, dash: 'dash' } }],
+    xaxis: XT('Sample starts on 1 January of', { dtick: 2 }), yaxis: XT('Fitted degrees of freedom ν̂', { rangemode: 'tozero' }) }));
+  const f = F[k], m = momOf(k, y), n = m.n, ratio = f.nu / (f.nu - 2), c = kk * m.sd, pt = 2 * tSf(c / f.scale, f.nu), pn = 2 * normSf(kk), obs = sigmaDays(m.r, kk).obs;
+  steps('tt-we', [T.ttw1(SH[k], y, nf(f.nu, 2), nf(f.loc, 3), nf(f.scale, 3)),
+    f.nu > 2 ? T.ttw2(nf(f.nu, 2), nf(f.nu - 2, 2), nf(ratio, 3), nf(f.scale, 3), nf(f.scale ** 2 * ratio, 3), nf(f.scale * Math.sqrt(ratio), 3), nf(m.sd, 3)) : T.ttw2inf(nf(f.nu, 2)),
+    T.ttw3(nf(kk, 1), nf(m.sd, 3), nf(c, 2), nf(f.scale, 3), nf(c / f.scale, 2), nf(f.nu, 2), spct(pt, 3), fint(n), fexp(n * pt)),
+    T.ttw4(nf(kk, 1), spct(pn, 3), fexp(n * pn), fint(obs))]);
+  out('tt-out', [T.tt(y, D.assets.filter(a => F[a].nu < 4).length, SH[D.assets.reduce((b, a) => (F[a].nu < F[b].nu ? a : b))], nf(Math.min(...D.assets.map(a => F[a].nu)), 2),
+    SH[D.assets.reduce((b, a) => (F[a].nu > F[b].nu ? a : b))], nf(Math.max(...D.assets.map(a => F[a].nu)), 2), fint(Math.min(...D.assets.map(a => 2 * (F[a].ll_t - F[a].ll_n) - 2))))]);
+}
+
+// ----------------------------------------------------------------- X7. Fact 1: heavy tails, counted (frame 52)
+function sigmaTable() {
+  const y = +$('st-y').value, kp = +$('st-k').value, k = $('st-a').value; label('st-y').textContent = y;
+  const KS = [3, 4, 5, 6], X = Object.fromEntries(D.assets.map(a => { const m = momOf(a, y); return [a, { n: m.n, S: KS.map(j => sigmaDays(m.r, j)), P: sigmaDays(m.r, kp) }]; }));
+  const n0 = X.sp500.n;
+  table('st-tab', [T.h.series, 'n', ...KS.map(j => `&gt;${j}σ`), `p-value (Poisson, ${kp}σ)`], [
+    ...D.assets.map(a => row([LONG[a], fint(X[a].n), ...X[a].S.map(s => fint(s.obs)), X[a].P.obs ? fpv(poissonSf(X[a].P.obs, X[a].P.exp)) : '1'], a === k ? 'sel' : '')),
+    row([T.h.normalN(fint(n0)), '', ...KS.map(j => { const e = n0 * 2 * normSfX(j); return e >= 0.1 ? nf(e, 2) : fsci(e); }), ''], 'nrm')]);
+  const M = momOf(k, y), ks = range(1, 8, 0.05), ob = ks.map(j => sigmaDays(M.r, j).obs || null), ex = ks.map(j => M.n * 2 * normSf(j)), S = X[k].P;
+  plot('st-chart', [
+    { x: ks, y: ob, mode: 'lines', line: { color: COL[k], width: 2, shape: 'hv' }, name: `${SH[k]}: observed days beyond k sd`, hovertemplate: 'k = %{x:.2f}: %{y} days<extra></extra>' },
+    { x: ks, y: ex, mode: 'lines', line: { color: C.navy, width: 1.6, dash: 'dash' }, name: 'expected under the Normal distribution', hovertemplate: 'k = %{x:.2f}: %{y:.3g} days<extra></extra>' },
+    { x: [kp], y: [S.obs || null], mode: 'markers', showlegend: false, marker: { color: COL[k], size: 10, line: { color: '#fff', width: 1.5 } }, hoverinfo: 'skip' },
+    { x: [kp], y: [S.exp], mode: 'markers', showlegend: false, marker: { color: C.navy, size: 10, symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hoverinfo: 'skip' }
+  ], layout({ shapes: [{ type: 'line', x0: kp, x1: kp, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1, dash: 'dot' } }],
+    xaxis: XT('k (standard deviations)'), yaxis: XT('Days with |r<sub>t</sub> − mean| > k sd (log scale)', { type: 'log', range: [-6, Math.log10(4 * M.n)], exponentformat: 'power' }) }));
+  const p = 2 * normSfX(kp), lam = M.n * p, pv = poissonSf(S.obs, lam), first = S.obs ? Math.exp(-lam + S.obs * Math.log(lam) - lgamma(S.obs + 1)) : 1;
+  steps('st-we', [T.stw1(kp, p >= 0.001 ? nf(p, 5) : sciN(p, 3), fint(1 / p)),
+    T.stw2(SH[k], fint(M.n), p >= 0.001 ? nf(p, 5) : sciN(p, 3), fexp(lam)),
+    T.stw3(fint(S.obs), kp, S.down, S.up, S.obs ? fratio(S.obs / lam) : '0'),
+    S.obs > 3 * lam ? T.stw4(fint(S.obs), fexp(lam), sciN(first, 2), sciN(pv, 2)) : T.stw4b(fint(S.obs), fexp(lam), pv >= 0.001 ? nf(pv, 3) : sciN(pv, 2))]);
+  out('st-out', [T.st(y, kp, D.assets.map(a => `${SH[a]} ${X[a].P.obs}`).join(', '), fint(n0), fexp(n0 * p))]);
+}
+
+// ----------------------------------------------------------------- X8. Fact 2: aggregational Gaussianity (frame 54)
+function aggTable() {
+  const ex = $('ah-s').value === 'ex', st = $('ah-m').value, H = D.horizons;
+  const V = Object.fromEntries(D.assets.map(a => { const r = sample(a, { ex }).r; return [a, H.map(h => mom(aggregate(r, h)))]; }));
+  const cellOf = m => (st === 'exkurt' ? nf(m.exkurt, 1) : st === 'skew' ? nf(m.skew, 2) : st === 'n' ? fint(m.n) : { v: fpv(Math.exp(-m.jb / 2)), c: Math.exp(-m.jb / 2) >= 0.05 ? 'ok' : '' });
+  table('ah-tab', [T.h.series, ...H.map(h => `h = ${h}`)], D.assets.map(a => [LONG[a], ...V[a].map(cellOf)]), st === 'jbp' ? T.ahNote : '');
+  const val = m => (st === 'exkurt' ? m.exkurt : st === 'skew' ? m.skew : st === 'n' ? m.n : Math.max(1e-300, Math.exp(-m.jb / 2)));
+  const ytitle = { exkurt: 'Excess kurtosis of h-day returns', skew: 'Skewness of h-day returns', n: 'Number of h-day returns', jbp: 'Jarque–Bera p-value (log scale)' }[st];
+  const tr = BVB.map(a => ({ x: H, y: V[a].map(val), mode: 'lines+markers', name: SH[a], line: { color: COL[a], width: 1.6 }, marker: { size: 7 }, hovertemplate: SH[a] + ', h = %{x}: %{y:.3g}<extra></extra>' }));
+  if (st === 'exkurt' || st === 'skew') tr.push({ x: [1, 63], y: [0, 0], mode: 'lines', name: 'Normal distribution (0)', line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' });
+  if (st === 'jbp') tr.push({ x: [1, 63], y: [0.05, 0.05], mode: 'lines', name: '5% level', line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' });
+  plot('ah-chart', tr, layout({ xaxis: XT('Horizon h (days, log scale), BVB stocks', { type: 'log', tickvals: H, ticktext: H.map(String) }),
+    yaxis: XT(ytitle, st === 'jbp' ? { type: 'log', exponentformat: 'power' } : st === 'n' ? { type: 'log' } : {}) }));
+  const nrej = H.map((h, j) => D.assets.filter(a => Math.exp(-V[a][j].jb / 2) < 0.05).length);
+  out('ah-out', [T.ah(ex ? T.agEx : T.agAll, H.map((h, j) => `h = ${h}: ${nrej[j]}`).join(', '), fint(V.sp500[0].n), fint(V.sp500[4].n), fint(V.sp500[5].n))]);
+}
+
+// ----------------------------------------------------------------- X9. Fact 3: Ljung-Box (frame 59)
+function ljungBoxBlock() {
+  const ex = $('lb-s').value === 'ex', m = +$('lb-m').value, y = +$('lb-y').value; label('lb-m').textContent = m; label('lb-y').textContent = y;
+  const cv = chi2Ppf(0.95, m), X = Object.fromEntries(D.assets.map(a => { const r = momOf(a, y, ex).r; return [a, { n: r.length, R: ljungBox(r, m), A: ljungBox(r.map(Math.abs), m) }]; }));
+  const pc = p => ({ v: fpv(p), c: p >= 0.05 ? 'ok' : '' });
+  table('lb-tab', [T.h.series, 'n', 'ρ̂(1)', `Q(${m}), r<sub>t</sub>`, 'p-value', `Q(${m}), |r<sub>t</sub>|`, 'p-value'], D.assets.map(a => {
+    const o = X[a]; return [LONG[a], fint(o.n), nf(o.R.rho[0], 3), fnum(o.R.Q, 1), pc(o.R.p), fnum(o.A.Q, 0), pc(o.A.p)];
+  }), T.lbNote(m, nf(cv, 1)));
+  const names = D.assets.map(a => SH[a]);
+  plot('lb-chart', [
+    { x: names, y: D.assets.map(a => X[a].R.Q), type: 'bar', name: `Q(${m}) of returns`, marker: { color: D.assets.map(a => COL[a]) }, hovertemplate: '%{x}: Q = %{y:.1f}<extra></extra>' },
+    { x: names, y: D.assets.map(a => X[a].A.Q), type: 'bar', name: `Q(${m}) of absolute returns (hatched)`, marker: { color: 'rgba(0,0,0,0)', line: { color: D.assets.map(a => COL[a]), width: 1.2 }, pattern: { shape: '/', fgcolor: D.assets.map(a => COL[a]), size: 7, solidity: 0.3 } }, hovertemplate: '%{x}: Q = %{y:.0f}<extra></extra>' },
+    { x: [-0.5, 7.5], y: [cv, cv], xaxis: 'x2', mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: `5% critical value of χ²(${m}): ${cv.toFixed(1)}`, hoverinfo: 'skip' }
+  ], layout({ barmode: 'group', bargap: 0.25, xaxis: XT(''), xaxis2: { overlaying: 'x', anchor: 'y', range: [-0.5, 7.5], visible: false }, yaxis: XT('Ljung–Box Q (log scale)', { type: 'log', dtick: 1, exponentformat: 'power' }) }));
+  out('lb-out', [T.lb(m, y, ex ? T.agEx : T.agAll, D.assets.filter(a => X[a].R.p < 0.05).length, D.assets.filter(a => X[a].R.p >= 0.05).map(a => SH[a]).join(', ') || '—', nf(cv, 1),
+    D.assets.filter(a => X[a].A.p < 0.05).length)]);
+}
+
+// ----------------------------------------------------------------- X10. Six facts, eight series (frame 65)
+function factsTable() {
+  const y = +$('ft-y').value, ex = $('ft-s').value === 'ex', h = +$('ft-h').value; label('ft-y').textContent = y; label('ft-h').textContent = h;
+  const F = D.assets.map(a => {
+    const m = momOf(a, y, ex), r = m.r, n = r.length, band = 1.96 / Math.sqrt(n), rr = acf(r, 10), ra = acf(r.map(Math.abs), 10), L = leverage(r, 5), lb = mean(L);
+    const s = sorted(r), q01 = quantile(s, 0.01), q99 = quantile(s, 0.99), kh = mom(aggregate(r, h)).exkurt;
+    return { a, n, band, ek: m.exkurt, heavy: m.exkurt > 1 && m.jb_p < 0.05, kh, agg: kh < m.exkurt / 2, r1: rr[0], noacf: mean(rr.map(Math.abs)) < 0.05,
+      a10: ra[9], clust: ra[9] > 3 * band, lb, lever: lb < -band, gl: -q01 / q99, gainloss: m.skew < 0 && -q01 > q99 };
+  });
+  const c = (v, ok) => ({ v, c: ok ? '' : 'bad' });
+  table('ft-tab', [T.h.series, T.h.exk, `${T.h.exk}, h = ${h}`, 'ρ̂<sub>r</sub>(1)', 'ρ̂<sub>|r|</sub>(10)', 'L̄(1..5)', '|q<sub>0.01</sub>|/q<sub>0.99</sub>'],
+    F.map(o => [LONG[o.a], c(nf(o.ek, 1), o.heavy), c(nf(o.kh, 1), o.agg), c(nf(o.r1, 2), o.noacf), c(nf(o.a10, 2), o.clust), c(nf(o.lb, 2), o.lever), c(nf(o.gl, 2), o.gainloss)]), T.ftNote);
+  const fail = key => F.filter(o => !o[key]).map(o => SH[o.a]).join(', ') || '—';
+  out('ft-out', [T.ft(y, ex ? T.agEx : T.agAll, h), T.ft2(fail('heavy'), fail('agg'), fail('noacf'), fail('clust'), fail('lever'), fail('gainloss'))]);
+}
+
+// ----------------------------------------------------------------- worked example of block 3: the exact binomial
+function cltWE() {
+  const p = +$('cl-p').value, n = +$('cl-n').value, mu = n * p, sd = Math.sqrt(n * p * (1 - p)), thr = mu + 1.96 * sd, k0 = Math.floor(thr) + 1, ex = binomSf(k0, n, p);
+  const items = [T.clw1(n, nf(p, 2), nf(mu, 2), nf(sd, 3)), T.clw2(nf(mu, 2), nf(sd, 3), nf(thr, 2), k0), T.clw3(k0, n, nf(p, 2), pct(ex, 2), nf(100 * normSf(1.96), 2) + '%')];
+  if (Math.abs(p - 0.2) < 1e-9) { const s = D.clt_sim[n]; items.push(T.clw4(n, pct(s, 1), pct(ex, 1), nf(100 * Math.sqrt(ex * (1 - ex) / 20000), 2))); }
+  steps('cl-we', items);
+}
+
+// ----------------------------------------------------------------- web lecture: table blocks travel inside a chart block
+function placeExtras() {
+  document.querySelectorAll('.xhold > section.xblk').forEach(sec => {
+    const art = document.getElementById('s' + sec.dataset.frame), head = art && art.querySelector('.fhead');
+    if (head) head.after(sec); else sec.closest('section.blk').after(sec);
+  });
+  document.querySelectorAll('.xhold').forEach(h => { if (!h.children.length) h.remove(); });
+}
+
 // ================================================================= wiring
 function init() {
+  placeExtras();
   const on = (ids, f) => ids.forEach(id => { $(id).addEventListener('input', f); if ($(id).tagName === 'SELECT') $(id).addEventListener('change', f); });
   const players = {}, PL = (btn, id, vals, ms) => (players[btn] = new Player(btn, $(id), vals, ms));
   on(['np-k'], normalPdf); PL('np-play', 'np-k', range(1, 6, 0.25), 450);
   on(['ln-s'], lognormal); PL('ln-play', 'ln-s', range(0.1, 1.5, 0.05), 250);
-  on(['cl-p'], clt); PL('cl-play', 'cl-p', range(0.5, 0.02, -0.02), 350);
+  on(['cl-p', 'cl-n'], () => { clt(); cltWE(); }); PL('cl-play', 'cl-p', range(0.5, 0.02, -0.02), 350);
   on(['na-n', 'na-p'], normalApprox); PL('na-play', 'na-n', range(5, 200, 5), 300);
   on(['sh-nu', 'sh-a'], shapes); PL('sh-play', 'sh-a', range(0, 20, 0.5), 200);
   on(['dx-a', 'dx-bw'], daxDensity); PL('dx-play', 'dx-bw', range(0.25, 3, 0.25), 700);
@@ -575,16 +854,29 @@ function init() {
   on(['vc-w'], clustering); PL('vc-play', 'vc-w', [5, 10, 21, 42, 63, 126, 252], 1000);
   on(['lv-y', 'lv-s'], leverageBlock); PL('lv-play', 'lv-y', range(2010, 2022, 1), 700);
   on(['gl-a', 'gl-k'], gainLoss); PL('gl-play', 'gl-a', range(0, 4, 1), 1000);
+  on(['rm-a', 'rm-y'], rareMoves); PL('rm-play', 'rm-y', range(2010, 2024, 1), 900);
+  on(['ll-a', 'll-x', 'll-y'], largeLosses); PL('ll-play', 'll-x', range(1, 10, 0.5), 600);
+  on(['b1-a', 'b1-T', 'b1-q', 'b1-y'], bet100); PL('b1-play', 'b1-T', range(1, 20, 1), 500);
+  on(['mo-y', 'mo-s', 'mo-a'], momentsBlock); PL('mo-play', 'mo-y', range(2010, 2024, 1), 900);
+  on(['jb-a', 'jb-y'], jbBlock); PL('jb-play', 'jb-y', range(2010, 2024, 1), 900);
+  on(['tt-y', 'tt-a', 'tt-k'], tFitTable); PL('tt-play', 'tt-y', range(2010, 2024, 1), 900);
+  on(['st-y', 'st-k', 'st-a'], sigmaTable); PL('st-play', 'st-k', [3, 4, 5, 6], 1400);
+  on(['ah-s', 'ah-m'], aggTable); PL('ah-play', 'ah-m', ['exkurt', 'skew', 'jbp', 'n'], 1800);
+  on(['lb-s', 'lb-m', 'lb-y'], ljungBoxBlock); PL('lb-play', 'lb-m', [1, 2, 5, 10, 20, 30, 40, 50], 900);
+  on(['ft-y', 'ft-s', 'ft-h'], factsTable); PL('ft-play', 'ft-y', range(2010, 2024, 1), 1000);
   const PFX = { 'normal-pdf': 'np', 'lognormal': 'ln', 'clt': 'cl', 'normal-approx': 'na', 'shapes': 'sh', 'dax-density': 'dx', 'qq-normal': 'qn', 't-densities': 'td',
-    't-fit': 'tf', 'qq-t': 'qt', 'sigma-days': 'sg', 'aggregation': 'ag', 'qq-horizons': 'qh', 'acf': 'ac', 'clustering': 'vc', 'leverage': 'lv', 'gain-loss': 'gl' };
-  const VEIL = { 'normal-approx': { out: true, charts: ['na-err'] } };
+    't-fit': 'tf', 'qq-t': 'qt', 'sigma-days': 'sg', 'aggregation': 'ag', 'qq-horizons': 'qh', 'acf': 'ac', 'clustering': 'vc', 'leverage': 'lv', 'gain-loss': 'gl',
+    'rare-moves': 'rm', 'large-losses': 'll', 'bet-100': 'b1', moments: 'mo', jb: 'jb', 't-fit-table': 'tt', 'sigma-table': 'st', 'agg-table': 'ah', 'ljung-box': 'lb', 'facts-table': 'ft' };
+  const VEIL = Object.assign({ 'normal-approx': { out: true, charts: ['na-err'] } }, T.veil || {});
   if (T.predict && predict) Object.entries(T.predict).forEach(([b, sp]) => { if ($(b)) predict(b, Object.assign({ player: players[PFX[b] + '-play'], veil: VEIL[b] || { out: true } }, sp)); });
   if (T.ticket && exitTicket) exitTicket(T.ticket);
-  const all = [normalPdf, lognormal, clt, normalApprox, shapes, daxDensity, qqNormalBlock, tDensities, tFit, qqTBlock, sigmaDaysBlock, aggregation, qqHorizons, acfBlock, clustering, leverageBlock, gainLoss];
+  const all = [normalPdf, rareMoves, largeLosses, lognormal, bet100, clt, cltWE, normalApprox, shapes, momentsBlock, daxDensity, jbBlock, qqNormalBlock, tDensities, tFitTable, tFit, qqTBlock,
+    sigmaTable, sigmaDaysBlock, aggTable, aggregation, qqHorizons, acfBlock, ljungBoxBlock, clustering, leverageBlock, gainLoss, factsTable];
   all.forEach(f => { try { f(); } catch (e) { console.error(e); throw e; } });
 }
 window.CH2 = { phi, Phi, normSf, normPpf, lgamma, ibeta, tpdf, tSf, tCdf, tPpf, tUnit, skewnormMoments, binomPmf, mom, sorted, quantile, acf, leverage, aggregate, kde,
-  sigmaDays, tProfile, tLL, normLL, ser, sample, cltStats, approxErr, qqNormal, qqT, rollSd, hist, init };
+  sigmaDays, tProfile, tLL, normLL, ser, sample, cltStats, approxErr, qqNormal, qqT, rollSd, hist, gammaP, gammaQ, chi2Sf, chi2Ppf, poissonSf, binomSf, ljungBox, ppy,
+  momOf, lossStats, lnStats, fitOf, init };
 if (window.CH2_NO_INIT) return;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
