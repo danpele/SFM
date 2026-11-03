@@ -126,13 +126,26 @@
         return [...links.slice(0, i + 1), ...extra, ...links.slice(i + 1)];
     }
 
+    // chapter buttons in labelled rows, as on the BA site: lecture (slides, web page, interactive), seminar, code
+    const LINK_ROWS = [['course', ['slides', 'slidesExtra', 'web', 'interactive']], ['seminar', ['seminar', 'seminarExtra', 'seminarNb']], ['code', ['lectureNb', 'quantlets']]];
+    const ROW_LABEL = { en: { course: 'Lecture', seminar: 'Seminar', code: 'Code' }, ro: { course: 'Curs', seminar: 'Seminar', code: 'Cod' } }[LANG];
+    const rowType = l => l.type !== 'notebook' ? l.type : (/seminar/i.test(l.href || '') ? 'seminarNb' : 'lectureNb');
+
+    function linkRows(links) {
+        const known = new Set(LINK_ROWS.flatMap(r => r[1]));
+        return LINK_ROWS.map(([row, types]) => {
+            const ls = types.flatMap(t => links.filter(l => rowType(l) === t)).concat(row === 'code' ? links.filter(l => !known.has(rowType(l))) : []);
+            return ls.length ? `<div class="link-row"><span class="link-row-h">${ROW_LABEL[row]}</span><div class="link-row-b">${ls.map(linkButton).join('')}</div></div>` : '';
+        }).join('');
+    }
+
     function renderChapters() {
         $('chapters-grid').innerHTML = D.chapters.map(ch => {
             const all = withWeb((ch.links && ch.links[LANG]) || []);
             const available = all.some(l => !l.soon);
             const badge = (available ? '' : `<span class="badge badge-soon">${T.comingSoon}</span>`) +
                 (ch.selfStudy ? `<span class="badge badge-self">${T.selfStudy}</span>` : '');
-            const links = available ? all.map(linkButton).join('') : `<p class="chapter-soon">${T.chapterSoon}</p>`;
+            const links = available ? linkRows(all) : `<p class="chapter-soon">${T.chapterSoon}</p>`;
             const qn = (ch.quantinar || []).length
                 ? `<div class="quantinar-box"><h4><img src="logos/qr_logo.png" alt="">${T.quantinar}</h4><ul>` +
                   ch.quantinar.map(c => `<li><a href="${c.url}" target="_blank" rel="noopener">${esc(c.title)}</a></li>`).join('') +
