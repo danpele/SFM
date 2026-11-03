@@ -235,6 +235,8 @@ function simpleLogReturns() {
     { x: xs, y: xs.map(v => v - v * v / 200), mode: 'lines', name: 'R − R²/2 (Taylor, second order)', line: { color: COL.snp, width: 1.2, dash: 'dot' }, hovertemplate: 'R %{x:.1f}%: R − R²/2 = %{y:.2f}%<extra></extra>' },
     ...ext.map(e => ({ x: e.pts.map(p => p.R), y: e.pts.map(p => p.r), text: e.pts.map(p => p.d), mode: 'markers', name: `${LAB[e.k]}, largest daily moves`,
       marker: { color: COL[e.k], symbol: e.sym, size: 9 }, hovertemplate: '%{text}: R %{x:.1f}%, r %{y:.1f}%<extra></extra>' })),
+    (([wk, ws]) => { const e = ext.find(o => o.k === wk), p = e.pts[ws === 'min' ? 0 : 1];
+      return { x: [p.R], y: [p.r], mode: 'markers', name: `worked example: ${LAB[wk]}, ${p.d}`, marker: { color: 'rgba(0,0,0,0)', size: 18, line: { color: C.navy, width: 2 } }, hoverinfo: 'skip' }; })($('sl-d').value.split(':')),
     { x: [100 * R, 100 * R], y: [100 * R, lr], mode: 'lines+markers', name: `chosen R = ${(100 * R).toFixed(1)}%: gap R − r`, line: { color: COL.bet, width: 2.5 }, marker: { color: COL.bet, size: 7 }, hoverinfo: 'skip' }
   ];
   $('sl-chart').style.height = H(420) + 'px';
@@ -255,8 +257,12 @@ function growth() {
   let i0 = all.findIndex((d, i) => vals.every(v => v[i] !== null) && d >= dayOf(y + '-01-01'));
   const dates = all.slice(i0).map(iso), idx = vals.map(v => v.slice(i0).map(x => 100 * x / v[i0]));
   $('gr-chart').style.height = H(400) + 'px';
-  plot('gr-chart', G4.map((k, j) => ({ x: dates, y: idx[j], mode: 'lines', name: LAB[k], line: { color: COL[k], width: 1.3 }, hovertemplate: `${LAB[k]} %{x}: %{y:.0f}<extra></extra>` })),
-    layout({ xaxis: DATE, yaxis: XT(lg ? 'Value of 100 invested (log scale)' : 'Value of 100 invested', lg ? { type: 'log', tickvals: LOGT } : { type: 'linear' }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
+  const ka = $('gr-a').value, ja = G4.indexOf(ka), ie = dates.length - 1;
+  plot('gr-chart', [...G4.map((k, j) => ({ x: dates, y: idx[j], mode: 'lines', name: LAB[k], line: { color: COL[k], width: k === ka ? 2.4 : 1.3 }, hovertemplate: `${LAB[k]} %{x}: %{y:.0f}<extra></extra>` })),
+    { x: [dates[0], dates[ie]], y: [100, idx[ja][ie]], text: ['100', fint(idx[ja][ie])], mode: 'markers+text', textposition: ['top right', 'top left'], textfont: { size: 11, color: C.navy },
+      name: `worked example: ${LAB[ka]}, first and last day`, marker: { color: COL[ka], size: 10, symbol: 'diamond', line: { color: C.navy, width: 1 } }, hovertemplate: `${LAB[ka]} %{x}: %{y:.0f}<extra></extra>` }],
+    layout({ annotations: [{ text: lg ? 'log scale: equal vertical distances = equal percentage changes' : 'linear scale: equal vertical distances = equal amounts',
+      xref: 'paper', yref: 'paper', x: 0.01, y: 0.99, xanchor: 'left', yanchor: 'top', showarrow: false, font: { size: 11, color: C.navy } }], xaxis: DATE, yaxis: XT(lg ? 'Value of 100 invested (log scale)' : 'Value of 100 invested', lg ? { type: 'log', tickvals: LOGT } : { type: 'linear' }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
   const end = idx.map(v => v[v.length - 1]);
   out('gr-out', [T.gr(fdate(dates[0]), G4.map((k, j) => `${LAB[k]} ${fint(end[j])}`).join(', ')),
     T.gr2(G4.map((k, j) => T.grItem(LAB[k], fint(end[j] - 100), nf(Math.log(end[j] / 100), 2))).join('; '))]);
@@ -321,7 +327,7 @@ function sharpeCI() {
   plot('sc-chart', [
     { x: ks.map(k => P[k].sharpe), y: names, mode: 'markers', name: `Sharpe ratio with ${cl}% interval`, marker: { color: COL.sp500, size: 8 },
       error_x: { type: 'data', array: ks.map(k => z * P[k].se), color: COL.bet, thickness: 1.5, width: 4 },
-      customdata: ks.map(k => [P[k].sharpe - z * P[k].se, P[k].sharpe + z * P[k].se]), hovertemplate: '%{y}: %{x:.2f} [%{customdata[0]:.2f}, %{customdata[1]:.2f}]<extra></extra>' }
+      text: ks.map(k => `${cl}% interval [${nf(P[k].sharpe - z * P[k].se, 2)}, ${nf(P[k].sharpe + z * P[k].se, 2)}]`), hovertemplate: '%{y}: %{x:.2f}, %{text}<extra></extra>' }
   ], layout({ shapes: [{ type: 'line', x0: 0, x1: 0, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1 } }],
     xaxis: XT('Annualised Sharpe ratio (risk-free rate 0)'), yaxis: XT('', { automargin: true }), margin: { l: 130, r: 12, t: 16, b: 40 } }));
   const hw = mean(ks.map(k => z * P[k].se)), zero = ks.filter(k => P[k].sharpe - z * P[k].se <= 0).map(k => LAB[k]), top = ks[ks.length - 1];
@@ -344,6 +350,9 @@ function drawdowns() {
     items.push(T.ddItem(LAB[k], A.dates[0].slice(0, 4), pc(under / dd.length, 1), nf(dd[im], 1)));
   });
   const d0 = DD3.map(k => full(k).dates[0]).sort()[0], d1 = DD3.map(k => { const q = full(k).dates; return q[q.length - 1]; }).sort().pop();
+  { const k = $('dd-a').value, A = full(k), M = mddDates(A.p, A.days), ii = [M.ip, M.it].concat(M.ir >= 0 ? [M.ir] : []);
+    tr.push({ x: ii.map(i => A.dates[i]), y: ii.map(i => 100 * (A.p[i] / A.p[M.ip] - 1)), mode: 'markers', name: `worked example: ${LAB[k]}, peak, trough${M.ir >= 0 ? ' and recovery' : ''} of the MDD`,
+      marker: { color: COL[k], size: 10, symbol: 'diamond', line: { color: C.navy, width: 1 } }, hovertemplate: `${LAB[k]} %{x}: %{y:.1f}%<extra></extra>` }); }
   tr.push({ x: [d0, d1], y: [-x, -x], mode: 'lines', name: `−${x}% threshold`, line: { color: C.navy, width: 1.2, dash: 'dash' }, hoverinfo: 'skip' });
   $('dd-chart').style.height = H(380) + 'px';
   plot('dd-chart', tr, layout({ xaxis: DATE, yaxis: XT('Drawdown from the previous peak (%)', { range: [-100, 3] }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
@@ -364,6 +373,8 @@ function volDrag() {
     tr.push({ x: [xs[i]], y: [ys[i]], mode: 'markers', xaxis: a.x, yaxis: a.y, name: LAB[k], marker: { color: c, symbol: SYM[m], size: m === '*' ? 13 : 9 },
       hovertemplate: `${LAB[k]}: σ²/2 = %{x:.2f}%, drag %{y:.2f}%<extra></extra>` });
   });
+  { const ka = $('vd-a').value, i = D.assets.indexOf(ka);
+    tr.push({ x: [xs[i]], y: [ys[i]], mode: 'markers', xaxis: a.x, yaxis: a.y, name: `worked example: ${LAB[ka]}`, marker: { color: 'rgba(0,0,0,0)', size: 20, line: { color: C.navy, width: 2 } }, hoverinfo: 'skip' }); }
   const dg = s * s / 2;
   if (s > 0) tr.push({ x: [100 * dg], y: [100 * dg], mode: 'markers', xaxis: a.x, yaxis: a.y, name: `asset with σ = ${(100 * s).toFixed(0)}%`, marker: { color: C.navy, symbol: 'x', size: 11 }, hovertemplate: 'σ²/2 = %{x:.2f}%<extra></extra>' });
   const yrs = range(0, 10, 0.25);
@@ -509,7 +520,8 @@ function annualiseBlock() {
   $('an-chart').style.height = H(400) + 'px';
   const FC = { d: COL.sp500, w: COL.dax, m: COL.bettr }, jf = ['d', 'w', 'm'].indexOf(f);   // grey: daily benchmark; coloured: the selected frequency
   plot('an-chart', [{ x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[0].annVol), type: 'bar', name: `from ${FREQ.d} log returns (benchmark)`, marker: { color: '#b0b0b0' }, hovertemplate: `%{x}, ${FREQ.d}: %{y:.1f}%<extra></extra>` },
-    { x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[jf].annVol), type: 'bar', name: `from ${FREQ[f]} log returns, √A × σ`, marker: { color: FC[f], line: { color: C.navy, width: 1 } }, hovertemplate: `%{x}, ${FREQ[f]}: %{y:.1f}%<extra></extra>` }],
+    { x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[jf].annVol), type: 'bar', name: `from ${FREQ[f]} log returns, √A × σ`, marker: { color: FC[f], line: { color: C.navy, width: 1 } }, hovertemplate: `%{x}, ${FREQ[f]}: %{y:.1f}%<extra></extra>` },
+    (o => ({ x: [SH[k]], y: [1.08 * Math.max(o.X[0].annVol, o.X[jf].annVol)], mode: 'markers', name: `worked example: ${LAB[k]}`, marker: { color: C.navy, symbol: 'triangle-down', size: 11 }, hoverinfo: 'skip' }))(rows.find(o => o.a === k))],
     layout({ barmode: 'group', xaxis: XT('', { tickangle: -30 }), yaxis: XT('Annualised volatility (%)', { rangemode: 'tozero' }), margin: { l: 60, r: 12, t: 16, b: 70 } }));
   const X = describe(resample(asset(k, y), f)), XD = describe(asset(k, y));
   steps('an-we', [T.anw1(LAB[k], T.fq[f], fdate(asset(k, y).dates[0]), nint(X.n), nf(X.Y, 2), nf(X.q, 2)),
@@ -528,7 +540,8 @@ function meanSeBlock() {
   $('ms-chart').style.height = H(420) + 'px';
   plot('ms-chart', [{ x: ks.map(a => X[a].annMean), y: ks.map(a => LAB[a]), mode: 'markers', name: `annual mean log return with ${cl}% interval`, marker: { color: COL.sp500, size: 8 },
     error_x: { type: 'data', array: ks.map(a => z * X[a].se), color: COL.bet, thickness: 1.5, width: 4 },
-    customdata: ks.map(a => [X[a].annMean - z * X[a].se, X[a].annMean + z * X[a].se]), hovertemplate: '%{y}: %{x:.1f}% [%{customdata[0]:.1f}%, %{customdata[1]:.1f}%]<extra></extra>' }],
+    text: ks.map(a => `${cl}% interval [${nf(X[a].annMean - z * X[a].se, 1)}%, ${nf(X[a].annMean + z * X[a].se, 1)}%]`), hovertemplate: '%{y}: %{x:.1f}%, %{text}<extra></extra>' },
+    { x: [X[k].annMean], y: [LAB[k]], mode: 'markers', name: `worked example: ${LAB[k]}`, marker: { color: 'rgba(0,0,0,0)', size: 18, line: { color: C.navy, width: 2 } }, hoverinfo: 'skip' }],
     layout({ shapes: [{ type: 'line', x0: 0, x1: 0, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1 } }],
       xaxis: XT('Annual mean log return (%)'), yaxis: XT('', { automargin: true }), margin: { l: 130, r: 12, t: 16, b: 40 } }));
   table('ms-tab', ['', T.h.Y, T.h.mu, T.h.volD, 'SE (%)', T.h.ci(cl)], D.assets.map(a => {
@@ -605,7 +618,8 @@ function perfBvbBlock() {
   plot('pb-chart', [
     { y: dur.map(o => LAB[o.a]), x: dur.map(o => o.fall), type: 'bar', orientation: 'h', name: 'peak to trough', marker: { color: COL.bet }, hovertemplate: '%{y}: %{x} days from peak to trough<extra></extra>' },
     { y: dur.map(o => LAB[o.a]), x: dur.map(o => o.rec), type: 'bar', orientation: 'h', name: `trough to recovery (hatched: not recovered by ${D.end})`,
-      marker: { color: COL.tlv, pattern: { shape: dur.map(o => (o.done ? '' : '/')), fgcolor: C.navy } }, hovertemplate: '%{y}: %{x} days after the trough<extra></extra>' }
+      marker: { color: COL.tlv, pattern: { shape: dur.map(o => (o.done ? '' : '/')), fgcolor: C.navy } }, hovertemplate: '%{y}: %{x} days after the trough<extra></extra>' },
+    (o => ({ x: [o.fall + o.rec], y: [LAB[k]], mode: 'markers', name: `worked example: ${LAB[k]}`, marker: { color: C.navy, symbol: 'triangle-left', size: 11 }, hovertemplate: `${LAB[k]}: %{x} days in all<extra></extra>` }))(dur.find(o => o.a === k))
   ], layout({ barmode: 'stack', legend: Object.assign(layout().legend, { traceorder: 'normal' }), xaxis: XT('Calendar days of the maximum-drawdown episode'), yaxis: XT('', { automargin: true }), margin: { l: 130, r: 12, t: 16, b: 40 } }));
   const x = P[k], d = x.dates;
   steps('pb-we', [T.pbw1(LAB[k], fprice(x.p[0]), fdate(d[0]), fprice(x.p[x.p.length - 1]), fdate(d[d.length - 1]), nf(x.years, 2), nf(100 * x.cagr, 2)),

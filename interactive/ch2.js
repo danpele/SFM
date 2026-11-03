@@ -239,17 +239,20 @@ function cltStats(n, p) {
   return { z, h, w: 1 / sd, tail, skew: (1 - 2 * p) / sd };
 }
 function clt() {
-  const p = +$('cl-p').value; label('cl-p').textContent = nf(p, 2);
+  const p = +$('cl-p').value, nw = +$('cl-n').value; label('cl-p').textContent = nf(p, 2);
   const Pn = panels('cl-chart', 3, { h: 360 }), tr = [], ann = [], xs = range(-4, 4, 0.02), res = [];
   CLT_N.forEach((n, i) => {
     const a = Pn.ax[i], s = cltStats(n, p); res.push(s);
     tr.push({ x: s.z, y: s.h, width: s.w * 0.9, type: 'bar', xaxis: a.x, yaxis: a.y, name: 'standardised mean of n draws', showlegend: i === 0, legendgroup: 'b',
       marker: { color: P.amber, opacity: 0.7 }, hovertemplate: 'z = %{x:.2f}<br>density %{y:.3f}<extra></extra>' });
+    if (n === nw) { const j = s.z.map((z, q) => (z > 1.96 ? q : -1)).filter(q => q >= 0);
+      tr.push({ x: j.map(q => s.z[q]), y: j.map(q => s.h[q]), width: s.w * 0.9, type: 'bar', xaxis: a.x, yaxis: a.y, name: `worked example, n = ${n}: z > 1.96 (exact tail ${pct(s.tail, 2)})`,
+        marker: { color: P.red }, hovertemplate: 'z = %{x:.2f}<br>density %{y:.3f}<extra></extra>' }); }
     tr.push({ x: xs, y: xs.map(phi), mode: 'lines', xaxis: a.x, yaxis: a.y, name: 'N(0, 1) density', showlegend: i === 0, legendgroup: 'n', line: { color: P.blue, width: 1.8 }, hoverinfo: 'skip' });
     ann.push(ptitle(a, `n = ${n}`));
     setAx(Pn, i, XT('z', { range: [-4, 5] }), XT(i === 0 || Pn.stack ? 'Density' : '', { rangemode: 'tozero' }));
   });
-  plot('cl-chart', tr, layout(Object.assign({ annotations: ann, bargap: 0, margin: { l: 56, r: 12, t: 30, b: 40 } }, Pn.L)));
+  plot('cl-chart', tr, layout(Object.assign({ annotations: ann, bargap: 0, barmode: 'overlay', margin: { l: 56, r: 12, t: 30, b: 40 } }, Pn.L)));
   out('cl-out', [T.cl(nf(p, 2), res.map((s, i) => `n = ${CLT_N[i]}: ${pct(s.tail, 1)}`).join(', '), res.map(s => nf(s.skew, 2)).join(', ')),
     ...(Math.abs(p - 0.2) < 1e-9 ? [T.clSim(CLT_N.map(n => pct(D.clt_sim[n], 1)).join(', '))] : [])]);
 }
@@ -719,7 +722,8 @@ function jbBlock() {
   }));
   plot('jb-chart', [
     { x: D.assets.map(a => SH[a]), y: D.assets.map(a => X[a].jb), type: 'bar', marker: { color: D.assets.map(a => COL[a]) }, name: 'JB statistic, daily log returns', text: D.assets.map(a => Math.round(X[a].jb).toLocaleString('en-US')), textposition: 'outside', cliponaxis: false, textfont: { color: C.navy, size: 11 }, hovertemplate: '%{x}: JB = %{y:,.0f}<extra></extra>' },
-    { x: [null], y: [null], mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: '5% critical value of χ²(2): 5.99', hoverinfo: 'skip' }
+    { x: [null], y: [null], mode: 'lines', line: { color: C.navy, width: 1.2, dash: 'dash' }, name: '5% critical value of χ²(2): 5.99', hoverinfo: 'skip' },
+    { x: [SH[k]], y: [1.8], mode: 'markers', name: `worked example: ${SH[k]}`, marker: { color: C.navy, symbol: 'star', size: 13, line: { color: '#fff', width: 1 } }, hoverinfo: 'skip' }
   ], layout({ bargap: 0.35, shapes: [{ type: 'line', xref: 'x domain', yref: 'y', x0: 0, x1: 1, y0: 5.99, y1: 5.99, line: { color: C.navy, width: 1.2, dash: 'dash' } }], xaxis: XT(''), yaxis: XT('JB (log scale)', { type: 'log', range: [0, 5.3], exponentformat: 'power' }) }));
   const m = X[k], a6 = m.n / 6, s2 = m.skew ** 2, k4 = m.exkurt ** 2 / 4;
   steps('jb-we', [T.jbw1(SH[k], fdate(m.dates[0]), fint(m.n), nf(m.skew, 3), nf(m.exkurt, 2)),

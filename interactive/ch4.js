@@ -584,7 +584,7 @@ function chebBlock() {
   table('cb-tab', [T.h.series, 'n', T.h.days(nf(kk, 1)), T.h.share, T.h.normShare, T.h.normDays, T.h.cheb, T.h.ratioN],
     D.assets.map(a => { const n = moments(a).n, c = beyond(a, kk); return row([SH[a], fint(n), fint(c), spct(c / n, 3), spct(pn, 3), sig(pn * n, 2), pc(cb, 2), c ? sig(c / n / pn, 3) : '0'], a === k ? 'sel' : ''); }), T.cbNote);
   const nw = single('cb-chart', 360), ks = range(1, 8, 0.1);
-  const tr = D.assets.map(a => ({ x: ks, y: ks.map(v => { const c = beyond(a, v); return c ? 100 * c / moments(a).n : null; }), mode: 'lines', line: { color: COL[a], width: 1.6, shape: 'hv' }, name: `${SH[a]}: data`, hovertemplate: `${SH[a]}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>` }));
+  const tr = D.assets.map(a => ({ x: ks, y: ks.map(v => { const c = beyond(a, v); return c ? 100 * c / moments(a).n : null; }), mode: 'lines', line: { color: COL[a], width: a === k ? 2.8 : 1.6, shape: 'hv' }, name: `${SH[a]}: data`, hovertemplate: `${SH[a]}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>` }));
   tr.push({ x: ks, y: ks.map(v => 200 * Phi(-v)), mode: 'lines', line: { color: RED, width: 1.6, dash: 'dash' }, name: 'Normal distribution 2 Phi(-k)', hovertemplate: 'k = %{x:.1f}<br>Normal %{y:.3g}%<extra></extra>' });
   tr.push({ x: ks, y: ks.map(v => 100 / (v * v)), mode: 'lines', line: { color: DARK, width: 1.6, dash: 'dot' }, name: "Chebyshev's bound 1/k^2", hovertemplate: 'k = %{x:.1f}<br>bound %{y:.3g}%<extra></extra>' });
   const mk = D.assets.map(a => { const c = beyond(a, kk); return c ? 100 * c / moments(a).n : null; });
@@ -593,6 +593,7 @@ function chebBlock() {
     customdata: D.assets.map(a => SH[a]), hovertemplate: '%{customdata}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>' });
   tr.push({ x: [kk, kk], y: [200 * Phi(-kk), 100 / (kk * kk)], mode: 'markers', marker: { size: 10, symbol: 'diamond', color: [RED, DARK], line: { color: '#fff', width: 1 } }, name: 'Normal and bound at the chosen k', legendgroup: 'k',
     customdata: ['Normal', 'Chebyshev bound'], hovertemplate: '%{customdata}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>' });
+  tr.push({ x: [kk], y: [mk[D.assets.indexOf(k)]], mode: 'markers', marker: { size: 20, color: 'rgba(0,0,0,0)', line: { color: C.navy, width: 2 } }, name: `worked example: ${SH[k]}`, legendgroup: 'k', hoverinfo: 'skip' });
   plot('cb-chart', tr, layout({ xaxis: XT('k (standard deviations)', { range: [1, 8] }),
     yaxis: XT('share of days beyond k sd (%, log scale)', { type: 'log', range: [-4, 2], exponentformat: 'power', dtick: 1 }), legend: LEG(nw, -0.2) }));
   const o = moments(k), c = beyond(k, kk), en = pn * o.n;

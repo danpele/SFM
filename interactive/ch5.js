@@ -563,12 +563,13 @@ function hillRow(k, fr) {
   return { S, kk, a, se, sb, lo: a * (1 - 1.96 / Math.sqrt(kk)), hi: a * (1 + 1.96 / Math.sqrt(kk)), a1: hillK(S, Math.trunc(0.01 * S.n)), a5: hillK(S, Math.trunc(0.05 * S.n)),
     gain: 1 / (cl[kk] / kk - Math.log(g[kk])) };
 }
-function hillBars(id, names, R, fr) {
+function hillBars(id, names, R, fr, k) {
   const nw = single(id, 330), x = names.map((_, i) => i), tr = [
     { x: x.map(v => v - 0.12), y: R.map(o => o.a), mode: 'markers', marker: { size: 9, color: names.map(k => COL[k]) }, error_y: { type: 'data', symmetric: false, array: R.map(o => o.hi - o.a), arrayminus: R.map(o => o.a - o.lo), color: DARK, thickness: 1.4, width: 5 },
       name: '95% interval, i.i.d. SE', customdata: names.map(lbl), hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra>i.i.d.</extra>' },
     { x: x.map(v => v + 0.12), y: R.map(o => o.a), mode: 'markers', marker: { size: 9, symbol: 'diamond', color: names.map(k => COL[k]) }, error_y: { type: 'data', array: R.map(o => 1.96 * o.sb), color: ORANGE, thickness: 1.4, width: 5 },
-      name: '95% interval, block-bootstrap SE', customdata: names.map(lbl), hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra>block bootstrap</extra>' }];
+      name: '95% interval, block-bootstrap SE', customdata: names.map(lbl), hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra>block bootstrap</extra>' },
+    (i => ({ x: [i], y: [R[i].a], mode: 'markers', marker: { size: 34, color: 'rgba(0,0,0,0)', line: { color: DARK, width: 2 } }, name: `highlighted row: ${LAB[k]}`, hoverinfo: 'skip' }))(names.indexOf(k))];
   const ax = { x: 'x', y: 'y' };
   plot(id, tr, layout({ shapes: [hln(2, DARK, ax, 'dash'), hln(4, DARK, ax, 'dashdot')], xaxis: AX(`Hill estimate at k = ${lvlEn(fr)} of n`, { tickvals: x, ticktext: names.map(k => LAB[k].replace(/ \(.*\)/, '')), range: [-0.5, names.length - 0.5] }),
     yaxis: AX('alpha-hat (dashed: 2, dash-dot: 4)'), legend: LEG(nw, -0.22) }));
@@ -579,7 +580,7 @@ function hillTab(pfx, names, cols) {
   const head = cols === 4 ? [T.h.series, 'n', 'k', 'α̂', T.h.ci95, T.h.seIid, T.h.seBlock, 'k = 1% / 5%', T.h.gains] : [T.h.series, 'n', 'k', 'α̂', T.h.ci95, T.h.seBlock, T.h.gains];
   table(pfx + '-tab', head, R.map((o, i) => { const a = names[i], c = [lbl(a), fint(o.S.n), fint(o.kk), nf(o.a, 2), ci(o.lo, o.hi, 2)];
     if (cols === 4) c.push(nf(o.se, 2)); c.push(nf(o.sb, 2)); if (cols === 4) c.push(`${nf(o.a1, 2)} / ${nf(o.a5, 2)}`); c.push(nf(o.gain, 2)); return row(c, a === k ? 'sel' : ''); }), T.htNote(lvl(fr)));
-  hillBars(pfx + '-chart', names, R, fr);
+  hillBars(pfx + '-chart', names, R, fr, k);
   const o = R[names.indexOf(k)];
   out(pfx + '-out', [T.ht(lbl(k), lvl(fr), fint(o.kk), nf(o.a, 2), nf(o.se, 2), nf(o.sb, 2), nf(o.sb / o.se, 2), nf(o.gain, 2))]);
 }
@@ -613,7 +614,9 @@ function gevTable() {
     error_y: { type: 'data', array: D.assets.map(a => 1.96 * D.gevb[a][bb].se_xi), color: [BLUE, RED, GREEN, PURPLE][j], thickness: bb === b ? 1.8 : 1, width: 4 },
     name: `${bb[0].toUpperCase() + bb.slice(1)}ly maxima` + (bb === 'month' ? ' (slide)' : ''), customdata: D.assets.map(a => `${LAB[a]}, ${D.gevb[a][bb].n} blocks`),
     hovertemplate: '%{customdata}<br>xi = %{y:.3f}<extra></extra>' }));
-  const jb = BS.indexOf(b);
+  const jb = BS.indexOf(b), ik = D.assets.indexOf(k);
+  tr.push({ x: [ik - 0.4, ik + 0.4, ik + 0.4, ik - 0.4, ik - 0.4], y: (v => [v[0], v[0], v[1], v[1], v[0]])((ys => [Math.min(...ys), Math.max(...ys)])(BS.flatMap(bb => [D.gevb[k][bb].xi - 1.96 * D.gevb[k][bb].se_xi, D.gevb[k][bb].xi + 1.96 * D.gevb[k][bb].se_xi]))),
+    mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dot' }, name: `highlighted row: ${LAB[k]}`, hoverinfo: 'skip' });
   tr.push({ x: D.assets.map((_, i) => i + (jb - 1.5) * 0.17), y: D.assets.map(a => D.gevb[a][b].xi), mode: 'markers+text', text: D.assets.map(a => D.gevb[a][b].xi.toFixed(2)), textposition: 'middle right',
     textfont: { size: 10, color: DARK }, marker: { size: 15, color: 'rgba(0,0,0,0)', line: { color: DARK, width: 1.8 } }, name: `Chosen: ${b}ly maxima`, hoverinfo: 'skip' });
   plot('gx-chart', tr, layout({ shapes: [hln(0, DARK, { x: 'x', y: 'y' }, 'dash')], xaxis: AX('', { tickvals: [0, 1, 2, 3], ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }),
@@ -741,6 +744,8 @@ function exceed() {
   { const ik = D.assets.indexOf(k), ok = R[ik][1];
     tr.push({ x: C3.map((c, j) => ik + (j - 1) * 0.22), y: C3.map(c => ok.res[lv][c]), mode: 'markers+text', text: C3.map(c => { const v = kupiec(ok.res[lv][c], ok.n, p).pv; return v < 0.001 ? '<0.001' : v.toFixed(3); }), textposition: 'top center',
       textfont: { size: 9, color: DARK }, marker: { symbol: 'circle-open', size: 13, color: DARK, line: { width: 2 } }, name: `${LAB[k]}: Kupiec p-value on each bar`, hoverinfo: 'skip', cliponaxis: false }); }
+  { const ik = D.assets.indexOf(k), jm = C3.indexOf(m);
+    tr.push({ x: [ik + (jm - 1) * 0.22], y: [R[ik][1].res[lv][m]], mode: 'markers', marker: { symbol: 'star', size: 14, color: DARK, line: { color: '#fff', width: 1 } }, name: `worked example: ${LAB[k]}, ${m}`, hoverinfo: 'skip', cliponaxis: false }); }
   plot('ex-chart', tr, layout({ barmode: 'overlay', xaxis: AX('', { tickvals: x, ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }), yaxis: AX(`Days with a loss above VaR ${lvlEn(p)} (2020-2026)`, { rangemode: 'tozero' }), legend: LEG(nw, -0.15) }));
   const o = R.find(z => z[0] === k)[1], xx = o.res[lv][m], n = o.n, ph = xx / n, K = kupiec(xx, n, p), rr = rg[D.assets.indexOf(k)];
   steps('ex-we', [T.exw1(lbl(k), T.h.m[m], lvl(p), nf(o.O[lv][m].var, 2), fint(n), xx, nf(n * p, 2)),

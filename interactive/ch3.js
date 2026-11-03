@@ -695,7 +695,8 @@ function fitsTable() {
       { mode: 'lines+markers', marker: { symbol: 'line-ew-open', size: 12, color: DBLUE, line: { width: 1.5, color: DBLUE } }, line: { color: DBLUE, width: 1.5 } }),
     { x: xs, y: D.assets.map(a => D.fits[a].stable.alpha), mode: 'markers', name: `ML, ${lvl} interval`, legendgroup: 'ml', marker: { color: DBLUE, size: 10 }, hovertemplate: '%{x}<br>ML alpha-hat %{y:.3f}<extra></extra>' },
     { x: xs, y: D.assets.map(a => D.fits[a].mcculloch.alpha), mode: 'markers', name: 'McCulloch', marker: { color: ORANGE, size: 11, symbol: 'diamond' }, hovertemplate: '%{x}<br>McCulloch alpha-hat %{y:.3f}<extra></extra>' },
-    { x: [null], y: [null], mode: 'lines', name: 'alpha = 2 (Normal)', line: { color: C.navy, dash: 'dash', width: 1 } }
+    { x: [null], y: [null], mode: 'lines', name: 'alpha = 2 (Normal)', line: { color: C.navy, dash: 'dash', width: 1 } },
+    { x: [SH[k]], y: [est(k).alpha], mode: 'markers', name: `worked example: ${SH[k]}, ${ml ? 'ML' : 'McCulloch'}`, marker: { color: 'rgba(0,0,0,0)', size: 20, line: { color: C.navy, width: 2 } }, hoverinfo: 'skip' }
   ], layout({ shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 2, y1: 2, line: { color: C.navy, width: 1, dash: 'dash' } }],
     xaxis: XT(''), yaxis: XT('alpha-hat', { range: [1.25, 2.05] }), legend: LEG(nw, -0.14) }));
   const e = est(k), ta = Math.tan(Math.PI * e.alpha / 2), sh = e.beta * e.gamma * ta;

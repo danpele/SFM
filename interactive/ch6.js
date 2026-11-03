@@ -606,7 +606,9 @@ function overfitBlock() {
     on2(b, { x: cs, y: dl(c => R[c].aic), mode: 'lines+markers', marker: { symbol: 'circle', size: 7 }, line: { color: GREEN }, name: 'Delta AIC', hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
     on2(b, { x: cs, y: dl(c => R[c].bic), mode: 'lines+markers', marker: { symbol: 'square', size: 7 }, line: { color: PURPLE }, name: 'Delta BIC', hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
     on2(b, { x: cs, y: dl(crit), mode: 'lines+markers', marker: { symbol: 'diamond', size: 8 }, line: { color: ORANGE, dash: 'dot' }, name: `penalty ${pen.toFixed(1)} per parameter`, hovertemplate: 'c = %{x}<br>%{y:.1f}<extra></extra>' }),
-    on2(b, { x: [chosen], y: [0], mode: 'markers', marker: { size: 14, color: 'rgba(0,0,0,0)', line: { color: ORANGE, width: 2 } }, name: `selected with this penalty: c = ${chosen}`, hoverinfo: 'skip' })];
+    on2(b, { x: [chosen], y: [0], mode: 'markers', marker: { size: 14, color: 'rgba(0,0,0,0)', line: { color: ORANGE, width: 2 } }, name: `selected with this penalty: c = ${chosen}`, hoverinfo: 'skip' }),
+    on2(a, { x: [c0, c0], y: [R[c0].in, R[c0].out], mode: 'markers', marker: { symbol: 'star', size: 13, color: C.navy, line: { color: '#fff', width: 1 } }, name: `worked example: c = ${c0}`, legendgroup: 'we', hoverinfo: 'skip' }),
+    on2(b, { x: [c0, c0], y: [dl(c => R[c].aic)[c0 - 1], dl(c => R[c].bic)[c0 - 1]], mode: 'markers', marker: { symbol: 'star', size: 13, color: C.navy, line: { color: '#fff', width: 1 } }, name: `worked example: c = ${c0}`, legendgroup: 'we', showlegend: false, hoverinfo: 'skip' })];
   setAx(Pn, 0, AX('Number of Normal components', { dtick: 1 }), AX('')); setAx(Pn, 1, AX('Number of Normal components', { dtick: 1 }), AX(''));
   plot('of-chart', tr, layout(Object.assign(Pn.L, { annotations: [ptitle(a, 'Mean log-likelihood per day'), ptitle(b, 'Information criteria (0 = selected)')], legend: LEG(Pn.stack, Pn.stack ? -0.07 : -0.2) })));
   table('of-tab', ['c', 'k', 'ℓ(θ̂)', 'AIC', 'BIC', T.h.pcrit, T.h.inS, T.h.outS], cs.map(c => Object.assign([String(c), String(R[c].k), fnum(R[c].loglik, 1), fnum(R[c].aic, 1), fnum(R[c].bic, 1),
