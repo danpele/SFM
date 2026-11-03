@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 · Data, Returns and Indicators</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch1.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch1_data.js?v=20261101a", "ch1_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch1.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistics of Financial Markets</h1><p>Chapter 1 · Data, Returns and Indicators</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_01" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch1.html" class="lang-btn active">EN</a><a href="ch1_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step.</p>
+<p class="toc"><a href="#s-data">Financial Data: Sources and Quality</a> · <a href="#s-ret">From Prices to Returns</a> · <a href="#s-sl">Simple and Log Returns</a> · <a href="#s-mp">Multi-Period and Portfolio Returns</a> · <a href="#s-desc">Descriptive Statistics of Returns</a> · <a href="#s-perf">Performance Indicators</a></p>
+<h2 class="sec" id="s-data">Financial Data: Sources and Quality</h2>
+<section class="blk" id="tlv-adjusted">
+  <h3>Real Data: Banca Transilvania, Close vs Adjusted Close</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch1_tlv_adjusted_en.jpg" alt="Slide 13: Real Data: Banca Transilvania, Close vs Adjusted Close" loading="lazy"></a>
+      <figcaption>Slide 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tl-th">Threshold on the gap between the two log returns (%): <b id="tl-th-v"></b></label><input type="range" id="tl-th" min="0.5" max="50" step="0.5" value="2"></div><button class="btn play" id="tl-play" type="button"></button></div><div class="charts "><div class="chart" id="tl-chart"></div></div><ul class="out" id="tl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, the two series differ by more than 2% on 24 days since 2015. The ▶ button raises the threshold. How many days remain at a threshold of 10%?</div>
+  <details><summary>Answer</summary><p>11 days. Besides the consolidation of 16 August 2022 (+230.3% from the close, 0.0% from the adjusted close), 10 other days show a gap of more than 10 percentage points between the two log returns, all with the close falling; the largest, 19.5 percentage points, on 3 August 2017. Above 20% only the consolidation remains. A return computed from the close would treat these days as losses of the shareholders, although the value of the holding did not change.</p></details>
+</section>
+<section class="blk" id="bet-bettr">
+  <h3>Dividends Matter: BET vs BET-TR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=15" target="_blank" rel="noopener"><img src="slides/sfm_ch1_bet_bettr_en.jpg" alt="Slide 14: Dividends Matter: BET vs BET-TR" loading="lazy"></a>
+      <figcaption>Slide 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bb-y">Year of the investment (2014 = 23 September 2014): <b id="bb-y-v"></b></label><input type="range" id="bb-y" min="2014" max="2025" step="1" value="2014"></div><button class="btn play" id="bb-play" type="button"></button></div><div class="charts "><div class="chart" id="bb-chart"></div></div><ul class="out" id="bb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the date of the investment from 2014 to 2025. With the investment made at the start of 2022, by how many percentage points a year does BET-TR grow faster than BET?</div>
+  <details><summary>Answer</summary><p>By 8.3 percentage points: 29.9% a year against 21.6%. The final values are 342 and 251, a gap of 91 units, much smaller than 1,005 against 455 for the investment of 23 September 2014. The gap between the growth rates, however, stays between 7.5 and 8.4 percentage points for every start year: dividends add roughly the same return every year, and their effect on wealth accumulates over time.</p></details>
+</section>
+<section class="blk" id="eurron">
+  <h3>Data Errors: Two EUR/RON Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch1_eurron_check_en.jpg" alt="Slide 15: Data Errors: Two EUR/RON Series" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eu-th">Threshold on the gap between the daily changes (percentage points): <b id="eu-th-v"></b></label><input type="range" id="eu-th" min="0.25" max="5" step="0.25" value="1"></div><button class="btn play" id="eu-play" type="button"></button></div><div class="charts "><div class="chart" id="eu-chart"></div></div><ul class="out" id="eu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The annualised volatility of the EODHD series is 13.4%, that of the BNR rate 4.5%. What does the volatility of the EODHD series become if we drop the 412 days on which the daily changes differ by more than 1 percentage point, that is 8% of the days?</div>
+  <details><summary>Answer</summary><p>About 4.7%, close to 4.3%, the volatility of the BNR rate on the same days. Volatility depends on squared deviations, so a few hundred wrong quotes triple it. Of the 412 days, 307 fall in 2010–2013. 283 days differ by more than 2 percentage points, 10 days by more than 5 percentage points.</p></details>
+</section><h2 class="sec" id="s-ret">From Prices to Returns</h2>
+<section class="blk" id="price-returns">
+  <h3>S&P 500: Price Level vs Daily Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch1_price_returns_en.jpg" alt="Slide 20: S&P 500: Price Level vs Daily Returns" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-k">Number of equal subperiods (0 = off): <b id="pr-k-v"></b></label><input type="range" id="pr-k" min="0" max="6" step="1" value="0"></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button splits the 2000–2026 sample into up to 6 equal subperiods. With 5 subperiods, what happens to the mean and the standard deviation of daily returns from one subperiod to the next?</div>
+  <details><summary>Answer</summary><p>The mean of returns stays close to zero, between −0.016% and 0.057% a day, while the mean of the price rises from 1,145 to 5,235 points. The standard deviation of returns, however, varies between 0.97% and 1.53% a day: returns fluctuate around a stable level, but their volatility changes over time. The ADF test rejects the unit root for returns (statistic −14.3), not for the log price (statistic −2.08, p-value 0.56).</p></details>
+</section><h2 class="sec" id="s-sl">Simple and Log Returns</h2>
+<section class="blk" id="simple-log">
+  <h3>Simple vs Log Returns on Real Extremes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch1_simple_log_en.jpg" alt="Slide 26: Simple vs Log Returns on Real Extremes" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sl-R">Simple return R (%): <b id="sl-R-v"></b></label><input type="range" id="sl-R" min="-60" max="60" step="0.2" value="10"></div><button class="btn play" id="sl-play" type="button"></button></div><div class="charts "><div class="chart" id="sl-chart"></div></div><ul class="out" id="sl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin, 7 December 2017: R = +25.2%, r = +22.5%, so R − r = 2.7 percentage points. What is the gap R − r for a fall of the same size, R = −25.2%?</div>
+  <details><summary>Answer</summary><p>3.8 percentage points: r = ln(0.748) = −29.0%. The function ln is concave, and the gap is larger for falls than for rises of the same size. The approximation R²/2 = 3.2 percentage points is the same for both signs; the R³/3 term of the Taylor series corrects it upwards for falls and downwards for rises. At R = −37.2% (Bitcoin, 12 March 2020), the gap reaches 9.3 percentage points.</p></details>
+</section><h2 class="sec" id="s-mp">Multi-Period and Portfolio Returns</h2>
+<section class="blk" id="growth">
+  <h3>Growth of 100 Invested, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch1_growth_en.jpg" alt="Slide 33: Growth of 100 Invested, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gr-y">Year of the investment: <b id="gr-y-v"></b></label><input type="range" id="gr-y" min="2015" max="2025" step="1" value="2015"></div><div class="ctl"><label for="gr-sc">Vertical scale</label><select id="gr-sc"><option value="log" selected>logarithmic</option><option value="lin">linear</option></select></div><button class="btn play" id="gr-play" type="button"></button></div><div class="charts "><div class="chart" id="gr-chart"></div></div><ul class="out" id="gr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the date of the investment from 2015 to 2025. With the investment made at the start of 2022, which of the four series has the largest final value?</div>
+  <details><summary>Answer</summary><p>BET: 251, against Bitcoin 170, S&P 500 161 and DAX 159. For the investment of 2015, Bitcoin reaches 29,475, and for that of 2018 592, still first. The ranking by cumulative return depends on the start date.</p></details>
+</section><h2 class="sec" id="s-desc">Descriptive Statistics of Returns</h2>
+<section class="blk" id="hist-normal">
+  <h3>Histograms vs the Normal Distribution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch1_hist_normal_en.jpg" alt="Slide 46: Histograms vs the Normal Distribution" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hi-k">Threshold k (standard deviations): <b id="hi-k-v"></b></label><input type="range" id="hi-k" min="1" max="6" step="0.5" value="3"></div><button class="btn play" id="hi-play" type="button"></button></div><div class="charts "><div class="chart" id="hi-chart"></div></div><ul class="out" id="hi-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Beyond 3 standard deviations, the S&P 500 has 5.2 times as many days as the Normal distribution. The ▶ button raises the threshold. How many times as many days does the S&P 500 have beyond 4 standard deviations?</div>
+  <details><summary>Answer</summary><p>About 113 times: 21 days out of 2,943 (0.71%), against 0.0063% for the Normal distribution. The ratio grows with the threshold, because the tail of the Normal distribution falls very fast; for Bitcoin the ratio is 103 (28 days). The frequency of extreme days does not follow from the standard deviation through the Normal distribution.</p></details>
+</section>
+<section class="blk" id="rolling-vol">
+  <h3>Volatility Changes over Time</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch1_rolling_vol_1y_en.jpg" alt="Slide 47: Volatility Changes over Time" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-w">Window (trading days; Bitcoin: the same calendar length): <b id="rv-w-v"></b></label><input type="range" id="rv-w" min="21" max="500" step="1" value="250"></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 250-day window, the annualised volatility of the S&P 500 reaches at most 35.0%. The ▶ button changes the window. What is the maximum with a 21-day window (one month)?</div>
+  <details><summary>Answer</summary><p>97.5%, in the window ending on 6 April 2020. A short window follows a turbulent period such as March 2020 quickly; a one-year window dilutes it with the calm months before and after. The minimum falls too, from 6.7% to 3.5%. A short window reacts fast, but its estimate has a larger error.</p></details>
+</section><h2 class="sec" id="s-perf">Performance Indicators</h2>
+<section class="blk" id="sharpe-ci">
+  <h3>Sharpe Ratios with 95% Intervals, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch1_sharpe_ci_en.jpg" alt="Slide 52: Sharpe Ratios with 95% Intervals, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-y">Sample starts in: <b id="sc-y-v"></b></label><input type="range" id="sc-y" min="2015" max="2024" step="1" value="2015"></div><div class="ctl"><label for="sc-cl">Confidence level</label><select id="sc-cl"><option value="90">90%</option><option value="95" selected>95%</option><option value="99">99%</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over 2015–2026 (11.7 years), the 95% confidence interval is the Sharpe ratio ± 0.57. The ▶ button moves the start of the sample towards 2024. With the start in 2023 (3.7 years), what does the half-width of the interval become?</div>
+  <details><summary>Answer</summary><p>About ± 1.02, roughly 1.96/√3.7. The standard error of the annual Sharpe ratio falls as 1/√Y, with Y the number of years, however many daily observations the sample holds. With the start in 2023, the Nuclearelectrica interval contains 0, and the DAX interval no longer does.</p></details>
+</section>
+<section class="blk" id="drawdowns">
+  <h3>Drawdowns over the Full History</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch1_drawdowns_en.jpg" alt="Slide 55: Drawdowns over the Full History" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-x">Threshold x: days more than x% below the peak: <b id="dd-x-v"></b></label><input type="range" id="dd-x" min="5" max="80" step="5" value="20"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> More than 20% below the peak lie 27% of the S&P 500 days, 56% of the BET days and 66% of the Bitcoin days. The ▶ button raises the threshold. What share of its days did BET, since 1997, spend more than 50% below the previous peak?</div>
+  <details><summary>Answer</summary><p>18%, almost one day in five; the S&P 500 only 0.3%, Bitcoin 31.6%. A fall of 50% needs a gain of 100% to recover. The depth of the maximum drawdown (−82.5% for BET) does not say how long the fall lasts; the share of days below the threshold shows the duration.</p></details>
+</section>
+<section class="blk" id="vol-drag">
+  <h3>Volatility Drag on Real Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=60" target="_blank" rel="noopener"><img src="slides/sfm_ch1_vol_drag_en.jpg" alt="Slide 59: Volatility Drag on Real Data" loading="lazy"></a>
+      <figcaption>Slide 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vd-s">Annual volatility σ of an asset with arithmetic mean 10% a year (%): <b id="vd-s-v"></b></label><input type="range" id="vd-s" min="0" max="80" step="1" value="30"></div><button class="btn play" id="vd-play" type="button"></button></div><div class="charts "><div class="chart" id="vd-chart"></div></div><ul class="out" id="vd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Arithmetic mean 10% a year, σ = 30%: the volatility drag is 4.5%, and 1 RON becomes 1.73 RON after 10 years. The ▶ button raises σ. With σ = 60%, does wealth grow over 10 years?</div>
+  <details><summary>Answer</summary><p>No. The drag is σ²/2 = 18%, four times larger, and the growth rate is 10% − 18% = −8% a year: after 10 years 1 RON becomes 0.45 RON. A positive arithmetic mean does not guarantee that wealth grows. On real data, the drag of Bitcoin is 22.1 percentage points, close to σ²/2 = 21.9%.</p></details>
+</section>
+<section class="blk" id="risk-return">
+  <h3>Risk and Return, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter1_data_returns_indicators.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch1_risk_return_en.jpg" alt="Slide 63: Risk and Return, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-m">Vertical axis</label><select id="rr-m"><option value="cagr" selected>CAGR</option><option value="sharpe">Sharpe</option><option value="sortino">Sortino</option><option value="calmar">Calmar</option><option value="mdd">MDD</option></select></div><div class="ctl"><label for="rr-y">Sample starts in: <b id="rr-y-v"></b></label><input type="range" id="rr-y" min="2015" max="2024" step="1" value="2015"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over 2015–2026, Bitcoin has the highest CAGR. The ▶ button moves the start of the sample. With the start in 2018, which asset has the highest CAGR?</div>
+  <details><summary>Answer</summary><p>Nuclearelectrica (SNN), with 40.7% a year; SNN also has the highest Sharpe, Sortino and Calmar ratios in this sample. The CAGR of Bitcoin falls from 60.6% to 22.7%, because the sample starts two weeks after the peak of 16 December 2017. The ranking depends on the indicator and on the period.</p></details>
+</section>
+<p class="src foot">EODHD daily prices up to 18 September 2026: indices and Bitcoin at the close, BVB stocks adjusted for dividends and corporate actions; the BNR EUR/RON reference rate. Comparison period: from 2015; S&P 500 from 2000, BET from 1997 and Bitcoin from 2014 over the full history.</p>
+</main>
+</body>
+</html>

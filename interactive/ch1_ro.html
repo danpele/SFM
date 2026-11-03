@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 1 · Date, randamente și indicatori</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch1.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch1_data.js?v=20261101a", "ch1_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch1.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 1 · Date, randamente și indicatori</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_01" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch1.html" class="lang-btn">EN</a><a href="ch1_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas.</p>
+<p class="toc"><a href="#s-data">Date financiare: surse și calitate</a> · <a href="#s-ret">De la prețuri la randamente</a> · <a href="#s-sl">Randamente simple și logaritmice</a> · <a href="#s-mp">Randamente pe mai multe perioade și ale portofoliilor</a> · <a href="#s-desc">Statisticile descriptive ale randamentelor</a> · <a href="#s-perf">Indicatori de performanță</a></p>
+<h2 class="sec" id="s-data">Date financiare: surse și calitate</h2>
+<section class="blk" id="tlv-adjusted">
+  <h3>Date reale: Banca Transilvania, prețul de închidere și prețul ajustat</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch1_tlv_adjusted_ro.jpg" alt="Slide-ul 13: Date reale: Banca Transilvania, prețul de închidere și prețul ajustat" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tl-th">Pragul diferenței dintre cele două randamente logaritmice (%): <b id="tl-th-v"></b></label><input type="range" id="tl-th" min="0.5" max="50" step="0.5" value="2"></div><button class="btn play" id="tl-play" type="button"></button></div><div class="charts "><div class="chart" id="tl-chart"></div></div><ul class="out" id="tl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, cele două serii diferă cu peste 2% în 24 de zile din 2015 încoace. Butonul ▶ ridică pragul. Cîte zile rămîn la un prag de 10%?</div>
+  <details><summary>Răspuns</summary><p>11 zile. Pe lîngă consolidarea din 16 august 2022 (+230,3% din prețul de închidere, 0,0% din prețul ajustat), alte 10 zile au o diferență de peste 10 puncte procentuale între cele două randamente logaritmice, toate cu prețul de închidere în scădere; cea mai mare, 19,5 puncte procentuale, pe 3 august 2017. Peste 20% rămîne doar consolidarea. Un randament calculat din prețul de închidere ar trata aceste zile drept pierderi ale acționarilor, deși valoarea deținerii nu s-a modificat.</p></details>
+</section>
+<section class="blk" id="bet-bettr">
+  <h3>Dividendele contează: BET și BET-TR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=15" target="_blank" rel="noopener"><img src="slides/sfm_ch1_bet_bettr_ro.jpg" alt="Slide-ul 14: Dividendele contează: BET și BET-TR" loading="lazy"></a>
+      <figcaption>Slide-ul 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bb-y">Anul investiției (2014 = 23 septembrie 2014): <b id="bb-y-v"></b></label><input type="range" id="bb-y" min="2014" max="2025" step="1" value="2014"></div><button class="btn play" id="bb-play" type="button"></button></div><div class="charts "><div class="chart" id="bb-chart"></div></div><ul class="out" id="bb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută data investiției din 2014 pînă în 2025. Cu investiția făcută la începutul lui 2022, cu cîte puncte procentuale pe an crește BET-TR mai repede decît BET?</div>
+  <details><summary>Răspuns</summary><p>Cu 8,3 puncte procentuale: 29,9% pe an față de 21,6%. Valorile finale sînt 342 și 251, o diferență de 91 de unități, mult mai mică decît 1 005 față de 455 pentru investiția din 23 septembrie 2014. Diferența dintre ratele de creștere rămîne însă între 7,5 și 8,4 puncte procentuale pentru orice an de început: dividendele adaugă în fiecare an aproximativ același randament, iar efectul lor asupra averii se acumulează în timp.</p></details>
+</section>
+<section class="blk" id="eurron">
+  <h3>Erori în date: două serii EUR/RON</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch1_eurron_check_ro.jpg" alt="Slide-ul 15: Erori în date: două serii EUR/RON" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eu-th">Pragul diferenței dintre variațiile zilnice (puncte procentuale): <b id="eu-th-v"></b></label><input type="range" id="eu-th" min="0.25" max="5" step="0.25" value="1"></div><button class="btn play" id="eu-play" type="button"></button></div><div class="charts "><div class="chart" id="eu-chart"></div></div><ul class="out" id="eu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Volatilitatea anualizată a seriei EODHD este 13,4%, a cursului BNR 4,5%. Cît devine volatilitatea seriei EODHD dacă eliminăm cele 412 zile în care variațiile zilnice diferă cu peste 1 punct procentual, adică 8% din zile?</div>
+  <details><summary>Răspuns</summary><p>Circa 4,7%, aproape de 4,3%, volatilitatea cursului BNR în aceleași zile. Volatilitatea depinde de pătratul abaterilor, deci cîteva sute de cotații greșite o triplează. Dintre cele 412 zile, 307 sînt în 2010–2013. Peste 2 puncte procentuale diferă 283 de zile, peste 5 puncte procentuale 10 zile.</p></details>
+</section><h2 class="sec" id="s-ret">De la prețuri la randamente</h2>
+<section class="blk" id="price-returns">
+  <h3>S&P 500: nivelul prețului și randamentele zilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch1_price_returns_ro.jpg" alt="Slide-ul 20: S&P 500: nivelul prețului și randamentele zilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-k">Numărul de subperioade egale (0 = fără): <b id="pr-k-v"></b></label><input type="range" id="pr-k" min="0" max="6" step="1" value="0"></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ împarte eșantionul 2000–2026 în pînă la 6 subperioade egale. Cu 5 subperioade, ce se întîmplă cu media și abaterea standard a randamentelor zilnice de la o subperioadă la alta?</div>
+  <details><summary>Răspuns</summary><p>Media randamentelor rămîne aproape de zero, între −0,016% și 0,057% pe zi, în timp ce media prețului crește de la 1 145 la 5 235 de puncte. Abaterea standard a randamentelor variază însă între 0,97% și 1,53% pe zi: randamentele oscilează în jurul unui nivel stabil, dar volatilitatea lor se schimbă în timp. Testul ADF respinge rădăcina unitară pentru randamente (statistica −14,3), nu și pentru logaritmul prețului (statistica −2,08, p-value 0,56).</p></details>
+</section><h2 class="sec" id="s-sl">Randamente simple și logaritmice</h2>
+<section class="blk" id="simple-log">
+  <h3>Randamente simple și logaritmice în zilele extreme</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch1_simple_log_ro.jpg" alt="Slide-ul 26: Randamente simple și logaritmice în zilele extreme" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sl-R">Randamentul simplu R (%): <b id="sl-R-v"></b></label><input type="range" id="sl-R" min="-60" max="60" step="0.2" value="10"></div><button class="btn play" id="sl-play" type="button"></button></div><div class="charts "><div class="chart" id="sl-chart"></div></div><ul class="out" id="sl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Bitcoin, 7 decembrie 2017: R = +25,2%, r = +22,5%, deci R − r = 2,7 puncte procentuale. Cît este diferența R − r pentru o scădere de aceeași mărime, R = −25,2%?</div>
+  <details><summary>Răspuns</summary><p>3,8 puncte procentuale: r = ln(0,748) = −29,0%. Funcția ln este concavă, iar diferența este mai mare pentru scăderi decît pentru creșteri de aceeași mărime. Aproximarea R²/2 = 3,2 puncte procentuale este aceeași pentru ambele semne; termenul R³/3 al seriei Taylor o corectează în sus la scăderi și în jos la creșteri. La R = −37,2% (Bitcoin, 12 martie 2020), diferența ajunge la 9,3 puncte procentuale.</p></details>
+</section><h2 class="sec" id="s-mp">Randamente pe mai multe perioade și ale portofoliilor</h2>
+<section class="blk" id="growth">
+  <h3>Evoluția a 100 de unități investite, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch1_growth_ro.jpg" alt="Slide-ul 33: Evoluția a 100 de unități investite, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gr-y">Anul investiției: <b id="gr-y-v"></b></label><input type="range" id="gr-y" min="2015" max="2025" step="1" value="2015"></div><div class="ctl"><label for="gr-sc">Scara verticală</label><select id="gr-sc"><option value="log" selected>logaritmică</option><option value="lin">liniară</option></select></div><button class="btn play" id="gr-play" type="button"></button></div><div class="charts "><div class="chart" id="gr-chart"></div></div><ul class="out" id="gr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută data investiției din 2015 pînă în 2025. Cu investiția făcută la începutul lui 2022, care dintre cele patru serii are cea mai mare valoare finală?</div>
+  <details><summary>Răspuns</summary><p>BET: 251, față de Bitcoin 170, S&P 500 161 și DAX 159. Pentru investiția din 2015, Bitcoin ajunge la 29 475, iar pentru cea din 2018 la 592, tot pe primul loc. Clasamentul după randamentul cumulat depinde de data de început.</p></details>
+</section><h2 class="sec" id="s-desc">Statisticile descriptive ale randamentelor</h2>
+<section class="blk" id="hist-normal">
+  <h3>Histogramele față de distribuția Normală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch1_hist_normal_ro.jpg" alt="Slide-ul 46: Histogramele față de distribuția Normală" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hi-k">Pragul k (abateri standard): <b id="hi-k-v"></b></label><input type="range" id="hi-k" min="1" max="6" step="0.5" value="3"></div><button class="btn play" id="hi-play" type="button"></button></div><div class="charts "><div class="chart" id="hi-chart"></div></div><ul class="out" id="hi-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Dincolo de 3 abateri standard, S&P 500 are de 5,2 ori mai multe zile decît distribuția Normală. Butonul ▶ ridică pragul. De cîte ori mai multe zile are S&P 500 dincolo de 4 abateri standard?</div>
+  <details><summary>Răspuns</summary><p>De circa 113 ori: 21 de zile din 2 943 (0,71%), față de 0,0063% pentru distribuția Normală. Raportul crește cu pragul, deoarece coada distribuției Normale scade foarte repede; la Bitcoin raportul este 103 (28 de zile). Frecvența zilelor extreme nu rezultă din abaterea standard prin distribuția Normală.</p></details>
+</section>
+<section class="blk" id="rolling-vol">
+  <h3>Volatilitatea se schimbă în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch1_rolling_vol_1y_ro.jpg" alt="Slide-ul 47: Volatilitatea se schimbă în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-w">Fereastra (zile de tranzacționare; Bitcoin: aceeași durată calendaristică): <b id="rv-w-v"></b></label><input type="range" id="rv-w" min="21" max="500" step="1" value="250"></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu o fereastră de 250 de zile, volatilitatea anualizată a S&P 500 ajunge cel mult la 35,0%. Butonul ▶ schimbă fereastra. Cît este maximul cu o fereastră de 21 de zile (o lună)?</div>
+  <details><summary>Răspuns</summary><p>97,5%, în fereastra care se termină pe 6 aprilie 2020. O fereastră scurtă urmărește rapid o perioadă agitată, cum a fost martie 2020; o fereastră de un an o diluează cu lunile calme dinainte și de după. Minimul scade și el, de la 6,7% la 3,5%. O fereastră scurtă reacționează repede, dar estimarea ei are o eroare mai mare.</p></details>
+</section><h2 class="sec" id="s-perf">Indicatori de performanță</h2>
+<section class="blk" id="sharpe-ci">
+  <h3>Raportul Sharpe cu intervale de încredere 95%, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch1_sharpe_ci_ro.jpg" alt="Slide-ul 52: Raportul Sharpe cu intervale de încredere 95%, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-y">Eșantionul începe în: <b id="sc-y-v"></b></label><input type="range" id="sc-y" min="2015" max="2024" step="1" value="2015"></div><div class="ctl"><label for="sc-cl">Nivelul de încredere</label><select id="sc-cl"><option value="90">90%</option><option value="95" selected>95%</option><option value="99">99%</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe 2015–2026 (11,7 ani), intervalul de încredere 95% este raportul Sharpe ± 0,57. Butonul ▶ mută începutul eșantionului spre 2024. Cu începutul în 2023 (3,7 ani), cît devine jumătatea intervalului?</div>
+  <details><summary>Răspuns</summary><p>Circa ± 1,02, aproximativ 1,96/√3,7. Eroarea standard a raportului Sharpe anual scade ca 1/√Y, cu Y numărul de ani, oricîte observații zilnice ar conține eșantionul. Cu începutul în 2023, intervalul Nuclearelectrica conține 0, iar intervalul DAX nu mai conține 0.</p></details>
+</section>
+<section class="blk" id="drawdowns">
+  <h3>Drawdown-uri pe întreaga istorie</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch1_drawdowns_ro.jpg" alt="Slide-ul 55: Drawdown-uri pe întreaga istorie" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-x">Pragul x: zile cu peste x% sub vîrf: <b id="dd-x-v"></b></label><input type="range" id="dd-x" min="5" max="80" step="5" value="20"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Peste 20% sub vîrf se află 27% din zilele S&P 500, 56% din zilele BET și 66% din zilele Bitcoin. Butonul ▶ ridică pragul. Ce pondere din zile a petrecut BET, din 1997, la peste 50% sub vîrful anterior?</div>
+  <details><summary>Răspuns</summary><p>18%, aproape o zi din cinci; S&P 500 doar 0,3%, Bitcoin 31,6%. O scădere de 50% cere un cîștig de 100% pentru revenire. Adîncimea drawdown-ului maxim (−82,5% la BET) nu spune cît durează scăderea; ponderea zilelor sub prag arată durata.</p></details>
+</section>
+<section class="blk" id="vol-drag">
+  <h3>Volatility drag pe date reale</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=60" target="_blank" rel="noopener"><img src="slides/sfm_ch1_vol_drag_ro.jpg" alt="Slide-ul 59: Volatility drag pe date reale" loading="lazy"></a>
+      <figcaption>Slide-ul 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vd-s">Volatilitatea anuală σ a unui activ cu media aritmetică 10% pe an (%): <b id="vd-s-v"></b></label><input type="range" id="vd-s" min="0" max="80" step="1" value="30"></div><button class="btn play" id="vd-play" type="button"></button></div><div class="charts "><div class="chart" id="vd-chart"></div></div><ul class="out" id="vd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Media aritmetică 10% pe an, σ = 30%: volatility drag este 4,5%, iar 1 leu devine 1,73 lei după 10 ani. Butonul ▶ crește σ. Cu σ = 60%, crește averea după 10 ani?</div>
+  <details><summary>Răspuns</summary><p>Nu. Drag-ul este σ²/2 = 18%, de patru ori mai mare, iar rata de creștere este 10% − 18% = −8% pe an: după 10 ani 1 leu devine 0,45 lei. O medie aritmetică pozitivă nu garantează creșterea averii. Pe date reale, drag-ul Bitcoin este 22,1 puncte procentuale, aproape de σ²/2 = 21,9%.</p></details>
+</section>
+<section class="blk" id="risk-return">
+  <h3>Risc și randament, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol1_date_randamente_indicatori.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch1_risk_return_ro.jpg" alt="Slide-ul 63: Risc și randament, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-m">Axa verticală</label><select id="rr-m"><option value="cagr" selected>CAGR</option><option value="sharpe">Sharpe</option><option value="sortino">Sortino</option><option value="calmar">Calmar</option><option value="mdd">MDD</option></select></div><div class="ctl"><label for="rr-y">Eșantionul începe în: <b id="rr-y-v"></b></label><input type="range" id="rr-y" min="2015" max="2024" step="1" value="2015"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe 2015–2026, Bitcoin are cel mai mare CAGR. Butonul ▶ mută începutul eșantionului. Cu începutul în 2018, care activ are cel mai mare CAGR?</div>
+  <details><summary>Răspuns</summary><p>Nuclearelectrica (SNN), cu 40,7% pe an; tot SNN are în acest eșantion cel mai mare raport Sharpe, Sortino și Calmar. CAGR-ul Bitcoin scade de la 60,6% la 22,7%, deoarece eșantionul începe la două săptămîni după vîrful din 16 decembrie 2017. Clasamentul depinde de indicator și de perioadă.</p></details>
+</section>
+<p class="src foot">Prețuri zilnice EODHD pînă la 18 septembrie 2026: indicii și Bitcoin la închidere, acțiunile BVB ajustate pentru dividende și operațiuni corporative; cursul de referință EUR/RON al BNR. Perioada de comparație: din 2015; S&P 500 din 2000, BET din 1997 și Bitcoin din 2014 pe istoria completă.</p>
+</main>
+</body>
+</html>
