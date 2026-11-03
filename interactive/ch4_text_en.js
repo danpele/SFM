@@ -6,6 +6,7 @@ window.CH4_TEXT = {
  jt: y => y ? `Correlation over the whole period and on the days of ${y} (purple points):` : 'Correlation on the common days of the whole period:',
  jtItem: (a, b, n, c, y, ny, cy) => `${a} and ${b}: ${n} days, ρ = ${c}` + (y ? `; in ${y}: ρ = ${cy} (${ny} days)` : ''),
  ud: (h, cxy) => `Left: Corr(X, X²) = ${cxy} in the 3,000 simulated draws. Right, lag h = ${h}:`,
+ udL: (h, lo, mn, hi) => `Left, red line: S&P 500, z = (r − mean)/standard deviation. The mean of z<sub>t</sub>² is ${lo} in the lowest decile of z<sub>t−${h}</sub>, ${hi} in the highest and ${mn} in the decile with the smallest mean (over all days, about 1).`,
  udItem: (a, c1, c2, b) => `${a}: Corr(r<sub>t</sub>, r<sub>t−h</sub>) = ${c1}, Corr(r<sub>t</sub>², r<sub>t−h</sub>²) = ${c2}; band ±${b}`,
  cd: q => `${q} groups of days by |r<sub>t−1</sub>|, from the calmest (group 1) to the most turbulent (group ${q}):`,
  cdItem: (a, m0, m1, s1, q, sq, r, tot, w, b, sh) => `${a}: conditional mean between ${m0}% and ${m1}%; conditional standard deviation ${s1}% (group 1) and ${sq}% (group ${q}), ratio ${r}. Total variance ${tot} = ${w} (within groups) + ${b} (between groups, ${sh}% of the total)`,
@@ -32,7 +33,9 @@ window.CH4_TEXT = {
  gf: (b, nom) => `Share of the days on which the real path is outside the ${b} GBM band (nominal ${nom}):`,
  gfItem: (a, o, s) => `${a} (σ = ${s}% per year): ${o}`,
  gc: k => `Days with |r − mean| > ${k} standard deviations: data against 300 GBM simulations of the same length (median, 95% quantile, maximum):`,
- gcItem: (a, n, f, m, q, mx) => `${a} (${n} days): ${f} in the data; GBM ${m}, ${q}, ${mx}`
+ gcItem: (a, n, f, m, q, mx) => `${a} (${n} days): ${f} in the data; GBM ${m}, ${q}, ${mx}`,
+ gcClip: (k, items, nk) => `Real returns clipped at the mean ± ${k} standard deviations (open circles): excess kurtosis and Corr(r<sub>t</sub>², r<sub>t−1</sub>²), against the unclipped series: ${items}. For i.i.d. Normal returns, the same clipping gives an excess kurtosis of ${nk}, so the GBM bands would shift by about that much.`,
+ gcClipItem: (a, kc, kr, ac, ar) => `${a} ${kc} (${kr}), ${ac} (${ar})`
 };
 Object.assign(window.CH4_TEXT, {
  h: { series: 'Series', notD: 'P(D | not D<sub>t−1</sub>)', both: 'P(D<sub>t</sub> and D<sub>t−1</sub>)', meanD: 'mean (% a day)', sdD: 'standard deviation (% a day)',

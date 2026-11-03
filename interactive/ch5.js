@@ -272,6 +272,10 @@ function hillPlot(pfx, names, bandDefault) {
     const se = Math.abs(f - D.hill_frac) < 1e-9 ? nf(H.se_block, 2) : null;
     items.push(T.hpItem(LAB[k], fint(kk), nf(al, 2), nf(al * (1 - 1.96 / Math.sqrt(kk)), 2), nf(al * (1 + 1.96 / Math.sqrt(kk)), 2), nf(al / Math.sqrt(kk), 2), se));
   });
+  const cur = names.map(k => { const S = ser(k), kk = Math.max(Math.trunc(f * S.n), 5), al = hillK(S, kk); return [al, al * 1.96 / Math.sqrt(kk)]; });
+  tr.push({ x: names.map(() => 100 * f), y: cur.map(c => c[0]), mode: 'markers', marker: { size: 9, color: names.map(k => COL[k]), line: { color: DARK, width: 1 } },
+    error_y: { type: 'data', array: cur.map(c => c[1]), color: DARK, thickness: 1.2, width: 4 }, name: `alpha-hat and 95% interval at k = ${lvlEn(f)} of n`, customdata: names.map(lbl),
+    hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra></extra>' });
   tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1, dash: 'dot' }, name: `k = ${lvlEn(f)} of n` });
   tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1, dash: 'dash' }, name: 'alpha = 2: variance finite above' });
   tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1, dash: 'dashdot' }, name: 'alpha = 4: kurtosis finite above' });
@@ -372,6 +376,9 @@ function rlBlock() {
     const z = gevPpf(1 - 1 / (12 * Ty), G.xi, G.mu, G.sigma), na = Array.from(m).filter(v => v > z).length, yrs = n / 12;
     items.push(T.rlItem(LAB[k], nf(z, 1), na, nf(yrs, 1), Ty > yrs, Ty === 10 ? [nf(G.rl10_lo, 1), nf(G.rl10_hi, 1)] : null));
   });
+  tr.push({ x: D.assets.map(() => Ty), y: D.assets.map(k => { const G = NUM.gev[k]; return gevPpf(1 - 1 / (12 * Ty), G.xi, G.mu, G.sigma); }), mode: 'markers',
+    marker: { size: 10, color: D.assets.map(k => COL[k]), line: { color: DARK, width: 1 } }, name: `Return level at T = ${Ty} ${Ty === 1 ? 'year' : 'years'}`, customdata: D.assets.map(lbl),
+    hovertemplate: '%{customdata}<br>T = %{x} years<br>level %{y:.2f}%<extra></extra>' });
   tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1, dash: 'dot' }, name: `${Ty}-year return period` });
   plot('rl-chart', tr, layout({ shapes: [vln(Ty, DARK, { x: 'x', y: 'y' }, 'dot')],
     xaxis: AX('Return period T (years, log scale)', { type: 'log', tickvals: [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], ticktext: ['0.1', '0.2', '0.5', '1', '2', '5', '10', '20', '50', '100'] }),
@@ -408,6 +415,10 @@ function stabBlock() {
     const r = R.find(v => Math.abs(v.q - q) < 1e-9), i85 = R.filter(v => v.q >= 0.849 && v.q <= 0.951);
     items.push(T.tsItem(LAB[k], nf(r.u, 2), fint(r.n_u), nf(r.xi, 3), nf(r.xi - 1.96 * r.se, 2), nf(r.xi + 1.96 * r.se, 2), nf(r.var1, 2), nf(r.var01, 2),
       nf(Math.min(...i85.map(v => v.xi)), 2), nf(Math.max(...i85.map(v => v.xi)), 2), nf(Math.min(...i85.map(v => v.var1)), 2), nf(Math.max(...i85.map(v => v.var1)), 2)));
+    tr.push(on2(a, { x: [100 * q], y: [r.xi], mode: 'markers', marker: { size: 11, color: COL[k], line: { color: DARK, width: 1.2 } }, error_y: { type: 'data', array: [1.96 * r.se], color: DARK, thickness: 1.6, width: 6 },
+      name: `${LAB[k]} at the marked u`, legendgroup: k, showlegend: false, hovertemplate: `${LAB[k]}<br>u = ${r.u.toFixed(2)}% (${r.n_u} excesses)<br>xi = %{y:.3f}<extra></extra>` }));
+    tr.push(on2(b, { x: [100 * q], y: [r.var1], mode: 'markers', marker: { size: 11, color: COL[k], line: { color: DARK, width: 1.2 } }, showlegend: false, legendgroup: k,
+      hovertemplate: `${LAB[k]}<br>u = ${r.u.toFixed(2)}%<br>VaR 1%% = %{y:.2f}%<extra></extra>` }));
   });
   setAx(Pn, 0, AX('Threshold u: quantile of the losses (%)', { range: [79.5, 99.5] }), AX('xi-hat (95% interval)')); setAx(Pn, 1, AX('Threshold u: quantile of the losses (%)', { range: [79.5, 99.5] }), AX('EVT VaR 1% (%)'));
   plot('ts-chart', tr, layout(Object.assign(Pn.L, { shapes: [vln(100 * q, DARK, a), vln(100 * q, DARK, b), hln(0, DARK, a, 'dash')], legend: Object.assign(LEG(Pn.stack, Pn.stack ? -0.08 : -0.2), { traceorder: 'normal' }) })));
@@ -441,6 +452,9 @@ function tailFitBlock() {
     tr.push(on2(ax, { x: xx, y: xx.map(v => potTail(F, v)), mode: 'lines', line: { color: MC.EVT, width: 1.4 }, name: 'EVT: GPD above u', showlegend: j === 0, legendgroup: 'e', hovertemplate: 'x = %{x:.2f}%<br>EVT P(L > x) = %{y:.2e}<extra></extra>' }));
     const pn = xx.map(v => normSf((v - S.mean) / S.sd));
     tr.push(on2(ax, { x: xx.filter((_, i) => pn[i] > 1e-7), y: pn.filter(v => v > 1e-7), mode: 'lines', line: { color: MC.Normal, width: 1.3, dash: 'dash' }, name: 'Normal distribution', showlegend: j === 0, legendgroup: 'n', hoverinfo: 'skip' }), dat);
+    const vp = [[potVar(F, p), MC.EVT, 'EVT'], [histVar(S, p), MC.Historical, 'Historical'], [normVar(S, p), MC.Normal, 'Normal']];
+    tr.push(on2(ax, { x: vp.map(v => v[0]), y: vp.map(() => p), mode: 'markers', marker: { size: 10, symbol: 'diamond', color: vp.map(v => v[1]), line: { color: '#fff', width: 1 } },
+      name: 'VaR at the chosen p: EVT, historical, Normal', showlegend: j === 0, legendgroup: 'v', customdata: vp.map(v => v[2]), hovertemplate: '%{customdata}<br>VaR = %{x:.2f}%<extra></extra>' }));
     shapes.push(hln(0.01, DARK, ax, 'dot', 0.8), hln(0.001, DARK, ax, 'dashdot', 0.8));
     if (p !== 0.01 && p !== 0.001) shapes.push(hln(p, GREEN, ax, 'dot', 1.4));
     G.L[ax.xa] = Object.assign(G.L[ax.xa], AX('Loss x (%, log scale)', Object.assign({ range: [Math.log10(F.u), Math.log10(2 * S.desc[0])] }, LOGX)));
@@ -599,6 +613,9 @@ function gevTable() {
     error_y: { type: 'data', array: D.assets.map(a => 1.96 * D.gevb[a][bb].se_xi), color: [BLUE, RED, GREEN, PURPLE][j], thickness: bb === b ? 1.8 : 1, width: 4 },
     name: `${bb[0].toUpperCase() + bb.slice(1)}ly maxima` + (bb === 'month' ? ' (slide)' : ''), customdata: D.assets.map(a => `${LAB[a]}, ${D.gevb[a][bb].n} blocks`),
     hovertemplate: '%{customdata}<br>xi = %{y:.3f}<extra></extra>' }));
+  const jb = BS.indexOf(b);
+  tr.push({ x: D.assets.map((_, i) => i + (jb - 1.5) * 0.17), y: D.assets.map(a => D.gevb[a][b].xi), mode: 'markers+text', text: D.assets.map(a => D.gevb[a][b].xi.toFixed(2)), textposition: 'middle right',
+    textfont: { size: 10, color: DARK }, marker: { size: 15, color: 'rgba(0,0,0,0)', line: { color: DARK, width: 1.8 } }, name: `Chosen: ${b}ly maxima`, hoverinfo: 'skip' });
   plot('gx-chart', tr, layout({ shapes: [hln(0, DARK, { x: 'x', y: 'y' }, 'dash')], xaxis: AX('', { tickvals: [0, 1, 2, 3], ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }),
     yaxis: AX('xi-hat with 95% interval'), legend: LEG(nw, -0.15) }));
   const g = D.gevb[k][b], m = D.gevb[k].month;
@@ -628,6 +645,8 @@ function rlTable() {
     { x: TT, y: band.map(v => v[0]), mode: 'lines', line: { width: 0, color: COL[k] }, showlegend: false, hoverinfo: 'skip' },
     { x: TT, y: band.map(v => v[1]), mode: 'lines', line: { width: 0, color: COL[k] }, fill: 'tonexty', fillcolor: hexA(COL[k], 0.18), name: '95% bootstrap interval (200 resamples)', hoverinfo: 'skip' },
     { x: TT, y: TT.map(t => z(k, t)), mode: 'lines', line: { color: COL[k], width: 2 }, name: `${LAB[k]}: GEV return level`, hovertemplate: 'T = %{x:.1f} years<br>%{y:.2f}%<extra></extra>' },
+    { x: [Ty], y: [z(k, Ty)], mode: 'markers', marker: { size: 11, color: COL[k], line: { color: DARK, width: 1.2 } }, error_y: { type: 'data', symmetric: false, array: [rlBoot(k, Ty)[1] - z(k, Ty)], arrayminus: [z(k, Ty) - rlBoot(k, Ty)[0]], color: DARK, thickness: 1.6, width: 6 },
+      name: `${Ty}-year level with its 95% interval`, hovertemplate: 'T = %{x} years<br>%{y:.2f}%<extra></extra>' },
     { x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dash' }, name: `Largest observed loss: ${G.max.toFixed(1)}%` }
   ], layout({ shapes: [vln(Ty, DARK, ax, 'dot'), hln(G.max, DARK, ax, 'dash', 1.2)],
     xaxis: AX('Return period T (years, log scale)', { type: 'log', tickvals: [1, 2, 5, 10, 20, 50, 100], ticktext: ['1', '2', '5', '10', '20', '50', '100'] }),
@@ -719,6 +738,9 @@ function exceed() {
     error_y: { type: 'data', symmetric: false, array: R.map(([, o], i) => rg[i][1] - o.n * p), arrayminus: R.map(([, o], i) => o.n * p - rg[i][0]), color: DARK, thickness: 1.2, width: 14 },
     hovertemplate: 'expected %{y:.1f}<extra></extra>' });
   tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1.2 }, name: 'Counts not rejected by Kupiec at 5%' });
+  { const ik = D.assets.indexOf(k), ok = R[ik][1];
+    tr.push({ x: C3.map((c, j) => ik + (j - 1) * 0.22), y: C3.map(c => ok.res[lv][c]), mode: 'markers+text', text: C3.map(c => { const v = kupiec(ok.res[lv][c], ok.n, p).pv; return v < 0.001 ? '<0.001' : v.toFixed(3); }), textposition: 'top center',
+      textfont: { size: 9, color: DARK }, marker: { symbol: 'circle-open', size: 13, color: DARK, line: { width: 2 } }, name: `${LAB[k]}: Kupiec p-value on each bar`, hoverinfo: 'skip', cliponaxis: false }); }
   plot('ex-chart', tr, layout({ barmode: 'overlay', xaxis: AX('', { tickvals: x, ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }), yaxis: AX(`Days with a loss above VaR ${lvlEn(p)} (2020-2026)`, { rangemode: 'tozero' }), legend: LEG(nw, -0.15) }));
   const o = R.find(z => z[0] === k)[1], xx = o.res[lv][m], n = o.n, ph = xx / n, K = kupiec(xx, n, p), rr = rg[D.assets.indexOf(k)];
   steps('ex-we', [T.exw1(lbl(k), T.h.m[m], lvl(p), nf(o.O[lv][m].var, 2), fint(n), xx, nf(n * p, 2)),

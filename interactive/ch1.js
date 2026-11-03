@@ -274,7 +274,9 @@ function histNormal() {
     const nb = 90, w = (hi - lo) / nb, cnt = new Array(nb).fill(0);
     c.forEach(x => { cnt[Math.min(nb - 1, Math.floor((x - lo) / w))]++; });
     const mid = cnt.map((_, i) => lo + (i + 0.5) * w), xs = range(0, 299, 1).map(i => lo + i * (hi - lo) / 299);
-    tr.push({ x: mid, y: cnt.map(v => v / (r.length * w)), type: 'bar', xaxis: ax.x, yaxis: ax.y, name: `${LAB[a]} (histogram)`, marker: { color: COL[a], opacity: 0.55 }, width: w, hovertemplate: '%{x:.2f}%: density %{y:.3f}<extra></extra>' });
+    const dens = cnt.map(v => v / (r.length * w)), isOut = mid.map(v => Math.abs(v - m) > k * s);   // bins beyond mean ± k s.d. drawn in full colour
+    tr.push({ x: mid, y: dens.map((v, i) => (isOut[i] ? 0 : v)), type: 'bar', xaxis: ax.x, yaxis: ax.y, name: `${LAB[a]}: days within mean ± ${k.toFixed(1)} s.d.`, marker: { color: COL[a], opacity: 0.3 }, width: w, hovertemplate: '%{x:.2f}%: density %{y:.3f}<extra></extra>' });
+    tr.push({ x: mid, y: dens.map((v, i) => (isOut[i] ? v : 0)), type: 'bar', xaxis: ax.x, yaxis: ax.y, name: `${LAB[a]}: days beyond`, marker: { color: COL[a], opacity: 1 }, width: w, hovertemplate: '%{x:.2f}%: density %{y:.3f}<extra></extra>' });
     tr.push({ x: xs, y: xs.map(v => Math.exp(-0.5 * ((v - m) / s) ** 2) / (s * SQ2PI)), mode: 'lines', xaxis: ax.x, yaxis: ax.y, name: 'Normal density, same mean and s.d.', showlegend: j === 0, legendgroup: 'n', line: { color: C.navy, width: 1.3 }, hoverinfo: 'skip' });
     [m - k * s, m + k * s].forEach(v => shapes.push({ type: 'line', xref: ax.x, yref: ax.y + ' domain', x0: v, x1: v, y0: 0, y1: 1, line: { color: COL.bet, width: 1.2, dash: 'dash' } }));
     let nOut = 0; r.forEach(x => { if (Math.abs(x - m) > k * s) nOut++; });
@@ -284,7 +286,7 @@ function histNormal() {
     setAx(Pn, j, XT('Daily log return (%)', { range: [lo, hi] }), XT('', { showticklabels: false }));
   });
   tr.push({ x: [null], y: [null], mode: 'lines', name: `mean ± ${k.toFixed(1)} standard deviations`, line: { color: COL.bet, width: 1.2, dash: 'dash' } });
-  plot('hi-chart', tr, layout(Object.assign({ shapes, bargap: 0, margin: { l: 20, r: 12, t: 16, b: 40 } }, Pn.L)));
+  plot('hi-chart', tr, layout(Object.assign({ shapes, barmode: 'overlay', bargap: 0, margin: { l: 20, r: 12, t: 16, b: 40 } }, Pn.L)));
   const pN = 2 * normSf(k);
   const x2 = 100 * pN;
   out('hi-out', [T.hi(nf(k, 1), nf(x2, Math.max(0, 1 - Math.floor(Math.log10(x2)))) + '%'),
@@ -337,12 +339,14 @@ function drawdowns() {
   DD3.forEach(k => {
     const A = full(k), dd = drawdown(A.p).map(v => 100 * v);
     let under = 0, im = 0; dd.forEach((v, i) => { if (v < -x) under++; if (v < dd[im]) im = i; });
-    tr.push({ x: A.dates, y: dd, mode: 'lines', name: LAB[k], line: { color: COL[k], width: 1 }, hovertemplate: `${LAB[k]} %{x}: %{y:.1f}%<extra></extra>` });
+    tr.push({ x: A.dates, y: dd, mode: 'lines', name: LAB[k], legendgroup: k, line: { color: COL[k], width: 1 }, opacity: 0.35, hovertemplate: `${LAB[k]} %{x}: %{y:.1f}%<extra></extra>` });
+    tr.push({ x: A.dates, y: dd.map(v => (v < -x ? v : null)), mode: 'lines', name: `${LAB[k]}: days below −${x}%`, legendgroup: k, connectgaps: false, line: { color: COL[k], width: 1.6 }, hoverinfo: 'skip' });
     items.push(T.ddItem(LAB[k], A.dates[0].slice(0, 4), pc(under / dd.length, 1), nf(dd[im], 1)));
   });
-  tr.push({ x: [null], y: [null], mode: 'lines', name: `−${x}% threshold`, line: { color: C.navy, width: 1.2, dash: 'dash' } });
+  const d0 = DD3.map(k => full(k).dates[0]).sort()[0], d1 = DD3.map(k => { const q = full(k).dates; return q[q.length - 1]; }).sort().pop();
+  tr.push({ x: [d0, d1], y: [-x, -x], mode: 'lines', name: `−${x}% threshold`, line: { color: C.navy, width: 1.2, dash: 'dash' }, hoverinfo: 'skip' });
   $('dd-chart').style.height = H(380) + 'px';
-  plot('dd-chart', tr, layout({ shapes: [hl(-x, C.navy, 'dash')], xaxis: DATE, yaxis: XT('Drawdown from the previous peak (%)', { range: [-100, 3] }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
+  plot('dd-chart', tr, layout({ xaxis: DATE, yaxis: XT('Drawdown from the previous peak (%)', { range: [-100, 3] }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
   out('dd-out', [T.dd(x, nf(100 * x / (100 - x), 0)), ...items]);
   ddWE();
 }
@@ -503,9 +507,9 @@ function annualiseBlock() {
   const head = ['', T.h.A, T.h.sdD, T.h.volD, T.h.vol252, T.h.volW, T.h.volM];
   table('an-tab', head, rows.map(({ a, X }) => Object.assign([SH[a], nf(X[0].q, 1), nf(X[0].sd, 2), nf(X[0].annVol, 1), nf(X[0].sd * Math.sqrt(252), 1), nf(X[1].annVol, 1), nf(X[2].annVol, 1)], { cls: SEL(a, k) })));
   $('an-chart').style.height = H(400) + 'px';
-  const FC = { d: COL.sp500, w: COL.dax, m: COL.bettr };
-  plot('an-chart', ['d', 'w', 'm'].map((g, j) => ({ x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[j].annVol), type: 'bar', name: `from ${FREQ[g]} log returns, √A × σ`,
-    marker: { color: FC[g], opacity: g === f ? 1 : 0.45, line: { color: g === f ? C.navy : FC[g], width: g === f ? 1.5 : 0 } }, hovertemplate: `%{x}, ${FREQ[g]}: %{y:.1f}%<extra></extra>` })),
+  const FC = { d: COL.sp500, w: COL.dax, m: COL.bettr }, jf = ['d', 'w', 'm'].indexOf(f);   // grey: daily benchmark; coloured: the selected frequency
+  plot('an-chart', [{ x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[0].annVol), type: 'bar', name: `from ${FREQ.d} log returns (benchmark)`, marker: { color: '#b0b0b0' }, hovertemplate: `%{x}, ${FREQ.d}: %{y:.1f}%<extra></extra>` },
+    { x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[jf].annVol), type: 'bar', name: `from ${FREQ[f]} log returns, √A × σ`, marker: { color: FC[f], line: { color: C.navy, width: 1 } }, hovertemplate: `%{x}, ${FREQ[f]}: %{y:.1f}%<extra></extra>` }],
     layout({ barmode: 'group', xaxis: XT('', { tickangle: -30 }), yaxis: XT('Annualised volatility (%)', { rangemode: 'tozero' }), margin: { l: 60, r: 12, t: 16, b: 70 } }));
   const X = describe(resample(asset(k, y), f)), XD = describe(asset(k, y));
   steps('an-we', [T.anw1(LAB[k], T.fq[f], fdate(asset(k, y).dates[0]), nint(X.n), nf(X.Y, 2), nf(X.q, 2)),

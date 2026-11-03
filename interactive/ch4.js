@@ -149,10 +149,20 @@ function cdfBlock() {
     const xx = x.filter(v => v >= lo && v <= hi);
     tr.push(on2(ax, { x: xx, y: xx.map(v => Phi((v - m) / s)), mode: 'lines', line: { color: RED, width: 1.5, dash: 'dash' }, name: 'Normal CDF, same mean and sd', showlegend: leg, legendgroup: 'n', hovertemplate: 'x %{x:.2f}%<br>Normal F(x) %{y:.2e}<extra></extra>' }));
   });
-  tr.push(on2(b, { x: [null], y: [null], mode: 'lines', line: { color: GREEN, dash: 'dot' }, name: `level ${(100 * al).toFixed(al < 0.01 ? 2 : 1).replace(/\.?0+$/, '')}%` }));
+  const lvN = `${(100 * al).toFixed(al < 0.01 ? 2 : 1).replace(/\.?0+$/, '')}%`, tl = [], tf = [];
+  for (let i = 0; i < n && xs[i] <= qe; i++) if (xs[i] >= -6) { tl.push(xs[i]); tf.push((i + 1) / n); }
+  if (tl.length) { tl.push(qe); tf.push(al); }
+  tr.push(on2(a, { x: tl, y: tf, mode: 'lines', line: { shape: 'hv', color: GREEN, width: 2.5 }, fill: 'tozeroy', fillcolor: 'rgba(40,167,69,0.25)', name: `days below the empirical ${lvN} quantile`, hoverinfo: 'skip' }));
+  [a, b].forEach((ax, j) => {
+    const y0 = j ? 1e-5 : 0;
+    tr.push(on2(ax, { x: [ax === a ? -6 : -12, Math.max(qe, qn)], y: [al, al], mode: 'lines', line: { color: GREEN, width: 1.2, dash: 'dot' }, name: `level ${lvN}`, showlegend: !j, legendgroup: 'lv', hoverinfo: 'skip' }));
+    tr.push(on2(ax, { x: [qe, qe, null, qn, qn], y: [y0, al, null, y0, al], mode: 'lines', line: { color: GREEN, width: 1.2, dash: 'dot' }, showlegend: false, legendgroup: 'lv', hoverinfo: 'skip' }));
+    tr.push(on2(ax, { x: [qe, qn], y: [al, al], mode: 'markers', marker: { size: 9, color: [DBLUE, RED], line: { color: '#fff', width: 1 } }, name: `quantiles q_alpha: data ${qe.toFixed(2)}%, Normal ${qn.toFixed(2)}%`, showlegend: !j, legendgroup: 'q',
+      customdata: ['empirical', 'Normal'], hovertemplate: '%{customdata} quantile<br>q = %{x:.2f}%<br>alpha = %{y:.4f}<extra></extra>' }));
+  });
   setAx(Pn, 0, XT('daily log return x (%)'), XT('F(x) = P(r <= x)'));
   setAx(Pn, 1, XT('daily log return x (%)', { range: [-12, -1] }), XT('F(x) = P(r <= x)', { type: 'log', range: [-5, Math.log10(0.5)], exponentformat: 'power', dtick: 1 }));
-  plot('cq-chart', tr, layout(Object.assign(Pn.L, { shapes: [hln(al, GREEN, b, 'dot'), vln(qe, DBLUE, b), vln(qn, RED, b)],
+  plot('cq-chart', tr, layout(Object.assign(Pn.L, {
     annotations: [ptitle(a, 'whole distribution'), ptitle(b, 'left tail, log scale')], legend: LEG(Pn.stack, Pn.stack ? -0.08 : -0.2) })));
   const pe = x => S.r.filter(v => v < x).length / n;
   out('cq-out', [T.cq(SH[k], fint(n), lvl, nf(-qe, 2), nf(-qn, 2), nf(qe / qn, 2)),
@@ -194,6 +204,9 @@ function udBlock() {
   const h = +$('ud-h').value; label('ud-h').textContent = h;
   const Pn = panels('ud-chart', 2, { h: 400, hs: 300, extra: 140 }), [a, b] = Pn.ax, X = D.xsq, tr = [], shapes = [], items = [];
   tr.push(on2(a, { x: X, y: X.map(v => v * v), mode: 'markers', marker: { size: 4, color: PURPLE, opacity: 0.4 }, name: `simulated: Y = X^2, Corr(X, Y) = ${pearson(X, X.map(v => v * v)).toFixed(3)}`, hoverinfo: 'skip' }));
+  const cz = udCond(h);
+  tr.push(on2(a, { x: cz.x, y: cz.y, mode: 'lines+markers', line: { color: RED, width: 2 }, marker: { size: 7, color: RED }, name: `S&P 500: mean of z_t^2 by decile of z_{t-${h}}`,
+    hovertemplate: `mean z_{t-${h}} %{x:.2f}<br>mean z_t^2 %{y:.2f}<extra></extra>` }));
   const R1 = [], R2 = [], idx = D.assets.map((_, i) => i);
   D.assets.forEach((k, i) => {
     const r = ser(k).r, c1 = lagCorr(r, h), c2 = lagCorr(r, h, v => v * v), band = 1.96 / Math.sqrt(r.length);
@@ -205,10 +218,19 @@ function udBlock() {
   tr.push(on2(b, { x: idx.map(i => i + 0.18), y: R2, type: 'bar', width: 0.36, marker: { color: RED }, name: `Corr(r_t^2, r_{t-${h}}^2)`, hovertemplate: '%{y:.3f}<extra></extra>' }));
   tr.push(on2(b, { x: [null], y: [null], mode: 'lines', line: { color: GREEN, dash: 'dash' }, name: 'i.i.d. band +/- 1.96/sqrt(n)' }));
   shapes.push(hln(0, DARK, b, 'solid', 0.6));
-  setAx(Pn, 0, XT('X ~ N(0, 1)'), XT('Y = X^2'));
+  setAx(Pn, 0, XT('X ~ N(0, 1); S&P 500: z_{t-h} = standardized r_{t-h}'), XT('Y = X^2; S&P 500: z_t^2'));
   setAx(Pn, 1, XT('', { tickvals: idx, ticktext: D.assets.map(k => SH[k]) }), XT(`lag-${h} correlation`, { range: [-0.15, 0.45] }));
   plot('ud-chart', tr, layout(Object.assign(Pn.L, { shapes, legend: LEG(Pn.stack, Pn.stack ? -0.08 : -0.16) })));
-  out('ud-out', [T.ud(h, nf(pearson(X, X.map(v => v * v)), 3)), ...items]);
+  out('ud-out', [T.ud(h, nf(pearson(X, X.map(v => v * v)), 3)), ...items, T.udL(h, nf(cz.y[0], 2), nf(Math.min(...cz.y), 2), nf(cz.y[9], 2))]);
+}
+// S&P 500: deciles of z_{t-h} = (r_{t-h} - mean)/sd, and the mean of z_t^2 in each decile
+function udCond(h) {
+  const r = ser('sp500').r, m = mean(r), s = sdev(r), z = r.map(v => (v - m) / s), P = [];
+  for (let i = h; i < z.length; i++) P.push([z[i - h], z[i] * z[i]]);
+  P.sort((p, q) => p[0] - q[0]);
+  const x = [], y = [], nP = P.length;
+  for (let d = 0; d < 10; d++) { const g = P.slice(Math.floor(d * nP / 10), Math.floor((d + 1) * nP / 10)); x.push(mean(g.map(p => p[0]))); y.push(mean(g.map(p => p[1]))); }
+  return { x, y, r: pearson(P.map(p => p[0]), P.map(p => p[1])) };
 }
 
 // ================================================================= 5. conditional moments given yesterday's move
@@ -292,6 +314,11 @@ function invBlock() {
     on2(a, { x: xg, y: xg.map(v => lam * Math.exp(-lam * v)), mode: 'lines', line: { color: DBLUE, width: 1.8 }, name: `exponential density ${lam.toFixed(1)} exp(-${lam.toFixed(1)}x)`, hoverinfo: 'skip' }),
     on2(b, { x: mids, y: stepY(I.hN), mode: 'lines', line: { shape: 'hvh', color: RED, width: 1.5 }, name: 'Normal quantile of U', hovertemplate: '%{x:.1f}%<br>density %{y:.2e}<extra></extra>' }),
     on2(b, { x: mids, y: stepY(I.hH), mode: 'lines', line: { shape: 'hvh', color: DBLUE, width: 1.5 }, name: 'empirical quantile of U (S&P 500)', hovertemplate: '%{x:.1f}%<br>density %{y:.2e}<extra></extra>' })];
+  const tail = h => mids.map((v, i) => (v < -xq && h[i] > 0 ? h[i] : null));
+  [[I.hN, RED, 'Normal'], [I.hH, DBLUE, 'historical']].forEach(([h, c, nm]) => tr.push(on2(b, { x: mids, y: tail(h), mode: 'lines', line: { shape: 'hvh', color: c, width: 5 }, opacity: 0.45,
+    name: `${nm} draws below -${xq.toFixed(1)}%`, hovertemplate: `${nm}<br>%{x:.1f}%<br>density %{y:.2e}<extra></extra>` })));
+  const xl = 1 / lam;
+  tr.push(on2(a, { x: [xl, xl], y: [0, lam], mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dash' }, name: `mean 1/lambda = ${xl.toFixed(3)}`, hoverinfo: 'skip' }));
   setAx(Pn, 0, XT('x', { range: [0, 3] }), XT('density'));
   setAx(Pn, 1, XT('simulated daily return (%)', { range: [-12, 12] }), XT('density (log scale)', { type: 'log', exponentformat: 'power', dtick: 1 }));
   plot('it-chart', tr, layout(Object.assign(Pn.L, { bargap: 0, shapes: [vln(-xq, GREEN, b, 'dash')], legend: LEG(Pn.stack, Pn.stack ? -0.08 : -0.2) })));
@@ -347,11 +374,15 @@ function binBlock() {
 function ar1(phi, eps) { const x = []; let p = 0; for (const e of eps) { p = phi * p + e; x.push(p); } return x; }
 function procBlock() {
   const phi = +$('pr-phi').value; label('pr-phi').textContent = nf(phi, 2);
-  const e = D.eps, t = e.map((_, i) => i), G = gridp('pr-chart', 2, 2, { h: 470, hs: 210, extra: 90, gy: 0.2 });
+  const e = D.eps, t = e.map((_, i) => i), G = gridp('pr-chart', 2, 2, { h: 510, hs: 210, extra: 130, gy: 0.2 });
   const S = [['white noise eps_t', e, PURPLE], ['AR(1), phi = 0.5', ar1(0.5, e), GREEN], [`AR(1), phi = ${phi.toFixed(2)}`, ar1(phi, e), AMBER], ['random walk (phi = 1)', ar1(1, e), RED]];
-  const tr = S.map(([nm, x, c], i) => on2(G.ax[i], { x: t, y: x, mode: 'lines', line: { color: c, width: 0.9 }, name: nm, showlegend: false, hovertemplate: 't = %{x}<br>%{y:.2f}<extra></extra>' }));
+  const tr = [];
+  [0, 1, 3].forEach((i, j) => tr.push(on2(G.ax[i], { x: t, y: S[2][1], mode: 'lines', line: { color: AMBER, width: 1.1 }, opacity: 0.55, name: `AR(1), phi = ${phi.toFixed(2)}, drawn in every panel`,
+    showlegend: j === 0, legendgroup: 'cur', hovertemplate: `AR(1), phi = ${phi.toFixed(2)}<br>t = %{x}<br>%{y:.2f}<extra></extra>` })));
+  S.forEach(([nm, x, c], i) => tr.push(on2(G.ax[i], { x: t, y: x, mode: 'lines', line: { color: c, width: 0.9 }, name: nm, showlegend: false, hovertemplate: 't = %{x}<br>%{y:.2f}<extra></extra>' })));
   S.forEach((_, i) => { G.L[G.ax[i].xa] = Object.assign(G.L[G.ax[i].xa], XT(i >= 2 || G.nw ? 't' : '', { matches: i ? 'x' : undefined })); G.L[G.ax[i].ya] = Object.assign(G.L[G.ax[i].ya], XT('')); });
-  plot('pr-chart', tr, layout(Object.assign(G.L, { margin: { l: 46, r: 12, t: 30, b: 40 }, shapes: G.ax.map(a => hln(0, DARK, a, 'solid', 0.5)), annotations: S.map(([nm], i) => ptitle(G.ax[i], nm)) })));
+  plot('pr-chart', tr, layout(Object.assign(G.L, { margin: { l: 46, r: 12, t: 30, b: 40 }, shapes: G.ax.map(a => hln(0, DARK, a, 'solid', 0.5)), annotations: S.map(([nm], i) => ptitle(G.ax[i], nm)),
+    legend: LEG(G.nw, G.nw ? -0.04 : -0.12) })));
   const x = S[2][1], hl = phi > 0 && phi < 1 ? Math.log(0.5) / Math.log(phi) : null;
   const sim = N.proc[phi === 0.5 ? '0.5' : phi === 0.95 ? '0.95' : ''];
   out('pr-out', [T.pr(nf(phi, 2), phi < 1 ? nf(1 / (1 - phi * phi), 2) : null, nf(phi ** 5, 3), hl === null ? (phi >= 1 ? '∞' : '—') : nf(hl, 1), nf(sdev(x) ** 2, 2)),
@@ -361,7 +392,7 @@ function procBlock() {
 // ================================================================= 12. which one is real?
 function spotBlock() {
   const k = +$('sr-k').value; label('sr-k').textContent = nf(k, 1);
-  const S = ser('sp500'), cols = [D.spot.sims[0], D.spot.sims[1], S.r, D.spot.sims[2]], G = gridp('sr-chart', 2, 4, { h: 470, nr: 4, nc: 2, hs: 190, extra: 60, gx: 0.06, gxn: 0.14, gy: 0.14, gyn: 0.07 });
+  const S = ser('sp500'), cols = [D.spot.sims[0], D.spot.sims[1], S.r, D.spot.sims[2]], G = gridp('sr-chart', 2, 4, { h: 510, nr: 4, nc: 2, hs: 190, extra: 100, gx: 0.06, gxn: 0.14, gy: 0.14, gyn: 0.07 });
   const tr = [], shapes = [], ann = [], items = [];
   cols.forEach((x, c) => {
     const ia = G.nw ? 2 * c : c, ib = G.nw ? 2 * c + 1 : 4 + c, A = G.ax[ia], B = G.ax[ib];
@@ -370,15 +401,19 @@ function spotBlock() {
     tr.push(on2(A, { x: lp.map((_, i) => i), y: lp.map(Math.exp), mode: 'lines', line: { color: DBLUE, width: 0.9 }, showlegend: false, hovertemplate: 'day %{x}<br>price %{y:.0f}<extra></extra>' }));
     tr.push(on2(B, { x: x.map((_, i) => i + 1), y: x, mode: 'lines', line: { color: RED, width: 0.5 }, showlegend: false, hovertemplate: 'day %{x}<br>return %{y:.2f}%<extra></extra>' }));
     shapes.push(hln(m + k * s, DARK, B, 'dash', 1), hln(m - k * s, DARK, B, 'dash', 1));
-    G.L[A.xa] = Object.assign(G.L[A.xa], XT('', { showticklabels: false }));
+    const fi = []; x.forEach((v, i) => { if (Math.abs(v - m) > k * s) fi.push(i); });
+    tr.push(on2(A, { x: fi.map(i => i + 1), y: fi.map(i => Math.exp(lp[i + 1])), mode: 'markers', marker: { size: 5, color: GREEN }, name: `days with |r - mean| > ${k.toFixed(1)} sd`, showlegend: c === 0, legendgroup: 'far',
+      hovertemplate: 'day %{x}<br>price %{y:.0f}<extra></extra>' }));
+    tr.push(on2(B, { x: fi.map(i => i + 1), y: fi.map(i => x[i]), mode: 'markers', marker: { size: 5, color: GREEN }, name: 'far', showlegend: false, legendgroup: 'far', hovertemplate: 'day %{x}<br>return %{y:.2f}%<extra></extra>' }));
+    G.L[A.xa] = Object.assign(G.L[A.xa], XT('', { showticklabels: false, range: [0, x.length + 1] }));
     G.L[A.ya] = Object.assign(G.L[A.ya], XT(c === 0 && !G.nw ? 'price (log scale)' : '', Object.assign({ type: 'log', matches: c ? G.ax[0].y : undefined, showticklabels: c === 0 || G.nw }, logTicks(true))));
-    G.L[B.xa] = Object.assign(G.L[B.xa], XT(G.nw && c < 3 ? '' : 'trading day'));
+    G.L[B.xa] = Object.assign(G.L[B.xa], XT(G.nw && c < 3 ? '' : 'trading day', { range: [0, x.length + 1] }));
     G.L[B.ya] = Object.assign(G.L[B.ya], XT(c === 0 && !G.nw ? 'daily return (%)' : '', { range: [-13.5, 13.5], showticklabels: c === 0 || G.nw }));
     ann.push(ptitle(A, G.nw ? `${'ABCD'[c]}: price (log scale)` : 'ABCD'[c]));
     if (G.nw) ann.push(ptitle(B, `${'ABCD'[c]}: daily return (%)`));
     items.push(T.srItem('ABCD'[c], far, nf(exKurt(x), 2), nf(acf1(x.map(v => v * v)), 3), nf(Math.max(...x.map(Math.abs)), 1)));
   });
-  plot('sr-chart', tr, layout(Object.assign(G.L, { margin: { l: 52, r: 10, t: 26, b: 40 }, shapes, annotations: ann })));
+  plot('sr-chart', tr, layout(Object.assign(G.L, { margin: { l: 52, r: 10, t: 26, b: 70 }, shapes, annotations: ann, legend: LEG(G.nw, G.nw ? -0.05 : -0.16) })));
   out('sr-out', [T.sr(nf(k, 1)), ...items]);
 }
 
@@ -396,6 +431,11 @@ function wienBlock() {
     tr.push(on2(b, { x: t, y: t.map(v => kk * Math.sqrt(v)), mode: 'lines', line: { color: DARK, width: 1.1, dash: ds }, name: `+/- ${kk.toFixed(kk % 1 ? 1 : 0)} sqrt(t)`, legendgroup: 'b' + j, hoverinfo: 'skip' }));
     tr.push(on2(b, { x: t, y: t.map(v => -kk * Math.sqrt(v)), mode: 'lines', line: { color: DARK, width: 1.1, dash: ds }, showlegend: false, legendgroup: 'b' + j, hoverinfo: 'skip' }));
   });
+  tr.push(on2(a, { x: t.concat([null], t), y: t.map(v => k * Math.sqrt(v)).concat([null], t.map(v => -k * Math.sqrt(v))), mode: 'lines', line: { color: DARK, width: 1.1, dash: Math.abs(k - 1) < 1e-9 ? 'dash' : 'dot' },
+    showlegend: false, legendgroup: 'b' + (Math.abs(k - 1) < 1e-9 ? 0 : 1), hoverinfo: 'skip' }));
+  const e1 = W.endW, ins = e1.map(v => Math.abs(v) < k);
+  tr.push(on2(b, { x: e1.map(() => 1), y: e1, mode: 'markers', marker: { size: 8, color: ins.map(z => (z ? GREEN : RED)), line: { color: '#fff', width: 1 } }, cliponaxis: false,
+    name: `W(1) of the 20 paths: green inside +/- ${k.toFixed(1)}, red outside`, customdata: ins.map(z => (z ? 'inside' : 'outside')), hovertemplate: 'W(1) = %{y:.3f}<br>%{customdata}<extra></extra>' }));
   setAx(Pn, 0, XT('t'), XT('W_n(t)'));
   setAx(Pn, 1, XT('t'), XT('W(t)'));
   plot('wn-chart', tr, layout(Object.assign(Pn.L, { legend: LEG(Pn.stack, Pn.stack ? -0.08 : -0.18) })));
@@ -446,6 +486,7 @@ function fanBlock() {
 function chkBlock() {
   const k = +$('gc-k').value, Ck = D.chk, j = Ck.ks.findIndex(v => Math.abs(v - k) < 1e-9); label('gc-k').textContent = nf(k, 1);
   const G = gridp('gc-chart', 2, 2, { h: 560, hs: 230, extra: 110, gy: 0.22, gx: 0.12 }), names = ['sp500', 'bet', 'btc'], idx = [0, 1, 2], tr = [], items = [];
+  const clip = {}; names.forEach(nm => { clip[nm] = clipStats(nm, k); });
   const panelsDef = [['kurt', 'excess kurtosis', 1], ['acf2', 'Corr(r_t^2, r_{t-1}^2)', 1], ['dd', 'maximum drawdown', 100], ['f', `days beyond ${k.toFixed(1)} sd`, 1]];
   panelsDef.forEach(([key, ttl, sc], p) => {
     const ax = G.ax[p];
@@ -455,13 +496,27 @@ function chkBlock() {
       tr.push(on2(ax, { x: [i], y: [sc * q50], mode: 'markers', marker: { symbol: 'line-ew-open', size: 16, color: TEAL, line: { width: 2, color: TEAL } }, name: 'GBM median', showlegend: p === 0 && i === 0, legendgroup: 'm', hovertemplate: `${SH[nm]}<br>GBM median %{y:.3f}<extra></extra>` }));
       tr.push(on2(ax, { x: [i], y: [sc * rv], mode: 'markers', marker: { size: 9, color: COL[nm] }, name: 'real series', showlegend: p === 0 && i === 0, legendgroup: 'x', hovertemplate: `${SH[nm]}<br>real %{y:.3f}<extra></extra>` }));
     });
+    if (key !== 'f') tr.push(on2(ax, { x: idx.map(i => i + 0.22), y: names.map(nm => sc * clip[nm][key]), mode: 'markers', marker: { size: 9, symbol: 'circle-open', color: names.map(nm => COL[nm]), line: { width: 2 } },
+      name: `real series, returns clipped at +/- ${k.toFixed(1)} sd`, showlegend: p === 0, legendgroup: 'c', customdata: names.map(nm => SH[nm]), hovertemplate: `%{customdata}<br>clipped at ${k.toFixed(1)} sd: %{y:.3f}<extra></extra>` }));
     G.L[ax.xa] = Object.assign(G.L[ax.xa], XT('', { tickvals: idx, ticktext: names.map(n => SH[n]), range: [-0.5, 2.5] }));
     G.L[ax.ya] = Object.assign(G.L[ax.ya], XT('', key === 'dd' ? { ticksuffix: '%' } : {}));
   });
   plot('gc-chart', tr, layout(Object.assign(G.L, { annotations: panelsDef.map(([, t], p) => ptitle(G.ax[p], t)), legend: LEG(G.nw, G.nw ? -0.05 : -0.1) })));
   names.forEach(nm => { const o = Ck[nm]; items.push(T.gcItem(SH[nm], fint(o.n), o.fr[j], nf(o.f50[j], 0), nf(o.f95[j], 0), o.fmax[j])); });
-  out('gc-out', [T.gc(nf(k, 1)), ...items]);
+  out('gc-out', [T.gc(nf(k, 1)), ...items, T.gcClip(nf(k, 1), names.map(nm => T.gcClipItem(SH[nm], nf(clip[nm].kurt, 2), nf(Ck[nm].real.kurt, 2), nf(clip[nm].acf2, 3), nf(Ck[nm].real.acf2, 3))).join('; '), nf(Math.abs(normClipKurt(k)) < 5e-4 ? 0 : normClipKurt(k), 3))]);
   gcExtra(k);
+}
+// excess kurtosis of a standard Normal variable clipped at +/- k
+function normClipKurt(k) {
+  const f = Math.exp(-k * k / 2) / SQ2PI, c = 2 * Phi(k) - 1, t = 2 * Phi(-k);
+  const m2 = c - 2 * k * f + t * k * k, m4 = 3 * c - 2 * (k ** 3 + 3 * k) * f + t * k ** 4;
+  return m4 / (m2 * m2) - 3;
+}
+// excess kurtosis, Corr(r_t^2, r_{t-1}^2) and maximum drawdown of the real returns clipped at mean +/- k sd
+function clipStats(nm, k) {
+  const r = ser(nm).r, m = mean(r), s = sdev(r), c = r.map(v => Math.max(m - k * s, Math.min(m + k * s, v)));
+  let acc = 0, mx = 0, dd = 0; for (const v of c) { acc += v / 100; mx = Math.max(mx, acc); dd = Math.min(dd, Math.exp(acc - mx) - 1); }
+  return { kurt: exKurt(c), acf2: acf1(c.map(v => v * v)), dd };
 }
 
 // ================================================================= tables and worked examples (blocks of the frames without a chart)
@@ -532,7 +587,13 @@ function chebBlock() {
   const tr = D.assets.map(a => ({ x: ks, y: ks.map(v => { const c = beyond(a, v); return c ? 100 * c / moments(a).n : null; }), mode: 'lines', line: { color: COL[a], width: 1.6, shape: 'hv' }, name: `${SH[a]}: data`, hovertemplate: `${SH[a]}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>` }));
   tr.push({ x: ks, y: ks.map(v => 200 * Phi(-v)), mode: 'lines', line: { color: RED, width: 1.6, dash: 'dash' }, name: 'Normal distribution 2 Phi(-k)', hovertemplate: 'k = %{x:.1f}<br>Normal %{y:.3g}%<extra></extra>' });
   tr.push({ x: ks, y: ks.map(v => 100 / (v * v)), mode: 'lines', line: { color: DARK, width: 1.6, dash: 'dot' }, name: "Chebyshev's bound 1/k^2", hovertemplate: 'k = %{x:.1f}<br>bound %{y:.3g}%<extra></extra>' });
-  plot('cb-chart', tr, layout({ shapes: [vl(kk, GREEN)], xaxis: XT('k (standard deviations)', { range: [1, 8] }),
+  const mk = D.assets.map(a => { const c = beyond(a, kk); return c ? 100 * c / moments(a).n : null; });
+  tr.push({ x: [kk, kk], y: [1e-4, 100], mode: 'lines', line: { color: GREEN, width: 1.2, dash: 'dot' }, name: `k = ${kk.toFixed(1)}`, legendgroup: 'k', hoverinfo: 'skip' });
+  tr.push({ x: D.assets.map(() => kk), y: mk, mode: 'markers', marker: { size: 10, color: D.assets.map(a => COL[a]), line: { color: '#fff', width: 1 } }, name: 'data at the chosen k', legendgroup: 'k',
+    customdata: D.assets.map(a => SH[a]), hovertemplate: '%{customdata}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>' });
+  tr.push({ x: [kk, kk], y: [200 * Phi(-kk), 100 / (kk * kk)], mode: 'markers', marker: { size: 10, symbol: 'diamond', color: [RED, DARK], line: { color: '#fff', width: 1 } }, name: 'Normal and bound at the chosen k', legendgroup: 'k',
+    customdata: ['Normal', 'Chebyshev bound'], hovertemplate: '%{customdata}<br>k = %{x:.1f}<br>%{y:.3g}%<extra></extra>' });
+  plot('cb-chart', tr, layout({ xaxis: XT('k (standard deviations)', { range: [1, 8] }),
     yaxis: XT('share of days beyond k sd (%, log scale)', { type: 'log', range: [-4, 2], exponentformat: 'power', dtick: 1 }), legend: LEG(nw, -0.2) }));
   const o = moments(k), c = beyond(k, kk), en = pn * o.n;
   steps('cb-we', [T.cbw1(nf(kk, 1), pc(cb, 2), fint(cb * o.n), fint(o.n), SH[k]), T.cbw2(nf(kk, 1), spct(pn, 3), sig(en, 2)),
@@ -629,14 +690,22 @@ function ieBlock() {
   const dataShare = x => S.r.filter(v => v < -x).length / n;
   table('ie-tab', [T.h.thr, T.h.drawsN, T.h.expN, '√E', T.h.zN, T.h.drawsH, T.h.shareH, T.h.shareD],
     IE_X.map(x => { const j = I.xs.indexOf(x), E = I.n * Phi((-x - m) / s); return row([`−${x}%`, fint(I.cN[j]), E >= 1000 ? fint(E) : sig(E, 2), sig(Math.sqrt(E), 2), E > 1e-3 ? nf((I.cN[j] - E) / Math.sqrt(E), 1) : '—', fint(I.cH[j]), spct(I.cH[j] / I.n, 3), spct(dataShare(x), 3)], x === 5 ? 'sel' : ''); }), T.ieNote);
-  const nw = single('ie-chart', 340), pos = v => (v > 0 ? v : null);
-  plot('ie-chart', [
-    { x: I.xs, y: I.cN.map(pos), mode: 'markers', marker: { size: 7, color: RED }, name: 'Normal draws below -x%', hovertemplate: 'x = %{x}<br>%{y} draws<extra></extra>' },
-    { x: I.xs, y: I.xs.map(x => I.n * Phi((-x - m) / s)), mode: 'lines', line: { color: RED, width: 1.4, dash: 'dash' }, name: 'expected under the Normal distribution', hovertemplate: 'x = %{x}<br>expected %{y:.3g}<extra></extra>' },
-    { x: I.xs, y: I.cH.map(pos), mode: 'markers', marker: { size: 7, color: DBLUE, symbol: 'square' }, name: 'historical draws below -x%', hovertemplate: 'x = %{x}<br>%{y} draws<extra></extra>' },
-    { x: I.xs, y: I.xs.map(x => pos(I.n * dataShare(x))), mode: 'lines', line: { color: DBLUE, width: 1.4, dash: 'dot' }, name: 'share in the data x 200,000', hovertemplate: 'x = %{x}<br>%{y:.1f}<extra></extra>' }
-  ], layout({ xaxis: XT('loss threshold x (%)', { range: [0.8, 12.2] }), yaxis: XT('draws below -x% (log scale)', { type: 'log', range: [-1, 5], exponentformat: 'power', dtick: 1 }), legend: LEG(nw, -0.2) }));
-  const x = -Math.log(1 - u) / lam, z = normPpf(u);
+  const x = -Math.log(1 - u) / lam, z = normPpf(u), qh = quantile(S.s, u), qn = m + s * z;
+  const Pn = panels('ie-chart', 2, { h: 380, hs: 280, extra: 130, gap: 0.1 }), [a, b] = Pn.ax, xm = Math.max(4 / lam, 1.15 * x), xg = linspace(0, xm, 300), xa = linspace(0, x, 120);
+  const tr = [
+    on2(a, { x: xa, y: xa.map(v => lam * Math.exp(-lam * v)), mode: 'lines', line: { width: 0, color: AMBER }, fill: 'tozeroy', fillcolor: 'rgba(255,193,7,0.45)', name: `area u = ${u.toFixed(2)} below x = -ln(1 - u)/lambda`, hoverinfo: 'skip' }),
+    on2(a, { x: xg, y: xg.map(v => lam * Math.exp(-lam * v)), mode: 'lines', line: { color: DBLUE, width: 1.8 }, name: `exponential density, lambda = ${lam.toFixed(1)}`, hovertemplate: 'x %{x:.3f}<br>density %{y:.3f}<extra></extra>' }),
+    on2(a, { x: [1 / lam, 1 / lam], y: [0, lam], mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dash' }, name: `mean 1/lambda = ${(1 / lam).toFixed(3)}`, hoverinfo: 'skip' }),
+    on2(a, { x: [x], y: [0], mode: 'markers', marker: { size: 10, color: AMBER, line: { color: DARK, width: 1 } }, name: `exponential draw x = ${x.toFixed(3)}`, hovertemplate: 'x = %{x:.3f}<extra></extra>', cliponaxis: false })];
+  const xr = linspace(-5, 5, 401), F = xr.map(v => { let lo = 0, hi = n; while (lo < hi) { const md = (lo + hi) >> 1; if (S.s[md] <= v) lo = md + 1; else hi = md; } return lo / n; });
+  tr.push(on2(b, { x: xr, y: F, mode: 'lines', line: { shape: 'hv', color: DBLUE, width: 1.6 }, name: 'S&P 500 empirical CDF', hovertemplate: 'x %{x:.2f}%<br>F %{y:.3f}<extra></extra>' }));
+  tr.push(on2(b, { x: xr, y: xr.map(v => Phi((v - m) / s)), mode: 'lines', line: { color: RED, width: 1.4, dash: 'dash' }, name: 'Normal CDF, same mean and sd', hoverinfo: 'skip' }));
+  tr.push(on2(b, { x: [-5, Math.max(qh, qn), null, qh, qh, null, qn, qn], y: [u, u, null, u, 0, null, u, 0], mode: 'lines', line: { color: AMBER, width: 1.6 }, name: `u = ${u.toFixed(2)} -> quantile`, hoverinfo: 'skip' }));
+  tr.push(on2(b, { x: [qh, qn], y: [0, 0], mode: 'markers', marker: { size: 10, color: [DBLUE, RED], line: { color: DARK, width: 1 } }, name: `draws: historical ${qh.toFixed(2)}%, Normal ${qn.toFixed(2)}%`, cliponaxis: false,
+    customdata: ['historical', 'Normal'], hovertemplate: '%{customdata} draw %{x:.3f}%<extra></extra>' }));
+  setAx(Pn, 0, XT('x', { range: [0, xm] }), XT('density', { rangemode: 'tozero' }));
+  setAx(Pn, 1, XT('daily log return (%)', { range: [-5, 5] }), XT('F(x)', { range: [0, 1] }));
+  plot('ie-chart', tr, layout(Object.assign(Pn.L, { annotations: [ptitle(a, 'exponential: x = F^{-1}(u)'), ptitle(b, 'S&P 500: the same u through two quantile functions')], legend: LEG(Pn.stack, Pn.stack ? -0.08 : -0.2) })));
   steps('ie-we', [T.iew1(nf(u, 2), nf(lam, 1), nf(-Math.log(1 - u), 3), nf(x, 3)), T.iew2(nf(lam, 1), nf(x, 3), nf(1 - Math.exp(-lam * x), 2)),
     T.iew3(nf(m, 4), nf(s, 3), nf(z, 4), nf(m + s * z, 3)), T.iew4(nf(quantile(S.s, u), 3), fint(n))]);
   const j5 = I.xs.indexOf(5), E5 = I.n * Phi((-5 - m) / s);
@@ -756,7 +825,11 @@ function gcExtra(k) {
     tr.push({ x: Ck.ks, y: Ck[a].fr.map(pos), mode: 'lines+markers', line: { color: COL[a], width: 1.8 }, marker: { size: 6 }, name: `${SH[a]}: data`, hovertemplate: `${SH[a]}<br>k = %{x}<br>%{y} days<extra></extra>` });
     tr.push({ x: Ck.ks, y: Ck[a].f95.map(pos), mode: 'lines', line: { color: COL[a], width: 1.2, dash: 'dash' }, name: `${SH[a]}: GBM 95% quantile`, hovertemplate: `${SH[a]}<br>k = %{x}<br>GBM 95% quantile %{y}<extra></extra>` });
   });
-  plot('gc-tail', tr, layout({ shapes: [vl(k, GREEN)], xaxis: XT('k (standard deviations)'), yaxis: XT('days beyond k sd (log scale)', { type: 'log', range: [-0.2, 2.6], tickvals: [1, 2, 5, 10, 20, 50, 100, 200], ticktext: ['1', '2', '5', '10', '20', '50', '100', '200'] }), legend: LEG(nw, -0.2) }));
+  const j = Ck.ks.findIndex(v => Math.abs(v - k) < 1e-9);
+  tr.push({ x: [k, k], y: [0.63, 400], mode: 'lines', line: { color: GREEN, width: 1.2, dash: 'dot' }, name: `k = ${k.toFixed(1)}`, legendgroup: 'k', hoverinfo: 'skip' });
+  tr.push({ x: names.map(() => k), y: names.map(a => pos(Ck[a].fr[j])), mode: 'markers', marker: { size: 11, color: names.map(a => COL[a]), line: { color: '#fff', width: 1 } }, name: 'data at the chosen k', legendgroup: 'k',
+    customdata: names.map(a => SH[a]), hovertemplate: '%{customdata}<br>k = %{x}<br>%{y} days<extra></extra>' });
+  plot('gc-tail', tr, layout({ xaxis: XT('k (standard deviations)'), yaxis: XT('days beyond k sd (log scale)', { type: 'log', range: [-0.2, 2.6], tickvals: [1, 2, 5, 10, 20, 50, 100, 200], ticktext: ['1', '2', '5', '10', '20', '50', '100', '200'] }), legend: LEG(nw, -0.2) }));
 }
 
 // ----------------------------------------------------------------- web lecture: table blocks travel inside a chart block
@@ -780,11 +853,12 @@ function init() {
   on(['cd-q'], condBlock); PL('cd-play', 'cd-q', range(2, 10, 1), 800);
   on(['ln-y'], llnBlock); PL('ln-play', 'ln-y', range(2000, 2020, 1), 600);
   on(['ru-s'], randuBlock); PL('ru-play', 'ru-s', range(1, 99, 2), 300);
+  $('it-x').addEventListener('input', e => { if (!e.isTrusted) $('it-l').value = Math.min(4, +(0.4 * +$('it-x').value).toFixed(1)); });   // ▶ moves lambda with x
   on(['it-l', 'it-x'], invBlock); PL('it-play', 'it-x', range(1, 12, 0.5), 400);
   on(['mc-L'], mcBlock); PL('mc-play', 'mc-L', range(5, 20, 1), 600);
   on(['bn-n'], binBlock); PL('bn-play', 'bn-n', range(0, 6, 1), 1000);
   on(['pr-phi'], procBlock); PL('pr-play', 'pr-phi', range(0, 1, 0.05), 400);
-  on(['sr-k'], spotBlock); PL('sr-play', 'sr-k', range(3, 8, 0.5), 700);
+  on(['sr-k'], spotBlock); PL('sr-play', 'sr-k', range(8, 2, -0.5), 700);
   on(['wn-k'], wienBlock); PL('wn-play', 'wn-k', range(0.5, 3, 0.1), 300);
   on(['gp-s'], gbmBlock); PL('gp-play', 'gp-s', [5, 10, 15, 19.26, 25, 30, 35, 40, 50, 60], 800);
   on(['gf-b'], fanBlock); PL('gf-play', 'gf-b', ['0.5', '0.8', '0.9', '0.95', '0.99'], 1500);
@@ -813,7 +887,7 @@ function init() {
     meBlock, mcBlock, ttBlock, crrBlock, binBlock, arBlock, procBlock, spotBlock, wienBlock, gmBlock, gbmBlock, fanBlock, chkBlock];
   all.forEach(f => { try { f(); } catch (e) { console.error(e); throw e; } });
 }
-window.CH4 = { ser, quantile, pearson, lagCorr, condMoments, binomPmf, Phi, normPpf, exKurt, acf1, ar1, init, moments, downStats, beyond, pfSd, lcgRun, crrParts, gbmPar,
+window.CH4 = { udCond, clipStats, normClipKurt, ser, quantile, pearson, lagCorr, condMoments, binomPmf, Phi, normPpf, exKurt, acf1, ar1, init, moments, downStats, beyond, pfSd, lcgRun, crrParts, gbmPar,
   blocks: { downDays, annualBlock, chebBlock, pfBlock, regBlock, lltBlock, lcgBlock, ieBlock, meBlock, ttBlock, crrBlock, arBlock, gmBlock, rvBlock, cdfBlock, jointBlock, udBlock, condBlock, llnBlock, randuBlock, invBlock, mcBlock, binBlock, procBlock, spotBlock, wienBlock, gbmBlock, fanBlock, chkBlock } };
 if (window.CH4_NO_INIT) return;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

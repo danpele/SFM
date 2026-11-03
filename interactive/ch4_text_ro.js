@@ -6,6 +6,7 @@ window.CH4_TEXT = {
  jt: y => y ? `Corelația pe întreaga perioadă și în zilele din ${y} (punctele violet):` : 'Corelația pe zilele comune ale întregii perioade:',
  jtItem: (a, b, n, c, y, ny, cy) => `${a} și ${b}: ${n} zile, ρ = ${c}` + (y ? `; în ${y}: ρ = ${cy} (${ny} zile)` : ''),
  ud: (h, cxy) => `Stînga: Corr(X, X²) = ${cxy} în cele 3 000 de extrageri simulate. Dreapta, lagul h = ${h}:`,
+ udL: (h, lo, mn, hi) => `Stînga, linia roșie: S&P 500, z = (r − media)/abaterea standard. Media lui z<sub>t</sub>² este ${lo} în decila cea mai joasă a lui z<sub>t−${h}</sub>, ${hi} în cea mai înaltă și ${mn} în decila cu media cea mai mică (pe toate zilele, circa 1).`,
  udItem: (a, c1, c2, b) => `${a}: Corr(r<sub>t</sub>, r<sub>t−h</sub>) = ${c1}, Corr(r<sub>t</sub>², r<sub>t−h</sub>²) = ${c2}; banda ±${b}`,
  cd: q => `${q} grupuri de zile după |r<sub>t−1</sub>|, de la cel mai calm (grupul 1) la cel mai agitat (grupul ${q}):`,
  cdItem: (a, m0, m1, s1, q, sq, r, tot, w, b, sh) => `${a}: media condiționată între ${m0}% și ${m1}%; abaterea standard condiționată ${s1}% (grupul 1) și ${sq}% (grupul ${q}), raportul ${r}. Varianța totală ${tot} = ${w} (în interiorul grupurilor) + ${b} (între grupuri, ${sh}% din total)`,
@@ -32,7 +33,9 @@ window.CH4_TEXT = {
  gf: (b, nom) => `Ponderea zilelor în care traiectoria reală este în afara benzii GBM de ${b} (nominal ${nom}):`,
  gfItem: (a, o, s) => `${a} (σ = ${s}% pe an): ${o}`,
  gc: k => `Zile cu |r − media| > ${k} abateri standard: date față de 300 de simulări GBM de aceeași lungime (mediana, cuantila de 95%, maximul):`,
- gcItem: (a, n, f, m, q, mx) => `${a} (${n} zile): ${f} în date; GBM ${m}, ${q}, ${mx}`
+ gcItem: (a, n, f, m, q, mx) => `${a} (${n} zile): ${f} în date; GBM ${m}, ${q}, ${mx}`,
+ gcClip: (k, items, nk) => `Randamentele reale limitate la media ± ${k} abateri standard (cercurile goale): exces de boltire și Corr(r<sub>t</sub>², r<sub>t−1</sub>²), față de seria nelimitată: ${items}. Pentru randamente i.i.d. Normale, aceeași limitare dă excesul de boltire ${nk}, deci benzile GBM s-ar deplasa cu aproximativ atît.`,
+ gcClipItem: (a, kc, kr, ac, ar) => `${a} ${kc} (${kr}), ${ac} (${ar})`
 };
 window.ch4De = n => (n % 100 >= 20 || (n >= 100 && n % 100 === 0) ? ' de' : '');
 window.ch4D = s => window.ch4De(+String(s).replace(/[^0-9]/g, ''));
