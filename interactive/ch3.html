@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3 · α-Stable Distributions</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch3.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch3_data.js?v=20261101a", "ch3_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch3.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistics of Financial Markets</h1><p>Chapter 3 · α-Stable Distributions</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch3.html" class="lang-btn active">EN</a><a href="ch3_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step.</p>
+<p class="toc"><a href="#s-stab">Stability under Summation</a> · <a href="#s-gclt">The Generalised Central Limit Theorem</a> · <a href="#s-par">Parameters and the Characteristic Function</a> · <a href="#s-tail">Tails and Moments</a> · <a href="#s-sim">Simulation</a> · <a href="#s-est">Estimation</a> · <a href="#s-real">Fitting Real Returns</a> · <a href="#s-crit">The Critique: Finite or Infinite Variance?</a></p>
+<h2 class="sec" id="s-stab">Stability under Summation</h2>
+<section class="blk" id="stability-qq">
+  <h3>Stability in a Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=12" target="_blank" rel="noopener"><img src="slides/sfm_ch3_stability_qq_en.jpg" alt="Slide 11: Stability in a Simulation" loading="lazy"></a>
+      <figcaption>Slide 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sq-n">Number of draws summed n</label><select id="sq-n"><option value="2">2</option><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div><div class="ctl"><label for="sq-a">Exponent α′ of the divisor n<sup>1/α′</sup> (blue): <b id="sq-a-v"></b></label><input type="range" id="sq-a" min="1" max="2" step="0.05" value="1.7"></div><button class="btn play" id="sq-play" type="button"></button></div><div class="charts "><div class="chart" id="sq-chart"></div></div><ul class="out" id="sq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, the sum of 10 draws from S(1.7, 0, 1, 0) divided by √10 has a 99% quantile of 6.31, against 5.04 for a single draw. What does this quantile become if we add 50 draws and still divide by √n?</div>
+  <details><summary>Answer</summary><p>About 7.27. Divided by 50<sup>1/1.7</sup> = 9.98, the same sum has a 99% quantile of 5.15, the law of a single draw. The √n rule understates the scale of the sum by the factor n<sup>1/α − 1/2</sup>, which grows with n: 10<sup>0.088</sup> = 1.23 and 50<sup>0.088</sup> = 1.41. With infinite variance, more terms do not bring the sum closer to the rule of the Normal distribution.</p></details>
+</section><h2 class="sec" id="s-gclt">The Generalised Central Limit Theorem</h2>
+<section class="blk" id="gclt">
+  <h3>The GCLT in a Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch3_gclt_en.jpg" alt="Slide 16: The GCLT in a Simulation" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gc-k">Threshold k for P(|·| > k): <b id="gc-k-v"></b></label><input type="range" id="gc-k" min="2" max="15" step="0.5" value="10"></div><button class="btn play" id="gc-play" type="button"></button></div><div class="charts "><div class="chart" id="gc-chart"></div></div><ul class="out" id="gc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At the threshold 10, the Normal distribution with the same interquartile range as the stable limit gives P(|·| > 10) = 0.0005%, against 2.64% for the limit. What probability does the same Normal distribution give at the threshold 3?</div>
+  <details><summary>Answer</summary><p>17.2%, close to 19.2% for the sums with n = 100 and to 21.7% for the stable limit. The same interquartile range makes the bodies of the two laws similar; the difference is far in the tails: at the threshold 10, 0.0005% against 2.73% in the simulation. The ▶ button shows how the ratio grows with the threshold.</p></details>
+</section><h2 class="sec" id="s-par">Parameters and the Characteristic Function</h2>
+<section class="blk" id="density-alpha">
+  <h3>The Effect of α</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=22" target="_blank" rel="noopener"><img src="slides/sfm_ch3_density_alpha_en.jpg" alt="Slide 21: The Effect of α" loading="lazy"></a>
+      <figcaption>Slide 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="da-a">α of the chosen curve (dotted): <b id="da-a-v"></b></label><input type="range" id="da-a" min="0.5" max="2" step="0.05" value="1.7"></div><button class="btn play" id="da-play" type="button"></button></div><div class="charts "><div class="chart" id="da-chart"></div></div><ul class="out" id="da-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From α = 2 to α = 1.5, what changes more: the density at x = 0 or the density at x = 5?</div>
+  <details><summary>Answer</summary><p>The density at x = 5. f(0) rises from 0.2821 to 0.2874, by 1.9%, and f(5) rises from 0.000545 to 0.00711, 13 times. On the linear scale the curves look close; the log scale shows that α changes mainly the tails. P(|X| > 5) is 0.041% for α = 2 and 4.14% for α = 1.5.</p></details>
+</section>
+<section class="blk" id="density-beta">
+  <h3>The Effect of β and γ</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch3_density_beta_en.jpg" alt="Slide 22: The Effect of β and γ" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="db-b">β of the chosen curve, α = 1.3 (left): <b id="db-b-v"></b></label><input type="range" id="db-b" min="-1" max="1" step="0.1" value="0.5"></div><div class="ctl"><label for="db-g">γ of the chosen curve, α = 1.7 (right): <b id="db-g-v"></b></label><input type="range" id="db-g" min="0.25" max="3" step="0.25" value="1.5"></div><button class="btn play" id="db-play" type="button"></button></div><div class="charts "><div class="chart" id="db-chart"></div></div><ul class="out" id="db-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For α = 1.3 and β = 0.5, how many times more likely is a value above 10 than a value below −10?</div>
+  <details><summary>Answer</summary><p>About 3 times: the ratio is 3.29 at the threshold 10 and tends to (1 + β)/(1 − β) = 1.5/0.5 = 3, from the tail formula P(X > x) ∼ c<sub>α</sub>(1 + β)x<sup>−α</sup> and P(X < −x) ∼ c<sub>α</sub>(1 − β)x<sup>−α</sup>. At the threshold 3 the probabilities are 10.8% and 3.37%. With β = 1, the left tail falls much faster than x<sup>−α</sup>.</p></details>
+</section>
+<section class="blk" id="s0-s1">
+  <h3>S1 vs S0 near α = 1</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch3_s0_s1_en.jpg" alt="Slide 24: S1 vs S0 near α = 1" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ss-a">α of the chosen curve (dotted), β = 0.8: <b id="ss-a-v"></b></label><input type="range" id="ss-a" min="0.7" max="1.3" step="0.01" value="0.9"></div><button class="btn play" id="ss-play" type="button"></button></div><div class="charts "><div class="chart" id="ss-chart"></div></div><ul class="out" id="ss-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves α from 0.80 to 1.20, with β = 0.8. Where is the mode of the density in the S1 parameterisation for α = 0.99?</div>
+  <details><summary>Answer</summary><p>At about 50.5, far outside the chart. The shift between the two parameterisations is β tan(πα/2) = 0.8 × 63.66 = 50.93, and the mode in S0 is −0.38. At α = 1.01 the tangent changes sign and the mode in S1 moves to about −51. In S0 the mode stays between −0.48 and −0.26 over the whole range.</p></details>
+</section>
+<section class="blk" id="special-cases">
+  <h3>Normal, Cauchy and Lévy</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch3_special_cases_en.jpg" alt="Slide 27: Normal, Cauchy and Lévy" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-x">Threshold x for P(X > x): <b id="sc-x-v"></b></label><input type="range" id="sc-x" min="1" max="20" step="0.5" value="3"></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the threshold x = 20, which of the three laws has the largest probability P(X > x)?</div>
+  <details><summary>Answer</summary><p>The Lévy law: 17.7%, against 1.59% for the Cauchy and about 3 × 10<sup>−87</sup>% for the Normal distribution. The Lévy tail falls as x<sup>−1/2</sup> (α = 1/2), the Cauchy tail as x<sup>−1</sup>. For x = 3 the probabilities are 43.6% (Lévy), 10.2% (Cauchy) and 0.13% (Normal distribution).</p></details>
+</section><h2 class="sec" id="s-tail">Tails and Moments</h2>
+<section class="blk" id="tails-loglog">
+  <h3>Tails on Log-Log Axes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_loglog_en.jpg" alt="Slide 31: Tails on Log-Log Axes" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tl-a">α of the chosen curve: <b id="tl-a-v"></b></label><input type="range" id="tl-a" min="1.1" max="1.95" step="0.05" value="1.6"></div><button class="btn play" id="tl-play" type="button"></button></div><div class="charts "><div class="chart" id="tl-chart"></div></div><ul class="out" id="tl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For α = 1.9, P(X > 10) = 0.064%. What is P(X > 20)?</div>
+  <details><summary>Answer</summary><p>0.0165%: doubling the threshold divides the probability by about 2<sup>1.9</sup> = 3.7 (the exact ratio is 0.256, the power law gives 2<sup>−1.9</sup> = 0.268). With α close to 2 the tail is still a power law, far from the Normal distribution, for which P(X > 10) is of the order of 10<sup>−12</sup>.</p></details>
+</section>
+<section class="blk" id="running-var-sim">
+  <h3>The Sample Variance Does Not Settle</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch3_running_var_sim_en.jpg" alt="Slide 33: The Sample Variance Does Not Settle" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-a">α of the three stable samples: <b id="rv-a-v"></b></label><input type="range" id="rv-a" min="0" max="7" step="1" value="3"></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button takes α from 1.1 to 2. For α = 1.9, do the three sample variances end near 2 after 20,000 draws, as for the Normal distribution?</div>
+  <details><summary>Answer</summary><p>No: 3.16, 2.62 and 4.12, against 1.96 for the Normal distribution. For any α < 2 the variance is infinite and each large draw makes a jump. With α = 1.95 the final values are 2.46, 2.22 and 2.83; only α = 2 gives 2.00, 1.97 and 1.99. With α = 1.7 (the slide): 10.4, 6.6 and 20.2.</p></details>
+</section><h2 class="sec" id="s-sim">Simulation</h2>
+<section class="blk" id="cms">
+  <h3>CMS Draws against the Exact Density</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch3_cms_en.jpg" alt="Slide 40: CMS Draws against the Exact Density" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cm-a">α</label><select id="cm-a"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.8">1.8</option></select></div><div class="ctl"><label for="cm-b">β: <b id="cm-b-v"></b></label><input type="range" id="cm-b" min="-1" max="1" step="0.5" value="0.5"></div><button class="btn play" id="cm-play" type="button"></button></div><div class="charts "><div class="chart" id="cm-chart"></div></div><ul class="out" id="cm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For α = 1.5 and β = 0.5, the exact 1% and 99% quantiles are −5.40 and 9.76. What do they become for β = −0.5?</div>
+  <details><summary>Answer</summary><p>Approximately mirrored: −9.81 and 5.38 (in the simulated sample −9.99 and 5.21). In S1 with δ = 0, the law with −β is the law with β reflected about 0, so β changes which tail is longer, not only the location. The histogram follows the exact density for every combination of α and β.</p></details>
+</section><h2 class="sec" id="s-est">Estimation</h2>
+<section class="blk" id="mcculloch-map">
+  <h3>McCulloch's Map from ν_α to α</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch3_mcculloch_map_en.jpg" alt="Slide 44: McCulloch's Map from ν_α to α" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mm-y">Sample starts in: <b id="mm-y-v"></b></label><input type="range" id="mm-y" min="2000" max="2020" step="1" value="2000"></div><button class="btn play" id="mm-play" type="button"></button></div><div class="charts "><div class="chart" id="mm-chart"></div></div><ul class="out" id="mm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the start of the sample from 2000 to 2020. The S&P 500 sample from 2020 has 1,687 days, and the crisis of March 2020 weighs more in it. Does the McCulloch α̂ fall below 1.438?</div>
+  <details><summary>Answer</summary><p>No, it rises to 1.543: ν<sub>α</sub> falls from 3.338 to 3.044. The McCulloch estimator uses only the 5%, 25%, 50%, 75% and 95% quantiles, so the extreme days do not enter the calculation directly; what matters is how wide the 5–95% band is relative to the interquartile range. The DAX goes from 1.455 to 1.590, BET from 1.414 to 1.480, Bitcoin from 1.322 to 1.400.</p></details>
+</section>
+<section class="blk" id="estimators-mc">
+  <h3>McCulloch vs ML in a Monte Carlo Study</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch3_estimators_mc_en.jpg" alt="Slide 47: McCulloch vs ML in a Monte Carlo Study" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-r">Number of Monte Carlo samples used: <b id="mc-r-v"></b></label><input type="range" id="mc-r" min="10" max="200" step="10" value="200"></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button raises the number of Monte Carlo samples from 10 to 200. Does the standard deviation of the ML α̂ for n = 500 change between 100 and 200 samples?</div>
+  <details><summary>Answer</summary><p>Yes: from 0.050 to 0.061. The precision of α̂ depends on the sample size n; the number of Monte Carlo samples only determines how well this precision is measured. With 100 samples, the estimated standard deviation still has a relative error of at least 1/√(2 × 100) = 7%. For McCulloch, 0.110 at 100 and 0.107 at 200.</p></details>
+</section><h2 class="sec" id="s-real">Fitting Real Returns</h2>
+<section class="blk" id="fit-density-1">
+  <h3>Fitted Densities on a Log Scale</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch3_fit_density_1_en.jpg" alt="Slide 51: Fitted Densities on a Log Scale" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="f1-k">Return x, in standard deviations: <b id="f1-k-v"></b></label><input type="range" id="f1-k" min="-10" max="10" step="0.5" value="-5"></div><button class="btn play" id="f1-play" type="button"></button></div><div class="charts "><div class="chart" id="f1-chart"></div></div><ul class="out" id="f1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At x = −6 standard deviations (−7.28% per day for the S&P 500), how many times smaller is the density of the fitted Normal distribution than the Student-t density?</div>
+  <details><summary>Answer</summary><p>About 120,000 times: 4.4 × 10<sup>−9</sup> against 5.5 × 10<sup>−4</sup>. The stable density is 1.0 × 10<sup>−3</sup>, almost twice the Student-t density. The Normal tail falls as e<sup>−x²/2</sup>, the other two as a power of x, so the ratio grows very fast with |x|.</p></details>
+</section>
+<section class="blk" id="fit-density-2">
+  <h3>Fitted Densities on a Log Scale</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch3_fit_density_2_en.jpg" alt="Slide 52: Fitted Densities on a Log Scale" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="f2-k">Return x, in standard deviations: <b id="f2-k-v"></b></label><input type="range" id="f2-k" min="-10" max="10" step="0.5" value="-5"></div><button class="btn play" id="f2-play" type="button"></button></div><div class="charts "><div class="chart" id="f2-chart"></div></div><ul class="out" id="f2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At x = −8 standard deviations for the DAX (−11.26% per day), how many times larger is the stable density than the Student-t density?</div>
+  <details><summary>Answer</summary><p>About 2.9 times: 3.7 × 10<sup>−4</sup> against 1.3 × 10<sup>−4</sup>. The stable tail falls as |x|<sup>−α̂−1</sup> with α̂ = 1.61, the Student-t tail as |x|<sup>−ν̂−1</sup> with ν̂ = 3.09; a smaller exponent means a heavier tail. The ratio is 1.6 at −5 standard deviations and 3.9 at −10.</p></details>
+</section>
+<section class="blk" id="qq-real-1">
+  <h3>QQ Plots against the Three Models</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=54" target="_blank" rel="noopener"><img src="slides/sfm_ch3_qq_real_1_en.jpg" alt="Slide 53: QQ Plots against the Three Models" loading="lazy"></a>
+      <figcaption>Slide 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q1-p">Level p of the quantile (circles): <b id="q1-p-v"></b></label><input type="range" id="q1-p" min="0" max="5" step="1" value="2"></div><button class="btn play" id="q1-play" type="button"></button></div><div class="charts "><div class="chart" id="q1-chart"></div></div><ul class="out" id="q1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button lowers the level p from 5% to 0.1%. At p = 0.1%, what VaR does the fitted stable law give for the S&P 500, against 7.22% in the data?</div>
+  <details><summary>Answer</summary><p>19.70%, 2.7 times the empirical quantile. The Student-t gives 8.58%, the Normal distribution 3.72%. At p = 1%, the values are 3.45% (data), 4.54% (stable), 3.46% (Student-t) and 2.80% (Normal): the stable law already overstates, but the gap grows as p gets smaller.</p></details>
+</section>
+<section class="blk" id="qq-real-2">
+  <h3>QQ Plots against the Three Models</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch3_qq_real_2_en.jpg" alt="Slide 54: QQ Plots against the Three Models" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q2-p">Level p of the quantile (circles): <b id="q2-p-v"></b></label><input type="range" id="q2-p" min="0" max="5" step="1" value="2"></div><button class="btn play" id="q2-play" type="button"></button></div><div class="charts "><div class="chart" id="q2-chart"></div></div><ul class="out" id="q2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At p = 1%, the VaR of Bitcoin in the data is 10.51%. Which fitted model gives the closest value?</div>
+  <details><summary>Answer</summary><p>The Student-t: 11.06%. The stable law gives 14.26%, the Normal distribution 7.99%. At p = 0.1%, the data give 18.05%, the Student-t 31.95% and the stable law 74.16%: the Student-t also overstates the far tail of Bitcoin, but much less than the stable law.</p></details>
+</section>
+<section class="blk" id="tails-real-1">
+  <h3>The Left Tail on Log-Log Axes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_real_1_en.jpg" alt="Slide 55: The Left Tail on Log-Log Axes" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="t1-x">Loss x: <b id="t1-x-v"></b></label><input type="range" id="t1-x" min="2" max="25" step="0.5" value="10"></div><button class="btn play" id="t1-play" type="button"></button></div><div class="charts "><div class="chart" id="t1-chart"></div></div><ul class="out" id="t1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The S&P 500 has 23 days with losses above 5% in 6,714 days. How many such days does the fitted stable law expect?</div>
+  <details><summary>Answer</summary><p>57.3, 2.5 times as many. The Student-t expects 27.0, the Normal distribution 0.1. For losses above 10%: one day observed, 4.5 under the Student-t and 19.1 under the stable law. The ratio between the days expected by the stable law and those observed grows with the threshold.</p></details>
+</section>
+<section class="blk" id="tails-real-2">
+  <h3>The Left Tail on Log-Log Axes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_real_2_en.jpg" alt="Slide 56: The Left Tail on Log-Log Axes" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="t2-x">Loss x: <b id="t2-x-v"></b></label><input type="range" id="t2-x" min="2" max="25" step="0.5" value="10"></div><button class="btn play" id="t2-play" type="button"></button></div><div class="charts "><div class="chart" id="t2-chart"></div></div><ul class="out" id="t2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin has 4 days with losses above 20% in 4,384 days. How many days do the Student-t and the stable law expect?</div>
+  <details><summary>Answer</summary><p>12.3 under the Student-t and 26.9 under the stable law; the Normal distribution gives practically zero. Both heavy-tailed models overstate the far tail of Bitcoin, the stable law more than 6 times. For losses above 10%: 56 observed, 54.2 (Student-t), 73.9 (stable).</p></details>
+</section><h2 class="sec" id="s-crit">The Critique: Finite or Infinite Variance?</h2>
+<section class="blk" id="aggregation">
+  <h3>Test 1: Does α Stay the Same When Returns Are Summed?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=62" target="_blank" rel="noopener"><img src="slides/sfm_ch3_aggregation_en.jpg" alt="Slide 61: Test 1: Does α Stay the Same When Returns Are Summed?" loading="lazy"></a>
+      <figcaption>Slide 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-e">Estimator</label><select id="ag-e"><option value="ml" selected>ML</option><option value="mcc">McCulloch</option></select></div><div class="ctl"><label for="ag-c">Confidence level of the intervals: <b id="ag-c-v"></b></label><input type="range" id="ag-c" min="0" max="4" step="1" value="2"></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, the 95% intervals of the ML α̂ for the S&P 500 at the daily (1.54) and monthly (1.82) horizon do not overlap. Do they overlap at the 99% confidence level?</div>
+  <details><summary>Answer</summary><p>No. At 99% (±2.576 standard errors), the daily interval is [1.486, 1.594] and the monthly one [1.655, 1.984]. Not even at 99.9% (±3.29 standard errors) do they overlap, although the gap between them almost vanishes. For the DAX and BET the intervals already overlap at 95%. The intervals are asymptotic, and the monthly one rests on 321 months.</p></details>
+</section>
+<section class="blk" id="running-var-real">
+  <h3>Test 2: Does the Sample Variance Settle?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter3_alpha_stable_distributions.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch3_running_var_real_en.jpg" alt="Slide 63: Test 2: Does the Sample Variance Settle?" loading="lazy"></a>
+      <figcaption>Slide 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-a">Series</label><select id="rr-a"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For Bitcoin (α̂ = 1.410), the running variance of the data at the end of the sample is 12.14. Where do the final variances of the three paths simulated from the fitted stable law end?</div>
+  <details><summary>Answer</summary><p>Much higher: 252.1, 111.4 and 52.6, 4 to 21 times the variance of the data. The same holds for the S&P 500 (the slide): data 1.47, paths 5.9, 5.4 and 15.6. A stable law with α̂ < 2 produces extremes that the real series do not have, and their sample variance does not settle.</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: BET, S&P 500 and DAX from January 2000, Bitcoin from September 2014 (7 days a week), to 18 September 2026. EODHD closing prices. The fitted laws are those of the lecture: the Normal distribution, the Student-t and the stable law fitted by maximum likelihood in the S0 parameterisation.</p>
+</main>
+</body>
+</html>

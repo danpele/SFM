@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 3 · Distribuții α-stabile</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch3.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch3_data.js?v=20261101a", "ch3_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch3.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 3 · Distribuții α-stabile</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_03" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch3.html" class="lang-btn">EN</a><a href="ch3_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas.</p>
+<p class="toc"><a href="#s-stab">Stabilitatea la adunare</a> · <a href="#s-gclt">Teorema limită centrală generalizată</a> · <a href="#s-par">Parametrii și funcția caracteristică</a> · <a href="#s-tail">Cozi și momente</a> · <a href="#s-sim">Simulare</a> · <a href="#s-est">Estimare</a> · <a href="#s-real">Estimarea pe randamente reale</a> · <a href="#s-crit">Critica: varianță finită sau infinită?</a></p>
+<h2 class="sec" id="s-stab">Stabilitatea la adunare</h2>
+<section class="blk" id="stability-qq">
+  <h3>Stabilitatea într-o simulare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=12" target="_blank" rel="noopener"><img src="slides/sfm_ch3_stability_qq_ro.jpg" alt="Slide-ul 11: Stabilitatea într-o simulare" loading="lazy"></a>
+      <figcaption>Slide-ul 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sq-n">Numărul de extrageri adunate n</label><select id="sq-n"><option value="2">2</option><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div><div class="ctl"><label for="sq-a">Exponentul α′ al împărțitorului n<sup>1/α′</sup> (albastru): <b id="sq-a-v"></b></label><input type="range" id="sq-a" min="1" max="2" step="0.05" value="1.7"></div><button class="btn play" id="sq-play" type="button"></button></div><div class="charts "><div class="chart" id="sq-chart"></div></div><ul class="out" id="sq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, suma a 10 extrageri din S(1,7; 0; 1; 0) împărțită la √10 are cuantila de 99% egală cu 6,31, față de 5,04 pentru o singură extragere. Cît devine această cuantilă dacă adunăm 50 de extrageri și împărțim tot la √n?</div>
+  <details><summary>Răspuns</summary><p>Circa 7,27. Împărțită la 50<sup>1/1,7</sup> = 9,98, aceeași sumă are cuantila de 99% egală cu 5,15, adică legea unei singure extrageri. Regula √n subestimează scala sumei cu factorul n<sup>1/α − 1/2</sup>, care crește cu n: 10<sup>0,088</sup> = 1,23 și 50<sup>0,088</sup> = 1,41. Cu varianță infinită, mai mulți termeni nu aduc suma mai aproape de regula distribuției Normale.</p></details>
+</section><h2 class="sec" id="s-gclt">Teorema limită centrală generalizată</h2>
+<section class="blk" id="gclt">
+  <h3>GCLT într-o simulare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch3_gclt_ro.jpg" alt="Slide-ul 16: GCLT într-o simulare" loading="lazy"></a>
+      <figcaption>Slide-ul 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gc-k">Pragul k pentru P(|·| > k): <b id="gc-k-v"></b></label><input type="range" id="gc-k" min="2" max="15" step="0.5" value="10"></div><button class="btn play" id="gc-play" type="button"></button></div><div class="charts "><div class="chart" id="gc-chart"></div></div><ul class="out" id="gc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La pragul 10, distribuția Normală cu același interval intercuartilic ca limita stabilă dă P(|·| > 10) = 0,0005%, față de 2,64% la limită. Ce probabilitate dă aceeași distribuție Normală la pragul 3?</div>
+  <details><summary>Răspuns</summary><p>17,2%, aproape de 19,2% pentru sumele cu n = 100 și de 21,7% pentru limita stabilă. Același interval intercuartilic face corpurile celor două legi asemănătoare; diferența apare departe în cozi: la pragul 10, 0,0005% față de 2,73% în simulare. Butonul ▶ arată cum raportul crește odată cu pragul.</p></details>
+</section><h2 class="sec" id="s-par">Parametrii și funcția caracteristică</h2>
+<section class="blk" id="density-alpha">
+  <h3>Efectul lui α</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=22" target="_blank" rel="noopener"><img src="slides/sfm_ch3_density_alpha_ro.jpg" alt="Slide-ul 21: Efectul lui α" loading="lazy"></a>
+      <figcaption>Slide-ul 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="da-a">α al curbei alese (punctat): <b id="da-a-v"></b></label><input type="range" id="da-a" min="0.5" max="2" step="0.05" value="1.7"></div><button class="btn play" id="da-play" type="button"></button></div><div class="charts "><div class="chart" id="da-chart"></div></div><ul class="out" id="da-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> De la α = 2 la α = 1,5, ce se schimbă mai mult: densitatea în x = 0 sau densitatea în x = 5?</div>
+  <details><summary>Răspuns</summary><p>Densitatea în x = 5. f(0) crește de la 0,2821 la 0,2874, cu 1,9%, iar f(5) crește de la 0,000545 la 0,00711, de 13 ori. Pe scara liniară curbele par apropiate; pe scara logaritmică se vede că α schimbă mai ales cozile. P(|X| > 5) este 0,041% pentru α = 2 și 4,14% pentru α = 1,5.</p></details>
+</section>
+<section class="blk" id="density-beta">
+  <h3>Efectul lui β și γ</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch3_density_beta_ro.jpg" alt="Slide-ul 22: Efectul lui β și γ" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="db-b">β al curbei alese, α = 1,3 (stînga): <b id="db-b-v"></b></label><input type="range" id="db-b" min="-1" max="1" step="0.1" value="0.5"></div><div class="ctl"><label for="db-g">γ al curbei alese, α = 1,7 (dreapta): <b id="db-g-v"></b></label><input type="range" id="db-g" min="0.25" max="3" step="0.25" value="1.5"></div><button class="btn play" id="db-play" type="button"></button></div><div class="charts "><div class="chart" id="db-chart"></div></div><ul class="out" id="db-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru α = 1,3 și β = 0,5, de cîte ori este mai probabilă o valoare peste 10 decît o valoare sub −10?</div>
+  <details><summary>Răspuns</summary><p>De circa 3 ori: raportul este 3,29 la pragul 10 și tinde la (1 + β)/(1 − β) = 1,5/0,5 = 3, din formula cozilor P(X > x) ∼ c<sub>α</sub>(1 + β)x<sup>−α</sup> și P(X < −x) ∼ c<sub>α</sub>(1 − β)x<sup>−α</sup>. La pragul 3 probabilitățile sînt 10,8% și 3,37%. Cu β = 1, coada stîngă scade mult mai repede decît x<sup>−α</sup>.</p></details>
+</section>
+<section class="blk" id="s0-s1">
+  <h3>S1 și S0 în apropiere de α = 1</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch3_s0_s1_ro.jpg" alt="Slide-ul 24: S1 și S0 în apropiere de α = 1" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ss-a">α al curbei alese (punctat), β = 0,8: <b id="ss-a-v"></b></label><input type="range" id="ss-a" min="0.7" max="1.3" step="0.01" value="0.9"></div><button class="btn play" id="ss-play" type="button"></button></div><div class="charts "><div class="chart" id="ss-chart"></div></div><ul class="out" id="ss-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută α de la 0,80 la 1,20, cu β = 0,8. Unde se află modul densității în parametrizarea S1 pentru α = 0,99?</div>
+  <details><summary>Răspuns</summary><p>La circa 50,5, departe în afara graficului. Deplasarea dintre cele două parametrizări este β tan(πα/2) = 0,8 × 63,66 = 50,93, iar modul în S0 este −0,38. La α = 1,01 tangenta își schimbă semnul și modul în S1 ajunge la circa −51. În S0 modul rămîne între −0,48 și −0,26 pe tot intervalul.</p></details>
+</section>
+<section class="blk" id="special-cases">
+  <h3>Distribuțiile Normală, Cauchy și Lévy</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch3_special_cases_ro.jpg" alt="Slide-ul 27: Distribuțiile Normală, Cauchy și Lévy" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-x">Pragul x pentru P(X > x): <b id="sc-x-v"></b></label><input type="range" id="sc-x" min="1" max="20" step="0.5" value="3"></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru pragul x = 20, care dintre cele trei legi are cea mai mare probabilitate P(X > x)?</div>
+  <details><summary>Răspuns</summary><p>Legea Lévy: 17,7%, față de 1,59% pentru Cauchy și circa 3 × 10<sup>−87</sup>% pentru distribuția Normală. Coada Lévy scade ca x<sup>−1/2</sup> (α = 1/2), coada Cauchy ca x<sup>−1</sup>. Pentru x = 3 probabilitățile sînt 43,6% (Lévy), 10,2% (Cauchy) și 0,13% (distribuția Normală).</p></details>
+</section><h2 class="sec" id="s-tail">Cozi și momente</h2>
+<section class="blk" id="tails-loglog">
+  <h3>Cozile pe axe log-log</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_loglog_ro.jpg" alt="Slide-ul 31: Cozile pe axe log-log" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tl-a">α al curbei alese: <b id="tl-a-v"></b></label><input type="range" id="tl-a" min="1.1" max="1.95" step="0.05" value="1.6"></div><button class="btn play" id="tl-play" type="button"></button></div><div class="charts "><div class="chart" id="tl-chart"></div></div><ul class="out" id="tl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru α = 1,9, P(X > 10) = 0,064%. Cît este P(X > 20)?</div>
+  <details><summary>Răspuns</summary><p>0,0165%: dublarea pragului împarte probabilitatea la circa 2<sup>1,9</sup> = 3,7 (raportul exact este 0,256, legea de tip putere dă 2<sup>−1,9</sup> = 0,268). Cu α aproape de 2 coada rămîne de tip putere, departe de distribuția Normală, pentru care P(X > 10) este de ordinul 10<sup>−12</sup>.</p></details>
+</section>
+<section class="blk" id="running-var-sim">
+  <h3>Varianța de selecție nu se stabilizează</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch3_running_var_sim_ro.jpg" alt="Slide-ul 33: Varianța de selecție nu se stabilizează" loading="lazy"></a>
+      <figcaption>Slide-ul 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-a">α al celor trei eșantioane stabile: <b id="rv-a-v"></b></label><input type="range" id="rv-a" min="0" max="7" step="1" value="3"></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ trece α de la 1,1 la 2. Pentru α = 1,9, ajung cele trei varianțe de selecție lîngă 2 după 20 000 de extrageri, ca în cazul distribuției Normale?</div>
+  <details><summary>Răspuns</summary><p>Nu: 3,16, 2,62 și 4,12, față de 1,96 pentru distribuția Normală. Pentru orice α < 2 varianța este infinită și fiecare extragere mare produce un salt. Cu α = 1,95 valorile finale sînt 2,46, 2,22 și 2,83; numai α = 2 dă 2,00, 1,97 și 1,99. Cu α = 1,7 (slide-ul): 10,4, 6,6 și 20,2.</p></details>
+</section><h2 class="sec" id="s-sim">Simulare</h2>
+<section class="blk" id="cms">
+  <h3>Extrageri CMS față de densitatea exactă</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch3_cms_ro.jpg" alt="Slide-ul 40: Extrageri CMS față de densitatea exactă" loading="lazy"></a>
+      <figcaption>Slide-ul 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cm-a">α</label><select id="cm-a"><option value="1.2">1,2</option><option value="1.5" selected>1,5</option><option value="1.8">1,8</option></select></div><div class="ctl"><label for="cm-b">β: <b id="cm-b-v"></b></label><input type="range" id="cm-b" min="-1" max="1" step="0.5" value="0.5"></div><button class="btn play" id="cm-play" type="button"></button></div><div class="charts "><div class="chart" id="cm-chart"></div></div><ul class="out" id="cm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru α = 1,5 și β = 0,5, cuantilele exacte de 1% și 99% sînt −5,40 și 9,76. Ce devin ele pentru β = −0,5?</div>
+  <details><summary>Răspuns</summary><p>Aproximativ în oglindă: −9,81 și 5,38 (în eșantionul simulat −9,99 și 5,21). În S1 cu δ = 0, legea cu −β este legea cu β reflectată față de 0, deci β schimbă coada mai lungă, nu doar poziția. Histograma urmează densitatea exactă pentru fiecare combinație de α și β.</p></details>
+</section><h2 class="sec" id="s-est">Estimare</h2>
+<section class="blk" id="mcculloch-map">
+  <h3>Corespondența McCulloch între ν_α și α</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch3_mcculloch_map_ro.jpg" alt="Slide-ul 44: Corespondența McCulloch între ν_α și α" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mm-y">Eșantionul începe în: <b id="mm-y-v"></b></label><input type="range" id="mm-y" min="2000" max="2020" step="1" value="2000"></div><button class="btn play" id="mm-play" type="button"></button></div><div class="charts "><div class="chart" id="mm-chart"></div></div><ul class="out" id="mm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mută începutul eșantionului de la 2000 la 2020. Eșantionul S&P 500 din 2020 are 1 687 de zile, iar criza din martie 2020 cîntărește mai mult în el. Scade α̂ McCulloch față de 1,438?</div>
+  <details><summary>Răspuns</summary><p>Nu, crește la 1,543: ν<sub>α</sub> scade de la 3,338 la 3,044. Estimatorul McCulloch folosește doar cuantilele de 5%, 25%, 50%, 75% și 95%, deci zilele extreme nu intră direct în calcul; contează cît de lată este banda 5–95% față de intervalul intercuartilic. DAX trece de la 1,455 la 1,590, BET de la 1,414 la 1,480, Bitcoin de la 1,322 la 1,400.</p></details>
+</section>
+<section class="blk" id="estimators-mc">
+  <h3>McCulloch și ML într-un studiu Monte Carlo</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch3_estimators_mc_ro.jpg" alt="Slide-ul 47: McCulloch și ML într-un studiu Monte Carlo" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-r">Numărul de eșantioane Monte Carlo folosite: <b id="mc-r-v"></b></label><input type="range" id="mc-r" min="10" max="200" step="10" value="200"></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ crește numărul de eșantioane Monte Carlo de la 10 la 200. Se schimbă abaterea standard a lui α̂ ML pentru n = 500 între 100 și 200 de eșantioane?</div>
+  <details><summary>Răspuns</summary><p>Da: de la 0,050 la 0,061. Precizia lui α̂ depinde de mărimea eșantionului n; numărul de eșantioane Monte Carlo determină doar cît de bine este măsurată această precizie. Cu 100 de eșantioane, abaterea standard estimată are încă o eroare relativă de cel puțin 1/√(2 × 100) = 7%. Pentru McCulloch, 0,110 la 100 și 0,107 la 200.</p></details>
+</section><h2 class="sec" id="s-real">Estimarea pe randamente reale</h2>
+<section class="blk" id="fit-density-1">
+  <h3>Densități estimate, pe scară logaritmică</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch3_fit_density_1_ro.jpg" alt="Slide-ul 51: Densități estimate, pe scară logaritmică" loading="lazy"></a>
+      <figcaption>Slide-ul 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="f1-k">Randamentul x, în abateri standard: <b id="f1-k-v"></b></label><input type="range" id="f1-k" min="-10" max="10" step="0.5" value="-5"></div><button class="btn play" id="f1-play" type="button"></button></div><div class="charts "><div class="chart" id="f1-chart"></div></div><ul class="out" id="f1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La x = −6 abateri standard (−7,28% pe zi pentru S&P 500), de cîte ori este densitatea distribuției Normale estimate mai mică decît densitatea Student-t?</div>
+  <details><summary>Răspuns</summary><p>De circa 120 000 de ori: 4,4 × 10<sup>−9</sup> față de 5,5 × 10<sup>−4</sup>. Densitatea stabilă este 1,0 × 10<sup>−3</sup>, aproape de două ori densitatea Student-t. Coada Normală scade ca e<sup>−x²/2</sup>, iar cozile celorlalte două ca o putere a lui x, deci raportul crește foarte repede cu |x|.</p></details>
+</section>
+<section class="blk" id="fit-density-2">
+  <h3>Densități estimate, pe scară logaritmică</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch3_fit_density_2_ro.jpg" alt="Slide-ul 52: Densități estimate, pe scară logaritmică" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="f2-k">Randamentul x, în abateri standard: <b id="f2-k-v"></b></label><input type="range" id="f2-k" min="-10" max="10" step="0.5" value="-5"></div><button class="btn play" id="f2-play" type="button"></button></div><div class="charts "><div class="chart" id="f2-chart"></div></div><ul class="out" id="f2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La x = −8 abateri standard pentru DAX (−11,26% pe zi), de cîte ori este densitatea stabilă mai mare decît densitatea Student-t?</div>
+  <details><summary>Răspuns</summary><p>De circa 2,9 ori: 3,7 × 10<sup>−4</sup> față de 1,3 × 10<sup>−4</sup>. Coada stabilă scade ca |x|<sup>−α̂−1</sup> cu α̂ = 1,61, coada Student-t ca |x|<sup>−ν̂−1</sup> cu ν̂ = 3,09; un exponent mai mic înseamnă o coadă mai groasă. Raportul este 1,6 la −5 abateri standard și 3,9 la −10.</p></details>
+</section>
+<section class="blk" id="qq-real-1">
+  <h3>QQ plots față de cele trei modele</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=54" target="_blank" rel="noopener"><img src="slides/sfm_ch3_qq_real_1_ro.jpg" alt="Slide-ul 53: QQ plots față de cele trei modele" loading="lazy"></a>
+      <figcaption>Slide-ul 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q1-p">Nivelul p al cuantilei (cercurile): <b id="q1-p-v"></b></label><input type="range" id="q1-p" min="0" max="5" step="1" value="2"></div><button class="btn play" id="q1-play" type="button"></button></div><div class="charts "><div class="chart" id="q1-chart"></div></div><ul class="out" id="q1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ coboară nivelul p de la 5% la 0,1%. La p = 0,1%, ce VaR dă legea stabilă estimată pentru S&P 500, față de 7,22% în date?</div>
+  <details><summary>Răspuns</summary><p>19,70%, de 2,7 ori cuantila empirică. Student-t dă 8,58%, distribuția Normală 3,72%. La p = 1%, valorile sînt 3,45% (date), 4,54% (stabilă), 3,46% (Student-t) și 2,80% (Normală): legea stabilă exagerează deja, dar diferența crește cu cît p este mai mic.</p></details>
+</section>
+<section class="blk" id="qq-real-2">
+  <h3>QQ plots față de cele trei modele</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch3_qq_real_2_ro.jpg" alt="Slide-ul 54: QQ plots față de cele trei modele" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q2-p">Nivelul p al cuantilei (cercurile): <b id="q2-p-v"></b></label><input type="range" id="q2-p" min="0" max="5" step="1" value="2"></div><button class="btn play" id="q2-play" type="button"></button></div><div class="charts "><div class="chart" id="q2-chart"></div></div><ul class="out" id="q2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La p = 1%, VaR Bitcoin din date este 10,51%. Care model estimat dă valoarea cea mai apropiată?</div>
+  <details><summary>Răspuns</summary><p>Student-t: 11,06%. Legea stabilă dă 14,26%, distribuția Normală 7,99%. La p = 0,1%, datele dau 18,05%, Student-t 31,95% și legea stabilă 74,16%: și Student-t exagerează coada îndepărtată a Bitcoin, dar mult mai puțin decît legea stabilă.</p></details>
+</section>
+<section class="blk" id="tails-real-1">
+  <h3>Coada stîngă pe axe log-log</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_real_1_ro.jpg" alt="Slide-ul 55: Coada stîngă pe axe log-log" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="t1-x">Pierderea x: <b id="t1-x-v"></b></label><input type="range" id="t1-x" min="2" max="25" step="0.5" value="10"></div><button class="btn play" id="t1-play" type="button"></button></div><div class="charts "><div class="chart" id="t1-chart"></div></div><ul class="out" id="t1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500 are 23 de zile cu pierderi peste 5% în 6 714 zile. Cîte astfel de zile așteaptă legea stabilă estimată?</div>
+  <details><summary>Răspuns</summary><p>57,3, de 2,5 ori mai multe. Student-t așteaptă 27,0, distribuția Normală 0,1. Pentru pierderi peste 10%: o zi observată, 4,5 conform Student-t și 19,1 conform legii stabile. Raportul dintre zilele așteptate de legea stabilă și cele observate crește odată cu pragul.</p></details>
+</section>
+<section class="blk" id="tails-real-2">
+  <h3>Coada stîngă pe axe log-log</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch3_tails_real_2_ro.jpg" alt="Slide-ul 56: Coada stîngă pe axe log-log" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="t2-x">Pierderea x: <b id="t2-x-v"></b></label><input type="range" id="t2-x" min="2" max="25" step="0.5" value="10"></div><button class="btn play" id="t2-play" type="button"></button></div><div class="charts "><div class="chart" id="t2-chart"></div></div><ul class="out" id="t2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Bitcoin are 4 zile cu pierderi peste 20% în 4 384 de zile. Cîte zile așteaptă Student-t și cîte legea stabilă?</div>
+  <details><summary>Răspuns</summary><p>12,3 conform Student-t și 26,9 conform legii stabile; distribuția Normală dă practic zero. Ambele modele cu cozi groase exagerează coada îndepărtată a Bitcoin, legea stabilă de peste 6 ori. Pentru pierderi peste 10%: 56 observate, 54,2 (Student-t), 73,9 (stabilă).</p></details>
+</section><h2 class="sec" id="s-crit">Critica: varianță finită sau infinită?</h2>
+<section class="blk" id="aggregation">
+  <h3>Testul 1: rămîne α la fel cînd randamentele se adună?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=62" target="_blank" rel="noopener"><img src="slides/sfm_ch3_aggregation_ro.jpg" alt="Slide-ul 61: Testul 1: rămîne α la fel cînd randamentele se adună?" loading="lazy"></a>
+      <figcaption>Slide-ul 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-e">Estimatorul</label><select id="ag-e"><option value="ml" selected>ML (verosimilitate maximă)</option><option value="mcc">McCulloch</option></select></div><div class="ctl"><label for="ag-c">Nivelul de încredere al intervalelor: <b id="ag-c-v"></b></label><input type="range" id="ag-c" min="0" max="4" step="1" value="2"></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, intervalele de 95% ale lui α̂ ML pentru S&P 500 la orizontul zilnic (1,54) și lunar (1,82) nu se suprapun. Se suprapun la nivelul de încredere 99%?</div>
+  <details><summary>Răspuns</summary><p>Nu. La 99% (±2,576 erori standard), intervalul zilnic este [1,486; 1,594], iar cel lunar [1,655; 1,984]. Nici la 99,9% (±3,29 erori standard) nu se suprapun, deși distanța dintre ele ajunge aproape la zero. Pentru DAX și BET intervalele se suprapun deja la 95%. Intervalele sînt asimptotice, iar cel lunar se bazează pe 321 de luni.</p></details>
+</section>
+<section class="blk" id="running-var-real">
+  <h3>Testul 2: se stabilizează varianța de selecție?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol3_distributii_alfa_stabile.pdf#page=64" target="_blank" rel="noopener"><img src="slides/sfm_ch3_running_var_real_ro.jpg" alt="Slide-ul 63: Testul 2: se stabilizează varianța de selecție?" loading="lazy"></a>
+      <figcaption>Slide-ul 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-a">Seria</label><select id="rr-a"><option value="bet">BET</option><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru Bitcoin (α̂ = 1,410), varianța cumulată a datelor la sfîrșitul eșantionului este 12,14. Unde ajung varianțele finale ale celor trei traiectorii simulate din legea stabilă estimată?</div>
+  <details><summary>Răspuns</summary><p>Mult mai sus: 252,1, 111,4 și 52,6, de 4 pînă la 21 de ori varianța datelor. La fel pentru S&P 500 (slide-ul): datele 1,47, traiectoriile 5,9, 5,4 și 15,6. O lege stabilă cu α̂ < 2 produce extreme pe care seriile reale nu le au, iar varianța lor de selecție nu se stabilizează.</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: BET, S&P 500 și DAX din ianuarie 2000, Bitcoin din septembrie 2014 (7 zile pe săptămînă), pînă la 18 septembrie 2026. Prețuri de închidere EODHD. Legile estimate sînt cele din curs: distribuția Normală, Student-t și legea stabilă estimată prin verosimilitate maximă în parametrizarea S0.</p>
+</main>
+</body>
+</html>
