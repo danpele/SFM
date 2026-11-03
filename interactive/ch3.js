@@ -214,6 +214,19 @@ const LOGY = (title, extra) => XT(title, Object.assign({ type: 'log', exponentfo
 const vl = (x, color, axes, dash) => ({ type: 'line', xref: axes ? axes.x : 'x', yref: (axes ? axes.y : 'y') + ' domain', x0: x, x1: x, y0: 0, y1: 1, line: { color, width: 1.3, dash: dash || 'dash' } });
 const diag = (lo, hi, axes, show) => ({ x: [lo, hi], y: [lo, hi], mode: 'lines', xaxis: axes ? axes.x : 'x', yaxis: axes ? axes.y : 'y', name: '45-degree line', showlegend: !!show, legendgroup: 'd',
   line: { color: C.navy, width: 1, dash: 'dash' }, hoverinfo: 'skip' });
+// the current value of the animated parameter, marked with data: points on the curves and shaded tail areas
+const rgba = (hex, a) => `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
+const dots = (x, y, color, name, axes, o) => Object.assign({ x, y, mode: 'markers', xaxis: axes ? axes.x : 'x', yaxis: axes ? axes.y : 'y', name, showlegend: false,
+  marker: { color, size: 10, line: { color: '#fff', width: 1.5 } } }, o || {});
+// area under f between a and b (a < b), closed at the level base; several pieces separated by null
+function areaXY(f, pieces, base, n) {
+  const X = [], Y = [];
+  pieces.forEach(([a, b], j) => { if (!(b > a)) return; if (X.length) { X.push(null); Y.push(null); }
+    const xs = linspace(a, b, n || 120); X.push(a, ...xs, b); Y.push(base, ...xs.map(f), base); });
+  return { x: X.length ? X : [null], y: Y.length ? Y : [null] };
+}
+const area = (f, pieces, base, color, name, o) => Object.assign(areaXY(f, pieces, base), { mode: 'lines', fill: 'toself', fillcolor: rgba(color, 0.22), line: { width: 0, color },
+  name, hoverinfo: 'skip' }, o || {});
 
 // ================================================================= 1. stability in a simulation
 function stabQQ() {
@@ -241,6 +254,9 @@ function gcltBlock() {
     hovertemplate: `n = ${n}<br>x %{x:.2f}<br>density %{y:.2e}<extra></extra>` }));
   tr.push({ x, y: x.map(v => G.pdf(v / gam) / gam), mode: 'lines', line: { color: DBLUE, width: 2 }, name: `stable limit S(1.5, 0, ${gam.toFixed(2)}, 0)`, hovertemplate: 'x %{x:.2f}<br>density %{y:.2e}<extra></extra>' });
   tr.push({ x, y: x.map(v => normPdf(v, 0, sd)), mode: 'lines', line: { color: RED, width: 1.4, dash: 'dash' }, name: 'Normal, same interquartile range', hovertemplate: 'x %{x:.2f}<br>density %{y:.2e}<extra></extra>' });
+  const fl = v => Math.max(G.pdf(v / gam) / gam, 1e-5);
+  tr.unshift(area(fl, k < 15 ? [[-15, -k], [k, 15]] : [], 1e-5, DBLUE, `P(|X| > ${k.toFixed(1)}) under the stable limit`));
+  tr.push(dots([-k, k], [fl(-k), fl(k)], DBLUE, 'stable limit at x = ±k', null, { showlegend: false, hovertemplate: 'x %{x:.1f}<br>density %{y:.2e}<extra></extra>' }));
   plot('gc-chart', tr, layout({ shapes: [vl(-k, C.navy), vl(k, C.navy)], xaxis: XT('Normalised sum S_n / n^(1/alpha)', { range: [-15, 15] }), yaxis: LOGY('Density (log scale)', { range: [-5, 0] }), legend: LEG(nw, -0.2) }));
   const i = Gd.ks.findIndex(v => Math.abs(v - k) < 1e-9);
   out('gc-out', [T.gc(nf(k, 1), Gd.ns.map(n => `n = ${n}: ${spct(Gd.tail[n][i])}`).join(', '), spct(2 * G.sf(k / gam)), spct(2 * normSf(k / sd)))]);
@@ -308,12 +324,16 @@ function s0s1() {
 const levySf = x => x > 0 ? 1 - erfc(Math.sqrt(1 / (2 * x))) : 1;
 function specialCases() {
   const k = +$('sc-x').value; label('sc-x').textContent = nf(k, 1);
-  const x = linspace(-5, 8, 1301), xl = x.filter(v => v > 0), nw = single('sc-chart');
+  const xm = Math.max(8, k + 1), x = linspace(-5, xm, Math.round((xm + 5) * 100) + 1), xl = x.filter(v => v > 0), nw = single('sc-chart');
+  const fN = v => normPdf(v, 0, 1), fC = v => 1 / (Math.PI * (1 + v * v)), fL = v => v > 0 ? Math.sqrt(1 / (2 * Math.PI)) * v ** -1.5 * Math.exp(-1 / (2 * v)) : 0;
   const tr = [
     { x, y: x.map(v => normPdf(v, 0, 1)), mode: 'lines', name: 'Normal: alpha = 2, gamma = 1/sqrt(2) (variance 1)', line: { color: DBLUE, width: 1.8 }, hovertemplate: 'x %{x:.2f}<br>density %{y:.4f}<extra></extra>' },
     { x, y: x.map(v => 1 / (Math.PI * (1 + v * v))), mode: 'lines', name: 'Cauchy: alpha = 1, beta = 0, gamma = 1', line: { color: ORANGE, width: 1.8 }, hovertemplate: 'x %{x:.2f}<br>density %{y:.4f}<extra></extra>' },
     { x: xl, y: xl.map(v => Math.sqrt(1 / (2 * Math.PI)) * v ** -1.5 * Math.exp(-1 / (2 * v))), mode: 'lines', name: 'Lévy: alpha = 1/2, beta = 1, gamma = 1 (S1)', line: { color: GREEN, width: 1.8 }, hovertemplate: 'x %{x:.2f}<br>density %{y:.4f}<extra></extra>' }];
-  plot('sc-chart', tr, layout({ shapes: k <= 8 ? [vl(k, C.navy)] : [], xaxis: XT('x', { range: [-5, 8] }), yaxis: XT('Density', { rangemode: 'tozero' }), legend: LEG(nw, -0.16) }));
+  [[fN, DBLUE, 'Normal'], [fC, ORANGE, 'Cauchy'], [fL, GREEN, 'Lévy']].forEach(([f, c, nm]) => tr.push(area(f, [[k, xm]], 0, c, `P(X > ${k.toFixed(1)}): ${nm}`, { showlegend: false })));
+  tr.push(dots([k, k, k], [fN(k), fC(k), fL(k)], C.navy, 'densities at x', null, { showlegend: false, marker: { color: [DBLUE, ORANGE, GREEN], size: 9, line: { color: '#fff', width: 1.5 } },
+    hovertemplate: 'x %{x:.1f}<br>density %{y:.2e}<extra></extra>' }));
+  plot('sc-chart', tr, layout({ shapes: [vl(k, C.navy)], xaxis: XT('x', { range: [-5, xm] }), yaxis: XT('Density', { rangemode: 'tozero' }), legend: LEG(nw, -0.16) }));
   out('sc-out', [T.sc(nf(k, 1), spct(normSf(k)), spct(0.5 - Math.atan(k) / Math.PI), spct(levySf(k)))]);
 }
 
@@ -405,6 +425,9 @@ function fitDensity(pf, names) {
     Pn.L.shapes = (Pn.L.shapes || []).concat(xk >= lo && xk <= hi ? [vl(xk, C.navy, a)] : []);
     ann.push(ptitle(a, `${SH[nm]}: alpha-hat = ${f.stable.alpha.toFixed(2)}`));
     const j = mid.findIndex((_, jj) => xk >= e[jj] && xk < e[jj + 1]), hd = j >= 0 ? h[j] : 0;
+    const okx = xk >= lo && xk <= hi, yv = MODELS.map(m => M[m].pdf(xk));
+    tr.push(dots(okx ? MODELS.map(() => xk) : [null], okx ? yv : [null], C.navy, `densities at x = ${nf(k, 1)} sd`, a, { legendgroup: 'k',
+      marker: { color: MODELS.map(m => MC[m]), size: 10, symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hovertemplate: 'return %{x:.2f}%<br>density %{y:.2e}<extra></extra>' }));
     items.push(T.fdItem(SH[nm], nf(xk, 2), hd > 0 ? sig(hd, 3) : '—', ...MODELS.map(m => sig(M[m].pdf(xk), 3))));
   });
   plot(pf + '-chart', tr, layout(Object.assign({ annotations: ann, legend: Object.assign(layout().legend, { y: Pn.stack ? -0.12 : -0.18 }) }, Pn.L)));
@@ -463,6 +486,10 @@ function tailsReal(pf, names) {
         hovertemplate: `${m}<br>loss %{x:.2f}%<br>P %{y:.2e}<extra></extra>` }); });
     tr.push({ x: [0.5, 4 * Q.L[0]], y: [1 / Q.n, 1 / Q.n], mode: 'lines', xaxis: a.x, yaxis: a.y, name: 'one day in the sample', showlegend: i === 0, legendgroup: 'o', line: { color: C.navy, width: 0.8, dash: 'dot' }, hoverinfo: 'skip' });
     if (k <= 4 * Q.L[0]) shapes.push(vl(k, C.navy, a));
+    let ob = 0; for (const v of Q.r) if (v < -k) ob++;
+    const pk = [ob / Q.n, ...MODELS.map(m => Q.M[m].cdf(-k))].map(v => (v > 1e-6 && k <= 4 * Q.L[0] ? v : null));
+    tr.push(dots([k, k, k, k], pk, C.navy, `P(loss > x) at x = ${nf(k, 1)}%`, a, { legendgroup: 'k',
+      marker: { color: [MC.Data, ...MODELS.map(m => MC[m])], size: 10, symbol: 'diamond', line: { color: '#fff', width: 1.5 } }, hovertemplate: 'loss %{x:.1f}%<br>P %{y:.2e}<extra></extra>' }));
     setAx(Pn, i, XT(Pn.stack && i === 0 ? '' : 'Loss x (%, log scale)', { type: 'log', range: [Math.log10(0.5), Math.log10(4 * Q.L[0])], tickvals: [0.5, 1, 2, 5, 10, 20, 50, 100, 200] }),
       LOGY(i === 0 || Pn.stack ? 'P(loss > x)' : '', { range: [-6, 0], dtick: 1 }));
     ann.push(ptitle(a, SH[nm]));
@@ -475,6 +502,15 @@ function tailsReal(pf, names) {
 
 // ================================================================= 18. aggregation: does alpha stay the same?
 const AG_L = [0.8, 0.9, 0.95, 0.99, 0.999], AG_H = ['daily', 'weekly', 'monthly'];
+// confidence intervals as vertical segments with caps: centre y, half-width e (0 = no interval); x numeric or categories (cap offset w)
+function segs(xs, y, e, color, name, group, w) {
+  const X = [], Y = [], num = typeof xs[0] === 'number', cw = w || 0.03;
+  xs.forEach((x, i) => { if (!(e[i] > 0)) return; const lo = y[i] - e[i], hi = y[i] + e[i];
+    X.push(x, x, null); Y.push(lo, hi, null);
+    if (num) { X.push(x - cw, x + cw, null, x - cw, x + cw, null); Y.push(lo, lo, null, hi, hi, null); } });
+  return { x: X.length ? X : [null], y: Y.length ? Y : [null], mode: 'lines', name: `${name}: interval`, legendgroup: group, showlegend: false, line: { color, width: 1.4 },
+    hovertemplate: `${name}<br>%{y:.3f}<extra></extra>` };
+}
 function aggregationBlock() {
   const est = $('ag-e').value, lv = AG_L[+$('ag-c').value], z = normPpf(0.5 + lv / 2);
   label('ag-c').textContent = (LANG === 'ro' ? String(100 * lv).replace('.', ',') : String(+(100 * lv).toFixed(1))) + '%';
@@ -482,8 +518,8 @@ function aggregationBlock() {
   D.assets.forEach((k, j) => {
     const A = D.agg[k], xs = [0, 1, 2].map(v => v + (j - 1.5) * 0.08);
     const a = AG_H.map(h => est === 'ml' ? A[h].alpha : A[h].alpha_mcc), e = AG_H.map(h => est === 'ml' && A[h].se != null ? z * A[h].se : 0);
-    tr.push({ x: xs, y: a, mode: 'lines+markers', name: SH[k], line: { color: COL[k], width: 1.6 }, marker: { color: COL[k], size: 7 },
-      error_y: est === 'ml' ? { type: 'data', array: e, visible: true, color: COL[k], thickness: 1.3, width: 4 } : { visible: false }, hovertemplate: `${SH[k]}<br>alpha-hat %{y:.3f}<extra></extra>` });
+    tr.push({ x: xs, y: a, mode: 'lines+markers', name: SH[k], legendgroup: k, line: { color: COL[k], width: 1.6 }, marker: { color: COL[k], size: 7 }, hovertemplate: `${SH[k]}<br>alpha-hat %{y:.3f}<extra></extra>` });
+    if (est === 'ml') tr.push(segs(xs, a, e, COL[k], SH[k], k));
     items.push(T.agItem(SH[k], a.map(v => nf(v, 2)).join(' → '), est === 'ml' && A.monthly.at_bound));
     if (est === 'ml' && !A.monthly.at_bound) {
       const ov = A.daily.alpha + z * A.daily.se >= A.monthly.alpha - z * A.monthly.se && A.monthly.alpha + z * A.monthly.se >= A.daily.alpha - z * A.daily.se;
@@ -541,6 +577,8 @@ function horizons() {
   const nw = single('hz-chart'), ns = logspace(0, Math.log10(250), 80), tr = HZ_A.map((a, i) => ({ x: ns, y: ns.map(v => v ** (1 / a)), mode: 'lines', name: `alpha = ${a}` + (a === 2 ? ' (square-root-of-time rule)' : ''),
     line: { color: [DBLUE, TEAL, GREEN, ORANGE][i], width: 1.6 }, hovertemplate: `alpha = ${a}<br>n = %{x:.0f}<br>n^(1/alpha) = %{y:.2f}<extra></extra>` }));
   tr.push({ x: ns, y: ns.map(v => v ** (1 / ah)), mode: 'lines', name: `${SH[k]}: fitted alpha = ${ah.toFixed(3)}`, line: { color: COL[k], width: 3, dash: 'dot' }, hovertemplate: 'n = %{x:.0f}<br>n^(1/alpha) = %{y:.2f}<extra></extra>' });
+  tr.push(dots(HZ_A.map(() => n).concat([n]), HZ_A.map(a => n ** (1 / a)).concat([n ** (1 / ah)]), C.navy, `scale at n = ${n}`, null,
+    { marker: { color: [DBLUE, TEAL, GREEN, ORANGE, COL[k]], size: 10, line: { color: '#fff', width: 1.5 } }, hovertemplate: 'n = %{x:.0f}<br>n^(1/alpha) = %{y:.2f}<extra></extra>' }));
   plot('hz-chart', tr, layout({ shapes: [vl(n, C.navy)], xaxis: XT('Horizon n (days, log scale)', { type: 'log', tickvals: [1, 2, 5, 10, 20, 50, 100, 250] }),
     yaxis: LOGY('Scale of the n-day sum / daily scale (log scale)', logTicks(nw)), legend: LEG(nw, -0.18) }));
   const gn = n ** (1 / ah) * g;
@@ -587,6 +625,9 @@ function tailTable() {
   const xs = linspace(0.5, 20, 196), nw = single('tt-chart'), tr = [];
   [[1.5, GREEN], [1.9, TEAL]].forEach(([v, col]) => { const H = grid(v, 0); tr.push({ x: xs, y: xs.map(z => 2 * H.sf(z) / (2 * normSf(z / Math.SQRT2))), mode: 'lines', name: `alpha = ${v}`, line: { color: col, width: 1.4 }, hovertemplate: `alpha = ${v}<br>k %{x:.1f}<br>ratio %{y:.3g}<extra></extra>` }); });
   tr.push({ x: xs, y: xs.map(z => P(z).s / P(z).n), mode: 'lines', name: `chosen alpha = ${a.toFixed(2)}`, line: { color: PURPLE, width: 3 }, hovertemplate: 'k %{x:.1f}<br>ratio %{y:.3g}<extra></extra>' });
+  const rk = v => 2 * grid(v, 0).sf(k) / (2 * normSf(k / Math.SQRT2));
+  tr.push(dots([k, k, k], [rk(1.5), rk(1.9), P(k).s / P(k).n], C.navy, `ratio at k = ${k.toFixed(1)}`, null, { marker: { color: [GREEN, TEAL, PURPLE], size: 10, line: { color: '#fff', width: 1.5 } },
+    hovertemplate: 'k %{x:.1f}<br>ratio %{y:.3g}<extra></extra>' }));
   plot('tt-chart', tr, layout({ shapes: [vl(k, C.navy)], xaxis: XT('Threshold k'), yaxis: LOGY('P(|X| > k), stable / Normal (log scale)', { dtick: 5 }), legend: LEG(nw, -0.18) }));
   const p = P(k);
   out('tt-out', [T.tt(nf(a, 2), nf(k, 1), tpct(100 * p.n) + '%', tpct(100 * p.s) + '%', rt(p.s / p.n), nf(c, 4), tpct(100 * p.pl) + '%', nf(100 * p.pl / p.s, 0) + '%')]);
@@ -650,8 +691,9 @@ function fitsTable() {
   }), T.fsNoteM);
   const nw = single('fs-chart'), xs = D.assets.map(a => SH[a]);
   plot('fs-chart', [
-    { x: xs, y: D.assets.map(a => D.fits[a].stable.alpha), mode: 'markers', name: `ML, ${lvl} interval`, marker: { color: DBLUE, size: 10 },
-      error_y: { type: 'data', array: D.assets.map(a => z * D.fits[a].stable.se_alpha), visible: true, color: DBLUE, thickness: 1.5, width: 6 }, hovertemplate: '%{x}<br>ML alpha-hat %{y:.3f}<extra></extra>' },
+    Object.assign(segs(xs, D.assets.map(a => D.fits[a].stable.alpha), D.assets.map(a => z * D.fits[a].stable.se_alpha), DBLUE, 'ML', 'ml'),
+      { mode: 'lines+markers', marker: { symbol: 'line-ew-open', size: 12, color: DBLUE, line: { width: 1.5, color: DBLUE } }, line: { color: DBLUE, width: 1.5 } }),
+    { x: xs, y: D.assets.map(a => D.fits[a].stable.alpha), mode: 'markers', name: `ML, ${lvl} interval`, legendgroup: 'ml', marker: { color: DBLUE, size: 10 }, hovertemplate: '%{x}<br>ML alpha-hat %{y:.3f}<extra></extra>' },
     { x: xs, y: D.assets.map(a => D.fits[a].mcculloch.alpha), mode: 'markers', name: 'McCulloch', marker: { color: ORANGE, size: 11, symbol: 'diamond' }, hovertemplate: '%{x}<br>McCulloch alpha-hat %{y:.3f}<extra></extra>' },
     { x: [null], y: [null], mode: 'lines', name: 'alpha = 2 (Normal)', line: { color: C.navy, dash: 'dash', width: 1 } }
   ], layout({ shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 2, y1: 2, line: { color: C.navy, width: 1, dash: 'dash' } }],
@@ -695,6 +737,9 @@ function varTable() {
     { x: ps.map(p => 100 * p), y: V.map(v => v.m[2] / v.m[0]), mode: 'lines', name: 'stable / Normal', line: { color: MC.Stable, width: 2 }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' },
     { x: ps.map(p => 100 * p), y: V.map(v => v.m[1] / v.m[0]), mode: 'lines', name: 'Student-t / Normal', line: { color: MC['Student-t'], width: 2 }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' },
     { x: pd.map(p => 100 * p), y: pd.map(p => varOf(k, p)).map(v => v.data / v.m[0]), mode: 'lines', name: 'data / Normal', line: { color: MC.Data, width: 2, dash: 'dot' }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' }
+    , ...[p1, p2].map((p, j) => { const v = varOf(k, p), ok = p >= 2 / n;
+      return dots([100 * p, 100 * p, 100 * p], [v.m[2] / v.m[0], v.m[1] / v.m[0], ok ? v.data / v.m[0] : null], C.navy, `ratios at p = ${plab(p)}`, null,
+        { marker: { color: [MC.Stable, MC['Student-t'], MC.Data], size: 10, symbol: j ? 'diamond' : 'circle', line: { color: '#fff', width: 1.5 } }, hovertemplate: 'p = %{x:.3g}%<br>ratio %{y:.2f}<extra></extra>' }); })
   ], layout({ shapes: [vl(100 * p1, C.navy), vl(100 * p2, C.navy, null, 'dot')], xaxis: XT(`${SH[k]}: level p (%, log scale)`, { type: 'log', autorange: 'reversed', tickvals: [10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02] }),
     yaxis: XT('VaR / VaR of the fitted Normal', { rangemode: 'tozero' }), legend: LEG(nw, -0.2) }));
   const nm = D.fits[k].normal, st = D.fits[k].stable, G = grid(st.alpha, st.beta), W = [p1, p2].map(p => ({ p, z: normPpf(p), zs: G.ppf(p), v: varOf(k, p) }));
@@ -741,6 +786,7 @@ function init() {
   on(['sq-n', 'sq-a'], stabQQ); PL('sq-play', 'sq-a', range(1, 2, 0.05), 350);
   on(['gc-k'], gcltBlock); PL('gc-play', 'gc-k', range(2, 15, 0.5), 400);
   on(['da-a'], densityAlpha); PL('da-play', 'da-a', range(2, 0.6, -0.05), 300);
+  $('db-b').addEventListener('input', e => { if (!e.isTrusted) $('db-g').value = 0.25 + 0.25 * Math.round((+$('db-b').value + 1) / 2 * 11); });   // ▶ moves gamma with beta
   on(['db-b', 'db-g'], densityBeta); PL('db-play', 'db-b', range(-1, 1, 0.1), 350);
   on(['ss-a'], s0s1); PL('ss-play', 'ss-a', range(0.8, 1.2, 0.01), 250);
   on(['sc-x'], specialCases); PL('sc-play', 'sc-x', range(1, 20, 0.5), 250);
