@@ -473,10 +473,277 @@ function oosBlock() {
   out('os-out', [T.os(LAB[k], lvl(p), fint(O.n_est), fint(L.length), nf(O[lv].expected, 1)), ...ex]);
 }
 
+// ================================================================= tables and worked examples (blocks of the frames without a chart)
+function table(id, head, rows, foot) {    // head: array of cells or an HTML string of header rows; a cell is a string or { v, c, s }
+  const cell = (x, tag) => { const o = typeof x === 'object' && x !== null ? x : { v: x }; return `<${tag}${o.c ? ` class="${o.c}"` : ''}${o.s ? ` colspan="${o.s}"` : ''}>${o.v}</${tag}>`; };
+  const H = typeof head === 'string' ? head : `<tr>${head.map(h => cell(h, 'th')).join('')}</tr>`;
+  $(id).innerHTML = `<table class="xt"><thead>${H}</thead><tbody>` +
+    rows.map(r => `<tr${r.cls ? ` class="${r.cls}"` : ''}>${r.map(x => cell(x, 'td')).join('')}</tr>`).join('') + '</tbody></table>' + (foot ? `<p class="tnote">${foot}</p>` : '');
+}
+const steps = (id, items) => { $(id).innerHTML = items.map(s => `<li>${s}</li>`).join(''); };
+const row = (cells, cls) => Object.assign(cells, { cls });
+const SC = LANG === 'ro' ? ';' : ',';
+const ci = (a, b, d) => `[${nf(a, d)}${SC} ${nf(b, d)}]`;
+const ppy = k => (k === 'btc' ? 365 : 252);
+const p10 = e => `10<sup>${e}</sup>`;
+const ALL8 = () => D.assets.concat(D.stocks);
+const lbl = k => LAB[k];
+function gpdSe(F) {                 // standard errors from the numerical Hessian of the negative log-likelihood (as num_hessian of the chapter)
+  const f = (a, b) => gpdNll(F.y, a, b), h = 1e-4, x = F.xi, b = F.beta;
+  const H11 = (f(x + 2 * h, b) - 2 * f(x, b) + f(x - 2 * h, b)) / (4 * h * h), H22 = (f(x, b + 2 * h) - 2 * f(x, b) + f(x, b - 2 * h)) / (4 * h * h);
+  const H12 = (f(x + h, b + h) - f(x + h, b - h) - f(x - h, b + h) + f(x - h, b - h)) / (4 * h * h), det = H11 * H22 - H12 * H12;
+  return { xi: Math.sqrt(H22 / det), beta: Math.sqrt(H11 / det) };
+}
+function kupiec(x, n, p) {          // Kupiec (1995) unconditional coverage: LR statistic and chi-square(1) p-value
+  const xl = (a, b) => (a === 0 ? 0 : a * Math.log(b));
+  const lr = -2 * (xl(n - x, 1 - p) + xl(x, p)) + 2 * (xl(n - x, 1 - x / n) + xl(x, x / n));
+  return { lr: Math.max(lr, 0), pv: erfc(Math.sqrt(Math.max(lr, 0) / 2)) };
+}
+function kupiecRange(n, p) { let lo = null, hi = null; for (let x = 0; x <= n; x++) { if (kupiec(x, n, p).lr <= 3.841459) { if (lo === null) lo = x; hi = x; } else if (lo !== null) break; } return [lo, hi]; }
+const PV = v => (v < 0.001 ? '&lt; 0' + (LANG === 'ro' ? ',' : '.') + '001' : nf(v, 3));
+const KX = { EVT: 'EVT', Historical: 'Historical', Normal: 'Normal' };
+
+// ----------------------------------------------------------------- X1. the worst days under the Normal law (frame 10)
+function crashStats(k, kk) {
+  const S = ser(k), mu = -S.mean, sd = S.sd, rmin = -S.desc[0], z = (rmin - mu) / sd, lp = lnNormSf(-z), days = ppy(k);
+  let nb = 0; for (const v of S.x) if (-v < mu - kk * sd) nb++;
+  const i = S.x.indexOf(S.desc[0]);
+  return { S, mu, sd, rmin, z, lp, days, ly: -lp / Math.LN10 - Math.log10(days), nb, ex: S.n * Phi(-kk), date: S.dates[i] };
+}
+function crashTable() {
+  const k = $('ct-a').value, kk = +$('ct-k').value; label('ct-k').textContent = nf(kk, 1) + 'σ';
+  const R = D.assets.map(a => [a, crashStats(a, kk)]);
+  table('ct-tab', [T.h.series, T.h.worst, T.h.lossPct, 'z', T.h.normOnce, T.h.below(nf(kk, 1)), T.h.expected],
+    R.map(([a, o]) => row([lbl(a), T.date(o.date), nf(o.rmin, 1), nf(o.z, 1), p10(Math.round(o.ly)), o.nb, o.ex < 0.1 ? sig(o.ex, 2) : nf(o.ex, 2)], a === k ? 'sel' : '')), T.ctNote);
+  const o = R.find(z => z[0] === k)[1], l10p = o.lp / Math.LN10, e = Math.floor(l10p), m = 10 ** (l10p - e);
+  steps('ct-we', [T.ctw1(lbl(k), fint(o.S.n), nf(o.mu, 4), nf(o.sd, 4)), T.ctw2(nf(o.rmin, 2), nf(o.mu, 4), nf(o.sd, 4), nf(o.z, 2)),
+    T.ctw3(nf(o.z, 2), nf(m, 2), -e), T.ctw4(o.days, nf(o.ly, 2), Math.round(o.ly)), T.ctw5(nf(kk, 1), sig(Phi(-kk), 3), o.days, big(1 / (Phi(-kk) * o.days)))]);
+  out('ct-out', [T.ct(lbl(k), nf(kk, 1), o.nb, o.ex < 0.1 ? sig(o.ex, 2) : nf(o.ex, 2), big(o.nb / o.ex))]);
+}
+const big = x => (Math.abs(x) >= 1000 ? fint(x) : nf(x, x >= 100 ? 0 : 1));
+
+// ----------------------------------------------------------------- X2. Hill on the largest real losses (frame 21)
+const HS_K = [5, 10, 20, 50, 100, 0.025, 0.05, 0.1];
+const hsK = (S, v) => (v < 1 ? Math.trunc(v * S.n) : v);
+function hillSix() {
+  const k = $('hs-a').value, v = HS_K[+$('hs-k').value], S = ser(k), kk = hsK(S, v);
+  label('hs-k').textContent = v < 1 ? `${fint(kk)} (${lvl(v)} ${T.h.ofN})` : String(kk);
+  const ord = Array.from(S.x.keys()).sort((a, b) => S.x[b] - S.x[a]), th = S.desc[kk], m = Math.min(kk, 5);
+  const rows = []; for (let i = 0; i < m; i++) rows.push(row([String(i + 1), T.date(S.dates[ord[i]]), nf(S.desc[i], 2), nf(Math.log(S.desc[i] / th), 3)]));
+  if (kk > m) rows.push(row(['…', '', '', '']));
+  rows.push(row([`k + 1 = ${fint(kk + 1)}`, T.date(S.dates[ord[kk]]), nf(th, 2), T.h.thrRow], 'sel'));
+  table('hs-tab', ['i', T.h.day, 'X<sub>(i)</sub> (%)', 'ln(X<sub>(i)</sub>/X<sub>(k+1)</sub>)'], rows, T.hsNote);
+  const sum = S.cl[kk] - kk * Math.log(th), xi = sum / kk, al = 1 / xi, terms = [];
+  for (let i = 0; i < m; i++) terms.push(nf(Math.log(S.desc[i] / th), 3));
+  steps('hs-we', [T.hsw1(lbl(k), fint(S.n), fint(kk), nf(th, 2)), T.hsw2(terms.join(' + ') + (kk > m ? ' + …' : ''), nf(sum, 3)),
+    T.hsw3(nf(sum, 3), fint(kk), nf(xi, 4)), T.hsw4(nf(xi, 4), nf(al, 2)), T.hsw5(nf(al, 2), fint(kk), nf(Math.sqrt(kk), 2), nf(al / Math.sqrt(kk), 2))]);
+  out('hs-out', [T.hs(lbl(k), fint(kk), nf(xi, 3), nf(al, 2), nf(al / Math.sqrt(kk), 2), nf(hillK(S, Math.trunc(D.hill_frac * S.n)), 2))]);
+}
+
+// ----------------------------------------------------------------- X3/X4. Hill estimates for the four markets and the BVB stocks (frames 25, 27)
+const HF = D.hillse.fracs;
+function hillRow(k, fr) {
+  const S = ser(k), kk = Math.trunc(fr * S.n), a = hillK(S, kk), se = a / Math.sqrt(kk), sb = D.hillse.se[k][fr.toFixed(4)];
+  const g = Float64Array.from(S.asc, v => -v), cl = [0];          // gains r = -L, in descending order
+  for (let i = 0; i < kk; i++) cl.push(cl[i] + Math.log(g[i]));
+  return { S, kk, a, se, sb, lo: a * (1 - 1.96 / Math.sqrt(kk)), hi: a * (1 + 1.96 / Math.sqrt(kk)), a1: hillK(S, Math.trunc(0.01 * S.n)), a5: hillK(S, Math.trunc(0.05 * S.n)),
+    gain: 1 / (cl[kk] / kk - Math.log(g[kk])) };
+}
+function hillBars(id, names, R, fr) {
+  const nw = single(id, 330), x = names.map((_, i) => i), tr = [
+    { x: x.map(v => v - 0.12), y: R.map(o => o.a), mode: 'markers', marker: { size: 9, color: names.map(k => COL[k]) }, error_y: { type: 'data', symmetric: false, array: R.map(o => o.hi - o.a), arrayminus: R.map(o => o.a - o.lo), color: DARK, thickness: 1.4, width: 5 },
+      name: '95% interval, i.i.d. SE', customdata: names.map(lbl), hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra>i.i.d.</extra>' },
+    { x: x.map(v => v + 0.12), y: R.map(o => o.a), mode: 'markers', marker: { size: 9, symbol: 'diamond', color: names.map(k => COL[k]) }, error_y: { type: 'data', array: R.map(o => 1.96 * o.sb), color: ORANGE, thickness: 1.4, width: 5 },
+      name: '95% interval, block-bootstrap SE', customdata: names.map(lbl), hovertemplate: '%{customdata}<br>alpha = %{y:.2f}<extra>block bootstrap</extra>' }];
+  const ax = { x: 'x', y: 'y' };
+  plot(id, tr, layout({ shapes: [hln(2, DARK, ax, 'dash'), hln(4, DARK, ax, 'dashdot')], xaxis: AX(`Hill estimate at k = ${lvlEn(fr)} of n`, { tickvals: x, ticktext: names.map(k => LAB[k].replace(/ \(.*\)/, '')), range: [-0.5, names.length - 0.5] }),
+    yaxis: AX('alpha-hat (dashed: 2, dash-dot: 4)'), legend: LEG(nw, -0.22) }));
+}
+function hillTab(pfx, names, cols) {
+  const fr = HF[+$(pfx + '-k').value], k = $(pfx + '-a').value; label(pfx + '-k').textContent = lvl(fr);
+  const R = names.map(a => hillRow(a, fr));
+  const head = cols === 4 ? [T.h.series, 'n', 'k', 'α̂', T.h.ci95, T.h.seIid, T.h.seBlock, 'k = 1% / 5%', T.h.gains] : [T.h.series, 'n', 'k', 'α̂', T.h.ci95, T.h.seBlock, T.h.gains];
+  table(pfx + '-tab', head, R.map((o, i) => { const a = names[i], c = [lbl(a), fint(o.S.n), fint(o.kk), nf(o.a, 2), ci(o.lo, o.hi, 2)];
+    if (cols === 4) c.push(nf(o.se, 2)); c.push(nf(o.sb, 2)); if (cols === 4) c.push(`${nf(o.a1, 2)} / ${nf(o.a5, 2)}`); c.push(nf(o.gain, 2)); return row(c, a === k ? 'sel' : ''); }), T.htNote(lvl(fr)));
+  hillBars(pfx + '-chart', names, R, fr);
+  const o = R[names.indexOf(k)];
+  out(pfx + '-out', [T.ht(lbl(k), lvl(fr), fint(o.kk), nf(o.a, 2), nf(o.se, 2), nf(o.sb, 2), nf(o.sb / o.se, 2), nf(o.gain, 2))]);
+}
+const hillTable = () => hillTab('ht', D.assets, 4);
+const bvbTable = () => hillTab('bt', D.stocks, 3);
+
+// ----------------------------------------------------------------- X5. mean excess at a threshold and its slope (frame 31)
+function meTable() {
+  const q = +$('mt-q').value / 100, k = $('mt-a').value; label('mt-q').textContent = nf(100 * q, 0) + '%';
+  const R = D.assets.map(a => {
+    const S = ser(a), F = pot(a, q), us = linspace(0.5, 0.995, 120).map(p => quantile(S.asc, p)).filter(u => u >= F.u - 1e-12), e = us.map(u => meanExcess(S, u));
+    const mx = meanA(us), my = meanA(e); let sxy = 0, sxx = 0; us.forEach((u, i) => { sxy += (u - mx) * (e[i] - my); sxx += (u - mx) ** 2; });
+    const b = sxy / sxx, g = F.xi / (1 - F.xi);
+    return { a, F, e: meanExcess(S, F.u), b, g, np: us.length };
+  });
+  table('mt-tab', [T.h.series, 'u (%)', 'N<sub>u</sub>', 'e(u) (%)', T.h.meRatio, T.h.slopeEmp, T.h.slopeGpd, T.h.alphaSlope],
+    R.map(o => row([lbl(o.a), nf(o.F.u, 2), fint(o.F.nu), nf(o.e, 2), nf(o.e / o.F.u, 2), nf(o.b, 3), nf(o.g, 3), o.b > 0 ? nf(1 + 1 / o.b, 1) : '—'], o.a === k ? 'sel' : '')), T.mtNote);
+  const o = R.find(z => z.a === k);
+  out('mt-out', [T.mt(lbl(k), nf(100 * q, 0), nf(o.F.u, 2), nf(o.e, 2), nf(o.b, 3), nf(o.F.xi, 3), nf(o.g, 3))]);
+}
+
+// ----------------------------------------------------------------- X6. GEV fits by block size (frame 38)
+const BS = ['week', 'month', 'quarter', 'year'];
+function gevTable() {
+  const b = BS[+$('gx-b').value], k = $('gx-a').value; label('gx-b').textContent = T.h[b];
+  table('gx-tab', [T.h.series, T.h.blocks, 'ξ̂', T.h.ci95, 'μ̂ (%)', 'σ̂ (%)', '1/ξ̂'],
+    D.assets.map(a => { const g = D.gevb[a][b]; return row([lbl(a), fint(g.n), nf(g.xi, 2), ci(g.xi - 1.96 * g.se_xi, g.xi + 1.96 * g.se_xi, 2), nf(g.mu, 2), nf(g.sigma, 2), g.xi > 0 ? nf(1 / g.xi, 1) : '—'], a === k ? 'sel' : ''); }),
+    T.gxNote(T.h[b], D.gevb.sp500[b].min_days));
+  const nw = single('gx-chart', 330), tr = BS.map((bb, j) => ({ x: D.assets.map((_, i) => i + (j - 1.5) * 0.17), y: D.assets.map(a => D.gevb[a][bb].xi), mode: 'markers',
+    marker: { size: bb === b ? 10 : 7, color: [BLUE, RED, GREEN, PURPLE][j], opacity: bb === b ? 1 : 0.35 },
+    error_y: { type: 'data', array: D.assets.map(a => 1.96 * D.gevb[a][bb].se_xi), color: [BLUE, RED, GREEN, PURPLE][j], thickness: bb === b ? 1.8 : 1, width: 4 },
+    name: `${bb[0].toUpperCase() + bb.slice(1)}ly maxima` + (bb === 'month' ? ' (slide)' : ''), customdata: D.assets.map(a => `${LAB[a]}, ${D.gevb[a][bb].n} blocks`),
+    hovertemplate: '%{customdata}<br>xi = %{y:.3f}<extra></extra>' }));
+  plot('gx-chart', tr, layout({ shapes: [hln(0, DARK, { x: 'x', y: 'y' }, 'dash')], xaxis: AX('', { tickvals: [0, 1, 2, 3], ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }),
+    yaxis: AX('xi-hat with 95% interval'), legend: LEG(nw, -0.15) }));
+  const g = D.gevb[k][b], m = D.gevb[k].month;
+  out('gx-out', [T.gx(lbl(k), T.h[b], fint(g.n), nf(g.xi, 3), ci(g.xi - 1.96 * g.se_xi, g.xi + 1.96 * g.se_xi, 2), nf(m.xi, 3), b === 'month')]);
+}
+
+// ----------------------------------------------------------------- X7. a return level, step by step (frame 40)
+const RT = [1, 2, 5, 10, 20, 50, 100];
+const yrsL = t => (LANG === 'ro' ? (t === 1 ? '1 an' : t >= 20 ? `${t} de ani` : `${t} ani`) : (t === 1 ? '1 year' : `${t} years`));
+function rlExample() {
+  const k = $('rx-a').value, Ty = RT[+$('rx-t').value], G = NUM.gev[k], m = 12 * Ty; label('rx-t').textContent = yrsL(Ty);
+  const a = -Math.log(1 - 1 / m), b = Math.pow(a, -G.xi), z = G.mu + G.sigma / G.xi * (b - 1), mm = D.mmax[k].m, na = mm.filter(v => v > z).length;
+  steps('rx-we', [T.rxw1(lbl(k), nf(G.xi, 3), nf(G.mu, 3), nf(G.sigma, 3)), T.rxw2(Ty, m), T.rxw3(m, sig(a, 3), nf(G.xi, 3), nf(b, 3)),
+    T.rxw4(nf(G.mu, 3), nf(G.sigma, 3), nf(G.xi, 3), nf(b, 3), nf(z, 2), nf(G.sigma / G.xi, 3)), T.rxw5(nf(z, 2), na, fint(mm.length), nf(mm.length / 12, 1), nf(mm.length / m, 2))]);
+  out('rx-out', [T.rx(lbl(k), yrsL(Ty), nf(z, 2), na, nf(mm.length / m, 2))]);
+}
+
+// ----------------------------------------------------------------- X8. return levels by T with bootstrap intervals (frame 42)
+function rlBoot(k, Ty) { const v = D.gevboot[k].map(([x, mu, s]) => gevPpf(1 - 1 / (12 * Ty), x, mu, s)).sort((a, b) => a - b); return [quantile(v, 0.025), quantile(v, 0.975)]; }
+function rlTable() {
+  const Ty = RT[+$('rt-t').value], k = $('rt-a').value; label('rt-t').textContent = yrsL(Ty);
+  const z = (a, t) => { const G = NUM.gev[a]; return gevPpf(1 - 1 / (12 * t), G.xi, G.mu, G.sigma); };
+  table('rt-tab', [T.h.series, yrsL(1), `<b>${yrsL(Ty)}</b>`, T.h.ciBoot, yrsL(50), T.h.largest, T.h.yearsData],
+    D.assets.map(a => { const c = rlBoot(a, Ty), G = NUM.gev[a]; return row([lbl(a), nf(z(a, 1), 1), nf(z(a, Ty), 1), ci(c[0], c[1], 1), nf(z(a, 50), 1), nf(G.max, 1), nf(G.years, 1)], a === k ? 'sel' : ''); }), T.rtNote);
+  const TT = logspace(0, 2, 60), band = TT.map(t => rlBoot(k, t)), G = NUM.gev[k], nw = single('rt-chart', 360), ax = { x: 'x', y: 'y' };
+  plot('rt-chart', [
+    { x: TT, y: band.map(v => v[0]), mode: 'lines', line: { width: 0, color: COL[k] }, showlegend: false, hoverinfo: 'skip' },
+    { x: TT, y: band.map(v => v[1]), mode: 'lines', line: { width: 0, color: COL[k] }, fill: 'tonexty', fillcolor: hexA(COL[k], 0.18), name: '95% bootstrap interval (200 resamples)', hoverinfo: 'skip' },
+    { x: TT, y: TT.map(t => z(k, t)), mode: 'lines', line: { color: COL[k], width: 2 }, name: `${LAB[k]}: GEV return level`, hovertemplate: 'T = %{x:.1f} years<br>%{y:.2f}%<extra></extra>' },
+    { x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dash' }, name: `Largest observed loss: ${G.max.toFixed(1)}%` }
+  ], layout({ shapes: [vln(Ty, DARK, ax, 'dot'), hln(G.max, DARK, ax, 'dash', 1.2)],
+    xaxis: AX('Return period T (years, log scale)', { type: 'log', tickvals: [1, 2, 5, 10, 20, 50, 100], ticktext: ['1', '2', '5', '10', '20', '50', '100'] }),
+    yaxis: AX('Daily loss (%)', { rangemode: 'tozero' }), legend: LEG(nw, -0.2) }));
+  const c = rlBoot(k, Ty), zz = z(k, Ty);
+  out('rt-out', [T.rt(lbl(k), yrsL(Ty), nf(zz, 1), ci(c[0], c[1], 1), nf(c[1] / c[0], 2), nf(zz / G.max, 2))]);
+}
+
+// ----------------------------------------------------------------- X9. GPD fits above a threshold (frame 48)
+function gpdTable() {
+  const q = +$('gb-q').value / 100, k = $('gb-a').value; label('gb-q').textContent = nf(100 * q, 0) + '%';
+  const R = D.assets.map(a => { const F = pot(a, q); return { a, F, se: gpdSe(F), h: NUM.hill[a].alpha }; });
+  table('gb-tab', [T.h.series, 'n', 'u (%)', 'N<sub>u</sub>', 'ξ̂', 'SE', 'β̂', '1/ξ̂', T.h.hill25],
+    R.map(o => row([lbl(o.a), fint(o.F.n), nf(o.F.u, 2), fint(o.F.nu), nf(o.F.xi, 2), nf(o.se.xi, 2), nf(o.F.beta, 3), o.F.xi > 0 ? nf(1 / o.F.xi, 1) : '—', nf(o.h, 2)], o.a === k ? 'sel' : '')), T.gbNote);
+  const o = R.find(z => z.a === k), F = o.F, lo = F.xi - 1.96 * o.se.xi, hi = F.xi + 1.96 * o.se.xi;
+  steps('gb-we', [T.gbw1(lbl(k), nf(100 * q, 0), nf(F.u, 3), fint(F.nu), nf(F.xi, 4), nf(o.se.xi, 4)),
+    T.gbw2(nf(F.xi, 4), F.xi > 0 ? nf(1 / F.xi, 2) : null, nf(F.xi, 2), nf(1 / +F.xi.toFixed(2), 2)),
+    T.gbw3(ci(lo, hi, 3), lo > 0 ? nf(1 / hi, 2) : null, lo > 0 ? nf(1 / lo, 2) : null),
+    T.gbw4(nf(o.h, 2), nf(1 / o.h, 3))]);
+  out('gb-out', [T.gb(lbl(k), nf(100 * q, 0), nf(F.xi, 3), F.xi > 0 ? nf(1 / F.xi, 1) : '∞', nf(o.h, 2))]);
+}
+
+// ----------------------------------------------------------------- X10. back to the crashes: Normal and EVT waiting times (frame 52)
+function crashEvt() {
+  const q = +$('ce-q').value / 100; label('ce-q').textContent = nf(100 * q, 0) + '%';
+  const rows = D.assets.map(a => { const o = crashStats(a, 4), F = pot(a, q), p = potTail(F, -o.rmin); return { a, o, F, y: 1 / (p * o.days) }; });
+  const c = NUM.c87, F = pot('sp500', q), p87 = potTail(F, -c.logret), y87 = 1 / (p87 * 252), ly87 = -c.log10p - Math.log10(252);
+  const fy = y => (y >= 1e6 ? sig(y, 2) : fint(y));
+  table('ce-tab', `<tr><th></th><th></th><th></th><th colspan="2">${T.h.onceIn}</th></tr><tr><th></th><th>${T.h.day}</th><th>${T.h.lossPct}</th><th>${T.h.normLaw}</th><th>EVT</th></tr>`,
+    rows.map(r => row([lbl(r.a), T.date(r.o.date), nf(r.o.rmin, 1), p10(Math.round(r.o.ly)), fy(r.y)])).concat([row([T.h.bm, T.date('1987-10-19'), nf(c.logret, 1), p10(Math.round(ly87)), fy(y87)], 'sel')]), T.ceNote(nf(100 * q, 0)));
+  const s = rows[0];
+  out('ce-out', [T.ce(nf(100 * q, 0), fy(s.y), fy(rows[2].y), fy(y87), nf(F.xi, 3))]);
+}
+
+// ----------------------------------------------------------------- X11. EVT VaR and ES, step by step (frame 55)
+const VP = [0.05, 0.025, 0.01, 0.005, 0.001, 0.0005, 0.0001];
+function varExample() {
+  const k = $('ve-a').value, p = +$('ve-p').value, pe = +$('ve-e').value, F = pot(k, D.pot_q), bx = F.beta / F.xi;
+  const r = F.n * p / F.nu, f = Math.pow(r, -F.xi), v = F.u + bx * (f - 1), re = F.n * pe / F.nu, fe = Math.pow(re, -F.xi), ve = F.u + bx * (fe - 1), es = (ve + F.beta - F.xi * F.u) / (1 - F.xi);
+  steps('ve-we', [T.vew1(lbl(k), fint(F.n), nf(F.u, 3), fint(F.nu), nf(100 * F.nu / F.n, 1), nf(F.xi, 3), nf(F.beta, 3), nf(bx, 3)),
+    T.vew2(lvl(p), nf(r, 3), nf(f, 3), nf(F.u, 3), nf(bx, 3), nf(v, 2)),
+    T.vew3(lvl(pe), nf(re, 3), nf(fe, 3), nf(F.u, 3), nf(bx, 3), nf(ve, 2)),
+    T.vew4(lvl(pe), nf(ve, 2), nf(F.beta, 3), nf(F.xi, 3), nf(F.u, 3), nf(es, 2), nf(es / ve, 2), nf(1 / (1 - F.xi), 2))]);
+  out('ve-out', [T.ve(lbl(k), lvl(p), nf(v, 2), lvl(pe), nf(es, 2))]);
+}
+
+// ----------------------------------------------------------------- X12. VaR and ES by three methods (frame 56)
+function varEs() {
+  const p = +$('vt-p').value, pe = +$('vt-e').value, k = $('vt-a').value;
+  const head = `<tr><th></th><th colspan="3">VaR ${lvl(p)} (%)</th><th colspan="3">ES ${lvl(pe)} (%)</th></tr><tr><th></th><th>EVT</th><th>${T.h.hist}</th><th>${T.h.norm}</th><th>EVT</th><th>${T.h.hist}</th><th>${T.h.norm}</th></tr>`;
+  const R = D.assets.map(a => { const S = ser(a), F = pot(a, D.pot_q); return { a, v: [potVar(F, p), histVar(S, p), normVar(S, p)], e: [potEs(F, pe), histEs(S, pe), normEs(S, pe)] }; });
+  table('vt-tab', head, R.map(o => row([lbl(o.a), ...o.v.map(x => nf(x, 2)), ...o.e.map(x => nf(x, 2))], o.a === k ? 'sel' : '')), T.vtNote);
+  const o = R.find(z => z.a === k), dmax = Math.max(...R.map(z => Math.abs(z.v[0] - z.v[1])), ...R.map(z => Math.abs(z.e[0] - z.e[1])));
+  const dv = 100 * (o.v[0] / o.v[2] - 1), de = 100 * (o.e[0] / o.e[2] - 1);
+  out('vt-out', [T.vt(lbl(k), lvl(p), nf(Math.abs(dv), 0), dv >= 0, lvl(pe), nf(Math.abs(de), 0), de >= 0, nf(dmax, 2))]);
+}
+
+// ----------------------------------------------------------------- X13. far in the tail (frame 57)
+function varFar() {
+  const p = +$('vf-p').value, k = $('vf-a').value;
+  const R = ALL8().map(a => { const S = ser(a), F = pot(a, D.pot_q), kk = Math.trunc(D.hill_frac * S.n); return { a, S, F, kk, v: [potVar(F, p), hillQuantile(S, kk, p), histVar(S, p), normVar(S, p)] }; });
+  table('vf-tab', [T.h.series, 'EVT (POT)', 'Hill', T.h.hist, T.h.norm, T.h.largestL, T.h.beyond], R.map(o => row([lbl(o.a), ...o.v.map(x => nf(x, 2)), nf(o.S.desc[0], 1), nf(o.S.n * p, 1)], o.a === k ? 'sel' : '')), T.vfNote(lvl(p)));
+  const o = R.find(z => z.a === k), ps = logspace(Math.log10(0.025), -4, 60), nw = single('vf-chart', 360), ax = { x: 'x', y: 'y' };
+  const meth = [['EVT', p2 => potVar(o.F, p2), 'solid'], ['Hill', p2 => hillQuantile(o.S, o.kk, p2), 'dashdot'], ['Historical', p2 => histVar(o.S, p2), 'dot'], ['Normal', p2 => normVar(o.S, p2), 'dash']];
+  const tr = meth.map(([m, f, dash]) => ({ x: ps.map(v => 100 * v), y: ps.map(f), mode: 'lines', line: { color: MC[m], width: 1.8, dash }, name: m, hovertemplate: `${m}<br>p = %{x:.3g}%<br>VaR %{y:.2f}%<extra></extra>` }));
+  tr.push({ x: meth.map(() => 100 * p), y: o.v, mode: 'markers', marker: { size: 8, color: meth.map(m => MC[m[0]]) }, showlegend: false, hovertemplate: 'VaR %{y:.2f}%<extra></extra>' });
+  tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1.2, dash: 'dash' }, name: `Largest loss of ${LAB[k]}: ${o.S.desc[0].toFixed(1)}%` });
+  plot('vf-chart', tr, layout({ shapes: [vln(100 * p, DARK, ax, 'dot'), hln(o.S.desc[0], DARK, ax, 'dash', 1.2)],
+    xaxis: AX(`Level p (%, log scale): ${LAB[k]}`, { type: 'log', autorange: 'reversed', tickvals: [2.5, 1, 0.5, 0.1, 0.05, 0.01], ticktext: ['2.5', '1', '0.5', '0.1', '0.05', '0.01'] }),
+    yaxis: AX('VaR: daily loss (%)', { rangemode: 'tozero' }), legend: LEG(nw, -0.2) }));
+  out('vf-out', [T.vf(lbl(k), lvl(p), nf(o.v[0], 2), nf(o.v[3], 2), nf(o.v[0] / o.v[3], 2), nf(o.S.n * p, 1), nf(o.v[1] - o.v[0], 2))]);
+}
+
+// ----------------------------------------------------------------- X14. counting the exceedances, Kupiec test (frame 59)
+function oosCounts(k) {
+  const S = ser(k), i0 = S.dates.findIndex(d => d >= D.split) + 1, L = S.x.slice(i0), O = NUM.oos[k], res = {};
+  for (const lv of ['var1', 'var01']) { res[lv] = {}; for (const m of ['EVT', 'Historical', 'Normal']) res[lv][m] = L.filter(x => x > O[lv][m].var).length; }
+  return { n: L.length, res, O };
+}
+function exceed() {
+  const lv = $('ex-p').value, p = lv === 'var1' ? 0.01 : 0.001, k = $('ex-a').value, m = $('ex-m').value;
+  const C3 = ['EVT', 'Historical', 'Normal'], R = D.assets.map(a => [a, oosCounts(a)]);
+  const head = `<tr><th></th><th></th><th></th><th colspan="3">${T.h.exc} (VaR ${lvl(p)})</th><th colspan="3">${T.h.kupiec}</th></tr>`
+    + `<tr><th></th><th>${T.h.testDays}</th><th>${T.h.expected}</th>${C3.map(c => `<th>${T.h.m[c]}</th>`).join('')}${C3.map(c => `<th>${T.h.m[c]}</th>`).join('')}</tr>`;
+  table('ex-tab', head, R.map(([a, o]) => row([lbl(a), fint(o.n), nf(o.n * p, 1), ...C3.map(c => o.res[lv][c]), ...C3.map(c => PV(kupiec(o.res[lv][c], o.n, p).pv))], a === k ? 'sel' : '')), T.exNote);
+  const nw = single('ex-chart', 360), x = D.assets.map((_, i) => i), rg = R.map(([, o]) => kupiecRange(o.n, p));
+  const tr = C3.map((c, j) => ({ x: x.map(v => v + (j - 1) * 0.22), y: R.map(([, o]) => o.res[lv][c]), type: 'bar', width: 0.2, marker: { color: MC[c] }, name: c, hovertemplate: `${c}<br>%{y} exceedances<extra></extra>` }));
+  tr.push({ x, y: R.map(([, o]) => o.n * p), mode: 'markers', marker: { symbol: 'line-ew', size: 34, line: { color: DARK, width: 2.4 } }, name: 'Expected: p × test days',
+    error_y: { type: 'data', symmetric: false, array: R.map(([, o], i) => rg[i][1] - o.n * p), arrayminus: R.map(([, o], i) => o.n * p - rg[i][0]), color: DARK, thickness: 1.2, width: 14 },
+    hovertemplate: 'expected %{y:.1f}<extra></extra>' });
+  tr.push({ x: [null], y: [null], mode: 'lines', line: { color: DARK, width: 1.2 }, name: 'Counts not rejected by Kupiec at 5%' });
+  plot('ex-chart', tr, layout({ barmode: 'overlay', xaxis: AX('', { tickvals: x, ticktext: D.assets.map(a => LAB[a]), range: [-0.5, 3.5] }), yaxis: AX(`Days with a loss above VaR ${lvlEn(p)} (2020-2026)`, { rangemode: 'tozero' }), legend: LEG(nw, -0.15) }));
+  const o = R.find(z => z[0] === k)[1], xx = o.res[lv][m], n = o.n, ph = xx / n, K = kupiec(xx, n, p), rr = rg[D.assets.indexOf(k)];
+  steps('ex-we', [T.exw1(lbl(k), T.h.m[m], lvl(p), nf(o.O[lv][m].var, 2), fint(n), xx, nf(n * p, 2)),
+    T.exw2(fint(n), xx, nf(ph, 5), nf(p, 3)),
+    T.exw3(fint(n - xx), nf(p, 3), xx, nf(Math.log(1 - p), 5), nf(Math.log(p), 4), xx > 0 ? nf(Math.log(ph), 4) : null, nf(xx < n ? Math.log(1 - ph) : 0, 5), nf(K.lr, 2)),
+    T.exw4(nf(K.lr, 2), PV(K.pv), K.lr > 3.841459, rr[0], rr[1])]);
+  out('ex-out', [T.ex(lvl(p), ...C3.map(c => R.filter(([, z]) => kupiec(z.res[lv][c], z.n, p).pv < 0.05).length))]);
+}
+
+// ----------------------------------------------------------------- web lecture: table blocks travel inside a chart block
+function placeExtras() {
+  document.querySelectorAll('.xhold > section.xblk').forEach(sec => {
+    const art = document.getElementById('s' + sec.dataset.frame), head = art && art.querySelector('.fhead');
+    if (head) head.after(sec); else sec.closest('section.blk').after(sec);
+  });
+  document.querySelectorAll('.xhold').forEach(h => { if (!h.children.length) h.remove(); });
+}
+
 // ================================================================= wiring
 const PFX = { 'crash-days': 'cd', 'light-heavy': 'lh', 'loglog-real': 'll', 'hill-plot': 'hp', 'hill-bvb': 'hb', 'mean-excess': 'me', 'gev-types': 'gt',
-  'maxima-sim': 'ms', 'gev-ppqq': 'gq', 'return-levels': 'rl', 'gpd-densities': 'gd', 'threshold-stability': 'ts', 'gpd-ppqq': 'gp', 'tail-fit': 'tf', oos: 'os' };
+  'maxima-sim': 'ms', 'gev-ppqq': 'gq', 'return-levels': 'rl', 'gpd-densities': 'gd', 'threshold-stability': 'ts', 'gpd-ppqq': 'gp', 'tail-fit': 'tf', oos: 'os',
+  'crash-table': 'ct', 'hill-six': 'hs', 'hill-table': 'ht', 'bvb-table': 'bt', 'me-table': 'mt', 'gev-table': 'gx', 'rl-example': 'rx', 'rl-table': 'rt',
+  'gpd-table': 'gb', 'crash-evt': 'ce', 'var-example': 've', 'var-es': 'vt', 'var-far': 'vf', exceed: 'ex' };
 function init() {
+  placeExtras();
   const on = (ids, f) => ids.forEach(id => { $(id).addEventListener('input', f); if ($(id).tagName === 'SELECT') $(id).addEventListener('change', f); });
   const players = {}, PL = (btn, id, vals, ms) => (players[btn] = new Player(btn, $(id), vals, ms));
   on(['cd-t'], crashBlock); PL('cd-play', 'cd-t', range(0, 4, 1), 1300);
@@ -494,15 +761,30 @@ function init() {
   on(['gp-a', 'gp-q'], gpdPPBlock); PL('gp-play', 'gp-q', range(80, 98, 1), 450);
   on(['tf-p'], tailFitBlock); PL('tf-play', 'tf-p', range(0, 5, 1), 1100);
   on(['os-a', 'os-p'], oosBlock); PL('os-play', 'os-a', D.assets, 1500);
-  const VC = { out: true, charts: true }, VEIL = { 'light-heavy': VC, 'hill-plot': VC, 'hill-bvb': VC, 'mean-excess': VC, 'return-levels': VC, 'threshold-stability': VC, 'tail-fit': VC };
+  on(['ct-a', 'ct-k'], crashTable); PL('ct-play', 'ct-k', range(3, 6, 0.5), 900);
+  on(['hs-a', 'hs-k'], hillSix); PL('hs-play', 'hs-k', range(0, HS_K.length - 1, 1), 1000);
+  on(['ht-a', 'ht-k'], hillTable); PL('ht-play', 'ht-k', range(0, HF.length - 1, 1), 900);
+  on(['bt-a', 'bt-k'], bvbTable); PL('bt-play', 'bt-k', range(0, HF.length - 1, 1), 900);
+  on(['mt-a', 'mt-q'], meTable); PL('mt-play', 'mt-q', range(80, 98, 1), 500);
+  on(['gx-a', 'gx-b'], gevTable); PL('gx-play', 'gx-b', [0, 1, 2, 3], 1300);
+  on(['rx-a', 'rx-t'], rlExample); PL('rx-play', 'rx-t', range(0, RT.length - 1, 1), 1000);
+  on(['rt-a', 'rt-t'], rlTable); PL('rt-play', 'rt-t', range(0, RT.length - 1, 1), 1000);
+  on(['gb-a', 'gb-q'], gpdTable); PL('gb-play', 'gb-q', range(80, 98, 1), 500);
+  on(['ce-q'], crashEvt); PL('ce-play', 'ce-q', range(80, 98, 1), 500);
+  on(['ve-a', 've-p', 've-e'], varExample); PL('ve-play', 've-e', VP.map(String), 1000);
+  on(['vt-a', 'vt-p', 'vt-e'], varEs); PL('vt-play', 'vt-p', VP.map(String), 1000);
+  on(['vf-a', 'vf-p'], varFar); PL('vf-play', 'vf-p', VP.map(String), 1000);
+  on(['ex-a', 'ex-p', 'ex-m'], exceed); PL('ex-play', 'ex-a', D.assets, 1500);
+  const VC = { out: true, charts: true }, VEIL = Object.assign({ 'light-heavy': VC, 'hill-plot': VC, 'hill-bvb': VC, 'mean-excess': VC, 'return-levels': VC, 'threshold-stability': VC, 'tail-fit': VC }, T.veil || {});
   if (T.predict && predict) Object.entries(T.predict).forEach(([b, sp]) => { if ($(b)) predict(b, Object.assign({ player: players[PFX[b] + '-play'], veil: VEIL[b] || { out: true } }, sp)); });
   if (T.ticket && exitTicket) exitTicket(T.ticket);
-  [crashBlock, lightBlock, loglogBlock, hillBlock, bvbBlock, meBlock, gevTypesBlock, maxSimBlock, gevPPBlock, rlBlock, gpdDensBlock, stabBlock, gpdPPBlock, tailFitBlock, oosBlock]
+  [crashTable, crashBlock, lightBlock, loglogBlock, hillSix, hillBlock, hillTable, bvbTable, bvbBlock, meBlock, meTable, gevTypesBlock, maxSimBlock, gevTable, gevPPBlock,
+    rlExample, rlBlock, rlTable, gpdDensBlock, stabBlock, gpdTable, gpdPPBlock, tailFitBlock, crashEvt, varExample, varEs, varFar, oosBlock, exceed]
     .forEach(f => { try { f(); } catch (e) { console.error(e); throw e; } });
 }
 window.CH5 = { ser, hillK, hillFr, lsSlope, hillQuantile, pot, potVar, potEs, potTail, normVar, normEs, histVar, histEs, meanExcess, fitGpd, gevCdf, gevPpf, gpdSf, gpdPpf,
-  t3Sf, normSf, normPpf, quantile, init, PFX,
-  blocks: { crashBlock, lightBlock, loglogBlock, hillBlock, bvbBlock, meBlock, gevTypesBlock, maxSimBlock, gevPPBlock, rlBlock, gpdDensBlock, stabBlock, gpdPPBlock, tailFitBlock, oosBlock } };
+  t3Sf, normSf, normPpf, quantile, init, PFX, kupiec, kupiecRange, gpdSe, hillRow, crashStats, rlBoot, oosCounts,
+  blocks: { crashTable, hillSix, hillTable, bvbTable, meTable, gevTable, rlExample, rlTable, gpdTable, crashEvt, varExample, varEs, varFar, exceed, crashBlock, lightBlock, loglogBlock, hillBlock, bvbBlock, meBlock, gevTypesBlock, maxSimBlock, gevPPBlock, rlBlock, gpdDensBlock, stabBlock, gpdPPBlock, tailFitBlock, oosBlock } };
 if (window.CH5_NO_INIT) return;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
