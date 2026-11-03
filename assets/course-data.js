@@ -217,6 +217,26 @@
             ]
         },
 
+        chapterCharts: {
+            intro: { src: 'charts/sfm_ch0_markets.png', en: 'Growth of 100 invested in January 2015 in five markets, log scale', ro: 'Evoluția a 100 de unități investite în ianuarie 2015 pe cinci piețe, scară logaritmică' },
+            returns: { src: 'charts/sfm_ch1_drawdowns.png', en: 'Drawdowns of the S&P 500, BET and Bitcoin over the full history', ro: 'Drawdown-urile S&P 500, BET și Bitcoin pe întreaga istorie' },
+            distributions: { src: 'charts/sfm_ch2_t_fit_sp500.png', en: 'S&P 500 daily log returns: Normal vs Student-t fit, linear and log scale', ro: 'Randamentele logaritmice zilnice S&P 500: distribuția Normală și distribuția Student-t estimate, scară liniară și logaritmică' },
+            stable: { src: 'charts/sfm_ch3_fit_density_1.png', en: 'BET and S&P 500: fitted Normal, Student-t and stable densities on a log scale', ro: 'BET și S&P 500: densitățile Normală, Student-t și stabilă estimate, pe scară logaritmică' },
+            probability: { src: 'charts/sfm_ch4_gbm_fan.png', en: 'Real paths of the S&P 500, BET and Bitcoin in the GBM fan', ro: 'Traiectoriile reale ale S&P 500, BET și Bitcoin în evantaiul GBM' },
+            evt: { src: 'charts/sfm_ch5_hill_plot.png', en: 'Hill plots of daily losses: S&P 500, DAX, BET and Bitcoin', ro: 'Grafice Hill ale pierderilor zilnice: S&P 500, DAX, BET și Bitcoin' },
+            'model-selection': { src: 'charts/sfm_ch6_var_models.png', en: 'VaR 1% of six models relative to the empirical VaR 1%, for seven series', ro: 'VaR 1% al celor șase modele raportat la VaR 1% empiric, pentru șapte serii' },
+            emh: { src: 'charts/sfm_ch7_rolling_vr.png', en: 'Rolling variance ratios VR(5) and Z*(5): S&P 500, BET and Bitcoin', ro: 'Rapoarte ale varianțelor VR(5) și Z*(5) pe ferestre mobile: S&P 500, BET și Bitcoin' },
+            'vol-estimators': { src: 'charts/sfm_ch8_vix.png', en: 'VIX against the realised volatility of the S&P 500 over the next 21 days', ro: 'VIX față de volatilitatea realizată a S&P 500 în următoarele 21 de zile' },
+            garch: { src: 'charts/sfm_ch9_vol_sp500_dax.png', en: 'GARCH(1,1)-t conditional volatility of the S&P 500 and DAX, annualised', ro: 'Volatilitatea condiționată GARCH(1,1)-t pentru S&P 500 și DAX, anualizată' },
+            'var-es': { src: 'charts/sfm_ch10_rolling_var.png', en: 'S&P 500 VaR 1% forecasts of four methods through 2008 and 2020', ro: 'Prognozele VaR 1% ale celor patru metode pentru S&P 500, în 2008 și în 2020' },
+            fmh: { src: 'charts/sfm_ch11_markets.png', en: 'DFA exponents of returns and absolute returns in six markets, with the shuffle test', ro: 'Exponenții DFA ai randamentelor și ai randamentelor absolute pe șase piețe, cu testul permutării' },
+            scoring: { src: 'charts/sfm_ch12_roc.png', en: 'ROC curves on the test sample: WoE logit, Fisher LDA and checking account only', ro: 'Curbele ROC pe eșantionul de test: logit WoE, LDA Fisher și doar contul curent' },
+            ml: { src: 'charts/sfm_ch13_rv_forecasts.png', en: 'S&P 500 realised volatility and HAR, random forest and MLP forecasts in 2020 and 2025', ro: 'Volatilitatea realizată a S&P 500 și prognozele HAR, random forest și MLP în 2020 și 2025' },
+            crypto: { src: 'charts/sfm_ch14_drawdowns.png', en: 'Drawdowns of Bitcoin, Ethereum and the S&P 500 since 2016', ro: 'Drawdown-urile Bitcoin, Ethereum și S&P 500 din 2016' },
+            systemic: { src: 'charts/sfm_ch15_dcovar_dynamic.png', en: 'ΔCoVaR 1% through time: JPMorgan Chase, Deutsche Bank and Banca Transilvania', ro: 'ΔCoVaR 1% în timp: JPMorgan Chase, Deutsche Bank și Banca Transilvania' },
+            review: { src: 'charts/sfm_ch16_stylised.png', en: 'Stylised facts in one chart: ACF of returns and absolute returns, S&P 500, BET and Bitcoin', ro: 'Faptele stilizate într-un singur grafic: ACF a randamentelor și a randamentelor absolute, S&P 500, BET și Bitcoin' }
+        },
+
         // ---------------------------------------------------------------
         // Chapters 0-16. `id` is the stable key (quizzes, anchors, tabs);
         // `num` is only the display order. RO page -> RO files, EN page -> EN files.
