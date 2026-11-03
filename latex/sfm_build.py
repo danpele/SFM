@@ -224,6 +224,94 @@ def ql(folder):
 
 
 # =============================================================================
+# SEMINAR QUANTLET BADGES
+# =============================================================================
+def _strip_solonly(f):
+    """The frame without its \\solonly{...} arguments (what the student version shows)."""
+    out, i = [], 0
+    while True:
+        j = f.find('\\solonly{', i)
+        if j < 0:
+            return ''.join(out) + f[i:]
+        out.append(f[i:j])
+        k, depth = j + len('\\solonly{'), 1
+        while k < len(f) and depth:
+            depth += {'{': 1, '}': -1}.get(f[k], 0)
+            k += 1
+        i = k
+
+
+def _shows_output(f):
+    """True if the frame text shows a chart from charts/ or a table of computed numbers (@{key})."""
+    for g in re.findall(r'\\includegraphics(?:\[[^\]]*\])?\{([^}]*)\}', f):
+        b = os.path.splitext(os.path.basename(g))[0]
+        if any(os.path.exists(os.path.join(ROOT, 'charts', b + e)) for e in ('', '.pdf', '.png', '.jpg')):
+            return True
+    return any('@{' in t for t in re.findall(r'\\begin\{tabular\}.*?\\end\{tabular\}', f, re.S))
+
+
+BADGE_MARK, BADGE_FOOT = '%QLAUTO', '%QLFOOT'
+# the same badge, drawn in the footline (left of the page-turn mark): used only where the badge line does not fit
+QLFOOT_MACRO = ('\\newcommand{\\qlfoot}[2]{\\par\\nointerlineskip\\vbox to 0pt{\\hbox{\\begin{tikzpicture}'
+                '[remember picture,overlay]\\node[anchor=base east,inner sep=0pt] at ([xshift=-1.45cm,yshift=8.3pt]'
+                'current page.south east) {\\quantlet{#1}{#2}};\\end{tikzpicture}}\\vss}}\n')
+
+
+def fix_badges(deck_tex, logs):
+    """A frame that overflows (Overfull \\vbox) because of its added badge line gets the footline badge instead."""
+    lines = open(deck_tex, encoding='utf-8').read().split('\n')
+    bad = set()
+    for log in logs:
+        t = open(log, encoding='latin-1').read()
+        bad |= {int(x) for x in re.findall(r'Overfull \\vbox \([^)]*\) detected at line (\d+)', t)}
+    changed = False
+    for ln in sorted(bad):
+        i = min(ln, len(lines)) - 1
+        b = next((k for k in range(i, -1, -1) if '\\begin{frame}' in lines[k]), None)
+        e = next((k for k in range(i, len(lines)) if '\\end{frame}' in lines[k]), None)
+        if b is None or e is None:
+            continue
+        for k in range(b, e + 1):
+            if lines[k].endswith(BADGE_MARK):
+                lines[k] = lines[k][:-len(BADGE_MARK)].replace('\\quantlet{', '\\qlfoot{', 1) + BADGE_FOOT
+                changed = True
+    if changed:
+        open(deck_tex, 'w', encoding='utf-8').write('\n'.join(lines))
+    return changed
+
+
+def compile_seminar(deck_tex, rounds=3):
+    """Deck + its _solutions wrapper; frames overflowing because of the badge line are fixed, then recompiled."""
+    targets = [deck_tex, deck_tex[:-4] + '_solutions.tex']
+    for _ in range(rounds):
+        res = [compile_tex(t) for t in targets]
+        if not fix_badges(deck_tex, [t[:-4] + '.log' for t in targets]):
+            break
+    return list(zip(targets, res))
+
+
+def seminar_badges(src, n):
+    """Every seminar frame with a chart or a computed table gets the Quantlet badge of the chapter's seminar
+    folder (Quantlets/Ch_NN/SFM_chN_seminar), placed as in the lecture decks: last line of the frame.
+    Frames that already link a Quantlet are left as they are; output shown only in the instructor version
+    (\\solonly) gets the badge only there."""
+    folder = f'SFM_ch{n}_seminar'
+    if not os.path.isdir(os.path.join(ROOT, 'Quantlets', f'Ch_{n:02d}', folder)):
+        return src
+
+    def fix(m):
+        f = m.group(0)
+        if re.search(r'\\(?:sfm|tsa)?quantlet\{|\\qlurl|/Quantlets/', f) or not _shows_output(f):   # never two badges
+            return f
+        t = re.match(r'\\begin\{frame\}(?:\[[^\]]*\])?\{([^\n]*)', f)
+        if t and re.search(r'Data [Uu]sed', t.group(1)):        # data inventory, not output
+            return f
+        badge = ql(folder) if _shows_output(_strip_solonly(f)) else '\\solonly{' + ql(folder) + '}'
+        return f[:-len('\\end{frame}')].rstrip() + '\n' + badge + BADGE_MARK + '\n\\end{frame}'
+    return re.sub(r'\\begin\{frame\}.*?\\end\{frame\}', fix, src, flags=re.S)
+
+
+# =============================================================================
 # DECK
 # =============================================================================
 SOLVED = '⟦[Solved]||[Rezolvat]⟧'
@@ -352,6 +440,7 @@ class Deck:
     def chapter_macros(self):
         m = f'\n\\newcommand{{\\qlurl}}[1]{{{QL_REPO}/Ch_{self.n:02d}/#1}}\n'
         if self.kind == 'seminar':
+            m += QLFOOT_MACRO
             p = paths(self.n)['nb_seminar']
             m += (f'\\renewcommand{{\\nb}}{{\\colaburl{{{p}}}}}\n'
                   f'\\renewcommand{{\\nbname}}{{{os.path.basename(p).replace("_", chr(92) + "_")}}}\n'
@@ -363,6 +452,8 @@ class Deck:
     # ---- scriere
     def write(self, values=None, glossary=True):
         src = self.chapter_macros() + '@@TITLE@@' + DOC_START + '\n'.join(self.FR) + '\n\\end{document}\n'
+        if self.kind == 'seminar':
+            src = seminar_badges(src, self.n)
         out = []
         for lang in ('en', 'ro'):
             rel = deck(self.n, self.kind, lang)
@@ -455,9 +546,8 @@ def compile_tex(path, runs=2):
 def compile_chapter(chapter):
     ok = True
     for p, lang, kind, n in new_decks(chapters={str(chapter)}):
-        targets = [p] + ([p[:-4] + '_solutions.tex'] if kind == 'seminar' else [])
-        for t in targets:
-            e, v, pages = compile_tex(t)
+        done = compile_seminar(p) if kind == 'seminar' else [(p, compile_tex(p))]
+        for t, (e, v, pages) in done:
             ok &= e == 0
             print(f'{os.path.relpath(t, ROOT)}: {pages} pages, {e} errors, {v} overfull vbox')
     return ok
