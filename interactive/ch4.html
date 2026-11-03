@@ -36,6 +36,8 @@
   go();
 })(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch4_data.js?v=20261101a", "ch4_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch4.js?v=20261101a", []);
 </script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
 </head>
 <body>
 <header>
@@ -53,14 +55,39 @@
 </ul></nav>
 <main class="imain">
 <p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step.</p>
-<p class="toc"><a href="#s-rv">Random Variables and Distributions</a> · <a href="#s-joint">Joint Distributions and Dependence</a> · <a href="#s-cond">Conditional Expectation and Conditional Variance</a> · <a href="#s-lln">The Law of Large Numbers and the CLT</a> · <a href="#s-mc">Random Numbers and Monte Carlo</a> · <a href="#s-bin">The Binomial Model</a> · <a href="#s-proc">Discrete-Time Stochastic Processes</a> · <a href="#s-wien">The Wiener Process and Geometric Brownian Motion</a></p>
-<h2 class="sec" id="s-rv">Random Variables and Distributions</h2>
+<p class="toc"><a href="#s-ax">From Games of Chance to Axioms</a> · <a href="#s-rv">Random Variables and Distributions</a> · <a href="#s-ev">Expectation and Variance</a> · <a href="#s-joint">Joint Distributions and Dependence</a> · <a href="#s-cond">Conditional Expectation and Conditional Variance</a> · <a href="#s-lln">The Law of Large Numbers and the CLT</a> · <a href="#s-mc">Random Numbers and Monte Carlo</a> · <a href="#s-bin">The Binomial Model</a> · <a href="#s-proc">Discrete-Time Stochastic Processes</a> · <a href="#s-wien">The Wiener Process and Geometric Brownian Motion</a></p>
+<h2 class="sec" id="s-ax">From Games of Chance to Axioms</h2>
+<section class="blk" id="down-days">
+  <h3>Example: Down Days in a Row</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=9" target="_blank" rel="noopener"><img src="slides/ch4_down-days_en.jpg" alt="Slide 8: Example: Down Days in a Row" loading="lazy"></a>
+      <figcaption>Slide 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dw-a">Series (highlighted row)</label><select id="dw-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="dw-x">Event D: return below −x%, threshold x: <b id="dw-x-v"></b></label><input type="range" id="dw-x" min="0" max="3" step="0.25" value="0"></div><button class="btn play" id="dw-play" type="button"></button></div><p class="xh">Conditional probabilities of the event D, daily log returns</p><div class="tw" id="dw-tab"></div><ul class="out" id="dw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, P(down today | down yesterday) = 43.4% is even below P(down) = 46.3%. The ▶ button raises the threshold x: the event D becomes a loss of more than x%. At x = 2%, what is P(D | D yesterday) against P(D) = 4.27%?</div><details><summary>Answer</summary><p>11.85%, 2.8 times P(D). Two losses of more than 2% in a row have a frequency of 0.51%, against 0.18% under independence. The sign of the return barely persists for the S&P 500, but large losses come in clusters: volatility clustering. For BET the sign persists too, at x = 0: 50.0% after a down day against 42.6% after a day that is not down, an effect of thin trading.</p></details>
+</section><h2 class="sec" id="s-rv">Random Variables and Distributions</h2>
 <section class="blk" id="random-variables">
   <h3>A Discrete and a Continuous Random Variable</h3>
   <div class="pair">
     <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch4_random_variables_en.jpg" alt="Slide 13: A Discrete and a Continuous Random Variable" loading="lazy"></a>
       <figcaption>Slide 13</figcaption></figure>
-    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-a">Series</label><select id="rv-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-a">Series</label><select id="rv-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead th[colspan]{text-align:center;border-bottom:1px solid #1F2A44}
+.xt tr.sel td{background:#EEF3FB}
+.tnote{font-size:.78rem;color:#1F2A44;margin:.25rem 0 0;max-width:46rem;white-space:normal}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+</style><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
   </div>
   <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, the variance of K (1.16) is slightly below the binomial variance 5p(1 − p) = 1.24. The ▶ button moves to the DAX and BET. What happens for BET, whose daily return has a first-order autocorrelation of 0.109?</div>
   <details><summary>Answer</summary><p>The variance of K exceeds the binomial value: 1.47 against 1.24, ratio 1.18. The binomial distribution assumes independent days; with the positive autocorrelation of BET returns, up days come one after another more often, so weeks with many or with few up days are more frequent. The mean stays close to 5p: 2.67 against 2.70. For the S&P 500, with autocorrelation −0.099, the ratio is 0.93; for the DAX also 0.93.</p></details>
@@ -74,6 +101,24 @@
   </div>
   <div class="ask"><span class="ask-tag">Question for the room</span> At the 1% level, the empirical VaR of the S&P 500 (3.45%) is 1.24 times the VaR of the Normal distribution with the same mean and standard deviation (2.80%). The ▶ button lowers the level α from 5% to 0.1%. What does the ratio become at α = 0.1%?</div>
   <details><summary>Answer</summary><p>About 1.94: VaR 0.1% is 7.22% in the data and 3.72% under the Normal distribution. At α = 5% the ratio is 0.94 (1.85% against 1.97%). If the difference were only one of scale, the ratio would be the same at every level; it grows towards the tail, so the problem is the shape of the distribution: a higher peak and heavier tails. P(r < −5%) is 0.34% in the data and 1.7 × 10<sup>−3</sup>% under the Normal distribution, 199 times less.</p></details>
+</section><h2 class="sec" id="s-ev">Expectation and Variance</h2>
+<section class="blk" id="annual-moments">
+  <h3>Worked Example: Annual Mean and Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=19" target="_blank" rel="noopener"><img src="slides/ch4_annual-moments_en.jpg" alt="Slide 18: Worked Example: Annual Mean and Volatility" loading="lazy"></a>
+      <figcaption>Slide 18</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="am-a">Series (highlighted row and worked example)</label><select id="am-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="am-h">Horizon h (days): <b id="am-h-v"></b></label><input type="range" id="am-h" min="1" max="365" step="1" value="252"></div><button class="btn play" id="am-play" type="button"></button></div><p class="xh">Moments of the daily log returns (%)</p><div class="tw" id="am-tab"></div><div class="we" id="am-we-box"><p class="we-h">Worked example: the mean and volatility over h days</p><div class="we-f">\[E\Big[\sum_{t=1}^{h} r_t\Big] = h\,\bar r, \qquad \mathrm{Var}\Big(\sum_{t=1}^{h} r_t\Big) = h\,\sigma^2 \;\Rightarrow\; \sigma_h = \sigma\sqrt{h}\]</div><ol id="am-we"></ol></div><ul class="out" id="am-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin trades every day, so the chapter annualises with A = 365. The daily standard deviation is 3.485%. What is the annual volatility?</div><details><summary>Answer</summary><p>66.6% = 3.485 × √365. With A = 252, as for stocks, it would be 55.3%. The annual mean is 43.1% with A = 365 (29.8% with A = 252). The volatility grows with √A, the mean with A, and both assume i.i.d. returns. The excess kurtosis of 11.96 shows that the daily distribution is not Normal, even though the square-root-of-time rule uses only the variance.</p></details>
+</section>
+<section class="blk" id="chebyshev">
+  <h3>How Rare Is a 4-Sigma Day? Chebyshev's Bound</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch4_chebyshev_en.jpg" alt="Slide 19: How Rare Is a 4-Sigma Day? Chebyshev's Bound" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cb-a">Series (highlighted row and worked example)</label><select id="cb-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="cb-k">Distance k, in standard deviations: <b id="cb-k-v"></b></label><input type="range" id="cb-k" min="1.5" max="8" step="0.5" value="4"></div><button class="btn play" id="cb-play" type="button"></button></div><p class="xh">Days with |r − mean| > kσ: data, the Normal distribution and Chebyshev's bound</p><div class="tw" id="cb-tab"></div><div class="charts "><div class="chart" id="cb-chart"></div></div><div class="we" id="cb-we-box"><p class="we-h">Worked example: Chebyshev's bound against the data</p><div class="we-f">\[P(|X - \mu| \ge k\sigma) \le \frac{1}{k^2}, \qquad P(|X - \mu| > k\sigma) = 2\Phi(-k) \;\text{ for } X \sim N(\mu, \sigma^2)\]</div><ol id="cb-we"></ol></div><ul class="out" id="cb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For k = 2, Chebyshev's inequality allows up to 25% of the days. What share of the S&P 500 days lies more than 2 standard deviations from the mean?</div><details><summary>Answer</summary><p>4.90% (329 days), close to 4.55% under the Normal distribution. At 2 standard deviations the data look like the Normal distribution; the difference is in the tail: at k = 4 there are 46 days (0.69%), 108 times the 0.0063% of the Normal distribution, and at k = 6 there are 12 days, against 1.3 × 10<sup>−5</sup> expected days. Chebyshev's bound, 1/k², holds for any distribution with finite variance, which is why it lies far above the data.</p></details>
 </section><h2 class="sec" id="s-joint">Joint Distributions and Dependence</h2>
 <section class="blk" id="joint">
   <h3>Joint Distributions of Daily Returns</h3>
@@ -85,6 +130,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> The daily correlation of the S&P 500 and BET over the whole period is 0.21. What is it on the days of 2020?</div>
   <details><summary>Answer</summary><p>0.63, on 242 common days, three times the value over the whole period. In 2008 the correlation is 0.28, in 2017 0.20. For the S&P 500 and the DAX: 0.69 in 2020, 0.62 in 2008 and 0.57 in 2017, against 0.60 over the whole period. Correlation rises in crisis years, exactly when diversification would be needed.</p></details>
 </section>
+<section class="blk" id="portfolio">
+  <h3>Worked Example: a 50/50 Portfolio of S&P 500 and DAX</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=25" target="_blank" rel="noopener"><img src="slides/ch4_portfolio_en.jpg" alt="Slide 24: Worked Example: a 50/50 Portfolio of S&P 500 and DAX" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pf-p">Pair (highlighted row, chart and worked example)</label><select id="pf-p"><option value="sp500_dax" selected>S&P 500 / DAX</option><option value="sp500_bet">S&P 500 / BET</option><option value="sp500_btc">S&P 500 / Bitcoin</option><option value="dax_bet">DAX / BET</option><option value="dax_btc">DAX / Bitcoin</option><option value="bet_btc">BET / Bitcoin</option></select></div><div class="ctl"><label for="pf-w">Weight a of the first series: <b id="pf-w-v"></b></label><input type="range" id="pf-w" min="0" max="1" step="0.05" value="0.5"></div><button class="btn play" id="pf-play" type="button"></button></div><p class="xh">Variances, covariances and correlations of daily returns (%)</p><div class="tw" id="pf-mat"></div><p class="xh">Pairs of series on their common days</p><div class="tw" id="pf-tab"></div><div class="charts "><div class="chart" id="pf-chart"></div></div><div class="we" id="pf-we-box"><p class="we-h">Worked example: the volatility of the a/b portfolio</p><div class="we-f">\[\begin{gathered}\sigma_p^2 = a^2\sigma_1^2 + b^2\sigma_2^2 + 2ab\,\mathrm{Cov}(X, Y), \qquad b = 1 - a,\\ \rho = \frac{\mathrm{Cov}(X, Y)}{\sigma_1\sigma_2}, \qquad a^* = \frac{\sigma_2^2 - \mathrm{Cov}(X, Y)}{\sigma_1^2 + \sigma_2^2 - 2\,\mathrm{Cov}(X, Y)}\end{gathered}\]</div><ol id="pf-we"></ol></div><ul class="out" id="pf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button moves the weight a of the S&P 500 in the S&P 500/DAX portfolio from 0 to 1. At which weight is the volatility of the portfolio lowest?</div><details><summary>Answer</summary><p>At a* = (σ<sub>2</sub>² − Cov)/(σ<sub>1</sub>² + σ<sub>2</sub>² − 2Cov) = 0.69, with σ<sub>p</sub> = 1.163%, against 1.186% at a = 0.5. The S&P 500 gets the larger weight because its volatility is lower (1.221% against 1.429%), but not 1: with ρ = 0.60, some DAX still reduces the risk. For S&P 500/BET, with ρ = 0.21: a* = 0.60 and σ<sub>p</sub> = 1.025%.</p></details>
+</section>
 <section class="blk" id="uncorrelated-dependent">
   <h3>Returns Are Uncorrelated, Squared Returns Are Not</h3>
   <div class="pair">
@@ -95,6 +149,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button raises the lag h from 1 to 20. At h = 20, is Corr(r<sub>t</sub>², r<sub>t−20</sub>²) of the S&P 500 still outside the band ±1.96/√n = ±0.024?</div>
   <details><summary>Answer</summary><p>Yes: 0.164 at lag 20, against 0.313 at lag 1, while the correlation of the returns at lag 20 is 0.014, inside the band. At lag 1, the correlation of the squares is 0.31 (S&P 500), 0.15 (DAX), 0.33 (BET) and 0.14 (Bitcoin). At lag 20 it stays above the band for the DAX (0.116) and BET (0.090); for Bitcoin (0.026) it falls inside the band ±0.030. Volatility clustering lasts for weeks. The band is an asymptotic reference value for an i.i.d. series, not an exact test at every lag.</p></details>
 </section><h2 class="sec" id="s-cond">Conditional Expectation and Conditional Variance</h2>
+<section class="blk" id="two-regimes">
+  <h3>Worked Example: Two Regimes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch4_two-regimes_en.jpg" alt="Slide 30: Worked Example: Two Regimes" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rg-p">Probability of the calm regime π: <b id="rg-p-v"></b></label><input type="range" id="rg-p" min="0.5" max="0.95" step="0.05" value="0.7"></div><div class="ctl"><label for="rg-s">Standard deviation in the turbulent regime (%): <b id="rg-s-v"></b></label><input type="range" id="rg-s" min="1" max="4" step="0.25" value="2"></div><div class="ctl"><label for="rg-a">Series of the data table</label><select id="rg-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="rg-play" type="button"></button></div><p class="xh">Two regimes: the components of the variance</p><div class="tw" id="rg-tab"></div><div class="we" id="rg-we-box"><p class="we-h">Worked example: the mean and the total variance</p><div class="we-f">\[E[r] = \sum_j \pi_j \mu_j, \qquad \mathrm{Var}(r) = \underbrace{\sum_j \pi_j \sigma_j^2}_{E[\mathrm{Var}(r \mid X)]} + \underbrace{\sum_j \pi_j (\mu_j - E[r])^2}_{\mathrm{Var}(E[r \mid X])}\]</div><ol id="rg-we"></ol></div><p class="xh">The data: r<sub>t</sub> by the quintile of |r<sub>t−1</sub>|</p><div class="tw" id="rg-dat"></div><ul class="out" id="rg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In the two-regime example, the standard deviation of the return is 1.286%. What does it become if the turbulent regime has a standard deviation of 3% instead of 2%?</div><details><summary>Answer</summary><p>1.776%: the within-regime variance rises to 0.7 × 0.8² + 0.3 × 3² = 3.148, and the between-regime component stays at 0.0047, so Var(r) = 3.153. The weighted average of the standard deviations, 0.7 × 0.8 + 0.3 × 3 = 1.46%, understates the risk: variances add, not standard deviations. In the data, for the S&P 500, the between-quintile component is 0.009% of the total variance.</p></details>
+</section>
 <section class="blk" id="conditional">
   <h3>Today's Return Given Yesterday's Move</h3>
   <div class="pair">
@@ -105,6 +168,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> With 5 groups (quintiles), the ratio of the standard deviations of the most turbulent and the calmest group is 1.88 for the S&P 500. The ▶ button goes from 2 to 10 groups. What does the ratio become with 10 groups?</div>
   <details><summary>Answer</summary><p>2.22: 2.03% in the most turbulent group against 0.92% in the calmest. With 2 groups the ratio is 1.43: the extreme groups are more extreme when they are narrower. The between-group component of the total variance stays negligible: 0.054% of the total with 10 groups, 0.009% with 5. Yesterday's move says a lot about today's risk and almost nothing about today's mean.</p></details>
 </section><h2 class="sec" id="s-lln">The Law of Large Numbers and the CLT</h2>
+<section class="blk" id="lln-table">
+  <h3>Two Limit Theorems</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch4_lln-table_en.jpg" alt="Slide 34: Two Limit Theorems" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lt-y">Sample starts in: <b id="lt-y-v"></b></label><input type="range" id="lt-y" min="2000" max="2020" step="1" value="2000"></div><button class="btn play" id="lt-play" type="button"></button></div><p class="xh">S&P 500: the running mean after n days</p><div class="tw" id="lt-tab"></div><div class="we" id="lt-we-box"><p class="we-h">Worked example: the standard error of the mean</p><div class="we-f">\[\bar r_n = \frac1n\sum_{t=1}^n r_t, \qquad \mathrm{SE} = \frac{s}{\sqrt n}, \qquad t = \frac{\bar r_n}{s/\sqrt n}, \qquad n_{t = 2} = \Big(\frac{2s}{\bar r}\Big)^2\]</div><ol id="lt-we"></ol></div><ul class="out" id="lt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over 2000–2026, the daily mean of the S&P 500 has t = 1.67. With the same mean and volatility, how many years of data would give t = 2?</div><details><summary>Answer</summary><p>About 38 years: n = (2s/r̄)² = (2 × 1.213/0.0247)² = 9,633 days. t grows with √n, so a t that is 2/1.67 = 1.20 times larger needs 1.43 times as many days. A standard error half as large needs four times as many days (26,856). The running mean from 2000 is still negative after 100, 1,000 and 2,500 days.</p></details>
+</section>
 <section class="blk" id="lln">
   <h3>The LLN for the Mean Return: Slow</h3>
   <div class="pair">
@@ -115,6 +187,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> Over 2000–2026, the daily mean of the S&P 500 has t = 1.67. The ▶ button moves the start of the sample from 2000 to 2020. What is t for the sample that starts in 2009?</div>
   <details><summary>Answer</summary><p>2.83: the daily mean is 0.0480% (12.1% per year), the standard error 0.0169%. The sample from 2009 starts after the 2008 crisis. From 2003, t = 2.38; from 2020, t = 1.64 with only 1,687 days. The 95% interval of the annual mean is [3.7%, 20.4%] from 2009 and [−1.1%, 13.5%] from 2000. The estimated mean depends strongly on the start of the sample; a start chosen after looking at the data no longer gives a valid test.</p></details>
 </section><h2 class="sec" id="s-mc">Random Numbers and Monte Carlo</h2>
+<section class="blk" id="lcg">
+  <h3>Worked Example: an LCG with M = 16</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch4_lcg_en.jpg" alt="Slide 38: Worked Example: an LCG with M = 16" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lc-a">Multiplier a: <b id="lc-a-v"></b></label><input type="range" id="lc-a" min="0" max="15" step="1" value="5"></div><div class="ctl"><label for="lc-c">Increment c: <b id="lc-c-v"></b></label><input type="range" id="lc-c" min="0" max="15" step="1" value="1"></div><div class="ctl"><label for="lc-x">Seed x<sub>0</sub>: <b id="lc-x-v"></b></label><input type="range" id="lc-x" min="0" max="15" step="1" value="7"></div><button class="btn play" id="lc-play" type="button"></button></div><p class="xh">M = 16: the period for every multiplier a, with the chosen c and x<sub>0</sub></p><div class="tw" id="lc-tab"></div><div class="we" id="lc-we-box"><p class="we-h">Worked example: the steps of an LCG and its period</p><div class="we-f">\[x_{k+1} = (a\,x_k + c) \bmod M, \qquad u_k = \frac{x_k}{M}, \qquad M = 16\]</div><ol id="lc-we"></ol></div><ul class="out" id="lc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a = 4, c = 1 and x<sub>0</sub> = 7, after how many steps does the sequence get stuck, and at which value?</div><details><summary>Answer</summary><p>After two steps: x<sub>1</sub> = 29 mod 16 = 13, x<sub>2</sub> = 53 mod 16 = 5, then 4 × 5 + 1 = 21 ≡ 5, so the sequence stays at 5 (period 1). The slide says "after one step"; the first step, however, goes to 13. With M = 16 and an odd c, the maximal period 16 occurs exactly when a − 1 is a multiple of 4 (a = 1, 5, 9, 13, the Hull–Dobell condition); a = 1, however, gives the sequence 7, 8, 9, …, with a maximal period and nothing random about it.</p></details>
+</section>
 <section class="blk" id="randu">
   <h3>RANDU: Random Numbers Fall Mainly in the Planes (SFErandu)</h3>
   <div class="pair">
@@ -125,6 +206,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button changes the RANDU seed x<sub>0</sub> (odd numbers from 1 to 99). How many distinct values does the combination 9u<sub>k</sub> − 6u<sub>k+1</sub> + u<sub>k+2</sub> take for x<sub>0</sub> = 99?</div>
   <details><summary>Answer</summary><p>15, from −5 to 9, as for every odd seed. The relation comes from the multiplier: 65539 = 2<sup>16</sup> + 3, so a² = 6a − 9 (mod 2<sup>31</sup>) and x<sub>k+2</sub> = 6x<sub>k+1</sub> − 9x<sub>k</sub> (mod 2<sup>31</sup>), whatever x<sub>0</sub>. The correlation of the pairs stays small (0.0078 for x<sub>0</sub> = 99), so a test on pairs does not see the flaw. With PCG64, the combination takes 29,998 different values in 29,998 triples.</p></details>
 </section>
+<section class="blk" id="inverse-exp">
+  <h3>The Inverse Transform Method</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=41" target="_blank" rel="noopener"><img src="slides/ch4_inverse-exp_en.jpg" alt="Slide 40: The Inverse Transform Method" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ie-l">λ of the exponential distribution: <b id="ie-l-v"></b></label><input type="range" id="ie-l" min="0.2" max="4" step="0.1" value="2"></div><div class="ctl"><label for="ie-u">Uniform draw u: <b id="ie-u-v"></b></label><input type="range" id="ie-u" min="0.01" max="0.99" step="0.01" value="0.9"></div><button class="btn play" id="ie-play" type="button"></button></div><div class="we" id="ie-we-box"><p class="we-h">Worked example: the same u through three quantile functions</p><div class="we-f">\[\begin{gathered}X = F^{-1}(U), \qquad U \sim U(0, 1):\\ x = -\frac{\ln(1 - u)}{\lambda} \;\text{(exponential)}, \qquad x = \mu + \sigma\,\Phi^{-1}(u) \;\text{(Normal)}, \qquad x = \hat F^{-1}(u) \;\text{(historical)}\end{gathered}\]</div><ol id="ie-we"></ol></div><p class="xh">The left tail of the 200,000 draws of the lecture (S&P 500)</p><div class="tw" id="ie-tab"></div><div class="charts "><div class="chart" id="ie-chart"></div></div><ul class="out" id="ie-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With λ = 2, the mean of the exponential distribution is 1/λ = 0.5. For which values of u does the draw x = −ln(1 − u)/2 exceed the mean?</div><details><summary>Answer</summary><p>For u > 1 − e<sup>−1</sup> = 0.632: P(X > 0.5) = e<sup>−λ × 0.5</sup> = e<sup>−1</sup> = 36.8%. The median is ln 2/λ = 0.347, below the mean: the exponential distribution is skewed to the right. In the table, the 7 Normal draws below −5%, against 3.4 expected, differ by 1.9 Poisson standard deviations (√3.44 = 1.85): simulation noise, not a flaw of the method.</p></details>
+</section>
 <section class="blk" id="inverse-transform">
   <h3>Inverse Transform: Exponential, Normal and Historical</h3>
   <div class="pair">
@@ -133,7 +223,16 @@
     <div class="live"><div class="ctls"><div class="ctl"><label for="it-l">λ of the exponential distribution (left): <b id="it-l-v"></b></label><input type="range" id="it-l" min="0.4" max="4" step="0.2" value="2"></div><div class="ctl"><label for="it-x">Threshold x for draws below −x% (right): <b id="it-x-v"></b></label><input type="range" id="it-x" min="1" max="12" step="0.5" value="5"></div><button class="btn play" id="it-play" type="button"></button></div><div class="charts "><div class="chart" id="it-chart"></div></div><ul class="out" id="it-out"></ul></div>
   </div>
   <div class="ask"><span class="ask-tag">Question for the room</span> Of the 200,000 draws from the Normal distribution, 7 (0.0035%) are below −5%. What does the exact Normal distribution, with the same mean and standard deviation, give for P(r < −5%)?</div>
-  <details><summary>Answer</summary><p>1.7 × 10<sup>−3</sup>%, i.e. 0.0017%, or 3.4 expected draws out of 200,000. With so few events, the standard deviation of the number of draws is about √3.4 = 1.8, so 7 draws are simulation noise, not a flaw of the method. The historical draws give 0.34% (685 of 200,000), as the data: the inverse transform with the empirical quantile function reproduces the tail of the sample. At −8%: no Normal draw, 148 historical ones.</p></details>
+  <details><summary>Answer</summary><p>1.7 × 10<sup>−3</sup>%, i.e. 0.0017%, or 3.4 expected draws out of 200,000. With so few events, the standard deviation of the number of draws is about √3.4 ≈ 1.84, so 7 draws are simulation noise, not a flaw of the method. The historical draws give 0.34% (685 of 200,000), as the data: the inverse transform with the empirical quantile function reproduces the tail of the sample. At −8%: no Normal draw, 148 historical ones.</p></details>
+</section>
+<section class="blk" id="mc-error">
+  <h3>Worked Example: a Monthly Loss Probability by Monte Carlo (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch4_mc-error_en.jpg" alt="Slide 43: Worked Example: a Monthly Loss Probability by Monte Carlo (2/2)" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="me-L">Monthly loss L, in %: <b id="me-L-v"></b></label><input type="range" id="me-L" min="5" max="20" step="1" value="10"></div><div class="ctl"><label for="me-n">Number of simulations N (highlighted row and worked example)</label><select id="me-n"><option value="100">100</option><option value="1000" selected>1,000</option><option value="10000">10,000</option><option value="100000">100,000</option><option value="1000000">1,000,000</option></select></div><button class="btn play" id="me-play" type="button"></button></div><p class="xh">The Monte Carlo estimate and its standard error</p><div class="tw" id="me-tab"></div><div class="charts "><div class="chart" id="me-chart"></div></div><div class="we" id="me-we-box"><p class="we-h">Worked example: the exact probability, the estimate and the standard error</p><div class="we-f">\[\begin{gathered}z = \frac{-L - h\,m}{s\sqrt h}, \qquad p = \Phi(z), \qquad \hat p_N = \frac{1}{N}\sum_{i=1}^N \mathbf 1\{R_i < -L\},\\ \mathrm{SE} = \sqrt{\frac{p(1 - p)}{N}}, \qquad N_{10\%} = \frac{1.96^2 (1 - p)}{0.1^2\,p}\end{gathered}\]</div><ol id="me-we"></ol></div><ul class="out" id="me-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For a monthly loss above 20%, p = 0.0112%. What is the standard error of the Monte Carlo estimate with N = 1,000 simulations?</div><details><summary>Answer</summary><p>√(p(1 − p)/N) = 0.0334%, three times p. With 1,000 simulations the estimate is 0 (no simulated month below −20%); with 100,000 it is 0.007%, with one million 0.0117% (standard error 0.0011%). For L = 10%, the standard error at N = 1,000 is 0.533%, i.e. 18% of p = 2.922%.</p></details>
 </section>
 <section class="blk" id="monte-carlo">
   <h3>Monte Carlo Converges at Rate 1/√N</h3>
@@ -145,6 +244,24 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> For a monthly loss above 10%, a relative error of 10% (at 95%) needs N = 12,762 simulations. How many does the same precision need for a monthly loss above 15%?</div>
   <details><summary>Answer</summary><p>About 146,000 (146,201): p falls from 2.922% to 0.262%, and N ≈ 1.96²(1 − p)/(0.1² p) grows almost as 1/p. For 20%, p = 0.0112% and N = 3.44 million; with one million simulations the estimate is 0.0117%, with standard error 0.0011%, about 10% of p. The absolute error √(p(1 − p)/N) falls with p, but the relative error grows.</p></details>
 </section><h2 class="sec" id="s-bin">The Binomial Model</h2>
+<section class="blk" id="two-step-tree">
+  <h3>Worked Example: a Two-Step Tree</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch4_two-step-tree_en.jpg" alt="Slide 47: Worked Example: a Two-Step Tree" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tt-u">Up factor u: <b id="tt-u-v"></b></label><input type="range" id="tt-u" min="1.05" max="1.5" step="0.05" value="1.2"></div><div class="ctl"><label for="tt-d">Down factor d: <b id="tt-d-v"></b></label><input type="range" id="tt-d" min="0.5" max="0.95" step="0.05" value="0.8"></div><div class="ctl"><label for="tt-p">Probability p of an up move: <b id="tt-p-v"></b></label><input type="range" id="tt-p" min="0.05" max="0.95" step="0.05" value="0.6"></div><div class="ctl"><label for="tt-n">Number of steps n: <b id="tt-n-v"></b></label><input type="range" id="tt-n" min="1" max="6" step="1" value="2"></div><button class="btn play" id="tt-play" type="button"></button></div><p class="xh">The terminal nodes of the tree, S<sub>0</sub> = 100 (highlighted rows: S<sub>n</sub> &lt; 100)</p><div class="tw" id="tt-tab"></div><div class="we" id="tt-we-box"><p class="we-h">Worked example: the mean, the probability of a loss and p*</p><div class="we-f">\[\begin{gathered}S_n = S_0\,u^K d^{\,n-K}, \qquad P(K = k) = \binom{n}{k} p^k (1 - p)^{n-k},\\ E[S_n] = S_0\big(pu + (1 - p)d\big)^n, \qquad p^* = \frac{1 - d}{u - d}\end{gathered}\]</div><ol id="tt-we"></ol></div><ul class="out" id="tt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With S<sub>0</sub> = 100, u = 1.2, d = 0.8 and p = 0.6, P(S<sub>2</sub> < 100) = 0.64. What is P(S<sub>3</sub> < 100) with three steps?</div><details><summary>Answer</summary><p>0.352: the nodes are 172.8, 115.2, 76.8 and 51.2, and below 100 are those with at most one up move: 0.4³ + 3 × 0.6 × 0.4² = 0.064 + 0.288. With two steps, the node ud = 96 was below 100 because ud = 0.96 < 1; with three steps, the node with two up moves is 115.2. The mean E[S<sub>3</sub>] = 100 × 1.04³ = 112.49 grows with n in any case.</p></details>
+</section>
+<section class="blk" id="crr-tree">
+  <h3>Calibrating the Tree to a Market (Cox–Ross–Rubinstein)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=49" target="_blank" rel="noopener"><img src="slides/ch4_crr-tree_en.jpg" alt="Slide 48: Calibrating the Tree to a Market (Cox–Ross–Rubinstein)" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cr-n">Number of steps n in one year (highlighted row, chart and worked example)</label><select id="cr-n"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="10">10</option><option value="21">21</option><option value="63">63</option><option value="125">125</option><option value="126">126</option><option value="251">251</option><option value="252" selected>252</option><option value="253">253</option></select></div><button class="btn play" id="cr-play" type="button"></button></div><p class="xh">The CRR tree calibrated to the S&P 500 (σ = 19.26%, μ = 8.08%), S<sub>0</sub> = 100, T = 1 year</p><div class="tw" id="cr-tab"></div><div class="charts "><div class="chart" id="cr-chart"></div></div><div class="we" id="cr-we-box"><p class="we-h">Worked example: P(S<sub>T</sub> ≤ 100) and P(S<sub>T</sub> &lt; 100)</p><div class="we-f">\[\begin{gathered}u = e^{\sigma\sqrt{\Delta t}}, \quad d = \frac1u, \quad p = \frac{e^{\mu\Delta t} - d}{u - d}, \qquad S_T = S_0\,u^{2K - n},\\ P(S_T \le S_0) = \sum_{k \le n/2} \binom{n}{k} p^k (1 - p)^{n-k}, \qquad P(S_T < S_0) = \sum_{k < n/2} \binom{n}{k} p^k (1 - p)^{n-k}\end{gathered}\]</div><ol id="cr-we"></ol></div><ul class="out" id="cr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 252 steps, the slide gives "P(S<sub>T</sub> < 100) = 39.7%". What is the probability that S<sub>T</sub> is strictly below 100?</div><details><summary>Answer</summary><p>34.9%. The 39.7% is P(S<sub>T</sub> ≤ 100): it includes the node S<sub>T</sub> = 100 (k = 126 up moves), with probability C(252, 126)p<sup>126</sup>(1 − p)<sup>126</sup> = 4.8%. The lognormal limit, 37.3%, is practically the average of the two values. With an odd number of steps there is no node at 100: 37.3% with 251 and with 253 steps.</p></details>
+</section>
 <section class="blk" id="binomial">
   <h3>Binomial Paths and the Lognormal Limit (SFEBinomp)</h3>
   <div class="pair">
@@ -155,6 +272,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> With 252 steps, P(S<sub>T</sub> ≤ 100) = 39.7%, against 37.3% in the lognormal limit. What is P(S<sub>T</sub> ≤ 100) with only 2 steps?</div>
   <details><summary>Answer</summary><p>61.9%, of which 47.3% is the node S<sub>T</sub> = 100 (one up and one down move, ud = 1); P(S<sub>T</sub> < 100) is only 14.7%. With an even n, the tree has a node exactly at S<sub>0</sub>, with a probability that falls as 1/√n: 6.7% at 126 steps, 4.8% at 252. With 5 steps there is no such node and P(S<sub>T</sub> < 100) = 36.5%. The 39.7% of the slide is P(S<sub>T</sub> ≤ 100); strictly below 100 is 34.9%. E[S<sub>T</sub>] = 108.42 for every n, by the construction of p.</p></details>
 </section><h2 class="sec" id="s-proc">Discrete-Time Stochastic Processes</h2>
+<section class="blk" id="ar1-sim">
+  <h3>The AR(1) Process: Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch4_ar1-sim_en.jpg" alt="Slide 55: The AR(1) Process: Simulation" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ar-phi">Persistence φ (highlighted row and worked example): <b id="ar-phi-v"></b></label><input type="range" id="ar-phi" min="0" max="0.99" step="0.01" value="0.5"></div><button class="btn play" id="ar-play" type="button"></button></div><p class="xh">AR(1) with σ = 1: theoretical values, the 500 shocks of the chart and the long simulation of the lecture</p><div class="tw" id="ar-tab"></div><div class="we" id="ar-we-box"><p class="we-h">Worked example: the variance, the autocorrelation and the half-life</p><div class="we-f">\[X_t = \phi X_{t-1} + \varepsilon_t: \qquad \mathrm{Var}(X_t) = \frac{\sigma^2}{1 - \phi^2}, \qquad \rho(h) = \phi^h, \qquad h_{1/2} = \frac{\ln 0.5}{\ln \phi}\]</div><ol id="ar-we"></ol></div><ul class="out" id="ar-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For φ = 0.5 the half-life of a shock is 1.0 periods, for φ = 0.95 it is 13.5. What is it for φ = 0.9?</div><details><summary>Answer</summary><p>ln 0.5/ln 0.9 = 6.6 periods. The stationary variance is 1/(1 − 0.81) = 5.26, and ρ(5) = 0.9⁵ = 0.590. On the 500 shocks of the chart, the sample variance of the process with φ = 0.9 is 6.44: with high persistence, 500 points contain few nearly independent stretches, and the sample variance moves away from the theoretical value.</p></details>
+</section>
 <section class="blk" id="processes">
   <h3>White Noise, AR(1) and Random Walk, Same Shocks</h3>
   <div class="pair">
@@ -185,6 +311,15 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> 68.2% of the 10,000 simulated values W(1) are within ±1. What share is within ±2?</div>
   <details><summary>Answer</summary><p>95.37% in the simulation, theoretically 2Φ(2) − 1 = 95.45%, because W(1) ~ N(0, 1). Chebyshev's inequality only guarantees at least 1 − 1/2² = 75%, for any distribution with finite variance. The band ±k√t describes the distribution of W(t), not a bound on the paths: of the 20 paths of the chart, all end within ±2, but only 14 within ±1. For k = 3: 99.67% against 99.73%.</p></details>
 </section>
+<section class="blk" id="gbm-median">
+  <h3>GBM: Mean, Median and Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=66" target="_blank" rel="noopener"><img src="slides/ch4_gbm-median_en.jpg" alt="Slide 65: GBM: Mean, Median and Simulation" loading="lazy"></a>
+      <figcaption>Slide 65</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gm-a">Series (highlighted row and worked example)</label><select id="gm-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="gm-T">Horizon T (years): <b id="gm-T-v"></b></label><input type="range" id="gm-T" min="0.5" max="30" step="0.5" value="10"></div><div class="ctl"><label for="gm-q">Level α of the quantile</label><select id="gm-q"><option value="0.01">1%</option><option value="0.05" selected>5%</option><option value="0.1">10%</option><option value="0.25">25%</option></select></div><button class="btn play" id="gm-play" type="button"></button></div><p class="xh">GBM calibrated to each series, S<sub>0</sub> = 100</p><div class="tw" id="gm-tab"></div><div class="we" id="gm-we-box"><p class="we-h">Worked example: the mean, the median and the quantile of S<sub>T</sub></p><div class="we-f">\[\begin{gathered}E[S_T] = S_0 e^{\mu T}, \qquad \mathrm{Me}(S_T) = S_0 e^{(\mu - \sigma^2/2)T}, \qquad q_\alpha(S_T) = S_0 e^{(\mu - \sigma^2/2)T + \sigma\sqrt T z_\alpha},\\ P(S_T < S_0) = \Phi\Big(-\frac{(\mu - \sigma^2/2)\sqrt T}{\sigma}\Big)\end{gathered}\]</div><ol id="gm-we"></ol></div><ul class="out" id="gm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> GBM calibrated to Bitcoin has σ = 66.6% per year. How many times larger is the mean of S<sub>10</sub> than the median?</div><details><summary>Answer</summary><p>e<sup>σ²T/2</sup> = e<sup>0.666² × 5</sup> = 9.2 times: mean 68,252, median 7,437. The ratio of the mean to the median depends only on σ²T. For the S&P 500 (σ = 19.26%) the ratio is 1.20 (224.4 against 186.4). The mean of a GBM is dominated by a few very large paths; a typical path follows the median.</p></details>
+</section>
 <section class="blk" id="gbm-paths">
   <h3>GBM Calibrated to the S&P 500 (SFEsimGBM)</h3>
   <div class="pair">
@@ -210,7 +345,7 @@
   <div class="pair">
     <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter4_probability.pdf#page=69" target="_blank" rel="noopener"><img src="slides/sfm_ch4_gbm_check_en.jpg" alt="Slide 68: What GBM Misses" loading="lazy"></a>
       <figcaption>Slide 68</figcaption></figure>
-    <div class="live"><div class="ctls"><div class="ctl"><label for="gc-k">Threshold k for the k-sigma days (fourth panel): <b id="gc-k-v"></b></label><input type="range" id="gc-k" min="3" max="8" step="0.5" value="4"></div><button class="btn play" id="gc-play" type="button"></button></div><div class="charts "><div class="chart" id="gc-chart"></div></div><ul class="out" id="gc-out"></ul></div>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gc-k">Threshold k for the k-sigma days (fourth panel): <b id="gc-k-v"></b></label><input type="range" id="gc-k" min="3" max="8" step="0.5" value="4"></div><button class="btn play" id="gc-play" type="button"></button></div><div class="charts "><div class="chart" id="gc-chart"></div></div><p class="xh">Days with |r − mean| > k standard deviations: data, GBM simulations and the Normal distribution</p><div class="tw" id="gc-tab"></div><div class="charts "><div class="chart" id="gc-tail"></div></div><ul class="out" id="gc-out"></ul></div>
   </div>
   <div class="ask"><span class="ask-tag">Question for the room</span> The ▶ button raises the threshold k from 3 to 8 standard deviations. At k = 6, how many days does the S&P 500 have, and how many does the most extreme of the 300 GBM simulations have?</div>
   <details><summary>Answer</summary><p>12 days in the data and 0 in each of the 300 simulations. BET has 17 such days, Bitcoin 4. At k = 3, the S&P 500 has 105 days, against a GBM median of 18; at k = 8, still 4 days. Under the Normal distribution, the expected number of days beyond 6 standard deviations in 6,714 days is of the order of 10<sup>−5</sup>.</p></details>
