@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 4 · Probabilitate</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch4.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch4_data.js?v=20261101a", "ch4_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch4.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1>Statistica piețelor financiare</h1><p>Capitolul 4 · Probabilitate</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_04" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch4.html" class="lang-btn">EN</a><a href="ch4_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas.</p>
+<p class="toc"><a href="#s-rv">Variabile aleatoare și distribuții</a> · <a href="#s-joint">Distribuții comune și dependență</a> · <a href="#s-cond">Media condiționată și varianța condiționată</a> · <a href="#s-lln">Legea numerelor mari și CLT</a> · <a href="#s-mc">Numere aleatoare și Monte Carlo</a> · <a href="#s-bin">Modelul binomial</a> · <a href="#s-proc">Procese stochastice în timp discret</a> · <a href="#s-wien">Procesul Wiener și mișcarea browniană geometrică</a></p>
+<h2 class="sec" id="s-rv">Variabile aleatoare și distribuții</h2>
+<section class="blk" id="random-variables">
+  <h3>O variabilă aleatoare discretă și una continuă</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch4_random_variables_ro.jpg" alt="Slide-ul 13: O variabilă aleatoare discretă și una continuă" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-a">Seria</label><select id="rv-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, varianța lui K (1,16) este puțin sub varianța binomială 5p(1 − p) = 1,24. Butonul ▶ trece la DAX și BET. Ce se întîmplă pentru BET, al cărui randament zilnic are autocorelația de ordinul 1 egală cu 0,109?</div>
+  <details><summary>Răspuns</summary><p>Varianța lui K depășește valoarea binomială: 1,47 față de 1,24, raportul 1,18. Distribuția binomială presupune zile independente; cu autocorelația pozitivă a randamentelor BET, zilele de creștere vin mai des una după alta, deci săptămînile cu multe sau cu puține zile de creștere sînt mai frecvente. Media rămîne aproape de 5p: 2,67 față de 2,70. Pentru S&P 500, cu autocorelația −0,099, raportul este 0,93; pentru DAX tot 0,93.</p></details>
+</section>
+<section class="blk" id="cdf-quantile">
+  <h3>CDF empirică și cuantila de 1% a S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=15" target="_blank" rel="noopener"><img src="slides/sfm_ch4_cdf_quantile_ro.jpg" alt="Slide-ul 14: CDF empirică și cuantila de 1% a S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cq-a">Seria</label><select id="cq-a"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="cq-p">Nivelul α al cuantilei (VaR α = −q<sub>α</sub>): <b id="cq-p-v"></b></label><input type="range" id="cq-p" min="0" max="5" step="1" value="3"></div><button class="btn play" id="cq-play" type="button"></button></div><div class="charts "><div class="chart" id="cq-chart"></div></div><ul class="out" id="cq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 1%, VaR empiric al S&P 500 (3,45%) este de 1,24 ori VaR din distribuția Normală cu aceeași medie și abatere standard (2,80%). Butonul ▶ coboară nivelul α de la 5% la 0,1%. Cît devine raportul la α = 0,1%?</div>
+  <details><summary>Răspuns</summary><p>Circa 1,94: VaR 0,1% este 7,22% în date și 3,72% în distribuția Normală. La α = 5% raportul este 0,94 (1,85% față de 1,97%). Dacă diferența ar fi doar de scală, raportul ar fi același la orice nivel; el crește spre coadă, deci problema este forma distribuției: un vîrf mai înalt și cozi mai groase. P(r < −5%) este 0,34% în date și 1,7 × 10<sup>−3</sup>% în distribuția Normală, de 199 de ori mai puțin.</p></details>
+</section><h2 class="sec" id="s-joint">Distribuții comune și dependență</h2>
+<section class="blk" id="joint">
+  <h3>Distribuții comune ale randamentelor zilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=24" target="_blank" rel="noopener"><img src="slides/sfm_ch4_joint_ro.jpg" alt="Slide-ul 23: Distribuții comune ale randamentelor zilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="jt-y">Zilele evidențiate: <b id="jt-y-v"></b></label><input type="range" id="jt-y" min="0" max="27" step="1" value="0"></div><button class="btn play" id="jt-play" type="button"></button></div><div class="charts "><div class="chart" id="jt-chart"></div></div><ul class="out" id="jt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Corelația zilnică S&P 500–BET pe întreaga perioadă este 0,21. Cît este în zilele din 2020?</div>
+  <details><summary>Răspuns</summary><p>0,63, în 242 de zile comune, de trei ori valoarea pe întreaga perioadă. În 2008 corelația este 0,28, în 2017 0,20. Pentru S&P 500 și DAX: 0,69 în 2020, 0,62 în 2008 și 0,57 în 2017, față de 0,60 pe toată perioada. Corelația crește în anii de criză, adică exact cînd diversificarea ar fi necesară.</p></details>
+</section>
+<section class="blk" id="uncorrelated-dependent">
+  <h3>Randamentele sînt necorelate, pătratele lor nu</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch4_uncorrelated_dependent_ro.jpg" alt="Slide-ul 26: Randamentele sînt necorelate, pătratele lor nu" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ud-h">Lagul h (zile): <b id="ud-h-v"></b></label><input type="range" id="ud-h" min="1" max="20" step="1" value="1"></div><button class="btn play" id="ud-play" type="button"></button></div><div class="charts "><div class="chart" id="ud-chart"></div></div><ul class="out" id="ud-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mărește lagul h de la 1 la 20. La h = 20, mai iese Corr(r<sub>t</sub>², r<sub>t−20</sub>²) a S&P 500 din banda ±1,96/√n = ±0,024?</div>
+  <details><summary>Răspuns</summary><p>Da: 0,164 la lagul 20, față de 0,313 la lagul 1, în timp ce corelația randamentelor la lagul 20 este 0,014, în bandă. La lagul 1, corelația pătratelor este 0,31 (S&P 500), 0,15 (DAX), 0,33 (BET) și 0,14 (Bitcoin). La lagul 20 rămîne peste bandă pentru DAX (0,116) și BET (0,090); pentru Bitcoin (0,026) intră în banda ±0,030. Volatility clustering durează săptămîni. Banda este o valoare de referință asimptotică pentru o serie i.i.d., nu un test exact pentru fiecare lag.</p></details>
+</section><h2 class="sec" id="s-cond">Media condiționată și varianța condiționată</h2>
+<section class="blk" id="conditional">
+  <h3>Randamentul de azi dată fiind mișcarea de ieri</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch4_conditional_ro.jpg" alt="Slide-ul 31: Randamentul de azi dată fiind mișcarea de ieri" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cd-q">Numărul de grupuri după |r<sub>t−1</sub>|: <b id="cd-q-v"></b></label><input type="range" id="cd-q" min="2" max="10" step="1" value="5"></div><button class="btn play" id="cd-play" type="button"></button></div><div class="charts "><div class="chart" id="cd-chart"></div></div><ul class="out" id="cd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 5 grupuri (chintile), raportul abaterilor standard dintre grupul cel mai agitat și cel mai calm este 1,88 pentru S&P 500. Butonul ▶ trece de la 2 la 10 grupuri. Cît devine raportul la 10 grupuri?</div>
+  <details><summary>Răspuns</summary><p>2,22: 2,03% în grupul cel mai agitat față de 0,92% în cel mai calm. Cu 2 grupuri raportul este 1,43: grupurile extreme sînt mai extreme cînd sînt mai înguste. Componenta dintre grupuri a varianței totale rămîne neglijabilă: 0,054% din total la 10 grupuri, 0,009% la 5. Mișcarea de ieri spune mult despre riscul de azi și aproape nimic despre media de azi.</p></details>
+</section><h2 class="sec" id="s-lln">Legea numerelor mari și CLT</h2>
+<section class="blk" id="lln">
+  <h3>LLN pentru randamentul mediu: convergență lentă</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch4_lln_ro.jpg" alt="Slide-ul 35: LLN pentru randamentul mediu: convergență lentă" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ln-y">Eșantionul începe în: <b id="ln-y-v"></b></label><input type="range" id="ln-y" min="2000" max="2020" step="1" value="2000"></div><button class="btn play" id="ln-play" type="button"></button></div><div class="charts "><div class="chart" id="ln-chart"></div></div><ul class="out" id="ln-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe 2000–2026, media zilnică a S&P 500 are t = 1,67. Butonul ▶ mută începutul eșantionului de la 2000 la 2020. Ce valoare are t pentru eșantionul care începe în 2009?</div>
+  <details><summary>Răspuns</summary><p>2,83: media zilnică este 0,0480% (12,1% pe an), eroarea standard 0,0169%. Eșantionul din 2009 începe după criza din 2008. Din 2003, t = 2,38; din 2020, t = 1,64 cu doar 1 687 de zile. Intervalul de 95% al mediei anuale este [3,7%; 20,4%] din 2009 și [−1,1%; 13,5%] din 2000. Media estimată depinde mult de începutul eșantionului; un început ales după ce s-au văzut datele nu mai dă un test valid.</p></details>
+</section><h2 class="sec" id="s-mc">Numere aleatoare și Monte Carlo</h2>
+<section class="blk" id="randu">
+  <h3>RANDU: numerele aleatoare cad mai ales în plane (SFErandu)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch4_randu_ro.jpg" alt="Slide-ul 39: RANDU: numerele aleatoare cad mai ales în plane (SFErandu)" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ru-s">Sămînța x<sub>0</sub> a RANDU (impară): <b id="ru-s-v"></b></label><input type="range" id="ru-s" min="1" max="99" step="2" value="1"></div><button class="btn play" id="ru-play" type="button"></button></div><div class="charts "><div class="chart" id="ru-chart"></div></div><ul class="out" id="ru-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ schimbă sămînța x<sub>0</sub> a RANDU (numere impare de la 1 la 99). Cîte valori distincte ia combinația 9u<sub>k</sub> − 6u<sub>k+1</sub> + u<sub>k+2</sub> pentru x<sub>0</sub> = 99?</div>
+  <details><summary>Răspuns</summary><p>15, de la −5 la 9, ca pentru orice sămînță impară. Relația vine din multiplicator: 65539 = 2<sup>16</sup> + 3, deci a² = 6a − 9 (mod 2<sup>31</sup>) și x<sub>k+2</sub> = 6x<sub>k+1</sub> − 9x<sub>k</sub> (mod 2<sup>31</sup>), oricare ar fi x<sub>0</sub>. Corelația perechilor rămîne mică (0,0078 pentru x<sub>0</sub> = 99), deci un test pe perechi nu vede defectul. Cu PCG64, combinația ia 29 998 de valori diferite în 29 998 de triplete.</p></details>
+</section>
+<section class="blk" id="inverse-transform">
+  <h3>Transformarea inversă: extrageri exponențiale, Normale și istorice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch4_inverse_transform_ro.jpg" alt="Slide-ul 41: Transformarea inversă: extrageri exponențiale, Normale și istorice" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="it-l">λ al distribuției exponențiale (stînga): <b id="it-l-v"></b></label><input type="range" id="it-l" min="0.4" max="4" step="0.2" value="2"></div><div class="ctl"><label for="it-x">Pragul x pentru extrageri sub −x% (dreapta): <b id="it-x-v"></b></label><input type="range" id="it-x" min="1" max="12" step="0.5" value="5"></div><button class="btn play" id="it-play" type="button"></button></div><div class="charts "><div class="chart" id="it-chart"></div></div><ul class="out" id="it-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Dintre cele 200 000 de extrageri din distribuția Normală, 7 (0,0035%) sînt sub −5%. Cît dă distribuția Normală exactă, cu aceeași medie și abatere standard, pentru P(r < −5%)?</div>
+  <details><summary>Răspuns</summary><p>1,7 × 10<sup>−3</sup>%, adică 0,0017%, sau 3,4 extrageri așteptate din 200 000. Cu atît de puține evenimente, abaterea standard a numărului de extrageri este circa √3,4 = 1,8, deci 7 extrageri sînt zgomot de simulare, nu un defect al metodei. Extragerile istorice dau 0,34% (685 din 200 000), ca datele: transformarea inversă cu funcția cuantilă empirică reproduce coada eșantionului. La −8%: nicio extragere Normală, 148 istorice.</p></details>
+</section>
+<section class="blk" id="monte-carlo">
+  <h3>Monte Carlo converge cu viteza 1/√N</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch4_monte_carlo_ro.jpg" alt="Slide-ul 44: Monte Carlo converge cu viteza 1/√N" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-L">Pierderea lunară L, în %: <b id="mc-L-v"></b></label><input type="range" id="mc-L" min="5" max="20" step="1" value="10"></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru o pierdere lunară peste 10%, o eroare relativă de 10% (la 95%) cere N = 12 762 de simulări. Cîte cere aceeași precizie pentru o pierdere lunară peste 15%?</div>
+  <details><summary>Răspuns</summary><p>Circa 146 000 (146 201): p scade de la 2,922% la 0,262%, iar N ≈ 1,96²(1 − p)/(0,1² p) crește aproape ca 1/p. Pentru 20%, p = 0,0112% și N = 3,44 milioane; cu un milion de simulări estimarea este 0,0117%, cu eroarea standard 0,0011%, circa 10% din p. Eroarea absolută √(p(1 − p)/N) scade odată cu p, dar eroarea relativă crește.</p></details>
+</section><h2 class="sec" id="s-bin">Modelul binomial</h2>
+<section class="blk" id="binomial">
+  <h3>Traiectorii binomiale și limita lognormală (SFEBinomp)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=50" target="_blank" rel="noopener"><img src="slides/sfm_ch4_binomial_ro.jpg" alt="Slide-ul 49: Traiectorii binomiale și limita lognormală (SFEBinomp)" loading="lazy"></a>
+      <figcaption>Slide-ul 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bn-n">Numărul de pași n pe un an: <b id="bn-n-v"></b></label><input type="range" id="bn-n" min="0" max="6" step="1" value="6"></div><button class="btn play" id="bn-play" type="button"></button></div><div class="charts "><div class="chart" id="bn-chart"></div></div><ul class="out" id="bn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 252 de pași, P(S<sub>T</sub> ≤ 100) = 39,7%, față de 37,3% în limita lognormală. Cît este P(S<sub>T</sub> ≤ 100) cu doar 2 pași?</div>
+  <details><summary>Răspuns</summary><p>61,9%, din care 47,3% este nodul S<sub>T</sub> = 100 (o creștere și o scădere, ud = 1); P(S<sub>T</sub> < 100) este doar 14,7%. Cu n par, arborele are un nod exact în S<sub>0</sub>, cu o probabilitate care scade ca 1/√n: 6,7% la 126 de pași, 4,8% la 252. Cu 5 pași nu există acest nod și P(S<sub>T</sub> < 100) = 36,5%. Valoarea de 39,7% de pe slide este P(S<sub>T</sub> ≤ 100); strict sub 100 sînt 34,9%. E[S<sub>T</sub>] = 108,42 la orice n, prin construcția lui p.</p></details>
+</section><h2 class="sec" id="s-proc">Procese stochastice în timp discret</h2>
+<section class="blk" id="processes">
+  <h3>Zgomot alb, AR(1) și mers aleator, aceleași șocuri</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch4_processes_ro.jpg" alt="Slide-ul 56: Zgomot alb, AR(1) și mers aleator, aceleași șocuri" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-phi">φ al procesului AR(1) din panoul al treilea: <b id="pr-phi-v"></b></label><input type="range" id="pr-phi" min="0" max="1" step="0.01" value="0.95"></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru φ = 0,95, timpul de înjumătățire al unui șoc este 13,5 perioade. Cît este pentru φ = 0,99?</div>
+  <details><summary>Răspuns</summary><p>ln 0,5/ln 0,99 = 69,0 perioade, de cinci ori mai mult. Varianța staționară 1/(1 − φ²) crește de la 10,26 la 50,25, iar ρ(5) = 0,99⁵ = 0,951. Procesul este încă staționar și revine la 0, dar pe 500 de puncte se deosebește greu de un mers aleator; numai φ = 1 face șocurile permanente.</p></details>
+</section>
+<section class="blk" id="spot-the-real">
+  <h3>Întrebare pentru sală: care serie este cea reală?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch4_spot_the_real_ro.jpg" alt="Slide-ul 57: Întrebare pentru sală: care serie este cea reală?" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sr-k">Pragul k, în abateri standard (linii punctate): <b id="sr-k-v"></b></label><input type="range" id="sr-k" min="3" max="8" step="0.5" value="4"></div><button class="btn play" id="sr-play" type="button"></button></div><div class="charts "><div class="chart" id="sr-chart"></div></div><ul class="out" id="sr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Care coloană este S&P 500, după randamente?</div>
+  <details><summary>Răspuns</summary><p>Coloana C. Prețurile nu o deosebesc: și mersurile aleatoare cu tendință au avînturi și căderi lungi. Randamentele o deosebesc: exces de boltire 10,67 față de cel mult 0,02 în simulări, Corr(r<sub>t</sub>², r<sub>t−1</sub>²) = 0,313 față de cel mult 0,006, cea mai mare mișcare zilnică 12,8% față de 6,2%. Peste 4 abateri standard: 46 de zile în C, cel mult una în coloanele simulate; peste 6 abateri standard: 12 zile în C, niciuna în simulări.</p></details>
+</section><h2 class="sec" id="s-wien">Procesul Wiener și mișcarea browniană geometrică</h2>
+<section class="blk" id="wiener">
+  <h3>De la mersul aleator la procesul Wiener (SFEWienerProcess)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=63" target="_blank" rel="noopener"><img src="slides/sfm_ch4_wiener_ro.jpg" alt="Slide-ul 62: De la mersul aleator la procesul Wiener (SFEWienerProcess)" loading="lazy"></a>
+      <figcaption>Slide-ul 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wn-k">Banda ±k√t (linii punctate): <b id="wn-k-v"></b></label><input type="range" id="wn-k" min="0.5" max="3" step="0.1" value="2"></div><button class="btn play" id="wn-play" type="button"></button></div><div class="charts "><div class="chart" id="wn-chart"></div></div><ul class="out" id="wn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> 68,2% din cele 10 000 de valori simulate W(1) sînt în ±1. Ce pondere este în ±2?</div>
+  <details><summary>Răspuns</summary><p>95,37% în simulare, teoretic 2Φ(2) − 1 = 95,45%, pentru că W(1) ~ N(0, 1). Inegalitatea lui Cebîșev garantează doar cel puțin 1 − 1/2² = 75%, pentru orice distribuție cu varianță finită. Banda ±k√t descrie distribuția lui W(t), nu o margine a traiectoriilor: dintre cele 20 de traiectorii ale graficului, toate se termină în ±2, dar doar 14 în ±1. Pentru k = 3: 99,67% față de 99,73%.</p></details>
+</section>
+<section class="blk" id="gbm-paths">
+  <h3>GBM calibrat pe S&P 500 (SFEsimGBM)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=67" target="_blank" rel="noopener"><img src="slides/sfm_ch4_gbm_paths_ro.jpg" alt="Slide-ul 66: GBM calibrat pe S&P 500 (SFEsimGBM)" loading="lazy"></a>
+      <figcaption>Slide-ul 66</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-s">Volatilitatea σ (μ = 8,08% fixat): <b id="gp-s-v"></b></label><input type="range" id="gp-s" min="5" max="60" step="0.01" value="19.26"></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ mărește σ de la 5% la 60%, cu aceeași medie μ = 8,08% pe an. Pentru σ = 40%, unde ajunge mediana lui S<sub>10</sub>?</div>
+  <details><summary>Răspuns</summary><p>La 100,8 = 100e<sup>(0,0808 − 0,08) × 10</sup>: tendința logaritmică μ − σ²/2 scade la 0,08% pe an. Media rămîne 224,4, pentru că depinde doar de μ. Probabilitatea unei pierderi după 10 ani crește de la 15,3% (σ = 19,26%) la 49,7%, iar ponderea traiectoriilor sub medie, Φ(σ√T/2), de la 62,0% la 73,6%. σ = 40% este o rulare suplimentară a formulelor capitolului, nu un rezultat din curs.</p></details>
+</section>
+<section class="blk" id="gbm-fan">
+  <h3>Traiectorii reale în evantaiul GBM</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=68" target="_blank" rel="noopener"><img src="slides/sfm_ch4_gbm_fan_ro.jpg" alt="Slide-ul 67: Traiectorii reale în evantaiul GBM" loading="lazy"></a>
+      <figcaption>Slide-ul 67</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gf-b">Banda exterioară a evantaiului</label><select id="gf-b"><option value="0.5">50%</option><option value="0.8">80%</option><option value="0.9" selected>90%</option><option value="0.95">95%</option><option value="0.99">99%</option></select></div><button class="btn play" id="gf-play" type="button"></button></div><div class="charts "><div class="chart" id="gf-chart"></div></div><ul class="out" id="gf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu banda de 90%, BET este în afara evantaiului GBM în 24% din zile. Ce pondere dă banda de 99%, unde nominal ar fi 1%?</div>
+  <details><summary>Răspuns</summary><p>12,7%: mai puțin, dar de 13 ori valoarea nominală; avîntul din 2000–2007 și crahul din 2008 duc traiectoria departe de GBM. S&P 500: 7,0% în afara benzii de 90% și 0,0% în afara celei de 99%; Bitcoin: 4,5% și 0,1%. Zilele unei singure traiectorii nu sînt observații independente: traiectoria rămîne mult timp de aceeași parte a medianei, așa că și S&P 500 este în afara benzii de 50% în 64,2% din zile.</p></details>
+</section>
+<section class="blk" id="gbm-check">
+  <h3>Limitele modelului GBM</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol4_probabilitate.pdf#page=69" target="_blank" rel="noopener"><img src="slides/sfm_ch4_gbm_check_ro.jpg" alt="Slide-ul 68: Limitele modelului GBM" loading="lazy"></a>
+      <figcaption>Slide-ul 68</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gc-k">Pragul k pentru zilele de k sigma (panoul al patrulea): <b id="gc-k-v"></b></label><input type="range" id="gc-k" min="3" max="8" step="0.5" value="4"></div><button class="btn play" id="gc-play" type="button"></button></div><div class="charts "><div class="chart" id="gc-chart"></div></div><ul class="out" id="gc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Butonul ▶ ridică pragul k de la 3 la 8 abateri standard. La k = 6, cîte zile are S&P 500 și cîte are cea mai extremă dintre cele 300 de simulări GBM?</div>
+  <details><summary>Răspuns</summary><p>12 zile în date și 0 în fiecare dintre cele 300 de simulări. BET are 17 astfel de zile, Bitcoin 4. La k = 3, S&P 500 are 105 zile, față de mediana GBM 18; la k = 8, încă 4 zile. În distribuția Normală, numărul așteptat de zile peste 6 abateri standard în 6 714 zile este de ordinul 10<sup>−5</sup>.</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: S&P 500, DAX și BET din ianuarie 2000, Bitcoin din septembrie 2014 (7 zile pe săptămînă), pînă la 18 septembrie 2026. Prețuri de închidere EODHD. Simulările sînt cele din curs: aceleași modele, aceleași numere de traiectorii și aceleași semințe ale generatorului.</p>
+</main>
+</body>
+</html>
