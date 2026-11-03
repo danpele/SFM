@@ -39,15 +39,44 @@ const simpleRet = p => p.slice(1).map((x, i) => x / p[i] - 1);
 const perYear = (n, d0, d1) => n / ((d1 - d0) / 365.25);           // periods_per_year: observations per calendar year
 function quantile(a, q) { const s = Float64Array.from(a).sort(), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; }
 function drawdown(p) { let m = -Infinity; return p.map(x => { m = Math.max(m, x); return x / m - 1; }); }
-function performance(A) {           // performance() of generate_all_charts.py, risk-free rate 0
+function mddDates(p, days) {        // max_drawdown() of generate_all_charts.py: indices of the trough, the previous peak and the recovery (-1: none)
+  const dd = drawdown(p); let it = 0; dd.forEach((v, i) => { if (v < dd[it]) it = i; });
+  let ip = 0; for (let i = 0; i <= it; i++) if (p[i] > p[ip]) ip = i;
+  let ir = -1; for (let i = it; i < p.length; i++) if (p[i] >= p[ip]) { ir = i; break; }
+  return { mdd: dd[it], ip, it, ir };
+}
+function performance(A, rf) {       // performance(p, rf) of generate_all_charts.py; rf: annual risk-free rate (decimal), 0 in the lecture
+  rf = rf || 0;
   const { p, days } = A, R = simpleRet(p), r = logRet(p), n = R.length;
   const q = perYear(n, days[1], days[days.length - 1]), m = mean(R), s = sd(R);
-  const muA = m * q, vol = s * Math.sqrt(q), srd = m / s, sr = srd * Math.sqrt(q), se = Math.sqrt((1 + 0.5 * srd * srd) / n) * Math.sqrt(q);
+  const muA = m * q, vol = s * Math.sqrt(q), srd = (m - rf / q) / s, sr = srd * Math.sqrt(q), se = Math.sqrt((1 + 0.5 * srd * srd) / n) * Math.sqrt(q);
   let dn = 0; for (const x of R) dn += Math.min(x, 0) ** 2; dn = Math.sqrt(dn / n);
   const years = (days[days.length - 1] - days[0]) / 365.25, cagr = (p[p.length - 1] / p[0]) ** (1 / years) - 1;
-  const mdd = Math.min(...drawdown(p)), muL = mean(r) * q;
-  return { n, q, years, muA, muL, cagr, vol, drag: muA - muL, halfVar: 0.5 * vol * vol, sharpe: sr, se, sortino: muA / (dn * Math.sqrt(q)), mdd, calmar: cagr / Math.abs(mdd) };
+  const M = mddDates(p, days), mdd = M.mdd, muL = mean(r) * q;
+  return { n, q, years, m, s, srd, muA, muL, cagr, vol, drag: muA - muL, halfVar: 0.5 * vol * vol, sharpe: sr, se, sed: se / Math.sqrt(q), dn,
+    sortino: (muA - rf) / (dn * Math.sqrt(q)), mdd, calmar: cagr / Math.abs(mdd),
+    peak: M.ip, trough: M.it, rec: M.ir, dates: A.dates, p };
 }
+function resample(A, f) {           // f = 'w': last price of each week (Monday to Sunday); 'm': of each calendar month; 'd': A
+  if (f === 'd') return A;
+  const key = d => (f === 'w' ? Math.floor((d + 3) / 7) : iso(d).slice(0, 7)), days = [], p = [];
+  A.days.forEach((d, i) => {
+    if (days.length && key(days[days.length - 1]) === key(d)) { days[days.length - 1] = d; p[p.length - 1] = A.p[i]; } else { days.push(d); p.push(A.p[i]); }
+  });
+  return { days, dates: days.map(iso), p };
+}
+function describe(A, drop) {        // describe() of generate_all_charts.py: log returns in %, sd with n - 1, skewness and kurtosis with n (scipy)
+  let r = logRet(A.p).map(x => 100 * x), rd = A.dates.slice(1);   // drop: dates of daily returns left out (the two TLV days of May 2016)
+  if (drop) { const k = rd.map(d => !drop.includes(d)); r = r.filter((_, i) => k[i]); rd = rd.filter((_, i) => k[i]); }
+  const n = r.length, q = perYear(n, dayOf(rd[0]), dayOf(rd[n - 1])), m = mean(r);
+  let m2 = 0, m3 = 0, m4 = 0, lo = 0, hi = 0;
+  r.forEach((x, i) => { const e = x - m; m2 += e * e; m3 += e ** 3; m4 += e ** 4; if (x < r[lo]) lo = i; if (x > r[hi]) hi = i; });
+  m2 /= n; m3 /= n; m4 /= n;
+  const s = sd(r), annVol = s * Math.sqrt(q), Y = n / q;
+  return { n, q, Y, mean: m, sd: s, skew: m3 / m2 ** 1.5, exkurt: m4 / (m2 * m2) - 3, min: r[lo], minDate: rd[lo], max: r[hi], maxDate: rd[hi],
+    annMean: m * q, annVol, se: annVol / Math.sqrt(Y) };
+}
+const TLV_BAD = ['2016-05-30', '2016-05-31'];   // adjusted close of 30 May 2016 out of line (bonus shares): −15.0%, then +20.5%
 function rollSd(r, w) {             // pandas rolling(w).std(), ddof 1
   const o = new Array(r.length).fill(null); let s = 0, s2 = 0;
   for (let i = 0; i < r.length; i++) {
@@ -213,6 +242,7 @@ function simpleLogReturns() {
   const gap = 100 * R - lr, tay = 100 * R - 100 * R * R / 2;
   out('sl-out', [T.sl(sgn(100 * R, 1), sgn(lr, 3), sgn(tay, 3), nf(100 * gap, 1), nf(gap, 2)),
     T.slExt(ext.map(e => e.pts.map(p => T.slItem(LAB[e.k], fdate(p.d), sgn(p.R, 1), sgn(p.r, 1))).join('; ')).join('; '))]);
+  slWE();
 }
 
 // ================================================================= 6. growth of 100 invested
@@ -230,6 +260,7 @@ function growth() {
   const end = idx.map(v => v[v.length - 1]);
   out('gr-out', [T.gr(fdate(dates[0]), G4.map((k, j) => `${LAB[k]} ${fint(end[j])}`).join(', ')),
     T.gr2(G4.map((k, j) => T.grItem(LAB[k], fint(end[j] - 100), nf(Math.log(end[j] / 100), 2))).join('; '))]);
+  grWE(dates, vals, i0);
 }
 
 // ================================================================= 7. histograms vs the Normal distribution
@@ -279,7 +310,7 @@ function rollingVol() {
 
 // ================================================================= 9. Sharpe ratios with confidence intervals
 const PERF = {};
-function perfAll(y) { return PERF[y] || (PERF[y] = Object.fromEntries(D.assets.map(k => [k, performance(asset(k, y))]))); }
+function perfAll(y, rf) { const key = y + ':' + (rf || 0); return PERF[key] || (PERF[key] = Object.fromEntries(D.assets.map(k => [k, performance(asset(k, y), rf)]))); }
 const ZQ = { 90: 1.6448536, 95: 1.959964, 99: 2.5758293 };
 function sharpeCI() {
   const y = +$('sc-y').value, cl = +$('sc-cl').value, z = cl === 95 ? 1.96 : ZQ[cl]; label('sc-y').textContent = y;
@@ -313,6 +344,7 @@ function drawdowns() {
   $('dd-chart').style.height = H(380) + 'px';
   plot('dd-chart', tr, layout({ shapes: [hl(-x, C.navy, 'dash')], xaxis: DATE, yaxis: XT('Drawdown from the previous peak (%)', { range: [-100, 3] }), margin: { l: 60, r: 12, t: 16, b: 40 } }));
   out('dd-out', [T.dd(x, nf(100 * x / (100 - x), 0)), ...items]);
+  ddWE();
 }
 
 // ================================================================= 11. volatility drag on real data
@@ -341,6 +373,7 @@ function volDrag() {
   const B = P.btc;
   out('vd-out', [T.vd(Math.round(100 * s), nf(100 * dg, 2), nf(100 * (0.10 - dg), 2), nf(Math.exp(10 * (0.10 - dg)), 2)),
     T.vd2(nf(100 * B.muA, 1), nf(100 * B.muL, 1), nf(100 * B.drag, 1), nf(100 * B.halfVar, 1))]);
+  vdWE();
 }
 
 // ================================================================= 12. risk and return
@@ -364,31 +397,264 @@ function riskReturn() {
   out('rr-out', [T.rr(fdate(asset('sp500', y).dates[0]), best('cagr'), best('sharpe'), best('sortino'), best('calmar')), T.rr2(lowV, lowM)]);
 }
 
+// ================================================================= tables and worked examples
+function table(id, head, rows) {    // rows: arrays of cells; a cell is a string or { v, c } (class); rows may carry .cls
+  const cell = (x, tag) => { const o = typeof x === 'object' && x !== null ? x : { v: x }; return `<${tag}${o.c ? ` class="${o.c}"` : ''}>${o.v}</${tag}>`; };
+  $(id).innerHTML = `<table class="xt"><thead><tr>${head.map(h => cell(h, 'th')).join('')}</tr></thead><tbody>` +
+    rows.map(r => `<tr${r.cls ? ` class="${r.cls}"` : ''}>${r.map(x => cell(x, 'td')).join('')}</tr>`).join('') + '</tbody></table>';
+}
+const steps = (id, items) => { $(id).innerHTML = items.map(s => `<li>${s}</li>`).join(''); };
+const fnum = (x, d) => { const s = nf(x, d), i = s.search(/[.,]/), a = i < 0 ? s : s.slice(0, i), b = i < 0 ? '' : s.slice(i); return a.replace(/\B(?=(\d{3})+(?!\d))/g, sep) + b; };
+const fprice = x => fnum(x, x >= 100 ? 2 : 4);
+const dshort = s => fdate(s);
+const ndays = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+const FREQ = { d: 'daily', w: 'weekly', m: 'monthly' };
+const SEL = (k, sel) => (k === sel ? 'sel' : '');
+
+// worked example of block 5: a real price pair
+function slWE() {
+  const [k, side] = $('sl-d').value.split(':'), A = full(k), Rk = simpleRet(A.p);
+  let j = 0; Rk.forEach((x, i) => { if (side === 'max' ? x > Rk[j] : x < Rk[j]) j = i; });
+  const p0 = A.p[j], p1 = A.p[j + 1], R = p1 / p0 - 1, r = Math.log(p1 / p0);
+  steps('sl-we', [T.slw1(LAB[k], fdate(A.dates[j]), fprice(p0), fdate(A.dates[j + 1]), fprice(p1)),
+    T.slw2(fprice(p1), fprice(p0), sgn(100 * R, 2), sgn(100 * r, 2)),
+    T.slw3(nf(100 * (R - r), 2), nf(100 * R * R / 2, 2), nf(100 * (R * R / 2 - R ** 3 / 3), 2))]);
+}
+// worked example of block 6: compounding over many periods
+function grWE(dates, vals, i0) {
+  const k = $('gr-a').value, j = G4.indexOf(k), v = vals[j].slice(i0), A = asset(k);
+  const p0 = v[0], pT = v[v.length - 1], g = pT / p0, Y = (Date.parse(dates[dates.length - 1]) - Date.parse(dates[0])) / 864e5 / 365.25;
+  let i1 = 0; A.days.forEach((d, i) => { if (d <= dayOf(dates[0])) i1 = i; });   // own calendar from the last price on or before the first day
+  const lr = logRet(A.p.slice(i1)), Ay = asset(k, +$('gr-y').value); let s = 0; for (const x of lr) s += x;
+  steps('gr-we', [T.grw1(LAB[k], fprice(p0), fdate(dates[0]), fprice(pT), fdate(dates[dates.length - 1]), nf(Y, 2)),
+    T.grw2(nint(lr.length), nf(g, 3), fnum(100 * (g - 1), 1)),
+    T.grw3(nint(lr.length), nf(s, 4), nf(Math.log(g), 4), fnum(100 * (Math.exp(s) - 1), 1)),
+    T.grw4(nf(g, 3), nf(Y, 2), nf(100 * (g ** (1 / Y) - 1), 2), nf(s, 4), nf(100 * (Math.exp(s / Y) - 1), 2)),
+    T.grw5(fdate(Ay.dates[0]), nf(100 * performance(Ay).cagr, 2), fdate(dates[0]))]);
+}
+// worked example of block 10: the maximum drawdown of a real price path
+function ddWE() {
+  const k = $('dd-a').value, A = full(k), M = mddDates(A.p, A.days), x = -M.mdd, d = A.dates;
+  steps('dd-we', [T.ddw1(LAB[k], d[0].slice(0, 4), fdate(d[M.ip]), fprice(A.p[M.ip]), fdate(d[M.it]), fprice(A.p[M.it])),
+    T.ddw2(fprice(A.p[M.it]), fprice(A.p[M.ip]), nf(-100 * x, 1)),
+    T.ddw3(nf(x, 3), nf(100 * x / (1 - x), 0)),
+    M.ir >= 0 ? T.ddw4(fdate(d[M.ir]), nint(ndays(d[M.ip], d[M.it])), nint(ndays(d[M.it], d[M.ir])), nf(ndays(d[M.ip], d[M.ir]) / 365.25, 1))
+      : T.ddw4n(nint(ndays(d[M.ip], d[M.it])), fdate(d[d.length - 1]))]);
+}
+// worked example of block 11: arithmetic minus log mean on real data
+function vdWE() {
+  const k = $('vd-a').value, P = perfAll(2015)[k], r = logRet(P.p);
+  steps('vd-we', [T.vdw1(LAB[k], nf(P.q, 1), nf(100 * P.m, 4), nf(100 * P.muA, 1)),
+    T.vdw2(nf(100 * mean(r), 4), nf(100 * P.muL, 1)),
+    T.vdw3(nf(100 * P.muA, 1), nf(100 * P.muL, 1), nf(100 * P.drag, 2), nf(100 * P.vol, 1), nf(100 * P.halfVar, 2)),
+    T.vdw4(nf(P.muL, 3), nf(100 * (Math.exp(P.muL) - 1), 1), nf(100 * P.cagr, 1))]);
+}
+
+// ================================================================= X1. a TLV–SNP portfolio (frame "Real Data: a TLV–SNP Portfolio")
+function pairTS(a, b) {             // pandas concat(...).dropna(): the days on which both stocks have a price
+  const A = asset(a), B = asset(b), m = new Map(B.days.map((d, i) => [d, B.p[i]])), days = [], pa = [], pb = [];
+  A.days.forEach((d, i) => { if (m.has(d)) { days.push(d); pa.push(A.p[i]); pb.push(m.get(d)); } });
+  return { days, dates: days.map(iso), pa, pb };
+}
+function portfolio(w) {             // portfolio_example() of generate_all_charts.py
+  const S = pairTS('tlv', 'snp'), Ra = simpleRet(S.pa), Rb = simpleRet(S.pb), n = Ra.length;
+  const ex = [], ap = [], err = []; let cE = 0, cA = 0, im = 0, sAbs = 0;
+  const cumE = [0], cumA = [0];
+  for (let i = 0; i < n; i++) {
+    const Rp = w * Ra[i] + (1 - w) * Rb[i], e = Math.log1p(Rp), a = w * Math.log1p(Ra[i]) + (1 - w) * Math.log1p(Rb[i]);
+    ex.push(e); ap.push(a); err.push(1e4 * (e - a)); cE += e; cA += a; cumE.push(cE); cumA.push(cA); sAbs += Math.abs(1e4 * (e - a));
+    if (err[i] > err[im]) im = i;
+  }
+  const Y = (S.days[S.days.length - 1] - S.days[0]) / 365.25;
+  return { S, Ra, Rb, n, ex, ap, err, cumE, cumA, sumE: cE, sumA: cA, im, mae: sAbs / n, Y, wealth: Math.exp(cE), cagr: Math.exp(cE / Y) - 1,
+    cagrA: (S.pa[S.pa.length - 1] / S.pa[0]) ** (1 / Y) - 1, cagrB: (S.pb[S.pb.length - 1] / S.pb[0]) ** (1 / Y) - 1 };
+}
+function portfolioBlock() {
+  const w = +$('pf-w').value / 100; label('pf-w').textContent = Math.round(100 * w) + '% TLV, ' + Math.round(100 * (1 - w)) + '% SNP';
+  const P = portfolio(w), S = P.S, d1 = S.dates.slice(1);
+  const Pn = panels('pf-chart', 2, { stack: true, hs: 190, extra: 110, vgap: 0.12 }), [a, b] = Pn.ax;
+  setAx(Pn, 0, Object.assign({}, DATE, { showticklabels: false }), XT('Cumulative log return'));
+  setAx(Pn, 1, Object.assign({}, DATE, { matches: 'x' }), XT('Basis points', { rangemode: 'tozero' }));
+  plot('pf-chart', [
+    { x: S.dates, y: P.cumE, mode: 'lines', xaxis: a.x, yaxis: a.y, name: 'exact: sum of ln(1 + R_p)', line: { color: COL.tlv, width: 1.4 }, hovertemplate: '%{x}: %{y:.3f}<extra></extra>' },
+    { x: S.dates, y: P.cumA, mode: 'lines', xaxis: a.x, yaxis: a.y, name: 'weighted sum of log returns', line: { color: COL.snp, width: 1.4, dash: 'dash' }, hovertemplate: '%{x}: %{y:.3f}<extra></extra>' },
+    { x: d1, y: P.err, mode: 'lines', xaxis: b.x, yaxis: b.y, name: 'daily gap (basis points)', line: { color: COL.bet, width: 0.7 }, hovertemplate: '%{x}: %{y:.2f} bp<extra></extra>' }
+  ], layout(Object.assign({ margin: { l: 60, r: 12, t: 24, b: 40 }, annotations: [ptitle(a, 'Cumulative log return of the portfolio'), ptitle(b, 'Exact minus weighted log return (bp)')],
+    legend: Object.assign(layout().legend, { y: -0.1 }) }, Pn.L)));
+  const cl = (x, nm, cls) => Object.assign([nm, nf(x, 3), nf(Math.exp(x), 2), nf(100 * (Math.exp(x / P.Y) - 1), 1)], { cls });
+  table('pf-tab', ['', T.h.clr, T.h.wealth, T.h.cagr], [cl(P.sumE, T.h.pexact, 'sel'), cl(P.sumA, T.h.papprox),
+    cl(Math.log(S.pa[S.pa.length - 1] / S.pa[0]), 'Banca Transilvania (TLV)'), cl(Math.log(S.pb[S.pb.length - 1] / S.pb[0]), 'OMV Petrom (SNP)')]);
+  const i = P.im, wa = Math.round(100 * w) / 100;
+  steps('pf-we', [T.pfw1(fdate(S.dates[i]) + ' → ' + fdate(S.dates[i + 1]), fprice(S.pa[i]), fprice(S.pa[i + 1]), sgn(100 * P.Ra[i], 3), fprice(S.pb[i]), fprice(S.pb[i + 1]), sgn(100 * P.Rb[i], 3)),
+    T.pfw2(nf(wa, 2), sgn(100 * P.Ra[i], 3), nf(1 - wa, 2), sgn(100 * P.Rb[i], 3), sgn(100 * (wa * P.Ra[i] + (1 - wa) * P.Rb[i]), 3), sgn(100 * P.ex[i], 3)),
+    T.pfw3(nf(wa, 2), sgn(100 * Math.log1p(P.Ra[i]), 3), nf(1 - wa, 2), sgn(100 * Math.log1p(P.Rb[i]), 3), sgn(100 * P.ap[i], 3)),
+    T.pfw4(nf(P.err[i], 1), nint(P.n), nf(P.mae, 2))]);
+  out('pf-out', [T.pf(nint(P.n), nf(P.mae, 2), nf(P.err[i], 1), fdate(S.dates[i + 1])),
+    T.pf2(nf(P.sumE - P.sumA, 3), nf(100 * P.cagr, 1), nf(100 * P.cagrA, 1), nf(100 * P.cagrB, 1))]);
+}
+
+// ================================================================= X2. annualisation by frequency (frame "Annualising the Mean and the Volatility")
+function annualiseBlock() {
+  const y = +$('an-y').value, f = $('an-f').value, k = $('an-a').value; label('an-y').textContent = y;
+  const rows = D.assets.map(a => {
+    const X = ['d', 'w', 'm'].map(g => describe(resample(asset(a, y), g)));
+    return { a, X };
+  });
+  const head = ['', T.h.A, T.h.sdD, T.h.volD, T.h.vol252, T.h.volW, T.h.volM];
+  table('an-tab', head, rows.map(({ a, X }) => Object.assign([SH[a], nf(X[0].q, 1), nf(X[0].sd, 2), nf(X[0].annVol, 1), nf(X[0].sd * Math.sqrt(252), 1), nf(X[1].annVol, 1), nf(X[2].annVol, 1)], { cls: SEL(a, k) })));
+  $('an-chart').style.height = H(400) + 'px';
+  const FC = { d: COL.sp500, w: COL.dax, m: COL.bettr };
+  plot('an-chart', ['d', 'w', 'm'].map((g, j) => ({ x: rows.map(o => SH[o.a]), y: rows.map(o => o.X[j].annVol), type: 'bar', name: `from ${FREQ[g]} log returns, √A × σ`,
+    marker: { color: FC[g], opacity: g === f ? 1 : 0.45, line: { color: g === f ? C.navy : FC[g], width: g === f ? 1.5 : 0 } }, hovertemplate: `%{x}, ${FREQ[g]}: %{y:.1f}%<extra></extra>` })),
+    layout({ barmode: 'group', xaxis: XT('', { tickangle: -30 }), yaxis: XT('Annualised volatility (%)', { rangemode: 'tozero' }), margin: { l: 60, r: 12, t: 16, b: 70 } }));
+  const X = describe(resample(asset(k, y), f)), XD = describe(asset(k, y));
+  steps('an-we', [T.anw1(LAB[k], T.fq[f], fdate(asset(k, y).dates[0]), nint(X.n), nf(X.Y, 2), nf(X.q, 2)),
+    T.anw2(nf(X.q, 2), nf(X.mean, 4), nf(X.annMean, 2)),
+    T.anw3(nf(X.q, 2), nf(Math.sqrt(X.q), 2), nf(X.sd, 3), nf(X.annVol, 2)),
+    f === 'd' ? T.anw4(nf(X.sd * Math.sqrt(252), 1), nf(X.sd * Math.sqrt(365), 1)) : T.anw4f(nf(X.annVol, 1), nf(XD.annVol, 1))]);
+  const sp = rows.find(o => o.a === 'sp500').X, bt = rows.find(o => o.a === 'btc').X;
+  out('an-out', [T.an(fdate(asset('sp500', y).dates[0]), nf(sp[0].annVol, 1), nf(sp[1].annVol, 1), nf(sp[2].annVol, 1)),
+    T.an2(nf(bt[0].annVol, 1), nf(bt[0].sd * Math.sqrt(252), 1), nf(bt[0].q, 1))]);
+}
+
+// ================================================================= X3. precision of the mean (frame "How Precisely Do We Know the Mean?")
+function meanSeBlock() {
+  const y = +$('ms-y').value, cl = +$('ms-cl').value, z = cl === 95 ? 1.96 : ZQ[cl], k = $('ms-a').value; label('ms-y').textContent = y;
+  const X = Object.fromEntries(D.assets.map(a => [a, describe(asset(a, y))])), ks = D.assets.slice().sort((a, b) => X[a].annMean - X[b].annMean);
+  $('ms-chart').style.height = H(420) + 'px';
+  plot('ms-chart', [{ x: ks.map(a => X[a].annMean), y: ks.map(a => LAB[a]), mode: 'markers', name: `annual mean log return with ${cl}% interval`, marker: { color: COL.sp500, size: 8 },
+    error_x: { type: 'data', array: ks.map(a => z * X[a].se), color: COL.bet, thickness: 1.5, width: 4 },
+    customdata: ks.map(a => [X[a].annMean - z * X[a].se, X[a].annMean + z * X[a].se]), hovertemplate: '%{y}: %{x:.1f}% [%{customdata[0]:.1f}%, %{customdata[1]:.1f}%]<extra></extra>' }],
+    layout({ shapes: [{ type: 'line', x0: 0, x1: 0, yref: 'paper', y0: 0, y1: 1, line: { color: C.navy, width: 1 } }],
+      xaxis: XT('Annual mean log return (%)'), yaxis: XT('', { automargin: true }), margin: { l: 130, r: 12, t: 16, b: 40 } }));
+  table('ms-tab', ['', T.h.Y, T.h.mu, T.h.volD, 'SE (%)', T.h.ci(cl)], D.assets.map(a => {
+    const x = X[a], lo = x.annMean - z * x.se, hi = x.annMean + z * x.se;
+    return Object.assign([SH[a], nf(x.Y, 1), nf(x.annMean, 1), nf(x.annVol, 1), nf(x.se, 1), { v: `[${nf(lo, 1)}; ${nf(hi, 1)}]`, c: lo <= 0 ? 'bad' : '' }], { cls: SEL(a, k) });
+  }));
+  const x = X[k], lo = x.annMean - z * x.se, hi = x.annMean + z * x.se;
+  steps('ms-we', [T.msw1(LAB[k], fdate(asset(k, y).dates[0]), nf(x.annMean, 2), nf(x.annVol, 2), nint(x.n), nf(x.q, 1), nf(x.Y, 2)),
+    T.msw2(nf(x.annVol, 2), nf(x.Y, 2), nf(Math.sqrt(x.Y), 3), nf(x.se, 2)),
+    T.msw3(cl, nf(z, 3), nf(x.annMean, 2), nf(x.se, 2), nf(lo, 1), nf(hi, 1)),
+    (XM => T.msw4(nint(XM.n), nf(XM.se, 2), nint(x.n), nf(x.se, 2)))(describe(resample(asset(k, y), 'm')))]);
+  const zero = ks.filter(a => X[a].annMean - z * X[a].se <= 0).map(a => LAB[a]);
+  out('ms-out', [T.ms(fdate(asset('sp500', y).dates[0]), cl, zero.length ? zero.join(', ') : '—'),
+    T.ms2(nf(mean(D.assets.map(a => X[a].se)), 1), nf(mean(D.assets.map(a => X[a].Y)), 1))]);
+}
+
+// ================================================================= X4–X5. descriptive statistics of daily log returns (tables)
+const IDX5 = ['sp500', 'dax', 'bet', 'bettr', 'btc'], BVB5 = ['tlv', 'snp', 'brd', 'snn', 'tgn'];
+function descTable(pf, ks) {
+  const y = +$(pf + '-y').value, f = $(pf + '-f').value, cl = $(pf + '-t') && $(pf + '-t').value === 'clean' && f === 'd'; label(pf + '-y').textContent = y;
+  const X = Object.fromEntries(ks.map(a => [a, describe(resample(asset(a, y), f), a === 'tlv' && cl ? TLV_BAD : null)]));
+  table(pf + '-tab', ['', 'n', T.h.mean, T.h.sd, T.h.skew, T.h.exk, T.h.min, T.h.max, T.h.volD], ks.map(a => {
+    const x = X[a];
+    return [LAB[a] + (pf === 'db' && SH[a] !== LAB[a] ? ` (${SH[a]})` : ''), fint(x.n), nf(x.mean, 3), nf(x.sd, 2), nf(x.skew, 2), nf(x.exkurt, 1), `${nf(x.min, 1)} <span class="pv">(${fdate(x.minDate)})</span>`,
+      `${nf(x.max, 1)} <span class="pv">(${fdate(x.maxDate)})</span>`, nf(x.annVol, 1)];
+  }));
+  return { y, f, X, cl };
+}
+function descIdxBlock() {
+  const { y, f, X } = descTable('di', IDX5);
+  const hk = IDX5.reduce((b, a) => (X[a].exkurt > X[b].exkurt ? a : b)), neg = IDX5.filter(a => X[a].skew < 0).length;
+  const P = perfAll(y);
+  out('di-out', [T.di(T.fq[f], fdate(asset('sp500', y).dates[0]), nf(X.btc.sd / mean(['sp500', 'dax', 'bet'].map(a => X[a].sd)), 1), neg, LAB[hk], nf(X[hk].exkurt, 1)),
+    T.di2(nf(X.sp500.annVol, 1), nf(100 * P.sp500.vol, 1))]);
+}
+function descBvbBlock() {
+  const { y, f, X, cl } = descTable('db', BVB5);
+  const hk = BVB5.reduce((b, a) => (X[a].exkurt > X[b].exkurt ? a : b)), lk = BVB5.reduce((b, a) => (X[a].exkurt < X[b].exkurt ? a : b));
+  const B = describe(resample(asset('bet', y), f)), t0 = describe(asset('tlv', y)), t1 = describe(asset('tlv', y), TLV_BAD);
+  out('db-out', [T.db(T.fq[f], fdate(asset('tlv', y).dates[0]), nf(Math.min(...BVB5.map(a => X[a].sd)), 2), nf(Math.max(...BVB5.map(a => X[a].sd)), 2), nf(B.sd, 2)),
+    T.db2(LAB[hk], nf(X[hk].exkurt, 1), LAB[lk], nf(X[lk].exkurt, 1)),
+    y <= 2016 ? T.db3(nf(t0.exkurt, 1), nf(t1.exkurt, 1), nf(t1.max, 1)) : ''].filter(Boolean));
+}
+
+// ================================================================= X6–X7. performance indicators (tables)
+function perfTable(pf, ks) {
+  const y = +$(pf + '-y').value, rf = +$(pf + '-rf').value / 100, k = $(pf + '-a').value; label(pf + '-y').textContent = y; label(pf + '-rf').textContent = nf(100 * rf, 2) + '%';
+  const P = perfAll(y, rf);
+  table(pf + '-tab', ['', 'CAGR %', T.h.vol, 'Sharpe (SE)', 'Sortino', 'MDD %', 'Calmar', 'Drag %'], ks.map(a => {
+    const x = P[a];
+    return Object.assign([LAB[a] + (pf === 'pb' && SH[a] !== LAB[a] ? ` (${SH[a]})` : ''), nf(100 * x.cagr, 1), nf(100 * x.vol, 1), `${nf(x.sharpe, 2)} <span class="pv">(${nf(x.se, 2)})</span>`, nf(x.sortino, 2),
+      nf(100 * x.mdd, 1), nf(x.calmar, 2), nf(100 * x.drag, 2)], { cls: SEL(a, k) });
+  }));
+  return { y, rf, k, P };
+}
+function perfIdxBlock() {
+  const { y, rf, k, P } = perfTable('pi', IDX5), x = P[k], lo = x.sharpe - 1.96 * x.se, hi = x.sharpe + 1.96 * x.se;
+  steps('pi-we', [T.piw1(LAB[k], fdate(asset(k, y).dates[0]), fint(x.n), nf(x.q, 1), nf(100 * x.m, 4), nf(100 * x.s, 3)),
+    T.piw2(nf(100 * x.m, 4), nf(100 * rf, 2), nf(x.q, 1), nf(100 * x.s, 3), nf(x.srd, 4), nf(Math.sqrt(x.q), 2), nf(x.sharpe, 3)),
+    T.piw3(nf(x.srd, 4), fint(x.n), nf(x.sed, 4), nf(Math.sqrt(x.q), 2), nf(x.se, 3)),
+    T.piw4(nf(x.sharpe, 2), nf(x.se, 3), nf(lo, 2), nf(hi, 2), lo > 0)]);
+  const best = IDX5.reduce((b, a) => (P[a].sharpe > P[b].sharpe ? a : b));
+  out('pi-out', [T.pi(fdate(asset('sp500', y).dates[0]), nf(100 * rf, 2), LAB[best], nf(P[best].sharpe, 2), nf(P[best].se, 2)),
+    T.pi2(nf(100 * P.sp500.vol, 1), nf(describe(asset('sp500', y)).annVol, 1), nf(100 * P.bet.mdd, 3), nf(100 * P.bettr.mdd, 3))]);
+}
+function perfBvbBlock() {
+  const { y, k, P } = perfTable('pb', BVB5);
+  // drawdown duration: the maximum-drawdown episode of every asset, peak to trough and trough to recovery (calendar days)
+  const ks = D.assets.slice().sort((a, b) => P[b].mdd - P[a].mdd), dur = ks.map(a => {
+    const x = P[a], d = x.dates, end = d[d.length - 1];
+    return { a, fall: ndays(d[x.peak], d[x.trough]), rec: ndays(d[x.trough], x.rec >= 0 ? d[x.rec] : end), done: x.rec >= 0 };
+  });
+  $('pb-chart').style.height = H(420) + 'px';
+  plot('pb-chart', [
+    { y: dur.map(o => LAB[o.a]), x: dur.map(o => o.fall), type: 'bar', orientation: 'h', name: 'peak to trough', marker: { color: COL.bet }, hovertemplate: '%{y}: %{x} days from peak to trough<extra></extra>' },
+    { y: dur.map(o => LAB[o.a]), x: dur.map(o => o.rec), type: 'bar', orientation: 'h', name: `trough to recovery (hatched: not recovered by ${D.end})`,
+      marker: { color: COL.tlv, pattern: { shape: dur.map(o => (o.done ? '' : '/')), fgcolor: C.navy } }, hovertemplate: '%{y}: %{x} days after the trough<extra></extra>' }
+  ], layout({ barmode: 'stack', legend: Object.assign(layout().legend, { traceorder: 'normal' }), xaxis: XT('Calendar days of the maximum-drawdown episode'), yaxis: XT('', { automargin: true }), margin: { l: 130, r: 12, t: 16, b: 40 } }));
+  const x = P[k], d = x.dates;
+  steps('pb-we', [T.pbw1(LAB[k], fprice(x.p[0]), fdate(d[0]), fprice(x.p[x.p.length - 1]), fdate(d[d.length - 1]), nf(x.years, 2), nf(100 * x.cagr, 2)),
+    T.pbw2(fdate(d[x.peak]), fprice(x.p[x.peak]), fdate(d[x.trough]), fprice(x.p[x.trough]), nf(100 * x.mdd, 2)),
+    T.pbw3(nf(100 * x.cagr, 2), nf(-100 * x.mdd, 2), nf(x.calmar, 2)),
+    x.rec >= 0 ? T.pbw4(fdate(d[x.rec]), nint(ndays(d[x.peak], d[x.rec]))) : T.pbw4n(fdate(d[d.length - 1]))]);
+  const lg = dur.reduce((b, o) => (o.fall + o.rec > b.fall + b.rec ? o : b));
+  out('pb-out', [T.pb(fdate(asset('tlv', y).dates[0]), LAB[BVB5.reduce((b, a) => (P[a].calmar > P[b].calmar ? a : b))], LAB[BVB5.reduce((b, a) => (P[a].mdd < P[b].mdd ? a : b))]),
+    T.pb2(LAB[lg.a], nint(lg.fall + lg.rec), lg.done, dur.filter(o => !o.done).map(o => LAB[o.a]).join(', ') || '—')]);
+}
+
 // ================================================================= wiring
+function placeExtras() {                // web lecture: the table blocks travel inside a chart block; move each to its own frame
+  document.querySelectorAll('.xhold > section.xblk').forEach(sec => {
+    const art = document.getElementById('s' + sec.dataset.frame), head = art && art.querySelector('.fhead');
+    if (head) head.after(sec); else sec.closest('section.blk').after(sec);
+  });
+  document.querySelectorAll('.xhold').forEach(h => { if (!h.children.length) h.remove(); });
+}
 function init() {
+  placeExtras();
   const on = (ids, f) => ids.forEach(id => { $(id).addEventListener('input', f); if ($(id).tagName === 'SELECT') $(id).addEventListener('change', f); });
   const players = {}, PL = (btn, id, vals, ms) => (players[btn] = new Player(btn, $(id), vals, ms));
   on(['tl-th'], tlvAdjusted); PL('tl-play', 'tl-th', [0.5, 1, 2, 3, 5, 10, 15, 20, 30, 50], 800);
   on(['bb-y'], betBettr); PL('bb-play', 'bb-y', range(2014, 2025, 1), 800);
   on(['eu-th'], eurron); PL('eu-play', 'eu-th', range(0.25, 5, 0.25), 500);
   on(['pr-k'], priceReturns); PL('pr-play', 'pr-k', range(0, 6, 1), 1000);
-  on(['sl-R'], simpleLogReturns); PL('sl-play', 'sl-R', range(-60, 60, 2.5), 200);
-  on(['gr-y', 'gr-sc'], growth); PL('gr-play', 'gr-y', range(2015, 2025, 1), 800);
+  on(['sl-R', 'sl-d'], simpleLogReturns); PL('sl-play', 'sl-R', range(-60, 60, 2.5), 200);
+  on(['gr-y', 'gr-sc', 'gr-a'], growth); PL('gr-play', 'gr-y', range(2015, 2025, 1), 800);
   on(['hi-k'], histNormal); PL('hi-play', 'hi-k', range(1, 6, 0.5), 700);
   on(['rv-w'], rollingVol); PL('rv-play', 'rv-w', [21, 42, 63, 125, 250, 500], 1000);
   on(['sc-y', 'sc-cl'], sharpeCI); PL('sc-play', 'sc-y', range(2015, 2024, 1), 800);
-  on(['dd-x'], drawdowns); PL('dd-play', 'dd-x', range(5, 80, 5), 500);
-  on(['vd-s'], volDrag); PL('vd-play', 'vd-s', range(0, 80, 5), 400);
+  on(['dd-x', 'dd-a'], drawdowns); PL('dd-play', 'dd-x', range(5, 80, 5), 500);
+  on(['vd-s', 'vd-a'], volDrag); PL('vd-play', 'vd-s', range(0, 80, 5), 400);
   on(['rr-y', 'rr-m'], riskReturn); PL('rr-play', 'rr-y', range(2015, 2024, 1), 900);
+  on(['pf-w'], portfolioBlock); PL('pf-play', 'pf-w', range(10, 90, 5), 500);
+  on(['an-y', 'an-f', 'an-a'], annualiseBlock); PL('an-play', 'an-f', ['d', 'w', 'm'], 1600);
+  on(['ms-y', 'ms-cl', 'ms-a'], meanSeBlock); PL('ms-play', 'ms-y', range(2015, 2024, 1), 800);
+  on(['di-y', 'di-f'], descIdxBlock); PL('di-play', 'di-f', ['d', 'w', 'm'], 1600);
+  on(['db-y', 'db-f', 'db-t'], descBvbBlock); PL('db-play', 'db-t', ['raw', 'clean'], 1800);
+  on(['pi-y', 'pi-rf', 'pi-a'], perfIdxBlock); PL('pi-play', 'pi-rf', range(0, 5, 0.25), 400);
+  on(['pb-y', 'pb-rf', 'pb-a'], perfBvbBlock); PL('pb-play', 'pb-y', range(2015, 2024, 1), 900);
   const PFX = { 'tlv-adjusted': 'tl', 'bet-bettr': 'bb', 'eurron': 'eu', 'price-returns': 'pr', 'simple-log': 'sl', 'growth': 'gr', 'hist-normal': 'hi',
-    'rolling-vol': 'rv', 'sharpe-ci': 'sc', 'drawdowns': 'dd', 'vol-drag': 'vd', 'risk-return': 'rr' };
-  const VEIL = {};
+    'rolling-vol': 'rv', 'sharpe-ci': 'sc', 'drawdowns': 'dd', 'vol-drag': 'vd', 'risk-return': 'rr',
+    portfolio: 'pf', annualise: 'an', 'mean-se': 'ms', 'desc-indices': 'di', 'desc-bvb': 'db', 'perf-indices': 'pi', 'perf-bvb': 'pb' };
+  const VEIL = T.veil || {};
   if (T.predict && predict) Object.entries(T.predict).forEach(([b, sp]) => { if ($(b)) predict(b, Object.assign({ player: players[PFX[b] + '-play'], veil: VEIL[b] || { out: true } }, sp)); });
   if (T.ticket && exitTicket) exitTicket(T.ticket);
-  const all = [tlvAdjusted, betBettr, eurron, priceReturns, simpleLogReturns, growth, histNormal, rollingVol, sharpeCI, drawdowns, volDrag, riskReturn];
+  const all = [tlvAdjusted, betBettr, eurron, priceReturns, simpleLogReturns, growth, portfolioBlock, annualiseBlock, meanSeBlock, histNormal, rollingVol, descIdxBlock, descBvbBlock,
+    sharpeCI, drawdowns, volDrag, perfIdxBlock, perfBvbBlock, riskReturn];
   all.forEach(f => { try { f(); } catch (e) { console.error(e); throw e; } });
 }
-window.CH1 = { raw, asset, full, slice, performance, perfAll, drawdown, rollSd, logRet, simpleRet, quantile, mean, sd, perYear, normSf, init };
+window.CH1 = { raw, asset, full, slice, performance, perfAll, describe, resample, mddDates, portfolio, pairTS, drawdown, rollSd, logRet, simpleRet, quantile, mean, sd, perYear, normSf, init };
 if (window.CH1_NO_INIT) return;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
