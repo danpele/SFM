@@ -332,6 +332,8 @@ D.frame(T('From One Day to Ten Days', 'De la o zi la zece zile'), items(
     (T('Why the rule fails in general', 'De ce regula nu funcționează în general'),
      [T('heavy tails: a sum of 10 heavy-tailed returns is closer to Normal (CLT, central limit theorem), so the ratio of quantiles is below $\\sqrt{10}$',
         'cozi groase: suma a 10 randamente cu cozi groase este mai aproape de Normală (CLT, teorema limită centrală), deci raportul cuantilelor este sub $\\sqrt{10}$'),
+      T('autocorrelation: $\\mathrm{Var}(r_{t+1}+\\dots+r_{t+10}) = \\sigma^2\\bigl(10 + 2\\sum_{k=1}^{9}(10-k)\\rho_k\\bigr)$; S\\&P 500: $\\hat\\rho_1 = @{hz.ac1}$, ratio $@{hz.ratio}$; BET: $\\hat\\rho_1 = @{hzb.ac1}$, ratio $@{hzb.ratio} > \\sqrt{10}$',
+        'autocorelația: $\\mathrm{Var}(r_{t+1}+\\dots+r_{t+10}) = \\sigma^2\\bigl(10 + 2\\sum_{k=1}^{9}(10-k)\\rho_k\\bigr)$; S\\&P 500: $\\hat\\rho_1 = @{hz.ac1}$, raport $@{hz.ratio}$; BET: $\\hat\\rho_1 = @{hzb.ac1}$, raport $@{hzb.ratio} > \\sqrt{10}$'),
       T('volatility clustering: after a calm day the 10-day risk is larger than $\\sqrt{10}$ times today\'s, after a storm smaller (Chapter 9)',
         'volatility clustering: după o zi liniștită, riscul pe 10 zile este mai mare decît $\\sqrt{10}$ ori riscul de azi, după o perioadă turbulentă este mai mic (Capitolul 9)')])), 'footnotesize')
 
@@ -774,11 +776,11 @@ D.frame(T('Ranking the Forecasts, and Today\'s Zone', 'Ordonarea prognozelor și
       'Interpretare: în ultimele 250 de zile, toate modelele sînt în zona verde, cu excepția VaR Normal pentru BET (@{bt.bet.n.l250}, zona galbenă): o fereastră recentă spune puțin despre un model')) + ql('SFM_ch10_backtesting'), 'footnotesize')
 
 chart(T('The Traffic Light through Time', 'Semaforul Basel în timp'), 'sfm_ch10_traffic_time', 'SFM_ch10_backtesting', [
-    T('S\\&P 500: number of VaR 1\\% exceptions in the last 250 days, for every day since 2006; dashed: the zone limits', 'S\\&P 500: numărul depășirilor VaR 1\\% în ultimele 250 de zile, pentru fiecare zi din 2006; linii întrerupte: limitele zonelor'),
+    T('S\\&P 500: number of VaR 1\\% exceptions in the last 250 days, for every day from @{bt.sp500.w0} (the end of the first 250-day window); dashed: the zone limits', 'S\\&P 500: numărul depășirilor VaR 1\\% în ultimele 250 de zile, pentru fiecare zi de la @{bt.sp500.w0} (sfîrșitul primei ferestre de 250 de zile); linii întrerupte: limitele zonelor'),
     T('Share of days in the red zone: Normal @{bt.sp500.n.red}\\%, HS @{bt.sp500.hs.red}\\%, GARCH-t @{bt.sp500.g.red}\\%; worst count: @{bt.sp500.n.max}, @{bt.sp500.hs.max} and @{bt.sp500.g.max}',
       'Ponderea zilelor în zona roșie: Normală @{bt.sp500.n.red}\\%, HS @{bt.sp500.hs.red}\\%, GARCH-t @{bt.sp500.g.red}\\%; cel mai mare număr: @{bt.sp500.n.max}, @{bt.sp500.hs.max} și @{bt.sp500.g.max}'),
-    T('Interpretation: a bank using the Normal or HS VaR would have paid the red-zone penalty for most of 2008--2009; GARCH-t almost never reaches the red zone',
-      'Interpretare: o bancă ce ar fi folosit VaR Normal sau HS ar fi plătit penalizarea zonei roșii în cea mai mare parte din 2008--2009; GARCH-t aproape că nu ajunge niciodată în zona roșie')],
+    T('Interpretation: a bank using the Normal or HS VaR would have paid the red-zone penalty for most of 2008--2009; GARCH-t reaches it on only @{bt.sp500.g.red}\\% of the days',
+      'Interpretare: o bancă ce ar fi folosit VaR Normal sau HS ar fi plătit penalizarea zonei roșii în cea mai mare parte din 2008--2009; GARCH-t ajunge în ea doar în @{bt.sp500.g.red}\\% din zile')],
     h='0.48\\textheight')
 
 D.frame(T('Backtesting ES: Acerbi and Székely', 'Backtesting pentru ES: Acerbi și Székely'), items(

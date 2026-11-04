@@ -397,8 +397,10 @@ chart(T('Ridge and Lasso Paths for the Volatility Features', 'Traiectoriile ridg
     T('Target: log of the mean variance proxy of the next 5 days, S\\&P 500, 2008--2012 (@{sh.n} days); 11 standardised features (Section 7)',
       'Ținta: logaritmul mediei variabilei proxy a varianței din următoarele 5 zile, S\\&P 500, 2008--2012 (@{sh.n} zile); 11 variabile standardizate (secțiunea 7)'),
     T('Lasso with $\\lambda = @{sh.alpha}$ (walk-forward CV): @{sh.nz} of 11 features kept; the week coefficient rises from $@{sh.ols.w}$ (OLS) to $@{sh.cv.w}$, the absolute return drops out',
-      'Lasso cu $\\lambda = @{sh.alpha}$ (CV walk-forward): rămîn @{sh.nz} din 11 variabile; coeficientul săptămînal crește de la $@{sh.ols.w}$ (OLS) la $@{sh.cv.w}$, iar randamentul absolut iese din model')],
-    h='0.50\\textheight')
+      'Lasso cu $\\lambda = @{sh.alpha}$ (CV walk-forward): rămîn @{sh.nz} din 11 variabile; coeficientul săptămînal crește de la $@{sh.ols.w}$ (OLS) la $@{sh.cv.w}$, iar randamentul absolut iese din model'),
+    T('The design is exactly collinear, $|r| = r - 2\\min(r, 0)$ (rank 10): the OLS coefficients of $r$, $\\min(r,0)$, $|r|$ are not unique (shown: the minimum-norm solution); the others are unique',
+      'Matricea variabilelor este exact coliniară, $|r| = r - 2\\min(r, 0)$ (rang 10): coeficienții OLS pentru $r$, $\\min(r,0)$, $|r|$ nu sînt unici (afișată: soluția de normă minimă); ceilalți sînt unici')],
+    h='0.45\\textheight')
 
 D.frame(T('Interpretation of the Paths', 'Interpretarea traiectoriilor'), items(
     (T('Ridge (left): all coefficients shrink smoothly and together; correlated features share the weight', 'Ridge (stînga): toți coeficienții se contractă lin și împreună; variabilele corelate își împart ponderea'),

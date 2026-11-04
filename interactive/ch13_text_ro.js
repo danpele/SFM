@@ -27,7 +27,7 @@ window.CH13_TEXT = {
  lk: (h, sk, sw, sp, pk, pw, pp, nS, nP, x) => `Ținta: randamentul cumulat din următoarele ${h} ${de(h)}zile${x ? X : ''}. Mers aleator simulat (${nS} ${de(nS)}zile): K-fold aleator ${sk}, walk-forward ${sw}, walk-forward cu purging ${sp}. S&P 500 (${nP} ${de(nP)}zile): ${pk}, ${pw} și ${pp}.`,
  sh: (lamL, nz, fl, cl, co, lamR, cr, ratio, cv, nzcv) => (cv
    ? `Lasso la λ = ${lamL}, ales prin validare încrucișată walk-forward: ${nzcv} din 11 coeficienți nenuli; ${fl}: ${cl} (OLS ${co}). `
-   : `Lasso la λ = ${lamL}: ${nz} din 11 coeficienți nenuli; ${fl}: ${cl} (OLS ${co}). `) + `Ridge la λ = ${lamR}: ${fl} ${cr}; norma vectorului de coeficienți este ${ratio} din norma OLS. Aici fiecare coeficient lasso stă la penalizarea lui; pe slide, panoul lasso are axa λ inversată.`,
+   : `Lasso la λ = ${lamL}: ${nz} din 11 coeficienți nenuli; ${fl}: ${cl} (OLS ${co}). `) + `Ridge la λ = ${lamR}: ${fl} ${cr}; norma vectorului de coeficienți este ${ratio} din norma OLS. Coeficienții OLS ai lui r, min(r, 0) și |r| nu sînt unici, pentru că |r| = r − 2 min(r, 0) (rangul matricei este 10): se afișează soluția de normă minimă.`,
  rw1: (sxx, sxy, b) => `OLS: β̂ = S_xy/S_xx = ${sxy}/${sxx} = ${b}.`,
  rw2: (lam, sxx, sxy, b, f) => `Ridge cu λ = ${lam}: β̂ = ${sxy}/(${sxx} + ${lam}) = ${b}; factorul de contracție S_xx/(S_xx + λ) = ${f}.`,
  rw3: (bl, lam) => `Lasso cu același λ = ${lam}: ${bl}. Ridge contractă coeficientul spre zero, dar nu îl anulează pentru niciun λ finit.`,

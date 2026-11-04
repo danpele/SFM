@@ -337,12 +337,12 @@ def shrinkage_paths(k='sp500', end='2012-12-31'):
     Z = StandardScaler().fit_transform(X[EXT])
     y = X['y'].values - X['y'].mean()
     lam_l = np.logspace(-4, 0, 60)
-    _, coefs, _ = lasso_path(Z, y, alphas=lam_l)
+    lam_path, coefs, _ = lasso_path(Z, y, alphas=lam_l)     # lasso_path returns the penalties in decreasing order
     lam_r = np.logspace(-2, 5, 60)
     ridge = np.array([Ridge(alpha=a).fit(Z, y).coef_ for a in lam_r])
     cv = LassoCV(alphas=lam_l, cv=TimeSeriesSplit(5, gap=H)).fit(Z, y)
-    ols = LinearRegression().fit(Z, y).coef_
-    return {'lam_l': lam_l, 'lasso': coefs.T, 'lam_r': lam_r, 'ridge': ridge, 'cv_alpha': float(cv.alpha_),
+    ols = LinearRegression().fit(Z, y).coef_     # |r| = r - 2 min(r, 0): rank-deficient design, minimum-norm solution
+    return {'lam_l': lam_path, 'lasso': coefs.T, 'lam_r': lam_r, 'ridge': ridge, 'cv_alpha': float(cv.alpha_),
             'cv_coef': dict(zip(EXT, cv.coef_.tolist())), 'ols': dict(zip(EXT, ols.tolist())), 'n': int(len(X)),
             'nonzero': int(np.sum(np.abs(cv.coef_) > 1e-10))}
 

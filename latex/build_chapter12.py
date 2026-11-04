@@ -623,8 +623,8 @@ D.frame(T('CAP and KS on the Test Sample', 'CAP și KS pe eșantionul de test'),
     f'\\includegraphics[width=\\textwidth,height=0.50\\textheight,keepaspectratio]{{sfm_ch12_cap.pdf}}',
     f'\\includegraphics[width=\\textwidth,height=0.50\\textheight,keepaspectratio]{{sfm_ch12_ks.pdf}}', wl='0.44', wr='0.54') + items(
     T('AR $= @{v.ar}$ (Gini $= @{v.gini}$: the same up to rounding); KS $= @{ks.ks}$ at @{ks.at} points', 'AR $= @{v.ar}$ (Gini $= @{v.gini}$: același, cu excepția rotunjirii); KS $= @{ks.ks}$ la @{ks.at} puncte'),
-    T('Interpretation: rejecting the riskiest 30\\% catches about two thirds of the bads; at @{ks.at} points the scorecard separates bads and goods best',
-      'Interpretare: respingînd cei mai riscanți 30\\%, identificăm aproximativ două treimi din rău-platnici; la @{ks.at} puncte, scorecard-ul separă cel mai bine rău-platnicii de bun-platnici')) + ql('SFM_ch12_validation_irb'), 'footnotesize')
+    T('Interpretation: rejecting the riskiest 30\\% catches @{cap30.share}\\% of the bads (@{cap30.x} of @{cap30.n}); at @{ks.at} points the scorecard separates bads and goods best',
+      'Interpretare: respingînd cei mai riscanți 30\\%, identificăm @{cap30.share}\\% din rău-platnici (@{cap30.x} din @{cap30.n}); la @{ks.at} puncte, scorecard-ul separă cel mai bine rău-platnicii de bun-platnici')) + ql('SFM_ch12_validation_irb'), 'footnotesize')
 
 D.frame(T('Calibration and the Brier Score', 'Calibrarea și scorul Brier'), items(
     (T('\\textbf{Calibration}: among applicants with PD $\\approx p$, a share of about $p$ defaults', '\\textbf{Calibrarea}: dintre solicitanții cu PD $\\approx p$, aproximativ o pondere $p$ intră în nerambursare'),

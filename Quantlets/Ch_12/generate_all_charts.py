@@ -643,6 +643,9 @@ def fig_cap(S, save=True):
     st.check_no_grey(fig)
     if save:
         st.save_fig('sfm_ch12_cap')
+    k30 = int(round(0.3 * len(y)))                         # read the CAP at x = 30%: bads among the riskiest 30%
+    b30 = int(np.sum(y[np.argsort(-np.asarray(p, float), kind='mergesort')][:k30]))
+    return {'x': 0.3, 'n_reject': k30, 'bads_caught': b30, 'n_bad': int(y.sum()), 'share': b30 / float(y.sum())}
 
 
 def fig_ks(S, save=True):
@@ -973,7 +976,7 @@ if __name__ == '__main__':
     N['prior_shift'] = prior_shift(0.3, POP_BAD)
     N['score_dist'] = fig_score_dist(S)
     fig_roc(S)
-    fig_cap(S)
+    N['cap'] = fig_cap(S)
     N['ks_fig'] = fig_ks(S)
     N['cost'] = fig_cost_cutoff(S)
     res = cv_auc(df)

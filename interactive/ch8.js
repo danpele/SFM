@@ -442,7 +442,7 @@ function rrBlock() {
   const V = {}; EST.forEach(e => { V[e] = Array.from(R[e].subarray(i0), v => Math.sqrt(Math.max(v, 0) * A)); });
   plot('rr-chart', EST.map(e => ({ x: d, y: V[e], mode: 'lines', line: { color: ECOL[e], width: e === 'cc' ? 1.6 : 1 }, name: ELAB[e], hovertemplate: `${ELAB[e]}<br>%{x}<br>%{y:.1f}%<extra></extra>` })),
     layout({ xaxis: AX('Date'), yaxis: AX('Annualised volatility (%)'), legend: LEG(nw, -0.14), margin: { l: 56, r: 12, t: 14, b: 30 } }));
-  const rough = e => sdChange(Array.from(R[e], v => Math.sqrt(Math.max(v, 1e-8))));
+  const rough = e => sdChange(Array.from(R[e].subarray(i0), v => Math.sqrt(Math.max(v, 1e-8))));
   out('rr-out', [T.rr(n, EST.map(e => [ESH[e], nf(mean(V[e]), 1), nf(100 * rough(e), 1)]))]);
 }
 

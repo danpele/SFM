@@ -113,7 +113,7 @@ def review(n, title, formulas, fct, mistakes, size='small'):
 z1, z25 = stats.norm.ppf(0.01), stats.norm.ppf(0.025)
 phi25 = stats.norm.pdf(z25)
 V.put('z1', -z1, 3)
-V.put('phi25', phi25, 4)
+V.put('phi25', phi25, 5)                 # 5 digits, so that phi25/0.025 = e6.esf can be checked on the slide
 V.put('chi1', stats.chi2.ppf(0.95, 1), 2)
 V.put('chi2', stats.chi2.ppf(0.95, 2), 2)
 V.put('chi4', stats.chi2.ppf(0.95, 4), 2)
@@ -356,8 +356,8 @@ TROW = [
 D.frame(T('The Course in One Table', 'Cursul într-un singur tabel'), table(
     'lrrr', T('\\textbf{Daily log returns}', '\\textbf{Randamente logaritmice zilnice}') + ' & S\\&P 500 & BET & Bitcoin',
     [lab + ' & ' + ' & '.join(f(k) for k in ('sp500', 'bet', 'btc')) for lab, f in TROW], size='scriptsize') + items(
-    T('Window: @{s.first} -- @{s.last}; each series on its own calendar (Bitcoin: 365 days a year); critical value of $\\chi^2(10)$ at 5\\%: $@{s.crit}$',
-      'Fereastra: @{s.first} -- @{s.last}; fiecare serie pe calendarul ei (Bitcoin: 365 de zile pe an); valoarea critică $\\chi^2(10)$ la 5\\%: $@{s.crit}$')) + ql('SFM_ch16_course_summary'), 'footnotesize')
+    T('Window: first return @{s.sp500.first} (S\\&P 500), @{s.bet.first} (BET), @{s.btc.first} (Bitcoin) -- @{s.last}; each series on its own calendar (Bitcoin: 365 days a year); critical value of $\\chi^2(10)$ at 5\\%: $@{s.crit}$',
+      'Fereastra: primul randament la @{s.sp500.first} (S\\&P 500), @{s.bet.first} (BET), @{s.btc.first} (Bitcoin) -- @{s.last}; fiecare serie pe calendarul ei (Bitcoin: 365 de zile pe an); valoarea critică $\\chi^2(10)$ la 5\\%: $@{s.crit}$')) + ql('SFM_ch16_course_summary'), 'footnotesize')
 
 D.frame(T('Interpreting the Table', 'Interpretarea tabelului'), items(
     (T('\\textbf{Return and risk}: Bitcoin has about four times the volatility of the two indices', '\\textbf{Randament și risc}: Bitcoin are o volatilitate de circa patru ori mai mare decît a celor doi indici'),
@@ -369,7 +369,7 @@ D.frame(T('Interpreting the Table', 'Interpretarea tabelului'), items(
       T('volatility is persistent: $\\alpha + \\beta$ close to 1 (Bitcoin: an IGARCH, $\\alpha + \\beta = 1$)', 'volatilitatea este persistentă: $\\alpha + \\beta$ aproape de 1 (Bitcoin: un IGARCH, $\\alpha + \\beta = 1$)')])))
 
 chart(T('Stylised Facts in One Chart', 'Faptele stilizate într-un singur grafic'), 'sfm_ch16_stylised', 'SFM_ch16_course_summary', [
-    T('Returns: autocorrelations small and mostly inside the band $\\pm 1.96/\\sqrt{T}$; absolute returns: positive for 50 days', 'Randamentele: autocorelații mici și în mare parte în interiorul benzii $\\pm 1{,}96/\\sqrt{T}$; randamentele absolute: pozitive timp de 50 de zile'),
+    T('Returns: autocorrelations small and mostly inside the band $\\pm 1.96/\\sqrt{T}$; absolute returns: positive at @{s.sp500.apos}, @{s.bet.apos} and @{s.btc.apos} of the 50 lags (BET lag @{s.bet.aminlag}: $@{s.bet.amin}$)', 'Randamentele: autocorelații mici și în mare parte în interiorul benzii $\\pm 1{,}96/\\sqrt{T}$; randamentele absolute: pozitive la @{s.sp500.apos}, @{s.bet.apos} și @{s.btc.apos} din cele 50 de laguri (BET, lagul @{s.bet.aminlag}: $@{s.bet.amin}$)'),
     T('Uncorrelated is not independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)', 'Necorelat nu înseamnă independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)')],
     h='0.52\\textheight')
 

@@ -473,7 +473,7 @@ function tailFitBlock() {
 // ================================================================= 15. out of sample
 function oosBlock() {
   const k = $('os-a').value, lv = $('os-p').value, p = lv === 'var1' ? 0.01 : 0.001, S = ser(k), O = NUM.oos[k];
-  const i0 = S.dates.findIndex(d => d >= D.split) + 1, dates = S.dates.slice(i0), L = S.x.slice(i0), nw = single('os-chart', 400);
+  const i0 = S.dates.findIndex(d => d > D.split), dates = S.dates.slice(i0), L = S.x.slice(i0), nw = single('os-chart', 400);
   const tr = [{ x: dates, y: L, mode: 'lines', line: { color: COL[k], width: 0.7 }, name: `${LAB[k]} daily loss (%)`, hovertemplate: '%{x}<br>loss %{y:.2f}%<extra></extra>' }];
   const lines = [['Normal', 'dash'], ['Historical', 'dot'], ['EVT', 'solid']], items = [];
   lines.forEach(([m, dash]) => {
@@ -725,7 +725,7 @@ function varFar() {
 
 // ----------------------------------------------------------------- X14. counting the exceedances, Kupiec test (frame 59)
 function oosCounts(k) {
-  const S = ser(k), i0 = S.dates.findIndex(d => d >= D.split) + 1, L = S.x.slice(i0), O = NUM.oos[k], res = {};
+  const S = ser(k), i0 = S.dates.findIndex(d => d > D.split), L = S.x.slice(i0), O = NUM.oos[k], res = {};
   for (const lv of ['var1', 'var01']) { res[lv] = {}; for (const m of ['EVT', 'Historical', 'Normal']) res[lv][m] = L.filter(x => x > O[lv][m].var).length; }
   return { n: L.length, res, O };
 }

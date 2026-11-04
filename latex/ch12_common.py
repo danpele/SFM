@@ -150,6 +150,9 @@ def values(N):
     V.put('sd.min', d['min'], 0)
     V.put('sd.max', d['max'], 0)
     V.put('ks.at', N['ks_fig']['at'], 0)
+    V.put('cap30.share', 100 * N['cap']['share'], 0)
+    V.raw('cap30.x', str(N['cap']['bads_caught']))
+    V.raw('cap30.n', str(N['cap']['n_bad']))
     V.put('ks.ks', N['ks_fig']['ks'], 3)
     c = N['cost']
     V.put('cost.best', c['best_cut'], 2)

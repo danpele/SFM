@@ -438,7 +438,8 @@ def fig_range_rolling(k='sp500', n=21, start='2019-01-01', save=True):
     st.check_no_grey(fig)
     if save:
         st.save_fig('sfm_ch8_range_rolling')
-    smooth = {e: float(np.std(np.diff(np.log(np.sqrt(R[e].clip(lower=1e-8)))))) for e in EST_LABEL}
+    Rs = R.loc[start:]                                  # same period as the chart and the means
+    smooth = {e: float(np.std(np.diff(np.log(np.sqrt(Rs[e].clip(lower=1e-8)))))) for e in EST_LABEL}
     return {'mean': {e: float(V[e].mean()) for e in EST_LABEL}, 'roughness': smooth,
             'corr_cc': {e: float(np.corrcoef(V['cc'], V[e])[0, 1]) for e in EST_LABEL}}
 

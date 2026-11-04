@@ -117,6 +117,8 @@ def values(N):
         V.put(f'vr.{k}.avr', v['avr']['stat'], 2)
         V.put(f'vr.{k}.k', v['avr']['k'], 1)
         V.raw(f'vr.{k}.avrp', pv(v['avr']['p_boot']))
+    for k, v in N['vr_profile'].items():
+        V.put(f'vrp.{k}.40', v['vr40'], 3)
     V.put('cd.crit', N['cd_crit'], 2)
     for lab, d in N['vr_size'].items():
         for q, r in d.items():

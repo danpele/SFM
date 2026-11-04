@@ -76,8 +76,8 @@ for lab, rse in [('n', N['se']['21']['normal']), ('h', N['se']['21']['heavy'])]:
     V.put(f'ex.ci.{lab}.hi', w21 * (1 + 1.96 * rse), 1)
 _C = N['clust']
 _qr = [_C[k]['lb_r2']['q'] / _C[k]['lb_r']['q'] for k in ['sp500', 'dax', 'bet', 'btc', 'tlv', 'snp']]
-V.raw('cl.qratio.lo', str(int(math.floor(min(_qr)))))
-V.raw('cl.qratio.hi', str(int(math.floor(max(_qr)))))
+V.put('cl.qratio.lo', min(_qr), 1)
+V.put('cl.qratio.hi', max(_qr), 1)
 V.put('cl.plbr.max', max(_C[k]['lb_r']['p'] for k in ['sp500', 'dax', 'bet', 'btc', 'tlv', 'snp']), 3)
 # EWMA update after a -3% day
 V.put('ex.ew.s2', 0.94 * 1.0 + 0.06 * 9.0, 2)

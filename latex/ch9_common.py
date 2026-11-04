@@ -89,7 +89,7 @@ def values(N):
         V.put(f'la.{n_}', N['lik_arch1'][n_]['alpha_hat'], 3)
         V.put(f'la.{n_}.se', N['lik_arch1'][n_]['se'], 3)
     for n_ in ['500', '2000']:
-        V.put(f'lg.{n_}.a', N['lik_garch'][n_]['a_hat'], 2)
+        V.put(f'lg.{n_}.a', N['lik_garch'][n_]['a_hat'], 3)          # grid step 0.005
         V.put(f'lg.{n_}.b', N['lik_garch'][n_]['b_hat'], 2)
     for lab, k in [('ARCH(1)', 'a1'), ('ARCH(5)', 'a5'), ('ARCH(10)', 'a10'), ('GARCH(1,1)', 'g11')]:
         d = N['archq'][lab]

@@ -77,7 +77,7 @@ first_ar = next(k for k in range(1, 200) if rho[1] ** k < 0.05)
 V.raw('af3.first', str(first_af))
 V.raw('af3.firstar', str(first_ar))
 # risk scaling with h^H (Normal VaR 1%, daily volatility 1.2%)
-z, sig = 2.326, 1.2
+z, sig = 2.3263478740408408, 1.2              # -z_{0.01} unrounded (norm.ppf(0.99)); the slide shows 2.326
 V.put('vs.var1', z * sig, 2)
 for H in (0.45, 0.5, 0.55):
     k = str(int(round(100 * H)))

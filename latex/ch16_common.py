@@ -204,6 +204,11 @@ def summary_values(V, N):
     """The course in one table: @{s.<asset>.<quantity>}."""
     put_date(V, 's.first', N['summary']['sp500']['perf']['first'])
     put_date(V, 's.last', N['summary']['sp500']['perf']['last'])
+    for k in ('sp500', 'bet', 'btc'):                      # first return of each series (own calendar)
+        put_date(V, f's.{k}.first', N['summary'][k]['perf']['first'])
+        V.raw(f's.{k}.apos', str(N['stylised'][k]['abs_pos']))
+    V.put('s.bet.amin', N['stylised']['bet']['abs_min'], 3)
+    V.raw('s.bet.aminlag', str(N['stylised']['bet']['abs_min_lag']))
     for k in ASSETS:
         s = N['summary'][k]
         p = s['perf']

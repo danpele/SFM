@@ -720,9 +720,9 @@ def out_of_sample(names=ASSETS, split=SPLIT):
     out = {}
     for k in names:
         L = losses(k)
-        a, b = L.loc[:split].values, L.loc[split:].iloc[1:].values
+        a, b = L.loc[:split].values, L[L.index > split].values          # test: every day after `split`
         f = pot(a)
-        row = {'n_est': len(a), 'n_test': len(b), 'first_test': L.loc[split:].index[1].date().isoformat()}
+        row = {'n_est': len(a), 'n_test': len(b), 'first_test': L[L.index > split].index[0].date().isoformat()}
         for lab, p in [('var1', 0.01), ('var01', 0.001)]:
             v = {'EVT': pot_var(f, p), 'Historical': hist_var(a, p), 'Normal': normal_var(a, p)}
             row[lab] = {m: {'var': x, 'exc': int((b > x).sum())} for m, x in v.items()}
@@ -734,7 +734,7 @@ def out_of_sample(names=ASSETS, split=SPLIT):
 def fig_oos(k='sp500', split=SPLIT, save=True):
     """Daily losses after the estimation period with the VaR 1% of the three methods (estimated until 2019)."""
     L = losses(k)
-    a, b = L.loc[:split].values, L.loc[split:].iloc[1:]
+    a, b = L.loc[:split].values, L[L.index > split]
     f = pot(a)
     fig, ax = plt.subplots(figsize=(10, 4.0))
     ax.plot(b.index, b.values, color=COLORS[k], lw=0.6, label=f'{LABELS[k]} daily loss (%)')

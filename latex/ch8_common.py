@@ -6,6 +6,7 @@ the clickable citations of Chapter 8 (DOIs checked against Crossref, 3 October 2
 """
 
 import json
+import math
 import os
 import re
 import sys
@@ -82,7 +83,7 @@ def values(N):
         t = l[2:]
         V.put(f'ew.{t}.hl', e['half_life'], 1)
         V.put(f'ew.{t}.lag', e['mean_lag'], 1)
-        V.raw(f'ew.{t}.d99', str(round(e['days99'])))
+        V.raw(f'ew.{t}.d99', str(math.ceil(e['days99'])))     # smallest n with 1 - lambda^n >= 0.99
     G = N['ghost']
     V.put('gh.rpeak', G['roll_peak'], 1)
     put_date(V, 'gh.rpeakd', G['roll_peak_date'])

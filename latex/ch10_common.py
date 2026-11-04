@@ -95,11 +95,16 @@ def values(N):
     H = N['horizon']
     for c in ['var1', 'var_sqrt', 'var_h', 'var_n1', 'var_nh']:
         V.put(f'hz.{c}', H[c], 2)
+    V.put('hz.ac1', H['ac1'], 2)
+    Hb = N['horizon_bet']                                       # BET: positive lag-1 autocorrelation
+    V.put('hzb.ratio', Hb['ratio'], 2)
+    V.put('hzb.ac1', Hb['ac1'], 2, sign=True)
     for row in N['traffic']:
         V.put(f'tl.{row["x"]}.p', 100 * row['p'], 2)
         V.put(f'tl.{row["x"]}.c', 100 * row['cum'], 2)
     for k, b in N['bt'].items():
         put_date(V, f'bt.{k}.start', b['start'])
+        put_date(V, f'bt.{k}.w0', b['first_window_end'])          # last day of the first 250-day window
         for m in METHODS:
             r = b[m]
             key = f'bt.{k}.{MKEY[m]}'
@@ -119,7 +124,7 @@ def values(N):
             V.raw(f'{key}.max', str(r['max250']))
             V.put(f'{key}.z2', r['z2'], 2)
             V.raw(f'{key}.pz2', pv(r['p_z2']))
-            V.put(f'{key}.red', 100 * r['zones']['red'] / r['n_windows'], 0)
+            V.put(f'{key}.red', 100 * r['zones']['red'] / r['n_windows'], 1)
             V.put(f'{key}.green', 100 * r['zones']['green'] / r['n_windows'], 0)
             V.put(f'{key}.mv', r['mean_var'], 2)
             V.put(f'{key}.ql', 100 * r['qloss'], 2)

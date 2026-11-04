@@ -299,8 +299,11 @@ def fig_three_series(save=True):
 def fig_stylised(lags=50, save=True):
     """ACF of daily returns and of absolute returns, lags 1-50, with the 95% band +-1.96/sqrt(T)."""
     fig, axes = plt.subplots(1, 3, figsize=(11, 3.6), sharey=True)
+    out = {}
     for ax, k in zip(axes, ASSETS):
         r = returns(k)
+        a_abs = acf(np.abs(r), lags)
+        out[k] = {'abs_pos': int(np.sum(a_abs > 0)), 'abs_min': float(np.min(a_abs)), 'abs_min_lag': int(np.argmin(a_abs) + 1)}
         band = 1.96 / np.sqrt(len(r))
         lg = np.arange(1, lags + 1)
         ax.bar(lg - 0.2, acf(r, lags), width=0.4, color='#1A3A6E', label='returns $r_t$')
@@ -317,6 +320,7 @@ def fig_stylised(lags=50, save=True):
         st.save_fig('sfm_ch16_stylised')
     else:
         plt.show()
+    return out
 
 
 def fig_backtest(k='bet', save=True):
@@ -357,7 +361,7 @@ if __name__ == '__main__':
     N['summary'] = {k: summary(k) for k in ASSETS}
     summary_table(N['summary']).round(3).to_csv(os.path.join(TABLE_DIR, 'ch16_summary_table.csv'))
     fig_three_series()
-    fig_stylised()
+    N['stylised'] = fig_stylised()
     N['backtest'] = {'bet': fig_backtest('bet')}
     for k in ('sp500', 'btc'):
         N['backtest'][k] = var_backtest(k)[0]

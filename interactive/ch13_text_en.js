@@ -24,7 +24,7 @@ window.CH13_TEXT = {
  lk: (h, sk, sw, sp, pk, pw, pp, nS, nP, x) => `Target: the cumulative return over the next ${h} days${x ? X : ''}. Simulated random walk (${nS} days): random K-fold ${sk}, walk-forward ${sw}, purged walk-forward ${sp}. S&P 500 (${nP} days): ${pk}, ${pw} and ${pp}.`,
  sh: (lamL, nz, fl, cl, co, lamR, cr, ratio, cv, nzcv) => (cv
    ? `Lasso at λ = ${lamL}, chosen by walk-forward cross-validation: ${nzcv} of 11 coefficients non-zero; ${fl}: ${cl} (OLS ${co}). `
-   : `Lasso at λ = ${lamL}: ${nz} of 11 coefficients non-zero; ${fl}: ${cl} (OLS ${co}). `) + `Ridge at λ = ${lamR}: ${fl} ${cr}; the norm of the coefficient vector is ${ratio} of the OLS norm. Here each lasso coefficient sits at its own penalty; on the slide the lasso panel has the λ axis reversed.`,
+   : `Lasso at λ = ${lamL}: ${nz} of 11 coefficients non-zero; ${fl}: ${cl} (OLS ${co}). `) + `Ridge at λ = ${lamR}: ${fl} ${cr}; the norm of the coefficient vector is ${ratio} of the OLS norm. The OLS coefficients of r, min(r, 0) and |r| are not unique, because |r| = r − 2 min(r, 0) (the matrix has rank 10): the minimum-norm solution is shown.`,
  rw1: (sxx, sxy, b) => `OLS: β̂ = S_xy/S_xx = ${sxy}/${sxx} = ${b}.`,
  rw2: (lam, sxx, sxy, b, f) => `Ridge with λ = ${lam}: β̂ = ${sxy}/(${sxx} + ${lam}) = ${b}; shrinkage factor S_xx/(S_xx + λ) = ${f}.`,
  rw3: (bl, lam) => `Lasso with the same λ = ${lam}: ${bl}. Ridge shrinks the coefficient towards zero but does not set it to zero for any finite λ.`,

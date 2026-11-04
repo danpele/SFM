@@ -298,7 +298,8 @@ def horizon_check(k='sp500', h=10):
     r = returns(k)
     rh = r.rolling(h).sum().dropna()
     return {'var1': hs_var(r), 'var_sqrt': float(np.sqrt(h) * hs_var(r)), 'var_h': hs_var(rh.values), 'h': h,
-            'var_n1': normal_var(r.mean(), r.std()), 'var_nh': normal_var(h * r.mean(), np.sqrt(h) * r.std())}
+            'var_n1': normal_var(r.mean(), r.std()), 'var_nh': normal_var(h * r.mean(), np.sqrt(h) * r.std()),
+            'ratio': hs_var(rh.values) / hs_var(r), 'ac1': float(r.autocorr(1))}
 
 
 # =============================================================================
@@ -479,7 +480,8 @@ def backtest_all(assets=BT_ASSETS):
     for k in assets:
         df = rolling_forecasts(k)
         frames[k] = df
-        res[k] = {'start': df.index[0].date().isoformat(), 'end': df.index[-1].date().isoformat()}
+        res[k] = {'start': df.index[0].date().isoformat(), 'end': df.index[-1].date().isoformat(),
+                  'first_window_end': df.index[249].date().isoformat()}      # last day of the first 250-day window
         for m in METHODS:
             res[k][m] = backtest(df, m)
             res[k][m]['stress'] = stress_counts(df, m)
@@ -733,6 +735,7 @@ if __name__ == '__main__':
     N['methods'] = MT
     N['curves'] = fig_var_curves()
     N['horizon'] = horizon_check()
+    N['horizon_bet'] = horizon_check('bet')          # positive lag-1 autocorrelation: ratio above sqrt(h)
     N['precision'] = precision()
     N['traffic'] = fig_binomial()
     bt, frames = backtest_all()

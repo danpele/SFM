@@ -632,8 +632,8 @@ chart(T('Why the Robust Test: a Monte Carlo Check', 'Necesitatea testului robust
     h='0.48\\textheight')
 
 chart(T('Variance Ratios for Horizons of 2 to 40 Days', 'Rapoarte ale varianțelor pentru orizonturi de 2--40 de zile'), 'sfm_ch7_vr_profile', 'SFM_ch7_variance_ratio', [
-    T('S\\&P 500: VR falls below 1 at every horizon (mean reversion); BET: VR rises up to about @{vr.bet.20} at 20 days and beyond (momentum)',
-      'S\\&P 500: VR scade sub 1 la orice orizont (mean reversion); BET: VR crește pînă la circa @{vr.bet.20} la 20 de zile și peste (momentum)'),
+    T('S\\&P 500: VR falls below 1 at every horizon (mean reversion); BET: VR keeps rising with the horizon, @{vr.bet.20} at 20 days and @{vrp.bet.40} at 40 days (momentum)',
+      'S\\&P 500: VR scade sub 1 la orice orizont (mean reversion); BET: VR crește continuu cu orizontul, @{vr.bet.20} la 20 de zile și @{vrp.bet.40} la 40 de zile (momentum)'),
     T('DAX and Bitcoin: inside the robust band (shaded) at every horizon; the i.i.d.\\ band (dashed) is much narrower',
       'DAX și Bitcoin: în interiorul benzii robuste (zona umbrită) la orice orizont; banda i.i.d.\\ (linia întreruptă) este mult mai îngustă')],
     h='0.58\\textheight')
