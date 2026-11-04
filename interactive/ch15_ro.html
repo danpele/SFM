@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 15 · Riscul sistemic</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch15.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch15_data.js?v=20261101a", "ch15_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch15.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 15 · Riscul sistemic</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_15" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch15.html" class="lang-btn">EN</a><a href="ch15_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: VaR (value at risk), CoVaR (VaR-ul sistemului condiționat de o instituție), ΔCoVaR (contribuția instituției la CoVaR), ES (expected shortfall), MES (marginal expected shortfall), LRMES (long-run MES, MES pe termen lung), SRISK (deficitul de capital într-o criză), OLS (metoda celor mai mici pătrate), DGC (degree of Granger causality, gradul de cauzalitate Granger), VAR (model vector autoregresiv), FROM, TO, NET (proporțiile primite de la celelalte bănci, transmise celorlalte și diferența lor), CET1 (common equity tier 1, capital comun de nivel 1), G-SIB (global systemically important bank, bancă de importanță sistemică globală), BCBS (Basel Committee on Banking Supervision, Comitetul de la Basel pentru Supraveghere Bancară), BET (indicele Bursei de Valori București), VIX (indicele volatilității implicite a S&P 500), JPM, BAC, C, GS, MS, WFC (JPMorgan Chase, Bank of America, Citigroup, Goldman Sachs, Morgan Stanley, Wells Fargo), DBK, BNP, SAN, INGA, HSBA (Deutsche Bank, BNP Paribas, Santander, ING, HSBC), TLV (Banca Transilvania), BRD (BRD – Groupe Société Générale).</p>
+<p class="toc"><a href="#s-crises">Patru crize în date</a> · <a href="#s-dep">Corelația și dependența în cozi în crize</a> · <a href="#s-covar">CoVaR și Delta-CoVaR</a> · <a href="#s-mes">MES și SRISK</a> · <a href="#s-net">Rețele de bănci</a> · <a href="#s-macro">Politica macroprudențială</a></p>
+<h2 class="sec" id="s-crises">Patru crize în date</h2>
+<section class="blk" id="indices">
+  <h3>Portofoliile de bănci din 2005</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch15_bank_indices_ro.jpg" alt="Slide-ul 15: Portofoliile de bănci din 2005" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bi-y">Anul investiției celor 100 de unități</label><select id="bi-y"><option value="2005" selected>2005 (curs)</option><option value="2008">2008</option><option value="2010">2010</option><option value="2013">2013</option><option value="2016">2016</option><option value="2020">2020</option></select></div><button class="btn play" id="bi-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:520px}
+</style><div class="charts "><div class="chart" id="bi-chart"></div></div><ul class="out" id="bi-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută investiția celor 100 de unități la începutul lui 2010 (rulare suplimentară). Cît este drawdown-ul maxim al portofoliului băncilor americane?</div>
+  <details><summary>Răspuns</summary><p>−51%, pe 23 noiembrie 2011, față de −82% cu investiția din 2005: minimul din martie 2009 nu mai este în eșantion. Drawdown-ul maxim depinde de începutul eșantionului; pentru băncile europene, cel mai adînc punct după 2010 este 21 aprilie 2020 (−61%).</p></details>
+</section>
+<section class="blk" id="episodes">
+  <h3>Patru episoade comparate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch15_episodes_ro.jpg" alt="Slide-ul 22: Patru episoade comparate" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ep-d">Începutul ferestrelor mutat cu (zile): <b id="ep-d-v"></b></label><input type="range" id="ep-d" min="-30" max="30" step="5" value="0"></div><button class="btn play" id="ep-play" type="button"></button></div><div class="charts "><div class="chart" id="ep-chart"></div></div><ul class="out" id="ep-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută începutul fiecărei ferestre cu 30 de zile mai tîrziu (rulare suplimentară). Ce devine minimul băncilor americane în episodul din martie 2020?</div>
+  <details><summary>Răspuns</summary><p>−10,8% în loc de −47,6%: fereastra începe pe 15 martie 2020, după cea mai mare parte a scăderii, iar la final portofoliul are +16,9%. Randamentul cumulat se măsoară de la începutul ferestrei, deci comparația dintre episoade depinde de această dată.</p></details>
+</section><h2 class="sec" id="s-dep">Corelația și dependența în cozi în crize</h2>
+<section class="blk" id="rcorr">
+  <h3>Corelația dintre bănci crește în crize</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=24" target="_blank" rel="noopener"><img src="slides/sfm_ch15_rolling_corr_ro.jpg" alt="Slide-ul 23: Corelația dintre bănci crește în crize" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-w">Fereastra (zile): <b id="rc-w-v"></b></label><input type="range" id="rc-w" min="40" max="250" step="10" value="120"></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu o fereastră de 60 de zile (▶, rulare suplimentară), unde ajunge maximul corelației dintre TLV și BRD?</div>
+  <details><summary>Răspuns</summary><p>La 0,96, pe 6 februarie 2019, tot în afara unei crize (cu 120 de zile: 0,93 pe 9 mai 2019). Pentru o singură pereche de acțiuni, o fereastră scurtă dă valori extreme mai mari; maximul băncilor americane rămîne pe 16 martie 2020 (0,95).</p></details>
+</section>
+<section class="blk" id="corr-tab">
+  <h3>Interpretarea corelațiilor: cînd diversificarea nu mai funcționează</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=25" target="_blank" rel="noopener"><img src="slides/ch15_corr-tab_ro.jpg" alt="Slide-ul 24: Interpretarea corelațiilor: cînd diversificarea nu mai funcționează" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ct-y">Anul din tabel</label><select id="ct-y"><option value="2005">2005</option><option value="2006">2006</option><option value="2007">2007</option><option value="2008">2008</option><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014">2014</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017" selected>2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><div class="ctl"><label for="ct-w">Fereastra corelației</label><select id="ct-w"><option value="120" selected>120 de zile (curs)</option><option value="60">60 de zile</option><option value="250">250 de zile</option></select></div><button class="btn play" id="ct-play" type="button"></button></div><div class="charts "><div class="chart" id="ct-chart"></div></div><p class="xh">Media corelației medii dintre perechile de bănci, pe perioade (cifrele de pe slide-ul precedent)</p><div class="tw" id="ct-tab"></div><ul class="out" id="ct-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece prin anii 2005–2026. În ce an este cea mai mare media anuală a corelației dintre TLV și BRD?</div><details><summary>Răspuns</summary><p>În 2019: 0,80, peste 2020 (0,76) și peste 2011 (0,56). Corelația pe 120 de zile a două acțiuni este zgomotoasă și poate atinge maximul într-un an liniștit, cum arată și maximul zilnic din 9 mai 2019.</p></details>
+</section>
+<section class="blk" id="fr-we">
+  <h3>Contagiune sau interdependență? Forbes și Rigobon (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch15_fr-we_ro.jpg" alt="Slide-ul 26: Contagiune sau interdependență? Forbes și Rigobon (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fr-e">Perioada de criză</label><select id="fr-e"><option value="lehman" selected>15 septembrie – 31 decembrie 2008 (slide)</option><option value="euro">zona euro, iulie 2011 – septembrie 2012</option><option value="covid">martie 2020 (14 februarie – 30 aprilie)</option><option value="svb">martie 2023 (28 februarie – 28 aprilie)</option></select></div><button class="btn play" id="fr-play" type="button"></button></div><div class="charts "><div class="chart" id="fr-chart"></div></div><div class="we" id="fr-st-box"><p class="we-h">Exemplu lucrat: corecția Forbes–Rigobon</p><div class="we-f">\[\rho^* = \frac{\rho}{\sqrt{1 + \delta(1 - \rho^2)}}, \qquad \delta = \frac{\sigma^2_{\text{criză}}}{\sigma^2_{\text{calm}}} - 1\]</div><div class="wctl"><div class="ctl"><label for="fr-s">Piața-sursă</label><select id="fr-s"><option value="US" selected>băncile americane (slide)</option><option value="EU">băncile europene</option></select></div></div><ol id="fr-st"></ol></div><ul class="out" id="fr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ alege criza din martie 2020 (rulare suplimentară). Depășește corelația corectată ρ* corelația din perioada calmă, 0,40?</div><details><summary>Răspuns</summary><p>Nu: ρ_criză = 0,74, dar varianța portofoliului american crește de 47 de ori (δ = 46,0), deci ρ* = 0,74/√(1 + 46,0 × 0,451) = 0,16. Dintre cele patru ferestre, doar martie 2023 dă ρ* = 0,42, puțin peste 0,40, pentru că volatilitatea a crescut puțin (δ = 3,7).</p></details>
+</section>
+<section class="blk" id="tail-tab">
+  <h3>Dependența în cozi dintre bănci și piețe</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=30" target="_blank" rel="noopener"><img src="slides/ch15_tail-tab_ro.jpg" alt="Slide-ul 29: Dependența în cozi dintre bănci și piețe" loading="lazy"></a>
+      <figcaption>Slide-ul 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tt-q">Nivelul q al coloanei suplimentare (%): <b id="tt-q-v"></b></label><input type="range" id="tt-q" min="0.5" max="20" step="0.5" value="5"></div><button class="btn play" id="tt-play" type="button"></button></div><div class="charts "><div class="chart" id="tt-chart"></div></div><p class="xh">Dependența în cozi (tabelul de pe slide și λ(q) la nivelul ales)</p><div class="tw" id="tt-tab"></div><ul class="out" id="tt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ coboară q la 0,5% (rulare suplimentară). Ce se întîmplă cu λ(q) pentru băncile americane și S&P 500?</div><details><summary>Răspuns</summary><p>Crește la 0,73, față de 0,64 la 5%; la independență ar fi 0,005. Estimarea se sprijină pe cele mai proaste 26 de zile ale S&P 500, deci este imprecisă: pentru băncile europene λ(0,5%) scade la 0,58.</p></details>
+</section>
+<section class="blk" id="tscatter">
+  <h3>Zile proaste comune</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=31" target="_blank" rel="noopener"><img src="slides/sfm_ch15_tail_scatter_ro.jpg" alt="Slide-ul 30: Zile proaste comune" loading="lazy"></a>
+      <figcaption>Slide-ul 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-q">Pragul q (%): <b id="ts-q-v"></b></label><input type="range" id="ts-q" min="1" max="15" step="0.5" value="5"></div><button class="btn play" id="ts-play" type="button"></button></div><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La q = 1% (▶, rulare suplimentară), de cîte ori sînt mai multe zilele proaste comune ale băncilor americane și S&P 500 decît la independență?</div>
+  <details><summary>Răspuns</summary><p>De circa 63 de ori: 33 de zile față de q²n = 0,0001 × 5 229 = 0,52, față de 12,7 ori la q = 5%. Raportul crește spre coadă: zilele foarte proaste vin împreună.</p></details>
+</section><h2 class="sec" id="s-covar">CoVaR și Delta-CoVaR</h2>
+<section class="blk" id="covar-we">
+  <h3>Exemplu rezolvat: JPMorgan Chase și S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch15_covar-we_ro.jpg" alt="Slide-ul 34: Exemplu rezolvat: JPMorgan Chase și S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cw-a">Nivelul α</label><select id="cw-a"><option value="0.01" selected>1% (slide)</option><option value="0.025">2,5%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="cw-play" type="button"></button></div><div class="charts "><div class="chart" id="cw-chart"></div></div><div class="we" id="cw-we-box"><p class="we-h">Exemplu lucrat: CoVaR din regresia cuantilică</p><div class="we-f">\[\mathrm{CoVaR}_\alpha = -\big(\hat a + \hat b\,\hat q_\alpha(X^i)\big), \qquad \Delta\mathrm{CoVaR}_\alpha = \hat b\,\big(\hat q_{50\%}(X^i) - \hat q_\alpha(X^i)\big)\]</div><div class="wctl"><div class="ctl"><label for="cw-k">Banca</label><select id="cw-k"><option value="JPM" selected>JPMorgan Chase (slide)</option><option value="BAC">Bank of America</option><option value="C">Citigroup</option><option value="GS">Goldman Sachs</option><option value="MS">Morgan Stanley</option><option value="WFC">Wells Fargo</option><option value="DBK">Deutsche Bank</option><option value="BNP">BNP Paribas</option><option value="SAN">Santander</option><option value="INGA">ING</option><option value="HSBA">HSBC</option><option value="TLV">Banca Transilvania</option><option value="BRD">BRD</option></select></div></div><ol id="cw-we"></ol></div><ul class="out" id="cw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la α = 5% (rulare suplimentară). CoVaR 5% al S&P 500 condiționat de JPM este mai mare sau mai mic decît 4,79%?</div><details><summary>Răspuns</summary><p>Mai mic: 2,45%. Cuantila JPM (−3,07%) și termenul liber (−1,26) sînt mai puțin extreme, iar panta rămîne 0,39; ΔCoVaR 5% = 1,22%, aproape jumătate din 2,47%.</p></details>
+</section>
+<section class="blk" id="covarqr">
+  <h3>CoVaR într-un grafic</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch15_covar_qr_ro.jpg" alt="Slide-ul 35: CoVaR într-un grafic" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cq-a">Nivelul α</label><select id="cq-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><div class="ctl"><label for="cq-k">Banca</label><select id="cq-k"><option value="JPM" selected>JPMorgan Chase (curs)</option><option value="BAC">Bank of America</option><option value="C">Citigroup</option><option value="GS">Goldman Sachs</option><option value="MS">Morgan Stanley</option><option value="WFC">Wells Fargo</option><option value="DBK">Deutsche Bank</option><option value="BNP">BNP Paribas</option><option value="SAN">Santander</option><option value="INGA">ING</option><option value="HSBA">HSBC</option><option value="TLV">Banca Transilvania</option><option value="BRD">BRD</option></select></div><button class="btn play" id="cq-play" type="button"></button></div><div class="charts "><div class="chart" id="cq-chart"></div></div><ul class="out" id="cq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece prin α = 2,5%, 5% și 10% (rulare suplimentară). Cum se schimbă panta b̂ a dreptei roșii pentru JPM?</div>
+  <details><summary>Răspuns</summary><p>Aproape deloc: 0,385, 0,390 și 0,401, față de 0,390 la 1% și 0,398 la mediană. Se mută termenul liber, de la −2,35 la −0,86: dreptele sînt aproape paralele, deci ΔCoVaR scade pentru că distanța dintre cuantilele JPM scade.</p></details>
+</section>
+<section class="blk" id="dcovar">
+  <h3>ΔCoVaR 1% pentru 13 bănci</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch15_dcovar_ro.jpg" alt="Slide-ul 36: ΔCoVaR 1% pentru 13 bănci" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dc-a">Nivelul α</label><select id="dc-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="dc-play" type="button"></button></div><div class="charts "><div class="chart" id="dc-chart"></div></div><ul class="out" id="dc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 5% (▶, rulare suplimentară), ce grup de bănci are cel mai mare ΔCoVaR?</div>
+  <details><summary>Răspuns</summary><p>Tot băncile europene: 1,43–1,68% (Santander 1,68%), față de 1,12–1,33% la cele americane; TLV 1,51%, BRD 1,45%. La 1%, cea mai mare valoare era a TLV (3,31%).</p></details>
+</section>
+<section class="blk" id="dcovar-tab">
+  <h3>Interpretarea ΔCoVaR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch15_dcovar-tab_ro.jpg" alt="Slide-ul 37: Interpretarea ΔCoVaR" loading="lazy"></a>
+      <figcaption>Slide-ul 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dx-a">Al doilea nivel α₂</label><select id="dx-a"><option value="0.05" selected>5% (slide)</option><option value="0.025">2,5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="dx-play" type="button"></button></div><div class="charts "><div class="chart" id="dx-chart"></div></div><p class="xh">CoVaR și ΔCoVaR 1% pentru cele 13 bănci (cifrele din graficul precedent) și ΔCoVaR la α₂</p><div class="tw" id="dx-tab"></div><ul class="out" id="dx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu α₂ = 10% (▶, rulare suplimentară), cît este corelația Spearman dintre ordinea băncilor la 1% și la 10%?</div><details><summary>Răspuns</summary><p>0,84, față de 0,87 la 5% și la 2,5%: ordinea băncilor rămîne apropiată; se schimbă nivelul ΔCoVaR (0,74–1,20% la 10%), nu ordinea.</p></details>
+</section>
+<section class="blk" id="tlv-we">
+  <h3>Exemplu rezolvat: Banca Transilvania și BET</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch15_tlv-we_ro.jpg" alt="Slide-ul 38: Exemplu rezolvat: Banca Transilvania și BET" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tb-a">Nivelul α</label><select id="tb-a"><option value="0.01" selected>1% (slide)</option><option value="0.025">2,5%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="tb-play" type="button"></button></div><div class="charts "><div class="chart" id="tb-chart"></div></div><div class="we" id="tb-we-box"><p class="we-h">Exemplu lucrat: ΔCoVaR între mediana și starea de criză</p><div class="we-f">\[\Delta\mathrm{CoVaR}_\alpha = \mathrm{CoVaR}^{sys|X^i = q_\alpha}_\alpha - \mathrm{CoVaR}^{sys|X^i = q_{50\%}}_\alpha = \hat b\,\big(\hat q_{50\%} - \hat q_\alpha\big)\]</div><div class="wctl"><div class="ctl"><label for="tb-k">Banca</label><select id="tb-k"><option value="JPM">JPMorgan Chase</option><option value="BAC">Bank of America</option><option value="C">Citigroup</option><option value="GS">Goldman Sachs</option><option value="MS">Morgan Stanley</option><option value="WFC">Wells Fargo</option><option value="DBK">Deutsche Bank</option><option value="BNP">BNP Paribas</option><option value="SAN">Santander</option><option value="INGA">ING</option><option value="HSBA">HSBC</option><option value="TLV" selected>Banca Transilvania (slide)</option><option value="BRD">BRD</option></select></div></div><ol id="tb-we"></ol></div><ul class="out" id="tb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La α = 5% (▶, rulare suplimentară), cît este ΔCoVaR al TLV?</div><details><summary>Răspuns</summary><p>1,51%, mai puțin de jumătate din 3,31%: panta scade de la 0,611 la 0,542, iar distanța dintre mediana TLV și cuantila ei scade de la 5,41 la 2,79 puncte procentuale; 0,542 × 2,79 = 1,51.</p></details>
+</section>
+<section class="blk" id="vardcovar">
+  <h3>VaR nu este ΔCoVaR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch15_var_vs_dcovar_ro.jpg" alt="Slide-ul 39: VaR nu este ΔCoVaR" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vd-a">Nivelul α</label><select id="vd-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="vd-play" type="button"></button></div><div class="charts "><div class="chart" id="vd-chart"></div></div><ul class="out" id="vd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 10% (▶, rulare suplimentară), rămîne negativă corelația Spearman dintre VaR și ΔCoVaR?</div>
+  <details><summary>Răspuns</summary><p>Nu: devine +0,20 (la 2,5%: −0,13; la 5%: +0,03). Cu 13 bănci, niciuna dintre aceste corelații, nici −0,31 de la 1% (p = 0,31), nu este semnificativă la 5%; ce rămîne este că VaR-ul propriu nu ordonează băncile după ΔCoVaR.</p></details>
+</section>
+<section class="blk" id="dyn">
+  <h3>ΔCoVaR 1% în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch15_dcovar_dynamic_ro.jpg" alt="Slide-ul 41: ΔCoVaR 1% în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dn-a">Nivelul α</label><select id="dn-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="dn-k">Băncile</label><select id="dn-k"><option value="all" selected>toate trei (curs)</option><option value="JPM">JPMorgan Chase</option><option value="DBK">Deutsche Bank</option><option value="TLV">Banca Transilvania</option></select></div><button class="btn play" id="dn-play" type="button"></button></div><div class="charts "><div class="chart" id="dn-chart"></div></div><ul class="out" id="dn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La α = 2,5% (▶, rulare suplimentară), cînd atinge maximul ΔCoVaR al JPMorgan Chase?</div>
+  <details><summary>Răspuns</summary><p>Pe 28 octombrie 2008 (7,58%), nu în martie 2020 ca la 1% și 5%; în martie 2020 ajunge la 7,52%. Cele două vîrfuri sînt aproape egale, deci data maximului depinde de α.</p></details>
+</section><h2 class="sec" id="s-mes">MES și SRISK</h2>
+<section class="blk" id="mes-we">
+  <h3>Exemplu rezolvat: MES din zece zile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=45" target="_blank" rel="noopener"><img src="slides/ch15_mes-we_ro.jpg" alt="Slide-ul 44: Exemplu rezolvat: MES din zece zile" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mw-a">Nivelul α (%): <b id="mw-a-v"></b></label><input type="range" id="mw-a" min="10" max="50" step="10" value="20"></div><button class="btn play" id="mw-play" type="button"></button></div><div class="charts "><div class="chart" id="mw-chart"></div></div><div class="we" id="mw-we-box"><p class="we-h">Exemplu lucrat: MES ca medie a randamentelor băncii în zilele din coada pieței</p><div class="we-f">\[\mathrm{MES}_\alpha = -\frac{1}{k}\sum_{t \in \text{cele mai proaste } k \text{ zile ale pieței}} X^i_t, \qquad k = \lceil n\alpha \rceil\]</div><ol id="mw-we"></ol></div><ul class="out" id="mw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La α = 30% (▶), cît este MES?</div><details><summary>Răspuns</summary><p>6,20% = −(−9,0 − 6,5 − 3,1)/3: se adaugă ziua 9 (piața −2,2%, banca −3,1%). ES 30% al pieței = 4,07%, iar MES scade față de 7,75%, pentru că a treia zi este mai puțin extremă.</p></details>
+</section>
+<section class="blk" id="mes">
+  <h3>MES 5% pentru 13 bănci</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch15_mes_ro.jpg" alt="Slide-ul 45: MES 5% pentru 13 bănci" loading="lazy"></a>
+      <figcaption>Slide-ul 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-a">Nivelul α al MES</label><select id="ms-a"><option value="0.05" selected>5% (curs)</option><option value="0.01">1%</option><option value="0.025">2,5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 1% (▶, rulare suplimentară), care bancă are cel mai mare MES?</div>
+  <details><summary>Răspuns</summary><p>Citigroup, 10,64%, aproape la egalitate cu Bank of America (10,62%); HSBC rămîne cea mai mică (4,86%). La 1%, MES se sprijină pe 53 de zile ale S&P 500.</p></details>
+</section>
+<section class="blk" id="mes-tab">
+  <h3>Interpretarea MES și a ΔCoVaR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=47" target="_blank" rel="noopener"><img src="slides/ch15_mes-tab_ro.jpg" alt="Slide-ul 46: Interpretarea MES și a ΔCoVaR" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mt-a">Nivelul α al MES</label><select id="mt-a"><option value="0.05" selected>5% (curs)</option><option value="0.01">1%</option><option value="0.025">2,5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="mt-play" type="button"></button></div><div class="charts "><div class="chart" id="mt-chart"></div></div><p class="xh">MES, beta OLS, ES al pieței, LRMES și efectul de levier de echilibru (cifrele de pe slide-uri)</p><div class="tw" id="mt-tab"></div><ul class="out" id="mt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 1% (▶, rulare suplimentară), cum se schimbă corelația Spearman dintre MES și ΔCoVaR 1%?</div><details><summary>Răspuns</summary><p>Devine mai negativă: −0,58, față de −0,29 la 5%. Cele două măsuri răspund la întrebări diferite, iar la același nivel de 1% ordinea lor diferă și mai mult.</p></details>
+</section>
+<section class="blk" id="mescrisis">
+  <h3>Studiu de caz: a prezis MES pierderile din 2008?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch15_mes_crisis_ro.jpg" alt="Slide-ul 47: Studiu de caz: a prezis MES pierderile din 2008?" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-a">Nivelul α al MES</label><select id="mc-a"><option value="0.05" selected>5% (curs)</option><option value="0.01">1%</option><option value="0.025">2,5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La nivelul 1% (▶, rulare suplimentară), devine semnificativă corelația Spearman dintre MES și pierderea din 2007–2008?</div>
+  <details><summary>Răspuns</summary><p>Nu: −0,37 (p = 0,26); la 10%: −0,41 (p = 0,21). Semnul este cel din lucrare, dar cu 11 bănci nu este separat de zgomot.</p></details>
+</section>
+<section class="blk" id="lrmes-we">
+  <h3>De la MES la LRMES</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=49" target="_blank" rel="noopener"><img src="slides/ch15_lrmes-we_ro.jpg" alt="Slide-ul 48: De la MES la LRMES" loading="lazy"></a>
+      <figcaption>Slide-ul 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lr-m">MES (% pe zi): <b id="lr-m-v"></b></label><input type="range" id="lr-m" min="0.5" max="6" step="0.25" value="3"></div><button class="btn play" id="lr-play" type="button"></button></div><div class="charts "><div class="chart" id="lr-chart"></div></div><div class="we" id="lr-st-box"><p class="we-h">Exemplu lucrat: de la MES la LRMES</p><div class="we-f">\[\mathrm{LRMES} \approx 1 - \exp(-18 \times \mathrm{MES})\]</div><div class="wctl"><div class="ctl"><label for="lr-c">Pragul pieței pentru MES-ul băncilor</label><select id="lr-c"><option value="-2" selected>−2% (slide)</option><option value="-1">−1%</option><option value="-3">−3%</option></select></div></div><ol id="lr-st"></ol></div><ul class="out" id="lr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La MES = 6% (▶), cît este LRMES?</div><details><summary>Răspuns</summary><p>66,0% = 1 − e^(−1,08), nu 83,4% = 2 × 41,7%: funcția 1 − e^(−x) crește din ce în ce mai încet și rămîne sub 100%.</p></details>
+</section>
+<section class="blk" id="srisk-we">
+  <h3>SRISK: deficitul de capital într-o criză</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch15_srisk-we_ro.jpg" alt="Slide-ul 49: SRISK: deficitul de capital într-o criză" loading="lazy"></a>
+      <figcaption>Slide-ul 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sw-W">Valoarea de piață a capitalului propriu W (miliarde): <b id="sw-W-v"></b></label><input type="range" id="sw-W" min="20" max="200" step="10" value="100"></div><button class="btn play" id="sw-play" type="button"></button></div><div class="charts "><div class="chart" id="sw-chart"></div></div><div class="we" id="sw-st-box"><p class="we-h">Exemplu lucrat: SRISK</p><div class="we-f">\[\mathrm{SRISK} = kD - (1 - k)(1 - \mathrm{LRMES})\,W\]</div><div class="wctl"><div class="ctl"><label for="sw-k">Fracția de capital k</label><select id="sw-k"><option value="0.08" selected>8% (slide)</option><option value="0.055">5,5%</option></select></div><div class="ctl"><label for="sw-L">LRMES</label><select id="sw-L"><option value="ex" selected>41,7% (exemplul de pe slide)</option><option value="JPM">JPMorgan Chase</option><option value="BAC">Bank of America</option><option value="C">Citigroup</option><option value="GS">Goldman Sachs</option><option value="MS">Morgan Stanley</option><option value="WFC">Wells Fargo</option><option value="DBK">Deutsche Bank</option><option value="BNP">BNP Paribas</option><option value="SAN">Santander</option><option value="INGA">ING</option><option value="HSBA">HSBC</option><option value="TLV">Banca Transilvania</option><option value="BRD">BRD</option></select></div></div><ol id="sw-st"></ol></div><ul class="out" id="sw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu W = 50 de miliarde (▶), cît este SRISK?</div><details><summary>Răspuns</summary><p>45,2 miliarde = 72 − 0,92 × 0,583 × 50 = 72 − 26,8. Efectul de levier L = 950/50 = 19 este mult peste L* = 7,7: o scădere a valorii de piață a capitalului mărește deficitul.</p></details>
+</section>
+<section class="blk" id="srisk">
+  <h3>SRISK și efectul de levier</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch15_srisk_ro.jpg" alt="Slide-ul 50: SRISK și efectul de levier" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sr-k">Fracția de capital k (%): <b id="sr-k-v"></b></label><input type="range" id="sr-k" min="3" max="12" step="0.5" value="8"></div><button class="btn play" id="sr-play" type="button"></button></div><div class="charts "><div class="chart" id="sr-chart"></div></div><ul class="out" id="sr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu k = 5,5% (▶, regula europeană de pe slide-ul următor), peste ce efect de levier are Citigroup nevoie de capital într-o criză?</div>
+  <details><summary>Răspuns</summary><p>6,9, față de 5,0 cu k = 8%: un k mai mic cere mai puțin capital, deci pragul L* = 1 + 0,945 × 0,345/0,055 crește. Pentru HSBC pragul urcă la 11,3.</p></details>
+</section><h2 class="sec" id="s-net">Rețele de bănci</h2>
+<section class="blk" id="dgc">
+  <h3>Rețele Granger în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch15_dgc_ro.jpg" alt="Slide-ul 54: Rețele Granger în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dg-w">Fereastra (luni): <b id="dg-w-v"></b></label><input type="range" id="dg-w" min="24" max="60" step="6" value="36"></div><div class="ctl"><label for="dg-l">Nivelul testului</label><select id="dg-l"><option value="0.05" selected>5% (curs)</option><option value="0.01">1%</option><option value="0.1">10%</option></select></div><button class="btn play" id="dg-play" type="button"></button></div><div class="charts "><div class="chart" id="dg-chart"></div></div><ul class="out" id="dg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ferestre de 60 de luni (▶, rulare suplimentară), cît este maximul DGC?</div>
+  <details><summary>Răspuns</summary><p>35,5% (fereastra care se încheie în ianuarie 2010), față de 39,1% cu 36 de luni; media crește de la 9,6% la 12,0%, pentru că anii 2007–2009 rămîn în mai multe ferestre.</p></details>
+</section>
+<section class="blk" id="gnet">
+  <h3>Două rețele: 2007–2009 și 2017–2019</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch15_granger_net_ro.jpg" alt="Slide-ul 55: Două rețele: 2007–2009 și 2017–2019" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gn-s">Ambele ferestre mutate cu (luni): <b id="gn-s-v"></b></label><input type="range" id="gn-s" min="-12" max="24" step="6" value="0"></div><button class="btn play" id="gn-play" type="button"></button></div><div class="charts "><div class="chart" id="gn-chart"></div></div><ul class="out" id="gn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută ambele ferestre cu 12 luni mai devreme (2006–2008 și 2016–2018). Cîte legături are fereastra de criză?</div>
+  <details><summary>Răspuns</summary><p>43 (DGC 39%), față de 26 în 2007–2009; fereastra liniștită are 7. Fereastra care se încheie în decembrie 2008 este maximul din graficul precedent.</p></details>
+</section>
+<section class="blk" id="dy-we">
+  <h3>Conectivitatea Diebold–Yilmaz</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=57" target="_blank" rel="noopener"><img src="slides/ch15_dy-we_ro.jpg" alt="Slide-ul 56: Conectivitatea Diebold–Yilmaz" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dw-h">Orizontul H (zile): <b id="dw-h-v"></b></label><input type="range" id="dw-h" min="1" max="30" step="1" value="10"></div><button class="btn play" id="dw-play" type="button"></button></div><div class="charts "><div class="chart" id="dw-chart"></div></div><div class="we" id="dw-we-box"><p class="we-h">Exemplu lucrat: o proporție din descompunerea varianței și conectivitatea totală</p><div class="we-f">\[\mathrm{FROM}_i = \sum_{j \ne i} d_{ij} = 100 - d_{ii}, \quad \mathrm{TO}_i = \sum_{j \ne i} d_{ji}, \quad \text{total} = \frac{1}{N}\sum_{i \ne j} d_{ij}\]</div><div class="wctl"><div class="ctl"><label for="dw-k">Banca</label><select id="dw-k"><option value="JPM" selected>JPMorgan Chase (slide)</option><option value="BAC">Bank of America</option><option value="C">Citigroup</option><option value="GS">Goldman Sachs</option><option value="MS">Morgan Stanley</option><option value="WFC">Wells Fargo</option><option value="DBK">Deutsche Bank</option><option value="BNP">BNP Paribas</option><option value="SAN">Santander</option><option value="INGA">ING</option><option value="HSBA">HSBC</option></select></div></div><ol id="dw-we"></ol></div><ul class="out" id="dw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu H = 1 zi (▶), cît este FROM pentru JPMorgan Chase?</div><details><summary>Răspuns</summary><p>80,6%, practic ca la H = 10 (80,65%); conectivitatea totală este 78,0% față de 78,3%. Randamentele zilnice sînt aproape imprevizibile, deci descompunerea vine aproape în întregime din corelația șocurilor din aceeași zi, nu din dinamica VAR.</p></details>
+</section>
+<section class="blk" id="dytab">
+  <h3>Tabelul de conectivitate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch15_dy_table_ro.jpg" alt="Slide-ul 57: Tabelul de conectivitate" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dt-h">Orizontul H (zile): <b id="dt-h-v"></b></label><input type="range" id="dt-h" min="1" max="30" step="1" value="10"></div><button class="btn play" id="dt-play" type="button"></button></div><div class="charts "><div class="chart" id="dt-chart"></div></div><ul class="out" id="dt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu H = 30 de zile (▶), cum se schimbă conectivitatea totală?</div>
+  <details><summary>Răspuns</summary><p>Rămîne 78,3%: de la H = 5 valoarea nu se mai schimbă la prima zecimală. Coeficienții VAR(1) ai randamentelor zilnice sînt mici, deci efectele unui șoc dispar în cîteva zile.</p></details>
+</section>
+<section class="blk" id="dy-tab">
+  <h3>Interpretarea tabelului de conectivitate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=59" target="_blank" rel="noopener"><img src="slides/ch15_dy-tab_ro.jpg" alt="Slide-ul 58: Interpretarea tabelului de conectivitate" loading="lazy"></a>
+      <figcaption>Slide-ul 58</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dz-p">Perioada</label><select id="dz-p"><option value="full" selected>2005–2026 (slide)</option><option value="p1">2005–2009</option><option value="p2">2010–2019</option><option value="p3">2020–2026</option></select></div><button class="btn play" id="dz-play" type="button"></button></div><div class="charts "><div class="chart" id="dz-chart"></div></div><p class="xh">Partea proprie, FROM, TO și NET (în %, orizontul de 10 zile)</p><div class="tw" id="dz-tab"></div><ul class="out" id="dz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În subperioada 2020–2026 (▶, rulare suplimentară), care bancă are cel mai negativ NET?</div><details><summary>Răspuns</summary><p>HSBC, −20,1, ca pe întreaga perioadă; băncile americane rămîn transmițători neți (JPMorgan Chase +8,8, Bank of America +11,3), iar conectivitatea totală este 80,2%.</p></details>
+</section>
+<section class="blk" id="dyroll">
+  <h3>Conectivitatea totală în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=60" target="_blank" rel="noopener"><img src="slides/sfm_ch15_dy_rolling_ro.jpg" alt="Slide-ul 59: Conectivitatea totală în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dr-w">Fereastra (zile)</label><select id="dr-w"><option value="200" selected>200 (curs)</option><option value="100">100</option><option value="150">150</option><option value="250">250</option><option value="300">300</option></select></div><button class="btn play" id="dr-play" type="button"></button></div><div class="charts "><div class="chart" id="dr-chart"></div></div><ul class="out" id="dr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ferestre de 100 de zile (▶, rulare suplimentară), rămîne maximul conectivității totale în martie 2020?</div>
+  <details><summary>Răspuns</summary><p>Da: 87,9% pe 17 martie 2020. Maximul din 2016 urcă la 86,0%, iar minimul coboară la 54,5% (20 mai 2024): ferestrele scurte dau extreme mai mari în ambele direcții.</p></details>
+</section><h2 class="sec" id="s-macro">Politica macroprudențială</h2>
+<section class="blk" id="basel-we">
+  <h3>Amortizoarele de capital din Basel III</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol15_risc_sistemic.pdf#page=63" target="_blank" rel="noopener"><img src="slides/ch15_basel-we_ro.jpg" alt="Slide-ul 62: Amortizoarele de capital din Basel III" loading="lazy"></a>
+      <figcaption>Slide-ul 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bs-c">Amortizorul anticiclic (%): <b id="bs-c-v"></b></label><input type="range" id="bs-c" min="0" max="2.5" step="0.25" value="0"></div><button class="btn play" id="bs-play" type="button"></button></div><div class="charts "><div class="chart" id="bs-chart"></div></div><div class="we" id="bs-st-box"><p class="we-h">Exemplu lucrat: cerința de capital CET1 a unei bănci</p><div class="we-f">\[\text{CET1 cerut} = 4{,}5\% + 2{,}5\% + \text{anticiclic} + \text{supliment G-SIB}\]</div><div class="wctl"><div class="ctl"><label for="bs-g">Suplimentul G-SIB</label><select id="bs-g"><option value="1" selected>1% (minimul) (slide)</option><option value="3.5">3,5% (maximul)</option><option value="0">0 (bancă fără supliment)</option></select></div></div><ol id="bs-st"></ol></div><ul class="out" id="bs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La sfîrșitul lui ▶ amortizorul anticiclic ajunge la 2,5%. Cît este cerința CET1 a unei bănci G-SIB cu suplimentul minim de 1%?</div><details><summary>Răspuns</summary><p>10,5% = 4,5 + 2,5 + 2,5 + 1 din activele ponderate la risc (<a href="https://www.bis.org/publ/bcbs189.htm" target="_blank" rel="noopener">BCBS (2011)</a>; <a href="https://www.bis.org/bcbs/publ/d445.htm" target="_blank" rel="noopener">BCBS (2018)</a>). Cu suplimentul maxim de 3,5% ar fi 13%.</p></details>
+</section>
+<p class="src foot">Datele cursului din data/market (EODHD, ianuarie 2005 – 18 septembrie 2026): prețurile de închidere ajustate zilnice ale celor 13 bănci și închiderile S&P 500, Euro Stoxx 50 și BET; băncile românești din 2010. Coeficienții regresiilor cuantilice, intervalele bootstrap pe blocuri ale ΔCoVaR 1% și ale MES 5%, parametrii copulei t, ΔCoVaR variabil în timp și conectivitatea totală pe ferestre mobile vin din codul capitolului (Quantlets/Ch_15). Browserul recalculează din prețuri randamentele, portofoliile de bănci, episoadele, corelațiile, testul Forbes–Rigobon, dependența empirică în cozi, cuantilele, CoVaR și ΔCoVaR, MES, LRMES, SRISK, rețelele Granger și tabelul Diebold–Yilmaz. Alte niveluri α, ferestre, praguri, perioade și orizonturi sînt rulări suplimentare ale aceluiași cod. Exemplele cu MES din zece zile, LRMES, SRISK și amortizoarele Basel III folosesc cifrele de pe slide-uri; cerințele de capital urmează <a href="https://www.bis.org/publ/bcbs189.htm" target="_blank" rel="noopener">BCBS (2011)</a> și <a href="https://www.bis.org/bcbs/publ/d445.htm" target="_blank" rel="noopener">BCBS (2018)</a>.</p>
+</main>
+</body>
+</html>
