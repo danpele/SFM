@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 16 · Review</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch16.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch16_data.js?v=20261101a", "ch16_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch16.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 16 · Review</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_16" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch16.html" class="lang-btn active">EN</a><a href="ch16_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and review problems are recomputed with it. Abbreviations: VaR (value at risk), ES (expected shortfall), HS (historical simulation), EWMA (exponentially weighted moving average), GARCH (generalised autoregressive conditional heteroskedasticity), IGARCH (integrated GARCH), ML (maximum likelihood), ACF (autocorrelation function), VR (variance ratio), JB (Jarque–Bera), R/S (rescaled range), MDD (maximum drawdown), CAGR (compound annual growth rate), SE (standard error), CI (confidence interval), LR (likelihood ratio), GBM (geometric Brownian motion), TPR (true positive rate), FPR (false positive rate), AUC (area under the ROC curve), EL (expected loss), PD (probability of default), LGD (loss given default), EAD (exposure at default), CoVaR (the VaR of the system conditional on an institution), ΔCoVaR (the institution’s contribution to CoVaR), BET (the index of the Bucharest Stock Exchange), i.i.d. (independent and identically distributed).</p>
+<p class="toc"><a href="#s-map">The Course Map</a> · <a href="#s-c03">Chapters 0–3: Data, Returns and Distributions</a> · <a href="#s-c811">Chapters 8–11: Volatility, Risk and Memory</a> · <a href="#s-exam">The Exam</a></p>
+<h2 class="sec" id="s-map">The Course Map</h2>
+<section class="blk" id="three">
+  <h3>Three Series, One Window: S&P 500, BET, Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch16_three_series_en.jpg" alt="Slide 8: Three Series, One Window: S&P 500, BET, Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-w">Start of the window</label><select id="ts-w"><option value="2015-01-01" selected>January 2015 (lecture)</option><option value="2017-01-01">January 2017</option><option value="2019-01-01">January 2019</option><option value="2021-01-01">January 2021</option></select></div><button class="btn play" id="ts-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:520px}
+</style><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves the start of the window to January 2019 (extra run). Which of the three maximum drawdowns changes?</div>
+  <details><summary>Answer</summary><p>Only Bitcoin’s: −76.6% (from 8 November 2021 to 21 November 2022) instead of −83.4% (December 2017 – December 2018). The S&P 500 (−33.9%) and the BET (−31.1%) keep their trough of 23 March 2020, which stays in the window. The maximum drawdown depends on the sample: it measures the largest fall observed, not a fixed property of the asset.</p></details>
+</section>
+<section class="blk" id="sum-tab">
+  <h3>The Course in One Table</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=10" target="_blank" rel="noopener"><img src="slides/ch16_sum-tab_en.jpg" alt="Slide 9: The Course in One Table" loading="lazy"></a>
+      <figcaption>Slide 9</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sm-w">Start of the window</label><select id="sm-w"><option value="2015-01-01" selected>January 2015 (lecture)</option><option value="2017-01-01">January 2017</option><option value="2019-01-01">January 2019</option><option value="2021-01-01">January 2021</option></select></div><button class="btn play" id="sm-play" type="button"></button></div><div class="charts "><div class="chart" id="sm-chart"></div></div><p class="xh">Daily log returns on the chosen window (the table of the slide for January 2015)</p><div class="tw" id="sm-tab"></div><ul class="out" id="sm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the window from January 2021 (▶, extra run), does the Ljung–Box Q(10) test still reject no autocorrelation in the S&P 500 returns?</div><details><summary>Answer</summary><p>No: Q(10) = 9.1 < 18.31 (p = 0.52), against 236 on the window from 2015, while on rₜ² it stays at 291. The large statistic of the table comes largely from the days of March 2020, when large returns of opposite signs followed each other (ρ̂₁ = −0.13); volatility clustering shows in every window.</p></details>
+</section>
+<section class="blk" id="interp">
+  <h3>Interpreting the Table</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=11" target="_blank" rel="noopener"><img src="slides/ch16_interp_en.jpg" alt="Slide 10: Interpreting the Table" loading="lazy"></a>
+      <figcaption>Slide 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ip-a">VaR level α</label><select id="ip-a"><option value="0.01" selected>1% (slide)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="ip-play" type="button"></button></div><div class="charts "><div class="chart" id="ip-chart"></div></div><ul class="out" id="ip-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the level α = 5%. Is the Normal VaR still too low against the historical VaR?</div><details><summary>Answer</summary><p>No: at 5% the Normal VaR is too high, by 7.8% (S&P 500: 1.79% against 1.66%), 13.1% (BET) and 6.4% (Bitcoin). The return distribution has more mass in the centre and in the far tails than the Normal distribution with the same variance, so the two quantiles cross between 1% and 5% (at 2.5% the BET difference is −0.5%). The Normal VaR understates risk exactly at the small levels used in regulation.</p></details>
+</section>
+<section class="blk" id="stylised">
+  <h3>Stylised Facts in One Chart</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=12" target="_blank" rel="noopener"><img src="slides/sfm_ch16_stylised_en.jpg" alt="Slide 11: Stylised Facts in One Chart" loading="lazy"></a>
+      <figcaption>Slide 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sf-w">Start of the window</label><select id="sf-w"><option value="2015-01-01" selected>January 2015 (lecture)</option><option value="2017-01-01">January 2017</option><option value="2019-01-01">January 2019</option><option value="2021-01-01">January 2021</option></select></div><div class="ctl"><label for="sf-l">Number of lags: <b id="sf-l-v"></b></label><input type="range" id="sf-l" min="10" max="100" step="10" value="50"></div><button class="btn play" id="sf-play" type="button"></button></div><div class="charts "><div class="chart" id="sf-chart"></div></div><ul class="out" id="sf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the window from January 2021 (▶, extra run), what does ρ̂₁(|r|) of the S&P 500 become?</div>
+  <details><summary>Answer</summary><p>It falls to 0.16 from 0.36, because the days of March 2020 left the sample; all 50 autocorrelations of |r| stay positive. The size of the autocorrelation depends on the crises in the window, its persistent positive sign does not.</p></details>
+</section><h2 class="sec" id="s-c03">Chapters 0–3: Data, Returns and Distributions</h2>
+<section class="blk" id="perf">
+  <h3>Chapter 1: Data, Returns and Indicators (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch16_perf_en.jpg" alt="Slide 15: Chapter 1: Data, Returns and Indicators (2/2)" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pf-w">Start of the window</label><select id="pf-w"><option value="2015-01-01" selected>January 2015 (lecture)</option><option value="2017-01-01">January 2017</option><option value="2019-01-01">January 2019</option><option value="2021-01-01">January 2021</option></select></div><button class="btn play" id="pf-play" type="button"></button></div><div class="charts "><div class="chart" id="pf-chart"></div></div><ul class="out" id="pf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the window from January 2021 (▶, extra run), which Sharpe ratios have a 95% interval that contains 0?</div><details><summary>Answer</summary><p>The S&P 500 (0.85, CI [−0.10, 1.81]) and Bitcoin (0.60, CI [−0.29, 1.49]); the BET (1.53, CI [0.32, 2.74]) does not. With about 5.7 years of data the standard error √((1 + SR²/2)/Y) is close to 0.5: even a Sharpe ratio of 0.85 is not separated from zero.</p></details>
+</section>
+<section class="blk" id="agg">
+  <h3>Chapter 3: α-Stable Distributions (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch16_agg_en.jpg" alt="Slide 19: Chapter 3: α-Stable Distributions (2/2)" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-k">Series</label><select id="ag-k"><option value="sp500" selected>S&P 500 (slide)</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the BET. Does α̂ rise from daily to monthly returns, as for the S&P 500 (1.54 → 1.82)?</div><details><summary>Answer</summary><p>Not clearly: 1.49 daily, 1.56 weekly, 1.50 monthly, and the monthly interval [1.33, 1.67] is wide; the BET is the exception of the slide. The running sample variance of the BET still falls from 3.32 (2010) to 1.96 (2026) and settles down, as a finite variance does. For Bitcoin the monthly α̂ reaches the bound α = 2.</p></details>
+</section><h2 class="sec" id="s-c811">Chapters 8–11: Volatility, Risk and Memory</h2>
+<section class="blk" id="backtest">
+  <h3>VaR 1% Forecasts of the BET: Historical Simulation and EWMA-Normal</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch16_backtest_en.jpg" alt="Slide 34: VaR 1% Forecasts of the BET: Historical Simulation and EWMA-Normal" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bt-k">Series</label><select id="bt-k"><option value="bet" selected>BET (slide)</option><option value="sp500">S&P 500</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="bt-w">Historical-simulation window (days): <b id="bt-w-v"></b></label><input type="range" id="bt-w" min="250" max="1000" step="50" value="500"></div><div class="ctl"><label for="bt-l">EWMA factor λ: <b id="bt-l-v"></b></label><input type="range" id="bt-l" min="0.9" max="0.99" step="0.01" value="0.94"></div><button class="btn play" id="bt-play" type="button"></button></div><div class="charts "><div class="chart" id="bt-chart"></div></div><ul class="out" id="bt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 250-day historical-simulation window (▶, extra run), does the Kupiec test still accept the VaR 1% of the BET?</div>
+  <details><summary>Answer</summary><p>No: 38 exceptions (1.57%, 24.2 expected), LR = 6.76, p = 0.009. With 250 days the VaR 1% is the third smallest value of the window, so the tail is estimated from very few observations; with 500 days there are 28 exceptions (p = 0.450), with 750 days 26.</p></details>
+</section><h2 class="sec" id="s-exam">The Exam</h2>
+<section class="blk" id="p1">
+  <h3>Problem 1: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch16_p1_en.jpg" alt="Slide 54: Problem 1: Solution" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q1-p">Value at the end of year 2: <b id="q1-p-v"></b></label><input type="range" id="q1-p" min="20" max="150" step="4" value="64"></div><button class="btn play" id="q1-play" type="button"></button></div><div class="charts "><div class="chart" id="q1-chart"></div></div><div class="we" id="q1-we-box"><p class="we-h">Review problem: returns and drawdown</p><div class="we-f">\[\begin{gathered} R_t = \frac{P_t}{P_{t-1}} - 1, \quad r_t = \ln(1 + R_t), \\ \text{CAGR} = \Big(\frac{P_3}{P_0}\Big)^{1/3} - 1, \quad \text{MDD} = \min_t\Big(\frac{P_t}{\max_{s \le t}P_s} - 1\Big) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q1-a">Value at the end of year 1: <b id="q1-a-v"></b></label><input type="range" id="q1-a" min="100" max="250" step="10" value="160"></div><div class="ctl"><label for="q1-c">Value at the end of year 3: <b id="q1-c-v"></b></label><input type="range" id="q1-c" min="40" max="200" step="4" value="96"></div></div><ol id="q1-we"></ol></div><ul class="out" id="q1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ changes the value of year 2. If the index falls only to 120 (values other than on the slide), what does the CAGR become?</div><details><summary>Answer</summary><p>It stays −1.35%: the CAGR depends only on the first and the last value, (96/100)^(1/3) − 1. The arithmetic mean changes, (60 − 25 − 20)/3 = 5.00%, and so does the maximum drawdown, 96/160 − 1 = −40%.</p></details>
+</section>
+<section class="blk" id="p2">
+  <h3>Problem 2: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=57" target="_blank" rel="noopener"><img src="slides/ch16_p2_en.jpg" alt="Slide 56: Problem 2: Solution" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q2-k">Excess kurtosis K: <b id="q2-k-v"></b></label><input type="range" id="q2-k" min="0.5" max="12" step="0.5" value="6"></div><button class="btn play" id="q2-play" type="button"></button></div><div class="charts "><div class="chart" id="q2-chart"></div></div><div class="we" id="q2-we-box"><p class="we-h">Review problem: distribution and tails</p><div class="we-f">\[\text{JB} = \frac{n}{6}\Big(S^2 + \frac{K^2}{4}\Big), \quad K = \frac{6}{\nu - 4}, \quad \hat\alpha = \Big[\frac{1}{k}\sum_{i=1}^{k}\ln\frac{L_{(i)}}{L_{(k+1)}}\Big]^{-1}\]</div><div class="wctl"><div class="ctl"><label for="q2-s">Skewness S: <b id="q2-s-v"></b></label><input type="range" id="q2-s" min="-2" max="1" step="0.1" value="-0.5"></div><div class="ctl"><label for="q2-n">Number of returns n</label><select id="q2-n"><option value="250">250</option><option value="500">500</option><option value="1000" selected>1000 (slide)</option><option value="2500">2500</option></select></div><div class="ctl"><label for="q2-h">Tail losses k</label><select id="q2-h"><option value="2">2</option><option value="3">3</option><option value="4" selected>4 (slide)</option></select></div></div><ol id="q2-we"></ol></div><ul class="out" id="q2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ changes the excess kurtosis. If K falls from 6 to 3, what happens to the kurtosis part of JB?</div><details><summary>Answer</summary><p>It falls to a quarter: 1000/24 × 9 = 375 against 1500, because K enters squared; JB = 41.67 + 375 = 416.7, still far above 5.99. The degrees of freedom of the Student-t distribution with the same K rise to ν = 4 + 6/3 = 6.</p></details>
+</section>
+<section class="blk" id="p3">
+  <h3>Problem 3: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=59" target="_blank" rel="noopener"><img src="slides/ch16_p3_en.jpg" alt="Slide 58: Problem 3: Solution" loading="lazy"></a>
+      <figcaption>Slide 58</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q3-r">Correlation ρ: <b id="q3-r-v"></b></label><input type="range" id="q3-r" min="-1" max="1" step="0.1" value="0.3"></div><button class="btn play" id="q3-play" type="button"></button></div><div class="charts "><div class="chart" id="q3-chart"></div></div><div class="we" id="q3-we-box"><p class="we-h">Review problem: portfolio, Monte Carlo and GBM</p><div class="we-f">\[\begin{gathered} \sigma_p^2 = w^2\sigma_1^2 + (1 - w)^2\sigma_2^2 + 2w(1 - w)\rho\,\sigma_1\sigma_2, \\ \text{SE} = \sqrt{\frac{p(1 - p)}{N}}, \quad P(S_1 < S_0) = \Phi\Big(-\frac{\mu - \sigma^2/2}{\sigma}\Big) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q3-w">Weight of the first asset: <b id="q3-w-v"></b></label><input type="range" id="q3-w" min="0" max="1" step="0.1" value="0.6"></div><div class="ctl"><label for="q3-s">GBM volatility σ (% a year): <b id="q3-s-v"></b></label><input type="range" id="q3-s" min="5" max="60" step="5" value="25"></div><div class="ctl"><label for="q3-N">Monte Carlo draws N</label><select id="q3-N"><option value="1000">1000</option><option value="10000" selected>10000 (slide)</option><option value="100000">100000</option></select></div></div><ol id="q3-we"></ol></div><ul class="out" id="q3-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves through the correlations. What is the daily volatility of the portfolio at ρ = −1?</div><details><summary>Answer</summary><p>0.10%: σp² = 0.81 + 1.00 − 1.80 = 0.01. With ρ = −1 the risk does not vanish completely, because the two positions do not offset exactly: 0.6 × 1.5 = 0.9 against 0.4 × 2.5 = 1.0. At ρ = 1, σp = 1.90%, equal to the weighted average.</p></details>
+</section>
+<section class="blk" id="p4">
+  <h3>Problem 4: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=61" target="_blank" rel="noopener"><img src="slides/ch16_p4_en.jpg" alt="Slide 60: Problem 4: Solution" loading="lazy"></a>
+      <figcaption>Slide 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q4-r">Autocorrelation ρ̂(1): <b id="q4-r-v"></b></label><input type="range" id="q4-r" min="-0.1" max="0.15" step="0.01" value="0.06"></div><button class="btn play" id="q4-play" type="button"></button></div><div class="charts "><div class="chart" id="q4-chart"></div></div><div class="we" id="q4-we-box"><p class="we-h">Review problem: autocorrelation and the variance ratio</p><div class="we-f">\[\begin{gathered} Q(m) = T(T + 2)\sum_{k=1}^{m}\frac{\hat\rho_k^2}{T - k}, \quad \mathrm{VR}(q) = 1 + 2\sum_{k=1}^{q-1}\Big(1 - \frac{k}{q}\Big)\hat\rho(k), \\ Z(q) = \frac{\widehat{\mathrm{VR}} - 1}{\sqrt{2(2q - 1)(q - 1)/(3qT)}} \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q4-T">Number of returns T</label><select id="q4-T"><option value="500">500</option><option value="1000">1000</option><option value="2500" selected>2500 (slide)</option><option value="5000">5000</option></select></div><div class="ctl"><label for="q4-e">Robust SE of VR(5): <b id="q4-e-v"></b></label><input type="range" id="q4-e" min="0.03" max="0.12" step="0.005" value="0.065"></div></div><ol id="q4-we"></ol></div><ul class="out" id="q4-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ changes ρ̂(1). At ρ̂(1) = 0.09, does the robust test Z*(5) reject the random walk?</div><details><summary>Answer</summary><p>Yes: VR(5) = 1 + 2 × 0.082 = 1.164 and Z*(5) = 0.164/0.065 = 2.52 > 1.96 (Z(5) = 3.74, Q(4) = 21.78). With ρ̂(1) = 0.06 the choice of test decided the outcome; here the autocorrelation is large enough to be rejected with the robust standard error too.</p></details>
+</section>
+<section class="blk" id="p5">
+  <h3>Problem 5: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=63" target="_blank" rel="noopener"><img src="slides/ch16_p5_en.jpg" alt="Slide 62: Problem 5: Solution" loading="lazy"></a>
+      <figcaption>Slide 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q5-e">Today’s shock εₜ: <b id="q5-e-v"></b></label><input type="range" id="q5-e" min="-5" max="5" step="0.25" value="-2.5"></div><button class="btn play" id="q5-play" type="button"></button></div><div class="charts "><div class="chart" id="q5-chart"></div></div><div class="we" id="q5-we-box"><p class="we-h">Review problem: volatility forecasts</p><div class="we-f">\[\begin{gathered} \sigma_{t+1}^2 = \omega + \alpha\varepsilon_t^2 + \beta\sigma_t^2, \quad \bar\sigma^2 = \frac{\omega}{1 - \alpha - \beta}, \\ E_t\sigma_{t+h}^2 = \bar\sigma^2 + (\alpha + \beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q5-b">Coefficient β: <b id="q5-b-v"></b></label><input type="range" id="q5-b" min="0.8" max="0.905" step="0.005" value="0.89"></div><div class="ctl"><label for="q5-l">EWMA factor λ</label><select id="q5-l"><option value="0.94" selected>0.94 (slide)</option><option value="0.9">0.90</option><option value="0.97">0.97</option></select></div></div><ol id="q5-we"></ol></div><ul class="out" id="q5-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ changes the sign and the size of the shock. With εₜ = +2.5 instead of −2.5, what is σ²ₜ₊₁?</div><details><summary>Answer</summary><p>Still 2.1945: GARCH(1,1) uses ε², so a gain and a loss of the same size raise the variance alike. Asymmetry (the leverage effect) needs models such as GJR or EGARCH.</p></details>
+</section>
+<section class="blk" id="p6">
+  <h3>Problem 6: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=65" target="_blank" rel="noopener"><img src="slides/ch16_p6_en.jpg" alt="Slide 64: Problem 6: Solution" loading="lazy"></a>
+      <figcaption>Slide 64</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q6-x">Exceptions in 250 days: <b id="q6-x-v"></b></label><input type="range" id="q6-x" min="0" max="15" step="1" value="6"></div><button class="btn play" id="q6-play" type="button"></button></div><div class="charts "><div class="chart" id="q6-chart"></div></div><div class="we" id="q6-we-box"><p class="we-h">Review problem: VaR, ES and backtesting</p><div class="we-f">\[\begin{gathered} \mathrm{VaR}_\alpha = -(\mu + \sigma z_\alpha), \quad \mathrm{ES}_\alpha = -\mu + \sigma\frac{\varphi(z_\alpha)}{\alpha}, \\ LR_{uc} = -2\ln\frac{(1 - \alpha)^{n - x}\alpha^x}{(1 - \hat\pi)^{n - x}\hat\pi^x} \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q6-s">Daily standard deviation σ (%): <b id="q6-s-v"></b></label><input type="range" id="q6-s" min="0.8" max="3" step="0.1" value="1.6"></div></div><ol id="q6-we"></ol></div><ul class="out" id="q6-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the number of exceptions. What comes first: the Basel yellow zone or the Kupiec rejection at 5%?</div><details><summary>Answer</summary><p>The yellow zone, from 5 exceptions; as the exceptions grow, the Kupiec test rejects only from 7 (LR = 5.50, p = 0.019; with 6, LR = 3.56 and p = 0.059). In 250 days the test has little power, which is why the Basel traffic light penalises earlier. The test also rejects at 0 exceptions (LR = 5.03): too few exceptions point to a VaR that is too cautious.</p></details>
+</section>
+<section class="blk" id="p7">
+  <h3>Problem 7: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=67" target="_blank" rel="noopener"><img src="slides/ch16_p7_en.jpg" alt="Slide 66: Problem 7: Solution" loading="lazy"></a>
+      <figcaption>Slide 66</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q7-b">Average R/S for n = 2000: <b id="q7-b-v"></b></label><input type="range" id="q7-b" min="20" max="120" step="2" value="60"></div><button class="btn play" id="q7-play" type="button"></button></div><div class="charts "><div class="chart" id="q7-chart"></div></div><div class="we" id="q7-we-box"><p class="we-h">Review problem: long memory and risk scaling</p><div class="we-f">\[H = \frac{\log_{10}\big[(R/S)_{2000}/(R/S)_{20}\big]}{\log_{10}(2000/20)}, \quad d = H - 0.5, \quad \mathrm{VaR}^{(h)} = h^H\,\mathrm{VaR}^{(1)}\]</div><div class="wctl"><div class="ctl"><label for="q7-a">Average R/S for n = 20: <b id="q7-a-v"></b></label><input type="range" id="q7-a" min="2" max="8" step="0.1" value="4.1"></div><div class="ctl"><label for="q7-v">One-day VaR 1% (%): <b id="q7-v-v"></b></label><input type="range" id="q7-v" min="1" max="5" step="0.5" value="2.5"></div><div class="ctl"><label for="q7-h">Horizon h (days)</label><select id="q7-h"><option value="5">5</option><option value="10" selected>10 (slide)</option><option value="20">20</option><option value="60">60</option></select></div></div><ol id="q7-we"></ol></div><ul class="out" id="q7-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ changes R/S for n = 2000. If it is 40 instead of 60, does the h^H scaling still give a larger 10-day VaR than √h?</div><details><summary>Answer</summary><p>No: H = log₁₀(40/4.1)/2 = 0.495 < 0.5, so 10^H = 3.12 and VaR = 7.81%, slightly below 7.91% with √10. The slope decides, not the growth of R/S with n: R/S grows for data without memory as well, with exponent 0.5.</p></details>
+</section>
+<section class="blk" id="p8">
+  <h3>Problem 8: Solution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter16_review.pdf#page=69" target="_blank" rel="noopener"><img src="slides/ch16_p8_en.jpg" alt="Slide 68: Problem 8: Solution" loading="lazy"></a>
+      <figcaption>Slide 68</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q8-f">Good loans flagged as bad: <b id="q8-f-v"></b></label><input type="range" id="q8-f" min="0" max="210" step="6" value="42"></div><button class="btn play" id="q8-play" type="button"></button></div><div class="charts "><div class="chart" id="q8-chart"></div></div><div class="we" id="q8-we-box"><p class="we-h">Review problem: credit scoring and systemic risk</p><div class="we-f">\[\begin{gathered} \text{TPR} = \frac{TP}{TP + FN}, \quad \text{FPR} = \frac{FP}{FP + TN}, \\ \text{EL} = \text{PD} \times \text{LGD} \times \text{EAD}, \quad \Delta\mathrm{CoVaR} = \hat b\,(q_{50\%} - q_{1\%}) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q8-t">Bad loans found: <b id="q8-t-v"></b></label><input type="range" id="q8-t" min="0" max="90" step="3" value="60"></div><div class="ctl"><label for="q8-b">Slope b̂ of the quantile regression: <b id="q8-b-v"></b></label><input type="range" id="q8-b" min="0" max="1.2" step="0.1" value="0.6"></div></div><ol id="q8-we"></ol></div><ul class="out" id="q8-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the number of good loans flagged as bad. With 120 (values other than on the slide), which rate does not change?</div><details><summary>Answer</summary><p>The TPR, 60/90 = 66.7%: it involves only the bad loans. The accuracy falls to (60 + 90)/300 = 50%, below the rule “always good” (70%), the FPR rises to 57.1% and the precision falls to 60/180 = 33.3%.</p></details>
+</section>
+<p class="src foot">Course data in data/market (up to 18 September 2026): daily closes of the S&P 500 and the BET since January 2000 and of Bitcoin since September 2014. The browser cuts the window and recomputes the returns, the performance measures, the moments, the Hill index, the ACF, the Ljung–Box and VR tests, VaR and ES, the Hurst exponent, the running sample variance, the VaR 1% forecasts and the Kupiec test. The GARCH(1,1)-t estimates come from the code of the chapter (Quantlets/Ch_16), the ML estimates of the stable α at three horizons from Chapter 3 (Quantlets/Ch_03). Other windows, levels α, historical-simulation windows and values of λ are extra runs of the same code. The review problems start from the numbers of the slides.</p>
+</main>
+</body>
+</html>

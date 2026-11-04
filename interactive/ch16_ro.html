@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 16 · Recapitulare</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch16.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch16_data.js?v=20261101a", "ch16_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch16.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 16 · Recapitulare</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_16" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch16.html" class="lang-btn">EN</a><a href="ch16_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și problemele de recapitulare se recalculează odată cu el. Abrevieri: VaR (value at risk), ES (expected shortfall), HS (simulare istorică), EWMA (exponentially weighted moving average, media mobilă ponderată exponențial), GARCH (generalised autoregressive conditional heteroskedasticity), IGARCH (GARCH integrat), ML (verosimilitate maximă), ACF (funcția de autocorelație), VR (raportul varianțelor), JB (Jarque–Bera), R/S (amplitudinea rescalată), MDD (drawdown maxim), CAGR (rata anuală compusă de creștere), SE (eroarea standard), CI (intervalul de încredere), LR (raportul de verosimilitate), GBM (mișcarea browniană geometrică), TPR (rata adevărat pozitivelor), FPR (rata fals pozitivelor), AUC (aria de sub curba ROC), EL (pierderea așteptată), PD (probabilitatea de nerambursare), LGD (pierderea în caz de nerambursare), EAD (expunerea la nerambursare), CoVaR (VaR-ul sistemului condiționat de o instituție), ΔCoVaR (contribuția instituției la CoVaR), BET (indicele Bursei de Valori București), i.i.d. (independente și identic distribuite).</p>
+<p class="toc"><a href="#s-map">Harta cursului</a> · <a href="#s-c03">Capitolele 0–3: date, randamente și distribuții</a> · <a href="#s-c811">Capitolele 8–11: volatilitate, risc și memorie</a> · <a href="#s-exam">Examenul</a></p>
+<h2 class="sec" id="s-map">Harta cursului</h2>
+<section class="blk" id="three">
+  <h3>Trei serii, aceeași fereastră: S&P 500, BET, Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=10" target="_blank" rel="noopener"><img src="slides/sfm_ch16_three_series_ro.jpg" alt="Slide-ul 9: Trei serii, aceeași fereastră: S&P 500, BET, Bitcoin" loading="lazy"></a>
+      <figcaption>Slide-ul 9</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-w">Începutul ferestrei</label><select id="ts-w"><option value="2015-01-01" selected>ianuarie 2015 (curs)</option><option value="2017-01-01">ianuarie 2017</option><option value="2019-01-01">ianuarie 2019</option><option value="2021-01-01">ianuarie 2021</option></select></div><button class="btn play" id="ts-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:520px}
+</style><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută începutul ferestrei în ianuarie 2019 (rulare suplimentară). Care dintre cele trei drawdown-uri maxime se schimbă?</div>
+  <details><summary>Răspuns</summary><p>Doar cel al Bitcoin: −76,6% (de la 8 noiembrie 2021 la 21 noiembrie 2022) în loc de −83,4% (decembrie 2017 – decembrie 2018). S&P 500 (−33,9%) și BET (−31,1%) își păstrează minimul din 23 martie 2020, care rămîne în fereastră. Drawdown-ul maxim depinde de eșantion: el măsoară cea mai mare cădere observată, nu o proprietate fixă a activului.</p></details>
+</section>
+<section class="blk" id="sum-tab">
+  <h3>Cursul într-un singur tabel</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=11" target="_blank" rel="noopener"><img src="slides/ch16_sum-tab_ro.jpg" alt="Slide-ul 10: Cursul într-un singur tabel" loading="lazy"></a>
+      <figcaption>Slide-ul 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sm-w">Începutul ferestrei</label><select id="sm-w"><option value="2015-01-01" selected>ianuarie 2015 (curs)</option><option value="2017-01-01">ianuarie 2017</option><option value="2019-01-01">ianuarie 2019</option><option value="2021-01-01">ianuarie 2021</option></select></div><button class="btn play" id="sm-play" type="button"></button></div><div class="charts "><div class="chart" id="sm-chart"></div></div><p class="xh">Randamente logaritmice zilnice pe fereastra aleasă (tabelul de pe slide pentru ianuarie 2015)</p><div class="tw" id="sm-tab"></div><ul class="out" id="sm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu fereastra din ianuarie 2021 (▶, rulare suplimentară), mai respinge testul Ljung–Box Q(10) absența autocorelației randamentelor S&P 500?</div><details><summary>Răspuns</summary><p>Nu: Q(10) = 9,1 < 18,31 (p = 0,52), față de 236 pe fereastra din 2015, în timp ce pe rₜ² rămîne 291. Statistica mare din tabel vine în bună parte din zilele din martie 2020, cînd randamente mari de semne opuse au venit una după alta (ρ̂₁ = −0,13); volatility clustering se vede în orice fereastră.</p></details>
+</section>
+<section class="blk" id="interp">
+  <h3>Interpretarea tabelului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch16_interp_ro.jpg" alt="Slide-ul 11: Interpretarea tabelului" loading="lazy"></a>
+      <figcaption>Slide-ul 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ip-a">Nivelul α al VaR</label><select id="ip-a"><option value="0.01" selected>1% (slide)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="ip-play" type="button"></button></div><div class="charts "><div class="chart" id="ip-chart"></div></div><ul class="out" id="ip-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la nivelul α = 5%. Mai este VaR Normal prea mic față de VaR istoric?</div><details><summary>Răspuns</summary><p>Nu: la 5%, VaR Normal este prea mare, cu 7,8% (S&P 500: 1,79% față de 1,66%), 13,1% (BET) și 6,4% (Bitcoin). Distribuția randamentelor are mai multă masă în centru și în cozile extreme decît distribuția Normală cu aceeași varianță, așa că cele două cuantile se încrucișează între 1% și 5% (la 2,5%, pentru BET, diferența este −0,5%). VaR Normal subestimează riscul tocmai la nivelurile mici, cele folosite în reglementare.</p></details>
+</section>
+<section class="blk" id="stylised">
+  <h3>Faptele stilizate într-un singur grafic</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=13" target="_blank" rel="noopener"><img src="slides/sfm_ch16_stylised_ro.jpg" alt="Slide-ul 12: Faptele stilizate într-un singur grafic" loading="lazy"></a>
+      <figcaption>Slide-ul 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sf-w">Începutul ferestrei</label><select id="sf-w"><option value="2015-01-01" selected>ianuarie 2015 (curs)</option><option value="2017-01-01">ianuarie 2017</option><option value="2019-01-01">ianuarie 2019</option><option value="2021-01-01">ianuarie 2021</option></select></div><div class="ctl"><label for="sf-l">Numărul de laguri: <b id="sf-l-v"></b></label><input type="range" id="sf-l" min="10" max="100" step="10" value="50"></div><button class="btn play" id="sf-play" type="button"></button></div><div class="charts "><div class="chart" id="sf-chart"></div></div><ul class="out" id="sf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu fereastra din ianuarie 2021 (▶, rulare suplimentară), ce devine ρ̂₁(|r|) pentru S&P 500?</div>
+  <details><summary>Răspuns</summary><p>Scade la 0,16, de la 0,36, pentru că zilele din martie 2020 au ieșit din eșantion; toate cele 50 de autocorelații ale lui |r| rămîn totuși pozitive. Mărimea autocorelației depinde de crizele din fereastră, semnul ei pozitiv persistent nu.</p></details>
+</section><h2 class="sec" id="s-c03">Capitolele 0–3: date, randamente și distribuții</h2>
+<section class="blk" id="perf">
+  <h3>Capitolul 1: date, randamente și indicatori (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=17" target="_blank" rel="noopener"><img src="slides/ch16_perf_ro.jpg" alt="Slide-ul 16: Capitolul 1: date, randamente și indicatori (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pf-w">Începutul ferestrei</label><select id="pf-w"><option value="2015-01-01" selected>ianuarie 2015 (curs)</option><option value="2017-01-01">ianuarie 2017</option><option value="2019-01-01">ianuarie 2019</option><option value="2021-01-01">ianuarie 2021</option></select></div><button class="btn play" id="pf-play" type="button"></button></div><div class="charts "><div class="chart" id="pf-chart"></div></div><ul class="out" id="pf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu fereastra din ianuarie 2021 (▶, rulare suplimentară), care rapoarte Sharpe au un interval de 95% care conține 0?</div><details><summary>Răspuns</summary><p>S&P 500 (0,85, CI [−0,10; 1,81]) și Bitcoin (0,60, CI [−0,29; 1,49]); BET (1,53, CI [0,32; 2,74]) nu. Cu circa 5,7 ani de date, eroarea standard √((1 + SR²/2)/Y) este de aproape 0,5: chiar un Sharpe de 0,85 nu se separă de zero.</p></details>
+</section>
+<section class="blk" id="agg">
+  <h3>Capitolul 3: distribuții α-stabile (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=21" target="_blank" rel="noopener"><img src="slides/ch16_agg_ro.jpg" alt="Slide-ul 20: Capitolul 3: distribuții α-stabile (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ag-k">Seria</label><select id="ag-k"><option value="sp500" selected>S&P 500 (slide)</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="ag-play" type="button"></button></div><div class="charts "><div class="chart" id="ag-chart"></div></div><ul class="out" id="ag-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la BET. Crește α̂ de la randamentele zilnice la cele lunare, ca la S&P 500 (1,54 → 1,82)?</div><details><summary>Răspuns</summary><p>Nu clar: 1,49 zilnic, 1,56 săptămînal, 1,50 lunar, iar intervalul lunar [1,33; 1,67] este larg; BET este excepția de pe slide. Varianța de selecție cumulativă a BET scade totuși de la 3,32 (2010) la 1,96 (2026) și se stabilizează, cum se întîmplă cu o varianță finită. Pentru Bitcoin, α̂ lunar atinge frontiera α = 2.</p></details>
+</section><h2 class="sec" id="s-c811">Capitolele 8–11: volatilitate, risc și memorie</h2>
+<section class="blk" id="backtest">
+  <h3>Prognoze VaR 1% pentru BET: simulare istorică și EWMA-Normal</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch16_backtest_ro.jpg" alt="Slide-ul 35: Prognoze VaR 1% pentru BET: simulare istorică și EWMA-Normal" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bt-k">Seria</label><select id="bt-k"><option value="bet" selected>BET (slide)</option><option value="sp500">S&P 500</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="bt-w">Fereastra simulării istorice (zile): <b id="bt-w-v"></b></label><input type="range" id="bt-w" min="250" max="1000" step="50" value="500"></div><div class="ctl"><label for="bt-l">Factorul EWMA λ: <b id="bt-l-v"></b></label><input type="range" id="bt-l" min="0.9" max="0.99" step="0.01" value="0.94"></div><button class="btn play" id="bt-play" type="button"></button></div><div class="charts "><div class="chart" id="bt-chart"></div></div><ul class="out" id="bt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu o fereastră de 250 de zile pentru simularea istorică (▶, rulare suplimentară), mai acceptă testul Kupiec VaR 1% al BET?</div>
+  <details><summary>Răspuns</summary><p>Nu: 38 de depășiri (1,57%, așteptat 24,2), LR = 6,76, p = 0,009. Cu 250 de zile, VaR 1% este a treia cea mai mică valoare din fereastră și coada este estimată din foarte puține observații; cu 500 de zile sînt 28 de depășiri (p = 0,450), cu 750 de zile 26.</p></details>
+</section><h2 class="sec" id="s-exam">Examenul</h2>
+<section class="blk" id="p1">
+  <h3>Problema 1: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch16_p1_ro.jpg" alt="Slide-ul 55: Problema 1: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q1-p">Valoarea la sfîrșitul anului 2: <b id="q1-p-v"></b></label><input type="range" id="q1-p" min="20" max="150" step="4" value="64"></div><button class="btn play" id="q1-play" type="button"></button></div><div class="charts "><div class="chart" id="q1-chart"></div></div><div class="we" id="q1-we-box"><p class="we-h">Problemă de recapitulare: randamente și drawdown</p><div class="we-f">\[\begin{gathered} R_t = \frac{P_t}{P_{t-1}} - 1, \quad r_t = \ln(1 + R_t), \\ \text{CAGR} = \Big(\frac{P_3}{P_0}\Big)^{1/3} - 1, \quad \text{MDD} = \min_t\Big(\frac{P_t}{\max_{s \le t}P_s} - 1\Big) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q1-a">Valoarea la sfîrșitul anului 1: <b id="q1-a-v"></b></label><input type="range" id="q1-a" min="100" max="250" step="10" value="160"></div><div class="ctl"><label for="q1-c">Valoarea la sfîrșitul anului 3: <b id="q1-c-v"></b></label><input type="range" id="q1-c" min="40" max="200" step="4" value="96"></div></div><ol id="q1-we"></ol></div><ul class="out" id="q1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ schimbă valoarea din anul 2. Dacă indicele coboară doar la 120 (rulare cu alte valori), ce devine CAGR?</div><details><summary>Răspuns</summary><p>Rămîne −1,35%: CAGR depinde doar de prima și de ultima valoare, (96/100)^(1/3) − 1. Se schimbă media aritmetică, (60 − 25 − 20)/3 = 5,00%, și drawdown-ul maxim, 96/160 − 1 = −40%.</p></details>
+</section>
+<section class="blk" id="p2">
+  <h3>Problema 2: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=58" target="_blank" rel="noopener"><img src="slides/ch16_p2_ro.jpg" alt="Slide-ul 57: Problema 2: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q2-k">Excesul de boltire K: <b id="q2-k-v"></b></label><input type="range" id="q2-k" min="0.5" max="12" step="0.5" value="6"></div><button class="btn play" id="q2-play" type="button"></button></div><div class="charts "><div class="chart" id="q2-chart"></div></div><div class="we" id="q2-we-box"><p class="we-h">Problemă de recapitulare: distribuție și cozi</p><div class="we-f">\[\text{JB} = \frac{n}{6}\Big(S^2 + \frac{K^2}{4}\Big), \quad K = \frac{6}{\nu - 4}, \quad \hat\alpha = \Big[\frac{1}{k}\sum_{i=1}^{k}\ln\frac{L_{(i)}}{L_{(k+1)}}\Big]^{-1}\]</div><div class="wctl"><div class="ctl"><label for="q2-s">Asimetria S: <b id="q2-s-v"></b></label><input type="range" id="q2-s" min="-2" max="1" step="0.1" value="-0.5"></div><div class="ctl"><label for="q2-n">Numărul de randamente n</label><select id="q2-n"><option value="250">250</option><option value="500">500</option><option value="1000" selected>1000 (slide)</option><option value="2500">2500</option></select></div><div class="ctl"><label for="q2-h">Pierderi din coadă k</label><select id="q2-h"><option value="2">2</option><option value="3">3</option><option value="4" selected>4 (slide)</option></select></div></div><ol id="q2-we"></ol></div><ul class="out" id="q2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ schimbă excesul de boltire. Dacă K scade de la 6 la 3, ce se întîmplă cu componenta boltirii din JB?</div><details><summary>Răspuns</summary><p>Scade la un sfert: 1000/24 × 9 = 375, față de 1500, pentru că K intră la pătrat; JB = 41,67 + 375 = 416,7, tot mult peste 5,99. Gradele de libertate ale distribuției Student-t cu același K cresc la ν = 4 + 6/3 = 6.</p></details>
+</section>
+<section class="blk" id="p3">
+  <h3>Problema 3: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=60" target="_blank" rel="noopener"><img src="slides/ch16_p3_ro.jpg" alt="Slide-ul 59: Problema 3: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q3-r">Corelația ρ: <b id="q3-r-v"></b></label><input type="range" id="q3-r" min="-1" max="1" step="0.1" value="0.3"></div><button class="btn play" id="q3-play" type="button"></button></div><div class="charts "><div class="chart" id="q3-chart"></div></div><div class="we" id="q3-we-box"><p class="we-h">Problemă de recapitulare: portofoliu, Monte Carlo și GBM</p><div class="we-f">\[\begin{gathered} \sigma_p^2 = w^2\sigma_1^2 + (1 - w)^2\sigma_2^2 + 2w(1 - w)\rho\,\sigma_1\sigma_2, \\ \text{SE} = \sqrt{\frac{p(1 - p)}{N}}, \quad P(S_1 < S_0) = \Phi\Big(-\frac{\mu - \sigma^2/2}{\sigma}\Big) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q3-w">Ponderea primului activ: <b id="q3-w-v"></b></label><input type="range" id="q3-w" min="0" max="1" step="0.1" value="0.6"></div><div class="ctl"><label for="q3-s">Volatilitatea GBM σ (% pe an): <b id="q3-s-v"></b></label><input type="range" id="q3-s" min="5" max="60" step="5" value="25"></div><div class="ctl"><label for="q3-N">Extrageri Monte Carlo N</label><select id="q3-N"><option value="1000">1000</option><option value="10000" selected>10000 (slide)</option><option value="100000">100000</option></select></div></div><ol id="q3-we"></ol></div><ul class="out" id="q3-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece prin corelații. Cît este volatilitatea zilnică a portofoliului la ρ = −1?</div><details><summary>Răspuns</summary><p>0,10%: σp² = 0,81 + 1,00 − 1,80 = 0,01. Cu ρ = −1 riscul nu dispare complet, pentru că cele două poziții nu se compensează exact: 0,6 × 1,5 = 0,9 față de 0,4 × 2,5 = 1,0. La ρ = 1, σp = 1,90%, egală cu media ponderată.</p></details>
+</section>
+<section class="blk" id="p4">
+  <h3>Problema 4: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=62" target="_blank" rel="noopener"><img src="slides/ch16_p4_ro.jpg" alt="Slide-ul 61: Problema 4: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q4-r">Autocorelația ρ̂(1): <b id="q4-r-v"></b></label><input type="range" id="q4-r" min="-0.1" max="0.15" step="0.01" value="0.06"></div><button class="btn play" id="q4-play" type="button"></button></div><div class="charts "><div class="chart" id="q4-chart"></div></div><div class="we" id="q4-we-box"><p class="we-h">Problemă de recapitulare: autocorelație și raportul varianțelor</p><div class="we-f">\[\begin{gathered} Q(m) = T(T + 2)\sum_{k=1}^{m}\frac{\hat\rho_k^2}{T - k}, \quad \mathrm{VR}(q) = 1 + 2\sum_{k=1}^{q-1}\Big(1 - \frac{k}{q}\Big)\hat\rho(k), \\ Z(q) = \frac{\widehat{\mathrm{VR}} - 1}{\sqrt{2(2q - 1)(q - 1)/(3qT)}} \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q4-T">Numărul de randamente T</label><select id="q4-T"><option value="500">500</option><option value="1000">1000</option><option value="2500" selected>2500 (slide)</option><option value="5000">5000</option></select></div><div class="ctl"><label for="q4-e">SE robustă a lui VR(5): <b id="q4-e-v"></b></label><input type="range" id="q4-e" min="0.03" max="0.12" step="0.005" value="0.065"></div></div><ol id="q4-we"></ol></div><ul class="out" id="q4-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ schimbă ρ̂(1). La ρ̂(1) = 0,09, respinge testul robust Z*(5) mersul aleator?</div><details><summary>Răspuns</summary><p>Da: VR(5) = 1 + 2 × 0,082 = 1,164 și Z*(5) = 0,164/0,065 = 2,52 > 1,96 (Z(5) = 3,74, Q(4) = 21,78). Cu ρ̂(1) = 0,06 diferența dintre cele două teste decidea rezultatul; aici autocorelația este destul de mare ca să fie respinsă și cu eroarea standard robustă.</p></details>
+</section>
+<section class="blk" id="p5">
+  <h3>Problema 5: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=64" target="_blank" rel="noopener"><img src="slides/ch16_p5_ro.jpg" alt="Slide-ul 63: Problema 5: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q5-e">Șocul de azi εₜ: <b id="q5-e-v"></b></label><input type="range" id="q5-e" min="-5" max="5" step="0.25" value="-2.5"></div><button class="btn play" id="q5-play" type="button"></button></div><div class="charts "><div class="chart" id="q5-chart"></div></div><div class="we" id="q5-we-box"><p class="we-h">Problemă de recapitulare: prognoze de volatilitate</p><div class="we-f">\[\begin{gathered} \sigma_{t+1}^2 = \omega + \alpha\varepsilon_t^2 + \beta\sigma_t^2, \quad \bar\sigma^2 = \frac{\omega}{1 - \alpha - \beta}, \\ E_t\sigma_{t+h}^2 = \bar\sigma^2 + (\alpha + \beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q5-b">Coeficientul β: <b id="q5-b-v"></b></label><input type="range" id="q5-b" min="0.8" max="0.905" step="0.005" value="0.89"></div><div class="ctl"><label for="q5-l">Factorul EWMA λ</label><select id="q5-l"><option value="0.94" selected>0,94 (slide)</option><option value="0.9">0,90</option><option value="0.97">0,97</option></select></div></div><ol id="q5-we"></ol></div><ul class="out" id="q5-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ schimbă semnul și mărimea șocului. Cu εₜ = +2,5 în loc de −2,5, cît devine σ²ₜ₊₁?</div><details><summary>Răspuns</summary><p>Tot 2,1945: GARCH(1,1) folosește ε², deci un cîștig și o pierdere de aceeași mărime cresc varianța la fel. Asimetria (leverage effect) cere modele ca GJR sau EGARCH.</p></details>
+</section>
+<section class="blk" id="p6">
+  <h3>Problema 6: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=66" target="_blank" rel="noopener"><img src="slides/ch16_p6_ro.jpg" alt="Slide-ul 65: Problema 6: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 65</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q6-x">Depășiri în 250 de zile: <b id="q6-x-v"></b></label><input type="range" id="q6-x" min="0" max="15" step="1" value="6"></div><button class="btn play" id="q6-play" type="button"></button></div><div class="charts "><div class="chart" id="q6-chart"></div></div><div class="we" id="q6-we-box"><p class="we-h">Problemă de recapitulare: VaR, ES și backtesting</p><div class="we-f">\[\begin{gathered} \mathrm{VaR}_\alpha = -(\mu + \sigma z_\alpha), \quad \mathrm{ES}_\alpha = -\mu + \sigma\frac{\varphi(z_\alpha)}{\alpha}, \\ LR_{uc} = -2\ln\frac{(1 - \alpha)^{n - x}\alpha^x}{(1 - \hat\pi)^{n - x}\hat\pi^x} \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q6-s">Abaterea standard zilnică σ (%): <b id="q6-s-v"></b></label><input type="range" id="q6-s" min="0.8" max="3" step="0.1" value="1.6"></div></div><ol id="q6-we"></ol></div><ul class="out" id="q6-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește numărul de depășiri. Ce apare primul: zona galbenă Basel sau respingerea Kupiec la 5%?</div><details><summary>Răspuns</summary><p>Zona galbenă, de la 5 depășiri; pe măsură ce depășirile cresc, testul Kupiec respinge abia de la 7 (LR = 5,50, p = 0,019; cu 6, LR = 3,56 și p = 0,059). În 250 de zile testul are putere mică, de aceea semaforul Basel penalizează mai devreme. Testul respinge și la 0 depășiri (LR = 5,03): prea puține depășiri arată un VaR prea prudent.</p></details>
+</section>
+<section class="blk" id="p7">
+  <h3>Problema 7: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=68" target="_blank" rel="noopener"><img src="slides/ch16_p7_ro.jpg" alt="Slide-ul 67: Problema 7: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 67</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q7-b">R/S medie pentru n = 2000: <b id="q7-b-v"></b></label><input type="range" id="q7-b" min="20" max="120" step="2" value="60"></div><button class="btn play" id="q7-play" type="button"></button></div><div class="charts "><div class="chart" id="q7-chart"></div></div><div class="we" id="q7-we-box"><p class="we-h">Problemă de recapitulare: memorie lungă și scalarea riscului</p><div class="we-f">\[H = \frac{\log_{10}\big[(R/S)_{2000}/(R/S)_{20}\big]}{\log_{10}(2000/20)}, \quad d = H - 0{,}5, \quad \mathrm{VaR}^{(h)} = h^H\,\mathrm{VaR}^{(1)}\]</div><div class="wctl"><div class="ctl"><label for="q7-a">R/S medie pentru n = 20: <b id="q7-a-v"></b></label><input type="range" id="q7-a" min="2" max="8" step="0.1" value="4.1"></div><div class="ctl"><label for="q7-v">VaR 1% pe o zi (%): <b id="q7-v-v"></b></label><input type="range" id="q7-v" min="1" max="5" step="0.5" value="2.5"></div><div class="ctl"><label for="q7-h">Orizontul h (zile)</label><select id="q7-h"><option value="5">5</option><option value="10" selected>10 (slide)</option><option value="20">20</option><option value="60">60</option></select></div></div><ol id="q7-we"></ol></div><ul class="out" id="q7-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ schimbă R/S pentru n = 2000. Dacă este 40 în loc de 60, mai dă scalarea cu h^H un VaR pe 10 zile mai mare decît √h?</div><details><summary>Răspuns</summary><p>Nu: H = log₁₀(40/4,1)/2 = 0,495 < 0,5, deci 10^H = 3,12 și VaR = 7,81%, puțin sub 7,91% cu √10. Panta, nu creșterea lui R/S cu n, decide: R/S crește și pentru date fără memorie, cu exponentul 0,5.</p></details>
+</section>
+<section class="blk" id="p8">
+  <h3>Problema 8: rezolvare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol16_recapitulare.pdf#page=70" target="_blank" rel="noopener"><img src="slides/ch16_p8_ro.jpg" alt="Slide-ul 69: Problema 8: rezolvare" loading="lazy"></a>
+      <figcaption>Slide-ul 69</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="q8-f">Credite performante marcate ca neperformante: <b id="q8-f-v"></b></label><input type="range" id="q8-f" min="0" max="210" step="6" value="42"></div><button class="btn play" id="q8-play" type="button"></button></div><div class="charts "><div class="chart" id="q8-chart"></div></div><div class="we" id="q8-we-box"><p class="we-h">Problemă de recapitulare: scoring de credit și risc sistemic</p><div class="we-f">\[\begin{gathered} \text{TPR} = \frac{TP}{TP + FN}, \quad \text{FPR} = \frac{FP}{FP + TN}, \\ \text{EL} = \text{PD} \times \text{LGD} \times \text{EAD}, \quad \Delta\mathrm{CoVaR} = \hat b\,(q_{50\%} - q_{1\%}) \end{gathered}\]</div><div class="wctl"><div class="ctl"><label for="q8-t">Credite neperformante găsite: <b id="q8-t-v"></b></label><input type="range" id="q8-t" min="0" max="90" step="3" value="60"></div><div class="ctl"><label for="q8-b">Panta b̂ a regresiei cuantilice: <b id="q8-b-v"></b></label><input type="range" id="q8-b" min="0" max="1.2" step="0.1" value="0.6"></div></div><ol id="q8-we"></ol></div><ul class="out" id="q8-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește numărul creditelor performante marcate ca neperformante. Cu 120 (rulare cu alte valori), care rată nu se schimbă?</div><details><summary>Răspuns</summary><p>TPR, 60/90 = 66,7%: ea privește doar creditele neperformante. Acuratețea scade la (60 + 90)/300 = 50%, sub regula „mereu bun” (70%), FPR crește la 57,1%, iar precizia scade la 60/180 = 33,3%.</p></details>
+</section>
+<p class="src foot">Datele cursului din data/market (pînă la 18 septembrie 2026): închiderile zilnice ale S&P 500 și BET din ianuarie 2000 și ale Bitcoin din septembrie 2014. Browserul taie fereastra și recalculează randamentele, indicatorii de performanță, momentele, indicele Hill, ACF, testele Ljung–Box și VR, VaR și ES, exponentul Hurst, varianța de selecție cumulativă, prognozele VaR 1% și testul Kupiec. Estimațiile GARCH(1,1)-t vin din codul capitolului (Quantlets/Ch_16), estimările α ale legii stabile pe trei orizonturi din Capitolul 3 (Quantlets/Ch_03). Alte ferestre, niveluri α, ferestre ale simulării istorice și valori λ sînt rulări suplimentare ale aceluiași cod. Problemele de recapitulare pornesc de la cifrele de pe slide-uri.</p>
+</main>
+</body>
+</html>
