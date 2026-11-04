@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 11 · Fractal Markets and Long Memory</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch11.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch11_data.js?v=20261101a", "ch11_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch11.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 11 · Fractal Markets and Long Memory</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_11" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch11.html" class="lang-btn active">EN</a><a href="ch11_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: FMH (fractal market hypothesis), R/S (rescaled range), DFA (detrended fluctuation analysis), GPH (the Geweke–Porter-Hudak estimator), fBm (fractional Brownian motion), fGn (fractional Gaussian noise), ARFIMA (autoregressive fractionally integrated moving average), ACF (autocorrelation function), AR(1) (first-order autoregressive model), GARCH (generalised autoregressive conditional heteroskedasticity), OLS (ordinary least squares), SE (standard error), i.i.d. (independent and identically distributed), VaR (value at risk), TLV (Banca Transilvania), SNP (OMV Petrom).</p>
+<p class="toc"><a href="#s-self">Self-Similarity and Fractals</a> · <a href="#s-rs">Hurst, the Nile and the R/S Statistic</a> · <a href="#s-lm">Long Memory: Definitions and Models</a> · <a href="#s-est">Estimators of Long Memory</a> · <a href="#s-spur">Spurious Long Memory</a> · <a href="#s-vol">Long Memory in Volatility</a> · <a href="#s-roll">Rolling Hurst Exponents</a> · <a href="#s-risk">Long Memory and Risk</a></p>
+<h2 class="sec" id="s-self">Self-Similarity and Fractals</h2>
+<section class="blk" id="fractal-dim">
+  <h3>Fractal Dimension</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=13" target="_blank" rel="noopener"><img src="slides/ch11_fractal-dim_en.jpg" alt="Slide 12: Fractal Dimension" loading="lazy"></a>
+      <figcaption>Slide 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fd-h">H of the fBm path (seed 2026)</label><select id="fd-h"><option value="0.5" selected>0.5</option><option value="0.1">0.1</option><option value="0.2">0.2</option><option value="0.3">0.3</option><option value="0.4">0.4</option><option value="0.6">0.6</option><option value="0.7">0.7</option><option value="0.8">0.8</option><option value="0.9">0.9</option></select></div><button class="btn play" id="fd-play" type="button"></button></div><div class="charts "><div class="chart" id="fd-chart"></div></div><div class="we" id="fd-we-box"><p class="we-h">Worked example: box-counting dimension (extra computation)</p><div class="we-f">\[D = \frac{\ln N}{\ln s}, \qquad N(\varepsilon) \propto \varepsilon^{-D}, \qquad D_{\text{fBm}} = 2 - H\]</div><div class="wctl"><div class="ctl"><label for="fd-k">Smallest side ε</label><select id="fd-k"><option value="7" selected>1/128</option><option value="5">1/32</option><option value="6">1/64</option><option value="8">1/256</option></select></div></div><ol id="fd-we"></ol></div><ul class="out" id="fd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> We count boxes on the fBm path with H = 0.5 (extra computation, not in the lecture). Which dimension comes out?</div><details><summary>Answer</summary><p>About 1.5: the slope is 1.47 with ε from 1/2 to 1/128, close to D = 2 − H = 1.5. The path is a curve, but so rough that the number of boxes grows like ε^(−1.5), not like ε^(−1). For H = 0.1 the count gives only 1.74 instead of 1.9: with 1000 points the roughness below the time step is invisible, so D is underestimated for very rough paths.</p></details>
+</section>
+<section class="blk" id="scaling">
+  <h3>The Scaling of h-Day Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=15" target="_blank" rel="noopener"><img src="slides/sfm_ch11_scaling_en.jpg" alt="Slide 14: The Scaling of h-Day Returns" loading="lazy"></a>
+      <figcaption>Slide 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-h">Largest horizon h (days)</label><select id="sc-h"><option value="250" selected>250 (lecture)</option><option value="100">100</option><option value="50">50</option><option value="20">20</option><option value="10">10</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500: is the ratio of the 10-day to the daily standard deviation of returns above or below √10 = 3.16?</div>
+  <details><summary>Answer</summary><p>Below: 2.80. The daily S&P 500 returns have a negative first-order autocorrelation, −0.099, so consecutive days partly offset each other (mild mean reversion). The BET has 3.50, above √10 (positive autocorrelation), and Bitcoin 3.20, close to √10.</p></details>
+</section><h2 class="sec" id="s-rs">Hurst, the Nile and the R/S Statistic</h2>
+<section class="blk" id="rs-example">
+  <h3>Worked Example: R/S of Eight Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=19" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rs_example_en.jpg" alt="Slide 18: Worked Example: R/S of Eight Returns" loading="lazy"></a>
+      <figcaption>Slide 18</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rx-w">The eight returns</label><select id="rx-w"><option value="lec" selected>example of the lecture (lecture)</option><option value="2000-01-04">S&P 500, 4–13 Jan 2000</option><option value="2008-10-06">S&P 500, 6–15 Oct 2008</option><option value="2020-03-09">S&P 500, 9–18 Mar 2020</option><option value="last">S&P 500, 9–18 Sep 2026</option></select></div><button class="btn play" id="rx-play" type="button"></button></div><div class="charts "><div class="chart" id="rx-chart"></div></div><div class="we" id="rx-we-box"><p class="we-h">Worked example: R/S of one block</p><div class="we-f">\[Y_k = \sum_{j=1}^{k}(x_j - \bar x), \quad R_n = \max_k Y_k - \min_k Y_k, \quad S_n = \sqrt{\tfrac1n \sum_j (x_j - \bar x)^2}, \quad (R/S)_n = R_n/S_n\]</div><ol id="rx-we"></ol></div><ul class="out" id="rx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to 8-day windows of the S&P 500. On 9–18 March 2020 the standard deviation is 7.56%, about 15 times that of the lecture example (0.489). How does (R/S)₈ compare with 1.788?</div>
+  <details><summary>Answer</summary><p>It is of the same order: 1.530. R and S grow together with volatility, so the ratio has no unit; for 8 values R/S stays between about 1.5 and 2.8 (2.317 in January 2000, 2.774 in October 2008, 2.155 in September 2026). Dividing by S makes the statistic comparable across assets.</p></details>
+</section>
+<section class="blk" id="rs-hurst">
+  <h3>From R/S to the Hurst Exponent</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch11_rs-hurst_en.jpg" alt="Slide 19: From R/S to the Hurst Exponent" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rh-s">Series</label><select id="rh-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="rh-y">Variable</label><select id="rh-y"><option value="r" selected>returns r (lecture)</option><option value="abs">absolute returns |r|</option></select></div><button class="btn play" id="rh-play" type="button"></button></div><div class="charts "><div class="chart" id="rh-chart"></div></div><div class="we" id="rh-we-box"><p class="we-h">Worked example: the slope of the log-log plot</p><div class="we-f">\[\log_{10}(R/S)_n = \log_{10} c + H \log_{10} n + e_n, \qquad \hat H = \frac{\sum (u - \bar u)(v - \bar v)}{\sum (u - \bar u)^2}\]</div><div class="wctl"><div class="ctl"><label for="rh-n">Block size n shown (index): <b id="rh-n-v"></b></label><input type="range" id="rh-n" min="1" max="20" step="1" value="1"></div></div><ol id="rh-we"></ol></div><ul class="out" id="rh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The OLS slope of log₁₀ (R/S)_n for the S&P 500 returns is 0.530. What does it become for the absolute returns |r|?</div><details><summary>Answer</summary><p>About 0.86 (0.861), far above the i.i.d. band [0.51, 0.57]: long memory in volatility. For the returns, 0.530 lies inside the band, because R/S is biased upwards in small samples.</p></details>
+</section><h2 class="sec" id="s-lm">Long Memory: Definitions and Models</h2>
+<section class="blk" id="memory-we">
+  <h3>Worked Example: How Fast Does Memory Fade?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch11_memory-we_en.jpg" alt="Slide 23: Worked Example: How Fast Does Memory Fade?" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mw-h">H of the fGn: <b id="mw-h-v"></b></label><input type="range" id="mw-h" min="0.55" max="0.95" step="0.05" value="0.8"></div><button class="btn play" id="mw-play" type="button"></button></div><div class="charts "><div class="chart" id="mw-chart"></div></div><div class="we" id="mw-we-box"><p class="we-h">Worked example: fGn against AR(1)</p><div class="we-f">\[\rho_{\text{fGn}}(k) = \tfrac12\left(|k + 1|^{2H} - 2|k|^{2H} + |k - 1|^{2H}\right), \qquad \rho_{\text{AR}}(k) = \phi^k, \ \phi = \rho(1)\]</div><div class="wctl"><div class="ctl"><label for="mw-k">Lag k</label><select id="mw-k"><option value="100" selected>100 (lecture)</option><option value="10">10</option><option value="50">50</option><option value="250">250</option></select></div></div><ol id="mw-we"></ol></div><ul class="out" id="mw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises H of the fGn from 0.55 to 0.95. How does ρ(100) change?</div><details><summary>Answer</summary><p>It rises from about 0.001 (H = 0.55) to about 0.54 (H = 0.95); at H = 0.8 it is 0.076. For large H, ρ(k) decays like k^(2H − 2), that is very slowly. An AR(1) with the same ρ(1) has ρ(100) practically 0 for every H: its decay is geometric.</p></details>
+</section>
+<section class="blk" id="fbm">
+  <h3>fBm Paths for Three Hurst Exponents</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=26" target="_blank" rel="noopener"><img src="slides/sfm_ch11_fbm_paths_en.jpg" alt="Slide 25: fBm Paths for Three Hurst Exponents" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fb-d">Exponents H</label><select id="fb-d"><option value="0.2" selected>0.3, 0.5, 0.7 (lecture)</option><option value="0.1">0.4, 0.5, 0.6</option><option value="0.3">0.2, 0.5, 0.8</option><option value="0.4">0.1, 0.5, 0.9</option></select></div><button class="btn play" id="fb-play" type="button"></button></div><div class="charts "><div class="chart" id="fb-chart"></div></div><ul class="out" id="fb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What is the first-order autocorrelation of the increments of the path with H = 0.7?</div>
+  <details><summary>Answer</summary><p>In theory 2^(2H − 1) − 1 = 2^0.4 − 1 = 0.32; on the 1000 simulated increments, 0.32 (0.316). For H = 0.3: −0.23 in the data, −0.24 in theory. H is neither an autocorrelation nor a probability.</p></details>
+</section>
+<section class="blk" id="fgn">
+  <h3>The ACF of Fractional Gaussian Noise</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch11_fgn_acf_en.jpg" alt="Slide 27: The ACF of Fractional Gaussian Noise" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fg-h">H (and 1 − H)</label><select id="fg-h"><option value="0.8" selected>0.8 and 0.2 (lecture)</option><option value="0.6">0.6 and 0.4</option><option value="0.7">0.7 and 0.3</option><option value="0.9">0.9 and 0.1</option></select></div><button class="btn play" id="fg-play" type="button"></button></div><div class="charts "><div class="chart" id="fg-chart"></div></div><ul class="out" id="fg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the slide, the sample ACF of the fGn with H = 0.8 lies below the theoretical one. Why?</div>
+  <details><summary>Answer</summary><p>Estimating the mean removes part of the slow component of the series: with long memory the sample mean follows the long waves, and the deviations from it are less correlated. Over lags 1–50 the sample ACF is on average 0.040 below the theoretical one. The circulant-embedding simulation is exact, and the fGn ACF formula is exact at every lag.</p></details>
+</section>
+<section class="blk" id="arfima">
+  <h3>ARFIMA(0,d,0) with d = 0.4 and d = -0.4</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=31" target="_blank" rel="noopener"><img src="slides/sfm_ch11_arfima_en.jpg" alt="Slide 30: ARFIMA(0,d,0) with d = 0.4 and d = -0.4" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="af-d">d (and −d)</label><select id="af-d"><option value="0.4" selected>0.4 (lecture)</option><option value="0.1">0.1</option><option value="0.2">0.2</option><option value="0.3">0.3</option><option value="0.45">0.45</option></select></div><button class="btn play" id="af-play" type="button"></button></div><div class="charts "><div class="chart" id="af-chart"></div></div><ul class="out" id="af-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ARFIMA(0,d,0) with d = 0.4: ρ(1) = 0.667. What is ρ(50)?</div>
+  <details><summary>Answer</summary><p>0.307: the hyperbolic decay keeps much of ρ(1), which is why the series makes slow waves around its mean. An AR(1) with φ = 0.667 would have ρ(50) = 0.667⁵⁰, practically 0. With d = 0.1, ρ(50) is only 0.005.</p></details>
+</section>
+<section class="blk" id="arfima-we">
+  <h3>Worked Example: ARFIMA(0, 0.3, 0)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch11_arfima-we_en.jpg" alt="Slide 31: Worked Example: ARFIMA(0, 0.3, 0)" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aw-d">d: <b id="aw-d-v"></b></label><input type="range" id="aw-d" min="0.05" max="0.45" step="0.05" value="0.3"></div><button class="btn play" id="aw-play" type="button"></button></div><div class="charts "><div class="chart" id="aw-chart"></div></div><div class="we" id="aw-we-box"><p class="we-h">Worked example: weights and autocorrelations of ARFIMA(0,d,0)</p><div class="we-f">\[\pi_j = \pi_{j-1}\frac{j - 1 - d}{j}, \qquad \psi_j = \psi_{j-1}\frac{j - 1 + d}{j}, \qquad \rho(k) = \rho(k - 1)\frac{k - 1 + d}{k - d}\]</div><div class="wctl"><div class="ctl"><label for="aw-t">Autocorrelation threshold</label><select id="aw-t"><option value="0.05" selected>0.05 (lecture)</option><option value="0.1">0.1</option><option value="0.01">0.01</option></select></div></div><ol id="aw-we"></ol></div><ul class="out" id="aw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ARFIMA(0, 0.3, 0): after how many lags does the autocorrelation fall below 0.05?</div><details><summary>Answer</summary><p>After 222 lags; an AR(1) with the same ρ(1) = 0.429 falls below 0.05 after 4 lags. ρ(k) still goes to 0 (stationarity, d &lt; 0.5), only very slowly: ρ(100) = 0.069.</p></details>
+</section><h2 class="sec" id="s-est">Estimators of Long Memory</h2>
+<section class="blk" id="dfa-we">
+  <h3>Detrended Fluctuation Analysis (DFA)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=34" target="_blank" rel="noopener"><img src="slides/ch11_dfa-we_en.jpg" alt="Slide 33: Detrended Fluctuation Analysis (DFA)" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dw-s">Series</label><select id="dw-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="dw-y">Variable</label><select id="dw-y"><option value="r" selected>returns r (lecture)</option><option value="abs">absolute returns |r|</option></select></div><div class="ctl"><label for="dw-n">Block size n (index): <b id="dw-n-v"></b></label><input type="range" id="dw-n" min="1" max="20" step="1" value="1"></div><button class="btn play" id="dw-play" type="button"></button></div><div class="charts "><div class="chart" id="dw-chart"></div></div><div class="we" id="dw-we-box"><p class="we-h">Worked example: the fluctuation F(n)</p><div class="we-f">\[Y_k = \sum_{j \le k}(x_j - \bar x), \qquad F(n) = \sqrt{\frac{1}{mn}\sum_{b=1}^{m}\sum_{i=1}^{n}\big(Y_{(b-1)n+i} - \hat a_b - \hat b_b\, i\big)^2} \propto n^{\alpha}\]</div><ol id="dw-we"></ol></div><ul class="out" id="dw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> How does F(n) of the S&P 500 returns change as n grows from 10 to 1678?</div><details><summary>Answer</summary><p>It grows about 13 times (from 0.935 to 12.37), close to √(1678/10) = 13.0, because α̂ = 0.49 ≈ 0.5. For |r| it grows about 100 times: α̂ = 0.95. F(n) grows in proportion to n only for a profile with a trend (fBm has α = H + 1).</p></details>
+</section>
+<section class="blk" id="rs-dfa">
+  <h3>R/S and DFA: S&P 500 since 2000</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rs_dfa_en.jpg" alt="Slide 34: R/S and DFA: S&P 500 since 2000" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rd-s">Series</label><select id="rd-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="rd-play" type="button"></button></div><div class="charts "><div class="chart" id="rd-chart"></div></div><ul class="out" id="rd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The S&P 500 returns have an R/S slope of 0.53. Is this evidence of H > 0.5?</div>
+  <details><summary>Answer</summary><p>No: i.i.d. Normal series of the same length give a mean slope of 0.55, because R/S is biased upwards in small samples. DFA gives 0.49, against 0.50 for the i.i.d. series. The absolute returns have R/S 0.86 and DFA 0.95: the long memory is in volatility.</p></details>
+</section>
+<section class="blk" id="gph-we">
+  <h3>The GPH Log-Periodogram Regression</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=36" target="_blank" rel="noopener"><img src="slides/ch11_gph-we_en.jpg" alt="Slide 35: The GPH Log-Periodogram Regression" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gw-s">Series</label><select id="gw-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gw-p">Bandwidth m</label><select id="gw-p"><option value="0.5" selected>T^0.5 (lecture)</option><option value="0.4">T^0.4</option><option value="0.6">T^0.6</option><option value="0.7">T^0.7</option></select></div><button class="btn play" id="gw-play" type="button"></button></div><div class="charts "><div class="chart" id="gw-chart"></div></div><div class="we" id="gw-we-box"><p class="we-h">Worked example: the GPH regression</p><div class="we-f">\[\ln I(\lambda_j) = c - d\,\ln\!\big(4\sin^2(\lambda_j/2)\big) + e_j, \quad j = 1, \dots, m, \qquad \mathrm{SE} = \pi/\sqrt{24m}\]</div><div class="wctl"><div class="ctl"><label for="gw-y">Variable</label><select id="gw-y"><option value="r" selected>returns r (lecture)</option><option value="abs">absolute returns |r|</option></select></div></div><ol id="gw-we"></ol></div><ul class="out" id="gw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500 returns: d̂ = 0.036, SE = π/√(24 × 81) = 0.071. How wide is the 95% interval, and does it contain 0?</div><details><summary>Answer</summary><p>About 0.28, from −0.103 to 0.176, and it contains 0: the estimate is not separated from 0 by this test. This does not prove d = 0, only that the data are compatible with d = 0. For |r| the interval is [0.33, 0.61].</p></details>
+</section>
+<section class="blk" id="gph">
+  <h3>GPH: S&P 500 Returns and Absolute Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch11_gph_en.jpg" alt="Slide 36: GPH: S&P 500 Returns and Absolute Returns" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-s">Series</label><select id="gp-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gp-p">Bandwidth m</label><select id="gp-p"><option value="0.5" selected>T^0.5 (lecture)</option><option value="0.4">T^0.4</option><option value="0.6">T^0.6</option><option value="0.7">T^0.7</option></select></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The bandwidth moves from m = 81 (T^0.5) to m = 477 (T^0.7). What happens to d̂ for |r| and to the SE?</div>
+  <details><summary>Answer</summary><p>The SE falls from 0.071 to 0.029 and d̂ rises from 0.470 to 0.554: the higher frequencies bring more information, but also the short-run dynamics of volatility. At m = 33 (T^0.4), d̂ = 0.364 with SE 0.112.</p></details>
+</section>
+<section class="blk" id="lo-we">
+  <h3>Lo's Modified R/S Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch11_lo-we_en.jpg" alt="Slide 37: Lo's Modified R/S Test" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lw-s">Series</label><select id="lw-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="lw-play" type="button"></button></div><div class="charts "><div class="chart" id="lw-chart"></div></div><div class="we" id="lw-we-box"><p class="we-h">Worked example: the statistic V_N(q)</p><div class="we-f">\[V_N(q) = \frac{R_N}{\sqrt{N}\,\hat\sigma_N(q)}, \qquad \hat\sigma^2_N(q) = \hat\gamma_0 + 2\sum_{j=1}^{q}\Big(1 - \frac{j}{q + 1}\Big)\hat\gamma_j\]</div><div class="wctl"><div class="ctl"><label for="lw-y">Variable</label><select id="lw-y"><option value="r" selected>returns r (lecture)</option><option value="abs">absolute returns |r|</option></select></div></div><ol id="lw-we"></ol></div><p class="xh">Lo's test on the six series (at 5%: short memory is rejected outside [0.809, 1.862])</p><div class="tw" id="lw-tab"></div><ul class="out" id="lw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500 returns: ρ̂₁ = −0.099 and N = 6,714. Which q does the Andrews rule give?</div><details><summary>Answer</summary><p>7: (3N/2)^(1/3) = 21.60 and (2|ρ̂₁|/(1 − ρ̂₁²))^(2/3) = 0.341, product 7.36. The correction depends on the size of ρ̂₁, not on its sign. With q = 7, V = 1.56 lies in [0.809, 1.862]; for |r|, q = 15 and V = 2.66: short memory is rejected.</p></details>
+</section>
+<section class="blk" id="lo">
+  <h3>Classical against Modified R/S: Size and Power</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch11_lo_test_en.jpg" alt="Slide 38: Classical against Modified R/S: Size and Power" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lo-n">Length of the series N</label><select id="lo-n"><option value="1000" selected>1000 (lecture)</option><option value="250">250</option><option value="500">500</option><option value="2000">2000</option></select></div><button class="btn play" id="lo-play" type="button"></button></div><div class="charts "><div class="chart" id="lo-chart"></div></div><ul class="out" id="lo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For an AR(1) with φ = 0.5 (short memory, H₀ true), in what share of the cases does the classical R/S test reject short memory at 5%?</div>
+  <details><summary>Answer</summary><p>In 60% of the cases; Lo's modified test in 5%, the nominal level. The classical R/S confuses short memory with long memory. The correction costs power: for fGn with H = 0.7, the rejection rates are 91% (classical) and 36% (modified).</p></details>
+</section>
+<section class="blk" id="mc">
+  <h3>Monte Carlo: Bias and Spread of the Estimators</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch11_mc_bias_en.jpg" alt="Slide 40: Monte Carlo: Bias and Spread of the Estimators" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-l">Level of the band</label><select id="mc-l"><option value="0.95" selected>95% (lecture)</option><option value="0.9">90%</option><option value="0.99">99%</option></select></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At N = 1000, which estimator has the widest 95% band under H = 0.5?</div>
+  <details><summary>Answer</summary><p>GPH: width 0.53, against 0.16 for DFA and 0.12 for R/S. GPH is practically unbiased (mean 0.498) but uses only m = 31 frequencies; R/S has the narrowest band, but centred at 0.562, not at 0.5.</p></details>
+</section>
+<section class="blk" id="sp-table">
+  <h3>S&P 500: All Estimators</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch11_sp-table_en.jpg" alt="Slide 41: S&P 500: All Estimators" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="st-s">Series</label><select id="st-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="st-play" type="button"></button></div><div class="charts "><div class="chart" id="st-chart"></div></div><p class="xh">All estimators; the 95% bands come from 500 i.i.d. series of the same length (in red: outside the band)</p><div class="tw" id="st-tab"></div><ul class="out" id="st-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500 returns, only one estimator would seem to point to H > 0.5. Which one, and why is it not evidence?</div><details><summary>Answer</summary><p>R/S, with 0.53: its i.i.d. band for N = 6,714 is [0.51, 0.57], so 0.53 lies inside it. DFA (0.49), GPH (Ĥ = 0.54, d̂ ± 1.96 SE = [−0.10, 0.18]) and Lo's test (V = 1.56) are all compatible with no long memory.</p></details>
+</section><h2 class="sec" id="s-spur">Spurious Long Memory</h2>
+<section class="blk" id="nile">
+  <h3>The Nile: R/S before and after Removing the Break</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch11_nile_en.jpg" alt="Slide 45: The Nile: R/S before and after Removing the Break" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nl-b">Last year before the break: <b id="nl-b-v"></b></label><input type="range" id="nl-b" min="1880" max="1960" step="1" value="1898"></div><button class="btn play" id="nl-play" type="button"></button></div><div class="charts "><div class="chart" id="nl-chart"></div></div><ul class="out" id="nl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> After removing the two regime means (the 1898 break), what becomes of the Nile's Ĥ_R/S (0.78 on the raw series)?</div>
+  <details><summary>Answer</summary><p>0.63, inside the i.i.d. band [0.45, 0.75] for N = 100, centred at 0.60; DFA falls from 0.84 to 0.50. Most of the apparent memory was the break, not persistence of the flows.</p></details>
+</section>
+<section class="blk" id="spurious">
+  <h3>Simulated Spurious Long Memory</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch11_spurious_en.jpg" alt="Slide 46: Simulated Spurious Long Memory" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="su-n">Length of the series N</label><select id="su-n"><option value="2000" selected>2000 (lecture)</option><option value="500">500</option><option value="1000">1000</option><option value="4000">4000</option></select></div><button class="btn play" id="su-play" type="button"></button></div><div class="charts "><div class="chart" id="su-chart"></div></div><ul class="out" id="su-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> An i.i.d. series has a mean shift of 0.5 standard deviations in the middle. Which Ĥ does GPH give, on average?</div>
+  <details><summary>Answer</summary><p>About 0.79 (DFA 0.56), although the series has no memory at all. The common deviation from the overall mean makes observations of the same regime look correlated at all lags. At N = 4000, GPH still gives 0.79: spurious memory does not go away with more data.</p></details>
+</section><h2 class="sec" id="s-vol">Long Memory in Volatility</h2>
+<section class="blk" id="vol-acf">
+  <h3>S&P 500: the ACF of rₜ, |rₜ| and rₜ²</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=50" target="_blank" rel="noopener"><img src="slides/sfm_ch11_vol_acf_en.jpg" alt="Slide 49: S&P 500: the ACF of rₜ, |rₜ| and rₜ²" loading="lazy"></a>
+      <figcaption>Slide 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="va-s">Series</label><select id="va-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="va-l">Number of lags</label><select id="va-l"><option value="250" selected>250 (lecture)</option><option value="100">100</option><option value="500">500</option></select></div><button class="btn play" id="va-play" type="button"></button></div><div class="charts "><div class="chart" id="va-chart"></div></div><ul class="out" id="va-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> How many of the lags 2–250 of the ACF of the S&P 500 returns lie outside the 95% band?</div>
+  <details><summary>Answer</summary><p>31, against about 12 expected by chance (5% of 249); the largest at lags 15, 16 and 34, all below 0.061 in absolute value. The 1.96/√n band is an asymptotic reference for an i.i.d. series; with volatility clustering the sample autocorrelations vary more than it shows, so the exceedances do not, by themselves, prove predictability.</p></details>
+</section>
+<section class="blk" id="mk-table">
+  <h3>Six Markets: Returns and Absolute Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch11_mk-table_en.jpg" alt="Slide 50: Six Markets: Returns and Absolute Returns" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mt-p">GPH bandwidth m</label><select id="mt-p"><option value="0.5" selected>T^0.5 (lecture)</option><option value="0.4">T^0.4</option><option value="0.6">T^0.6</option><option value="0.7">T^0.7</option></select></div><button class="btn play" id="mt-play" type="button"></button></div><div class="charts "><div class="chart" id="mt-chart"></div></div><p class="xh">Six markets (in red: DFA above the band, Lo's test rejects short memory)</p><div class="tw" id="mt-tab"></div><ul class="out" id="mt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the returns of which series does the interval d̂ ± 1.96 SE exclude 0?</div><details><summary>Answer</summary><p>Only for the BET: d̂ = 0.17, interval [0.03, 0.31]. Also for the BET, DFA (0.57) is above its band and Lo's test (V = 1.96) rejects short memory. For |r|, d̂ lies between 0.21 and 0.48, and Lo's test rejects for all six series.</p></details>
+</section>
+<section class="blk" id="markets">
+  <h3>Six Markets: DFA Exponents and the Shuffle Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch11_markets_en.jpg" alt="Slide 51: Six Markets: DFA Exponents and the Shuffle Test" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mk-e">Estimator</label><select id="mk-e"><option value="dfa" selected>DFA (lecture)</option><option value="rs">R/S</option><option value="gph">GPH, d + 0.5</option></select></div><button class="btn play" id="mk-play" type="button"></button></div><div class="charts "><div class="chart" id="mk-chart"></div></div><ul class="out" id="mk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> After a random shuffle of |r|, what becomes of the DFA exponent (between 0.73 and 0.95 before)?</div>
+  <details><summary>Answer</summary><p>It falls to between 0.46 and 0.55, inside the i.i.d. bands: the shuffle keeps the distribution (heavy tails included) and destroys only the order of the days. The long memory in volatility lies in the order of the days.</p></details>
+</section><h2 class="sec" id="s-roll">Rolling Hurst Exponents</h2>
+<section class="blk" id="rolling">
+  <h3>Rolling DFA Exponents: S&P 500, BET, Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rolling_en.jpg" alt="Slide 55: Rolling DFA Exponents: S&P 500, BET, Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ro-w">Window (observations)</label><select id="ro-w"><option value="1000" selected>1000 (lecture)</option><option value="250">250</option><option value="500">500</option><option value="2000">2000</option></select></div><button class="btn play" id="ro-play" type="button"></button></div><div class="charts "><div class="chart" id="ro-chart"></div></div><ul class="out" id="ro-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, windows of 1000 days: what share of the windows has the DFA exponent of the returns below the i.i.d. band?</div>
+  <details><summary>Answer</summary><p>24%, none above. The minimum, 0.32, is reached on 31 December 2008: daily reversals (anti-persistence) in the panic. Consecutive windows share 979 of their 1000 observations, so 24% does not mean 65 independent results.</p></details>
+</section><h2 class="sec" id="s-risk">Long Memory and Risk</h2>
+<section class="blk" id="risk-we">
+  <h3>Scaling Risk with h^H</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter11_fractal_markets_long_memory.pdf#page=60" target="_blank" rel="noopener"><img src="slides/ch11_risk-we_en.jpg" alt="Slide 59: Scaling Risk with h^H" loading="lazy"></a>
+      <figcaption>Slide 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rk-h">H: <b id="rk-h-v"></b></label><input type="range" id="rk-h" min="0.4" max="0.6" step="0.01" value="0.55"></div><button class="btn play" id="rk-play" type="button"></button></div><div class="charts "><div class="chart" id="rk-chart"></div></div><div class="we" id="rk-we-box"><p class="we-h">Worked example: VaR 1% over h days</p><div class="we-f">\[\mathrm{VaR}_{0.01}(h) = -z_{0.01}\,\sigma\,h^{H}, \qquad z_{0.01} = -2.326, \quad \sigma = 1.2\%\]</div><div class="wctl"><div class="ctl"><label for="rk-n">Horizon h (days)</label><select id="rk-n"><option value="10" selected>10 (lecture)</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="250">250</option></select></div></div><ol id="rk-we"></ol></div><ul class="out" id="rk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With H = 0.55 instead of 0.5, by how much does the 10-day VaR 1% rise, at a daily volatility of 1.2%?</div><details><summary>Answer</summary><p>By about 12%: 9.91% against 8.83%, because 10^0.55/10^0.5 = 10^0.05 = 1.12. At 250 days the difference is 32%. The √h rule overstates the S&P 500 risk (10-day ratio 2.80) and understates the BET risk (3.50).</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: S&P 500, DAX and BET from January 2000, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV) and OMV Petrom (SNP) from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. EODHD prices. The annual flow of the Nile at Aswan, 1871–1970 (Cobb, 1978; the statsmodels data set). From these data the browser computes the scaling, R/S, DFA, the GPH regression, Lo's test, the ACF and the rolling exponents. The simulated series (fBm, fGn, ARFIMA) and every Monte Carlo estimate (500 i.i.d. series for each N, 500 series for Lo's test, 300 for spurious memory) come from the code of the lecture, with the same seeds; the browser computes the means, bands and rejection rates from them. Other values of H and d, other lengths N, bandwidths, windows and Nile break years, and the i.i.d. curves for the other five series are extra runs of the same code; box counting on the fBm paths is an extra computation that is not in the lecture.</p>
+</main>
+</body>
+</html>

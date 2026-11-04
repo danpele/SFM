@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 11 · Piețe fractale și memorie lungă</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch11.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch11_data.js?v=20261101a", "ch11_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch11.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 11 · Piețe fractale și memorie lungă</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_11" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch11.html" class="lang-btn">EN</a><a href="ch11_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: FMH (fractal market hypothesis, ipoteza pieței fractale), R/S (rescaled range, amplitudinea rescalată), DFA (detrended fluctuation analysis, analiza fluctuațiilor fără tendință), GPH (estimatorul Geweke–Porter-Hudak), fBm (fractional Brownian motion, mișcarea browniană fracționară), fGn (fractional Gaussian noise, zgomotul gaussian fracționar), ARFIMA (autoregressive fractionally integrated moving average), ACF (autocorrelation function, funcția de autocorelație), AR(1) (model autoregresiv de ordinul 1), GARCH (generalised autoregressive conditional heteroskedasticity), OLS (ordinary least squares, metoda celor mai mici pătrate), SE (standard error, eroarea standard), i.i.d. (independente și identic distribuite), VaR (value at risk, valoarea expusă la risc), TLV (Banca Transilvania), SNP (OMV Petrom).</p>
+<p class="toc"><a href="#s-self">Autosimilaritate și fractali</a> · <a href="#s-rs">Hurst, Nilul și statistica R/S</a> · <a href="#s-lm">Memoria lungă: definiții și modele</a> · <a href="#s-est">Estimatori ai memoriei lungi</a> · <a href="#s-spur">Memorie lungă aparentă</a> · <a href="#s-vol">Memoria lungă a volatilității</a> · <a href="#s-roll">Exponenți Hurst pe ferestre mobile</a> · <a href="#s-risk">Memoria lungă și riscul</a></p>
+<h2 class="sec" id="s-self">Autosimilaritate și fractali</h2>
+<section class="blk" id="fractal-dim">
+  <h3>Dimensiunea fractală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=14" target="_blank" rel="noopener"><img src="slides/ch11_fractal-dim_ro.jpg" alt="Slide-ul 13: Dimensiunea fractală" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fd-h">H al traiectoriei fBm (sămînța 2026)</label><select id="fd-h"><option value="0.5" selected>0,5</option><option value="0.1">0,1</option><option value="0.2">0,2</option><option value="0.3">0,3</option><option value="0.4">0,4</option><option value="0.6">0,6</option><option value="0.7">0,7</option><option value="0.8">0,8</option><option value="0.9">0,9</option></select></div><button class="btn play" id="fd-play" type="button"></button></div><div class="charts "><div class="chart" id="fd-chart"></div></div><div class="we" id="fd-we-box"><p class="we-h">Exemplu lucrat: dimensiunea prin numărarea cutiilor (calcul suplimentar)</p><div class="we-f">\[D = \frac{\ln N}{\ln s}, \qquad N(\varepsilon) \propto \varepsilon^{-D}, \qquad D_{\text{fBm}} = 2 - H\]</div><div class="wctl"><div class="ctl"><label for="fd-k">Cea mai mică latură ε</label><select id="fd-k"><option value="7" selected>1/128</option><option value="5">1/32</option><option value="6">1/64</option><option value="8">1/256</option></select></div></div><ol id="fd-we"></ol></div><ul class="out" id="fd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Numărăm cutiile pe traiectoria fBm cu H = 0,5 (calcul suplimentar, care nu este în curs). Ce dimensiune iese?</div><details><summary>Răspuns</summary><p>Circa 1,5: panta este 1,47 cu ε de la 1/2 la 1/128, aproape de D = 2 − H = 1,5. Traiectoria este o curbă, dar atît de neregulată încît numărul de cutii crește ca ε^(−1,5), nu ca ε^(−1). Pentru H = 0,1 numărarea dă doar 1,74 în loc de 1,9: cu 1000 de puncte, neregularitatea de sub pasul de timp nu se vede, deci D este subestimat la traiectoriile foarte neregulate.</p></details>
+</section>
+<section class="blk" id="scaling">
+  <h3>Scalarea randamentelor pe h zile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch11_scaling_ro.jpg" alt="Slide-ul 15: Scalarea randamentelor pe h zile" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-h">Orizontul maxim h (zile)</label><select id="sc-h"><option value="250" selected>250 (curs)</option><option value="100">100</option><option value="50">50</option><option value="20">20</option><option value="10">10</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500: raportul dintre abaterea standard a randamentelor pe 10 zile și cea zilnică este peste sau sub √10 = 3,16?</div>
+  <details><summary>Răspuns</summary><p>Sub: 2,80. Randamentele zilnice ale S&P 500 au autocorelația de ordinul 1 negativă, −0,099, deci zilele succesive se compensează parțial (ușoară revenire la medie). BET are 3,50, peste √10 (autocorelație pozitivă), iar Bitcoin 3,20, aproape de √10.</p></details>
+</section><h2 class="sec" id="s-rs">Hurst, Nilul și statistica R/S</h2>
+<section class="blk" id="rs-example">
+  <h3>Exemplu rezolvat: R/S pentru opt randamente</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=20" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rs_example_ro.jpg" alt="Slide-ul 19: Exemplu rezolvat: R/S pentru opt randamente" loading="lazy"></a>
+      <figcaption>Slide-ul 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rx-w">Cele opt randamente</label><select id="rx-w"><option value="lec" selected>exemplul din curs (curs)</option><option value="2000-01-04">S&P 500, 4–13 ian. 2000</option><option value="2008-10-06">S&P 500, 6–15 oct. 2008</option><option value="2020-03-09">S&P 500, 9–18 mar. 2020</option><option value="last">S&P 500, 9–18 sep. 2026</option></select></div><button class="btn play" id="rx-play" type="button"></button></div><div class="charts "><div class="chart" id="rx-chart"></div></div><div class="we" id="rx-we-box"><p class="we-h">Exemplu lucrat: R/S pentru un bloc</p><div class="we-f">\[Y_k = \sum_{j=1}^{k}(x_j - \bar x), \quad R_n = \max_k Y_k - \min_k Y_k, \quad S_n = \sqrt{\tfrac1n \sum_j (x_j - \bar x)^2}, \quad (R/S)_n = R_n/S_n\]</div><ol id="rx-we"></ol></div><ul class="out" id="rx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la ferestre de 8 zile ale S&P 500. În 9–18 martie 2020 abaterea standard este 7,56%, de circa 15 ori mai mare decît în exemplul din curs (0,489). Cum se compară (R/S)₈ cu 1,788?</div>
+  <details><summary>Răspuns</summary><p>Este de același ordin: 1,530. R și S cresc împreună cu volatilitatea, deci raportul nu are unitate de măsură; pentru 8 valori R/S rămîne între circa 1,5 și 2,8 (2,317 în ianuarie 2000, 2,774 în octombrie 2008, 2,155 în septembrie 2026). Împărțirea la S face statistica comparabilă între active.</p></details>
+</section>
+<section class="blk" id="rs-hurst">
+  <h3>De la R/S la exponentul Hurst</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=21" target="_blank" rel="noopener"><img src="slides/ch11_rs-hurst_ro.jpg" alt="Slide-ul 20: De la R/S la exponentul Hurst" loading="lazy"></a>
+      <figcaption>Slide-ul 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rh-s">Seria</label><select id="rh-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="rh-y">Variabila</label><select id="rh-y"><option value="r" selected>randamentele r (curs)</option><option value="abs">randamentele absolute |r|</option></select></div><button class="btn play" id="rh-play" type="button"></button></div><div class="charts "><div class="chart" id="rh-chart"></div></div><div class="we" id="rh-we-box"><p class="we-h">Exemplu lucrat: panta graficului log-log</p><div class="we-f">\[\log_{10}(R/S)_n = \log_{10} c + H \log_{10} n + e_n, \qquad \hat H = \frac{\sum (u - \bar u)(v - \bar v)}{\sum (u - \bar u)^2}\]</div><div class="wctl"><div class="ctl"><label for="rh-n">Blocul n afișat (al cîtelea): <b id="rh-n-v"></b></label><input type="range" id="rh-n" min="1" max="20" step="1" value="1"></div></div><ol id="rh-we"></ol></div><ul class="out" id="rh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Panta OLS a lui log₁₀ (R/S)_n pentru randamentele S&P 500 este 0,530. Ce devine ea pentru randamentele absolute |r|?</div><details><summary>Răspuns</summary><p>Circa 0,86 (0,861), mult peste banda i.i.d. [0,51; 0,57]: memorie lungă a volatilității. Pentru randamente, 0,530 se află în bandă, deoarece R/S este deplasat în sus în eșantioane mici.</p></details>
+</section><h2 class="sec" id="s-lm">Memoria lungă: definiții și modele</h2>
+<section class="blk" id="memory-we">
+  <h3>Exemplu rezolvat: cît de repede se stinge memoria?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=25" target="_blank" rel="noopener"><img src="slides/ch11_memory-we_ro.jpg" alt="Slide-ul 24: Exemplu rezolvat: cît de repede se stinge memoria?" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mw-h">H al fGn: <b id="mw-h-v"></b></label><input type="range" id="mw-h" min="0.55" max="0.95" step="0.05" value="0.8"></div><button class="btn play" id="mw-play" type="button"></button></div><div class="charts "><div class="chart" id="mw-chart"></div></div><div class="we" id="mw-we-box"><p class="we-h">Exemplu lucrat: fGn față de AR(1)</p><div class="we-f">\[\rho_{\text{fGn}}(k) = \tfrac12\left(|k + 1|^{2H} - 2|k|^{2H} + |k - 1|^{2H}\right), \qquad \rho_{\text{AR}}(k) = \phi^k, \ \phi = \rho(1)\]</div><div class="wctl"><div class="ctl"><label for="mw-k">Lagul k</label><select id="mw-k"><option value="100" selected>100 (curs)</option><option value="10">10</option><option value="50">50</option><option value="250">250</option></select></div></div><ol id="mw-we"></ol></div><ul class="out" id="mw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește H al fGn de la 0,55 la 0,95. Cum se schimbă ρ(100)?</div><details><summary>Răspuns</summary><p>Crește de la circa 0,001 (H = 0,55) la circa 0,54 (H = 0,95); la H = 0,8 este 0,076. Pentru H mare, ρ(k) scade ca k^(2H − 2), adică foarte încet. AR(1) cu același ρ(1) are ρ(100) practic 0 pentru orice H: scăderea lui este geometrică.</p></details>
+</section>
+<section class="blk" id="fbm">
+  <h3>Traiectorii fBm pentru trei exponenți Hurst</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch11_fbm_paths_ro.jpg" alt="Slide-ul 26: Traiectorii fBm pentru trei exponenți Hurst" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fb-d">Exponenții H</label><select id="fb-d"><option value="0.2" selected>0,3; 0,5; 0,7 (curs)</option><option value="0.1">0,4; 0,5; 0,6</option><option value="0.3">0,2; 0,5; 0,8</option><option value="0.4">0,1; 0,5; 0,9</option></select></div><button class="btn play" id="fb-play" type="button"></button></div><div class="charts "><div class="chart" id="fb-chart"></div></div><ul class="out" id="fb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ce autocorelație de ordinul 1 au creșterile traiectoriei cu H = 0,7?</div>
+  <details><summary>Răspuns</summary><p>Teoretic 2^(2H − 1) − 1 = 2^0,4 − 1 = 0,32; pe cele 1000 de creșteri simulate, 0,32 (0,316). Pentru H = 0,3: −0,23 pe date, −0,24 teoretic. H nu este o autocorelație și nici o probabilitate.</p></details>
+</section>
+<section class="blk" id="fgn">
+  <h3>ACF a zgomotului gaussian fracționar</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch11_fgn_acf_ro.jpg" alt="Slide-ul 28: ACF a zgomotului gaussian fracționar" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fg-h">H (și 1 − H)</label><select id="fg-h"><option value="0.8" selected>0,8 și 0,2 (curs)</option><option value="0.6">0,6 și 0,4</option><option value="0.7">0,7 și 0,3</option><option value="0.9">0,9 și 0,1</option></select></div><button class="btn play" id="fg-play" type="button"></button></div><div class="charts "><div class="chart" id="fg-chart"></div></div><ul class="out" id="fg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe slide, ACF de selecție a fGn cu H = 0,8 este sub cea teoretică. De ce?</div>
+  <details><summary>Răspuns</summary><p>Estimarea mediei elimină o parte din componenta lentă a seriei: cu memorie lungă, media de selecție urmează valurile lungi, iar abaterile de la ea sînt mai puțin corelate. Pe lagurile 1–50, ACF de selecție este în medie cu 0,040 sub cea teoretică. Simularea prin scufundare circulantă este exactă, iar formula ACF a fGn este exactă la orice lag.</p></details>
+</section>
+<section class="blk" id="arfima">
+  <h3>ARFIMA(0,d,0) cu d = 0,4 și d = -0,4</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch11_arfima_ro.jpg" alt="Slide-ul 31: ARFIMA(0,d,0) cu d = 0,4 și d = -0,4" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="af-d">d (și −d)</label><select id="af-d"><option value="0.4" selected>0,4 (curs)</option><option value="0.1">0,1</option><option value="0.2">0,2</option><option value="0.3">0,3</option><option value="0.45">0,45</option></select></div><button class="btn play" id="af-play" type="button"></button></div><div class="charts "><div class="chart" id="af-chart"></div></div><ul class="out" id="af-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ARFIMA(0,d,0) cu d = 0,4: ρ(1) = 0,667. Cît este ρ(50)?</div>
+  <details><summary>Răspuns</summary><p>0,307: scăderea hiperbolică păstrează mult din ρ(1), de aceea seria face valuri lente în jurul mediei. Un AR(1) cu φ = 0,667 ar avea ρ(50) = 0,667⁵⁰, practic 0. Cu d = 0,1, ρ(50) este doar 0,005.</p></details>
+</section>
+<section class="blk" id="arfima-we">
+  <h3>Exemplu rezolvat: ARFIMA(0; 0,3; 0)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch11_arfima-we_ro.jpg" alt="Slide-ul 32: Exemplu rezolvat: ARFIMA(0; 0,3; 0)" loading="lazy"></a>
+      <figcaption>Slide-ul 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aw-d">d: <b id="aw-d-v"></b></label><input type="range" id="aw-d" min="0.05" max="0.45" step="0.05" value="0.3"></div><button class="btn play" id="aw-play" type="button"></button></div><div class="charts "><div class="chart" id="aw-chart"></div></div><div class="we" id="aw-we-box"><p class="we-h">Exemplu lucrat: ponderile și autocorelațiile ARFIMA(0,d,0)</p><div class="we-f">\[\pi_j = \pi_{j-1}\frac{j - 1 - d}{j}, \qquad \psi_j = \psi_{j-1}\frac{j - 1 + d}{j}, \qquad \rho(k) = \rho(k - 1)\frac{k - 1 + d}{k - d}\]</div><div class="wctl"><div class="ctl"><label for="aw-t">Pragul autocorelației</label><select id="aw-t"><option value="0.05" selected>0,05 (curs)</option><option value="0.1">0,1</option><option value="0.01">0,01</option></select></div></div><ol id="aw-we"></ol></div><ul class="out" id="aw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ARFIMA(0; 0,3; 0): după cîte laguri scade autocorelația sub 0,05?</div><details><summary>Răspuns</summary><p>După 222 de laguri; un AR(1) cu același ρ(1) = 0,429 scade sub 0,05 după 4 laguri. ρ(k) tinde totuși la 0 (staționaritate, d &lt; 0,5), doar foarte încet: ρ(100) = 0,069.</p></details>
+</section><h2 class="sec" id="s-est">Estimatori ai memoriei lungi</h2>
+<section class="blk" id="dfa-we">
+  <h3>Analiza fluctuațiilor fără tendință (DFA)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch11_dfa-we_ro.jpg" alt="Slide-ul 34: Analiza fluctuațiilor fără tendință (DFA)" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dw-s">Seria</label><select id="dw-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="dw-y">Variabila</label><select id="dw-y"><option value="r" selected>randamentele r (curs)</option><option value="abs">randamentele absolute |r|</option></select></div><div class="ctl"><label for="dw-n">Mărimea blocului n (a cîta): <b id="dw-n-v"></b></label><input type="range" id="dw-n" min="1" max="20" step="1" value="1"></div><button class="btn play" id="dw-play" type="button"></button></div><div class="charts "><div class="chart" id="dw-chart"></div></div><div class="we" id="dw-we-box"><p class="we-h">Exemplu lucrat: fluctuația F(n)</p><div class="we-f">\[Y_k = \sum_{j \le k}(x_j - \bar x), \qquad F(n) = \sqrt{\frac{1}{mn}\sum_{b=1}^{m}\sum_{i=1}^{n}\big(Y_{(b-1)n+i} - \hat a_b - \hat b_b\, i\big)^2} \propto n^{\alpha}\]</div><ol id="dw-we"></ol></div><ul class="out" id="dw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cum se schimbă F(n) al randamentelor S&P 500 cînd n crește de la 10 la 1678?</div><details><summary>Răspuns</summary><p>Crește de circa 13 ori (de la 0,935 la 12,37), aproape cît √(1678/10) = 13,0, deoarece α̂ = 0,49 ≈ 0,5. Pentru |r| crește de circa 100 de ori: α̂ = 0,95. F(n) crește proporțional cu n doar pentru un profil cu tendință (fBm are α = H + 1).</p></details>
+</section>
+<section class="blk" id="rs-dfa">
+  <h3>R/S și DFA: S&P 500 din 2000</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rs_dfa_ro.jpg" alt="Slide-ul 35: R/S și DFA: S&P 500 din 2000" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rd-s">Seria</label><select id="rd-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="rd-play" type="button"></button></div><div class="charts "><div class="chart" id="rd-chart"></div></div><ul class="out" id="rd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Randamentele S&P 500 au panta R/S 0,53. Este o dovadă de H > 0,5?</div>
+  <details><summary>Răspuns</summary><p>Nu: seriile i.i.d. Normale de aceeași lungime dau în medie panta 0,55, pentru că R/S este deplasat în sus în eșantioane mici. DFA dă 0,49, față de 0,50 pentru seriile i.i.d. Randamentele absolute au R/S 0,86 și DFA 0,95: memoria lungă este în volatilitate.</p></details>
+</section>
+<section class="blk" id="gph-we">
+  <h3>Regresia GPH pe log-periodogramă</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=37" target="_blank" rel="noopener"><img src="slides/ch11_gph-we_ro.jpg" alt="Slide-ul 36: Regresia GPH pe log-periodogramă" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gw-s">Seria</label><select id="gw-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gw-p">Lățimea de bandă m</label><select id="gw-p"><option value="0.5" selected>T^0,5 (curs)</option><option value="0.4">T^0,4</option><option value="0.6">T^0,6</option><option value="0.7">T^0,7</option></select></div><button class="btn play" id="gw-play" type="button"></button></div><div class="charts "><div class="chart" id="gw-chart"></div></div><div class="we" id="gw-we-box"><p class="we-h">Exemplu lucrat: regresia GPH</p><div class="we-f">\[\ln I(\lambda_j) = c - d\,\ln\!\big(4\sin^2(\lambda_j/2)\big) + e_j, \quad j = 1, \dots, m, \qquad \mathrm{SE} = \pi/\sqrt{24m}\]</div><div class="wctl"><div class="ctl"><label for="gw-y">Variabila</label><select id="gw-y"><option value="r" selected>randamentele r (curs)</option><option value="abs">randamentele absolute |r|</option></select></div></div><ol id="gw-we"></ol></div><ul class="out" id="gw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Randamentele S&P 500: d̂ = 0,036, SE = π/√(24 × 81) = 0,071. Ce lățime are intervalul de 95% și conține el 0?</div><details><summary>Răspuns</summary><p>Circa 0,28, de la −0,103 la 0,176, și conține 0: estimarea nu se separă de 0 prin acest test. Asta nu dovedește că d = 0, doar că datele sînt compatibile cu d = 0. Pentru |r|, intervalul este [0,33; 0,61].</p></details>
+</section>
+<section class="blk" id="gph">
+  <h3>GPH: randamentele și randamentele absolute S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=38" target="_blank" rel="noopener"><img src="slides/sfm_ch11_gph_ro.jpg" alt="Slide-ul 37: GPH: randamentele și randamentele absolute S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gp-s">Seria</label><select id="gp-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gp-p">Lățimea de bandă m</label><select id="gp-p"><option value="0.5" selected>T^0,5 (curs)</option><option value="0.4">T^0,4</option><option value="0.6">T^0,6</option><option value="0.7">T^0,7</option></select></div><button class="btn play" id="gp-play" type="button"></button></div><div class="charts "><div class="chart" id="gp-chart"></div></div><ul class="out" id="gp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Lățimea de bandă trece de la m = 81 (T^0,5) la m = 477 (T^0,7). Ce se întîmplă cu d̂ pentru |r| și cu SE?</div>
+  <details><summary>Răspuns</summary><p>SE scade de la 0,071 la 0,029, iar d̂ crește de la 0,470 la 0,554: frecvențele mai mari aduc mai multă informație, dar și dinamica de termen scurt a volatilității. La m = 33 (T^0,4), d̂ = 0,364 cu SE 0,112.</p></details>
+</section>
+<section class="blk" id="lo-we">
+  <h3>Testul R/S modificat al lui Lo</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch11_lo-we_ro.jpg" alt="Slide-ul 38: Testul R/S modificat al lui Lo" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lw-s">Seria</label><select id="lw-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="lw-play" type="button"></button></div><div class="charts "><div class="chart" id="lw-chart"></div></div><div class="we" id="lw-we-box"><p class="we-h">Exemplu lucrat: statistica V_N(q)</p><div class="we-f">\[V_N(q) = \frac{R_N}{\sqrt{N}\,\hat\sigma_N(q)}, \qquad \hat\sigma^2_N(q) = \hat\gamma_0 + 2\sum_{j=1}^{q}\Big(1 - \frac{j}{q + 1}\Big)\hat\gamma_j\]</div><div class="wctl"><div class="ctl"><label for="lw-y">Variabila</label><select id="lw-y"><option value="r" selected>randamentele r (curs)</option><option value="abs">randamentele absolute |r|</option></select></div></div><ol id="lw-we"></ol></div><p class="xh">Testul lui Lo pe cele șase serii (la 5%: memoria scurtă este respinsă în afara [0,809; 1,862])</p><div class="tw" id="lw-tab"></div><ul class="out" id="lw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Randamentele S&P 500: ρ̂₁ = −0,099 și N = 6 714. Ce q dă regula lui Andrews?</div><details><summary>Răspuns</summary><p>7: (3N/2)^(1/3) = 21,60 și (2|ρ̂₁|/(1 − ρ̂₁²))^(2/3) = 0,341, produsul 7,36. Corecția depinde de mărimea lui ρ̂₁, nu de semnul lui. Cu q = 7, V = 1,56 se află în [0,809; 1,862]; pentru |r|, q = 15 și V = 2,66: memoria scurtă este respinsă.</p></details>
+</section>
+<section class="blk" id="lo">
+  <h3>R/S clasic față de R/S modificat: mărimea și puterea testului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch11_lo_test_ro.jpg" alt="Slide-ul 39: R/S clasic față de R/S modificat: mărimea și puterea testului" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lo-n">Lungimea seriilor N</label><select id="lo-n"><option value="1000" selected>1000 (curs)</option><option value="250">250</option><option value="500">500</option><option value="2000">2000</option></select></div><button class="btn play" id="lo-play" type="button"></button></div><div class="charts "><div class="chart" id="lo-chart"></div></div><ul class="out" id="lo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru AR(1) cu φ = 0,5 (memorie scurtă, H₀ adevărată), în ce proporție respinge testul R/S clasic memoria scurtă la 5%?</div>
+  <details><summary>Răspuns</summary><p>În 60% din cazuri; testul modificat al lui Lo, în 5%, cît este nivelul nominal. R/S clasic confundă memoria scurtă cu memoria lungă. Corecția costă putere: pentru fGn cu H = 0,7, ratele de respingere sînt 91% (clasic) și 36% (modificat).</p></details>
+</section>
+<section class="blk" id="mc">
+  <h3>Monte Carlo: deplasarea și dispersia estimatorilor</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch11_mc_bias_ro.jpg" alt="Slide-ul 41: Monte Carlo: deplasarea și dispersia estimatorilor" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mc-l">Nivelul benzii</label><select id="mc-l"><option value="0.95" selected>95% (curs)</option><option value="0.9">90%</option><option value="0.99">99%</option></select></div><button class="btn play" id="mc-play" type="button"></button></div><div class="charts "><div class="chart" id="mc-chart"></div></div><ul class="out" id="mc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La N = 1000, care estimator are cea mai largă bandă de 95% sub H = 0,5?</div>
+  <details><summary>Răspuns</summary><p>GPH: lățimea 0,53, față de 0,16 pentru DFA și 0,12 pentru R/S. GPH este practic nedeplasat (media 0,498), dar folosește doar m = 31 de frecvențe; R/S are banda cea mai îngustă, dar centrată la 0,562, nu la 0,5.</p></details>
+</section>
+<section class="blk" id="sp-table">
+  <h3>S&P 500: toți estimatorii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=43" target="_blank" rel="noopener"><img src="slides/ch11_sp-table_ro.jpg" alt="Slide-ul 42: S&P 500: toți estimatorii" loading="lazy"></a>
+      <figcaption>Slide-ul 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="st-s">Seria</label><select id="st-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="st-play" type="button"></button></div><div class="charts "><div class="chart" id="st-chart"></div></div><p class="xh">Toți estimatorii; benzile de 95% vin din 500 de serii i.i.d. de aceeași lungime (cu roșu: în afara benzii)</p><div class="tw" id="st-tab"></div><ul class="out" id="st-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru randamentele S&P 500, doar un estimator ar părea să indice H > 0,5. Care și de ce nu este o dovadă?</div><details><summary>Răspuns</summary><p>R/S, cu 0,53: banda lui i.i.d. pentru N = 6 714 este [0,51; 0,57], deci 0,53 se află în ea. DFA (0,49), GPH (Ĥ = 0,54, d̂ ± 1,96 SE = [−0,10; 0,18]) și testul lui Lo (V = 1,56) sînt toate compatibile cu absența memoriei lungi.</p></details>
+</section><h2 class="sec" id="s-spur">Memorie lungă aparentă</h2>
+<section class="blk" id="nile">
+  <h3>Nilul: R/S înainte și după eliminarea rupturii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch11_nile_ro.jpg" alt="Slide-ul 46: Nilul: R/S înainte și după eliminarea rupturii" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nl-b">Ultimul an înainte de ruptură: <b id="nl-b-v"></b></label><input type="range" id="nl-b" min="1880" max="1960" step="1" value="1898"></div><button class="btn play" id="nl-play" type="button"></button></div><div class="charts "><div class="chart" id="nl-chart"></div></div><ul class="out" id="nl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> După eliminarea celor două medii de regim (ruptura din 1898), ce devine Ĥ_R/S al Nilului (0,78 pe seria brută)?</div>
+  <details><summary>Răspuns</summary><p>0,63, în banda i.i.d. [0,45; 0,75] pentru N = 100, centrată în 0,60; DFA scade de la 0,84 la 0,50. Cea mai mare parte a memoriei aparente era ruptura, nu persistența debitelor.</p></details>
+</section>
+<section class="blk" id="spurious">
+  <h3>Memorie lungă aparentă în simulări</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch11_spurious_ro.jpg" alt="Slide-ul 47: Memorie lungă aparentă în simulări" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="su-n">Lungimea seriilor N</label><select id="su-n"><option value="2000" selected>2000 (curs)</option><option value="500">500</option><option value="1000">1000</option><option value="4000">4000</option></select></div><button class="btn play" id="su-play" type="button"></button></div><div class="charts "><div class="chart" id="su-chart"></div></div><ul class="out" id="su-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> O serie i.i.d. are o schimbare a mediei de 0,5 abateri standard la mijloc. Ce Ĥ dă GPH, în medie?</div>
+  <details><summary>Răspuns</summary><p>Circa 0,79 (DFA 0,56), deși seria nu are nicio memorie. Abaterea comună de la media generală face ca observațiile din același regim să pară corelate la toate lagurile. La N = 4000, GPH dă tot 0,79: memoria aparentă nu dispare cu mai multe date.</p></details>
+</section><h2 class="sec" id="s-vol">Memoria lungă a volatilității</h2>
+<section class="blk" id="vol-acf">
+  <h3>S&P 500: ACF pentru rₜ, |rₜ| și rₜ²</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch11_vol_acf_ro.jpg" alt="Slide-ul 50: S&P 500: ACF pentru rₜ, |rₜ| și rₜ²" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="va-s">Seria</label><select id="va-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="va-l">Numărul de laguri</label><select id="va-l"><option value="250" selected>250 (curs)</option><option value="100">100</option><option value="500">500</option></select></div><button class="btn play" id="va-play" type="button"></button></div><div class="charts "><div class="chart" id="va-chart"></div></div><ul class="out" id="va-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cîte dintre lagurile 2–250 ale ACF a randamentelor S&P 500 sînt în afara benzii de 95%?</div>
+  <details><summary>Răspuns</summary><p>31, față de circa 12 așteptate din întîmplare (5% din 249); cele mai mari la lagurile 15, 16 și 34, toate sub 0,061 în valoare absolută. Banda 1,96/√n este o referință asimptotică pentru o serie i.i.d.; cu volatility clustering, autocorelațiile de selecție variază mai mult decît arată ea, deci depășirile nu dovedesc, singure, predictibilitatea.</p></details>
+</section>
+<section class="blk" id="mk-table">
+  <h3>Șase piețe: randamente și randamente absolute</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=52" target="_blank" rel="noopener"><img src="slides/ch11_mk-table_ro.jpg" alt="Slide-ul 51: Șase piețe: randamente și randamente absolute" loading="lazy"></a>
+      <figcaption>Slide-ul 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mt-p">Lățimea de bandă GPH m</label><select id="mt-p"><option value="0.5" selected>T^0,5 (curs)</option><option value="0.4">T^0,4</option><option value="0.6">T^0,6</option><option value="0.7">T^0,7</option></select></div><button class="btn play" id="mt-play" type="button"></button></div><div class="charts "><div class="chart" id="mt-chart"></div></div><p class="xh">Șase piețe (cu roșu: DFA peste bandă, testul lui Lo respinge memoria scurtă)</p><div class="tw" id="mt-tab"></div><ul class="out" id="mt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru randamentele căror serii exclude intervalul d̂ ± 1,96 SE valoarea 0?</div><details><summary>Răspuns</summary><p>Doar pentru BET: d̂ = 0,17, intervalul [0,03; 0,31]. Tot la BET, DFA (0,57) este peste bandă și testul lui Lo (V = 1,96) respinge memoria scurtă. Pentru |r|, d̂ este între 0,21 și 0,48, iar testul lui Lo respinge pe toate cele șase serii.</p></details>
+</section>
+<section class="blk" id="markets">
+  <h3>Șase piețe: exponenții DFA și testul permutării</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch11_markets_ro.jpg" alt="Slide-ul 52: Șase piețe: exponenții DFA și testul permutării" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mk-e">Estimatorul</label><select id="mk-e"><option value="dfa" selected>DFA (curs)</option><option value="rs">R/S</option><option value="gph">GPH, d + 0,5</option></select></div><button class="btn play" id="mk-play" type="button"></button></div><div class="charts "><div class="chart" id="mk-chart"></div></div><ul class="out" id="mk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> După o permutare aleatoare a lui |r|, ce devine exponentul DFA (între 0,73 și 0,95 înainte)?</div>
+  <details><summary>Răspuns</summary><p>Scade între 0,46 și 0,55, în interiorul benzilor i.i.d.: permutarea păstrează distribuția (deci și cozile groase) și distruge doar ordinea zilelor. Memoria lungă a volatilității se află în ordinea zilelor.</p></details>
+</section><h2 class="sec" id="s-roll">Exponenți Hurst pe ferestre mobile</h2>
+<section class="blk" id="rolling">
+  <h3>Exponenți DFA pe ferestre mobile: S&P 500, BET, Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch11_rolling_ro.jpg" alt="Slide-ul 56: Exponenți DFA pe ferestre mobile: S&P 500, BET, Bitcoin" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ro-w">Fereastra (observații)</label><select id="ro-w"><option value="1000" selected>1000 (curs)</option><option value="250">250</option><option value="500">500</option><option value="2000">2000</option></select></div><button class="btn play" id="ro-play" type="button"></button></div><div class="charts "><div class="chart" id="ro-chart"></div></div><ul class="out" id="ro-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, ferestre de 1000 de zile: ce pondere din ferestre are exponentul DFA al randamentelor sub banda i.i.d.?</div>
+  <details><summary>Răspuns</summary><p>24%, niciuna peste. Minimul, 0,32, este atins la 31 decembrie 2008: inversări zilnice (antipersistență) în panică. Ferestrele consecutive au în comun 979 din 1000 de observații, deci 24% nu înseamnă 65 de rezultate independente.</p></details>
+</section><h2 class="sec" id="s-risk">Memoria lungă și riscul</h2>
+<section class="blk" id="risk-we">
+  <h3>Scalarea riscului cu h^H</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol11_piete_fractale_memorie_lunga.pdf#page=61" target="_blank" rel="noopener"><img src="slides/ch11_risk-we_ro.jpg" alt="Slide-ul 60: Scalarea riscului cu h^H" loading="lazy"></a>
+      <figcaption>Slide-ul 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rk-h">H: <b id="rk-h-v"></b></label><input type="range" id="rk-h" min="0.4" max="0.6" step="0.01" value="0.55"></div><button class="btn play" id="rk-play" type="button"></button></div><div class="charts "><div class="chart" id="rk-chart"></div></div><div class="we" id="rk-we-box"><p class="we-h">Exemplu lucrat: VaR 1% pe h zile</p><div class="we-f">\[\mathrm{VaR}_{0{,}01}(h) = -z_{0{,}01}\,\sigma\,h^{H}, \qquad z_{0{,}01} = -2{,}326, \quad \sigma = 1{,}2\%\]</div><div class="wctl"><div class="ctl"><label for="rk-n">Orizontul h (zile)</label><select id="rk-n"><option value="10" selected>10 (curs)</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="250">250</option></select></div></div><ol id="rk-we"></ol></div><ul class="out" id="rk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu H = 0,55 în loc de 0,5, cu cît crește VaR 1% pe 10 zile, la o volatilitate zilnică de 1,2%?</div><details><summary>Răspuns</summary><p>Cu circa 12%: 9,91% față de 8,83%, pentru că 10^0,55/10^0,5 = 10^0,05 = 1,12. La 250 de zile diferența este 32%. Regula √h supraestimează riscul S&P 500 (raportul pe 10 zile 2,80) și îl subestimează pe cel al BET (3,50).</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: S&P 500, DAX și BET din ianuarie 2000, Bitcoin din septembrie 2014 (7 zile pe săptămînă), Banca Transilvania (TLV) și OMV Petrom (SNP) din 2010, din prețul ajustat, pînă la 18 septembrie 2026; cele două zile greșite ale TLV din mai 2016 sînt eliminate. Prețuri EODHD. Debitul anual al Nilului la Aswan, 1871–1970 (Cobb, 1978; setul de date din statsmodels). Browserul calculează din aceste date scalarea, R/S, DFA, regresia GPH, testul lui Lo, ACF și exponenții pe ferestre mobile. Seriile simulate (fBm, fGn, ARFIMA) și toate estimările Monte Carlo (500 de serii i.i.d. pentru fiecare N, 500 de serii pentru testul lui Lo, 300 pentru memoria aparentă) vin din codul din curs, cu aceleași semințe; browserul calculează din ele mediile, benzile și ratele de respingere. Alte valori ale lui H și d, alte lungimi N, alte lățimi de bandă, alte ferestre, alte praguri ale rupturii Nilului și curbele i.i.d. pentru celelalte cinci serii sînt rulări suplimentare ale aceluiași cod; numărarea cutiilor pe traiectoriile fBm este un calcul suplimentar, care nu este în curs.</p>
+</main>
+</body>
+</html>
