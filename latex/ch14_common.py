@@ -301,7 +301,7 @@ REFS = r"""
 \newcommand{\refESMA}{\href{https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica}{ESMA: MiCA}}
 \newcommand{\refGENIUS}{\href{https://www.govinfo.gov/app/details/PLAW-119publ27}{GENIUS Act, Public Law 119-27}}
 \newcommand{\refSEC}{\href{https://www.sec.gov/newsroom/speeches-statements/gensler-statement-spot-bitcoin-011023}{SEC (2024)}}
-\newcommand{\refFed}{\href{https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm}{⟦Treasury, Federal Reserve and FDIC||Trezoreria SUA, Rezerva Federală și FDIC⟧ (2023)}}
+\newcommand{\refFed}{\href{https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm}{U.S. Treasury, Federal Reserve \& FDIC (2023)}}
 \newcommand{\refFDIC}{\href{https://www.fdic.gov/news/press-releases/2023/pr23016.html}{FDIC (2023)}}
 \newcommand{\refDL}{\href{https://api-docs.defillama.com/}{DefiLlama}}
 """
@@ -338,7 +338,7 @@ _BIB = {
     'PeleB': r"Pele, D.T., Mazurencu-Marinescu-Pele, M. (2019). \href{https://doi.org/10.3390/e21020102}{Using high-frequency entropy to forecast Bitcoin's daily value at risk}. \textit{Entropy}, 21(2), 102.",
     'SEC': r"SEC, U.S. Securities and Exchange Commission (2024). \href{https://www.sec.gov/newsroom/speeches-statements/gensler-statement-spot-bitcoin-011023}{Statement on the approval of spot Bitcoin exchange-traded products}, 10 January 2024.",
     'TL': r"Tran, V.L., Leirvik, T. (2020). \href{https://doi.org/10.1016/j.frl.2019.101382}{Efficiency in the markets of crypto-currencies}. \textit{Finance Research Letters}, 35, 101382.",
-    'Fed': r"Treasury, Federal Reserve and FDIC (2023). \href{https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm}{Joint statement by the Department of the Treasury, Federal Reserve, and FDIC}, 12 March 2023.",
+    'Fed': r"U.S. Treasury, Federal Reserve \& FDIC (2023). \href{https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm}{Joint statement by the Department of the Treasury, Federal Reserve, and FDIC}, 12 March 2023.",
     'TH': r"Trimborn, S., Härdle, W.K. (2018). \href{https://doi.org/10.1016/j.jempfin.2018.08.004}{CRIX an index for cryptocurrencies}. \textit{Journal of Empirical Finance}, 49, 107--122.",
     'GENIUS': r"United States Congress (2025). \href{https://www.govinfo.gov/app/details/PLAW-119publ27}{Guiding and Establishing National Innovation for U.S. Stablecoins Act (GENIUS Act)}, Public Law 119-27.",
     'Urquhart': r"Urquhart, A. (2016). \href{https://doi.org/10.1016/j.econlet.2016.09.019}{The inefficiency of Bitcoin}. \textit{Economics Letters}, 148, 80--82.",

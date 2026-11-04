@@ -169,7 +169,7 @@ D.frame(T('Learning Outcomes', 'Rezultatele învățării'), items(
     T('Compute the Weight of Evidence and the Information Value of a variable from a table of counts', 'Calculați Weight of Evidence și Information Value ale unei variabile dintr-un tabel de frecvențe'),
     T('Estimate a logistic regression and interpret its coefficients as changes in log-odds and as odds ratios',
       'Estimați o regresie logistică și interpretați coeficienții ca modificări ale logaritmului șansei și ca rapoarte ale șanselor'),
-    T('Derive Fisher\'s linear discriminant and compare it with the logit', 'Derivați discriminantul liniar al lui Fisher și comparați-l cu modelul logit'),
+    T('Derive Fisher\'s linear discriminant and compare it with the logit', 'Deduceți discriminantul liniar al lui Fisher și comparați-l cu modelul logit'),
     T('Scale a scorecard and validate it out of sample with the confusion matrix, AUC, Gini, KS, the Brier score and a calibration plot',
       'Scalați un scorecard și validați-l în afara eșantionului cu matricea de confuzie, AUC, Gini, KS, scorul Brier și graficul de calibrare')))
 
@@ -253,7 +253,7 @@ D.frame(T('Worked Example: IRB Capital of a Retail Loan', 'Exemplu rezolvat: cap
     (T('\\textbf{Step by step}', '\\textbf{Pas cu pas}'),
      [T('argument: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: the PD in a bad year',
         'argumentul: $(@{el.zpd} + \\sqrt{@{el.R}} \\times @{el.z999})/\\sqrt{1 - @{el.R}} = @{el.arg}$; $\\Phi(@{el.arg}) = @{el.cpd}\\%$: PD într-un an prost'),
-      T('$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ of EAD: @{el.k} RON for a loan of 100\\,000 RON', '$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ din EAD: @{el.k} de lei pentru un credit de 100\\,000 de lei'),
+      T('$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ of EAD: @{el.k} RON for a loan of 100\\,000 RON', '$K = 0.45 \\times (@{el.cpd}\\% - 2\\%) = @{irb.20.or}\\%$ din EAD: @{el.k} lei pentru un credit de 100\\,000 de lei'),
       T('RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ RON: a risk weight of @{el.rw}\\%', 'RWA $= 12.5 \\times @{el.k} = @{el.rwa}$ de lei: o pondere de risc de @{el.rw}\\%')]),
     T('Interpretation: EL ($@{el.el}$ RON) is priced in; the capital ($@{el.k}$ RON) absorbs a year in which defaults reach @{el.cpd}\\% instead of 2\\%',
       'Interpretare: EL ($@{el.el}$ de lei) intră în preț; capitalul ($@{el.k}$ de lei) absoarbe un an în care nerambursările ajung la @{el.cpd}\\% în loc de 2\\%')), 'footnotesize')
@@ -272,9 +272,9 @@ D.section('Default Data', 'Datele de nerambursare')
 
 D.frame(T('The South German Credit Data', 'Datele South German Credit'), items(
     (T('@{n} consumer credits of a large regional bank in southern Germany, 1973--1975 \\refSGC; \\refGroemping',
-       '@{n} de credite de consum ale unei mari bănci regionale din sudul Germaniei, 1973--1975 \\refSGC; \\refGroemping'),
+       '@{n} credite de consum ale unei mari bănci regionale din sudul Germaniei, 1973--1975 \\refSGC; \\refGroemping'),
      [T('outcome: the contract was complied with (good) or not (bad, \\textbf{default} $= 1$): @{bad} bad and 700 good credits',
-        'rezultatul: contractul a fost respectat (bun-platnic) sau nu (rău-platnic, \\textbf{nerambursare} $= 1$): @{bad} de credite neperformante și 700 performante'),
+        'rezultatul: contractul a fost respectat (bun-platnic) sau nu (rău-platnic, \\textbf{nerambursare} $= 1$): @{bad} credite neperformante și 700 performante'),
       T('20 variables: checking account, duration, credit history, purpose, amount (DM, Deutsche Mark), savings, employment, age and others',
         '20 de variabile: contul curent, durata, istoricul de credit, destinația, suma (DM, mărci germane), economiile, vechimea în muncă, vîrsta și altele')]),
     (T('A \\textbf{stratified sample}: bad credits are heavily oversampled; the bad rate of the bank was about 5\\% \\refGroemping',
@@ -287,9 +287,9 @@ D.frame(T('A Lesson in Data Checking', 'O lecție despre verificarea datelor'), 
     (T('The data were used for decades in the UCI version ``Statlog (German Credit)\'\', with code labels that were wrong \\refGroemping',
        'Datele au fost folosite zeci de ani în versiunea UCI „Statlog (German Credit)”, cu etichete greșite ale codurilor \\refGroemping'),
      [T('in that version, ``no checking account\'\' was the safest group: @{st4.n} credits, @{st4.r}\\% bad',
-        'în acea versiune, „fără cont curent” era grupul cel mai sigur: @{st4.n} de credite, @{st4.r}\\% neperformante'),
+        'în acea versiune, „fără cont curent” era grupul cel mai sigur: @{st4.n} credite, @{st4.r}\\% neperformante'),
       T('in the corrected data, those @{st4.n} credits have a balance of at least 200 DM or a salary account; ``no checking account\'\' is the riskiest group (@{st1.r}\\% bad)',
-        'în datele corectate, acele @{st4.n} de credite au un sold de cel puțin 200 DM sau un cont de salariu; „fără cont curent” este grupul cel mai riscant (@{st1.r}\\% neperformante)')]),
+        'în datele corectate, acele @{st4.n} credite au un sold de cel puțin 200 DM sau un cont de salariu; „fără cont curent” este grupul cel mai riscant (@{st1.r}\\% neperformante)')]),
     (T('The numbers were right, the labels were wrong: every model was fine, every interpretation of this variable was reversed',
        'Cifrele erau corecte, etichetele greșite: fiecare model funcționa, fiecare interpretare a acestei variabile era inversată'),
      [T('checks: compare the frequency tables with the original source (here the book of Fahrmeir and Hamerle), ask whether the signs make economic sense',
@@ -316,7 +316,7 @@ D.frame(T('Class Imbalance and Oversampling', 'Dezechilibrul claselor și suprar
 
 D.frame(T('Training and Test Samples', 'Eșantionul de estimare și eșantionul de test'), items(
     (T('\\textbf{Stratified split}: @{ntrain} credits for estimation (training), @{ntest} for testing, with @{badpct}\\% bads in both',
-       '\\textbf{Împărțire stratificată}: @{ntrain} de credite pentru estimare, @{ntest} pentru test, cu @{badpct}\\% rău-platnici în ambele'),
+       '\\textbf{Împărțire stratificată}: @{ntrain} credite pentru estimare, @{ntest} pentru test, cu @{badpct}\\% rău-platnici în ambele'),
      [T('every choice (bins, WoE, variables, coefficients) is made on the training sample only', 'orice alegere (intervale, WoE, variabile, coeficienți) se face doar pe eșantionul de estimare'),
       T('the test sample is used once, at the end: it plays the role of the future applicants', 'eșantionul de test se folosește o singură dată, la final: joacă rolul viitorilor solicitanți')]),
     (T('\\textbf{Leakage}: information from the test sample that enters the model, e.g.\\ bins chosen on all data', '\\textbf{Leakage} (scurgerea de informație): informație din eșantionul de test care intră în model, de exemplu intervale alese pe toate datele'),
@@ -448,7 +448,7 @@ D.frame(T('The WoE Logit Scorecard', 'Scorecard-ul logit pe variabile WoE'), tab
     'lrrr', T('WoE variable & IV (training) & $\\hat\\beta$ & se', 'Variabila WoE & IV (estimare) & $\\hat\\beta$ & se'),
     [T('constant', 'termenul liber') + ' & & $@{wl.const.b}$ & $@{wl.const.se}$'] +
     [vname(v) + f' & $@{{ivt.{v}}}$ & $@{{wl.{v}.b}}$ & $@{{wl.{v}.se}}$' for v in N['sel']], size='scriptsize') + items(
-    (T('Training sample (@{ntrain} credits); each variable replaced by the WoE of its bin; logit for default', 'Eșantionul de estimare (@{ntrain} de credite); fiecare variabilă este înlocuită cu WoE al intervalului ei; logit pentru nerambursare'),
+    (T('Training sample (@{ntrain} credits); each variable replaced by the WoE of its bin; logit for default', 'Eșantionul de estimare (@{ntrain} credite); fiecare variabilă este înlocuită cu WoE al intervalului ei; logit pentru nerambursare'),
      [T('all coefficients are negative: a higher WoE (safer bin) lowers the log-odds of default', 'toți coeficienții sînt negativi: un WoE mai mare (interval mai sigur) reduce logaritmul șansei de nerambursare'),
       T('a coefficient of $-1$ would mean that the variable adds exactly its own WoE; values between $-0.7$ and $-1.1$ reflect the overlap between variables', 'un coeficient de $-1$ ar însemna că variabila adaugă exact propriul WoE; valorile între $-0{,}7$ și $-1{,}1$ reflectă suprapunerea dintre variabile')]),
     T('Test sample: AUC $= @{v.auc}$ (Section 7); in-sample log-likelihood $@{wl.ll}$', 'Eșantionul de test: AUC $= @{v.auc}$ (secțiunea 7); log-verosimilitatea în eșantion $@{wl.ll}$')) + ql('SFM_ch12_scorecard'), 'footnotesize')
@@ -543,13 +543,13 @@ D.frame(T('Worked Example: Scores and Points', 'Exemplu rezolvat: scoruri și pu
      [T('$\\text{points}_{ij} = -(\\beta_j\\,\\mathrm{WoE}_{ij} + \\beta_0/k)\\,\\text{Factor} + \\text{Offset}/k$; the minus sign turns default log-odds into good:bad log-odds',
         '$\\text{puncte}_{ij} = -(\\beta_j\\,\\mathrm{WoE}_{ij} + \\beta_0/k)\\,\\text{Factor} + \\text{Offset}/k$; semnul minus transformă logaritmul șansei de nerambursare în logaritmul șansei bun:rău'),
       T('checking account (training WoE): no account @{pt.1} points, balance $<$ 0 @{pt.2}, 0--200 DM @{pt.3}, at least 200 DM or salary @{pt.4}',
-        'contul curent (WoE din estimare): fără cont @{pt.1} de puncte, sold $<$ 0 @{pt.2}, 0--200 DM @{pt.3}, cel puțin 200 DM sau salariu @{pt.4}')]),
+        'contul curent (WoE din estimare): fără cont @{pt.1} puncte, sold $<$ 0 @{pt.2}, 0--200 DM @{pt.3}, cel puțin 200 DM sau salariu @{pt.4}')]),
     T('Prior correction in points: for a population with 5\\% bads the default log-odds fall by $@{prior.abs}$, so the good:bad log-odds rise by $@{prior.abs}$ and every score rises by $@{sc.f} \\times @{prior.abs} = @{prior.pts}$ points',
       'Corecția a priori în puncte: pentru o populație cu 5\\% rău-platnici, logaritmul șansei de nerambursare scade cu $@{prior.abs}$, deci logaritmul șansei bun:rău crește cu $@{prior.abs}$ și fiecare scor crește cu $@{sc.f} \\times @{prior.abs} = @{prior.pts}$ puncte')) + ql('SFM_ch12_scorecard'), 'footnotesize')
 
 chart(T('Scores of the Test Sample', 'Scorurile eșantionului de test'), 'sfm_ch12_score_dist', 'SFM_ch12_scorecard', [
     T('@{ntest} test credits; scores from @{sd.min} to @{sd.max} points; mean: goods @{sd.g}, bads @{sd.b}; dashed: the cut-off at PD $= 1/6$ (Section 7), @{sd.cut} points',
-      '@{ntest} de credite de test; scoruri de la @{sd.min} la @{sd.max} de puncte; media: bun-platnici @{sd.g}, rău-platnici @{sd.b}; linia întreruptă: pragul la PD $= 1/6$ (secțiunea 7), @{sd.cut} de puncte'),
+      '@{ntest} credite de test; scoruri de la @{sd.min} la @{sd.max} puncte; media: bun-platnici @{sd.g}, rău-platnici @{sd.b}; linia întreruptă: pragul la PD $= 1/6$ (secțiunea 7), @{sd.cut} puncte'),
     T('Interpretation: the two distributions are shifted but overlap: every cut-off rejects some goods and accepts some bads; the validation measures quantify this overlap',
       'Interpretare: cele două distribuții sînt deplasate, dar se suprapun: orice prag respinge unii bun-platnici și acceptă unii rău-platnici; măsurile de validare cuantifică această suprapunere')],
     h='0.50\\textheight')
@@ -600,7 +600,7 @@ D.frame(T('ROC Curve and AUC', 'Curba ROC și AUC'), items(
      [T('standard error and tests of AUC: \\refDeLong', 'eroarea standard și testele pentru AUC: \\refDeLong')])))
 
 side_chart(T('ROC Curves on the Test Sample', 'Curbele ROC pe eșantionul de test'), 'sfm_ch12_roc', 'SFM_ch12_validation_irb', [
-    T('@{ntest} test credits, @{pairs} (bad, good) pairs', '@{ntest} de credite de test, @{pairs} de perechi (rău, bun)'),
+    T('@{ntest} test credits, @{pairs} (bad, good) pairs', '@{ntest} credite de test, @{pairs} perechi (rău, bun)'),
     T('WoE logit: AUC $= @{v.auc}$, 95\\% CI $[@{v.auc.lo}, @{v.auc.hi}]$ (DeLong, se $@{v.auc.se}$); Gini $= @{v.gini}$', 'Logit WoE: AUC $= @{v.auc}$, CI 95\\% $[@{v.auc.lo}, @{v.auc.hi}]$ (DeLong, se $@{v.auc.se}$); Gini $= @{v.gini}$'),
     T('Checking account alone: AUC $= @{v.auc_single}$; DeLong test against the scorecard: $z = @{v.ds.z}$, p $= @{v.ds.p}$', 'Doar contul curent: AUC $= @{v.auc_single}$; testul DeLong față de scorecard: $z = @{v.ds.z}$, p $= @{v.ds.p}$'),
     T('Interpretation: a random bad has a higher PD than a random good in about 80\\% of the pairs; the other five variables add a significant improvement over the checking account',
@@ -622,9 +622,9 @@ D.frame(T('CAP Curve, Accuracy Ratio and KS', 'Curba CAP, raportul de acuratețe
 D.frame(T('CAP and KS on the Test Sample', 'CAP și KS pe eșantionul de test'), cols(
     f'\\includegraphics[width=\\textwidth,height=0.50\\textheight,keepaspectratio]{{sfm_ch12_cap.pdf}}',
     f'\\includegraphics[width=\\textwidth,height=0.50\\textheight,keepaspectratio]{{sfm_ch12_ks.pdf}}', wl='0.44', wr='0.54') + items(
-    T('AR $= @{v.ar}$ (Gini $= @{v.gini}$: the same up to rounding); KS $= @{ks.ks}$ at @{ks.at} points', 'AR $= @{v.ar}$ (Gini $= @{v.gini}$: același, cu excepția rotunjirii); KS $= @{ks.ks}$ la @{ks.at} de puncte'),
+    T('AR $= @{v.ar}$ (Gini $= @{v.gini}$: the same up to rounding); KS $= @{ks.ks}$ at @{ks.at} points', 'AR $= @{v.ar}$ (Gini $= @{v.gini}$: același, cu excepția rotunjirii); KS $= @{ks.ks}$ la @{ks.at} puncte'),
     T('Interpretation: rejecting the riskiest 30\\% catches about two thirds of the bads; at @{ks.at} points the scorecard separates bads and goods best',
-      'Interpretare: respingînd cei mai riscanți 30\\%, identificăm aproximativ două treimi din rău-platnici; la @{ks.at} de puncte, scorecard-ul separă cel mai bine rău-platnicii de bun-platnici')) + ql('SFM_ch12_validation_irb'), 'footnotesize')
+      'Interpretare: respingînd cei mai riscanți 30\\%, identificăm aproximativ două treimi din rău-platnici; la @{ks.at} puncte, scorecard-ul separă cel mai bine rău-platnicii de bun-platnici')) + ql('SFM_ch12_validation_irb'), 'footnotesize')
 
 D.frame(T('Calibration and the Brier Score', 'Calibrarea și scorul Brier'), items(
     (T('\\textbf{Calibration}: among applicants with PD $\\approx p$, a share of about $p$ defaults', '\\textbf{Calibrarea}: dintre solicitanții cu PD $\\approx p$, aproximativ o pondere $p$ intră în nerambursare'),

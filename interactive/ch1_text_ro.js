@@ -1,6 +1,6 @@
 // Readouts of the Chapter 1 interactive page, written by latex/build_interactive_ch1.py.
 window.CH1_TEXT = {
- tl: (th, n, up, dn) => `Zile în care randamentele logaritmice din cele două serii diferă cu peste ${th}%: ${n} din 2015 încoace; prețul de închidere crește în ${up} dintre ele și scade în ${dn}.`,
+ tl: (th, n, up, dn) => `Zile în care randamentele logaritmice din cele două serii diferă cu peste ${th} puncte procentuale: ${n} din 2015 încoace; prețul de închidere crește în ${up} dintre ele și scade în ${dn}.`,
  tlBig: (d, rc, ra) => `Cea mai mare diferență: ${d}, randamentul logaritmic ${rc}% din prețul de închidere și ${ra}% din prețul ajustat.`,
  bb: (d, b, t) => `100 de unități investite pe ${d} devin ${b} în BET și ${t} în BET-TR pe 18 septembrie 2026.`,
  bb2: (gb, gt, g) => `Rata anuală compusă de creștere: BET ${gb}%, BET-TR ${gt}%; dividendele adaugă ${g} puncte procentuale pe an.`,

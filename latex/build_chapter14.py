@@ -212,7 +212,7 @@ D.frame(T('Prices and Data', 'Prețuri și date'), cols(items(
     (T('There is no single exchange: each platform has its own price; prices differ across countries \\refMS', 'Nu există un exchange unic: fiecare platformă are propriul preț; prețurile diferă între țări \\refMS'),
      [T('a data provider aggregates the platforms into one daily series; here: EODHD, close at midnight UTC (Coordinated Universal Time)', 'un furnizor de date agregă platformele într-o serie zilnică; aici: EODHD, închiderea la miezul nopții UTC (Coordinated Universal Time, ora universală coordonată)')]),
     (T('Seven trading days a week: no weekend gaps, no holidays', 'Șapte zile de tranzacționare pe săptămînă: fără goluri de weekend, fără sărbători'),
-     [T('Bitcoin: @{s.btc.n} daily returns since @{s.btc.y0}; the S\\&P 500: @{s.sp500.n} returns in the same period', 'Bitcoin: @{s.btc.n} randamente zilnice din @{s.btc.y0}; S\\&P 500: @{s.sp500.n} de randamente în aceeași perioadă')]),
+     [T('Bitcoin: @{s.btc.n} daily returns since @{s.btc.y0}; the S\\&P 500: @{s.sp500.n} returns in the same period', 'Bitcoin: @{s.btc.n} randamente zilnice din @{s.btc.y0}; S\\&P 500: @{s.sp500.n} randamente în aceeași perioadă')]),
     (T('Market indices of many coins exist, e.g.\\ CRIX (Crypto Index) \\refTH', 'Există indici de piață cu multe monede, de exemplu CRIX (Crypto Index) \\refTH'),
      [T('CRIX chooses the number of coins with the AIC criterion (Chapter 6): few coins describe the whole market', 'CRIX alege numărul de monede cu criteriul AIC (Capitolul 6): puține monede descriu întreaga piață')]),
     T('Returns: $r_t = 100(\\ln P_t - \\ln P_{t-1})$ in \\%, each series on its own calendar', 'Randamentele: $r_t = 100(\\ln P_t - \\ln P_{t-1})$ în \\%, fiecare serie pe propriul calendar')),
@@ -327,8 +327,8 @@ chart(T('Volatility Clustering in Bitcoin', 'Volatility clustering la Bitcoin'),
     T('ACF of $r_t$ and of $r_t^2$, lags 1--30; dashed: $\\pm 1.96/\\sqrt{n} = \\pm @{acf.band}$', 'ACF a lui $r_t$ și a lui $r_t^2$, lagurile 1--30; linii întrerupte: $\\pm 1{,}96/\\sqrt{n} = \\pm @{acf.band}$'),
     T('Returns: $\\hat\\rho(1) = @{acf.rho1}$, @{acf.nout} of 30 lags outside the band; squared returns: $\\hat\\rho(1) = @{acf.rho1sq}$, @{acf.noutsq} of 30 outside',
       'Randamentele: $\\hat\\rho(1) = @{acf.rho1}$, @{acf.nout} din 30 de laguri în afara benzii; pătratele: $\\hat\\rho(1) = @{acf.rho1sq}$, @{acf.noutsq} din 30 în afara benzii'),
-    T('Interpretation: Ljung--Box $Q(10)$ is @{acf.lbr} for $r_t$ and @{acf.lbsq} for $r_t^2$ (p @{acf.lbsqp}): the direction is hard to predict, the size of the move is not',
-      'Interpretare: statistica Ljung--Box $Q(10)$ este @{acf.lbr} pentru $r_t$ și @{acf.lbsq} pentru $r_t^2$ (p @{acf.lbsqp}): direcția este greu de prognozat, mărimea mișcării nu')],
+    T('Interpretation: Ljung--Box $Q(10)$ is @{acf.lbr} for $r_t$ (p @{acf.lbrp}) and @{acf.lbsq} for $r_t^2$ (p @{acf.lbsqp}): the direction is hard to predict, the size of the move is not',
+      'Interpretare: statistica Ljung--Box $Q(10)$ este @{acf.lbr} pentru $r_t$ (p @{acf.lbrp}) și @{acf.lbsq} pentru $r_t^2$ (p @{acf.lbsqp}): direcția este greu de prognozat, mărimea mișcării nu')],
     h='0.46\\textheight')
 
 GA = ['btc', 'eth', 'sp500', 'gold']
@@ -396,7 +396,7 @@ D.frame(T('Variance-Ratio Tests on the Whole Sample', 'Testele raportului varian
 chart(T('Efficiency Through Time', 'Eficiența în timp'), 'sfm_ch14_rolling_vr', 'SFM_ch14_garch_efficiency', [
     T('Robust $Z^*(5)$ on windows of 500 observations, one window every 21 observations (as in Chapter 7)', 'Statistica robustă $Z^*(5)$ pe ferestre de 500 de observații, o fereastră la fiecare 21 de observații (ca în Capitolul 7)'),
     T('Interpretation: Bitcoin @{rvr.btc.rej}\\% of @{rvr.btc.n} windows reject; with the i.i.d.\\ statistic $Z(5)$ the share would be @{rvr.btc.iid}\\% for Bitcoin and @{rvr.sp500.iid}\\% for the S\\&P 500: ignoring volatility clustering creates false rejections',
-      'Interpretare: la Bitcoin, @{rvr.btc.rej}\\% din @{rvr.btc.n} de ferestre resping; cu statistica i.i.d.\\ $Z(5)$, proporția ar fi @{rvr.btc.iid}\\% pentru Bitcoin și @{rvr.sp500.iid}\\% pentru S\\&P 500: ignorarea volatility clustering produce respingeri false')],
+      'Interpretare: la Bitcoin, @{rvr.btc.rej}\\% din @{rvr.btc.n} ferestre resping; cu statistica i.i.d.\\ $Z(5)$, proporția ar fi @{rvr.btc.iid}\\% pentru Bitcoin și @{rvr.sp500.iid}\\% pentru S\\&P 500: ignorarea volatility clustering produce respingeri false')],
     h='0.46\\textheight')
 
 D.frame(T('How Efficiency Evolved', 'Evoluția eficienței'), items(
@@ -441,8 +441,8 @@ D.frame(T('Measuring Correlation Across Calendars', 'Măsurarea corelației înt
 
 chart(T('Rolling Correlation with Equities and Gold', 'Corelația mobilă cu acțiunile și aurul'), 'sfm_ch14_rolling_corr', 'SFM_ch14_correlation', [
     T('Daily log returns on common days; 250-day windows; dashed: COVID-19, Terra/Luna, FTX and the spot ETFs', 'Randamente logaritmice zilnice în zilele comune; ferestre de 250 de zile; linii întrerupte: COVID-19, Terra/Luna, FTX și ETF-urile spot'),
-    T('Interpretation: Bitcoin and the S\\&P 500 were uncorrelated before 2020 (@{c.btc_sp500.pre2020}) and positively correlated after (@{c.btc_sp500.post2020}); the maximum, @{c.btc_sp500.max}, came on @{c.btc_sp500.maxd}; gold stays weakly linked',
-      'Interpretare: Bitcoin și S\\&P 500 erau necorelate înainte de 2020 (@{c.btc_sp500.pre2020}) și corelate pozitiv după (@{c.btc_sp500.post2020}); maximul, @{c.btc_sp500.max}, a apărut pe @{c.btc_sp500.maxd}; legătura cu aurul rămîne slabă')],
+    T('Interpretation: Bitcoin and the S\\&P 500 were uncorrelated before 2020 (@{c.btc_sp500.pre2020}) and positively correlated after (@{c.btc_sp500.post2020}); the maximum, @{c.btc_sp500.max}, came on @{c.btc_sp500.maxd}; the link with gold, weak until 2025, rose in 2026 (maximum @{c.btc_gold.max} on @{c.btc_gold.maxd})',
+      'Interpretare: Bitcoin și S\\&P 500 erau necorelate înainte de 2020 (@{c.btc_sp500.pre2020}) și corelate pozitiv după (@{c.btc_sp500.post2020}); maximul, @{c.btc_sp500.max}, a apărut pe @{c.btc_sp500.maxd}; legătura cu aurul, slabă pînă în 2025, a crescut în 2026 (maximul @{c.btc_gold.max} pe @{c.btc_gold.maxd})')],
     h='0.48\\textheight')
 
 D.frame(T('Correlation Year by Year', 'Corelația an cu an'), table(
@@ -471,7 +471,7 @@ D.frame(T('Three Crisis Episodes', 'Trei episoade de criză'), table(
 
 D.frame(T('Hedge or Safe Haven?', 'Acoperire sau refugiu?'), items(
     (T('\\refBL: a \\textbf{hedge} is uncorrelated or negatively correlated with equities on average; a \\textbf{safe haven} is so in market crashes', '\\refBL: o \\textbf{acoperire} (hedge) este necorelată sau corelată negativ cu acțiunile în medie; un \\textbf{refugiu} (safe haven) este astfel în timpul crahurilor'),
-     [T('test: the mean return on the worst 5\\% of S\\&P 500 days (@{w.btc.nb} common days, S\\&P 500 below $@{w.btc.thr}\\%$, on average $@{w.btc.msp}\\%$)', 'testul: randamentul mediu în cele mai proaste 5\\% dintre zilele S\\&P 500 (@{w.btc.nb} de zile comune, S\\&P 500 sub $@{w.btc.thr}\\%$, în medie $@{w.btc.msp}\\%$)')]),
+     [T('test: the mean return on the worst 5\\% of S\\&P 500 days (@{w.btc.nb} common days, S\\&P 500 below $@{w.btc.thr}\\%$, on average $@{w.btc.msp}\\%$)', 'testul: randamentul mediu în cele mai proaste 5\\% dintre zilele S\\&P 500 (@{w.btc.nb} zile comune, S\\&P 500 sub $@{w.btc.thr}\\%$, în medie $@{w.btc.msp}\\%$)')]),
     (T('Bitcoin: $@{w.btc.m}\\%$ on those days ($t = @{w.btc.t}$, p @{w.btc.p}); negative on @{w.btc.neg}\\% of them', 'Bitcoin: $@{w.btc.m}\\%$ în acele zile ($t = @{w.btc.t}$, p @{w.btc.p}); negativ în @{w.btc.neg}\\% dintre ele'),
      [T('gold: @{w.gold.m}\\% ($t = @{w.gold.t}$, p @{w.gold.p})', 'aurul: @{w.gold.m}\\% ($t = @{w.gold.t}$, p @{w.gold.p})')]),
     T('Interpretation: Bitcoin is not a safe haven; on the worst equity days it falls as much as the S\\&P 500; gold holds its value', 'Interpretare: Bitcoin nu este un activ de refugiu; în cele mai proaste zile ale acțiunilor scade cît S\\&P 500; aurul își păstrează valoarea'),
@@ -508,7 +508,7 @@ D.frame(T('Bitcoin\'s Large Drawdowns', 'Marile drawdown-uri ale Bitcoin'), tabl
     T('Episodes since September 2014 whose drawdown exceeded 50\\%; dates as year-month-day', 'Episoadele din septembrie 2014 cu drawdown de peste 50\\%; datele în formatul an-lună-zi'),
     (T('Interpretation', 'Interpretare'),
      [T('@{dd.nep} falls of more than half in twelve years: a crash of this size is a regular event, not a rare one', '@{dd.nep} scăderi de peste jumătate în doisprezece ani: un crah de această mărime este un eveniment obișnuit, nu unul rar'),
-      T('the 2017 and 2021 peaks were recovered after @{dd.d17} and @{dd.d21} days', 'maximele din 2017 și 2021 au fost recuperate după @{dd.d17} și, respectiv, @{dd.d21} de zile')])), 'footnotesize')
+      T('the 2017 and 2021 peaks were recovered after @{dd.d17} and @{dd.d21} days', 'maximele din 2017 și 2021 au fost recuperate după @{dd.d17} și, respectiv, @{dd.d21} zile')])), 'footnotesize')
 
 D.frame(T('Bubbles and the Log-Periodic Idea', 'Bulele și ideea log-periodică'), cols(items(
     (T('\\textbf{Bubble}: a price far above the fundamental value, sustained by the expectation of selling higher', '\\textbf{Bulă}: un preț mult peste valoarea fundamentală, susținut de așteptarea unei revînzări la un preț mai mare'),
@@ -546,7 +546,7 @@ D.frame(T('Before and After: a Simple Comparison', 'Înainte și după: o compar
      T('correlation with the S\\&P 500', 'corelația cu S\\&P 500') + ' & $@{etf.corr_before}$ & $@{etf.corr_after}$',
      T('GARCH(1,1)-t $\\hat\\alpha + \\hat\\beta$', 'GARCH(1,1)-t $\\hat\\alpha + \\hat\\beta$') + ' & $@{etf.pers_before}$ & $@{etf.pers_after}$'],
     size='footnotesize') + items(
-    T('Windows: 11 January 2022 -- 10 January 2024 (@{etf.nb} days) and 11 January 2024 -- 10 January 2026 (@{etf.na} days)', 'Ferestrele: 11 ianuarie 2022 -- 10 ianuarie 2024 (@{etf.nb} de zile) și 11 ianuarie 2024 -- 10 ianuarie 2026 (@{etf.na} de zile)'),
+    T('Windows: 11 January 2022 -- 10 January 2024 (@{etf.nb} days) and 11 January 2024 -- 10 January 2026 (@{etf.na} days)', 'Ferestrele: 11 ianuarie 2022 -- 10 ianuarie 2024 (@{etf.nb} zile) și 11 ianuarie 2024 -- 10 ianuarie 2026 (@{etf.na} zile)'),
     T('Brown--Forsythe test of equal variance: statistic @{etf.bf}, p $= @{etf.p_bf}$: the fall in volatility is not significant', 'Testul Brown--Forsythe al egalității varianțelor: statistica @{etf.bf}, p $= @{etf.p_bf}$: scăderea volatilității nu este semnificativă'),
     (T('Interpretation', 'Interpretare'),
      [T('a before--after comparison is not a causal effect: interest rates, the halving of April 2024 and the US election changed at the same time', 'o comparație înainte--după nu este un efect cauzal: dobînzile, halving-ul din aprilie 2024 și alegerile din SUA s-au schimbat în același timp'),
@@ -589,7 +589,7 @@ D.frame(T('How a Peg Is Held: Arbitrage', 'Menținerea parității: arbitrajul')
 chart(T('Supply of Stablecoins', 'Oferta de stablecoins'), 'sfm_ch14_stablecoin_supply', 'SFM_ch14_stablecoins', [
     T('Circulating supply in billion USD (DefiLlama): all USD stablecoins, USDT, USDC and DAI', 'Oferta în circulație, în miliarde USD (DefiLlama): toate stablecoin-urile în USD, USDT, USDC și DAI'),
     T('Interpretation: from @{sup.total_2020} billion USD at the start of 2020 to @{sup.total_end} billion on @{sup.end}, a factor of @{sup.growth_x}; USDT holds @{sup.usdt_share}\\%, USDC @{sup.usdc_share}\\%',
-      'Interpretare: de la @{sup.total_2020} miliarde USD la începutul lui 2020 la @{sup.total_end} de miliarde pe @{sup.end}, de @{sup.growth_x} de ori mai mult; USDT deține @{sup.usdt_share}\\%, USDC @{sup.usdc_share}\\%'),
+      'Interpretare: de la @{sup.total_2020} miliarde USD la începutul lui 2020 la @{sup.total_end} miliarde pe @{sup.end}, de @{sup.growth_x} de ori mai mult; USDT deține @{sup.usdt_share}\\%, USDC @{sup.usdc_share}\\%'),
     T('The total fell from @{sup.total_2022max} billion (@{sup.maxd}) to @{sup.total_trough} billion (@{sup.trd}) after Terra and FTX; USDC fell from @{sup.usdc_2023_03_10} to @{sup.usdc_2023_12_31} billion in 2023',
       'Totalul a scăzut de la @{sup.total_2022max} de miliarde (@{sup.maxd}) la @{sup.total_trough} de miliarde (@{sup.trd}) după Terra și FTX; USDC a scăzut de la @{sup.usdc_2023_03_10} la @{sup.usdc_2023_12_31} de miliarde în 2023')],
     h='0.44\\textheight')

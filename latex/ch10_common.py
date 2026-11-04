@@ -198,11 +198,11 @@ REFS = r"""
 \newcommand{\refCAViaR}{\href{https://doi.org/10.1198/073500104000000370}{Engle \& Manganelli (2004)}}
 \newcommand{\refDJSS}{\href{https://doi.org/10.1016/j.jeconom.2012.08.011}{Daníelsson et al.\ (2013)}}
 \newcommand{\refRM}{\href{https://www.msci.com/documents/10199/5915b101-4206-4ba0-aee2-3449d5c7e95a}{J.P.\ Morgan/Reuters (1996)}}
-\newcommand{\refBCBSa}{\href{https://www.bis.org/publ/bcbs24.htm}{⟦Basel Committee||Comitetul de la Basel⟧ (1996a)}}
-\newcommand{\refBCBSb}{\href{https://www.bis.org/publ/bcbs22.htm}{⟦Basel Committee||Comitetul de la Basel⟧ (1996b)}}
-\newcommand{\refFRTB}{\href{https://www.bis.org/bcbs/publ/d457.htm}{⟦Basel Committee||Comitetul de la Basel⟧ (2019)}}
-\newcommand{\refMAR}{\href{https://www.bis.org/basel_framework/chapter/MAR/33.htm}{⟦Basel Framework||Cadrul Basel⟧, MAR33}}
-\newcommand{\refMARb}{\href{https://www.bis.org/basel_framework/chapter/MAR/32.htm}{⟦Basel Framework||Cadrul Basel⟧, MAR32}}
+\newcommand{\refBCBSa}{\href{https://www.bis.org/publ/bcbs24.htm}{BCBS (1996a)}}
+\newcommand{\refBCBSb}{\href{https://www.bis.org/publ/bcbs22.htm}{BCBS (1996b)}}
+\newcommand{\refFRTB}{\href{https://www.bis.org/bcbs/publ/d457.htm}{BCBS (2019)}}
+\newcommand{\refMAR}{\href{https://www.bis.org/basel_framework/chapter/MAR/33.htm}{BCBS (2023b)}}
+\newcommand{\refMARb}{\href{https://www.bis.org/basel_framework/chapter/MAR/32.htm}{BCBS (2023a)}}
 \newcommand{\refBCBSh}{\href{https://www.bis.org/bcbs/history.htm}{⟦history of the Basel Committee||istoria Comitetului de la Basel⟧}}
 \newcommand{\refQRM}{\href{https://press.princeton.edu/books/hardcover/9780691166278/quantitative-risk-management}{McNeil, Frey \& Embrechts (2015)}}
 \newcommand{\refFHH}{\href{https://doi.org/10.1007/978-3-030-13751-9}{Franke, Härdle \& Hafner (2019)}}
@@ -221,6 +221,8 @@ _BIB = {
     'BCBSa': r"Basel Committee on Banking Supervision (1996a). \href{https://www.bis.org/publ/bcbs24.htm}{Amendment to the capital accord to incorporate market risks}. Bank for International Settlements.",
     'BCBSb': r"Basel Committee on Banking Supervision (1996b). \href{https://www.bis.org/publ/bcbs22.htm}{Supervisory framework for the use of ``backtesting'' in conjunction with the internal models approach to market risk capital requirements}. Bank for International Settlements.",
     'FRTB': r"Basel Committee on Banking Supervision (2019). \href{https://www.bis.org/bcbs/publ/d457.htm}{Minimum capital requirements for market risk}. Bank for International Settlements.",
+    'MARb': r"Basel Committee on Banking Supervision (2023a). \href{https://www.bis.org/basel_framework/chapter/MAR/32.htm}{MAR32: Internal models approach: backtesting and P\&L attribution test requirements}. Basel Framework, version effective 1 January 2023. Bank for International Settlements.",
+    'MAR': r"Basel Committee on Banking Supervision (2023b). \href{https://www.bis.org/basel_framework/chapter/MAR/33.htm}{MAR33: Internal models approach: capital requirements calculation}. Basel Framework, version effective 1 January 2023. Bank for International Settlements.",
     'BO': r"Berkowitz, J., O'Brien, J. (2002). \href{https://doi.org/10.1111/1540-6261.00455}{How accurate are value-at-risk models at commercial banks?} \textit{Journal of Finance}, 57(3), 1093--1111.",
     'Boll': r"Bollerslev, T. (1986). \href{https://doi.org/10.1016/0304-4076(86)90063-1}{Generalized autoregressive conditional heteroskedasticity}. \textit{Journal of Econometrics}, 31(3), 307--327.",
     'BHL': r"Borak, S., Härdle, W.K., López-Cabrera, B. (2013). \href{https://doi.org/10.1007/978-3-642-33929-5}{\textit{Statistics of Financial Markets: Exercises and Solutions}}, 2nd ed. Springer.",

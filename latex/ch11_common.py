@@ -106,6 +106,12 @@ def values(N):
             V.put(f'va.{k}.{lag}', VA[nm][lag], 3)
         V.raw(f'va.{k}.npos', str(VA[nm]['npos']))
     V.put('va.band', VA['band'], 3)
+    VR = VA['returns']                     # r_t: lags 2..250 outside the 95% band
+    V.raw('va.r.nout2', str(VR['nout2']))
+    V.put('va.r.exp2', 0.05 * 249, 0)
+    V.put('va.r.max2', VR['maxabs2'], 3)
+    for i, lag in enumerate(VR['top_lags']):
+        V.raw(f'va.r.lag{i + 1}', str(lag))
     V.put('va.shuf', VA['abs_shuffled_dfa'], 2)
     V.int('va.n', VA['n'])
     for n_, d in N['mc'].items():

@@ -224,8 +224,8 @@ D.frame(T('From RiskMetrics to Basel', 'De la RiskMetrics la Basel'), cols(items
       T('rule: VaR 1\\% over 10 days, times a multiplier of at least 3; the multiplier grows when the model fails the backtest \\refBCBSb',
         'regula: VaR 1\\% pe 10 zile, înmulțit cu un factor de cel puțin 3; factorul crește dacă modelul nu trece testul (backtesting) \\refBCBSb')]),
     (T('2019: the \\textbf{FRTB} (Fundamental Review of the Trading Book) \\refFRTB', '2019: \\textbf{FRTB} (Fundamental Review of the Trading Book, revizuirea fundamentală a portofoliului de tranzacționare) \\refFRTB'),
-     [T('capital from ES 2.5\\% instead of VaR 1\\% \\refMAR; backtesting still counts VaR exceptions \\refMARb',
-        'capitalul se calculează din ES 2,5\\% în loc de VaR 1\\% \\refMAR; backtesting-ul numără în continuare depășirile VaR \\refMARb')])),
+     [T('capital from ES 2.5\\% instead of VaR 1\\% (MAR33, \\refMAR); backtesting still counts VaR exceptions (MAR32, \\refMARb)',
+        'capitalul se calculează din ES 2,5\\% în loc de VaR 1\\% (MAR33, \\refMAR); backtesting-ul numără în continuare depășirile VaR (MAR32, \\refMARb)')])),
     ph('bis', T('The BIS tower in Basel, seat of the Basel Committee', 'Turnul BIS din Basel, sediul Comitetului de la Basel'), h='0.42\\textheight'),
     wl='0.58', wr='0.38'), 'footnotesize')
 
@@ -299,7 +299,7 @@ D.frame(T('The Normal Distribution: Closed Forms', 'Distribuția Normală: formu
     (T('Numbers: $z_{0.01} = -@{z1}$; $z_{0.025} = -@{z25}$, $\\varphi(z_{0.025}) = @{phi25}$, $\\varphi(z_{0.025})/0.025 = @{esn.f}$', 'Valori: $z_{0.01} = -@{z1}$; $z_{0.025} = -@{z25}$, $\\varphi(z_{0.025}) = @{phi25}$, $\\varphi(z_{0.025})/0.025 = @{esn.f}$'),
      [T('ES 2.5\\% / VaR 1\\% $= @{esn.f}/@{z1} = @{esn.ratio}$ (with $\\mu = 0$): for Normal returns the two measures are almost equal',
         'ES 2,5\\% / VaR 1\\% $= @{esn.f}/@{z1} = @{esn.ratio}$ (cu $\\mu = 0$): pentru randamente Normale, cele două măsuri sînt aproape egale'),
-      T('this is why ES 2.5\\% replaced VaR 1\\% in Basel: same size for Normal data, larger for heavy tails', 'de aceea ES 2,5\\% a înlocuit VaR 1\\% în Basel: aceeași mărime pentru date Normale, mai mare pentru cozi groase')])), 'footnotesize')
+      T('this is why ES 2.5\\% replaced VaR 1\\% in Basel: about the same size for Normal data, larger for heavy tails', 'de aceea ES 2,5\\% a înlocuit VaR 1\\% în Basel: aproximativ aceeași mărime pentru date Normale, mai mare pentru cozi groase')])), 'footnotesize')
 
 D.frame(T('Worked Example: Normal VaR and ES of the S\\&P 500', 'Exemplu rezolvat: VaR și ES Normale pentru S\\&P 500'), items(
     (T('Sample moments of the daily returns since 2000: $\\hat\\mu = @{m.sp500.mu}$, $\\hat\\sigma = @{m.sp500.sd}$ (in \\%)', 'Momentele de selecție ale randamentelor zilnice din 2000: $\\hat\\mu = @{m.sp500.mu}$, $\\hat\\sigma = @{m.sp500.sd}$ (în \\%)'),
@@ -463,7 +463,7 @@ D.frame(T('VaR 1\\% by Method on Six Series', 'VaR 1\\% pe metode, pentru șase 
 
 D.frame(T('ES 2.5\\% by Method on Six Series', 'ES 2,5\\% pe metode, pentru șase serii'), table(
     'lrrrrrrr', MH, [mrow(k, 'e') for k in ASSETS], size='footnotesize') + items(
-    T('Normal: ES 2.5\\% equals its VaR 1\\%; the data: the historical ES 2.5\\% is @{rg.es.lo}--@{rg.es.hi}\\% above the historical VaR 1\\%', 'Distribuția Normală: ES 2,5\\% este egal cu VaR 1\\%; datele: ES 2,5\\% istoric este cu @{rg.es.lo}--@{rg.es.hi}\\% peste VaR 1\\% istoric'),
+    T('Normal: ES 2.5\\% is almost equal to its VaR 1\\% (ratio $@{esn.ratio}$); the data: the historical ES 2.5\\% is @{rg.es.lo}--@{rg.es.hi}\\% above the historical VaR 1\\% (from the unrounded values)', 'Distribuția Normală: ES 2,5\\% este aproape egal cu VaR 1\\% (raportul $@{esn.ratio}$); datele: ES 2,5\\% istoric este cu @{rg.es.lo}--@{rg.es.hi}\\% peste VaR 1\\% istoric (din valorile nerotunjite)'),
     T('For the S\\&P 500, DAX, BET and Bitcoin, Student-t gives the largest ES among the sensible methods (Bitcoin: $@{m.btc.t.e}\\%$ against $@{m.btc.hs.e}\\%$): with $\\hat\\nu < 3$ its tail is heavier than the data beyond the threshold',
       'Pentru S\\&P 500, DAX, BET și Bitcoin, Student-t dă cel mai mare ES dintre metodele rezonabile (Bitcoin: $@{m.btc.t.e}\\%$ față de $@{m.btc.hs.e}\\%$): cu $\\hat\\nu < 3$, coada ei este mai groasă decît cea a datelor de dincolo de prag'),
     T('Interpretation: EVT and HS agree at 2.5\\%; the method matters more for ES than for VaR, because ES depends on the whole tail',
@@ -564,8 +564,8 @@ D.frame(T('A BET and S\\&P 500 Portfolio', 'Un portofoliu BET și S\\&P 500'), i
       T('each index in its own currency: the currency risk of a RON investor is left out', 'fiecare indice în moneda lui: riscul valutar al unui investitor în lei este ignorat')]),
     (T('Daily data: BET $\\hat\\mu = @{p.mu1}$, $\\hat\\sigma = @{p.sd1}$; S\\&P 500 $\\hat\\mu = @{p.mu2}$, $\\hat\\sigma = @{p.sd2}$; correlation $\\hat\\rho = @{p.corr}$',
        'Date zilnice: BET $\\hat\\mu = @{p.mu1}$, $\\hat\\sigma = @{p.sd1}$; S\\&P 500 $\\hat\\mu = @{p.mu2}$, $\\hat\\sigma = @{p.sd2}$; corelația $\\hat\\rho = @{p.corr}$'),
-     [T('the BVB closes before New York opens: part of the joint reaction appears one day later, so same-day correlation understates the link',
-        'BVB se închide înainte de deschiderea bursei din New York: o parte din reacția comună apare a doua zi, deci corelația din aceeași zi subestimează legătura')]),
+     [T('the BVB trades until 17:45 Romanian time and New York opens at 16:30: most of a New York session reaches Bucharest only the next day, so same-day correlation understates the link',
+        'BVB tranzacționează pînă la 17:45, ora României, iar bursa din New York se deschide la 16:30: cea mai mare parte a ședinței de la New York ajunge la București abia a doua zi, deci corelația din aceeași zi subestimează legătura')]),
     T('Question: is the portfolio VaR smaller than the average of the two VaRs, and by how much?', 'Întrebarea: este VaR-ul portofoliului mai mic decît media celor două VaR și cu cît?')))
 
 D.frame(T('The Variance--Covariance Method', 'Metoda varianță--covarianță'), items(
@@ -721,10 +721,10 @@ D.frame(T('The Basel Traffic Light', 'Semaforul Basel'), cols(table(
     [trow(x) for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], size='scriptsize'), items(
     (T('\\refBCBSb: count the exceptions of the one-day VaR 1\\% over the last 250 days', '\\refBCBSb: se numără depășirile VaR 1\\% pe o zi în ultimele 250 de zile'),
      [T('green: no action; yellow: the multiplier grows by the plus factor; red: the model is presumed wrong', 'verde: nicio măsură; galbenă: factorul crește cu adaosul; roșie: modelul este considerat greșit')]),
-    (T('Capital $= (3 + \\text{plus}) \\times$ the 60-day average of the 10-day VaR 1\\% (or yesterday\'s value, if larger)', 'Capitalul $= (3 + \\text{adaos}) \\times$ media pe 60 de zile a VaR 1\\% pe 10 zile (sau valoarea de ieri, dacă este mai mare)'),
+    (T('Capital $= \\max\\{\\mathrm{VaR}_{t-1},\\ (3 + \\text{plus}) \\times \\overline{\\mathrm{VaR}}_{60}\\}$: the larger of yesterday\'s 10-day VaR 1\\% and the multiplier times its 60-day average', 'Capitalul $= \\max\\{\\mathrm{VaR}_{t-1},\\ (3 + \\text{adaos}) \\times \\overline{\\mathrm{VaR}}_{60}\\}$: maximul dintre VaR 1\\% pe 10 zile de ieri și factorul înmulțit cu media lui pe 60 de zile'),
      [T('zones from the binomial: yellow starts where the cumulative probability first exceeds 95\\%, red where it reaches 99.99\\%', 'zonele vin din distribuția binomială: zona galbenă începe unde probabilitatea cumulată trece de 95\\%, zona roșie unde atinge 99,99\\%')]),
     T('$x$: exceptions in 250 days; Cumul.: $P(X \\le x)$ under $\\mathrm{Binomial}(250, 0.01)$', '$x$: depășiri în 250 de zile; Cumul.: $P(X \\le x)$ pentru $\\mathrm{Binomial}(250; 0{,}01)$'),
-    T('FRTB keeps the count of VaR 1\\% exceptions at bank and desk level \\refMARb', 'FRTB păstrează numărarea depășirilor VaR 1\\% la nivelul băncii și al diviziilor \\refMARb')), wl='0.44', wr='0.54'), 'footnotesize')
+    T('FRTB keeps the count of VaR 1\\% exceptions at bank and desk level (MAR32, \\refMARb)', 'FRTB păstrează numărarea depășirilor VaR 1\\% la nivelul băncii și al diviziilor (MAR32, \\refMARb)')), wl='0.44', wr='0.54'), 'footnotesize')
 
 chart(T('When Do the Exceptions Happen?', 'Depășirile în timp'), 'sfm_ch10_hits', 'SFM_ch10_backtesting', [
     T('S\\&P 500, 2005--2026: each mark is a day on which the VaR 1\\% of the method was exceeded; expected about @{bt.sp500.hs.exp} per method',
@@ -875,7 +875,7 @@ D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a desk reports ``VaR 1\\% = $-2.4\\%$\'\'. What is wrong?', '\\textbf{Întrebare}: o divizie raportează „VaR 1\\% = $-2{,}4\\%$”. Ce este greșit?'),
      [T('\\textbf{Answer}: the sign: $-2.4\\%$ is the 1\\% quantile $q_{0.01}$; VaR 1\\% $= -q_{0.01} = 2.4\\%$, a loss', '\\textbf{Răspuns}: semnul: $-2{,}4\\%$ este cuantila $q_{0{,}01}$; VaR 1\\% $= -q_{0{,}01} = 2{,}4\\%$, o pierdere')]),
     (T('\\textbf{Question}: a model has 3 exceptions in 250 days, all in the same week. Which test detects the problem?', '\\textbf{Întrebare}: un model are 3 depășiri în 250 de zile, toate în aceeași săptămînă. Ce test detectează problema?'),
-     [T('\\textbf{Answer}: not Kupiec (3 is close to 2.5), but Christoffersen\'s independence test', '\\textbf{Răspuns}: nu testul Kupiec (3 este aproape de 2,5), ci testul de independență al lui Christoffersen')]),
+     [T('\\textbf{Answer}: not Kupiec (3 is close to 2.5); Christoffersen\'s independence test can, if the exceptions fall on consecutive days (it looks only at day-to-day transitions), and with 3 exceptions its power is low', '\\textbf{Răspuns}: nu testul Kupiec (3 este aproape de 2,5); testul de independență al lui Christoffersen o poate face dacă depășirile cad în zile consecutive (el privește doar trecerile de la o zi la alta), iar cu 3 depășiri puterea lui este mică')]),
     (T('\\textbf{Question}: two portfolios have the same VaR 1\\%. Can their ES 2.5\\% differ?', '\\textbf{Întrebare}: două portofolii au același VaR 1\\%. Pot avea ES 2,5\\% diferit?'),
      [T('\\textbf{Answer}: yes: ES depends on the whole tail beyond the quantile, VaR only on one point', '\\textbf{Răspuns}: da: ES depinde de întreaga coadă de dincolo de cuantilă, VaR doar de un punct')]),
     T('Next: Chapter 11, the fractal markets hypothesis and long memory', 'Urmează: Capitolul 11, ipoteza piețelor fractale și memoria lungă')))

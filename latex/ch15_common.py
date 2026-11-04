@@ -140,6 +140,9 @@ def values(N):
     R = N['dy_roll']
     for c in ('min', 'max', 'last', 'mean', 'y2017', 'y2008'):
         V.put(f'dr.{c}', R[c], 0)
+    for c in ('y2016', 'max2016'):
+        if c in R:
+            V.put(f'dr.{c}', R[c], 0)
     put_date(V, 'dr.dmin', R['date_min'])
     put_date(V, 'dr.dmax', R['date_max'])
     return V
@@ -176,8 +179,8 @@ REFS = r"""
 \newcommand{\refDM}{\href{https://doi.org/10.1111/j.1751-5823.2005.tb00254.x}{Demarta \& McNeil (2005)}}
 \newcommand{\refWang}{\href{https://doi.org/10.1038/s41586-023-06221-2}{Wang et al.\ (2023)}}
 \newcommand{\refFSB}{\href{https://www.bis.org/publ/othp07.htm}{IMF, BIS \& FSB (2009)}}
-\newcommand{\refBIII}{\href{https://www.bis.org/publ/bcbs189.htm}{⟦Basel Committee||Comitetul de la Basel⟧ (2011)}}
-\newcommand{\refGSIB}{\href{https://www.bis.org/bcbs/publ/d445.htm}{⟦Basel Committee||Comitetul de la Basel⟧ (2018)}}
+\newcommand{\refBIII}{\href{https://www.bis.org/publ/bcbs189.htm}{BCBS (2011)}}
+\newcommand{\refGSIB}{\href{https://www.bis.org/bcbs/publ/d445.htm}{BCBS (2018)}}
 \newcommand{\refRBC}{\href{https://www.bis.org/basel_framework/chapter/RBC/30.htm}{⟦Basel Framework||Cadrul Basel⟧, RBC30}}
 \newcommand{\refCCyB}{\href{https://www.bis.org/basel_framework/chapter/RBC/30.htm}{RBC30}}
 \newcommand{\refESRB}{\href{https://www.esrb.europa.eu/about/background/html/index.en.html}{⟦(ESRB website)||(site-ul ESRB)⟧}}

@@ -341,7 +341,7 @@ D.frame(T('Short and Long Memory', 'Memorie scurtă și memorie lungă'), items(
     (T('Stationary $X_t$ with autocorrelations $\\rho(k)$ (ACF, autocorrelation function); \\textbf{long memory} \\refFHH, 14.1:',
        '$X_t$ staționar, cu autocorelațiile $\\rho(k)$ (ACF, autocorrelation function, funcția de autocorelație); \\textbf{memorie lungă} \\refFHH, 14.1:'),
      [T('$\\sum_{k} |\\rho(k)| = \\infty$: the autocorrelations are not summable', '$\\sum_{k} |\\rho(k)| = \\infty$: autocorelațiile nu sînt sumabile'),
-      T('equivalently, hyperbolic decay $\\rho(k) \\sim C\\,k^{2d - 1}$ as $k \\to \\infty$, with the \\textbf{memory parameter} $0 < d < 0.5$', 'echivalent, scădere hiperbolică $\\rho(k) \\sim C\\,k^{2d - 1}$ cînd $k \\to \\infty$, cu \\textbf{parametrul de memorie} $0 < d < 0.5$'),
+      T('the usual form: hyperbolic decay $\\rho(k) \\sim C\\,k^{2d - 1}$ as $k \\to \\infty$, with the \\textbf{memory parameter} $0 < d < 0.5$; it implies non-summability, the converse does not hold in general', 'forma uzuală: scădere hiperbolică $\\rho(k) \\sim C\\,k^{2d - 1}$ cînd $k \\to \\infty$, cu \\textbf{parametrul de memorie} $0 < d < 0.5$; ea implică nesumabilitatea, reciproca nu este adevărată în general'),
       T('in frequency: the spectral density has a pole at zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ as $\\lambda \\to 0$', 'în frecvență: densitatea spectrală are un pol în zero, $f(\\lambda) \\sim C\\,\\lambda^{-2d}$ cînd $\\lambda \\to 0$'),
       T('$C > 0$: a constant; $\\sim$: the ratio of the two sides tends to 1; $f(\\lambda)$: the share of variance at frequency $\\lambda$ (long cycles: $\\lambda$ near 0)', '$C > 0$: o constantă; $\\sim$: raportul celor doi membri tinde la 1; $f(\\lambda)$: partea din varianță la frecvența $\\lambda$ (ciclurile lungi: $\\lambda$ aproape de 0)')]),
     (T('\\textbf{Short memory}: ARMA (autoregressive moving average) models, e.g.\\ AR(1) with $\\rho(k) = \\phi^k$', '\\textbf{Memorie scurtă}: modelele ARMA (autoregressive moving average, autoregresive cu medie mobilă), de exemplu AR(1) cu $\\rho(k) = \\phi^k$'),
@@ -605,8 +605,8 @@ D.section('Long Memory in Volatility', 'Memoria lungă a volatilității')
 chart(T('S\\&P 500: the ACF of $r_t$, $|r_t|$ and $r_t^2$', 'S\\&P 500: ACF pentru $r_t$, $|r_t|$ și $r_t^2$'), 'sfm_ch11_vol_acf', 'SFM_ch11_volatility_memory', [
     T('$|r_t|$: $\\rho(1) = @{va.a.1}$, $\\rho(50) = @{va.a.50}$, $\\rho(100) = @{va.a.100}$; @{va.a.npos} of the first 250 lags above the band $@{va.band}$',
       '$|r_t|$: $\\rho(1) = @{va.a.1}$, $\\rho(50) = @{va.a.50}$, $\\rho(100) = @{va.a.100}$; @{va.a.npos} dintre primele 250 de laguri sînt peste banda $@{va.band}$'),
-    T('$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, then inside the band',
-      '$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, apoi în interiorul benzii'),
+    T('$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, then small ($|\\rho(k)| \\le @{va.r.max2}$), but @{va.r.nout2} of the lags 2--250 lie outside the band (about @{va.r.exp2} expected by chance; largest at lags @{va.r.lag1}, @{va.r.lag2} and @{va.r.lag3})',
+      '$r_t^2$: $\\rho(1) = @{va.s.1}$, $\\rho(50) = @{va.s.50}$; $r_t$: $\\rho(1) = @{va.r.1}$, apoi mici ($|\\rho(k)| \\le @{va.r.max2}$), dar @{va.r.nout2} dintre lagurile 2--250 sînt în afara benzii (circa @{va.r.exp2} așteptate din întîmplare; cele mai mari la lagurile @{va.r.lag1}, @{va.r.lag2} și @{va.r.lag3})'),
     T('\\refDGE: $|r_t|$ is more persistent than $r_t^2$, which is more affected by single extreme days', '\\refDGE: $|r_t|$ este mai persistent decît $r_t^2$, care este mai afectat de zilele extreme izolate')],
     h='0.48\\textheight')
 

@@ -61,8 +61,12 @@ def ph(key, cap, h='0.50\\textheight'):
 # =============================================================================
 b = N['bursts']
 V.put('ex.sp.ann', b['sp500']['sd'] * math.sqrt(b['sp500']['ppy']), 1)
-V.put('ex.sp.sq', math.sqrt(b['sp500']['ppy']), 2)
-V.put('ex.btc.sq365', math.sqrt(b['btc']['ppy']), 2)
+V.put('ex.sp.sq', math.sqrt(b['sp500']['ppy']), 3)
+V.put('ex.btc.sq365', math.sqrt(b['btc']['ppy']), 3)
+V.put('ex.sq252', math.sqrt(252), 3)
+for _k in ('sp500', 'btc'):
+    V.put(f'ex.{_k}.sd', b[_k]['sd'], 4)
+    V.put(f'ex.{_k}.A', b[_k]['ppy'], 1)
 V.put('ex.btc.252', b['btc']['sd'] * math.sqrt(252), 1)
 V.put('ex.btc.ratio', 100 * (math.sqrt(b['btc']['ppy'] / 252) - 1), 0)
 # 95% interval of the last 21-day volatility of the S&P 500
@@ -70,9 +74,14 @@ w21 = N['windows']['21']['last']
 for lab, rse in [('n', N['se']['21']['normal']), ('h', N['se']['21']['heavy'])]:
     V.put(f'ex.ci.{lab}.lo', w21 * (1 - 1.96 * rse), 1)
     V.put(f'ex.ci.{lab}.hi', w21 * (1 + 1.96 * rse), 1)
+_C = N['clust']
+_qr = [_C[k]['lb_r2']['q'] / _C[k]['lb_r']['q'] for k in ['sp500', 'dax', 'bet', 'btc', 'tlv', 'snp']]
+V.raw('cl.qratio.lo', str(int(math.floor(min(_qr)))))
+V.raw('cl.qratio.hi', str(int(math.floor(max(_qr)))))
+V.put('cl.plbr.max', max(_C[k]['lb_r']['p'] for k in ['sp500', 'dax', 'bet', 'btc', 'tlv', 'snp']), 3)
 # EWMA update after a -3% day
 V.put('ex.ew.s2', 0.94 * 1.0 + 0.06 * 9.0, 2)
-V.put('ex.ew.vol', math.sqrt(0.94 + 0.06 * 9.0), 2)
+V.put('ex.ew.vol', math.sqrt(0.94 + 0.06 * 9.0), 3)
 V.put('ex.ew.ann', math.sqrt((0.94 + 0.06 * 9.0) * 252), 1)
 V.put('ex.ew.next', 0.94 * (0.94 + 0.06 * 9.0) + 0.06 * 0.0, 2)
 # S&P 500 on 16 March 2020: open, high, low, close and the previous close
@@ -82,13 +91,13 @@ for k, x in [('pc', pc), ('o', o_), ('h', h_), ('l', l_), ('c', c_)]:
     V.int(f'm16.{k}', round(x))
 oo, uu, dd, ccv = 100 * math.log(o_ / pc), 100 * math.log(h_ / o_), 100 * math.log(l_ / o_), 100 * math.log(c_ / o_)
 r16 = 100 * math.log(c_ / pc)
-V.put('m16.oo', oo, 2)
-V.put('m16.u', uu, 2)
-V.put('m16.d', dd, 2)
-V.put('m16.cv', ccv, 2)
-V.put('m16.r', r16, 2)
+V.put('m16.oo', oo, 3)
+V.put('m16.u', uu, 3)
+V.put('m16.d', dd, 3)
+V.put('m16.cv', ccv, 3)
+V.put('m16.r', r16, 3)
 V.put('m16.r2', r16 ** 2, 1)
-V.put('m16.hl', uu - dd, 2)
+V.put('m16.hl', uu - dd, 3)
 V.put('m16.park', (uu - dd) ** 2 / (4 * math.log(2)), 1)
 V.put('m16.gk', 0.5 * (uu - dd) ** 2 - (2 * math.log(2) - 1) * ccv ** 2, 1)
 V.put('m16.rs', uu * (uu - ccv) + dd * (dd - ccv), 1)
@@ -233,13 +242,13 @@ D.frame(T('Volatility Is Latent', 'Volatilitatea este latentă'), items(
       T('use intraday prices: realised volatility', 'prețurile din timpul zilei: volatilitatea realizată')])))
 
 D.frame(T('Worked Example: Annualising Volatility', 'Exemplu rezolvat: anualizarea volatilității'), items(
-    (T('S\\&P 500 since 1990: daily standard deviation $\\hat\\sigma = @{b.sp500.sd}\\%$, $A = @{b.sp500.ppy}$ observations per year',
-       'S\\&P 500 din 1990: abaterea standard zilnică $\\hat\\sigma = @{b.sp500.sd}\\%$, $A = @{b.sp500.ppy}$ de observații pe an'),
-     [T('$\\hat\\sigma_{\\text{year}} = @{b.sp500.sd} \\times \\sqrt{@{b.sp500.ppy}} = @{b.sp500.sd} \\times @{ex.sp.sq} = @{ex.sp.ann}\\%$',
-        '$\\hat\\sigma_{\\text{an}} = @{b.sp500.sd} \\times \\sqrt{@{b.sp500.ppy}} = @{b.sp500.sd} \\times @{ex.sp.sq} = @{ex.sp.ann}\\%$')]),
-    (T('Bitcoin since @{b.btc.y0}: $\\hat\\sigma = @{b.btc.sd}\\%$ per day, 7 days a week', 'Bitcoin din @{b.btc.y0}: $\\hat\\sigma = @{b.btc.sd}\\%$ pe zi, 7 zile pe săptămînă'),
-     [T('correct: $@{b.btc.sd} \\times \\sqrt{@{b.btc.ppy}} = @{b.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$', 'corect: $@{b.btc.sd} \\times \\sqrt{@{b.btc.ppy}} = @{b.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$'),
-      T('wrong, with the equity convention: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$', 'greșit, cu convenția de la acțiuni: $@{b.btc.sd} \\times \\sqrt{252} = @{ex.btc.252}\\%$')]),
+    (T('S\\&P 500 since 1990: daily standard deviation $\\hat\\sigma = @{ex.sp500.sd}\\%$, $A = @{ex.sp500.A}$ observations per year (the actual frequency)',
+       'S\\&P 500 din 1990: abaterea standard zilnică $\\hat\\sigma = @{ex.sp500.sd}\\%$, $A = @{ex.sp500.A}$ observații pe an (frecvența reală)'),
+     [T('$\\hat\\sigma_{\\text{year}} = @{ex.sp500.sd} \\times \\sqrt{@{ex.sp500.A}} = @{ex.sp500.sd} \\times @{ex.sp.sq} = @{ex.sp.ann}\\%$',
+        '$\\hat\\sigma_{\\text{an}} = @{ex.sp500.sd} \\times \\sqrt{@{ex.sp500.A}} = @{ex.sp500.sd} \\times @{ex.sp.sq} = @{ex.sp.ann}\\%$')]),
+    (T('Bitcoin since @{b.btc.y0}: $\\hat\\sigma = @{ex.btc.sd}\\%$ per day, 7 days a week', 'Bitcoin din @{b.btc.y0}: $\\hat\\sigma = @{ex.btc.sd}\\%$ pe zi, 7 zile pe săptămînă'),
+     [T('correct: $@{ex.btc.sd} \\times \\sqrt{@{ex.btc.A}} = @{ex.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$', 'corect: $@{ex.btc.sd} \\times \\sqrt{@{ex.btc.A}} = @{ex.btc.sd} \\times @{ex.btc.sq365} = @{b.btc.vol}\\%$'),
+      T('wrong, with the equity convention: $@{ex.btc.sd} \\times \\sqrt{252} = @{ex.btc.sd} \\times @{ex.sq252} = @{ex.btc.252}\\%$', 'greșit, cu convenția de la acțiuni: $@{ex.btc.sd} \\times \\sqrt{252} = @{ex.btc.sd} \\times @{ex.sq252} = @{ex.btc.252}\\%$')]),
     T('Comparing assets: annualise each with its own calendar, then compare', 'Pentru a compara active: anualizați fiecare serie cu propriul calendar, apoi comparați')))
 
 # =============================================================================
@@ -471,8 +480,8 @@ D.frame(T('Real Data: Five Estimators, Five Assets', 'Date reale: cinci estimato
     [est_row(k) for k in OHLC_ASSETS], size='footnotesize') + items(
     T('Annualised volatility (\\%) on the whole OHLC sample; P = Parkinson; night share $= \\hat\\sigma_O^2/(\\hat\\sigma_O^2 + \\hat\\sigma_C^2)$',
       'Volatilitatea anualizată (\\%) pe întregul eșantion OHLC; P = Parkinson; ponderea nopții $= \\hat\\sigma_O^2/(\\hat\\sigma_O^2 + \\hat\\sigma_C^2)$'),
-    T('Stocks: open, high and low adjusted with the same factor as the close; days without trades removed',
-      'Acțiuni: deschiderea, maximul și minimul ajustate cu același factor ca închiderea; zilele fără tranzacții sînt eliminate')) + ql('SFM_ch8_range_estimators'), 'footnotesize')
+    T('Stocks: Banca Transilvania (TLV) and OMV Petrom (SNP); open, high and low adjusted with the same factor as the close; days without trades removed',
+      'Acțiuni: Banca Transilvania (TLV) și OMV Petrom (SNP); deschiderea, maximul și minimul ajustate cu același factor ca închiderea; zilele fără tranzacții sînt eliminate')) + ql('SFM_ch8_range_estimators'), 'footnotesize')
 
 D.frame(T('Interpretation: Why the Estimators Disagree', 'Interpretarea diferențelor dintre estimatori'), items(
     (T('Bitcoin trades 24 hours a day: the night share is almost 0, and all five estimators agree within a few points',
@@ -615,10 +624,10 @@ D.frame(T('Clustering Tests in Six Series', 'Testele de volatility clustering pe
     [cl_row(k) for k in ['sp500', 'dax', 'bet', 'btc', 'tlv', 'snp']], size='scriptsize') + items(
     T('5\\% critical values: $\\chi^2_{0.95}(10) = @{cl.crit10}$ for $Q(10)$, $\\chi^2_{0.95}(5) = @{cl.crit5}$ for ARCH-LM(5); every statistic on $r^2$ and $|r|$ rejects with p $<$ 0.001',
       'Valori critice de 5\\%: $\\chi^2_{0.95}(10) = @{cl.crit10}$ pentru $Q(10)$, $\\chi^2_{0.95}(5) = @{cl.crit5}$ pentru ARCH-LM(5); toate statisticile pentru $r^2$ și $|r|$ resping, cu p $<$ 0,001'),
-    T('$Q(10)$ on $r$ is far smaller: mean predictability is weak (Chapter 7), size predictability is strong everywhere',
-      '$Q(10)$ pentru $r$ este mult mai mic: previzibilitatea mediei este slabă (Capitolul 7), cea a mărimii este puternică peste tot'),
-    T('Bitcoin and the two BVB stocks have the smallest ARCH-LM values despite heavy tails: a few extreme days dilute the regression',
-      'Bitcoin și cele două acțiuni BVB au cele mai mici valori ARCH-LM, deși au cozi groase: cîteva zile extreme domină regresia și reduc $R^2$')) + ql('SFM_ch8_clustering'), 'footnotesize')
+    T('$Q(10)$ on $r$ also rejects at 5\\% in all six series ($p \\le @{cl.plbr.max}$), but it is far smaller than on $r^2$ (by a factor of @{cl.qratio.lo} to @{cl.qratio.hi}): mean predictability is weak (Chapter 7), size predictability is strong everywhere',
+      '$Q(10)$ pentru $r$ respinge și el la 5\\% în toate cele șase serii ($p \\le @{cl.plbr.max}$), dar este mult mai mic decît pentru $r^2$ (raportul dintre cele două este între @{cl.qratio.lo} și @{cl.qratio.hi}): previzibilitatea mediei este slabă (Capitolul 7), cea a mărimii este puternică peste tot'),
+    T('Bitcoin, Banca Transilvania (TLV) and OMV Petrom (SNP) have the smallest ARCH-LM values despite heavy tails: $\\mathrm{LM} = nR^2$ grows with the sample length, and these series are shorter; their $R^2$ is also lower (@{cl.btc.lmr2}, @{cl.tlv.lmr2}, @{cl.snp.lmr2} against @{cl.sp500.lmr2} for the S\\&P 500): a few extreme days dilute the regression',
+      'Bitcoin, Banca Transilvania (TLV) și OMV Petrom (SNP) au cele mai mici valori ARCH-LM, deși au cozi groase: $\\mathrm{LM} = nR^2$ crește cu lungimea eșantionului, iar aceste serii sînt mai scurte; și $R^2$ este mai mic (@{cl.btc.lmr2}, @{cl.tlv.lmr2}, @{cl.snp.lmr2} față de @{cl.sp500.lmr2} la S\\&P 500): cîteva zile extreme domină regresia și reduc $R^2$')) + ql('SFM_ch8_clustering'), 'footnotesize')
 
 chart(T('Clustering Creates Heavy Tails', 'Volatility clustering produce cozi groase'), 'sfm_ch8_kurtosis', 'SFM_ch8_kurgarch', [
     T('Left: calm days with sd 1, turbulent days with sd 2 (share $p = 0.2$): $E[\\sigma^2] = @{mx.e2}$, $E[\\sigma^4] = @{mx.e4}$, kurtosis $3E[\\sigma^4]/E[\\sigma^2]^2 = @{ku.m022}$, though each day is Normal',

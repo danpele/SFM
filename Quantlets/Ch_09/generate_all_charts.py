@@ -318,7 +318,7 @@ def fig_vol(names=('sp500', 'dax'), fname='sfm_ch9_vol_sp500_dax', save=True):
         ann = np.sqrt(periods_per_year(r))
         v = res.conditional_volatility * ann
         ax.plot(v.index, v.values, color=COLORS[k], lw=0.9, label=f'{NAME[k]}: GARCH(1,1)-t volatility, annualised (%)')
-        ax.axhline(r.std() * ann, color='black', ls='--', lw=0.9, label=f'{NAME[k]}: sample volatility, annualised (%)' if k == names[0] else '_')
+        ax.axhline(r.std() * ann, color='black', ls='--', lw=0.9, label='sample volatility of each series, annualised (%)' if k == names[0] else '_')
         for (a, b), c in zip(EPISODES.values(), [st.Purple, st.Orange]):
             if pd.Timestamp(a) < r.index[0]:
                 continue

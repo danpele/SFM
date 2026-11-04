@@ -644,7 +644,7 @@ def tlv_check(start=START):
 
 def fig_tails_by_year(names=('btc', 'sp500'), save=True):
     """Excess kurtosis and the fitted Student-t degrees of freedom of daily log returns, by calendar year."""
-    fig, axes = plt.subplots(2, 1, figsize=(4.8, 5.4), sharex=True)
+    fig, axes = plt.subplots(2, 1, figsize=(6.4, 7.2), sharex=True)
     out = {}
     for k in names:
         r = returns(k, '2015-01-01')

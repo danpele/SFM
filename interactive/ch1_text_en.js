@@ -1,6 +1,6 @@
 // Readouts of the Chapter 1 interactive page, written by latex/build_interactive_ch1.py.
 window.CH1_TEXT = {
- tl: (th, n, up, dn) => `Days on which the log returns of the two series differ by more than ${th}%: ${n} since 2015; the close rises on ${up} of them and falls on ${dn}.`,
+ tl: (th, n, up, dn) => `Days on which the log returns of the two series differ by more than ${th} percentage points: ${n} since 2015; the close rises on ${up} of them and falls on ${dn}.`,
  tlBig: (d, rc, ra) => `Largest gap: ${d}, log return ${rc}% from the close and ${ra}% from the adjusted close.`,
  bb: (d, b, t) => `100 units invested on ${d} become ${b} in BET and ${t} in BET-TR on 18 September 2026.`,
  bb2: (gb, gt, g) => `Compound annual growth rate: BET ${gb}%, BET-TR ${gt}%; dividends add ${g} percentage points a year.`,

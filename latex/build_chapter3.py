@@ -66,8 +66,12 @@ V.put('cms.last', (math.cos(-0.5 * Vv) / 1.2) ** (-0.5 / 1.5), 3)
 # McCulloch, BET: interpolare în Tabelul III (nu_beta = 0) între 3.2 și 3.5
 nuB = N['fits']['bet']['mcculloch']['nu_alpha']
 V.put('mc.bet.interp', 1.484 + (nuB - 3.2) / 0.3 * (1.391 - 1.484), 3)
-V.put('mc.bet.iqr', N['fits']['bet']['mcculloch']['q75'] - N['fits']['bet']['mcculloch']['q25'], 2)
-V.put('mc.bet.range', N['fits']['bet']['mcculloch']['q95'] - N['fits']['bet']['mcculloch']['q05'], 2)
+_mq = {c: round(N['fits']['bet']['mcculloch'][c], 4) for c in ['q05', 'q25', 'q50', 'q75', 'q95']}   # shown with 4 decimals
+for c, x in _mq.items():
+    V.put(f'mc.bet.{c}', x, 4)
+V.put('mc.bet.iqr', _mq['q75'] - _mq['q25'], 4)
+V.put('mc.bet.range', _mq['q95'] - _mq['q05'], 4)
+assert round(V_ratio := (_mq['q95'] - _mq['q05']) / (_mq['q75'] - _mq['q25']), 3) == round(N['fits']['bet']['mcculloch']['nu_alpha'], 3)
 # tail ratio 2^(-alpha)
 V.put('tr.17', 2 ** -1.7, 2)
 V.put('tr.15', 2 ** -1.5, 2)
@@ -79,6 +83,21 @@ V.put('ex.d0', 0.05 - 0.2 * 0.6 * math.tan(0.85 * math.pi), 3)
 V.put('sqrt2', math.sqrt(2), 2)
 fits = N['fits']
 best_alpha = min(fits, key=lambda k: fits[k]['stable']['alpha'])
+# AIC gain of the heavy-tailed models over the Normal distribution (range over the four series)
+for m_ in ['t', 'stable']:
+    g_ = {k: fits[k]['normal']['aic'] - fits[k][m_]['aic'] for k in fits}
+    lo_, hi_ = min(g_, key=g_.get), max(g_, key=g_.get)
+    V.int(f'aicg.{m_}.lo', round(g_[lo_]))
+    V.int(f'aicg.{m_}.hi', round(g_[hi_]))
+    V.raw(f'aicg.{m_}.lon', NAMES[lo_])
+    V.raw(f'aicg.{m_}.hin', NAMES[hi_])
+V.put('mc.ratio2500', N['mc']['2500']['mcculloch']['sd'] / N['mc']['2500']['ml']['sd'], 2)
+V.put('mc.ratio500', N['mc']['500']['mcculloch']['sd'] / N['mc']['500']['ml']['sd'], 2)
+# 1% and 99% quantiles of S1(1.5, 0.5, 1, 0) by numerical integration (scipy; the FFT grid of the chart is slightly low)
+from scipy.stats import levy_stable as _ls   # noqa: E402
+_q = _ls.ppf([0.01, 0.99], 1.5, 0.5)
+V.put('cms.q01_exact', float(_q[0]), 2)
+V.put('cms.q99_exact', float(_q[1]), 2)
 V.raw('low.alpha', NAMES[best_alpha])
 
 # =============================================================================
@@ -565,8 +584,8 @@ D.frame(T('Worked Example: One Draw Step by Step', 'Exemplu lucrat: o extragere 
 chart(T('CMS Draws against the Exact Density', 'Extrageri CMS față de densitatea exactă'), 'sfm_ch3_cms', 'SFM_ch3_sim_stable', [
     T('100\\,000 CMS draws of $S(1.5, 0.5, 1, 0; 1)$: the histogram follows the density computed from $\\varphi$',
       '100\\,000 de extrageri CMS din $S(1.5, 0.5, 1, 0; 1)$: histograma urmează densitatea calculată din $\\varphi$'),
-    T('Quantiles 1\\% and 99\\%: sample $@{cms.q01}$ and $@{cms.q99}$, exact $@{cms.q01_exact}$ and $@{cms.q99_exact}$',
-      'Cuantilele de 1\\% și 99\\%: eșantion $@{cms.q01}$ și $@{cms.q99}$, exact $@{cms.q01_exact}$ și $@{cms.q99_exact}$'),
+    T('Quantiles 1\\% and 99\\%: sample $@{cms.q01}$ and $@{cms.q99}$, exact (scipy \\texttt{levy\\_stable}) $@{cms.q01_exact}$ and $@{cms.q99_exact}$',
+      'Cuantilele de 1\\% și 99\\%: eșantion $@{cms.q01}$ și $@{cms.q99}$, exact (scipy \\texttt{levy\\_stable}) $@{cms.q01_exact}$ și $@{cms.q99_exact}$'),
     T('Two-sample KS (Kolmogorov--Smirnov) test against \\texttt{levy\\_stable.rvs}: statistic $@{cms.ks}$, p-value $@{cms.p}$, no difference',
       'Testul KS (Kolmogorov--Smirnov) cu două eșantioane față de \\texttt{levy\\_stable.rvs}: statistica $@{cms.ks}$, p-value $@{cms.p}$, nicio diferență')])
 
@@ -616,8 +635,8 @@ side(T("McCulloch's Map from $\\nu_\\alpha$ to $\\alpha$", 'Corespondența McCul
 D.frame(T('Worked Example: McCulloch on the BET', 'Exemplu lucrat: McCulloch pe BET'), items(
     T('BET daily log returns (\\%), @{f.bet.y0}--@{y1}, $n = @{f.bet.n}$', 'Randamentele logaritmice zilnice BET (\\%), @{f.bet.y0}--@{y1}, $n = @{f.bet.n}$'),
     (T('Step 1: quantiles', 'Pasul 1: cuantilele'),
-     [T('$\\hat q_{0.05} = @{f.bet.m.q05}$, $\\hat q_{0.25} = @{f.bet.m.q25}$, $\\hat q_{0.5} = @{f.bet.m.q50}$, $\\hat q_{0.75} = @{f.bet.m.q75}$, $\\hat q_{0.95} = @{f.bet.m.q95}$',
-        '$\\hat q_{0.05} = @{f.bet.m.q05}$, $\\hat q_{0.25} = @{f.bet.m.q25}$, $\\hat q_{0.5} = @{f.bet.m.q50}$, $\\hat q_{0.75} = @{f.bet.m.q75}$, $\\hat q_{0.95} = @{f.bet.m.q95}$')]),
+     [T('$\\hat q_{0.05} = @{mc.bet.q05}$, $\\hat q_{0.25} = @{mc.bet.q25}$, $\\hat q_{0.5} = @{mc.bet.q50}$, $\\hat q_{0.75} = @{mc.bet.q75}$, $\\hat q_{0.95} = @{mc.bet.q95}$',
+        '$\\hat q_{0.05} = @{mc.bet.q05}$, $\\hat q_{0.25} = @{mc.bet.q25}$, $\\hat q_{0.5} = @{mc.bet.q50}$, $\\hat q_{0.75} = @{mc.bet.q75}$, $\\hat q_{0.95} = @{mc.bet.q95}$')]),
     (T('Step 2: ratios', 'Pasul 2: rapoartele'),
      [T('$\\nu_\\alpha = @{mc.bet.range}/@{mc.bet.iqr} = @{f.bet.m.nu_alpha}$; $\\nu_\\beta = @{f.bet.m.nu_beta}$, practically symmetric',
         '$\\nu_\\alpha = @{mc.bet.range}/@{mc.bet.iqr} = @{f.bet.m.nu_alpha}$; $\\nu_\\beta = @{f.bet.m.nu_beta}$, practic simetric')]),
@@ -646,7 +665,8 @@ chart(T('McCulloch vs ML in a Monte Carlo Study', 'McCulloch și ML într-un stu
       '200 de eșantioane din $S(1.7, 0, 1, 0)$ pentru fiecare mărime; ambii estimatori sînt centrați pe 1,7'),
     T('Standard deviation of $\\hat\\alpha$: $n = 500$: McCulloch $@{mc.500.mcculloch.sd}$, ML $@{mc.500.ml.sd}$; $n = 2500$: $@{mc.2500.mcculloch.sd}$ vs $@{mc.2500.ml.sd}$',
       'Abaterea standard a lui $\\hat\\alpha$: $n = 500$: McCulloch $@{mc.500.mcculloch.sd}$, ML $@{mc.500.ml.sd}$; $n = 2500$: $@{mc.2500.mcculloch.sd}$ față de $@{mc.2500.ml.sd}$'),
-    T('ML is about $@{mc.ratio500}$ times more precise for the same data', 'ML este de circa $@{mc.ratio500}$ ori mai precisă pe aceleași date')], h='0.60\\textheight')
+    T('ML is more precise for the same data: McCulloch\'s standard deviation is $@{mc.ratio500}$ times that of ML at $n = 500$, $@{mc.ratio2500}$ times at $n = 2500$',
+      'ML este mai precisă pe aceleași date: abaterea standard McCulloch este de $@{mc.ratio500}$ ori cea ML la $n = 500$ și de $@{mc.ratio2500}$ ori la $n = 2500$')], h='0.60\\textheight')
 
 D.recap(('Estimation', 'Estimarea'), [
     T('McCulloch: five quantiles, two ratios, four tables; fast and robust', 'McCulloch: cinci cuantile, două rapoarte, patru tabele; rapidă și robustă'),
@@ -753,7 +773,8 @@ D.frame(T('Which Model Fits Best?', 'Compararea celor trei modele'), table(
     [aicrow(k) for k in ASSETS], size='footnotesize') + items(
     T('AIC (Akaike information criterion) $= 2k - 2\\ell(\\hat\\theta)$, with $k$ the number of parameters; lower is better',
       'AIC (Akaike information criterion, criteriul informațional Akaike) $= 2k - 2\\ell(\\hat\\theta)$, cu $k$ numărul de parametri; se preferă valoarea mai mică'),
-    T('Both heavy-tailed models beat the Normal distribution by thousands of AIC points', 'Ambele modele cu cozi groase sînt preferate distribuției Normale, cu diferențe de mii de puncte AIC'),
+    T('Both heavy-tailed models beat the Normal distribution: Student-t by @{aicg.t.lo} (@{aicg.t.lon}) to @{aicg.t.hi} (@{aicg.t.hin}) AIC points, stable by @{aicg.stable.lo} to @{aicg.stable.hi}',
+      'Ambele modele cu cozi groase sînt preferate distribuției Normale: Student-t cu @{aicg.t.lo} (@{aicg.t.lon}) pînă la @{aicg.t.hi} (@{aicg.t.hin}) puncte AIC, cea stabilă cu @{aicg.stable.lo} pînă la @{aicg.stable.hi}'),
     T('Student-t wins for every series, with fewer parameters; S\\&P 500: by @{f.sp500.aic.ts} points',
       'Student-t este preferată pentru fiecare serie, deși are mai puțini parametri; la S\\&P 500, diferența este de @{f.sp500.aic.ts} de puncte'),
     T('$\\hat\\nu$ between 2 and 3.1: finite variance, but few finite moments beyond it', '$\\hat\\nu$ între 2 și 3,1: varianță finită, dar aproape niciun moment finit de ordin superior')) + ql('SFM_ch3_fit_returns'))
@@ -838,7 +859,7 @@ D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
 D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     (T('\\textbf{Have the tails of Bitcoin become lighter as the market matured?}', '\\textbf{Au devenit mai subțiri cozile Bitcoin pe măsură ce piața s-a maturizat?}'),
-     [T('more participants, futures and ETFs (exchange-traded funds) since 2017--2024', 'mai mulți participanți, contracte futures și ETF-uri (exchange-traded funds, fonduri tranzacționate la bursă) în perioada 2017--2024'),
+     [T('more participants, futures (since 2017) and spot ETFs (exchange-traded funds, since 2024)', 'mai mulți participanți, contracte futures (din 2017) și ETF-uri spot (exchange-traded funds, fonduri tranzacționate la bursă, din 2024)'),
       T('if the tails got lighter, risk models fitted on old data overstate today\'s risk', 'dacă cozile au devenit mai subțiri, modelele de risc estimate pe date vechi supraestimează riscul de azi')]),
     T('Why it is open: $\\hat\\alpha$ moves with volatility regimes, and yearly samples are short', 'De ce rămîne deschisă: $\\hat\\alpha$ variază odată cu regimurile de volatilitate, iar eșantioanele anuale sînt scurte'),
     T('Full sample: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), the lowest of our four series', 'Eșantionul complet: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), cel mai mic dintre cele patru serii'),

@@ -74,7 +74,8 @@ def ph(key, cap, h='0.50\\textheight'):
 sd = 100 * N['rw']['sd']
 for q in (5, 20, 250):
     V.put(f'ex.sd{q}', sd * math.sqrt(q), 2)
-    V.put(f'ex.sq{q}', math.sqrt(q), 2)
+    V.put(f'ex.sq{q}', math.sqrt(q), 3)
+V.put('ex.sdd', sd, 4)
 # ACF of AR(1), AR(2), MA(1)
 V.put('ex.ma1', 0.5 / 1.25, 2)
 V.put('ex.ar3', 0.9 ** 3, 3)
@@ -102,8 +103,8 @@ X = np.column_stack([np.ones(len(yl)), yl])
 b, *_ = np.linalg.lstsq(X, dy, rcond=None)
 u = dy - X @ b
 se = math.sqrt(np.sum(u ** 2) / (len(dy) - 2) * np.linalg.inv(X.T @ X)[1, 1])
-V.put('df.g', b[1], 5)
-V.put('df.se', se, 5)
+V.put('df.g', b[1], 7)
+V.put('df.se', se, 6)
 V.put('df.tau', b[1] / se, 2)
 V.int('df.n', len(dy))
 # size of a multiple test: m independent tests at 5%
@@ -332,12 +333,12 @@ D.frame(T('Martingale and Random Walk', 'Martingal și mers aleator'), items(
         '\\textbf{Răspuns}: nu; respinge RW1 și RW2, dar o varianță previzibilă nu face randamentul previzibil; martingalul și RW3 rămîn valabile')])))
 
 D.frame(T('Worked Example: How Risk Grows with the Horizon', 'Exemplu lucrat: cum crește riscul cu orizontul'), items(
-    (T('S\\&P 500 since 1990: daily standard deviation $\\hat\\sigma = @{rw.sd}\\%$', 'S\\&P 500 din 1990: abaterea standard zilnică $\\hat\\sigma = @{rw.sd}\\%$'),
+    (T('S\\&P 500 since 1990: daily standard deviation $\\hat\\sigma = @{ex.sdd}\\%$', 'S\\&P 500 din 1990: abaterea standard zilnică $\\hat\\sigma = @{ex.sdd}\\%$'),
      [T('under a random walk, $\\mathrm{sd}(r_t(q)) = \\sigma\\sqrt{q}$', 'în ipoteza de mers aleator, $\\mathrm{sd}(r_t(q)) = \\sigma\\sqrt{q}$')]),
     (T('Step by step', 'Pas cu pas'),
-     [T('one week, $q = 5$: $@{rw.sd} \\times \\sqrt{5} = @{rw.sd} \\times @{ex.sq5} = @{ex.sd5}\\%$', 'o săptămînă, $q = 5$: $@{rw.sd} \\times \\sqrt{5} = @{rw.sd} \\times @{ex.sq5} = @{ex.sd5}\\%$'),
-      T('one month, $q = 20$: $@{rw.sd} \\times @{ex.sq20} = @{ex.sd20}\\%$', 'o lună, $q = 20$: $@{rw.sd} \\times @{ex.sq20} = @{ex.sd20}\\%$'),
-      T('one year, $q = 250$: $@{rw.sd} \\times @{ex.sq250} = @{ex.sd250}\\%$', 'un an, $q = 250$: $@{rw.sd} \\times @{ex.sq250} = @{ex.sd250}\\%$')]),
+     [T('one week, $q = 5$: $@{ex.sdd} \\times \\sqrt{5} = @{ex.sdd} \\times @{ex.sq5} = @{ex.sd5}\\%$', 'o săptămînă, $q = 5$: $@{ex.sdd} \\times \\sqrt{5} = @{ex.sdd} \\times @{ex.sq5} = @{ex.sd5}\\%$'),
+      T('one month, $q = 20$: $@{ex.sdd} \\times @{ex.sq20} = @{ex.sd20}\\%$', 'o lună, $q = 20$: $@{ex.sdd} \\times @{ex.sq20} = @{ex.sd20}\\%$'),
+      T('one year, $q = 250$: $@{ex.sdd} \\times @{ex.sq250} = @{ex.sd250}\\%$', 'un an, $q = 250$: $@{ex.sdd} \\times @{ex.sq250} = @{ex.sd250}\\%$')]),
     T('This is the ``square-root-of-time rule\'\' used to scale VaR and volatility', 'Aceasta este „regula rădăcinii pătrate a timpului”, folosită pentru a scala VaR și volatilitatea'),
     T('If returns are autocorrelated, the rule fails: the variance-ratio test of Section 7 measures by how much',
       'Dacă randamentele sînt autocorelate, regula nu mai funcționează: testul variance ratio din secțiunea 7 măsoară cu cît')))
@@ -525,8 +526,8 @@ D.frame(T('The Augmented Test and a Worked Example', 'Testul augmentat și un ex
     (T('\\textbf{Worked example}: BET log price, constant, no lags, $T = @{df.n}$', '\\textbf{Exemplu lucrat}: prețul logaritmic BET, constantă, fără laguri, $T = @{df.n}$'),
      [T('OLS: $\\hat\\gamma = @{df.g}$, $\\mathrm{SE}(\\hat\\gamma) = @{df.se}$', 'OLS: $\\hat\\gamma = @{df.g}$, $\\mathrm{SE}(\\hat\\gamma) = @{df.se}$'),
       T('$\\tau = @{df.g}/@{df.se} = @{df.tau} > @{df.c}$: do not reject the unit root', '$\\tau = @{df.g}/@{df.se} = @{df.tau} > @{df.c}$: nu respingem rădăcina unitară'),
-      T('a usual $t$-test (critical value $-1.645$) would have rejected it: the wrong distribution gives the wrong answer',
-        'un test $t$ obișnuit (valoarea critică $-1{,}645$) ar fi respins-o: distribuția greșită dă răspunsul greșit')])))
+      T('here even a usual $t$-test (critical value $-1.645$) would not reject; but a $\\tau$ between $@{df.c}$ and $-1.645$ would be rejected by the wrong (Normal) critical value and kept by the right one',
+        'aici nici un test $t$ obișnuit (valoarea critică $-1{,}645$) nu ar respinge; dar un $\\tau$ între $@{df.c}$ și $-1{,}645$ ar fi respins cu valoarea critică greșită (Normală) și păstrat cu cea corectă')])))
 
 D.frame(T('Phillips--Perron and KPSS', 'Phillips--Perron și KPSS'), items(
     (T('\\textbf{PP} (Phillips--Perron) \\refPP: the Dickey--Fuller regression without lags; $\\tau$ is corrected for autocorrelation and heteroskedasticity',
@@ -650,7 +651,7 @@ D.frame(T('Variance Ratios and Robust Tests', 'Rapoarte ale varianțelor și tes
     T('S\\&P 500: significant mean reversion at all four horizons; BET: significant momentum at all four', 'S\\&P 500: mean reversion semnificativ la toate cele patru orizonturi; BET: momentum semnificativ la toate patru'),
     T('Transgaz: $Z^*(2) = @{vr.tgn.zs2}$ and $Z^*(5) = @{vr.tgn.zs5}$; DAX, Bitcoin, TLV, SNP, BRD: no rejection',
       'Transgaz: $Z^*(2) = @{vr.tgn.zs2}$ și $Z^*(5) = @{vr.tgn.zs5}$; DAX, Bitcoin, TLV, SNP, BRD: nicio respingere'),
-    T('But eight tests per series at once: some ``significant\'\' horizons appear by chance', 'Atenție: sînt opt teste simultane pe fiecare serie, deci unele orizonturi „semnificative” apar din întîmplare')) + ql('SFM_ch7_variance_ratio'), 'footnotesize')
+    T('But four tests per series, 32 in the table: some ``significant\'\' horizons appear by chance', 'Atenție: sînt patru teste pe fiecare serie, 32 în tabel, deci unele orizonturi „semnificative” apar din întîmplare')) + ql('SFM_ch7_variance_ratio'), 'footnotesize')
 
 D.frame(T('Several Horizons at Once: the Chow--Denning Test', 'Mai multe orizonturi deodată: testul Chow--Denning'), items(
     (T('Testing $q = 2, 5, 10, 20$ separately at 5\\% gives a much higher chance of at least one false rejection', 'Testarea separată pentru $q = 2, 5, 10, 20$ la 5\\% crește mult probabilitatea de a obține cel puțin o respingere falsă'),
@@ -858,7 +859,7 @@ D.frame(T('Key Takeaways', 'Idei de reținut'), items(
 D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretch}{1.45}' + table(
     'll', T('\\textbf{Quantity}', '\\textbf{Mărimea}') + ' & ' + T('\\textbf{Formula}', '\\textbf{Formula}'),
     [T('Random walk', 'Mers aleator') + ' & $p_t = \\mu + p_{t-1} + \\varepsilon_t$, \\quad $\\mathrm{Var}(r_t(q)) = q\\sigma^2$',
-     T('Sample ACF', 'ACF de selecție') + ' & $\\hat\\rho(k) = \\sum_t e_te_{t-k}/\\sum_t e_t^2$, \\quad band $\\pm 1.96\\sqrt{\\hat\\delta(k)/T}$',
+     T('Sample ACF', 'ACF de selecție') + ' & $\\hat\\rho(k) = \\sum_t e_te_{t-k}/\\sum_t e_t^2$, \\quad ' + T('band', 'banda') + ' $\\pm 1.96\\sqrt{\\hat\\delta(k)/T}$',
      'Ljung--Box & $Q_{LB}(m) = T(T+2)\\sum_{k=1}^m \\hat\\rho(k)^2/(T-k) \\sim \\chi^2(m)$',
      T('Runs test', 'Testul runs') + ' & $E[R] = 2n_1n_2/n + 1$, \\quad $z = (R - E[R])/\\mathrm{sd}(R)$',
      'ADF & $\\Delta p_t = c + bt + \\gamma p_{t-1} + \\sum_j \\delta_j\\Delta p_{t-j} + \\varepsilon_t$, \\quad $\\tau = \\hat\\gamma/\\mathrm{SE}(\\hat\\gamma)$',

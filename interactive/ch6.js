@@ -556,8 +556,8 @@ function kupiecBlock() {
 
 // ================================================================= 21. out of sample, 2020-2026
 const OOS_M = ['Normal', 'Student-t', 'Skewed-t', 'GED', 'Mixture', 'NIG', 'Stable'];
-function oosTest(k) {                // the chapter's rule: test = r.loc[split:].iloc[1:] (the first day on or after 31 Dec 2019 is left out)
-  const S = ser(k), i0 = S.dates.findIndex(d => d >= D.split) + 1; return { S, i0, test: S.x.slice(i0), nEst: S.dates.filter(d => d <= D.split).length };
+function oosTest(k) {                // the chapter's rule: test = every day after the split (31 Dec 2019)
+  const S = ser(k), i0 = S.dates.findIndex(d => d > D.split); return { S, i0, test: S.x.slice(i0), nEst: S.dates.filter(d => d <= D.split).length };
 }
 function pinball(r, q, a) { let s = 0; for (const v of r) s += (a - (v < q ? 1 : 0)) * (v - q); return s / r.length; }
 function oosBlock() {

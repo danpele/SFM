@@ -76,9 +76,10 @@ Q = N['qr']
 # JPM worked example: computed from the estimates as displayed (2 decimals), the same inputs as Seminar 15, A1,
 # so that every product on the slide can be checked by hand and both decks give the same CoVaR 1%
 QA, QB, QQA, QQM = (round(Q[c], 2) for c in ('a', 'b', 'q_a', 'q_m'))
-V.put('qr.bqm', -QB * QQA, 2)
+V.put('qr.bqm', -QB * QQA, 3)        # 3 decimals: the sum of the displayed terms is the displayed CoVaR
 V.put('qr.diff', QQM - QQA, 2)
-V.put('qr.covar', -(QA + QB * QQA), 2)
+V.put('qr.covar', -(QA + QB * QQA), 3)
+V.put('qr.covar_u', Q['covar'], 2)    # from the unrounded estimates (the value in the chart)
 V.put('qr.covar_med', -(QA + QB * QQM), 2)
 V.put('qr.dcovar', QB * (QQM - QQA), 2)
 # MES on a toy table of 10 days: market and bank returns (%), level 20% -> the two worst market days
@@ -344,16 +345,16 @@ D.section('Correlation and Tail Dependence in Crises', 'Corelația și dependen�
 
 chart(T('Correlation between Banks Rises in Crises', 'Corelația dintre bănci crește în crize'), 'sfm_ch15_rolling_corr', 'SFM_ch15_dependence', [
     T('Average of the pairwise correlations of daily returns within each group, on 120-day windows', 'Media corelațiilor dintre perechile de bănci, pe randamente zilnice, în fiecare grup, pe ferestre de 120 de zile'),
-    T('US banks: $@{co.US.calm}$ before the crisis (July 2005 -- June 2007), up to $@{co.US.max}$ (@{co.US.dmax}); TLV and BRD: $@{co.RO.y2017}$ in 2017, $@{co.RO.c2020}$ in April--June 2020',
-      'Băncile americane: $@{co.US.calm}$ înainte de criză (iulie 2005 -- iunie 2007), pînă la $@{co.US.max}$ (@{co.US.dmax}); TLV și BRD: $@{co.RO.y2017}$ în 2017, $@{co.RO.c2020}$ în aprilie--iunie 2020')],
+    T('US banks: $@{co.US.calm}$ before the crisis (July 2005 -- June 2007), up to $@{co.US.max}$ (@{co.US.dmax}); TLV and BRD: $@{co.RO.y2017}$ in 2017, $@{co.RO.c2020}$ in April--June 2020, maximum $@{co.RO.max}$ (@{co.RO.dmax})',
+      'Băncile americane: $@{co.US.calm}$ înainte de criză (iulie 2005 -- iunie 2007), pînă la $@{co.US.max}$ (@{co.US.dmax}); TLV și BRD: $@{co.RO.y2017}$ în 2017, $@{co.RO.c2020}$ în aprilie--iunie 2020, maximul $@{co.RO.max}$ (@{co.RO.dmax})')],
     h='0.62\\textheight')
 
 D.frame(T('Interpretation: When Diversification Fails', 'Interpretarea corelațiilor: cînd diversificarea nu mai funcționează'), items(
     (T('In crises, the banks move together: a portfolio of several banks is almost one bank', 'În crize, băncile se mișcă împreună: un portofoliu de mai multe bănci este aproape o singură bancă'),
      [T('the common factor (the market, funding stress) dominates the bank-specific news', 'factorul comun (piața, stresul de finanțare) domină știrile specifice fiecărei bănci')]),
-    (T('The two Romanian banks: low correlation in calm years, very high in 2020', 'Cele două bănci românești: corelație mică în anii liniștiți, foarte mare în 2020'),
+    (T('The two Romanian banks: low correlation in 2017, very high in 2020; the maximum (@{co.RO.dmax}) falls outside any crisis', 'Cele două bănci românești: corelație mică în 2017, foarte mare în 2020; maximul (@{co.RO.dmax}) apare în afara oricărei crize'),
      [T('in calm years the BVB stocks are driven by their own news and by low liquidity; in a crisis, by the common shock', 'în anii liniștiți, acțiunile BVB sînt determinate de propriile știri și de lichiditatea redusă; într-o criză, de șocul comun')]),
-    T('Caution: a rolling correlation estimated on 120 days is noisy, and a rise in correlation does not prove contagion (next slide)', 'Atenție: o corelație pe 120 de zile este zgomotoasă, iar o creștere a corelației nu dovedește contagiunea (slide-ul următor)')))
+    T('Caution: a rolling correlation estimated on 120 days is noisy (for two stocks, it can peak in a calm year), and a rise in correlation does not prove contagion (next slide)', 'Atenție: o corelație pe 120 de zile este zgomotoasă (pentru două acțiuni, poate atinge maximul într-un an liniștit), iar o creștere a corelației nu dovedește contagiunea (slide-ul următor)')))
 
 D.frame(T('Contagion or Interdependence? Forbes and Rigobon (1/2)', 'Contagiune sau interdependență? Forbes și Rigobon (1/2)'), items(
     (T('If $y = \\beta x + e$ with fixed $\\beta$, the correlation of $x$ and $y$ rises \\textbf{automatically} when the variance of $x$ rises \\refFR',
@@ -462,11 +463,11 @@ D.frame(T('Worked Example: JPMorgan Chase and the S\\&P 500', 'Exemplu rezolvat:
        'Randamente logaritmice zilnice, 2005--2026 ($n = @{qr.n}$); regresia cuantilică la 1\\%: $\\hat a = @{qr.a}$, $\\hat b = @{qr.b}$'),
      [T('JPM: $\\hat q_{1\\%} = @{qr.q_a}\\%$ (so VaR 1\\% of JPM $= @{qr.var_i}\\%$), median $\\hat q_{50\\%} = @{qr.q_m}\\%$', 'JPM: $\\hat q_{1\\%} = @{qr.q_a}\\%$ (deci VaR 1\\% al JPM $= @{qr.var_i}\\%$), mediana $\\hat q_{50\\%} = @{qr.q_m}\\%$')]),
     (T('\\textbf{CoVaR 1\\%} $= -(@{qr.a} + @{qr.b} \\times (@{qr.q_a})) = @{qr.ma} + @{qr.bqm} = @{qr.covar}\\%$', '\\textbf{CoVaR 1\\%} $= -(@{qr.a} + @{qr.b} \\times (@{qr.q_a})) = @{qr.ma} + @{qr.bqm} = @{qr.covar}\\%$'),
-     [T('CoVaR at the median of JPM: $@{qr.covar_med}\\%$', 'CoVaR la mediana JPM: $@{qr.covar_med}\\%$')]),
+     [T('from the unrounded estimates: $@{qr.covar_u}\\%$ (the value in the chart); CoVaR at the median of JPM: $@{qr.covar_med}\\%$', 'din estimațiile nerotunjite: $@{qr.covar_u}\\%$ (valoarea din grafic); CoVaR la mediana JPM: $@{qr.covar_med}\\%$')]),
     (T('\\textbf{$\\Delta$CoVaR 1\\%} $= @{qr.b} \\times (@{qr.q_m} - (@{qr.q_a})) = @{qr.b} \\times @{qr.diff} = @{qr.dcovar}\\%$', '\\textbf{$\\Delta$CoVaR 1\\%} $= @{qr.b} \\times (@{qr.q_m} - (@{qr.q_a})) = @{qr.b} \\times @{qr.diff} = @{qr.dcovar}\\%$'),
      [T('the unconditional VaR 1\\% of the S\\&P 500 is $@{qr.var_sys}\\%$', 'VaR 1\\% necondiționat al S\\&P 500 este $@{qr.var_sys}\\%$')]),
-    T('Interpretation: when JPM is in distress, the loss of the index exceeded with probability 1\\% is @{qr.covar}\\%, against @{qr.covar_med}\\% on a normal JPM day',
-      'Interpretare: cînd JPM este în dificultate, pierderea indicelui depășită cu probabilitatea 1\\% este de @{qr.covar}\\%, față de @{qr.covar_med}\\% într-o zi obișnuită pentru JPM')))
+    T('Interpretation: when JPM is in distress, the loss of the index exceeded with probability 1\\% is @{qr.covar_u}\\%, against @{qr.covar_med}\\% on a normal JPM day',
+      'Interpretare: cînd JPM este în dificultate, pierderea indicelui depășită cu probabilitatea 1\\% este de @{qr.covar_u}\\%, față de @{qr.covar_med}\\% într-o zi obișnuită pentru JPM')))
 
 chart(T('CoVaR in a Picture', 'CoVaR într-un grafic'), 'sfm_ch15_covar_qr', 'SFM_ch15_covar', [
     T('Red line: the 1\\% quantile of the S\\&P 500 given JPM; green line: the median; dashed: the 1\\% quantile and the median of JPM',
@@ -637,7 +638,7 @@ D.frame(T('Granger Causality', 'Cauzalitatea Granger'), items(
     T('Under no links, about 5\\% of pairs are significant by chance: DGC must be compared with 5\\%', 'Fără legături, aproximativ 5\\% dintre perechi sînt semnificative din întîmplare: DGC trebuie comparat cu 5\\%')))
 
 chart(T('Granger Networks through Time', 'Rețele Granger în timp'), 'sfm_ch15_dgc', 'SFM_ch15_networks', [
-    T('11 US and European banks, monthly returns since 2005 (@{gc.nm} months); first window ends in January 2008', '11 bănci americane și europene, randamente lunare din 2005 (@{gc.nm} de luni); prima fereastră se încheie în ianuarie 2008'),
+    T('11 US and European banks, monthly returns since 2005 (@{gc.nm} months); first window ends in January 2008', '11 bănci americane și europene, randamente lunare din 2005 (@{gc.nm} luni); prima fereastră se încheie în ianuarie 2008'),
     T('DGC: maximum @{gc.max}\\% (window ending @{gc.dmax}), average @{gc.mean}\\%, minimum @{gc.min}\\% (@{gc.dmin})', 'DGC: maximul @{gc.max}\\% (fereastra care se încheie pe @{gc.dmax}), media @{gc.mean}\\%, minimul @{gc.min}\\% (@{gc.dmin})')],
     h='0.58\\textheight')
 
@@ -675,8 +676,8 @@ D.frame(T('Interpretation of the Connectedness Table', 'Interpretarea tabelului 
 chart(T('Total Connectedness through Time', 'Conectivitatea totală în timp'), 'sfm_ch15_dy_rolling', 'SFM_ch15_networks', [
     T('Rolling 200-day windows moved by 5 days; minimum @{dr.min}\\% (@{dr.dmin}), maximum @{dr.max}\\% (@{dr.dmax}); October 2008 -- March 2009: @{dr.y2008}\\%',
       'Ferestre mobile de 200 de zile, deplasate cu 5 zile; minimul @{dr.min}\\% (@{dr.dmin}), maximul @{dr.max}\\% (@{dr.dmax}); octombrie 2008 -- martie 2009: @{dr.y2008}\\%'),
-    T('Interpretation: connectedness rose during 2007, before Lehman, and peaks in crises; it falls when bank-specific news dominate (2006, 2024)',
-      'Interpretare: conectivitatea a crescut în 2007, înainte de Lehman, și atinge maximele în crize; scade cînd domină știrile specifice fiecărei bănci (2006, 2024)')],
+    T('Interpretation: connectedness rose during 2007, before Lehman, and reaches its maximum in March 2020; but in 2016, a year without a crisis in the data, it reaches @{dr.max2016}\\%, above the 2008--2009 average: a high level alone does not signal a crisis; it falls when bank-specific news dominate (2006, 2024)',
+      'Interpretare: conectivitatea a crescut în 2007, înainte de Lehman, și atinge maximul în martie 2020; dar în 2016, un an fără criză în date, ajunge la @{dr.max2016}\\%, peste media din 2008--2009: un nivel ridicat nu semnalează singur o criză; scade cînd domină știrile specifice fiecărei bănci (2006, 2024)')],
     h='0.58\\textheight')
 
 D.frame(T('Further Reading: the Financial Risk Meter', 'Lectură suplimentară: Financial Risk Meter'), items(

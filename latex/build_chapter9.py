@@ -117,6 +117,10 @@ V.put('m.nu.max', max(M[k]['params']['nu'] for k in ASSETS), 1)
 EN_ = N['est']['normal']
 V.put('se.ratio', sum(EN_['se'][c] / EN_['se_classic'][c] for c in ('alpha[1]', 'beta[1]')) / 2, 1)
 V.put('se.ratio.om', EN_['se']['omega'] / EN_['se_classic']['omega'], 1)
+V.put('se.ratio.mu', EN_['se']['mu'] / EN_['se_classic']['mu'], 2)
+for _k in M:
+    if M[_k]['pers'] < 0.9999:
+        V.put(f'm.{_k}.pers', M[_k]['pers'], 4)
 for pp_ in (0.90, 0.98, 0.99):
     V.put(f'hl.{int(round(100 * pp_))}', math.log(0.5) / math.log(pp_), 1)
 FE = N['fe']
@@ -225,7 +229,7 @@ D.section('Conditional Mean and Conditional Variance', 'Media condiționată și
 
 D.frame(T('Conditioning on the Past', 'Condiționarea pe trecut'), items(
     (T('$\\mathcal{F}_{t-1}$: the information available at the end of day $t-1$ (past returns)', '$\\mathcal{F}_{t-1}$: informația disponibilă la sfîrșitul zilei $t-1$ (randamentele trecute)'),
-     [T('conditional expectation $E[X \\mid \\mathcal{F}_{t-1}]$: the best forecast of $X$ given the past (Chapter 4)', 'speranța condiționată $E[X \\mid \\mathcal{F}_{t-1}]$: cea mai bună prognoză a lui $X$, dată fiind informația trecută (Capitolul 4)')]),
+     [T('conditional expectation $E[X \\mid \\mathcal{F}_{t-1}]$: the best forecast of $X$ given the past (Chapter 4)', 'media condiționată $E[X \\mid \\mathcal{F}_{t-1}]$: cea mai bună prognoză a lui $X$, dată fiind informația trecută (Capitolul 4)')]),
     (T('\\textbf{Conditional mean}: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$', '\\textbf{Media condiționată}: $\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$'),
      [T('Chapter 7: for daily returns, $\\mu_t$ is almost constant: $\\mu_t = \\mu$', 'Capitolul 7: pentru randamentele zilnice, $\\mu_t$ este aproape constantă: $\\mu_t = \\mu$')]),
     (T('\\textbf{Conditional variance}: $\\sigma_t^2 = \\mathrm{Var}(r_t \\mid \\mathcal{F}_{t-1}) = E[(r_t - \\mu_t)^2 \\mid \\mathcal{F}_{t-1}]$',
@@ -388,7 +392,7 @@ D.frame(T('Worked Example: One GARCH(1,1) Step', 'Exemplu rezolvat: un pas GARCH
 D.frame(T('IGARCH and the EWMA Link', 'IGARCH și legătura cu EWMA'), items(
     (T('\\textbf{IGARCH} (integrated GARCH) \\refEB: $\\alpha + \\beta = 1$', '\\textbf{IGARCH} (integrated GARCH, GARCH integrat) \\refEB: $\\alpha + \\beta = 1$'),
      [T('shocks to the variance never die out: no half-life, no finite unconditional variance', 'șocurile varianței nu se sting niciodată: nu există timp de înjumătățire și nici varianță necondiționată finită'),
-      T('the forecast of the variance is the same for every horizon', 'prognoza varianței este aceeași pentru orice orizont')]),
+      T('with $\\omega = 0$ the forecast of the variance is the same for every horizon; with $\\omega > 0$ it grows by $\\omega$ per day', 'cu $\\omega = 0$, prognoza varianței este aceeași pentru orice orizont; cu $\\omega > 0$, ea crește cu $\\omega$ pe zi')]),
     (T('\\textbf{EWMA} (exponentially weighted moving average, Chapter 8): $\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1 - \\lambda)r_{t-1}^2$',
        '\\textbf{EWMA} (exponentially weighted moving average, Capitolul 8): $\\sigma_t^2 = \\lambda\\sigma_{t-1}^2 + (1 - \\lambda)r_{t-1}^2$'),
      [T('this is IGARCH with $\\omega = 0$, $\\alpha = 1 - \\lambda$, $\\beta = \\lambda$; RiskMetrics uses $\\lambda = 0.94$ for daily data',
@@ -449,8 +453,8 @@ D.frame(T('Estimation Step by Step and with a Package', 'Estimarea pas cu pas ș
         'cele două variante diferă doar prin valoarea inițială a lui $\\sigma_t^2$ și prin algoritmul de optimizare; log-verosimilitatea $@{step.ll}$ față de $@{en.ll}$')]),
     T('SE (standard error), classic: from the inverse Hessian (the curvature of $\\ell$); robust: valid when $z_t$ is not Normal \\refBW',
       'SE (standard error, eroarea standard) clasică: din inversa matricei hessiene (curbura lui $\\ell$); robustă: validă și cînd $z_t$ nu este Normal \\refBW'),
-    T('Interpretation: the robust SE are about @{se.ratio} times larger (@{se.ratio.om} for $\\omega$): with heavy-tailed $z_t$ the classic SE overstate the precision',
-      'Interpretare: SE robuste sînt de circa @{se.ratio} ori mai mari (@{se.ratio.om} pentru $\\omega$): cînd $z_t$ are cozi groase, SE clasice supraestimează precizia')) + ql('SFM_ch9_garch_estimation'), 'footnotesize')
+    T('Interpretation: the robust SE of $\\alpha$ and $\\beta$ are about @{se.ratio} times larger (@{se.ratio.om} for $\\omega$, @{se.ratio.mu} for $\\mu$): with heavy-tailed $z_t$ the classic SE overstate the precision of the variance parameters',
+      'Interpretare: SE robuste ale lui $\\alpha$ și $\\beta$ sînt de circa @{se.ratio} ori mai mari (@{se.ratio.om} pentru $\\omega$, @{se.ratio.mu} pentru $\\mu$): cînd $z_t$ are cozi groase, SE clasice supraestimează precizia parametrilor varianței')) + ql('SFM_ch9_garch_estimation'), 'footnotesize')
 
 D.frame(T('Quasi-Maximum Likelihood', 'Cvasi-verosimilitatea maximă'), items(
     (T('\\textbf{QMLE} (quasi-maximum likelihood estimation): maximise the Normal likelihood even if $z_t$ is not Normal',
@@ -746,8 +750,8 @@ D.frame(T('Conditional VaR', 'VaR condiționat'), items(
     (T('\\textbf{Worked example}: S\\&P 500 on @{end}, GARCH(1,1)-t: $\\hat\\mu = @{var.mu}$, $\\sigma_{t+1} = @{var.sig}$, $\\hat\\nu = @{var.nu}$',
        '\\textbf{Exemplu rezolvat}: S\\&P 500 la @{end}, GARCH(1,1)-t: $\\hat\\mu = @{var.mu}$, $\\sigma_{t+1} = @{var.sig}$, $\\hat\\nu = @{var.nu}$'),
      [T('$q_{0.01}(z) = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$', '$q_{0{,}01}(z) = @{var.t} \\times @{var.sc} = @{var.qt}$; VaR 1\\% $= -(@{var.mu} + @{var.sig} \\times (@{var.qt})) = @{var.v1}\\%$'),
-      T('with Normal $z_t$: $@{var.vn}\\%$; over 10 days (sum of variances, $\\mu$ ignored): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, about $@{var.v10}\\%$',
-        'cu $z_t$ Normale: $@{var.vn}\\%$; pe 10 zile (suma varianțelor, fără $\\mu$): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, circa $@{var.v10}\\%$')])))
+      T('with Normal $z_t$: $@{var.vn}\\%$; over 10 days (sum of variances, $\\mu$ ignored): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, about $@{var.v10}\\%$, an approximation: the 10-day return is not Student-t with the same $\\nu$, and its quantile needs simulation',
+        'cu $z_t$ Normale: $@{var.vn}\\%$; pe 10 zile (suma varianțelor, fără $\\mu$): $@{var.qa} \\times \\sqrt{@{fc.sum10}}$, circa $@{var.v10}\\%$, o aproximare: randamentul pe 10 zile nu este Student-t cu același $\\nu$, iar cuantila lui cere simulare')])))
 
 chart(T('VaR 1\\% through the COVID-19 Crash', 'VaR 1\\% în timpul crahului COVID-19'), 'sfm_ch9_var', 'SFM_ch9_forecasts', [
     T('S\\&P 500, July 2019 -- June 2021 (@{vf.n} days): one-day VaR 1\\% from GARCH(1,1)-t (re-estimated every 250 days) and from EWMA with Normal $z_t$',
@@ -766,8 +770,8 @@ D.frame(T('Exceedances 2015--2026: a Preview of Backtesting', 'Depășiri 2015--
     [vrow(k) for k in ['sp500', 'dax', 'bet', 'btc']], size='footnotesize') + items(
     T('A correct VaR 1\\% is exceeded on 1\\% of the days, and the exceedances do not cluster', 'Un VaR 1\\% corect este depășit în 1\\% dintre zile, iar depășirile nu apar grupat'),
     T('EWMA-Normal: @{fe.ee.min}--@{fe.ee.max}\\%: the Normal quantile is too small for heavy tails', 'EWMA-Normal: @{fe.ee.min}--@{fe.ee.max}\\%: cuantila Normală este prea mică pentru cozi groase'),
-    T('GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: much closer to 1\\%, but still above it for the S\\&P 500 and the DAX (the leverage effect is missing)',
-      'GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: mult mai aproape de 1\\%, dar tot peste 1\\% pentru S\\&P 500 și DAX (lipsește efectul de levier)'),
+    T('GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: much closer to 1\\%, but still above it in all four markets, most for the S\\&P 500, the DAX (the leverage effect is missing) and Bitcoin',
+      'GARCH-t: @{fe.eg.min}--@{fe.eg.max}\\%: mult mai aproape de 1\\%, dar tot peste 1\\% pe toate cele patru piețe, mai ales pentru S\\&P 500, DAX (lipsește efectul de levier) și Bitcoin'),
     T('Are these differences significant? Chapter 10: the test of \\refKupiec, ES 2.5\\%, backtesting', 'Sînt aceste diferențe semnificative? Capitolul 10: testul \\refKupiec, ES 2,5\\%, backtesting'),
     T('Further reading on VaR forecasting for Bitcoin: \\refPeleB', 'Lectură suplimentară despre prognoza VaR pentru Bitcoin: \\refPeleB')) + ql('SFM_ch9_forecasts'), 'footnotesize')
 
@@ -819,7 +823,7 @@ D.frame(T('Key Takeaways', 'Idei de reținut'), items(
     T('Returns: unpredictable mean, predictable variance: $r_t = \\mu + \\sigma_t z_t$', 'Randamentele: media imprevizibilă, varianța previzibilă: $r_t = \\mu + \\sigma_t z_t$'),
     T('GARCH(1,1) with three parameters captures volatility clustering in all our series; $\\alpha + \\beta$ is close to 1', 'GARCH(1,1), cu trei parametri, surprinde volatility clustering în toate seriile noastre; $\\alpha + \\beta$ este apropiat de 1'),
     T('Estimate by maximum likelihood, report robust SE; Student-t or skewed-t innovations for the tails', 'Estimăm prin verosimilitate maximă și raportăm SE robuste; inovații Student-t sau t asimetrice pentru cozi'),
-    T('Equity indices need asymmetry (GJR, EGARCH); Bitcoin does not, and is an IGARCH', 'Indicii de acțiuni au nevoie de asimetrie (GJR, EGARCH); Bitcoin nu, și este un IGARCH'),
+    T('The S\\&P 500 and the DAX need asymmetry (GJR, EGARCH); for the BET it is weak (BIC prefers the symmetric GARCH); Bitcoin does not need it, and is an IGARCH', 'S\\&P 500 și DAX au nevoie de asimetrie (GJR, EGARCH); la BET ea este slabă (BIC preferă GARCH simetric); Bitcoin nu are nevoie de ea și este un IGARCH'),
     T('Forecasts revert to the long-run level; GARCH beats EWMA out of sample where volatility mean-reverts', 'Prognozele revin la nivelul pe termen lung; GARCH este mai bun decît EWMA în afara eșantionului acolo unde volatilitatea revine la medie'),
     T('VaR 1\\% = $-(\\mu + \\sigma_{t+1}q_{0.01}(z))$: the volatility model and the quantile both matter', 'VaR 1\\% = $-(\\mu + \\sigma_{t+1}q_{0{,}01}(z))$: contează atît modelul volatilității, cît și cuantila')))
 
@@ -840,7 +844,7 @@ D.frame(T('Check Yourself', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\omega = 0.05$, $\\alpha = 0.05$, $\\beta = 0.90$. What are the long-run variance and the half-life?', '\\textbf{Întrebare}: $\\omega = 0{,}05$, $\\alpha = 0{,}05$, $\\beta = 0{,}90$. Care sînt varianța pe termen lung și timpul de înjumătățire?'),
      [T('\\textbf{Answer}: $0.05/0.05 = 1$; $\\ln 0.5/\\ln 0.95 = 13.5$ days', '\\textbf{Răspuns}: $0{,}05/0{,}05 = 1$; $\\ln 0{,}5/\\ln 0{,}95 = 13{,}5$ zile')]),
     (T('\\textbf{Question}: GJR gives $\\hat\\alpha = 0$, $\\hat\\gamma = 0.2$. What happens after a rise of 3\\%?', '\\textbf{Întrebare}: GJR dă $\\hat\\alpha = 0$, $\\hat\\gamma = 0{,}2$. Ce se întîmplă după o creștere de 3\\%?'),
-     [T('\\textbf{Answer}: nothing beyond the decay $\\beta\\sigma_t^2$: only negative shocks raise the variance', '\\textbf{Răspuns}: nimic în afară de scăderea $\\beta\\sigma_t^2$: doar șocurile negative cresc varianța')]),
+     [T('\\textbf{Answer}: the shock adds nothing: $\\sigma_{t+1}^2 = \\omega + \\beta\\sigma_t^2$, as after a day with $\\varepsilon_t = 0$ (if $\\varepsilon_t = r_t - \\mu > 0$); only negative shocks raise the variance', '\\textbf{Răspuns}: șocul nu adaugă nimic: $\\sigma_{t+1}^2 = \\omega + \\beta\\sigma_t^2$, ca după o zi cu $\\varepsilon_t = 0$ (dacă $\\varepsilon_t = r_t - \\mu > 0$); doar șocurile negative cresc varianța')]),
     (T('\\textbf{Question}: $Q(10)$ of $\\hat z_t^2$ has p $= 0.40$. Is the model correct?', '\\textbf{Întrebare}: $Q(10)$ al lui $\\hat z_t^2$ are p $= 0{,}40$. Este modelul corect?'),
      [T('\\textbf{Answer}: we only know that no ARCH effect is left; asymmetry or the wrong distribution may remain', '\\textbf{Răspuns}: știm doar că nu a rămas niciun efect ARCH; pot rămîne asimetria sau o distribuție greșită')]),
     T('Next: Chapter 10, VaR, ES and backtesting', 'Urmează: Capitolul 10, VaR, ES și backtesting')))

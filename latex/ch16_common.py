@@ -98,6 +98,7 @@ def facts(V):
     for k in ASSETS:
         V.put(f'f3.a.{k}', C[3]['fits'][k]['stable']['alpha'], 2)
     V.put('f3.am', C[3]['aggregation']['bet']['monthly']['alpha'], 2)
+    V.put('f3.ams', C[3]['aggregation']['sp500']['monthly']['alpha'], 2)
     V.raw('f3.y0', year(C[3]['start']))
     # Chapter 4: S&P 500 since 2000
     cf = C[4]['cdf']

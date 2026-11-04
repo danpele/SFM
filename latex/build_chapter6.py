@@ -99,10 +99,10 @@ V.put('lnn.sp', math.log(n_sp), 2)
 # profil nu
 Pr = N['profile']
 V.put('pr.nu', Pr['nu'], 2)
-V.put('pr.lo', Pr['lo'], 1)
-V.put('pr.hi', Pr['hi'], 1)
+V.put('pr.lo', Pr['lo_exact'], 2)
+V.put('pr.hi', Pr['hi_exact'], 2)
 V.put('pr.l3', Pr['ll_3'], 1)
-V.put('pr.l5', Pr['ll_5'], 0)
+V.put('pr.l5', -Pr['ll_5'], 0)          # distance below the maximum (positive)
 # teste LR și Vuong
 TS = N['tests']
 for k in ASSETS:
@@ -465,8 +465,8 @@ D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
     T('Stable $\\hat\\alpha = @{sp.st.a}$ (Chapter 3): heavier tails than any other candidate', 'Distribuția stabilă, $\\hat\\alpha = @{sp.st.a}$ (Capitolul 3): cozi mai groase decît orice alt candidat')))
 
 chart(T('How Precise Is $\\hat\\nu$? The Profile Log-Likelihood', 'Precizia lui $\\hat\\nu$: log-verosimilitatea profil'), 'sfm_ch6_profile_nu', 'SFM_ch6_ml_fits', [
-    T('For each $\\nu$, maximise $\\ell$ over location and scale; the curve falls by $@{pr.l5}$ at $\\nu = 5$',
-      'Pentru fiecare $\\nu$, maximizăm $\\ell$ în raport cu locația și scala; la $\\nu = 5$, curba scade cu $@{pr.l5}$'),
+    T('For each $\\nu$, maximise $\\ell$ over location and scale; at $\\nu = 5$ the curve is $@{pr.l5}$ below its maximum',
+      'Pentru fiecare $\\nu$, maximizăm $\\ell$ în raport cu locația și scala; la $\\nu = 5$, curba se află cu $@{pr.l5}$ sub maximul său'),
     T('95\\% interval: all $\\nu$ with $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, here $[@{pr.lo}, @{pr.hi}]$ around $\\hat\\nu = @{pr.nu}$: the tails are pinned down well',
       'Intervalul de încredere de 95\\%: toate valorile $\\nu$ pentru care $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, aici $[@{pr.lo}; @{pr.hi}]$ în jurul lui $\\hat\\nu = @{pr.nu}$: grosimea cozilor este estimată precis')], h='0.56\\textheight')
 
@@ -654,7 +654,7 @@ D.frame(T('Estimated Parameters: the Lilliefors Problem', 'Parametri estimați: 
      [T('the fit pulls $F$ towards $F_n$: $D_n$ is smaller than under a known $F$', 'estimarea apropie $F$ de $F_n$: $D_n$ este mai mic decît pentru o $F$ cunoscută'),
       T('the usual critical values are too large: the test almost never rejects', 'valorile critice obișnuite sînt prea mari: testul aproape că nu mai respinge')]),
     (T('\\refLilliefors: critical values by simulation for the Normal law with $\\hat\\mu$, $\\hat\\sigma$ (5\\% level)', '\\refLilliefors: valori critice obținute prin simulare pentru distribuția Normală cu $\\hat\\mu$, $\\hat\\sigma$ (nivelul 5\\%)'),
-     [T('$n = 5$: $@{a5.lil}$ instead of $@{a5.crit}$; $n = 1000$: $@{li.1000}$ instead of $@{ks.asy.1000}$', '$n = 5$: $@{a5.lil}$ în loc de $@{a5.crit}$; $n = 1000$: $@{li.1000}$ în loc de $@{ks.asy.1000}$')]),
+     [T('this chapter\'s simulation: $n = 5$: $@{li.5}$ instead of $@{a5.crit}$; $n = 1000$: $@{li.1000}$ instead of $@{ks.asy.1000}$', 'simularea din acest capitol: $n = 5$: $@{li.5}$ în loc de $@{a5.crit}$; $n = 1000$: $@{li.1000}$ în loc de $@{ks.asy.1000}$')]),
     (T('Any model: \\textbf{parametric bootstrap} \\refSGQ', 'Orice model: \\textbf{bootstrap parametric} \\refSGQ'),
      [T('simulate $n$ draws from $F(\\cdot; \\hat\\theta)$, refit, recompute the statistic; repeat $B$ times', 'simulăm $n$ extrageri din $F(\\cdot; \\hat\\theta)$, reestimăm parametrii, recalculăm statistica; repetăm de $B$ ori'),
       T('$p$-value $= (1 + \\#\\{\\text{bootstrap statistics} \\ge \\text{observed}\\})/(B + 1)$: the share of simulated statistics at least as large as the observed one', 'p-value $= (1 + \\#\\{\\text{statistici bootstrap} \\ge \\text{cea observată}\\})/(B + 1)$: proporția statisticilor simulate cel puțin egale cu cea observată')])))
@@ -707,7 +707,7 @@ D.frame(T('Statistical vs Practical Significance', 'Semnificație statistică ș
     (T('With $n = @{n.sp500}$ every model is rejected: tests detect tiny departures', 'Cu $n = @{n.sp500}$, toate modelele sînt respinse: testele detectează abateri minuscule'),
      [T('and real returns are not i.i.d.\\ (volatility clustering), so no i.i.d.\\ law can pass', 'în plus, randamentele reale nu sînt i.i.d.\\ (volatility clustering), deci nicio distribuție i.i.d.\\ nu poate trece testul')]),
     (T('Use the statistics to \\textbf{rank} the models', 'Folosiți statisticile pentru a \\textbf{ordona} modelele'),
-     [T('the AD column of the previous table gives the AIC order: NIG first, the Normal model far behind', 'coloana AD din tabelul anterior dă ordinea AIC: NIG pe primul loc, modelul Normal mult în urmă')]),
+     [T('the AD column of the previous table ranks the models almost as AIC does: NIG first, skewed-t second, the Normal model far behind (AD puts GED and the stable law ahead of the Student-t)', 'coloana AD din tabelul anterior ordonează modelele aproape ca AIC: NIG pe primul loc, skewed-t pe al doilea, modelul Normal mult în urmă (AD plasează GED și distribuția stabilă înaintea distribuției Student-t)')]),
     T('\\textbf{Question for the room}: a KS test on 50 daily returns does not reject the Normal law; is the Normal law then fine for VaR 1\\%?',
       '\\textbf{Întrebare pentru sală}: un test KS pe 50 de randamente zilnice nu respinge distribuția Normală; este atunci distribuția Normală potrivită pentru VaR 1\\%?'),
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
@@ -761,18 +761,18 @@ D.frame(T('VaR and ES', 'VaR și ES'), items(
 
 def varrow(k):
     return (f'{NAMES[k]} & $@{{v.{k}.emp}}$ & $@{{v.{k}.Normal}}$ & $@{{v.{k}.Student-t}}$ & $@{{v.{k}.Skewed-t}}$ & $@{{v.{k}.GED}}$ & '
-            f'$@{{v.{k}.NIG}}$ & $@{{v.{k}.Stable}}$')
+            f'$@{{v.{k}.Mixture}}$ & $@{{v.{k}.NIG}}$ & $@{{v.{k}.Stable}}$')
 
 
 def esrow(k):
     return (f'{NAMES[k]} & $@{{e.{k}.emp}}$ & $@{{e.{k}.Normal}}$ & $@{{e.{k}.Student-t}}$ & $@{{e.{k}.Skewed-t}}$ & $@{{e.{k}.GED}}$ & '
-            f'$@{{e.{k}.NIG}}$ & $@{{e.{k}.Stable}}$')
+            f'$@{{e.{k}.Mixture}}$ & $@{{e.{k}.NIG}}$ & $@{{e.{k}.Stable}}$')
 
 
-HDR = T('& data & Normal & Student-t & skewed-t & GED & NIG & stable', '& date & Normală & Student-t & skewed-t & GED & NIG & stabilă')
+HDR = T('& data & Normal & Student-t & skewed-t & GED & mixture & NIG & stable', '& date & Normală & Student-t & skewed-t & GED & amestec & NIG & stabilă')
 D.frame(T('VaR 1\\% and ES 2.5\\% under Each Model (In Sample)', 'VaR 1\\% și ES 2,5\\% pentru fiecare model (în eșantion)'),
-        T('\\textbf{VaR 1\\%} (\\%)', '\\textbf{VaR 1\\%} (\\%)') + table('lrrrrrrr', HDR, [varrow(k) for k in ALL], size='scriptsize') +
-        T('\\textbf{ES 2.5\\%} (\\%)', '\\textbf{ES 2,5\\%} (\\%)') + table('lrrrrrrr', HDR, [esrow(k) for k in ['bet', 'sp500', 'btc']], size='scriptsize')
+        T('\\textbf{VaR 1\\%} (\\%)', '\\textbf{VaR 1\\%} (\\%)') + table('lrrrrrrrr', HDR, [varrow(k) for k in ALL], size='scriptsize') +
+        T('\\textbf{ES 2.5\\%} (\\%)', '\\textbf{ES 2,5\\%} (\\%)') + table('lrrrrrrrr', HDR, [esrow(k) for k in ['bet', 'sp500', 'btc']], size='scriptsize')
         + ql('SFM_ch6_tail_var'), size='footnotesize')
 
 chart(T('Model VaR 1\\% Relative to the Data', 'VaR 1\\% al modelelor raportat la date'), 'sfm_ch6_var_models', 'SFM_ch6_tail_var', [
@@ -864,7 +864,7 @@ D.frame(T('Which Criterion Warned Us?', 'Criteriul care a semnalat supraajustare
 chart(T('Rolling VaR 1\\%: Refit Every Month', 'VaR 1\\% pe fereastră mobilă: reestimare lunară'), 'sfm_ch6_rolling_var', 'SFM_ch6_out_of_sample', [
     T('S\\&P 500: each model refitted every 20 trading days on the previous 1000 days; the VaR 1\\% line is drawn as a loss threshold $-\\mathrm{VaR}$',
       'S\\&P 500: fiecare model este reestimat la fiecare 20 de zile de tranzacționare pe cele 1000 de zile anterioare; linia VaR 1\\% este desenată ca prag de pierdere $-\\mathrm{VaR}$'),
-    T('Black triangles: exceedances of the Student-t VaR; they come in clusters (March 2020)', 'Triunghiurile negre: depășiri ale VaR Student-t; apar grupat (martie 2020)')], h='0.55\\textheight')
+    T('The chart shows 2018--@{y1} only; the backtest of the next slide covers @{rv.sp.y0}--@{y1}. Black triangles: exceedances of the Student-t VaR; they come in clusters (March 2020)', 'Graficul arată doar perioada 2018--@{y1}; backtesting-ul de pe slide-ul următor acoperă @{rv.sp.y0}--@{y1}. Triunghiurile negre: depășiri ale VaR Student-t; apar grupat (martie 2020)')], h='0.55\\textheight')
 
 D.frame(T('Rolling Backtest: the Results', 'Backtesting pe fereastră mobilă: rezultatele'), table(
     'lrrrr', T('& Normal & Student-t & skewed-t & historical', '& Normală & Student-t & skewed-t & istorică'),
@@ -894,8 +894,8 @@ chart(T('The VaR Reliability Plot (SFEVaRqqplot)', 'Graficul de fiabilitate VaR 
 D.section('Model Uncertainty', 'Incertitudinea de model')
 
 chart(T('How Sure Are We of the Winner?', 'Stabilitatea cîștigătorului'), 'sfm_ch6_model_uncertainty', 'SFM_ch6_model_uncertainty', [
-    T('S\\&P 500, @{u.B} moving-block bootstrap resamples (blocks of 20 days keep the volatility clusters); in each, six models refitted',
-      'S\\&P 500, @{u.B} de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează volatility clustering); în fiecare reeșantionare, cele șase modele sînt reestimate'),
+    T('S\\&P 500, @{u.B} moving-block bootstrap resamples (blocks of 20 days keep the volatility clusters); in each, the six models other than the stable law (Normal, Student-t, skewed-t, GED, Normal mixture, NIG) are refitted',
+      'S\\&P 500, @{u.B} de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează volatility clustering); în fiecare reeșantionare sînt reestimate cele șase modele în afară de distribuția stabilă (Normală, Student-t, skewed-t, GED, amestec Normal, NIG)'),
     T('Left: NIG has the lowest AIC in $@{u.w.NIG}\\%$ of the resamples; right: the bootstrap spread of VaR 1\\% under each model',
       'Stînga: NIG are cel mai mic AIC în $@{u.w.NIG}\\%$ din reeșantionări; dreapta: dispersia bootstrap a VaR 1\\% pentru fiecare model')], h='0.52\\textheight')
 
@@ -914,7 +914,7 @@ D.frame(T('Model Averaging and Model Risk', 'Medierea modelelor și riscul de mo
     'lrrrrr', T('& data & Normal & heavy-tailed range & averaged & range (\\%)', '& date & Normală & interval (cozi groase) & mediat & interval (\\%)'),
     [f'{NAMES[k]} & $@{{av.{k}.emp}}$ & $@{{av.{k}.normal}}$ & $[@{{av.{k}.min_heavy}}, @{{av.{k}.max_heavy}}]$ & $@{{av.{k}.avg}}$ & $@{{av.{k}.range}}$' for k in ALL],
     size='scriptsize') + items(
-    (T('VaR 1\\% in \\%; heavy-tailed range: the smallest and largest VaR 1\\% of the six non-Normal models', 'VaR 1\\% în \\%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\\% dintre cele șase modele nenormale'),
+    (T('VaR 1\\% in \\%; heavy-tailed range: the smallest and largest VaR 1\\% of the six non-Normal models, the Normal mixture included', 'VaR 1\\% în \\%; intervalul cozilor groase: cel mai mic și cel mai mare VaR 1\\% dintre cele șase modele nenormale, inclusiv amestecul Normal'),
      [T('range (\\%): max/min $- 1$, the relative distance between the extreme models', 'intervalul (\\%): max/min $- 1$, distanța relativă dintre modelele extreme')]),
     (T('Averaged: $\\sum_i w_i\\,\\mathrm{VaR}_i$ with the Akaike weights $w_i$', 'Mediat: $\\sum_i w_i\\,\\mathrm{VaR}_i$, cu ponderile Akaike $w_i$'),
      [T('a frequentist cousin of Bayesian model averaging \\refHoeting', 'un analog frecventist al medierii bayesiene a modelelor \\refHoeting')]),

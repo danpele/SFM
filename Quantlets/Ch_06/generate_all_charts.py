@@ -526,15 +526,21 @@ def profile_nu(k='sp500', grid=None, save=True):
     ax.plot(grid, ll - lmax, color='#1A3A6E', lw=1.6, label='profile log-likelihood l(nu) - l(nu_hat)')
     ax.axhline(cut - lmax, color='#CD0000', ls='--', lw=1.0, label='cut-off -3.84 / 2 (95% interval)')
     ax.axvline(f['nu'], color='#2E7D32', ls=':', lw=1.2, label=f'ML estimate nu_hat = {f["nu"]:.2f}')
-    ax.set_ylim(max((ll - lmax).min(), -40), 2)
+    ax.set_ylim(1.05 * (ll - lmax).min(), 2)          # the whole curve (it falls far below the cut-off)
     ax.set_xlabel('Degrees of freedom nu')
     ax.set_ylabel('Log-likelihood difference')
     st.legend_outside_bottom(ax, ncol=3, y=-0.16)
     st.check_no_grey(fig)
     if save:
         st.save_fig('sfm_ch6_profile_nu')
-    return {'nu': f['nu'], 'lo': float(inside.min()), 'hi': float(inside.max()), 'loglik': lmax,
-            'll_3': float(np.interp(3.0, grid, ll) - lmax), 'll_5': float(np.interp(5.0, grid, ll) - lmax)}
+    def prof(nu):                                   # profile log-likelihood minus the cut-off, at any nu
+        _, loc, sc = stats.t.fit(x, fdf=nu)
+        return np.sum(stats.t.logpdf(x, nu, loc, sc)) - cut
+    step = grid[1] - grid[0]                        # exact ends of the interval: root between the last grid point
+    lo_x = optimize.brentq(prof, inside.min() - step, inside.min(), xtol=1e-6)    # inside and the first one outside
+    hi_x = optimize.brentq(prof, inside.max(), inside.max() + step, xtol=1e-6)
+    return {'nu': f['nu'], 'lo': float(inside.min()), 'hi': float(inside.max()), 'lo_exact': float(lo_x), 'hi_exact': float(hi_x),
+            'loglik': lmax, 'll_3': float(np.interp(3.0, grid, ll) - lmax), 'll_5': float(np.interp(5.0, grid, ll) - lmax)}
 
 
 def fig_delta_aic(fits, save=True):
@@ -851,7 +857,7 @@ def out_of_sample(names=ASSETS, models=MODELS, split=SPLIT):
     out = {}
     for k in names:
         r = returns(k)
-        est, test = r.loc[:split].values, r.loc[split:].iloc[1:].values
+        est, test = r.loc[:split].values, r[r.index > split].values      # test: every day after `split`
         row = {'n_est': len(est), 'n_test': len(test), 'emp_var1_est': float(-np.quantile(est, ALPHA_VAR))}
         for m in models:
             p = fit_model(m, est)

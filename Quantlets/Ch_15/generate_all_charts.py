@@ -814,7 +814,8 @@ def fig_dy_rolling(save=True):
         st.save_fig('sfm_ch15_dy_rolling')
     return {'min': float(tot.min()), 'date_min': tot.idxmin().date().isoformat(), 'max': float(tot.max()),
             'date_max': tot.idxmax().date().isoformat(), 'last': float(tot.iloc[-1]), 'mean': float(tot.mean()),
-            'y2017': float(tot.loc['2017'].mean()), 'y2008': float(tot.loc['2008-10-01':'2009-03-31'].mean())}
+            'y2017': float(tot.loc['2017'].mean()), 'y2008': float(tot.loc['2008-10-01':'2009-03-31'].mean()),
+            'y2016': float(tot.loc['2016'].mean()), 'max2016': float(tot.loc['2016'].max())}
 
 
 if __name__ == '__main__':

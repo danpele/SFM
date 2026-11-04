@@ -9,6 +9,8 @@ EXTRA = {
     'BCBS': ('Basel Committee on Banking Supervision', 'en', 'Comitetul de la Basel pentru supraveghere bancară', None),
     'CF': ('Cornish–Fisher (expansion)', 'en', 'dezvoltarea Cornish–Fisher', None),
     'FRTB': ('Fundamental Review of the Trading Book', 'en', 'revizuirea fundamentală a portofoliului de tranzacționare', None),
+    'MAR32': ('Market Risk standard, chapter 32 of the Basel Framework (backtesting)', 'en', 'standardul pentru riscul de piață, capitolul 32 din Cadrul Basel (backtesting)', None),
+    'MAR33': ('Market Risk standard, chapter 33 of the Basel Framework (capital calculation)', 'en', 'standardul pentru riscul de piață, capitolul 33 din Cadrul Basel (calculul capitalului)', None),
 }
 OVERRIDE_CH = {
     'LR': ('Likelihood Ratio (test)', 'en', 'testul raportului de verosimilitate', None),

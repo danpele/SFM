@@ -169,6 +169,8 @@ V.raw('ru.per', str(RU['period16']))
 V.raw('ru.perbad', str(RU['period_bad']))
 IV = N['inv']
 V.put('iv.p5n', 100 * IV['p5_norm'], 4)
+V.raw('iv.n5n', str(round(IV['p5_norm'] * IV['n'])))
+V.put('iv.p5x', 100 * N['cdf']['p5_norm'], 4)
 V.put('iv.p5h', 100 * IV['p5_hist'], 2)
 V.put('iv.p5d', 100 * IV['p5_data'], 2)
 V.put('iv.minh', IV['min_hist'], 1)
@@ -194,6 +196,14 @@ V.put('bn.mulog', 100 * BN['mu_log'], 2)
 V.put('bn.sigma', 100 * BN['sigma'], 2)
 V.put('bn.pl', 100 * BN['ploss_bin'], 1)
 V.put('bn.pln', 100 * BN['ploss_ln'], 1)
+# binomial: strictly below 100 (K < n/2) and with S_T = 100 included (K <= n/2); CRR has u d = 1
+assert abs(BN['u'] * BN['d'] - 1) < 1e-12 and BN['n'] % 2 == 0
+_pl_strict = float(stats.binom.cdf(BN['n'] // 2 - 1, BN['n'], BN['p']))
+_pl_le = float(stats.binom.cdf(BN['n'] // 2, BN['n'], BN['p']))
+assert abs(_pl_le - BN['ploss_bin']) < 1e-9
+V.put('bn.pls', 100 * _pl_strict, 1)
+V.put('bn.ple', 100 * _pl_le, 1)
+V.put('bn.p100', 100 * (_pl_le - _pl_strict), 1)
 # arborele cu doi pași
 S0, u2, d2, p2 = 100, 1.2, 0.8, 0.6
 V.put('t2.uu', S0 * u2 * u2, 0)
@@ -296,9 +306,9 @@ D.frame(T("Today's Question, Route and Learning Outcomes", 'Întrebarea de azi, 
        '\\textbf{Întrebarea}: de ce instrumente de probabilitate avem nevoie pentru a descrie randamentele și pentru a simula prețuri?'),
      [T('every later chapter (tails, volatility, VaR, efficiency) is built on them', 'toate capitolele următoare (cozi, volatilitate, VaR, eficiență) se sprijină pe ele')]),
     (T('\\textbf{Route and outcomes}: after this chapter you can', '\\textbf{Traseul și rezultatele învățării}: la finalul capitolului veți putea'),
-     [T('compute expectations, variances, covariances and correlations, and the volatility of a portfolio', 'calcula speranțe matematice, varianțe, covarianțe și corelații, precum și volatilitatea unui portofoliu'),
+     [T('compute expectations, variances, covariances and correlations, and the volatility of a portfolio', 'calcula medii, varianțe, covarianțe și corelații, precum și volatilitatea unui portofoliu'),
       T('explain why uncorrelated returns can still be dependent, and measure it', 'explica de ce randamente necorelate pot fi totuși dependente și măsura această dependență'),
-      T('use conditional expectation and conditional variance, the building blocks of GARCH', 'folosi speranța condiționată și varianța condiționată, elementele de bază ale modelelor GARCH'),
+      T('use conditional expectation and conditional variance, the building blocks of GARCH', 'folosi media condiționată și varianța condiționată, elementele de bază ale modelelor GARCH'),
       T('generate random numbers with the inverse transform and estimate a probability by Monte Carlo, with its standard error', 'genera numere aleatoare prin metoda transformării inverse și estima o probabilitate prin Monte Carlo, cu eroarea ei standard'),
       T('define and simulate the binomial model, a random walk, a martingale, white noise, AR(1), the Wiener process and GBM', 'defini și simula modelul binomial, mersul aleator, martingalul, zgomotul alb, AR(1), procesul Wiener și GBM')]),
     T('Real data, @{y0}--@{y1}: S\\&P 500, DAX, BET and Bitcoin (from 2014)', 'Date reale, @{y0}--@{y1}: S\\&P 500, DAX, BET și Bitcoin (din 2014)')))
@@ -343,14 +353,14 @@ D.frame(T('Kolmogorov\'s Axioms (1933)', 'Axiomele lui Kolmogorov (1933)'), cols
       T('$P(\\Omega) = 1$: some outcome certainly occurs', '$P(\\Omega) = 1$: unul dintre rezultate are loc sigur'),
       T('$P(\\cup_i A_i) = \\sum_i P(A_i)$ for disjoint $A_1, A_2, \\dots$ (no two can occur together): the probability of ``one of them\'\' is the sum',
         '$P(\\cup_i A_i) = \\sum_i P(A_i)$ pentru $A_1, A_2, \\dots$ disjuncte (oricare două nu pot avea loc simultan): probabilitatea ca unul dintre ele să aibă loc este suma probabilităților')]),
-    T('Everything else (expectation, independence, processes) is built on these three rules', 'Tot restul (speranță, independență, procese) se construiește pe aceste trei reguli')),
+    T('Everything else (expectation, independence, processes) is built on these three rules', 'Tot restul (media, independența, procese) se construiește pe aceste trei reguli')),
     ph('grund', T('Title page of the \\textit{Grundbegriffe}, Springer 1933', 'Pagina de titlu a lucrării \\textit{Grundbegriffe}, Springer 1933'), h='0.56\\textheight'),
     wl='0.62', wr='0.34'), 'footnotesize')
 
 D.frame(T('Andrey Kolmogorov', 'Andrei Kolmogorov'), cols(items(
     T('Andrey Nikolaevich Kolmogorov (1903--1987), Moscow State University', 'Andrei Nikolaevici Kolmogorov (1903--1987), Universitatea de Stat din Moscova'),
     T('Made probability a branch of measure theory: events are sets, probability is a measure', 'A făcut din probabilitate o ramură a teoriei măsurii: evenimentele sînt mulțimi, probabilitatea este o măsură'),
-    T('Also: conditional expectation in its modern form, Markov processes, turbulence, complexity', 'Alte contribuții: speranța condiționată în forma ei modernă, procese Markov, turbulență, complexitate'),
+    T('Also: conditional expectation in its modern form, Markov processes, turbulence, complexity', 'Alte contribuții: media condiționată în forma ei modernă, procese Markov, turbulență, complexitate'),
     T('The Kolmogorov--Smirnov test (Chapter 6) carries his name', 'Testul Kolmogorov--Smirnov (Capitolul 6) îi poartă numele')),
     ph('kolmogorov', T('Kolmogorov lecturing in Moscow, 1963--1964', 'Kolmogorov la un curs la Moscova, 1963--1964'), h='0.40\\textheight'),
     wl='0.44', wr='0.52'))
@@ -435,12 +445,12 @@ D.recap(('Random Variables', 'Variabile aleatoare'), [
     T('The tails of the empirical CDF are much heavier than the Normal ones', 'Cozile CDF empirice sînt mult mai groase decît cele ale distribuției Normale')])
 
 # =============================================================================
-# 3. SPERANȚĂ, VARIANȚĂ, MOMENTE
+# 3. MEDIE, VARIANȚĂ, MOMENTE
 # =============================================================================
-D.section('Expectation and Variance', 'Speranța matematică și varianța')
+D.section('Expectation and Variance', 'Media și varianța')
 
-D.frame(T('Expectation', 'Speranța matematică'), items(
-    (T('\\textbf{Expectation} (mean): $E[X] = \\sum_i x_i p(x_i)$ or $E[X] = \\int x f(x)\\,dx$', '\\textbf{Speranța matematică} (media): $E[X] = \\sum_i x_i p(x_i)$ sau $E[X] = \\int x f(x)\\,dx$'),
+D.frame(T('Expectation', 'Media'), items(
+    (T('\\textbf{Expectation} (mean): $E[X] = \\sum_i x_i p(x_i)$ or $E[X] = \\int x f(x)\\,dx$', '\\textbf{Media} (valoarea așteptată): $E[X] = \\sum_i x_i p(x_i)$ sau $E[X] = \\int x f(x)\\,dx$'),
      [T('$x_i$, $p(x_i)$: the values and their probabilities; $f$: the density', '$x_i$, $p(x_i)$: valorile și probabilitățile lor; $f$: densitatea'),
       T('the centre of mass of the distribution; it exists only if $E|X| < \\infty$ (not for Cauchy, Chapter 3)', 'centrul de greutate al distribuției; există doar dacă $E|X| < \\infty$ (nu și pentru Cauchy, Capitolul 3)')]),
     T('Of a function: $E[g(X)] = \\int g(x) f(x)\\,dx$, without finding the distribution of $g(X)$', 'A unei funcții: $E[g(X)] = \\int g(x) f(x)\\,dx$, fără a afla distribuția lui $g(X)$'),
@@ -469,7 +479,7 @@ D.frame(T('Worked Example: Annual Mean and Volatility', 'Exemplu lucrat: media �
     (T('Assume i.i.d. daily returns (independent and identically distributed)', 'Presupunem randamente zilnice i.i.d. (independente și identic distribuite)'),
      [T('the annual log return is the sum of the $A$ daily ones: $\\sum_{t=1}^{A} r_t$', 'randamentul logaritmic anual este suma celor $A$ randamente zilnice: $\\sum_{t=1}^{A} r_t$')]),
     (T('Mean: $E[\\sum r_t] = A \\times @{an.m} = @{an.ma}\\%$ a year', 'Media: $E[\\sum r_t] = A \\times @{an.m} = @{an.ma}\\%$ pe an'),
-     [T('linearity of expectation', 'din liniaritatea speranței')]),
+     [T('linearity of expectation', 'din liniaritatea mediei')]),
     (T('Variance: $\\text{Var}(\\sum r_t) = A\\,\\sigma^2$, because the covariances are zero', 'Varianța: $\\text{Var}(\\sum r_t) = A\\,\\sigma^2$, pentru că toate covarianțele sînt zero'),
      [T('annual volatility $\\sigma\\sqrt{A} = @{an.s}\\sqrt{@{an.ppy}} = @{an.sa}\\%$', 'volatilitatea anuală $\\sigma\\sqrt{A} = @{an.s}\\sqrt{@{an.ppy}} = @{an.sa}\\%$'),
       T('the square-root-of-time rule: volatility grows with $\\sqrt{h}$ over $h$ periods', 'regula rădăcinii pătrate a timpului: pe $h$ perioade, volatilitatea crește cu $\\sqrt{h}$')])))
@@ -485,8 +495,8 @@ D.frame(T('How Rare Is a 4-Sigma Day? Chebyshev\'s Bound', 'Frecvența zilelor d
     (T('The data lie between the two', 'Frecvența observată se află între cele două valori'),
      [T('the Normal distribution is far too optimistic; the worst case of Chebyshev is too pessimistic', 'distribuția Normală este mult prea optimistă; cazul cel mai nefavorabil al lui Cebîșev este prea pesimist')])))
 
-D.recap(('Expectation and Variance', 'Speranța și varianța'), [
-    T('Expectation is linear; variance scales with the square', 'Speranța este liniară; varianța se scalează cu pătratul'),
+D.recap(('Expectation and Variance', 'Media și varianța'), [
+    T('Expectation is linear; variance scales with the square', 'Media este liniară; varianța se scalează cu pătratul'),
     T('For i.i.d. returns the mean grows with $h$ and the volatility with $\\sqrt{h}$', 'Pentru randamente i.i.d., media crește cu $h$, iar volatilitatea cu $\\sqrt{h}$'),
     T('Chebyshev bounds tail probabilities for any distribution', 'Cebîșev mărginește probabilitățile din cozi pentru orice distribuție')])
 
@@ -545,7 +555,7 @@ D.frame(T('Independence and Uncorrelatedness', 'Independență și necorelare'),
 chart(T('Returns Are Uncorrelated, Squared Returns Are Not', 'Randamentele sînt necorelate, pătratele lor nu'), 'sfm_ch4_uncorrelated_dependent', 'SFM_ch4_dependence', [
     T('Left: simulated $Y = X^2$, sample correlation $@{dep.xy}$, yet $Y$ is determined by $X$', 'Stînga: $Y = X^2$ simulat, corelația de selecție $@{dep.xy}$, deși $Y$ este determinat de $X$'),
     (T('Right: $\\text{Corr}(r_t, r_{t-1})$ is small: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$', 'Dreapta: $\\text{Corr}(r_t, r_{t-1})$ este mică: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$'),
-     [T('$\\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$', '$\\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$'),
+     [T('$\\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$; BET $@{dep.bet.r2}$', '$\\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$; BET $@{dep.bet.r2}$'),
       T('band $\\pm 1.96/\\sqrt{n}$: the values compatible with zero correlation at the 5\\% level', 'banda $\\pm 1.96/\\sqrt{n}$: valorile compatibile cu o corelație nulă, la pragul de 5\\%'),
       T('the negative S\\&P 500 value comes mostly from crisis days', 'valoarea negativă pentru S\\&P 500 provine mai ales din zilele de criză')]),
     T('BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, an effect of thin trading', 'BET: $\\text{Corr}(r_t, r_{t-1}) = @{dep.bet.r}$, un efect al lichidității reduse')], h='0.46\\textheight', size='scriptsize')
@@ -556,20 +566,20 @@ D.recap(('Joint Distributions', 'Distribuții comune'), [
     T('Returns: nearly uncorrelated, but their squares are correlated, so they are not independent', 'Randamentele: aproape necorelate, dar pătratele lor sînt corelate, deci nu sînt independente')])
 
 # =============================================================================
-# 5. SPERANȚA ȘI VARIANȚA CONDIȚIONATĂ
+# 5. MEDIA ȘI VARIANȚA CONDIȚIONATĂ
 # =============================================================================
-D.section('Conditional Expectation and Conditional Variance', 'Speranța condiționată și varianța condiționată')
+D.section('Conditional Expectation and Conditional Variance', 'Media condiționată și varianța condiționată')
 
-D.frame(T('Conditional Expectation', 'Speranța condiționată'), items(
+D.frame(T('Conditional Expectation', 'Media condiționată'), items(
     (T('Conditional density: $f(y \\mid x) = f(x, y)/f_X(x)$', 'Densitatea condiționată: $f(y \\mid x) = f(x, y)/f_X(x)$'),
      [T('the distribution of $Y$ once we know that $X = x$: the joint density rescaled by the marginal one', 'distribuția lui $Y$ după ce aflăm că $X = x$: densitatea comună rescalată prin cea marginală')]),
-    (T('\\textbf{Conditional expectation}: $E[Y \\mid X = x] = \\int y f(y \\mid x)\\,dy$', '\\textbf{Speranța condiționată}: $E[Y \\mid X = x] = \\int y f(y \\mid x)\\,dy$'),
+    (T('\\textbf{Conditional expectation}: $E[Y \\mid X = x] = \\int y f(y \\mid x)\\,dy$', '\\textbf{Media condiționată}: $E[Y \\mid X = x] = \\int y f(y \\mid x)\\,dy$'),
      [T('the mean of $Y$ computed with the conditional density', 'media lui $Y$ calculată cu densitatea condiționată'),
       T('$E[Y \\mid X]$ is a random variable, a function of $X$', '$E[Y \\mid X]$ este o variabilă aleatoare, o funcție de $X$')]),
     (T('It is the best forecast of $Y$ from $X$: it minimises $E[(Y - g(X))^2]$ over all functions $g$', 'Este cea mai bună prognoză a lui $Y$ pe baza lui $X$: minimizează $E[(Y - g(X))^2]$ dintre toate funcțiile $g$'),
      [T('$E[(Y - g(X))^2]$: the mean squared error of the forecast $g(X)$', '$E[(Y - g(X))^2]$: eroarea pătratică medie a prognozei $g(X)$'),
       T('for returns: $E[r_t \\mid \\mathcal{F}_{t-1}]$, the forecast given all information $\\mathcal{F}_{t-1}$ up to yesterday', 'pentru randamente: $E[r_t \\mid \\mathcal{F}_{t-1}]$, prognoza dată fiind toată informația $\\mathcal{F}_{t-1}$ pînă ieri')]),
-    (T('\\textbf{Tower property} (law of iterated expectations): $E\\big[E[Y \\mid X]\\big] = E[Y]$', '\\textbf{Proprietatea turnului} (legea speranțelor iterate): $E\\big[E[Y \\mid X]\\big] = E[Y]$'),
+    (T('\\textbf{Tower property} (law of iterated expectations): $E\\big[E[Y \\mid X]\\big] = E[Y]$', '\\textbf{Proprietatea turnului} (legea mediilor iterate): $E\\big[E[Y \\mid X]\\big] = E[Y]$'),
      [T('averaging the conditional forecasts over all values of $X$ gives back the unconditional mean', 'media prognozelor condiționate, pe toate valorile lui $X$, este media necondiționată')])), 'footnotesize')
 
 D.frame(T('Conditional Variance and the Law of Total Variance', 'Varianța condiționată și legea varianței totale'), items(
@@ -647,12 +657,12 @@ D.section('Random Numbers and Monte Carlo', 'Numere aleatoare și Monte Carlo')
 D.frame(T('The Monte Carlo Idea', 'Ideea Monte Carlo'), items(
     (T('Estimate $\\theta = E[g(X)]$ by $\\hat\\theta_N = \\frac1N\\sum_{i=1}^N g(X_i)$ with simulated $X_i$', 'Estimăm $\\theta = E[g(X)]$ prin $\\hat\\theta_N = \\frac1N\\sum_{i=1}^N g(X_i)$, cu $X_i$ simulate'),
      [T('$\\theta$: the unknown quantity; $g$: a function of the simulated variable; $N$: the number of simulations', '$\\theta$: mărimea necunoscută; $g$: o funcție de variabila simulată; $N$: numărul de simulări'),
-      T('a probability is an expectation: $P(A) = E[\\mathbf{1}_A]$, with $\\mathbf{1}_A = 1$ if $A$ occurs and 0 otherwise', 'o probabilitate este o speranță: $P(A) = E[\\mathbf{1}_A]$, cu $\\mathbf{1}_A = 1$ dacă $A$ are loc și 0 altfel'),
+      T('a probability is an expectation: $P(A) = E[\\mathbf{1}_A]$, with $\\mathbf{1}_A = 1$ if $A$ occurs and 0 otherwise', 'o probabilitate este o medie: $P(A) = E[\\mathbf{1}_A]$, cu $\\mathbf{1}_A = 1$ dacă $A$ are loc și 0 altfel'),
       T('the LLN makes $\\hat\\theta_N \\to \\theta$; the CLT gives the error $\\text{sd}(g(X))/\\sqrt{N}$', 'LLN face ca $\\hat\\theta_N \\to \\theta$; CLT dă eroarea $\\text{sd}(g(X))/\\sqrt{N}$, unde $\\text{sd}$ este abaterea standard')]),
     T('Named after the Monaco casino by Ulam and von Neumann, Los Alamos, 1940s \\refMU', 'Ulam și von Neumann au numit metoda după cazinoul din Monaco (Los Alamos, anii 1940) \\refMU'),
     (T('In finance \\refGlasserman', 'În finanțe \\refGlasserman'),
      [T('prices of path-dependent options, portfolio VaR (Chapter 10), stress scenarios', 'prețuri de opțiuni dependente de traiectorie, VaR-ul portofoliilor (Capitolul 10), scenarii de stres'),
-      T('any expectation without a closed form', 'orice speranță matematică fără formulă analitică')]),
+      T('any expectation without a closed form', 'orice medie fără formulă analitică')]),
     T('Two ingredients: uniform random numbers and a way to turn them into any distribution', 'Două ingrediente: numere aleatoare uniforme și o metodă de a le transforma în extrageri din orice distribuție')), 'footnotesize')
 
 D.frame(T('Pseudo-Random Numbers: Linear Congruential Generators', 'Numere pseudo-aleatoare: generatoare congruențiale liniare'), items(
@@ -670,7 +680,7 @@ D.frame(T('Worked Example: an LCG with $M = 16$', 'Exemplu lucrat: un LCG cu $M 
      [T('first step: $x_1 = (5 \\times 7 + 1) \\bmod 16 = 36 \\bmod 16 = 4$', 'primul pas: $x_1 = (5 \\times 7 + 1) \\bmod 16 = 36 \\bmod 16 = 4$'),
       T('the sequence $x$: @{ru.lcg}', 'șirul $x$: @{ru.lcg}')]),
     (T('Period @{ru.per}, the maximum possible, $M$', 'Perioada @{ru.per}, maximul posibil, $M$'),
-     [T('with $a = 4$ the sequence sticks after one step (period @{ru.perbad})', 'cu $a = 4$ șirul se blochează după un pas (perioada @{ru.perbad})')]),
+     [T('with $a = 4$ the sequence sticks after two steps (period @{ru.perbad})', 'cu $a = 4$ șirul se blochează după doi pași (perioada @{ru.perbad})')]),
     (T('Good uniform marginals are not enough', 'Nu ajunge ca distribuțiile marginale să fie uniforme'),
      [T('consecutive numbers must also look independent: the next chart', 'numerele consecutive trebuie să pară și independente: graficul următor')])))
 
@@ -696,8 +706,8 @@ D.frame(T('The Inverse Transform Method', 'Metoda transformării inverse'), item
 chart(T('Inverse Transform: Exponential, Normal and Historical', 'Transformarea inversă: extrageri exponențiale, Normale și istorice'), 'sfm_ch4_inverse_transform', 'SFM_ch4_random_numbers', [
     T('Left: 200\\,000 draws $-\\ln(1 - U)/2$ match the exponential density; sample mean @{iv.meanE} (theory $1/\\lambda = 0.5$)', 'Stînga: 200\\,000 de extrageri $-\\ln(1 - U)/2$ urmează densitatea exponențială; media de selecție @{iv.meanE} (teoretic $1/\\lambda = 0.5$)'),
     T('Right: the same uniforms through the Normal and the empirical S\\&P 500 quantile functions', 'Dreapta: aceleași numere uniforme trecute prin funcția cuantilă a distribuției Normale și prin cea empirică a S\\&P 500'),
-    T('Draws below $-5\\%$: @{iv.p5n}\\% Normal vs @{iv.p5h}\\% historical (data: @{iv.p5d}\\%); worst draw @{iv.minn}\\% vs @{iv.minh}\\%',
-      'Extrageri sub $-5\\%$: @{iv.p5n}\\% din cele Normale față de @{iv.p5h}\\% din cele istorice (în date: @{iv.p5d}\\%); cea mai mică extragere: $@{iv.minn}\\%$ față de $@{iv.minh}\\%$')], h='0.52\\textheight')
+    T('Draws below $-5\\%$: @{iv.p5n}\\% Normal (@{iv.n5n} draws; exact @{iv.p5x}\\%, the gap is simulation noise) vs @{iv.p5h}\\% historical (data: @{iv.p5d}\\%); worst draw @{iv.minn}\\% vs @{iv.minh}\\%',
+      'Extrageri sub $-5\\%$: @{iv.p5n}\\% din cele Normale (@{iv.n5n} extrageri; exact @{iv.p5x}\\%, diferența este zgomot de simulare) față de @{iv.p5h}\\% din cele istorice (în date: @{iv.p5d}\\%); cea mai mică extragere: $@{iv.minn}\\%$ față de $@{iv.minh}\\%$')], h='0.52\\textheight')
 
 D.frame(T('Worked Example: a Monthly Loss Probability by Monte Carlo (1/2)', 'Exemplu lucrat: probabilitatea unei pierderi lunare prin Monte Carlo (1/2)'), items(
     (T('Model: S\\&P 500 daily log returns i.i.d. $N(@{an.m}, @{an.s}^2)$, in \\%', 'Modelul: randamentele logaritmice zilnice ale S\\&P 500, i.i.d. $N(@{an.m}, @{an.s}^2)$, în \\%'),
@@ -770,8 +780,8 @@ chart(T('Binomial Paths and the Lognormal Limit (SFEBinomp)', 'Traiectorii binom
     T('Left: 12 paths over one year of daily steps, $S_0 = 100$', 'Stînga: 12 traiectorii pe un an, cu pași zilnici, $S_0 = 100$'),
     (T('Right: distribution of $S_T$ after 252 steps ($T = 1$ year); $E[S_T] = @{bn.ES}$ $= 100e^{\\mu}$', 'Dreapta: distribuția lui $S_T$ după 252 de pași ($T = 1$ an); $E[S_T] = @{bn.ES}$ $= 100e^{\\mu}$'),
      [T('5\\% quantile @{bn.q05_bin} vs @{bn.q05_ln} in the lognormal limit', 'cuantila de 5\\%: @{bn.q05_bin}, față de @{bn.q05_ln} în limita lognormală')]),
-    (T('$P(S_T < 100)$: @{bn.pl}\\% binomial vs @{bn.pln}\\% lognormal', '$P(S_T < 100)$: @{bn.pl}\\% în modelul binomial, față de @{bn.pln}\\% în cel lognormal'),
-     [T('the exact value $S_T = 100$ has a positive probability, which the binomial counts on one side only', 'valoarea exactă $S_T = 100$ are probabilitate pozitivă, pe care modelul binomial o plasează de o singură parte')])], h='0.46\\textheight')
+    (T('$P(S_T < 100)$: @{bn.pls}\\% binomial ($P(S_T \\le 100) = @{bn.ple}\\%$) vs @{bn.pln}\\% lognormal', '$P(S_T < 100)$: @{bn.pls}\\% în modelul binomial ($P(S_T \\le 100) = @{bn.ple}\\%$), față de @{bn.pln}\\% în cel lognormal'),
+     [T('the exact value $S_T = 100$ has probability @{bn.p100}\\% in the tree; the lognormal value lies between the two', 'valoarea exactă $S_T = 100$ are în arbore probabilitatea @{bn.p100}\\%; valoarea lognormală se află între cele două')])], h='0.46\\textheight')
 
 D.recap(('The Binomial Model', 'Modelul binomial'), [
     T('Up or down each period: $S_n = S_0 u^K d^{n-K}$ with binomial $K$', 'Creștere sau scădere în fiecare perioadă: $S_n = S_0 u^K d^{n-K}$ cu $K$ binomial'),
@@ -910,7 +920,7 @@ D.frame(T('Geometric Brownian Motion', 'Mișcarea browniană geometrică'), item
     (T('Solution: $S_t = S_0\\exp\\big((\\mu - \\sigma^2/2)t + \\sigma W_t\\big)$', 'Soluția: $S_t = S_0\\exp\\big((\\mu - \\sigma^2/2)t + \\sigma W_t\\big)$'),
      [T('$\\ln(S_t/S_0) \\sim N\\big((\\mu - \\sigma^2/2)t, \\sigma^2 t\\big)$', '$\\ln(S_t/S_0) \\sim N\\big((\\mu - \\sigma^2/2)t, \\sigma^2 t\\big)$'),
       T('lognormal prices, i.i.d. Normal log returns', 'prețuri lognormale, randamente logaritmice Normale i.i.d.')]),
-    T('The model behind \\refBS{} (Chapter 6 of the textbook)', 'Modelul din spatele formulei \\refBS{} (capitolul 6 din manual)')), 'footnotesize')
+    T('The model behind \\refBS{} (textbook: \\refFHH, Ch.~6)', 'Modelul din spatele formulei \\refBS{} (manual: \\refFHH, cap.~6)')), 'footnotesize')
 
 D.frame(T('GBM: Mean, Median and Simulation', 'GBM: media, mediana și simularea'), items(
     (T('Mean $E[S_t] = S_0e^{\\mu t}$; median $S_0e^{(\\mu - \\sigma^2/2)t}$', 'Media $E[S_t] = S_0e^{\\mu t}$; mediana $S_0e^{(\\mu - \\sigma^2/2)t}$'),

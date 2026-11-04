@@ -527,8 +527,8 @@ def lo_rejections(N=1000, reps=MC_REPS, save=True):
                       'q_mean': float(np.mean([a['q'] for a in t]))}
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
     w = 0.35
-    for ax, d, xs, xl in [(axes[0], ar, PHIS, 'AR(1) coefficient phi (short memory: H0 true)'),
-                          (axes[1], fg, HS_POWER, 'Hurst exponent H of fGn (long memory if H > 0.5)')]:
+    for ax, d, xs, xl in [(axes[0], ar, PHIS, 'AR(1) coefficient phi\n(short memory: H0 true)'),
+                          (axes[1], fg, HS_POWER, 'Hurst exponent H of fGn\n(long memory if H > 0.5)')]:
         i = np.arange(len(xs))
         ax.bar(i - w / 2, [d[str(v)]['classical'] for v in xs], w, color=st.IDAred, label='classical R/S test (q = 0)')
         ax.bar(i + w / 2, [d[str(v)]['modified'] for v in xs], w, color=st.MainBlue, label="Lo's modified R/S test (Andrews q)")
@@ -669,6 +669,10 @@ def fig_vol_acf(k='sp500', nlags=250, save=True):
         ax.plot(lags, a, color=c, lw=1.2, label=nm)
         out[nm.split()[0]] = {'1': float(a[0]), '10': float(a[9]), '50': float(a[49]), '100': float(a[99]), '250': float(a[249]),
                               'npos': int(np.sum(a > 1.96 / np.sqrt(len(x))))}
+        out_band = np.abs(a[1:]) > 1.96 / np.sqrt(len(x))            # lags 2..nlags outside the 95% band
+        top = np.argsort(-np.abs(a[1:]))[:3] + 2
+        out[nm.split()[0]].update({'nout2': int(np.sum(out_band)), 'maxabs2': float(np.max(np.abs(a[1:]))),
+                                   'top_lags': [int(v) for v in sorted(top)]})
     band = 1.96 / np.sqrt(len(x))
     ax.axhspan(-band, band, color=st.MainBlue, alpha=0.12, lw=0, label='95% band of an i.i.d. series')
     ax.axhline(0, color='black', lw=0.6)

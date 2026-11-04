@@ -395,7 +395,7 @@ D.frame(T('The Lasso', 'Lasso'), cols(items(
 
 chart(T('Ridge and Lasso Paths for the Volatility Features', 'Traiectoriile ridge și lasso pentru variabilele de volatilitate'), 'sfm_ch13_shrinkage', 'SFM_ch13_shrinkage_trees', [
     T('Target: log of the mean variance proxy of the next 5 days, S\\&P 500, 2008--2012 (@{sh.n} days); 11 standardised features (Section 7)',
-      'Ținta: logaritmul mediei variabilei proxy a varianței din următoarele 5 zile, S\\&P 500, 2008--2012 (@{sh.n} de zile); 11 variabile standardizate (secțiunea 7)'),
+      'Ținta: logaritmul mediei variabilei proxy a varianței din următoarele 5 zile, S\\&P 500, 2008--2012 (@{sh.n} zile); 11 variabile standardizate (secțiunea 7)'),
     T('Lasso with $\\lambda = @{sh.alpha}$ (walk-forward CV): @{sh.nz} of 11 features kept; the week coefficient rises from $@{sh.ols.w}$ (OLS) to $@{sh.cv.w}$, the absolute return drops out',
       'Lasso cu $\\lambda = @{sh.alpha}$ (CV walk-forward): rămîn @{sh.nz} din 11 variabile; coeficientul săptămînal crește de la $@{sh.ols.w}$ (OLS) la $@{sh.cv.w}$, iar randamentul absolut iese din model')],
     h='0.50\\textheight')
@@ -463,7 +463,7 @@ D.frame(T('Gradient Boosting', 'Gradient boosting'), items(
 
 chart(T('One Tree, a Forest and Boosting on Volatility Data', 'Un arbore, un random forest și boosting pe date de volatilitate'), 'sfm_ch13_ensembles', 'SFM_ch13_shrinkage_trees', [
     T('S\\&P 500, training 2008--2018 (@{en.ntr} days), validation 2019--2022 (@{en.nva} days); dashed right: training MSE; dotted: HAR regression ($@{en.har}$)',
-      'S\\&P 500, antrenare 2008--2018 (@{en.ntr} de zile), validare 2019--2022 (@{en.nva} de zile); linii întrerupte în dreapta: MSE de antrenare; punctat: regresia HAR ($@{en.har}$)'),
+      'S\\&P 500, antrenare 2008--2018 (@{en.ntr} zile), validare 2019--2022 (@{en.nva} zile); linii întrerupte în dreapta: MSE de antrenare; punctat: regresia HAR ($@{en.har}$)'),
     T('Single tree: best $@{en.tree_best}$ at depth @{en.td}, $@{en.tree14}$ at depth 14; forest: $@{en.rf_best}$ (depth @{en.rd}) and still $@{en.rf14}$ at depth 14',
       'Un singur arbore: minimul $@{en.tree_best}$ la adîncimea @{en.td}, $@{en.tree14}$ la adîncimea 14; random forest: $@{en.rf_best}$ (adîncimea @{en.rd}) și tot $@{en.rf14}$ la adîncimea 14')],
     h='0.48\\textheight')
@@ -547,7 +547,7 @@ D.frame(T('Neural-Network ARCH: the Textbook Model (2/2)', 'ARCH cu rețea neuro
 
 chart(T('Neural-Network ARCH for GBP/USD', 'ARCH cu rețea neuronală pentru GBP/USD'), 'sfm_ch13_nnarch', 'SFM_ch13_neural_networks', [
     T('Daily data from @{na.first} (@{na.n} days); annualised volatility of the RBF network and of GARCH(1,1) ($\\hat\\alpha = @{na.alpha}$, $\\hat\\beta = @{na.beta}$)',
-      'Date zilnice din @{na.first} (@{na.n} de zile); volatilitatea anualizată a rețelei RBF și a modelului GARCH(1,1) ($\\hat\\alpha = @{na.alpha}$, $\\hat\\beta = @{na.beta}$)'),
+      'Date zilnice din @{na.first} (@{na.n} zile); volatilitatea anualizată a rețelei RBF și a modelului GARCH(1,1) ($\\hat\\alpha = @{na.alpha}$, $\\hat\\beta = @{na.beta}$)'),
     T('Average volatility: network @{na.mean_rbf}\\%, GARCH @{na.mean_garch}\\%; correlation of the two paths $@{na.corr}$ (a small MLP: $@{na.corrm}$)',
       'Volatilitatea medie: rețeaua @{na.mean_rbf}\\%, GARCH @{na.mean_garch}\\%; corelația celor două traiectorii $@{na.corr}$ (un MLP mic: $@{na.corrm}$)')],
     h='0.50\\textheight')
@@ -685,7 +685,7 @@ D.frame(T('Feature Importance: Permutation and Shapley Values', 'Importanța var
 
 chart(T('The Features Used by the Forest', 'Variabilele folosite de random forest'), 'sfm_ch13_importance', 'SFM_ch13_volatility_forecast', [
     T('Left: random forest on 11 features, trained to 2019, tested 2020--2026 (@{im.n} days): shuffling the weekly variance raises the MSE by $@{im.w}$, the monthly by $@{im.m}$, the daily by $@{im.d}$',
-      'Stînga: random forest pe 11 variabile, antrenat pînă în 2019, testat în 2020--2026 (@{im.n} de zile): amestecarea varianței săptămînale crește MSE cu $@{im.w}$, a celei lunare cu $@{im.m}$, a celei zilnice cu $@{im.d}$'),
+      'Stînga: random forest pe 11 variabile, antrenat pînă în 2019, testat în 2020--2026 (@{im.n} zile): amestecarea varianței săptămînale crește MSE cu $@{im.w}$, a celei lunare cu $@{im.m}$, a celei zilnice cu $@{im.d}$'),
     T('Right: exact Shapley values of a forest on the 3 HAR features; mean $|\\phi|$: week $@{im.phi.w}$, month $@{im.phi.m}$, day $@{im.phi.d}$; the effect is nonlinear and grows with the level of volatility',
       'Dreapta: valorile Shapley exacte ale unui random forest pe cele 3 variabile HAR; media $|\\phi|$: săptămîna $@{im.phi.w}$, luna $@{im.phi.m}$, ziua $@{im.phi.d}$; efectul este neliniar și crește cu nivelul volatilității')],
     h='0.48\\textheight')
@@ -779,7 +779,7 @@ D.frame(T('Backtest of VaR 1\\%: Quantile Methods, HS and GARCH-t (2/2)', 'Backt
        'S\\&P 500 (@{qv.sp500.n} zile de la @{qv.sp500.first}): QR are rata corectă (@{qv.sp500.QR.rate}\\%) și cea mai mică pierdere'),
      [T('its exceptions are not fully independent (p ind.\\ @{qv.sp500.QR.pind})', 'depășirile lui nu sînt complet independente (p ind.\\ @{qv.sp500.QR.pind})'),
       T('GARCH-t is exceeded too often (@{qv.sp500.GARCH-t.rate}\\%)', 'GARCH-t este depășit prea des (@{qv.sp500.GARCH-t.rate}\\%)')]),
-    (T('Bitcoin (@{qv.btc.n} days): HS has the best rate (@{qv.btc.HS.rate}\\%)', 'Bitcoin (@{qv.btc.n} de zile): HS are cea mai bună rată (@{qv.btc.HS.rate}\\%)'),
+    (T('Bitcoin (@{qv.btc.n} days): HS has the best rate (@{qv.btc.HS.rate}\\%)', 'Bitcoin (@{qv.btc.n} zile): HS are cea mai bună rată (@{qv.btc.HS.rate}\\%)'),
      [T('QGB is rejected by the Kupiec test (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})', 'QGB este respins de testul Kupiec (@{qv.btc.QGB.rate}\\%, p @{qv.btc.QGB.puc})')]),
     (T('Reading the p-values', 'Interpretarea p-value-urilor'),
      [T('p Kupiec below 0.05: the exception rate differs significantly from 1\\%', 'p Kupiec sub 0,05: rata depășirilor diferă semnificativ de 1\\%'),
@@ -817,7 +817,7 @@ D.frame(T('The Best of $N$ Strategies (2/2)', 'Cea mai bună dintre $N$ strategi
 
 chart(T('Selection Bias in Practice', 'Distorsiunea de selecție în practică'), 'sfm_ch13_snooping', 'SFM_ch13_data_snooping', [
     T('Left: the best annual Sharpe ratio among $N$ strategies without skill (10 years); right: @{sn.N} moving-average rules on the S\\&P 500 (long or cash), 2000--2014 against 2015--2026',
-      'Stînga: cel mai bun raport Sharpe anual dintre $N$ strategii fără abilitate (10 ani); dreapta: @{sn.N} de reguli cu medii mobile pe S\\&P 500 (investit sau numerar), 2000--2014 față de 2015--2026'),
+      'Stînga: cel mai bun raport Sharpe anual dintre $N$ strategii fără abilitate (10 ani); dreapta: @{sn.N} reguli cu medii mobile pe S\\&P 500 (investit sau numerar), 2000--2014 față de 2015--2026'),
     T('Interpretation: the best rule in sample (MA @{sn.s}/@{sn.l}, Sharpe $@{sn.is}$) earns $@{sn.oos}$ afterwards, rank @{sn.rank} of @{sn.N}, below buy and hold ($@{sn.bh_oos}$); in and out of sample Sharpe ratios correlate $@{sn.corr}$',
       'Interpretare: cea mai bună regulă în eșantion (MA @{sn.s}/@{sn.l}, Sharpe $@{sn.is}$) obține apoi $@{sn.oos}$, locul @{sn.rank} din @{sn.N}, sub buy and hold ($@{sn.bh_oos}$); rapoartele Sharpe din eșantion și din afara lui au corelația $@{sn.corr}$')],
     h='0.48\\textheight')

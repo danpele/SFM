@@ -80,6 +80,9 @@ V.put('nt.3.in', 100 * (1 - N['normal_tails']['3']['p']), 2)
 sp = M['sp500']
 zmin = (sp['min'] - sp['mean']) / sp['sd']
 V.raw('sp.pmin', sci(stats.norm.cdf(zmin), 0))
+V.put('sp.min2', sp['min'], 2)
+V.put('sp.mean3', sp['mean'], 3)
+V.put('sp.sd3', sp['sd'], 3)
 V.raw('sp.pmin.exp', str(int(math.floor(math.log10(1 / stats.norm.cdf(zmin) / 252)))))
 # zile cu pierderi > 3% și > 5%
 L = N['loss']
@@ -117,7 +120,7 @@ for T_ in [1, 10]:
     V.put(f'ln.{T_}.q05', 100 * math.exp(mT + sT * stats.norm.ppf(0.05)), 1)
 V.put('ln.drag', 100 * s_y ** 2 / 2, 2)
 Q05_10 = 100 * math.exp(10 * mu_y + s_y * math.sqrt(10) * stats.norm.ppf(0.05))   # cuantila de 5% după 10 ani
-V.put('ln.ppy', bet['ppy'], 0)
+V.put('ln.ppy', bet['ppy'], 1)
 LN = N['lognormal']
 for s_, key in [('0.25', 'a'), ('0.5', 'b'), ('1.0', 'c')]:
     V.put(f'lnd.{key}.mean', LN[s_]['mean'], 2)
@@ -148,15 +151,17 @@ V.put('tlv.k', TL['exkurt'], 1)
 V.put('tlv.kc', TL['exkurt_clean'], 1)
 V.put('tlv.c0', TL['close']['2016-05-27'], 2)
 V.put('tlv.c1', TL['close']['2016-05-30'], 2)
-V.put('tlv.a0', TL['adj']['2016-05-27'], 2)
-V.put('tlv.a1', TL['adj']['2016-05-30'], 2)
-V.put('tlv.a2', TL['adj']['2016-05-31'], 2)
+V.put('tlv.a0', TL['adj']['2016-05-27'], 4)
+V.put('tlv.a1', TL['adj']['2016-05-30'], 4)
+V.put('tlv.a2', TL['adj']['2016-05-31'], 4)
 V.put('tlv.nu', TL['nu'], 2)
 V.put('tlv.nuc', TL['nu_clean'], 2)
 # JB, exemplul lucrat
-V.put('jb.s2', sp['skew'] ** 2, 3)
-V.put('jb.k24', sp['exkurt'] ** 2 / 4, 1)
-V.put('jb.n6', sp['n'] / 6, 1)
+V.put('jb.s2', sp['skew'] ** 2, 4)
+V.put('jb.k24', sp['exkurt'] ** 2 / 4, 3)
+V.put('jb.n6', sp['n'] / 6, 2)
+V.put('jb.s', sp['skew'], 3)
+V.put('jb.k', sp['exkurt'], 2)
 V.put('jb.crit', stats.chi2.ppf(0.95, 2), 2)
 B1 = S['B1']
 V.put('bs.klo', B1['bs_k_lo'], 1)
@@ -329,8 +334,8 @@ D.section('Why the Distribution Matters', 'Importanța distribuției')
 D.frame(T('A Day That Should Not Happen', 'O zi care n-ar trebui să existe'), items(
     T('16 March 2020: the S\\&P 500 fell by $@{m.sp500.min}\\%$ (log return) in one day',
       '16 martie 2020: S\\&P 500 a scăzut cu $@{m.sp500.min}\\%$ (randament logaritmic) într-o singură zi'),
-    (T('Daily standard deviation @{y0}--@{y1}: $@{m.sp500.sd}\\%$, so the fall was $@{m.sp500.zmin}$ standard deviations',
-       'Abaterea standard zilnică @{y0}--@{y1}: $@{m.sp500.sd}\\%$, deci scăderea a fost de $@{m.sp500.zmin}$ abateri standard'),
+    (T('Daily mean and standard deviation @{y0}--@{y1}: $@{sp.mean3}\\%$ and $@{sp.sd3}\\%$, so the fall was $(@{sp.min2} - @{sp.mean3})/@{sp.sd3} = @{m.sp500.zmin}$ standard deviations',
+       'Media și abaterea standard zilnică @{y0}--@{y1}: $@{sp.mean3}\\%$ și $@{sp.sd3}\\%$, deci scăderea a fost de $(@{sp.min2} - @{sp.mean3})/@{sp.sd3} = @{m.sp500.zmin}$ abateri standard'),
      [T('under the Normal distribution, the probability of such a day is about $@{sp.pmin}$',
         'dacă randamentele ar urma distribuția Normală, probabilitatea unei asemenea zile ar fi de circa $@{sp.pmin}$'),
       T('that is, less than once in $10^{@{sp.pmin.exp}}$ years of trading', 'adică mai rar de o dată la $10^{@{sp.pmin.exp}}$ ani de tranzacționare')]),
@@ -633,7 +638,7 @@ D.frame(T('The Jarque--Bera Test', 'Testul Jarque--Bera'), items(
     T('Simple, uses only two moments, and is the standard test reported in empirical finance', 'Este simplu, folosește doar două momente și este testul raportat de regulă în finanțele empirice')))
 
 D.frame(T('Worked Example: Jarque--Bera for the S\\&P 500', 'Exemplu lucrat: Jarque--Bera pentru S\\&P 500'), items(
-    T('$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$', '$n = @{m.sp500.n}$, $S = @{m.sp500.skew}$, $K = @{m.sp500.exkurt}$'),
+    T('$n = @{m.sp500.n}$, $S = @{jb.s}$, $K = @{jb.k}$', '$n = @{m.sp500.n}$, $S = @{jb.s}$, $K = @{jb.k}$'),
     T('$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$', '$\\text{JB} = @{jb.n6} \\times (@{jb.s2} + @{jb.k24}) = @{m.sp500.jb}$'),
     T('Critical value @{jb.crit}: normality is rejected; the p-value is zero to any number of decimals', 'Valoarea critică @{jb.crit}: normalitatea este respinsă; p-value-ul este practic zero'),
     T('The kurtosis term dominates: almost all of JB comes from $K^2/4$', 'Termenul de boltire domină: aproape toată valoarea JB provine din $K^2/4$'),
@@ -848,8 +853,8 @@ D.frame(T('Fact 3: Small but Not Always Zero', 'Faptul 3: autocorelație mică, 
     T('Robust tests of predictability (variance ratios): Chapter 7', 'Teste robuste ale previzibilității (testele raportului varianțelor): Capitolul 7')))
 
 D.frame(T('Fact 4: Volatility Clustering', 'Faptul 4: volatility clustering'), cols(items(
-    T('``Large changes tend to be followed by large changes, of either sign, and small changes tend to be followed by small changes\'\' \\refMandelbrot',
-      '„Variațiile mari tind să fie urmate de variații mari, de orice semn, iar variațiile mici de variații mici” \\refMandelbrot'),
+    T('``[L]arge changes tend to be followed by large changes---of either sign---and small changes tend to be followed by small changes\'\' \\refMandelbrot',
+      '„Variațiile mari tind să fie urmate de variații mari – de orice semn –, iar variațiile mici tind să fie urmate de variații mici” \\refMandelbrot'),
     T('The sign of tomorrow\'s return is unpredictable; its size is not', 'Semnul randamentului de mîine este imprevizibil; mărimea lui nu este'),
     (T('Evidence: ACF of $|r_t|$ positive for 50 lags', 'Dovezi: ACF a lui $|r_t|$ pozitivă pe 50 de laguri'),
      [T('Ljung--Box $Q(10)$ of $|r_t|$: S\\&P 500 @{acf.sp500.lba}, BET @{acf.bet.lba}, Bitcoin @{acf.btc.lba}', 'Ljung--Box $Q(10)$ pentru $|r_t|$: S\\&P 500 @{acf.sp500.lba}, BET @{acf.bet.lba}, Bitcoin @{acf.btc.lba}')]),
@@ -890,14 +895,25 @@ for k in ASSETS:
     V.put(f'ft.{k}.lev', f['lev5'], 2)
     V.put(f'ft.{k}.km', f['exkurt_m'], 1)
     V.put(f'ft.{k}.gl', f['gl_ratio'], 2)
+WEAK5 = ['btc', 'snp', 'snn', 'sng']
+V.put('ft.sp500.abs1', abs(FT['sp500']['rho1']), 2)
+assert max(FT, key=lambda k: abs(FT[k]['rho1'])) == 'sp500' and sorted(FT, key=lambda k: FT[k]['rho10_abs'])[:2] == ['snn', 'sng']
+V.put('ft.lev.idx.lo', min(FT[k]['lev5'] for k in ['sp500', 'dax', 'bet']), 2)
+V.put('ft.lev.idx.hi', max(FT[k]['lev5'] for k in ['sp500', 'dax', 'bet']), 2)
+V.put('ft.lev.weak.lo', min(FT[k]['lev5'] for k in WEAK5), 2)
+V.put('ft.lev.weak.hi', max(FT[k]['lev5'] for k in WEAK5), 2)
+assert all(FT[k]['lev5'] > -0.045 for k in WEAK5) and all(FT[k]['lev5'] < -0.045 for k in ASSETS if k not in WEAK5)
+assert FT['snn']['gl_ratio'] < 1 and all(FT[k]['gl_ratio'] > 1 for k in ASSETS if k != 'snn')
 D.frame(T('Six Facts, Eight Series', 'Șase fapte, opt serii'), table(
     'lrrrrrr', T('Series', 'Seria') + ' & ' + T('Exc. kurt.', 'Exces bolt.') + ' & ' + T('Exc. kurt., 21 days', 'Exces bolt., 21 zile') + ' & $\\hat\\rho_r(1)$ & $\\hat\\rho_{|r|}(10)$ & $\\bar L(1..5)$ & $|q_{0.01}|/q_{0.99}$',
     [f'{NAMES[k]} & $@{{m.{k}.exkurt}}$ & $@{{ft.{k}.km}}$ & $@{{ft.{k}.r1}}$ & $@{{ft.{k}.a10}}$ & $@{{ft.{k}.lev}}$ & $@{{ft.{k}.gl}}$' for k in ASSETS],
     size='scriptsize') + items(
     T('Columns: excess kurtosis of daily and 21-day returns; ACF of returns at lag 1 and of $|r_t|$ at lag 10; mean $L(k)$ over lags 1--5; 1\\% over 99\\% quantile',
       'Coloanele: excesul de boltire al randamentelor zilnice și pe 21 de zile; ACF a randamentelor la lagul 1 și a lui $|r_t|$ la lagul 10; media $L(k)$ pe lagurile 1--5; cuantila de 1\\% împărțită la cea de 99\\%'),
-    T('Facts 1, 3 and 4 hold for every series; fact 2 holds with noise; facts 5 and 6 hold for the indices and most BVB stocks, weakly or not for Bitcoin and SNN',
-      'Faptele 1, 3 și 4 sînt valabile pentru toate seriile; faptul 2, cu estimări imprecise; faptele 5 și 6, pentru indici și majoritatea acțiunilor BVB, slab sau deloc pentru Bitcoin și SNN'),
+    T('Fact 1 holds for every series, fact 2 with noise; fact 3 only approximately, $|\\hat\\rho_r(1)|$ up to $@{ft.sp500.abs1}$ (S\\&P 500; SNN $@{ft.snn.r1}$); fact 4 everywhere, weakest for SNN and SNG ($@{ft.snn.a10}$)',
+      'Faptul 1 este valabil pentru toate seriile, faptul 2 cu estimări imprecise; faptul 3 doar aproximativ, $|\\hat\\rho_r(1)|$ pînă la $@{ft.sp500.abs1}$ (S\\&P 500; SNN $@{ft.snn.r1}$); faptul 4 peste tot, cel mai slab pentru SNN și SNG ($@{ft.snn.a10}$)'),
+    T('Fact 5: clear for the indices ($@{ft.lev.idx.lo}$ to $@{ft.lev.idx.hi}$), equally weak for Bitcoin, SNP, SNN and SNG ($@{ft.lev.weak.lo}$ to $@{ft.lev.weak.hi}$); fact 6 fails for SNN ($@{ft.snn.gl}$), close to 1 for SNP and SNG',
+      'Faptul 5: clar pentru indici (între $@{ft.lev.idx.lo}$ și $@{ft.lev.idx.hi}$), la fel de slab pentru Bitcoin, SNP, SNN și SNG (între $@{ft.lev.weak.lo}$ și $@{ft.lev.weak.hi}$); faptul 6 nu este valabil pentru SNN ($@{ft.snn.gl}$), aproape 1 pentru SNP și SNG'),
     T('A comparison of the return distributions of cryptocurrencies and traditional assets: \\refPeleCrypto', 'O comparație între distribuțiile randamentelor criptomonedelor și cele ale activelor tradiționale: \\refPeleCrypto')) + ql('SFM_ch2_cont_stylised_facts'),
     'footnotesize')
 

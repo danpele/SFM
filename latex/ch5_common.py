@@ -66,7 +66,7 @@ def values(N):
     for k, w in N['wait'].items():
         y = w['years_evt']
         if y >= 1000:
-            V.int(f'w.{k}', round(y, -2))
+            V.int(f'w.{k}', round(y))
         else:
             V.put(f'w.{k}', y, 0)
     for k, d in N['crash_days'].items():

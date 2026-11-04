@@ -21,6 +21,14 @@ from ch5_common import ASSETS, BIB, NAMES, REFS, SHORT, STOCKS, T, load, values 
 
 N = load()
 V = values(N)
+# z for the BET tail change, written as on the slide: (alpha_1 - alpha_2)/sqrt(SE_1^2 + SE_2^2), period 1 = before
+_B = N['bet_periods']
+V.put('bp.z', (_B['before']['alpha'] - _B['after']['alpha']) / math.sqrt(_B['before']['se_block'] ** 2 + _B['after']['se_block'] ** 2), 2)
+# GPD shape with three decimals in the POT table, so that 1/xi can be checked from the table
+for _k, _r in N['risk'].items():
+    V.put(f'r.{_k}.xi3', _r['pot']['xi'], 3)
+# block-bootstrap SE: the slide singles out the S&P 500
+assert max(N['hill'], key=lambda k: N['hill'][k]['se_block'] / N['hill'][k]['se_iid']) == 'sp500'
 D = Deck(5, 'lecture', refs=REFS)
 QLURL = 'https://github.com/danpele/SFM/tree/main/Quantlets/Ch_05'
 
@@ -397,8 +405,8 @@ D.frame(T('Hill Estimates for Four Markets', 'Estimări Hill pentru patru piețe
     [hrow(k) for k in ASSETS], size='scriptsize') + items(
     (T('Losses: $\\hat\\alpha$ between $@{h.min}$ and $@{h.max}$', 'Pierderi: $\\hat\\alpha$ între $@{h.min}$ și $@{h.max}$'),
      [T('the intervals exclude 2 (finite variance) and lie below 4 (no finite kurtosis)', 'intervalele exclud 2 (varianță finită) și sînt sub 4 (boltire infinită)')]),
-    T('The block-bootstrap SE is close to the i.i.d.\\ one here; the estimates move with $k$ by more than one SE',
-      'SE din bootstrap pe blocuri este apropiată aici de cea i.i.d.; estimările variază cu $k$ cu mai mult de o SE'),
+    T('The block-bootstrap SE is close to the i.i.d.\\ one for the DAX, BET and Bitcoin, but larger for the S\\&P 500 ($@{h.sp500.se_block}$ vs $@{h.sp500.se_iid}$); the estimates move with $k$ by more than one SE',
+      'SE din bootstrap pe blocuri este apropiată de cea i.i.d. pentru DAX, BET și Bitcoin, dar mai mare pentru S\\&P 500 ($@{h.sp500.se_block}$ față de $@{h.sp500.se_iid}$); estimările variază cu $k$ cu mai mult de o SE'),
     T('Last column: the Hill index of gains ($r_t > 0$), same $k$', 'Ultima coloană: indicele Hill al cîștigurilor ($r_t > 0$), același $k$')) + ql('SFM_ch5_hill'), 'footnotesize')
 
 D.frame(T('From the Tail Index to a Quantile', 'De la tail index-ul la o cuantilă'), items(
@@ -633,7 +641,7 @@ chart(T('Parameter Stability', 'Stabilitatea parametrilor'), 'sfm_ch5_threshold_
 
 
 def prow(k):
-    return (f'{NAMES[k]} & @{{r.{k}.n}} & $@{{r.{k}.u}}$ & @{{r.{k}.nu}} & $@{{r.{k}.xi}}$ & $@{{r.{k}.se_xi}}$ & $@{{r.{k}.beta}}$ & $@{{r.{k}.alpha}}$')
+    return (f'{NAMES[k]} & @{{r.{k}.n}} & $@{{r.{k}.u}}$ & @{{r.{k}.nu}} & $@{{r.{k}.xi3}}$ & $@{{r.{k}.se_xi}}$ & $@{{r.{k}.beta}}$ & $@{{r.{k}.alpha}}$')
 
 
 D.frame(T('GPD Fits above the 90\\% Quantile', 'Ajustări GPD peste cuantila de 90\\%'), table(
@@ -680,8 +688,8 @@ D.frame(T('Back to the Crashes: How Often?', 'Înapoi la crahuri: cît de des?')
       'Timpul de așteptare EVT: $1/(\\hat{\\bar F}(x) \\times 252)$ ani (365 pentru Bitcoin), cu ajustarea POT pe întregul eșantion'),
     T('EVT makes the COVID-19 days rare but plausible events of a lifetime; the Normal law makes them impossible',
       'Pentru EVT, zilele COVID-19 sînt evenimente rare, dar plauzibile, de tipul „o dată într-o viață”; pentru distribuția Normală sînt imposibile'),
-    T('1987 is outside our data: EVT extrapolates it to a waiting time of about @{w.1987} years, with a wide uncertainty',
-      '1987 este în afara datelor noastre: EVT îl extrapolează la un timp de așteptare de circa @{w.1987} de ani, cu o incertitudine mare')) + ql('SFM_ch5_pot_gpd'), 'footnotesize')
+    T('1987 is outside our data: EVT extrapolates it to a waiting time of @{w.1987} years, with a wide uncertainty',
+      '1987 este în afara datelor noastre: EVT îl extrapolează la un timp de așteptare de @{w.1987} ani, cu o incertitudine mare')) + ql('SFM_ch5_pot_gpd'), 'footnotesize')
 
 # =============================================================================
 # 7. VaR ȘI ES PRIN EVT

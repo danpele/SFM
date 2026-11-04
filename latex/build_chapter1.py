@@ -178,6 +178,7 @@ V.put('sr.sp.d', sr_sp / math.sqrt(P['sp500']['obs_per_year']), 3)
 best = {m: max(P, key=lambda k: P[k][m]) for m in ['cagr', 'sharpe', 'sortino', 'calmar']}
 best['vol'] = min(P, key=lambda k: P[k]['vol'])
 best['mdd'] = max(P, key=lambda k: P[k]['mdd'])
+assert best['mdd'] == 'bettr' and sorted(P, key=lambda k: -P[k]['mdd'])[1] == 'bet'   # the slide names both
 for m, k in best.items():
     V.raw(f'best.{m}', SHORTNAME[k])
 V.put('btc.drag', 100 * P['btc']['drag'], 1)
@@ -196,6 +197,23 @@ with open(os.path.join(ROOT, 'data', 'manifest.csv')) as f_:
     V.raw('nseries', str(sum(1 for _ in f_) - 1))
 # verificați-vă: cifre calculate din enunț
 V.put('cy.mu', 252 * 0.05, 1)
+# date issues found in the cached data (kept in all statistics; stated on the slides)
+sys.path.insert(0, os.path.join(ROOT, 'Quantlets', 'common'))
+from sfm_data import load_close as _lc, log_returns as _lr   # noqa: E402
+from scipy import stats as _st   # noqa: E402
+_r = _lr('tlv', N['start'])
+V.put('tlv.bad.r1', _r.loc['2016-05-30'], 1)
+V.put('tlv.bad.r2', _r.loc['2016-05-31'], 1)
+V.put('tlv.bad.k', _st.kurtosis(_r.drop(_r.loc['2016-05-30':'2016-05-31'].index)), 1)
+put_date(V, 'g.first', max(_lc(k, N['start']).index[0] for k in ('sp500', 'dax', 'bet', 'btc')).date().isoformat())
+# daily standard deviation: range without Bitcoin
+_sd = {k: d['sd'] for k, d in N['desc'].items() if k != 'btc'}
+V.put('sd.lo', min(_sd.values()), 1)
+V.put('sd.hi', max(_sd.values()), 1)
+V.put('sd.btc', N['desc']['btc']['sd'], 1)
+# BET vs BET-TR: maximum drawdowns with three decimals (practically tied)
+V.put('mdd3.bet', 100 * P['bet']['mdd'], 3)
+V.put('mdd3.bettr', 100 * P['bettr']['mdd'], 3)
 V.put('cy.vol', math.sqrt(252) * 1.0, 1)
 V.put('cy.need', 100 * 0.6 / 0.4, 0)
 
@@ -365,8 +383,8 @@ chart(T('Real Data: Banca Transilvania, Close vs Adjusted Close', 'Date reale: B
             'Pe @{tlv.date} prețul crește brusc de la @{tlv.before} la @{tlv.after} lei: o consolidare a acțiunilor, @{tlv.ratio} acțiuni vechi într-una'),
           T('Log return from the close: $+@{tlv.jc}\\%$ in one day; from the adjusted close: $@{tlv.ja}\\%$',
             'Randamentul logaritmic din prețul de închidere: $+@{tlv.jc}\\%$ într-o zi; din prețul ajustat: $@{tlv.ja}\\%$'),
-          T('Since 2015 the two series disagree by more than 2\\% on @{tlv.nev} days (dividends, bonus shares)',
-            'Din 2015, cele două serii diferă cu peste 2\\% în @{tlv.nev} zile (dividende, acțiuni gratuite)')])
+          T('Since 2015 the daily returns of the two series differ by more than 2 percentage points on @{tlv.nev} days (dividends, bonus shares)',
+            'Din 2015, randamentele zilnice ale celor două serii diferă cu peste 2 puncte procentuale în @{tlv.nev} zile (dividende, acțiuni gratuite)')])
 
 chart(T('Dividends Matter: BET vs BET-TR', 'Dividendele contează: BET și BET-TR'), 'sfm_ch1_bet_bettr', 'SFM_ch1_data_quality', [
     T('100 invested on @{bt.start}: @{bt.bet} in the BET (price index), @{bt.tr} in the BET-TR (dividends reinvested)',
@@ -581,8 +599,8 @@ D.frame(T('Cumulative Return and Wealth', 'Randamentul cumulat și averea'), ite
       'Scara logaritmică pe grafice: distanțe verticale egale corespund unor variații procentuale egale')))
 
 chart(T('Growth of 100 Invested, @{y0}--@{y1}', 'Evoluția a 100 de unități investite, @{y0}--@{y1}'), 'sfm_ch1_growth', 'SFM_ch1_portfolio_returns', [
-    T('100 invested on the first day of @{y0} with prices for all four series; final values: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}',
-      '100 de unități investite în prima zi din @{y0} cu prețuri pentru toate cele patru serii; valori finale: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}'),
+    T('100 invested on @{g.first}, the first day with prices for all four series (the CAGR tables start each series on its own first day of @{y0}); final values: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}',
+      '100 de unități investite pe @{g.first}, prima zi cu prețuri pentru toate cele patru serii (tabelele CAGR pornesc fiecare serie din prima ei zi din @{y0}); valori finale: S\\&P 500 @{g.sp500.end}, DAX @{g.dax.end}, BET @{g.bet.end}, Bitcoin @{g.btc.end}'),
     T('Bitcoin: cumulative simple return @{g.btc.cs}\\%, cumulative log return @{g.btc.cl}; BET: @{g.bet.cs}\\% and @{g.bet.cl}',
       'Bitcoin: randament simplu cumulat @{g.btc.cs}\\%, randament logaritmic cumulat @{g.btc.cl}; BET: @{g.bet.cs}\\% și @{g.bet.cl}'),
     T('Without the log scale, every series except Bitcoin would look flat', 'Fără scara logaritmică, toate seriile, cu excepția Bitcoin, ar părea plate')])
@@ -737,10 +755,13 @@ D.frame(T('Daily Log Returns: Five BVB Stocks, @{y0}--@{y1}', 'Randamente logari
             T('Banca Transilvania and BRD lost most on 19 December 2018, after the announcement of a tax on bank assets, adopted as OUG 114/2018',
               'Banca Transilvania și BRD au pierdut cel mai mult pe 19 decembrie 2018, după anunțarea taxei pe activele bancare, adoptată prin OUG 114/2018'),
             T('Excess kurtosis differs widely between stocks: compare TLV with SNN', 'Excesul de boltire diferă mult între acțiuni: comparați TLV cu SNN'),
+            T('Data issue: the EODHD adjusted close of TLV on 30 May 2016 is wrong ($@{tlv.bad.r1}\\%$, then $+@{tlv.bad.r2}\\%$ on 31 May); kept here, without these two days the excess kurtosis is @{tlv.bad.k}',
+              'Problemă de date: prețul ajustat EODHD al TLV din 30 mai 2016 este greșit ($@{tlv.bad.r1}\\%$, apoi $+@{tlv.bad.r2}\\%$ pe 31 mai); este păstrat aici, iar fără aceste două zile excesul de boltire este @{tlv.bad.k}'),
             T('Crashes on the BVB have their own statistics \\refPele', 'Crahurile de la BVB au o statistică proprie \\refPele')) + ql('SFM_ch1_descriptive_stats'))
 
 chart(T('Histograms vs the Normal Distribution', 'Histogramele față de distribuția Normală'), 'sfm_ch1_hist_normal', 'SFM_ch1_descriptive_stats', [
-    T('Black line: the Normal density with the same mean and standard deviation', 'Linia neagră: densitatea Normală cu aceeași medie și abatere standard'),
+    T('Black line: the Normal density with the same mean and standard deviation; horizontal axis cut at the 0.1\\% and 99.9\\% quantiles, the days beyond them are counted in the outermost bars',
+      'Linia neagră: densitatea Normală cu aceeași medie și abatere standard; axa orizontală este tăiată la cuantilele de 0,1\\% și 99,9\\%, iar zilele din afara lor sînt numărate în barele de la margine'),
     T('S\\&P 500: @{h.sp500.in1}\\% of days lie within one standard deviation of the mean (Normal: @{h.n.in1}\\%)',
       'S\\&P 500: @{h.sp500.in1}\\% din zile sînt la cel mult o abatere standard de medie (distribuția Normală: @{h.n.in1}\\%)'),
     T('Beyond three standard deviations: @{h.sp500.out3}\\% of days vs @{h.n.out3}\\% under the Normal distribution, @{h.ratio} times more',
@@ -756,8 +777,8 @@ chart(T('Volatility Changes over Time', 'Volatilitatea se schimbă în timp'), '
 D.recap(('Descriptive Statistics', 'statistici descriptive'), [
     T('Report mean, standard deviation, skewness, excess kurtosis, quantiles and extremes with dates',
       'Raportați media, abaterea standard, asimetria, excesul de boltire, cuantilele și extremele cu datele lor'),
-    T('Daily returns: mean near 0, volatility 1--3\\% a day, heavy tails, often negative skewness',
-      'Randamente zilnice: medie apropiată de 0, volatilitate 1--3\\% pe zi, cozi groase, adesea asimetrie negativă'),
+    T('Daily returns: mean near 0, volatility @{sd.lo}--@{sd.hi}\\% a day (Bitcoin @{sd.btc}\\%), heavy tails, often negative skewness',
+      'Randamente zilnice: medie apropiată de 0, volatilitate @{sd.lo}--@{sd.hi}\\% pe zi (Bitcoin @{sd.btc}\\%), cozi groase, adesea asimetrie negativă'),
     T('Extreme days are several times more frequent than under the Normal distribution', 'Zilele extreme sînt de cîteva ori mai frecvente decît în cazul distribuției Normale'),
     T('Volatility is not constant over time', 'Volatilitatea nu este constantă în timp')])
 
@@ -806,7 +827,8 @@ D.frame(T('The Sharpe Ratio Is an Estimate', 'Raportul Sharpe este o estimare'),
 
 side(T('Sharpe Ratios with 95\\% Intervals, @{y0}--@{y1}', 'Raportul Sharpe cu intervale de încredere 95\\%, @{y0}--@{y1}'), 'sfm_ch1_sharpe_ci', 'SFM_ch1_performance', [
     T('Highest point estimate: @{best.sharpe}', 'Cea mai mare estimare punctuală: @{best.sharpe}'),
-    T('All intervals overlap: the ranking is not statistically significant', 'Toate intervalele se suprapun: clasamentul nu este semnificativ statistic'),
+    T('All intervals overlap: the ranking is uncertain; overlap is not a formal test, which compares the difference of two Sharpe ratios with its own standard error',
+      'Toate intervalele se suprapun: clasamentul este incert; suprapunerea nu este un test formal, care compară diferența a două rapoarte Sharpe cu propria ei eroare standard'),
     T('The DAX interval contains 0', 'Intervalul DAX conține 0'),
     T('Interval widths are almost equal: they depend mainly on the length of the sample', 'Lățimile intervalelor sînt aproape egale: depind mai ales de lungimea eșantionului')], w=0.58)
 
@@ -896,7 +918,8 @@ D.frame(T('Question for the Room: Which Bitcoin Return?', 'Întrebare pentru sal
      [T('the CAGR: it is the rate that actually turned the first price into the last', 'CAGR: este rata care a transformat efectiv primul preț în ultimul'),
       T('the arithmetic mean is the expected return of a single year, not the growth over many years',
         'media aritmetică este randamentul așteptat al unui singur an, nu creșterea pe mulți ani'),
-      T('the gap is the volatility drag; for low-volatility assets it is small', 'diferența este volatility drag, neglijabil pentru activele cu volatilitate mică')])))
+      T('the volatility drag of @{btc.drag} points separates the arithmetic mean from the mean log return, @{btc.ml}\\%; the CAGR is $e^{@{btc.ml}\\%} - 1 = @{btc.cagr}\\%$',
+        'volatility drag de @{btc.drag} puncte separă media aritmetică de media randamentelor logaritmice, @{btc.ml}\\%; CAGR este $e^{@{btc.ml}\\%} - 1 = @{btc.cagr}\\%$')])))
 
 
 def prow(k):
@@ -923,7 +946,8 @@ side(T('Risk and Return, @{y0}--@{y1}', 'Risc și randament, @{y0}--@{y1}'), 'sf
     T('Horizontal: annualised volatility; vertical: CAGR', 'Orizontal: volatilitatea anualizată; vertical: CAGR'),
     T('Best by CAGR: @{best.cagr}; by Sharpe: @{best.sharpe}; by Sortino: @{best.sortino}; by Calmar: @{best.calmar}',
       'Cel mai bun după CAGR: @{best.cagr}; după Sharpe: @{best.sharpe}; după Sortino: @{best.sortino}; după Calmar: @{best.calmar}'),
-    T('Lowest volatility: @{best.vol}; shallowest MDD: @{best.mdd}', 'Cea mai mică volatilitate: @{best.vol}; cel mai mic MDD în valoare absolută: @{best.mdd}'),
+    T('Lowest volatility: @{best.vol}; shallowest MDD: BET-TR ($@{mdd3.bettr}\\%$) and BET ($@{mdd3.bet}\\%$), practically tied',
+      'Cea mai mică volatilitate: @{best.vol}; cel mai mic MDD în valoare absolută: BET-TR ($@{mdd3.bettr}\\%$) și BET ($@{mdd3.bet}\\%$), practic la egalitate'),
     T('The ranking depends on the indicator: always say which one you use', 'Clasamentul depinde de indicator: precizați întotdeauna indicatorul folosit')], w=0.56)
 
 D.recap(('Performance Indicators', 'indicatori de performanță'), [

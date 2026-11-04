@@ -523,7 +523,7 @@ GARCH(1,1) & 4 & $-9218.0$ & \textbf{18444.0} & \textbf{18471.2} & $0.980$ \\
     \item \textbf{IGARCH} (integrated GARCH) \refEB: $\alpha + \beta = 1$
     \begin{itemize}
         \item shocks to the variance never die out: no half-life, no finite unconditional variance
-        \item the forecast of the variance is the same for every horizon
+        \item with $\omega = 0$ the forecast of the variance is the same for every horizon; with $\omega > 0$ it grows by $\omega$ per day
     \end{itemize}
     \item \textbf{EWMA} (exponentially weighted moving average, \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter8_volatility_estimators.pdf}{Chapter 8}): $\sigma_t^2 = \lambda\sigma_{t-1}^2 + (1 - \lambda)r_{t-1}^2$
     \begin{itemize}
@@ -612,7 +612,7 @@ $\beta$ & $0.8600$ ($0.0091$) & $0.8599$ & $0.0091$ & $0.0125$ \\
         \item the two routes differ only in the start-up of $\sigma_t^2$ and in the optimiser; log-likelihood $-9219.9$ against $-9218.0$
     \end{itemize}
     \item SE (standard error), classic: from the inverse Hessian (the curvature of $\ell$); robust: valid when $z_t$ is not Normal \refBW
-    \item Interpretation: the robust SE are about 1.4 times larger (1.6 for $\omega$): with heavy-tailed $z_t$ the classic SE overstate the precision
+    \item Interpretation: the robust SE of $\alpha$ and $\beta$ are about 1.4 times larger (1.6 for $\omega$, 1.02 for $\mu$): with heavy-tailed $z_t$ the classic SE overstate the precision of the variance parameters
 \end{itemize}\sfmquantlet{Ch_09}{SFM_ch9_garch_estimation}
 \end{frame}
 
@@ -707,18 +707,18 @@ skewed t & $0.0153$ & $0.120$ & $0.872$ & $6.92$ & $-0.114$ & $-9038.4$ & $0.993
 \toprule
 & from & $\alpha$ & $\beta$ & $\nu$ & $\alpha + \beta$ & half-life & long-run vol. & sample vol. \\
 \midrule
-S\&P 500 & 2000 & $0.123$ & $0.872$ & $6.26$ & $0.995$ & 131 & 27.3 & 19.2 \\
-DAX & 2000 & $0.097$ & $0.895$ & $7.08$ & $0.992$ & 88 & 25.9 & 22.4 \\
-BET & 2000 & $0.192$ & $0.799$ & $5.01$ & $0.991$ & 74 & 34.7 & 22.1 \\
+S\&P 500 & 2000 & $0.123$ & $0.872$ & $6.26$ & $0.9947$ & 131 & 27.3 & 19.2 \\
+DAX & 2000 & $0.097$ & $0.895$ & $7.08$ & $0.9922$ & 88 & 25.9 & 22.4 \\
+BET & 2000 & $0.192$ & $0.799$ & $5.01$ & $0.9907$ & 74 & 34.7 & 22.1 \\
 Bitcoin & 2014 & $0.109$ & $0.891$ & $3.18$ & $1.000$ & -- & -- & 66.6 \\
-TLV & 2010 & $0.139$ & $0.824$ & $4.91$ & $0.963$ & 18 & 28.2 & 26.5 \\
-SNP & 2010 & $0.135$ & $0.807$ & $4.81$ & $0.942$ & 12 & 25.6 & 24.5 \\
+TLV & 2010 & $0.139$ & $0.824$ & $4.91$ & $0.9630$ & 18 & 28.2 & 26.5 \\
+SNP & 2010 & $0.135$ & $0.807$ & $4.81$ & $0.9425$ & 12 & 25.6 & 24.5 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
     \item Daily log returns in \% to 18 September 2026; robust SE of $\hat\alpha$ and $\hat\beta$ between 0.010 and 0.041; half-life in days; volatilities annualised with the actual number of observations per year, in \%
-    \item Indices: $\alpha + \beta$ between 0.991 and 0.995, half-lives of 74--131 trading days; BVB stocks: shorter memory (TLV 18 days, SNP 12 days)
+    \item Indices: $\alpha + \beta$ between 0.9907 and 0.9947, half-lives of 74--131 trading days; BVB stocks: shorter memory (TLV 18 days, SNP 12 days)
     \item BET: the largest $\alpha$ (0.192): a stronger reaction to news; all $\hat\nu$ between 3.2 and 7.1: heavy tails everywhere
 \end{itemize}\sfmquantlet{Ch_09}{SFM_ch9_volatility_markets}
 \end{frame}
@@ -1058,7 +1058,7 @@ Bitcoin & 4\,279 & $3.383$ & $3.401$ & $3.390$ & ${-0.20}$ (0.845) \\
     \item \textbf{Worked example}: S\&P 500 on 18 September 2026, GARCH(1,1)-t: $\hat\mu = 0.079$, $\sigma_{t+1} = 0.714$, $\hat\nu = 6.26$
     \begin{itemize}
         \item $q_{0.01}(z) = -3.100 \times 0.825 = -2.557$; VaR 1\% $= -(0.079 + 0.714 \times (-2.557)) = 1.75\%$
-        \item with Normal $z_t$: $1.58\%$; over 10 days (sum of variances, $\mu$ ignored): $2.557 \times \sqrt{5.67}$, about $6.09\%$
+        \item with Normal $z_t$: $1.58\%$; over 10 days (sum of variances, $\mu$ ignored): $2.557 \times \sqrt{5.67}$, about $6.09\%$, an approximation: the 10-day return is not Student-t with the same $\nu$, and its quantile needs simulation
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1094,7 +1094,7 @@ Bitcoin & 4\,279 & 43 & 64 (1.50\%) & 93 (2.17\%) \\
 \begin{itemize}
     \item A correct VaR 1\% is exceeded on 1\% of the days, and the exceedances do not cluster
     \item EWMA-Normal: 2.2--2.5\%: the Normal quantile is too small for heavy tails
-    \item GARCH-t: 1.2--1.7\%: much closer to 1\%, but still above it for the S\&P 500 and the DAX (the leverage effect is missing)
+    \item GARCH-t: 1.2--1.7\%: much closer to 1\%, but still above it in all four markets, most for the S\&P 500, the DAX (the leverage effect is missing) and Bitcoin
     \item Are these differences significant? \sfmchlink{https://danpele.github.io/SFM/EN/Courses/chapter10_var_es_backtesting.pdf}{Chapter 10}: the test of \refKupiec, ES 2.5\%, backtesting
     \item Further reading on VaR forecasting for Bitcoin: \refPeleB
 \end{itemize}\sfmquantlet{Ch_09}{SFM_ch9_forecasts}
@@ -1173,7 +1173,7 @@ Bitcoin & 4\,279 & 43 & 64 (1.50\%) & 93 (2.17\%) \\
     \item Returns: unpredictable mean, predictable variance: $r_t = \mu + \sigma_t z_t$
     \item GARCH(1,1) with three parameters captures volatility clustering in all our series; $\alpha + \beta$ is close to 1
     \item Estimate by maximum likelihood, report robust SE; Student-t or skewed-t innovations for the tails
-    \item Equity indices need asymmetry (GJR, EGARCH); Bitcoin does not, and is an IGARCH
+    \item The S\&P 500 and the DAX need asymmetry (GJR, EGARCH); for the BET it is weak (BIC prefers the symmetric GARCH); Bitcoin does not need it, and is an IGARCH
     \item Forecasts revert to the long-run level; GARCH beats EWMA out of sample where volatility mean-reverts
     \item VaR 1\% = $-(\mu + \sigma_{t+1}q_{0.01}(z))$: the volatility model and the quantile both matter
 \end{itemize}
@@ -1211,7 +1211,7 @@ VaR 1\% & $-(\mu + \sigma_{t+1}\,q_{0.01}(z))$ \\
     \end{itemize}
     \item \textbf{Question}: GJR gives $\hat\alpha = 0$, $\hat\gamma = 0.2$. What happens after a rise of 3\%?
     \begin{itemize}
-        \item \textbf{Answer}: nothing beyond the decay $\beta\sigma_t^2$: only negative shocks raise the variance
+        \item \textbf{Answer}: the shock adds nothing: $\sigma_{t+1}^2 = \omega + \beta\sigma_t^2$, as after a day with $\varepsilon_t = 0$ (if $\varepsilon_t = r_t - \mu > 0$); only negative shocks raise the variance
     \end{itemize}
     \item \textbf{Question}: $Q(10)$ of $\hat z_t^2$ has p $= 0.40$. Is the model correct?
     \begin{itemize}

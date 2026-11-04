@@ -159,7 +159,7 @@ A = {
     'CCP': ('Central CounterParty', 'en', 'contraparte centrală', None),
     'CFTC': ('Commodity Futures Trading Commission', 'en', 'Comisia americană pentru tranzacționarea contractelor futures pe mărfuri', None),
     'CME': ('Chicago Mercantile Exchange', 'en', 'Bursa de mărfuri din Chicago', None),
-    'COVID-19': ('COronaVIrus Disease 2019', 'en', 'boala provocată de coronavirus, 2019', None),
+    'COVID-19': ('COronaVIrus Disease 2019', 'en', 'boala provocată de noul coronavirus, identificată în 2019', None),
     'CRIX': ('CRypto IndeX', 'en', 'indicele pieței cripto', None),
     'EBA': ('European Banking Authority', 'en', 'Autoritatea Bancară Europeană', None),
     'ESMA': ('European Securities and Markets Authority', 'en', 'Autoritatea Europeană pentru Valori Mobiliare și Piețe', None),

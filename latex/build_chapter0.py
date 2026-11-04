@@ -361,7 +361,7 @@ ASSET_ROWS = [
     '⟦Currencies (FX)||Valute (FX)⟧ & EUR/USD, EUR/RON & ⟦interest differential||diferențial de dobîndă⟧ & ⟦currency, policy||curs, politică monetară⟧',
     '⟦Commodities||Mărfuri⟧ & ⟦gold, oil||aur, petrol⟧ & ⟦none||niciunul⟧ & ⟦supply, storage||ofertă, depozitare⟧',
     '⟦Derivatives||Derivate⟧ & ⟦futures, options||futures, opțiuni⟧ & ⟦contingent payoffs||plăți condiționate⟧ & ⟦leverage, counterparty||efect de levier, contrapartidă⟧',
-    '⟦Crypto assets||Active cripto⟧ & Bitcoin, Ether & ⟦none||niciunul⟧ & ⟦volatility, regulation||volatilitate, reglementare⟧',
+    '⟦Crypto assets||Active cripto⟧ & Bitcoin, Ethereum & ⟦none||niciunul⟧ & ⟦volatility, regulation||volatilitate, reglementare⟧',
 ]
 D.frame('⟦Asset Classes||Clase de active⟧', table(
     '>{\\raggedright\\arraybackslash}p{2.2cm}>{\\raggedright\\arraybackslash}p{4.0cm}>{\\raggedright\\arraybackslash}p{2.8cm}>{\\raggedright\\arraybackslash}p{3.2cm}',
@@ -456,7 +456,7 @@ D.frame('⟦Risk and Return: Interpretation||Risc și randament: interpretare⟧
     ('⟦\\textbf{Stock indices cluster} around 15--22\\% volatility a year||\\textbf{Indicii bursieri se grupează} în jurul unei volatilități de 15--22\\% pe an⟧',
      ['⟦returns between @{wig20_ret}\\% (WIG20, Warsaw) and @{ndx_ret}\\% (Nasdaq 100) a year||randamente între @{wig20_ret}\\% (WIG20, Varșovia) și @{ndx_ret}\\% (Nasdaq 100) pe an⟧']),
     ('⟦\\textbf{Crypto assets are far to the right}||\\textbf{Activele cripto se află mult mai la dreapta}⟧',
-     ['⟦Bitcoin @{btc_vol}\\%, Ether @{eth_vol}\\% volatility a year||volatilitate anuală: Bitcoin @{btc_vol}\\%, Ether @{eth_vol}\\%⟧']),
+     ['⟦Bitcoin @{btc_vol}\\%, Ethereum @{eth_vol}\\% volatility a year||volatilitate anuală: Bitcoin @{btc_vol}\\%, Ethereum @{eth_vol}\\%⟧']),
     ('⟦\\textbf{Long US government bonds (TLT) lost money}: @{tlt_ret}\\% a year||\\textbf{Titlurile de stat americane pe termen lung (TLT) au pierdut}: @{tlt_ret}\\% pe an⟧',
      ['⟦TLT: an ETF of US Treasury bonds with more than 20 years to maturity; interest rates rose sharply in 2022||TLT: un ETF de titluri de stat americane cu scadența peste 20 de ani; dobînzile au crescut puternic în 2022⟧']),
     (f'\\textbf{{{QUESTION}}}',
@@ -639,7 +639,7 @@ D.frame('⟦Modern Crises: 1987, 2008, 2020||Crize moderne: 1987, 2008, 2020⟧'
     '0.36', '0.60'), size='footnotesize')
 
 D.recap(('a short history', 'o scurtă istorie'), [
-    '⟦Exchanges since the 1600s; bubbles and crashes almost from the start||Burse din anii 1600; bule și crahuri aproape de la început⟧',
+    '⟦Exchanges since Bruges (13th--15th centuries), share trading since 1602 (Amsterdam); bubbles and crashes almost from the start||Burse din secolele XIII--XV (Bruges), tranzacții cu acțiuni din 1602 (Amsterdam); bule și crahuri aproape de la început⟧',
     '⟦The Bucharest exchange: 1882--1948, then again from 1995; the BET since 1997||Bursa din București: 1882--1948, apoi din nou din 1995; BET din 1997⟧',
     '⟦Models: random walk (1900), portfolio risk (1952), heavy tails (1963), efficiency (1970), changing volatility (1982)||Modele: mers aleator (1900), riscul portofoliului (1952), cozi groase (1963), eficiență (1970), volatilitate variabilă (1982)⟧',
     '⟦Each crisis showed that extreme days are more frequent than the Normal distribution predicts||Fiecare criză a arătat că zilele extreme sînt mai frecvente decît prevede distribuția Normală⟧'])
@@ -707,7 +707,7 @@ D.frame('⟦Heavy Tails: Interpretation||Cozi groase: interpretare⟧', items(
       '⟦the worst day, @{sp_min_date}, lies @{sp_min_z} standard deviations from the mean||cea mai slabă zi, @{sp_min_date}, se află la @{sp_min_z} abateri standard de medie⟧']),
     ('⟦\\textbf{Kurtosis} $K = \\frac{1}{n}\\sum_{t=1}^n (r_t - \\bar r)^4 / s^4$: the mean fourth power of the standardised returns||\\textbf{Coeficientul de boltire} (kurtosis) $K = \\frac{1}{n}\\sum_{t=1}^n (r_t - \\bar r)^4 / s^4$: media puterii a patra a randamentelor standardizate⟧',
      ['⟦$(r_t - \\bar r)/s$: distance from the mean in standard deviations; the fourth power lets the extreme days dominate $K$||$(r_t - \\bar r)/s$: distanța față de medie, în abateri standard; puterea a patra face ca zilele extreme să domine $K$⟧',
-      '⟦Normal distribution: $K = 3$; S\\&P 500 since 2000: @{sp_kurt}; $K > 3$ means heavier tails than the Normal||distribuția Normală: $K = 3$; S\\&P 500 din 2000: @{sp_kurt}; $K > 3$ indică cozi mai groase decît la distribuția Normală⟧']),
+      '⟦Normal distribution: $K = 3$; S\\&P 500 since 2000: @{sp_kurt}; $K > 3$ means heavier tails than the Normal distribution||distribuția Normală: $K = 3$; S\\&P 500 din 2000: @{sp_kurt}; $K > 3$ indică cozi mai groase decît la distribuția Normală⟧']),
     ('⟦\\textbf{Also more quiet days}: the histogram is taller in the centre||\\textbf{Și mai multe zile liniștite}: histograma este mai înaltă în centru⟧',
      ['⟦risk measured with the Normal distribution is too low in the tails (Chapters 2, 5 and 10)||riscul măsurat pe baza distribuției Normale este subestimat în cozi (Capitolele 2, 5 și 10)⟧'])))
 
@@ -774,7 +774,7 @@ D.frame('⟦Your Turn: a Project Seed||Rîndul dumneavoastră: o idee de proiect
      ['⟦replicate the chart of the mini-case from the course data||reproduceți graficul mini-studiului de caz din datele cursului⟧',
       '⟦write down the hypothesis, the break date and the test before computing||scrieți ipoteza, data de ruptură și testul înainte de calcul⟧',
       '⟦compare the variances of daily returns before and after with a test for equal variances (Levene test)||comparați varianțele randamentelor zilnice înainte și după, cu un test de egalitate a varianțelor (testul Levene)⟧',
-      '⟦repeat with Ether as a second crypto asset||repetați cu Ether, ca al doilea activ cripto⟧']),
+      '⟦repeat with Ethereum as a second crypto asset||repetați cu Ethereum, ca al doilea activ cripto⟧']),
     ('⟦\\textbf{Report}||\\textbf{Raportați}⟧',
      ['⟦the two volatilities, the ratio, the test result and one limitation||cele două volatilități, raportul, rezultatul testului și o limită⟧',
       '⟦every AI prompt that shaped a decision, in \\texttt{AI\\_USE.md}||fiecare prompt AI care a influențat o decizie, în \\texttt{AI\\_USE.md}⟧'])))

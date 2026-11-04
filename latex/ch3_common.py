@@ -97,7 +97,7 @@ def values(N):
     for n_, r in N['mc'].items():
         for k, d in r.items():
             V.put(f'mc.{n_}.{k}.mean', d['mean'], 3)
-            V.put(f'mc.{n_}.{k}.sd', d['sd'], 3)
+            V.put(f'mc.{n_}.{k}.sd', d['sd'], 4)
     V.put('mc.ratio500', N['mc']['500']['mcculloch']['sd'] / N['mc']['500']['ml']['sd'], 1)
     TT = N['tail_table']
     for k, d in TT.items():
