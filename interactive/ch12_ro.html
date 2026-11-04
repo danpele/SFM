@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 12 · Modele de scoring</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch12.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch12_data.js?v=20261101a", "ch12_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch12.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 12 · Modele de scoring</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_12" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch12.html" class="lang-btn">EN</a><a href="ch12_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: PD (probability of default, probabilitatea de nerambursare), LGD (loss given default, pierderea în caz de nerambursare), EAD (exposure at default, expunerea la nerambursare), EL (expected loss, pierderea așteptată), IRB (internal ratings-based, abordarea bazată pe ratinguri interne), RWA (risk-weighted assets, active ponderate la risc), WoE (weight of evidence), IV (information value), LDA (linear discriminant analysis, analiza discriminantă liniară), ROC (receiver operating characteristic), AUC (area under the curve, aria de sub curba ROC), CAP (cumulative accuracy profile), AR (accuracy ratio, raportul de acuratețe), KS (statistica Kolmogorov–Smirnov), HL (testul Hosmer–Lemeshow), TP, FN, FP, TN (true positive, false negative, false positive, true negative), TPR (true positive rate), FPR (false positive rate), PDO (points to double the odds, punctele care dublează șansa), LR (likelihood ratio, raportul de verosimilitate), CI (confidence interval, interval de încredere), se (eroarea standard), DM (mărci germane), EBIT (profitul înainte de dobînzi și impozite), TA (activele totale), DD (distance to default, distanța pînă la nerambursare), GBM (geometric Brownian motion, mișcarea browniană geometrică).</p>
+<p class="toc"><a href="#s-def">Scorul de credit: definiție</a> · <a href="#s-data">Datele de nerambursare</a> · <a href="#s-woe">Weight of Evidence și Information Value</a> · <a href="#s-logit">Regresia logistică</a> · <a href="#s-lda">Analiza discriminantă liniară</a> · <a href="#s-card">De la model la scorecard</a> · <a href="#s-val">Validarea</a> · <a href="#s-rej">Reject inference și echitatea</a> · <a href="#s-corp">Nerambursarea companiilor: Altman și Merton</a></p>
+<h2 class="sec" id="s-def">Scorul de credit: definiție</h2>
+<section class="blk" id="cpd">
+  <h3>PD în ani buni și în ani proști: modelul cu un factor</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=11" target="_blank" rel="noopener"><img src="slides/sfm_ch12_conditional_pd_ro.jpg" alt="Slide-ul 10: PD în ani buni și în ani proști: modelul cu un factor" loading="lazy"></a>
+      <figcaption>Slide-ul 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cp-r">Ponderea factorului comun ρ: <b id="cp-r-v"></b></label><input type="range" id="cp-r" min="0.05" max="0.5" step="0.05" value="0.2"></div><button class="btn play" id="cp-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="cp-chart"></div></div><ul class="out" id="cp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește ρ de la 0,2 la 0,5. Ce se întîmplă cu probabilitatea ca un credit cu PD = 2% să intre în nerambursare într-un an prost (y = −3)?</div>
+  <details><summary>Răspuns</summary><p>Crește de la 21,3% la 53,8%; într-un an obișnuit (y = 0) scade de la 1,08% la 0,18%. O pondere mai mare a factorului comun concentrează nerambursările în anii proști, iar media peste toți anii rămîne 2%.</p></details>
+</section>
+<section class="blk" id="irb-we">
+  <h3>Exemplu rezolvat: capitalul IRB al unui credit de retail</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch12_irb-we_ro.jpg" alt="Slide-ul 11: Exemplu rezolvat: capitalul IRB al unui credit de retail" loading="lazy"></a>
+      <figcaption>Slide-ul 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="iw-p">PD: <b id="iw-p-v"></b></label><input type="range" id="iw-p" min="0.005" max="0.2" step="0.005" value="0.02"></div><button class="btn play" id="iw-play" type="button"></button></div><div class="charts "><div class="chart" id="iw-chart"></div></div><div class="we" id="iw-we-box"><p class="we-h">Exemplu lucrat: capitalul IRB, alte expuneri de retail</p><div class="we-f">\[K = \mathrm{LGD}\Big[\Phi\Big(\frac{\Phi^{-1}(\mathrm{PD}) + \sqrt{R}\,\Phi^{-1}(0{,}999)}{\sqrt{1 - R}}\Big) - \mathrm{PD}\Big], \quad R = 0{,}03\,w + 0{,}16\,(1 - w), \quad w = \frac{1 - e^{-35\,\mathrm{PD}}}{1 - e^{-35}}\]</div><div class="wctl"><div class="ctl"><label for="iw-e">Expunerea EAD (lei)</label><select id="iw-e"><option value="100000" selected>100 000 (curs)</option><option value="50000">50 000</option><option value="250000">250 000</option></select></div></div><ol id="iw-we"></ol></div><ul class="out" id="iw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește PD de la 2% la 4%. Se dublează capitalul K?</div><details><summary>Răspuns</summary><p>Nu: crește de la 4,64% la 5,20% din EAD (+12%), în timp ce EL se dublează, de la 0,90% la 1,80%. Corelația R scade de la 0,095 la 0,062 cînd PD crește, iar nerambursările în plus sînt tot mai mult așteptate, nu neașteptate.</p></details>
+</section>
+<section class="blk" id="irb">
+  <h3>Pierderea așteptată și capitalul IRB în funcție de PD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=13" target="_blank" rel="noopener"><img src="slides/sfm_ch12_irb_ro.jpg" alt="Slide-ul 12: Pierderea așteptată și capitalul IRB în funcție de PD" loading="lazy"></a>
+      <figcaption>Slide-ul 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ir-q">Nivelul de încredere</label><select id="ir-q"><option value="0.999" selected>99,9% (curs)</option><option value="0.99">99%</option><option value="0.995">99,5%</option><option value="0.9999">99,99%</option></select></div><div class="ctl"><label for="ir-l">LGD: <b id="ir-l-v"></b></label><input type="range" id="ir-l" min="0.1" max="1" step="0.05" value="0.45"></div><button class="btn play" id="ir-play" type="button"></button></div><div class="charts "><div class="chart" id="ir-chart"></div></div><ul class="out" id="ir-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Alte expuneri de retail, LGD 45%: PD crește de la 5% la 10%, deci EL se dublează (de la 2,25% la 4,50% din EAD). Ce se întîmplă cu capitalul K?</div>
+  <details><summary>Răspuns</summary><p>Crește doar de la 5,31% la 6,04% din EAD (+14%). K acoperă pierderea neașteptată: cu cît PD este mai mare, cu atît o parte mai mare din pierdere este așteptată și inclusă în preț, iar R scade de la 0,053 la 0,034. Peste o PD de aproximativ 16%, K este chiar mai mic decît EL.</p></details>
+</section><h2 class="sec" id="s-data">Datele de nerambursare</h2>
+<section class="blk" id="status">
+  <h3>Rata creditelor neperformante după contul curent</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch12_default_by_status_ro.jpg" alt="Slide-ul 15: Rata creditelor neperformante după contul curent" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-v">Variabila</label><select id="ds-v"><option value="status" selected>contul curent (curs)</option><option value="credit_history">istoricul de credit</option><option value="savings">economiile</option><option value="employment_duration">vechimea la angajator</option></select></div><button class="btn play" id="ds-play" type="button"></button></div><div class="charts "><div class="chart" id="ds-chart"></div></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În etichetele vechi Statlog, cele 394 de credite cu un sold de cel puțin 200 DM se numeau „fără cont curent” și păreau grupul cel mai sigur (11,7%). În datele corectate, care este rata creditelor neperformante fără cont curent?</div>
+  <details><summary>Răspuns</summary><p>49,3% (274 de credite), grupul cel mai riscant, față de 11,7% pentru un sold de cel puțin 200 DM sau un cont de salariu: un raport de 4,2. Cifrele erau corecte în ambele versiuni; doar etichetele erau inversate.</p></details>
+</section><h2 class="sec" id="s-woe">Weight of Evidence și Information Value</h2>
+<section class="blk" id="woe-tab">
+  <h3>Exemplu rezolvat: WoE și IV pentru contul curent</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch12_woe-tab_ro.jpg" alt="Slide-ul 19: Exemplu rezolvat: WoE și IV pentru contul curent" loading="lazy"></a>
+      <figcaption>Slide-ul 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wt-v">Variabila</label><select id="wt-v"><option value="status" selected>contul curent (curs)</option><option value="credit_history">istoricul de credit</option><option value="savings">economiile</option><option value="employment_duration">vechimea la angajator</option></select></div><button class="btn play" id="wt-play" type="button"></button></div><div class="charts "><div class="chart" id="wt-chart"></div></div><p class="xh">Tabelul WoE pe eșantionul complet</p><div class="tw" id="wt-tab"></div><div class="we" id="wt-we-box"><p class="we-h">Exemplu lucrat: WoE și termenul IV al unui rînd</p><div class="we-f">\[\mathrm{WoE}_i = \ln\frac{g_i/G}{b_i/B}, \qquad \mathrm{IV} = \sum_i \Big(\frac{g_i}{G} - \frac{b_i}{B}\Big)\mathrm{WoE}_i\]</div><div class="wctl"><div class="ctl"><label for="wt-r">Rîndul</label><select id="wt-r"><option value="last" selected>ultimul (curs)</option><option value="first">primul</option><option value="max">cel mai mare termen IV</option></select></div></div><ol id="wt-we"></ol></div><ul class="out" id="wt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Grupul „≥ 200 DM sau cont de salariu”: 348 din cei 700 de bun-platnici și 46 din cei 300 de rău-platnici. Cît este WoE?</div><details><summary>Răspuns</summary><p>ln(0,497/0,153) = 1,176: ponderea bun-platnicilor este de 3,2 ori ponderea rău-platnicilor. Termenul IV, (0,497 − 0,153) × 1,176 = 0,404, este cel mai mare dintre cele patru; IV total este 0,666, o variabilă puternică.</p></details>
+</section>
+<section class="blk" id="woe-dur">
+  <h3>WoE pentru durata creditului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=22" target="_blank" rel="noopener"><img src="slides/sfm_ch12_woe_duration_ro.jpg" alt="Slide-ul 21: WoE pentru durata creditului" loading="lazy"></a>
+      <figcaption>Slide-ul 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wd-v">Variabila</label><select id="wd-v"><option value="duration" selected>durata (luni) (curs)</option><option value="amount">suma (DM)</option><option value="age">vîrsta (ani)</option></select></div><div class="ctl"><label for="wd-s">Eșantionul</label><select id="wd-s"><option value="full" selected>complet (1000 de credite) (curs)</option><option value="train">de estimare (700 de credite)</option></select></div><button class="btn play" id="wd-play" type="button"></button></div><div class="charts "><div class="chart" id="wd-chart"></div></div><ul class="out" id="wd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la suma creditului (intervale pînă la 1300, 2000, 3000, 5000 DM și peste). Crește rata creditelor neperformante constant cu suma?</div>
+  <details><summary>Răspuns</summary><p>Nu: este 30,9% la creditele cele mai mici, scade la 23,9% la 2001–3000 DM și urcă la 41,5% peste 5000 DM (WoE de la 0,31 la −0,50). Relația are forma unui U, pe care un singur termen liniar într-un logit nu o surprinde, iar intervalele da; IV = 0,082, o variabilă slabă.</p></details>
+</section>
+<section class="blk" id="iv">
+  <h3>Information Value pentru cele 20 de variabile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch12_iv_ro.jpg" alt="Slide-ul 22: Information Value pentru cele 20 de variabile" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="iv-s">Eșantionul</label><select id="iv-s"><option value="full" selected>complet (1000 de credite) (curs)</option><option value="train">de estimare (700 de credite)</option><option value="test">de test (300 de credite)</option></select></div><button class="btn play" id="iv-play" type="button"></button></div><div class="charts "><div class="chart" id="iv-chart"></div></div><ul class="out" id="iv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe eșantionul complet, proprietatea are IV = 0,113 ≥ 0,1. Trece de pragul 0,1 și pe eșantionul de estimare, unde se aleg variabilele scorecard-ului?</div>
+  <details><summary>Răspuns</summary><p>Nu: pe eșantionul de estimare IV este 0,082, iar vechimea la angajator (0,086 pe eșantionul complet, 0,122 pe cel de estimare) îi ia locul. Șase variabile trec pragul în ambele cazuri. IV calculat pe cîteva sute de credite variază cu cîteva sutimi între eșantioane: pe cele 300 de credite de test, IV al contului curent este 0,913, față de 0,666 pe toate cele 1000.</p></details>
+</section><h2 class="sec" id="s-logit">Regresia logistică</h2>
+<section class="blk" id="odds-we">
+  <h3>Șansa (odds) și logaritmul șansei</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch12_odds-we_ro.jpg" alt="Slide-ul 23: Șansa (odds) și logaritmul șansei" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ow-p">Probabilitatea de nerambursare p: <b id="ow-p-v"></b></label><input type="range" id="ow-p" min="0.02" max="0.98" step="0.02" value="0.2"></div><button class="btn play" id="ow-play" type="button"></button></div><div class="charts "><div class="chart" id="ow-chart"></div></div><div class="we" id="ow-we-box"><p class="we-h">Exemplu lucrat: șansa și logaritmul șansei</p><div class="we-f">\[\text{odds} = \frac{p}{1 - p}, \qquad \mathrm{logit}(p) = \ln\frac{p}{1 - p}, \qquad \mathrm{logit}(1 - p) = -\mathrm{logit}(p)\]</div><ol id="ow-we"></ol></div><ul class="out" id="ow-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> p = 0,2 dă logaritmul șansei −1,386. ▶ duce p la 0,8. Cît este logaritmul șansei acolo?</div><details><summary>Răspuns</summary><p>+1,386: logit(1 − p) = −logit(p), logit-ul este simetric față de p = 0,5. Șansa este 4 (patru nerambursări la un credit rambursat), inversul lui 0,25.</p></details>
+</section>
+<section class="blk" id="logit-curve">
+  <h3>O curbă logistică: PD și durata</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=26" target="_blank" rel="noopener"><img src="slides/sfm_ch12_logistic_curve_ro.jpg" alt="Slide-ul 25: O curbă logistică: PD și durata" loading="lazy"></a>
+      <figcaption>Slide-ul 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lc-v">Variabila explicativă</label><select id="lc-v"><option value="duration" selected>durata (curs)</option><option value="age">vîrsta</option></select></div><div class="ctl"><label for="lc-m">Numărul minim de credite pe punct</label><select id="lc-m"><option value="5" selected>5 (curs)</option><option value="1">1</option><option value="10">10</option><option value="20">20</option></select></div><button class="btn play" id="lc-play" type="button"></button></div><div class="charts "><div class="chart" id="lc-chart"></div></div><ul class="out" id="lc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ estimează logit-ul doar cu vîrsta. Cu cît înmulțesc zece ani în plus șansa de nerambursare?</div>
+  <details><summary>Răspuns</summary><p>Cu e^(10 × (−0,0185)) = 0,83, adică −17%: PD scade de la 34,0% la 25 de ani la 21,3% la 60 de ani. Durata singură dă 1,57 pe an: solicitanții mai în vîrstă sînt mai siguri, creditele mai lungi mai riscante.</p></details>
+</section>
+<section class="blk" id="small-tab">
+  <h3>Un model logit mic pe eșantionul complet</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch12_small-tab_ro.jpg" alt="Slide-ul 27: Un model logit mic pe eșantionul complet" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sm-d">Variabila omisă</label><select id="sm-d"><option value="none" selected>niciuna (curs)</option><option value="duration_years">durata</option><option value="age_decades">vîrsta</option><option value="amount_1000">suma</option><option value="acct">indicatorii de cont</option></select></div><button class="btn play" id="sm-play" type="button"></button></div><div class="charts "><div class="chart" id="sm-chart"></div></div><p class="xh">Coeficienții, eșantionul complet (1000 de credite)</p><div class="tw" id="sm-tab"></div><ul class="out" id="sm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ scoate durata din model. Ce se întîmplă cu coeficientul sumei (0,029, p = 0,368)?</div><details><summary>Răspuns</summary><p>Crește la 0,112 pe 1000 DM, p < 0,001: fără durată, suma preia riscul creditelor lungi, cu care este corelată. Un coeficient este efectul cu celelalte variabile fixate; omiterea unei variabile corelate îl schimbă.</p></details>
+</section>
+<section class="blk" id="odds">
+  <h3>Rapoartele șanselor cu intervale de încredere</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch12_odds_ratios_ro.jpg" alt="Slide-ul 28: Rapoartele șanselor cu intervale de încredere" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="or-l">Nivelul intervalului</label><select id="or-l"><option value="0.95" selected>95% (curs)</option><option value="0.9">90%</option><option value="0.99">99%</option></select></div><button class="btn play" id="or-play" type="button"></button></div><div class="charts "><div class="chart" id="or-chart"></div></div><ul class="out" id="or-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Intervalul de 95% pentru vîrstă (+10 ani) este 0,74–0,98. Conține intervalul de 99% valoarea 1?</div>
+  <details><summary>Răspuns</summary><p>Da: 0,71–1,02. Efectul vîrstei are p = 0,022: semnificativ la 5%, nu și la 1%. Intervalele duratei și ale celor doi indicatori de cont exclud 1 și la 99%; suma conține 1 la orice nivel.</p></details>
+</section>
+<section class="blk" id="pd-we">
+  <h3>Exemplu rezolvat: PD a unui solicitant</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=30" target="_blank" rel="noopener"><img src="slides/ch12_pd-we_ro.jpg" alt="Slide-ul 29: Exemplu rezolvat: PD a unui solicitant" loading="lazy"></a>
+      <figcaption>Slide-ul 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pw-d">Durata (luni): <b id="pw-d-v"></b></label><input type="range" id="pw-d" min="6" max="72" step="6" value="36"></div><button class="btn play" id="pw-play" type="button"></button></div><div class="charts "><div class="chart" id="pw-chart"></div></div><div class="we" id="pw-we-box"><p class="we-h">Exemplu lucrat: PD a unui solicitant (coeficienți rotunjiți)</p><div class="we-f">\[\eta = -2{,}101 + 0{,}385\,\tfrac{\text{dur}}{12} - 0{,}159\,\tfrac{\text{age}}{10} + 0{,}029\,\tfrac{\text{amount}}{1000} + 1{,}859\,\mathbb{1}_{\text{no acc{,}}} + 1{,}338\,\mathbb{1}_{<0}, \qquad \mathrm{PD} = \frac{1}{1 + e^{-\eta}}\]</div><div class="wctl"><div class="ctl"><label for="pw-a">Contul curent</label><select id="pw-a"><option value="none" selected>fără cont curent (curs)</option><option value="neg">sold < 0 DM</option><option value="ok">sold nenegativ</option></select></div><div class="ctl"><label for="pw-g">Vîrsta (ani)</label><select id="pw-g"><option value="30" selected>30 (curs)</option><option value="25">25</option><option value="40">40</option><option value="60">60</option></select></div></div><ol id="pw-we"></ol></div><ul class="out" id="pw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește durata de la 36 la 48 de luni pentru același solicitant. Cît este PD?</div><details><summary>Răspuns</summary><p>71,8%: η crește cu 0,385, la 0,937. Aproximarea p(1 − p)β = 8,9 puncte de la 63,5% dă 72,4%, aproape, dar modificarea exactă, 8,3 puncte, este mai mică, pentru că curba logistică se aplatizează cînd p se îndepărtează de 0,5.</p></details>
+</section>
+<section class="blk" id="woe-logit-tab">
+  <h3>Scorecard-ul logit pe variabile WoE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch12_woe-logit-tab_ro.jpg" alt="Slide-ul 30: Scorecard-ul logit pe variabile WoE" loading="lazy"></a>
+      <figcaption>Slide-ul 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wl-t">Pragul IV pentru selecție</label><select id="wl-t"><option value="0.1" selected>0,10 (curs)</option><option value="0.02">0,02</option><option value="0.05">0,05</option><option value="0.2">0,20</option><option value="0.3">0,30</option></select></div><button class="btn play" id="wl-play" type="button"></button></div><div class="charts "><div class="chart" id="wl-chart"></div></div><p class="xh">Scorecard-ul logit pe variabile WoE (eșantionul de estimare, 700 de credite)</p><div class="tw" id="wl-tab"></div><ul class="out" id="wl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ coboară pragul IV la 0,02, deci intră 15 variabile WoE în loc de 6. Crește AUC de test?</div><details><summary>Răspuns</summary><p>Nu: scade de la 0,801 la 0,787, în timp ce AUC de estimare crește de la 0,789 la 0,825. Cele nouă variabile slabe se adaptează la zgomotul celor 700 de credite de estimare.</p></details>
+</section>
+<section class="blk" id="prior-we">
+  <h3>Corecția pentru suprareprezentarea rău-platnicilor</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch12_prior-we_ro.jpg" alt="Slide-ul 31: Corecția pentru suprareprezentarea rău-platnicilor" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-pi">Rata rău-platnicilor în populație π: <b id="pr-pi-v"></b></label><input type="range" id="pr-pi" min="0.01" max="0.3" step="0.01" value="0.05"></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><div class="we" id="pr-we-box"><p class="we-h">Exemplu lucrat: corecția a priori</p><div class="we-f">\[\ln \text{odds}_{\text{pop}} = \ln \text{odds}_{\text{sample}} + \ln\frac{\pi/(1 - \pi)}{\pi_s/(1 - \pi_s)}\]</div><div class="wctl"><div class="ctl"><label for="pr-p">PD din eșantion</label><select id="pr-p"><option value="app" selected>solicitantul din exemplu, 63,5% (curs)</option><option value="0.3">30%</option><option value="0.5">50%</option></select></div></div><ol id="pr-we"></ol></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ coboară rata rău-platnicilor din populație π. Pentru solicitantul cu PD de 63,5% în eșantion, cît este PD la π = 1%?</div><details><summary>Răspuns</summary><p>3,9%: corecția este ln(0,01/0,99) − ln(0,3/0,7) = −3,748, deci η = 0,552 − 3,748 = −3,196. Se mută doar termenul liber; ordonarea solicitanților, deci și AUC, rămîne aceeași.</p></details>
+</section><h2 class="sec" id="s-lda">Analiza discriminantă liniară</h2>
+<section class="blk" id="fisher-we">
+  <h3>Exemplu rezolvat: direcția Fisher cu două variabile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch12_fisher-we_ro.jpg" alt="Slide-ul 34: Exemplu rezolvat: direcția Fisher cu două variabile" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fw-v">Variabilele</label><select id="fw-v"><option value="duration,age" selected>durata și vîrsta (curs)</option><option value="duration,amount">durata și suma (1000 DM)</option><option value="age,amount">vîrsta și suma (1000 DM)</option></select></div><button class="btn play" id="fw-play" type="button"></button></div><div class="charts "><div class="chart" id="fw-chart"></div></div><div class="we" id="fw-we-box"><p class="we-h">Exemplu lucrat: direcția Fisher</p><div class="we-f">\[J(w) = \frac{[w^\top(m_1 - m_0)]^2}{w^\top S_W w}, \qquad w = S_W^{-1}(m_1 - m_0)\]</div><ol id="fw-we"></ol></div><ul class="out" id="fw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Doar cu durata și vîrsta: ce AUC în eșantion atinge discriminantul Fisher pe cele 1000 de credite?</div><details><summary>Răspuns</summary><p>0,640, exact cît logit-ul cu aceleași două variabile. Scorecard-ul cu șase variabile WoE atinge 0,801 pe eșantionul de test: două variabile sînt departe de a fi suficiente, cum arată și norii care se suprapun.</p></details>
+</section>
+<section class="blk" id="lda">
+  <h3>Frontiera Fisher și frontiera logit</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch12_lda_2d_ro.jpg" alt="Slide-ul 35: Frontiera Fisher și frontiera logit" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ld-p">PD pe frontieră: <b id="ld-p-v"></b></label><input type="range" id="ld-p" min="0.1" max="0.6" step="0.05" value="0.3"></div><button class="btn play" id="ld-play" type="button"></button></div><div class="charts "><div class="chart" id="ld-chart"></div></div><ul class="out" id="ld-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută PD de pe frontieră de la 30% la 50%. Ce se întîmplă cu cele două drepte?</div>
+  <details><summary>Răspuns</summary><p>Se deplasează paralel spre durate mai lungi: la 30 de ani, de la aproximativ 20 de luni (19,9 LDA, 19,4 logit) la aproximativ 41 de luni (40,9 și 42,0). Panta nu depinde de nivelul PD; se schimbă doar termenul liber.</p></details>
+</section>
+<section class="blk" id="lda-tab">
+  <h3>Logit sau LDA?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=37" target="_blank" rel="noopener"><img src="slides/ch12_lda-tab_ro.jpg" alt="Slide-ul 36: Logit sau LDA?" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lt-s">Eșantionul</label><select id="lt-s"><option value="test" selected>de test (300 de credite) (curs)</option><option value="train">de estimare (700 de credite)</option></select></div><button class="btn play" id="lt-play" type="button"></button></div><div class="charts "><div class="chart" id="lt-chart"></div></div><p class="xh">Logit și LDA pe aceleași șase variabile WoE</p><div class="tw" id="lt-tab"></div><ul class="out" id="lt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe eșantionul de estimare (700 de credite), este AUC al logit-ului mai mare decît al LDA?</div><details><summary>Răspuns</summary><p>Nu, este puțin mai mic: 0,789 față de 0,790, DeLong z = −0,48, p = 0,63. Pe eșantionul de test, logit-ul este puțin înainte (0,8013 față de 0,8009, z = 0,18). Cele două scoruri au corelația 0,999; niciuna dintre ordonări nu este separată de zgomot de acest test.</p></details>
+</section><h2 class="sec" id="s-card">De la model la scorecard</h2>
+<section class="blk" id="scale-we">
+  <h3>Exemplu rezolvat: scoruri și puncte</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch12_scale-we_ro.jpg" alt="Slide-ul 38: Exemplu rezolvat: scoruri și puncte" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sw-o">PDO (puncte)</label><select id="sw-o"><option value="20" selected>20 (curs)</option><option value="10">10</option><option value="30">30</option><option value="40">40</option></select></div><button class="btn play" id="sw-play" type="button"></button></div><div class="charts "><div class="chart" id="sw-chart"></div></div><div class="we" id="sw-we-box"><p class="we-h">Exemplu lucrat: scoruri și puncte</p><div class="we-f">\[\text{Score} = \text{Offset} + \text{Factor}\,\ln\frac{1 - p}{p}, \quad \text{Factor} = \frac{\text{PDO}}{\ln 2}, \quad \text{Offset} = 600 - \text{Factor}\,\ln 50\]</div><div class="wctl"><div class="ctl"><label for="sw-p">PD pentru pasul 2</label><select id="sw-p"><option value="0.05" selected>5% (curs)</option><option value="0.3">30%</option><option value="0.01">1%</option><option value="0.1">10%</option></select></div></div><ol id="sw-we"></ol></div><ul class="out" id="sw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ fixează PDO la 40 de puncte. Ce scor primește acum o PD de 5% (572,1 cu PDO = 20)?</div><details><summary>Răspuns</summary><p>544,2: Factor 57,71, Offset 374,25. Punctul de bază rămîne 600 la șansa 50:1; o PD de 5% înseamnă șansa 19:1, sub bază, iar cu o scală mai abruptă scorul coboară și mai mult sub 600.</p></details>
+</section>
+<section class="blk" id="score">
+  <h3>Scorurile eșantionului de test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch12_score_dist_ro.jpg" alt="Slide-ul 39: Scorurile eșantionului de test" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sd-c">Pragul PD</label><select id="sd-c"><option value="0.1666666667" selected>1/6 (curs)</option><option value="0.1">0,1</option><option value="0.3">0,3</option><option value="0.5">0,5</option></select></div><div class="ctl"><label for="sd-b">Lățimea clasei (puncte)</label><select id="sd-b"><option value="10" selected>10 (curs)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="sd-play" type="button"></button></div><div class="charts "><div class="chart" id="sd-chart"></div></div><ul class="out" id="sd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pragul la PD = 1/6 este 534 de puncte. Cîți dintre cei 90 de rău-platnici de test au cel puțin 534 de puncte și ar fi acceptați?</div>
+  <details><summary>Răspuns</summary><p>8 (FN): 82 din cei 90 de rău-platnici sînt respinși. Prețul: 112 din cei 210 bun-platnici sînt respinși. Cele două distribuții se suprapun, deci orice prag schimbă o eroare pe cealaltă.</p></details>
+</section><h2 class="sec" id="s-val">Validarea</h2>
+<section class="blk" id="cm-tab">
+  <h3>Două praguri pe eșantionul de test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch12_cm-tab_ro.jpg" alt="Slide-ul 41: Două praguri pe eșantionul de test" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cm-c">Pragul PD c: <b id="cm-c-v"></b></label><input type="range" id="cm-c" min="0.05" max="0.9" step="0.01" value="0.5"></div><button class="btn play" id="cm-play" type="button"></button></div><div class="charts "><div class="chart" id="cm-chart"></div></div><p class="xh">Matricile de confuzie pe eșantionul de test (ultimul rînd: pragul ales)</p><div class="tw" id="cm-tbl"></div><div class="we" id="cm-we-box"><p class="we-h">Exemplu lucrat: ratele la pragul ales</p><div class="we-f">\[\mathrm{TPR} = \frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FN}}, \quad \mathrm{FPR} = \frac{\mathrm{FP}}{\mathrm{FP} + \mathrm{TN}}, \quad \text{cost} = \frac{5\,\mathrm{FN} + \mathrm{FP}}{n}\]</div><ol id="cm-we"></ol></div><ul class="out" id="cm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ coboară pragul de la 0,5 la 0,3. Crește sau scade acuratețea și ce se întîmplă cu costul?</div><details><summary>Răspuns</summary><p>Acuratețea scade de la 76,0% la 72,7%, costul scade de la 0,867 la 0,527: TPR crește de la 47,8% la 78,9%, FPR de la 11,9% la 30,0%. Acuratețea cîntărește la fel cele două erori; costul cîntărește de cinci ori un rău-platnic acceptat.</p></details>
+</section>
+<section class="blk" id="cost">
+  <h3>Costul așteptat și alegerea pragului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cost_cutoff_ro.jpg" alt="Slide-ul 42: Costul așteptat și alegerea pragului" loading="lazy"></a>
+      <figcaption>Slide-ul 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="co-f">Costul acceptării unui rău-platnic, C_FN (C_FP = 1)</label><select id="co-f"><option value="5" selected>5 (curs)</option><option value="2">2</option><option value="3">3</option><option value="10">10</option></select></div><button class="btn play" id="co-play" type="button"></button></div><div class="charts "><div class="chart" id="co-chart"></div></div><ul class="out" id="co-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește costul acceptării unui rău-platnic de la 5 la 10. Ce pondere din solicitanți respinge pragul Bayes?</div>
+  <details><summary>Răspuns</summary><p>81%: pragul scade de la 1/6 la 1/11 = 0,091, iar ponderea respinșilor crește de la 64,7% la 81,0%; costul așteptat este 0,620, sub 0,700, costul respingerii tuturor.</p></details>
+</section>
+<section class="blk" id="auc-we">
+  <h3>Curba ROC și AUC</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch12_auc-we_ro.jpg" alt="Slide-ul 43: Curba ROC și AUC" loading="lazy"></a>
+      <figcaption>Slide-ul 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aw-m">Scorul</label><select id="aw-m"><option value="logit" selected>logit WoE (curs)</option><option value="lda">LDA Fisher</option><option value="single">doar contul curent</option></select></div><button class="btn play" id="aw-play" type="button"></button></div><div class="charts "><div class="chart" id="aw-chart"></div></div><div class="we" id="aw-we-box"><p class="we-h">Exemplu lucrat: AUC ca probabilitate de ordonare</p><div class="we-f">\[\mathrm{AUC} = P(s_{\text{bad}} > s_{\text{good}}) + \tfrac12 P(s_{\text{bad}} = s_{\text{good}}), \qquad \text{Gini} = 2\,\mathrm{AUC} - 1\]</div><ol id="aw-we"></ol></div><ul class="out" id="aw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Contul curent singur are patru valori. Ce pondere din cele 18 900 de perechi (rău, bun) au scoruri egale?</div><details><summary>Răspuns</summary><p>23,1% (4362 de perechi); fiecare contează 1/2, deci AUC = (11 579 + 2181)/18 900 = 0,728. Logit-ul WoE are doar 12 perechi egale (0,06%).</p></details>
+</section>
+<section class="blk" id="roc">
+  <h3>Curbele ROC pe eșantionul de test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch12_roc_ro.jpg" alt="Slide-ul 44: Curbele ROC pe eșantionul de test" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-c">Pragul PD al punctului marcat: <b id="rc-c-v"></b></label><input type="range" id="rc-c" min="0.05" max="0.95" step="0.05" value="0.5"></div><div class="ctl"><label for="rc-s">Eșantionul</label><select id="rc-s"><option value="test" selected>de test (300 de credite) (curs)</option><option value="train">de estimare (700 de credite)</option></select></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe eșantionul de estimare (700 de credite), AUC al logit-ului WoE este peste sau sub 0,801, valoarea de pe eșantionul de test?</div>
+  <details><summary>Răspuns</summary><p>Sub: 0,789. Performanța în eșantion este de obicei optimistă, dar această împărțire a fost norocoasă: în cele 100 de părți ale validării încrucișate, AUC medie de test este 0,764.</p></details>
+</section>
+<section class="blk" id="ks-we">
+  <h3>Curba CAP, raportul de acuratețe și KS</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=46" target="_blank" rel="noopener"><img src="slides/ch12_ks-we_ro.jpg" alt="Slide-ul 45: Curba CAP, raportul de acuratețe și KS" loading="lazy"></a>
+      <figcaption>Slide-ul 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kw-m">Scorul</label><select id="kw-m"><option value="logit" selected>logit WoE (curs)</option><option value="lda">LDA Fisher</option><option value="single">doar contul curent</option></select></div><button class="btn play" id="kw-play" type="button"></button></div><div class="charts "><div class="chart" id="kw-chart"></div></div><div class="we" id="kw-we-box"><p class="we-h">Exemplu lucrat: KS, Gini și AR</p><div class="we-f">\[\mathrm{KS} = \max_s |F_{\text{bad}}(s) - F_{\text{good}}(s)| = \max_c\,(\mathrm{TPR} - \mathrm{FPR}), \qquad \mathrm{AR} \approx \text{Gini}\]</div><ol id="kw-we"></ol></div><ul class="out" id="kw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Contul curent singur: este raportul de acuratețe AR egal cu indicele Gini, 0,456?</div><details><summary>Răspuns</summary><p>Nu: AR = 0,240. Cu doar patru valori ale scorului, CAP ordonează solicitanții cu același scor în ordinea din fișier, care este arbitrară; AR = Gini este valabil pentru un scor continuu (logit WoE: 0,602 și 0,603). KS este 0,410, față de 0,511.</p></details>
+</section>
+<section class="blk" id="cap">
+  <h3>CAP și KS pe eșantionul de test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cap_ro.jpg" alt="Slide-ul 46: CAP și KS pe eșantionul de test" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ca-x">Ponderea respinșilor: <b id="ca-x-v"></b></label><input type="range" id="ca-x" min="0.05" max="0.95" step="0.05" value="0.3"></div><button class="btn play" id="ca-play" type="button"></button></div><div class="charts "><div class="chart" id="ca-chart"></div></div><ul class="out" id="ca-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Respingînd cei mai riscanți 30% dintre cei 300 de solicitanți de test, ce pondere din cei 90 de rău-platnici identificăm?</div>
+  <details><summary>Răspuns</summary><p>60% (54 din 90). Modelul perfect i-ar identifica pe toți, deoarece 30% este exact rata rău-platnicilor; un scor aleator ar identifica 30%.</p></details>
+</section>
+<section class="blk" id="ks">
+  <h3>CAP și KS pe eșantionul de test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch12_ks_ro.jpg" alt="Slide-ul 46: CAP și KS pe eșantionul de test" loading="lazy"></a>
+      <figcaption>Slide-ul 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ks-s">Scorul s (puncte): <b id="ks-s-v"></b></label><input type="range" id="ks-s" min="420" max="610" step="2" value="516"></div><button class="btn play" id="ks-play" type="button"></button></div><div class="charts "><div class="chart" id="ks-chart"></div></div><ul class="out" id="ks-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La pragul Bayes, 534 de puncte, cît este diferența F_rău(s) − F_bun(s), față de KS = 0,511 la 516 puncte?</div>
+  <details><summary>Răspuns</summary><p>0,373: 91,1% din rău-platnici și 53,8% din bun-platnici au cel mult 534 de puncte. Aceasta este TPR − FPR la acest prag; KS este maximul ei peste toate pragurile. Pragul care minimizează costul așteptat nu este cel care maximizează KS, pentru că KS cîntărește la fel cele două erori.</p></details>
+</section>
+<section class="blk" id="brier-we">
+  <h3>Calibrarea și scorul Brier</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch12_brier-we_ro.jpg" alt="Slide-ul 47: Calibrarea și scorul Brier" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bw-g">Numărul de grupuri</label><select id="bw-g"><option value="10" selected>10 (curs)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="bw-play" type="button"></button></div><div class="charts "><div class="chart" id="bw-chart"></div></div><div class="we" id="bw-we-box"><p class="we-h">Exemplu lucrat: scorul Brier și testul Hosmer–Lemeshow</p><div class="we-f">\[\mathrm{BS} = \frac1n\sum_i (p_i - y_i)^2, \qquad \mathrm{HL} = \sum_g \frac{(O_g - n_g\bar p_g)^2}{n_g\bar p_g(1 - \bar p_g)} \approx \chi^2(G - 2)\]</div><ol id="bw-we"></ol></div><p class="xh">Tabelul de calibrare al scorecard-ului (eșantionul de test)</p><div class="tw" id="bw-tab"></div><ul class="out" id="bw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Eșantionul de test al scorecard-ului: cu 5 grupuri de cîte 60 de credite în loc de 10, ce p-value dă testul Hosmer–Lemeshow?</div><details><summary>Răspuns</summary><p>0,90 (HL = 0,589, 3 grade de libertate); 0,59 cu 10 grupuri, 0,82 cu 20. Nerespins în nicio grupare: cu 300 de credite testul are o putere mică, deci „nerespins” nu dovedește că PD sînt exacte.</p></details>
+</section>
+<section class="blk" id="calib">
+  <h3>Calibrarea pe datele din Taiwan</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch12_calibration_ro.jpg" alt="Slide-ul 48: Calibrarea pe datele din Taiwan" loading="lazy"></a>
+      <figcaption>Slide-ul 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cb-g">Numărul de grupuri</label><select id="cb-g"><option value="10" selected>10 (curs)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="cb-play" type="button"></button></div><div class="charts "><div class="chart" id="cb-chart"></div></div><p class="xh">Tabelul de calibrare (cu roșu: termen HL peste 3,84)</p><div class="tw" id="cb-tab"></div><ul class="out" id="cb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 5 grupuri de cîte 1800 de clienți în loc de 10, mai respinge testul Hosmer–Lemeshow calibrarea la 5%?</div>
+  <details><summary>Răspuns</summary><p>Da: HL = 22,6 cu 3 grade de libertate, p < 0,001 (cu 20 de grupuri, 67,5, p < 0,001). Cu 9000 de clienți, testul detectează abateri de unul sau două puncte procentuale; contează mărimea abaterilor, nu doar p-value-ul.</p></details>
+</section>
+<section class="blk" id="cv">
+  <h3>AUC de estimare și de test în validarea încrucișată repetată</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cv_auc_ro.jpg" alt="Slide-ul 50: AUC de estimare și de test în validarea încrucișată repetată" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cv-r">Repetări incluse</label><select id="cv-r"><option value="20" selected>20 (curs)</option><option value="1">1</option><option value="5">5</option><option value="10">10</option></select></div><button class="btn play" id="cv-play" type="button"></button></div><div class="charts "><div class="chart" id="cv-chart"></div></div><ul class="out" id="cv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ arată primele 1, 5, 10 și 20 de repetări. Cît se mișcă AUC medie de test a logit-ului WoE?</div>
+  <details><summary>Răspuns</summary><p>Foarte puțin: 0,766; 0,767; 0,766; 0,764. O singură rulare cu 5 părți face deja media a cinci părți de test; împărțirea unică din curs (0,801) este o singură extragere dintr-o distribuție cu abaterea standard 0,032.</p></details>
+</section><h2 class="sec" id="s-rej">Reject inference și echitatea</h2>
+<section class="blk" id="reject-tab">
+  <h3>Un experiment de reject inference pe datele din Taiwan</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch12_reject-tab_ro.jpg" alt="Slide-ul 54: Un experiment de reject inference pe datele din Taiwan" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rj-a">Ponderea acceptată de scorul vechi</label><select id="rj-a"><option value="0.7" selected>70% (curs)</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.8">80%</option><option value="0.9">90%</option></select></div><button class="btn play" id="rj-play" type="button"></button></div><div class="charts "><div class="chart" id="rj-chart"></div></div><p class="xh">Experimentul de reject inference (eșantionul de test, 9000 de clienți)</p><div class="tw" id="rj-tab"></div><ul class="out" id="rj-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ lasă scorul vechi să accepte 90% în loc de 70%. Mai subestimează modelul estimat pe acceptați riscul respinșilor?</div><details><summary>Răspuns</summary><p>Nu, acum îl supraestimează: PD medie 80,0% față de 69,4% observat, iar AUC pe toți solicitanții (0,777) este cel al modelului complet. La 90%, printre acceptați sînt și clienți care au întîrziat în septembrie, deci nicio variabilă nu iese din model; cei 10% respinși se află dincolo de datele de estimare, iar logit-ul extrapolează.</p></details>
+</section>
+<section class="blk" id="fair">
+  <h3>Aprobarea și nerambursarea pe grupuri: Taiwan</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch12_fairness_ro.jpg" alt="Slide-ul 56: Aprobarea și nerambursarea pe grupuri: Taiwan" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fa-a">Ponderea aprobaților: <b id="fa-a-v"></b></label><input type="range" id="fa-a" min="0.5" max="0.95" step="0.05" value="0.75"></div><button class="btn play" id="fa-play" type="button"></button></div><div class="charts "><div class="chart" id="fa-chart"></div></div><ul class="out" id="fa-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește ponderea aprobaților de la 75% la 90%. Crește sau scade diferența dintre ratele de aprobare ale femeilor și bărbaților?</div>
+  <details><summary>Răspuns</summary><p>Scade de la 4,1 la 2,2 puncte procentuale (90,9% față de 88,7%). Ordinea grupurilor rămîne aceeași, pentru că modelul este calibrat în fiecare grup, iar bărbații intră mai des în nerambursare (24,7% față de 20,5%).</p></details>
+</section><h2 class="sec" id="s-corp">Nerambursarea companiilor: Altman și Merton</h2>
+<section class="blk" id="z-we">
+  <h3>Exemplu rezolvat: un scor Z</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=60" target="_blank" rel="noopener"><img src="slides/ch12_z-we_ro.jpg" alt="Slide-ul 59: Exemplu rezolvat: un scor Z" loading="lazy"></a>
+      <figcaption>Slide-ul 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="zw-x">X₃ = EBIT / TA: <b id="zw-x-v"></b></label><input type="range" id="zw-x" min="0" max="0.4" step="0.01" value="0.08"></div><button class="btn play" id="zw-play" type="button"></button></div><div class="charts "><div class="chart" id="zw-chart"></div></div><div class="we" id="zw-we-box"><p class="we-h">Exemplu lucrat: scorul Z</p><div class="we-f">\[Z = 1{,}2X_1 + 1{,}4X_2 + 3{,}3X_3 + 0{,}6X_4 + 1{,}0X_5\]</div><div class="wctl"><div class="ctl"><label for="zw-4">X₄ = capitaluri proprii / datorii</label><select id="zw-4"><option value="0.9" selected>0,90 (curs)</option><option value="0.5">0,50</option><option value="1.5">1,50</option></select></div></div><ol id="zw-we"></ol></div><ul class="out" id="zw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește EBIT/TA de la 0. La ce valoare iese compania din zona gri (Z > 2,99)?</div><details><summary>Răspuns</summary><p>Peste 0,27 (exact 0,2697): ceilalți patru termeni dau 2,100, iar 3,3 X₃ trebuie să adauge 0,890. EBIT/TA are cea mai mare pondere, 3,3, deci profitabilitatea mișcă cel mai mult scorul Z.</p></details>
+</section>
+<section class="blk" id="dd-we">
+  <h3>Exemplu rezolvat: distanța pînă la nerambursare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=62" target="_blank" rel="noopener"><img src="slides/ch12_dd-we_ro.jpg" alt="Slide-ul 61: Exemplu rezolvat: distanța pînă la nerambursare" loading="lazy"></a>
+      <figcaption>Slide-ul 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-s">Volatilitatea activelor σ_V: <b id="dd-s-v"></b></label><input type="range" id="dd-s" min="0.1" max="0.6" step="0.01" value="0.25"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><div class="we" id="dd-st-box"><p class="we-h">Exemplu lucrat: distanța pînă la nerambursare</p><div class="we-f">\[\mathrm{DD} = \frac{\ln(V_0/D) + (\mu - \sigma_V^2/2)T}{\sigma_V\sqrt{T}}, \qquad \mathrm{PD} = \Phi(-\mathrm{DD})\]</div><div class="wctl"><div class="ctl"><label for="dd-e">Capitalurile proprii E (pasul 3)</label><select id="dd-e"><option value="40" selected>40 (curs)</option><option value="30">30</option><option value="60">60</option></select></div></div><ol id="dd-st"></ol></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește σ_V. Cît este PD pe un an la σ_V = 40% (6,66% la 25%)?</div><details><summary>Răspuns</summary><p>20,7%: DD scade la (0,3567 + 0,05 − 0,08)/0,40 = 0,817. Volatilitatea intră de două ori: micșorează termenul de creștere și împarte distanța.</p></details>
+</section>
+<section class="blk" id="merton">
+  <h3>Merton: traiectoriile activelor și PD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol12_modele_scoring.pdf#page=63" target="_blank" rel="noopener"><img src="slides/sfm_ch12_merton_ro.jpg" alt="Slide-ul 62: Merton: traiectoriile activelor și PD" loading="lazy"></a>
+      <figcaption>Slide-ul 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="me-m">Rata de creștere μ: <b id="me-m-v"></b></label><input type="range" id="me-m" min="0" max="0.1" step="0.01" value="0.05"></div><div class="ctl"><label for="me-s">Volatilitatea activelor σ_V</label><select id="me-s"><option value="0.25" selected>25% (curs)</option><option value="0.15">15%</option><option value="0.4">40%</option></select></div><button class="btn play" id="me-play" type="button"></button></div><div class="charts "><div class="chart" id="me-chart"></div></div><ul class="out" id="me-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Aceleași 40 de traiectorii, σ_V = 40% în loc de 25%: cîte se termină sub datoria de 70?</div>
+  <details><summary>Răspuns</summary><p>8 din 40, față de 3 la 25% și niciuna la 15%; PD a modelului la D/V = 70% este 20,7%, 6,66% și 0,42%. Cu 40 de traiectorii, numărătorile sînt zgomotoase: 8/40 = 20%.</p></details>
+</section>
+<p class="src foot">South German Credit (Grömping, 2019; UCI, doi:10.24432/C5QG88): 1000 de credite de consum din 1973–1975, 300 neperformante; împărțirea stratificată 700/300 (sămînța 2026). Cardurile de credit din Taiwan (Yeh și Lien, 2009; UCI, doi:10.24432/C55S3H): 30 000 de clienți, eșantion de test de 9000. Ambele seturi sînt salvate în data/credit. Browserul calculează din înregistrările South German Credit tabelele WoE, IV, modelele logit și LDA, scorecard-ul, matricile de confuzie, ROC, AUC, DeLong, Gini, CAP, KS, Brier și Hosmer–Lemeshow; din PD, rezultatul, sexul și vîrsta celor 9000 de clienți de test din Taiwan, calibrarea și echitatea. AUC din cele 100 de părți ale validării încrucișate, traiectoriile Merton (sămînța 2026) și experimentul de reject inference vin din codul din curs. Alte variabile, alte eșantioane, praguri, costuri, niveluri de încredere, ponderi de aprobare și acceptare (50, 60, 80 și 90%) sînt rulări suplimentare ale aceluiași cod.</p>
+</main>
+</body>
+</html>

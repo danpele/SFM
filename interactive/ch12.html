@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 12 · Scoring Models</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch12.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch12_data.js?v=20261101a", "ch12_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch12.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 12 · Scoring Models</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_12" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch12.html" class="lang-btn active">EN</a><a href="ch12_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: PD (probability of default), LGD (loss given default), EAD (exposure at default), EL (expected loss), IRB (internal ratings-based approach), RWA (risk-weighted assets), WoE (weight of evidence), IV (information value), LDA (linear discriminant analysis), ROC (receiver operating characteristic), AUC (area under the ROC curve), CAP (cumulative accuracy profile), AR (accuracy ratio), KS (Kolmogorov–Smirnov statistic), HL (Hosmer–Lemeshow test), TP, FN, FP, TN (true positive, false negative, false positive, true negative), TPR (true positive rate), FPR (false positive rate), PDO (points to double the odds), LR (likelihood ratio), CI (confidence interval), se (standard error), DM (Deutsche Mark), EBIT (earnings before interest and taxes), TA (total assets), DD (distance to default), GBM (geometric Brownian motion).</p>
+<p class="toc"><a href="#s-def">What a Credit Score Is</a> · <a href="#s-data">Default Data</a> · <a href="#s-woe">Weight of Evidence and Information Value</a> · <a href="#s-logit">Logistic Regression</a> · <a href="#s-lda">Linear Discriminant Analysis</a> · <a href="#s-card">From Model to Scorecard</a> · <a href="#s-val">Validation</a> · <a href="#s-rej">Reject Inference and Fairness</a> · <a href="#s-corp">Corporate Default: Altman and Merton</a></p>
+<h2 class="sec" id="s-def">What a Credit Score Is</h2>
+<section class="blk" id="cpd">
+  <h3>PD in Good and Bad Years: the One-Factor Model</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=11" target="_blank" rel="noopener"><img src="slides/sfm_ch12_conditional_pd_en.jpg" alt="Slide 10: PD in Good and Bad Years: the One-Factor Model" loading="lazy"></a>
+      <figcaption>Slide 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cp-r">Weight of the common factor ρ: <b id="cp-r-v"></b></label><input type="range" id="cp-r" min="0.05" max="0.5" step="0.05" value="0.2"></div><button class="btn play" id="cp-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="cp-chart"></div></div><ul class="out" id="cp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises ρ from 0.2 to 0.5. What happens to the probability that a loan with PD = 2% defaults in a bad year (y = −3)?</div>
+  <details><summary>Answer</summary><p>It rises from 21.3% to 53.8%; in a typical year (y = 0) it falls from 1.08% to 0.18%. A larger weight of the common factor concentrates the defaults in the bad years, while the average over all years stays at 2%.</p></details>
+</section>
+<section class="blk" id="irb-we">
+  <h3>Worked Example: IRB Capital of a Retail Loan</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch12_irb-we_en.jpg" alt="Slide 11: Worked Example: IRB Capital of a Retail Loan" loading="lazy"></a>
+      <figcaption>Slide 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="iw-p">PD: <b id="iw-p-v"></b></label><input type="range" id="iw-p" min="0.005" max="0.2" step="0.005" value="0.02"></div><button class="btn play" id="iw-play" type="button"></button></div><div class="charts "><div class="chart" id="iw-chart"></div></div><div class="we" id="iw-we-box"><p class="we-h">Worked example: IRB capital, other retail exposures</p><div class="we-f">\[K = \mathrm{LGD}\Big[\Phi\Big(\frac{\Phi^{-1}(\mathrm{PD}) + \sqrt{R}\,\Phi^{-1}(0.999)}{\sqrt{1 - R}}\Big) - \mathrm{PD}\Big], \quad R = 0.03\,w + 0.16\,(1 - w), \quad w = \frac{1 - e^{-35\,\mathrm{PD}}}{1 - e^{-35}}\]</div><div class="wctl"><div class="ctl"><label for="iw-e">Exposure EAD (lei)</label><select id="iw-e"><option value="100000" selected>100,000 (lecture)</option><option value="50000">50,000</option><option value="250000">250,000</option></select></div></div><ol id="iw-we"></ol></div><ul class="out" id="iw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises PD from 2% to 4%. Does the capital K double?</div><details><summary>Answer</summary><p>No: it rises from 4.64% to 5.20% of EAD (+12%), while EL doubles from 0.90% to 1.80%. The correlation R falls from 0.095 to 0.062 as PD rises, and the extra defaults are increasingly expected rather than unexpected.</p></details>
+</section>
+<section class="blk" id="irb">
+  <h3>Expected Loss and IRB Capital as Functions of PD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=13" target="_blank" rel="noopener"><img src="slides/sfm_ch12_irb_en.jpg" alt="Slide 12: Expected Loss and IRB Capital as Functions of PD" loading="lazy"></a>
+      <figcaption>Slide 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ir-q">Confidence level</label><select id="ir-q"><option value="0.999" selected>99.9% (lecture)</option><option value="0.99">99%</option><option value="0.995">99.5%</option><option value="0.9999">99.99%</option></select></div><div class="ctl"><label for="ir-l">LGD: <b id="ir-l-v"></b></label><input type="range" id="ir-l" min="0.1" max="1" step="0.05" value="0.45"></div><button class="btn play" id="ir-play" type="button"></button></div><div class="charts "><div class="chart" id="ir-chart"></div></div><ul class="out" id="ir-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Other retail exposures, LGD 45%: PD rises from 5% to 10%, so EL doubles (from 2.25% to 4.50% of EAD). What happens to the capital K?</div>
+  <details><summary>Answer</summary><p>It rises only from 5.31% to 6.04% of EAD (+14%). K covers the unexpected loss: the higher the PD, the larger the share of the loss that is expected and priced in, and R falls from 0.053 to 0.034. Above a PD of about 16%, K is even smaller than EL.</p></details>
+</section><h2 class="sec" id="s-data">Default Data</h2>
+<section class="blk" id="status">
+  <h3>Bad Rate by Checking Account</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch12_default_by_status_en.jpg" alt="Slide 15: Bad Rate by Checking Account" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-v">Variable</label><select id="ds-v"><option value="status" selected>checking account (lecture)</option><option value="credit_history">credit history</option><option value="savings">savings</option><option value="employment_duration">employment duration</option></select></div><button class="btn play" id="ds-play" type="button"></button></div><div class="charts "><div class="chart" id="ds-chart"></div></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In the old Statlog labels, the 394 credits with a balance of at least 200 DM were called “no checking account” and looked like the safest group (11.7%). In the corrected data, what is the bad rate of the credits without a checking account?</div>
+  <details><summary>Answer</summary><p>49.3% (274 credits), the riskiest group, against 11.7% for a balance of at least 200 DM or a salary account: a ratio of 4.2. The figures were right in both versions; only the labels were swapped.</p></details>
+</section><h2 class="sec" id="s-woe">Weight of Evidence and Information Value</h2>
+<section class="blk" id="woe-tab">
+  <h3>Worked Example: WoE and IV of the Checking Account</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch12_woe-tab_en.jpg" alt="Slide 19: Worked Example: WoE and IV of the Checking Account" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wt-v">Variable</label><select id="wt-v"><option value="status" selected>checking account (lecture)</option><option value="credit_history">credit history</option><option value="savings">savings</option><option value="employment_duration">employment duration</option></select></div><button class="btn play" id="wt-play" type="button"></button></div><div class="charts "><div class="chart" id="wt-chart"></div></div><p class="xh">WoE table on the full sample</p><div class="tw" id="wt-tab"></div><div class="we" id="wt-we-box"><p class="we-h">Worked example: WoE and IV term of one row</p><div class="we-f">\[\mathrm{WoE}_i = \ln\frac{g_i/G}{b_i/B}, \qquad \mathrm{IV} = \sum_i \Big(\frac{g_i}{G} - \frac{b_i}{B}\Big)\mathrm{WoE}_i\]</div><div class="wctl"><div class="ctl"><label for="wt-r">Row</label><select id="wt-r"><option value="last" selected>last (lecture)</option><option value="first">first</option><option value="max">largest IV term</option></select></div></div><ol id="wt-we"></ol></div><ul class="out" id="wt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Group “≥ 200 DM or salary account”: 348 of the 700 goods and 46 of the 300 bads. What is its WoE?</div><details><summary>Answer</summary><p>ln(0.497/0.153) = 1.176: the share of goods is 3.2 times the share of bads. Its IV term, (0.497 − 0.153) × 1.176 = 0.404, is the largest of the four; the total IV is 0.666, a strong variable.</p></details>
+</section>
+<section class="blk" id="woe-dur">
+  <h3>WoE of the Credit Duration</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=22" target="_blank" rel="noopener"><img src="slides/sfm_ch12_woe_duration_en.jpg" alt="Slide 21: WoE of the Credit Duration" loading="lazy"></a>
+      <figcaption>Slide 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wd-v">Variable</label><select id="wd-v"><option value="duration" selected>duration (months) (lecture)</option><option value="amount">amount (DM)</option><option value="age">age (years)</option></select></div><div class="ctl"><label for="wd-s">Sample</label><select id="wd-s"><option value="full" selected>full (1,000 credits) (lecture)</option><option value="train">training (700 credits)</option></select></div><button class="btn play" id="wd-play" type="button"></button></div><div class="charts "><div class="chart" id="wd-chart"></div></div><ul class="out" id="wd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the credit amount (bins up to 1300, 2000, 3000, 5000 DM and above). Does the bad rate rise steadily with the amount?</div>
+  <details><summary>Answer</summary><p>No: it is 30.9% for the smallest loans, falls to 23.9% at 2001–3000 DM and rises to 41.5% above 5000 DM (WoE from 0.31 to −0.50). The relation is U-shaped, which a single linear term in a logit misses and the bins capture; IV = 0.082, a weak variable.</p></details>
+</section>
+<section class="blk" id="iv">
+  <h3>Information Value of the 20 Variables</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch12_iv_en.jpg" alt="Slide 22: Information Value of the 20 Variables" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="iv-s">Sample</label><select id="iv-s"><option value="full" selected>full (1,000 credits) (lecture)</option><option value="train">training (700 credits)</option><option value="test">test (300 credits)</option></select></div><button class="btn play" id="iv-play" type="button"></button></div><div class="charts "><div class="chart" id="iv-chart"></div></div><ul class="out" id="iv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the full sample, property has IV = 0.113 ≥ 0.1. Does it also pass the 0.1 threshold on the training sample, where the scorecard variables are chosen?</div>
+  <details><summary>Answer</summary><p>No: on the training sample its IV is 0.082, and employment duration (0.086 on the full sample, 0.122 on the training sample) takes its place. Six variables pass in both cases. IV computed on a few hundred credits moves by several hundredths between samples: on the 300 test credits the IV of the checking account is 0.913, against 0.666 on all 1,000.</p></details>
+</section><h2 class="sec" id="s-logit">Logistic Regression</h2>
+<section class="blk" id="odds-we">
+  <h3>Odds and Log-Odds</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch12_odds-we_en.jpg" alt="Slide 23: Odds and Log-Odds" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ow-p">Probability of default p: <b id="ow-p-v"></b></label><input type="range" id="ow-p" min="0.02" max="0.98" step="0.02" value="0.2"></div><button class="btn play" id="ow-play" type="button"></button></div><div class="charts "><div class="chart" id="ow-chart"></div></div><div class="we" id="ow-we-box"><p class="we-h">Worked example: odds and log-odds</p><div class="we-f">\[\text{odds} = \frac{p}{1 - p}, \qquad \mathrm{logit}(p) = \ln\frac{p}{1 - p}, \qquad \mathrm{logit}(1 - p) = -\mathrm{logit}(p)\]</div><ol id="ow-we"></ol></div><ul class="out" id="ow-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> p = 0.2 gives the log-odds −1.386. ▶ moves p to 0.8. What are the log-odds there?</div><details><summary>Answer</summary><p>+1.386: logit(1 − p) = −logit(p), the logit is symmetric around p = 0.5. The odds are 4 (four defaults per repaid credit), the inverse of 0.25.</p></details>
+</section>
+<section class="blk" id="logit-curve">
+  <h3>A Logistic Curve: PD and Duration</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=26" target="_blank" rel="noopener"><img src="slides/sfm_ch12_logistic_curve_en.jpg" alt="Slide 25: A Logistic Curve: PD and Duration" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lc-v">Explanatory variable</label><select id="lc-v"><option value="duration" selected>duration (lecture)</option><option value="age">age</option></select></div><div class="ctl"><label for="lc-m">Minimum number of credits per dot</label><select id="lc-m"><option value="5" selected>5 (lecture)</option><option value="1">1</option><option value="10">10</option><option value="20">20</option></select></div><button class="btn play" id="lc-play" type="button"></button></div><div class="charts "><div class="chart" id="lc-chart"></div></div><ul class="out" id="lc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ fits the logit on age alone. By how much do ten more years multiply the odds of default?</div>
+  <details><summary>Answer</summary><p>By e^(10 × (−0.0185)) = 0.83, that is −17%: PD falls from 34.0% at age 25 to 21.3% at age 60. Duration alone gives 1.57 per year: older applicants are safer, longer credits riskier.</p></details>
+</section>
+<section class="blk" id="small-tab">
+  <h3>A Small Logit on the Full Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch12_small-tab_en.jpg" alt="Slide 27: A Small Logit on the Full Sample" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sm-d">Variable left out</label><select id="sm-d"><option value="none" selected>none (lecture)</option><option value="duration_years">duration</option><option value="age_decades">age</option><option value="amount_1000">amount</option><option value="acct">the account indicators</option></select></div><button class="btn play" id="sm-play" type="button"></button></div><div class="charts "><div class="chart" id="sm-chart"></div></div><p class="xh">Coefficients, full sample (1,000 credits)</p><div class="tw" id="sm-tab"></div><ul class="out" id="sm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ drops duration from the model. What happens to the coefficient of the amount (0.029, p = 0.368)?</div><details><summary>Answer</summary><p>It rises to 0.112 per 1000 DM, p < 0.001: without duration, the amount picks up the risk of long credits, with which it is correlated. A coefficient is the effect with the other variables held fixed; leaving out a correlated variable changes it.</p></details>
+</section>
+<section class="blk" id="odds">
+  <h3>Odds Ratios with Confidence Intervals</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch12_odds_ratios_en.jpg" alt="Slide 28: Odds Ratios with Confidence Intervals" loading="lazy"></a>
+      <figcaption>Slide 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="or-l">Level of the interval</label><select id="or-l"><option value="0.95" selected>95% (lecture)</option><option value="0.9">90%</option><option value="0.99">99%</option></select></div><button class="btn play" id="or-play" type="button"></button></div><div class="charts "><div class="chart" id="or-chart"></div></div><ul class="out" id="or-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The 95% interval for age (+10 years) is 0.74–0.98. Does the 99% interval contain 1?</div>
+  <details><summary>Answer</summary><p>Yes: 0.71–1.02. The age effect has p = 0.022: significant at 5%, not at 1%. The intervals of duration and of both account indicators exclude 1 also at 99%; the amount contains 1 at every level.</p></details>
+</section>
+<section class="blk" id="pd-we">
+  <h3>Worked Example: the PD of an Applicant</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=30" target="_blank" rel="noopener"><img src="slides/ch12_pd-we_en.jpg" alt="Slide 29: Worked Example: the PD of an Applicant" loading="lazy"></a>
+      <figcaption>Slide 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pw-d">Duration (months): <b id="pw-d-v"></b></label><input type="range" id="pw-d" min="6" max="72" step="6" value="36"></div><button class="btn play" id="pw-play" type="button"></button></div><div class="charts "><div class="chart" id="pw-chart"></div></div><div class="we" id="pw-we-box"><p class="we-h">Worked example: PD of an applicant (rounded coefficients)</p><div class="we-f">\[\eta = -2.101 + 0.385\,\tfrac{\text{dur}}{12} - 0.159\,\tfrac{\text{age}}{10} + 0.029\,\tfrac{\text{amount}}{1000} + 1.859\,\mathbb{1}_{\text{no acc.}} + 1.338\,\mathbb{1}_{<0}, \qquad \mathrm{PD} = \frac{1}{1 + e^{-\eta}}\]</div><div class="wctl"><div class="ctl"><label for="pw-a">Checking account</label><select id="pw-a"><option value="none" selected>no checking account (lecture)</option><option value="neg">balance < 0 DM</option><option value="ok">non-negative balance</option></select></div><div class="ctl"><label for="pw-g">Age (years)</label><select id="pw-g"><option value="30" selected>30 (lecture)</option><option value="25">25</option><option value="40">40</option><option value="60">60</option></select></div></div><ol id="pw-we"></ol></div><ul class="out" id="pw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the duration from 36 to 48 months for the same applicant. What is the PD?</div><details><summary>Answer</summary><p>71.8%: η rises by 0.385 to 0.937. The approximation p(1 − p)β = 8.9 points from 63.5% gives 72.4%, close, but the exact change, 8.3 points, is smaller because the logistic curve flattens as p moves away from 0.5.</p></details>
+</section>
+<section class="blk" id="woe-logit-tab">
+  <h3>The WoE Logit Scorecard</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch12_woe-logit-tab_en.jpg" alt="Slide 30: The WoE Logit Scorecard" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wl-t">IV threshold for selection</label><select id="wl-t"><option value="0.1" selected>0.10 (lecture)</option><option value="0.02">0.02</option><option value="0.05">0.05</option><option value="0.2">0.20</option><option value="0.3">0.30</option></select></div><button class="btn play" id="wl-play" type="button"></button></div><div class="charts "><div class="chart" id="wl-chart"></div></div><p class="xh">The WoE logit scorecard (training sample, 700 credits)</p><div class="tw" id="wl-tab"></div><ul class="out" id="wl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lowers the IV threshold to 0.02, so 15 WoE variables enter instead of 6. Does the test AUC rise?</div><details><summary>Answer</summary><p>No: it falls from 0.801 to 0.787, while the training AUC rises from 0.789 to 0.825. The nine weak variables fit the noise of the 700 training credits.</p></details>
+</section>
+<section class="blk" id="prior-we">
+  <h3>Correcting for Oversampling</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch12_prior-we_en.jpg" alt="Slide 31: Correcting for Oversampling" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-pi">Bad rate of the population π: <b id="pr-pi-v"></b></label><input type="range" id="pr-pi" min="0.01" max="0.3" step="0.01" value="0.05"></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><div class="we" id="pr-we-box"><p class="we-h">Worked example: the prior correction</p><div class="we-f">\[\ln \text{odds}_{\text{pop}} = \ln \text{odds}_{\text{sample}} + \ln\frac{\pi/(1 - \pi)}{\pi_s/(1 - \pi_s)}\]</div><div class="wctl"><div class="ctl"><label for="pr-p">Sample PD</label><select id="pr-p"><option value="app" selected>the applicant of the example, 63.5% (lecture)</option><option value="0.3">30%</option><option value="0.5">50%</option></select></div></div><ol id="pr-we"></ol></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lowers the population bad rate π. For the applicant with a sample PD of 63.5%, what is the PD at π = 1%?</div><details><summary>Answer</summary><p>3.9%: the correction is ln(0.01/0.99) − ln(0.3/0.7) = −3.748, so η = 0.552 − 3.748 = −3.196. Only the constant moves; the ranking of the applicants, and with it the AUC, stays the same.</p></details>
+</section><h2 class="sec" id="s-lda">Linear Discriminant Analysis</h2>
+<section class="blk" id="fisher-we">
+  <h3>Worked Example: Fisher's Direction with Two Variables</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch12_fisher-we_en.jpg" alt="Slide 34: Worked Example: Fisher's Direction with Two Variables" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fw-v">Variables</label><select id="fw-v"><option value="duration,age" selected>duration and age (lecture)</option><option value="duration,amount">duration and amount (1000 DM)</option><option value="age,amount">age and amount (1000 DM)</option></select></div><button class="btn play" id="fw-play" type="button"></button></div><div class="charts "><div class="chart" id="fw-chart"></div></div><div class="we" id="fw-we-box"><p class="we-h">Worked example: Fisher’s direction</p><div class="we-f">\[J(w) = \frac{[w^\top(m_1 - m_0)]^2}{w^\top S_W w}, \qquad w = S_W^{-1}(m_1 - m_0)\]</div><ol id="fw-we"></ol></div><ul class="out" id="fw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Duration and age alone: what in-sample AUC does Fisher’s discriminant reach on the 1,000 credits?</div><details><summary>Answer</summary><p>0.640, exactly as much as the logit with the same two variables. The scorecard with six WoE variables reaches 0.801 on the test sample: two variables are far from enough, as the overlapping clouds also show.</p></details>
+</section>
+<section class="blk" id="lda">
+  <h3>Fisher's Boundary and the Logit Boundary</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch12_lda_2d_en.jpg" alt="Slide 35: Fisher's Boundary and the Logit Boundary" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ld-p">PD on the boundary: <b id="ld-p-v"></b></label><input type="range" id="ld-p" min="0.1" max="0.6" step="0.05" value="0.3"></div><button class="btn play" id="ld-play" type="button"></button></div><div class="charts "><div class="chart" id="ld-chart"></div></div><ul class="out" id="ld-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves the PD on the boundary from 30% to 50%. What happens to the two lines?</div>
+  <details><summary>Answer</summary><p>They move in parallel to longer durations: at age 30 from about 20 months (19.9 LDA, 19.4 logit) to about 41 months (40.9 and 42.0). The slope does not depend on the PD level; only the constant changes.</p></details>
+</section>
+<section class="blk" id="lda-tab">
+  <h3>Logit or LDA?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=37" target="_blank" rel="noopener"><img src="slides/ch12_lda-tab_en.jpg" alt="Slide 36: Logit or LDA?" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lt-s">Sample</label><select id="lt-s"><option value="test" selected>test (300 credits) (lecture)</option><option value="train">training (700 credits)</option></select></div><button class="btn play" id="lt-play" type="button"></button></div><div class="charts "><div class="chart" id="lt-chart"></div></div><p class="xh">Logit and LDA on the same six WoE variables</p><div class="tw" id="lt-tab"></div><ul class="out" id="lt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the training sample (700 credits), is the AUC of the logit higher than that of the LDA?</div><details><summary>Answer</summary><p>No, slightly lower: 0.789 against 0.790, DeLong z = −0.48, p = 0.63. On the test sample the logit is slightly ahead (0.8013 against 0.8009, z = 0.18). The two scores correlate 0.999; neither ranking is separated from noise by this test.</p></details>
+</section><h2 class="sec" id="s-card">From Model to Scorecard</h2>
+<section class="blk" id="scale-we">
+  <h3>Worked Example: Scores and Points</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch12_scale-we_en.jpg" alt="Slide 38: Worked Example: Scores and Points" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sw-o">PDO (points)</label><select id="sw-o"><option value="20" selected>20 (lecture)</option><option value="10">10</option><option value="30">30</option><option value="40">40</option></select></div><button class="btn play" id="sw-play" type="button"></button></div><div class="charts "><div class="chart" id="sw-chart"></div></div><div class="we" id="sw-we-box"><p class="we-h">Worked example: scores and points</p><div class="we-f">\[\text{Score} = \text{Offset} + \text{Factor}\,\ln\frac{1 - p}{p}, \quad \text{Factor} = \frac{\text{PDO}}{\ln 2}, \quad \text{Offset} = 600 - \text{Factor}\,\ln 50\]</div><div class="wctl"><div class="ctl"><label for="sw-p">PD for step 2</label><select id="sw-p"><option value="0.05" selected>5% (lecture)</option><option value="0.3">30%</option><option value="0.01">1%</option><option value="0.1">10%</option></select></div></div><ol id="sw-we"></ol></div><ul class="out" id="sw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ sets PDO to 40 points. What score does a PD of 5% get now (572.1 with PDO = 20)?</div><details><summary>Answer</summary><p>544.2: Factor 57.71, Offset 374.25. The base point stays at 600 for odds of 50:1; a PD of 5% means odds of 19:1, below the base, and with a steeper scale the score falls further below 600.</p></details>
+</section>
+<section class="blk" id="score">
+  <h3>Scores of the Test Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch12_score_dist_en.jpg" alt="Slide 39: Scores of the Test Sample" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sd-c">PD cut-off</label><select id="sd-c"><option value="0.1666666667" selected>1/6 (lecture)</option><option value="0.1">0.1</option><option value="0.3">0.3</option><option value="0.5">0.5</option></select></div><div class="ctl"><label for="sd-b">Bin width (points)</label><select id="sd-b"><option value="10" selected>10 (lecture)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="sd-play" type="button"></button></div><div class="charts "><div class="chart" id="sd-chart"></div></div><ul class="out" id="sd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The cut-off at PD = 1/6 is 534 points. How many of the 90 bad test credits score at least 534 and would be accepted?</div>
+  <details><summary>Answer</summary><p>8 (FN): 82 of the 90 bads are rejected. The price: 112 of the 210 goods are rejected. The two distributions overlap, so every cut-off trades one error for the other.</p></details>
+</section><h2 class="sec" id="s-val">Validation</h2>
+<section class="blk" id="cm-tab">
+  <h3>Two Cut-Offs on the Test Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch12_cm-tab_en.jpg" alt="Slide 41: Two Cut-Offs on the Test Sample" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cm-c">PD cut-off c: <b id="cm-c-v"></b></label><input type="range" id="cm-c" min="0.05" max="0.9" step="0.01" value="0.5"></div><button class="btn play" id="cm-play" type="button"></button></div><div class="charts "><div class="chart" id="cm-chart"></div></div><p class="xh">Confusion matrices on the test sample (last row: the chosen cut-off)</p><div class="tw" id="cm-tbl"></div><div class="we" id="cm-we-box"><p class="we-h">Worked example: the rates at the chosen cut-off</p><div class="we-f">\[\mathrm{TPR} = \frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FN}}, \quad \mathrm{FPR} = \frac{\mathrm{FP}}{\mathrm{FP} + \mathrm{TN}}, \quad \text{cost} = \frac{5\,\mathrm{FN} + \mathrm{FP}}{n}\]</div><ol id="cm-we"></ol></div><ul class="out" id="cm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lowers the cut-off from 0.5 to 0.3. Does accuracy rise or fall, and what happens to the cost?</div><details><summary>Answer</summary><p>Accuracy falls from 76.0% to 72.7%, the cost falls from 0.867 to 0.527: TPR rises from 47.8% to 78.9%, FPR from 11.9% to 30.0%. Accuracy weighs both errors equally; the cost weighs an accepted bad five times.</p></details>
+</section>
+<section class="blk" id="cost">
+  <h3>Expected Cost and the Choice of the Cut-Off</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cost_cutoff_en.jpg" alt="Slide 42: Expected Cost and the Choice of the Cut-Off" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="co-f">Cost of accepting a bad, C_FN (C_FP = 1)</label><select id="co-f"><option value="5" selected>5 (lecture)</option><option value="2">2</option><option value="3">3</option><option value="10">10</option></select></div><button class="btn play" id="co-play" type="button"></button></div><div class="charts "><div class="chart" id="co-chart"></div></div><ul class="out" id="co-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the cost of accepting a bad from 5 to 10. Which share of the applicants does the Bayes cut-off reject?</div>
+  <details><summary>Answer</summary><p>81%: the cut-off falls from 1/6 to 1/11 = 0.091 and the share rejected rises from 64.7% to 81.0%; the expected cost is 0.620, below the 0.700 of rejecting everybody.</p></details>
+</section>
+<section class="blk" id="auc-we">
+  <h3>ROC Curve and AUC</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch12_auc-we_en.jpg" alt="Slide 43: ROC Curve and AUC" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aw-m">Score</label><select id="aw-m"><option value="logit" selected>WoE logit (lecture)</option><option value="lda">Fisher LDA</option><option value="single">checking account only</option></select></div><button class="btn play" id="aw-play" type="button"></button></div><div class="charts "><div class="chart" id="aw-chart"></div></div><div class="we" id="aw-we-box"><p class="we-h">Worked example: AUC as a rank probability</p><div class="we-f">\[\mathrm{AUC} = P(s_{\text{bad}} > s_{\text{good}}) + \tfrac12 P(s_{\text{bad}} = s_{\text{good}}), \qquad \text{Gini} = 2\,\mathrm{AUC} - 1\]</div><ol id="aw-we"></ol></div><ul class="out" id="aw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The checking account alone has four values. What share of the 18,900 (bad, good) pairs are tied?</div><details><summary>Answer</summary><p>23.1% (4,362 pairs); each counts 1/2, so AUC = (11,579 + 2,181)/18,900 = 0.728. The WoE logit has only 12 tied pairs (0.06%).</p></details>
+</section>
+<section class="blk" id="roc">
+  <h3>ROC Curves on the Test Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch12_roc_en.jpg" alt="Slide 44: ROC Curves on the Test Sample" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-c">PD cut-off of the marked point: <b id="rc-c-v"></b></label><input type="range" id="rc-c" min="0.05" max="0.95" step="0.05" value="0.5"></div><div class="ctl"><label for="rc-s">Sample</label><select id="rc-s"><option value="test" selected>test (300 credits) (lecture)</option><option value="train">training (700 credits)</option></select></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the training sample (700 credits), is the AUC of the WoE logit above or below 0.801, the value on the test sample?</div>
+  <details><summary>Answer</summary><p>Below: 0.789. In-sample performance is usually optimistic, but this split was lucky: over the 100 folds of the cross-validation the mean test AUC is 0.764.</p></details>
+</section>
+<section class="blk" id="ks-we">
+  <h3>CAP Curve, Accuracy Ratio and KS</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=46" target="_blank" rel="noopener"><img src="slides/ch12_ks-we_en.jpg" alt="Slide 45: CAP Curve, Accuracy Ratio and KS" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kw-m">Score</label><select id="kw-m"><option value="logit" selected>WoE logit (lecture)</option><option value="lda">Fisher LDA</option><option value="single">checking account only</option></select></div><button class="btn play" id="kw-play" type="button"></button></div><div class="charts "><div class="chart" id="kw-chart"></div></div><div class="we" id="kw-we-box"><p class="we-h">Worked example: KS, Gini and AR</p><div class="we-f">\[\mathrm{KS} = \max_s |F_{\text{bad}}(s) - F_{\text{good}}(s)| = \max_c\,(\mathrm{TPR} - \mathrm{FPR}), \qquad \mathrm{AR} \approx \text{Gini}\]</div><ol id="kw-we"></ol></div><ul class="out" id="kw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The checking account alone: is its accuracy ratio AR equal to its Gini, 0.456?</div><details><summary>Answer</summary><p>No: AR = 0.240. With only four score values, the CAP orders applicants with the same score in file order, which is arbitrary; AR = Gini holds for a continuous score (WoE logit: 0.602 and 0.603). KS is 0.410, against 0.511.</p></details>
+</section>
+<section class="blk" id="cap">
+  <h3>CAP and KS on the Test Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cap_en.jpg" alt="Slide 46: CAP and KS on the Test Sample" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ca-x">Share rejected: <b id="ca-x-v"></b></label><input type="range" id="ca-x" min="0.05" max="0.95" step="0.05" value="0.3"></div><button class="btn play" id="ca-play" type="button"></button></div><div class="charts "><div class="chart" id="ca-chart"></div></div><ul class="out" id="ca-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Rejecting the riskiest 30% of the 300 test applicants, what share of the 90 bads do we catch?</div>
+  <details><summary>Answer</summary><p>60% (54 of 90). The perfect model would catch all of them, since 30% is exactly the bad rate; a random score would catch 30%.</p></details>
+</section>
+<section class="blk" id="ks">
+  <h3>CAP and KS on the Test Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch12_ks_en.jpg" alt="Slide 46: CAP and KS on the Test Sample" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ks-s">Score s (points): <b id="ks-s-v"></b></label><input type="range" id="ks-s" min="420" max="610" step="2" value="516"></div><button class="btn play" id="ks-play" type="button"></button></div><div class="charts "><div class="chart" id="ks-chart"></div></div><ul class="out" id="ks-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At the Bayes cut-off, 534 points, how large is the gap F_bad(s) − F_good(s), compared with KS = 0.511 at 516 points?</div>
+  <details><summary>Answer</summary><p>0.373: 91.1% of the bads and 53.8% of the goods score at most 534. This is TPR − FPR at this cut-off; KS is its maximum over all cut-offs. The cut-off that minimises the expected cost is not the one that maximises KS, because KS weighs both errors equally.</p></details>
+</section>
+<section class="blk" id="brier-we">
+  <h3>Calibration and the Brier Score</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch12_brier-we_en.jpg" alt="Slide 47: Calibration and the Brier Score" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bw-g">Number of groups</label><select id="bw-g"><option value="10" selected>10 (lecture)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="bw-play" type="button"></button></div><div class="charts "><div class="chart" id="bw-chart"></div></div><div class="we" id="bw-we-box"><p class="we-h">Worked example: the Brier score and the Hosmer–Lemeshow test</p><div class="we-f">\[\mathrm{BS} = \frac1n\sum_i (p_i - y_i)^2, \qquad \mathrm{HL} = \sum_g \frac{(O_g - n_g\bar p_g)^2}{n_g\bar p_g(1 - \bar p_g)} \approx \chi^2(G - 2)\]</div><ol id="bw-we"></ol></div><p class="xh">Calibration table of the scorecard (test sample)</p><div class="tw" id="bw-tab"></div><ul class="out" id="bw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Scorecard test sample: with 5 groups of 60 credits instead of 10, what p-value does the Hosmer–Lemeshow test give?</div><details><summary>Answer</summary><p>0.90 (HL = 0.589, 3 degrees of freedom); 0.59 with 10 groups, 0.82 with 20. Not rejected in any grouping: with 300 credits the test has little power, so “not rejected” does not prove that the PDs are exact.</p></details>
+</section>
+<section class="blk" id="calib">
+  <h3>Calibration on the Taiwan Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch12_calibration_en.jpg" alt="Slide 48: Calibration on the Taiwan Data" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cb-g">Number of groups</label><select id="cb-g"><option value="10" selected>10 (lecture)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="cb-play" type="button"></button></div><div class="charts "><div class="chart" id="cb-chart"></div></div><p class="xh">Calibration table (in red: HL term above 3.84)</p><div class="tw" id="cb-tab"></div><ul class="out" id="cb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 5 groups of 1,800 clients instead of 10, does the Hosmer–Lemeshow test still reject calibration at 5%?</div>
+  <details><summary>Answer</summary><p>Yes: HL = 22.6 with 3 degrees of freedom, p < 0.001 (with 20 groups, 67.5, p < 0.001). With 9,000 clients the test detects deviations of one or two percentage points; what matters is the size of the deviations, not only the p-value.</p></details>
+</section>
+<section class="blk" id="cv">
+  <h3>Training and Test AUC in Repeated Cross-Validation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch12_cv_auc_en.jpg" alt="Slide 50: Training and Test AUC in Repeated Cross-Validation" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cv-r">Repetitions included</label><select id="cv-r"><option value="20" selected>20 (lecture)</option><option value="1">1</option><option value="5">5</option><option value="10">10</option></select></div><button class="btn play" id="cv-play" type="button"></button></div><div class="charts "><div class="chart" id="cv-chart"></div></div><ul class="out" id="cv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ shows the first 1, 5, 10 and 20 repetitions. How much does the mean test AUC of the WoE logit move?</div>
+  <details><summary>Answer</summary><p>Very little: 0.766, 0.767, 0.766, 0.764. A single 5-fold run already averages five test folds; the single split of the lecture (0.801) is one draw from a distribution with standard deviation 0.032.</p></details>
+</section><h2 class="sec" id="s-rej">Reject Inference and Fairness</h2>
+<section class="blk" id="reject-tab">
+  <h3>A Reject-Inference Experiment on the Taiwan Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch12_reject-tab_en.jpg" alt="Slide 54: A Reject-Inference Experiment on the Taiwan Data" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rj-a">Share accepted by the old score</label><select id="rj-a"><option value="0.7" selected>70% (lecture)</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.8">80%</option><option value="0.9">90%</option></select></div><button class="btn play" id="rj-play" type="button"></button></div><div class="charts "><div class="chart" id="rj-chart"></div></div><p class="xh">The reject-inference experiment (test sample, 9,000 clients)</p><div class="tw" id="rj-tab"></div><ul class="out" id="rj-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lets the old score accept 90% instead of 70%. Does the model trained on the accepted still underestimate the risk of the rejected?</div><details><summary>Answer</summary><p>No, it now overestimates it: mean PD 80.0% against an observed 69.4%, and its AUC on all applicants (0.777) is that of the full model. At 90%, clients who paid late in September are among the accepted, so no variable drops out; the rejected 10% lie beyond the training data, and the logit extrapolates.</p></details>
+</section>
+<section class="blk" id="fair">
+  <h3>Approval and Default by Group: Taiwan</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch12_fairness_en.jpg" alt="Slide 56: Approval and Default by Group: Taiwan" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fa-a">Share approved: <b id="fa-a-v"></b></label><input type="range" id="fa-a" min="0.5" max="0.95" step="0.05" value="0.75"></div><button class="btn play" id="fa-play" type="button"></button></div><div class="charts "><div class="chart" id="fa-chart"></div></div><ul class="out" id="fa-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the approval share from 75% to 90%. Does the gap between the approval rates of women and men grow or shrink?</div>
+  <details><summary>Answer</summary><p>It shrinks from 4.1 to 2.2 percentage points (90.9% against 88.7%). The order of the groups stays the same, because the model is calibrated in each group and men default more often (24.7% against 20.5%).</p></details>
+</section><h2 class="sec" id="s-corp">Corporate Default: Altman and Merton</h2>
+<section class="blk" id="z-we">
+  <h3>Worked Example: a Z-Score</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=60" target="_blank" rel="noopener"><img src="slides/ch12_z-we_en.jpg" alt="Slide 59: Worked Example: a Z-Score" loading="lazy"></a>
+      <figcaption>Slide 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="zw-x">X₃ = EBIT / TA: <b id="zw-x-v"></b></label><input type="range" id="zw-x" min="0" max="0.4" step="0.01" value="0.08"></div><button class="btn play" id="zw-play" type="button"></button></div><div class="charts "><div class="chart" id="zw-chart"></div></div><div class="we" id="zw-we-box"><p class="we-h">Worked example: the Z-score</p><div class="we-f">\[Z = 1.2X_1 + 1.4X_2 + 3.3X_3 + 0.6X_4 + 1.0X_5\]</div><div class="wctl"><div class="ctl"><label for="zw-4">X₄ = equity / debt</label><select id="zw-4"><option value="0.9" selected>0.90 (lecture)</option><option value="0.5">0.50</option><option value="1.5">1.50</option></select></div></div><ol id="zw-we"></ol></div><ul class="out" id="zw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises EBIT/TA from 0. At which value does the company leave the grey zone (Z > 2.99)?</div><details><summary>Answer</summary><p>Above 0.27 (exactly 0.2697): the other four terms give 2.100, and 3.3 X₃ has to add 0.890. EBIT/TA has the largest weight, 3.3, so profitability moves the Z-score most.</p></details>
+</section>
+<section class="blk" id="dd-we">
+  <h3>Worked Example: Distance to Default</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=62" target="_blank" rel="noopener"><img src="slides/ch12_dd-we_en.jpg" alt="Slide 61: Worked Example: Distance to Default" loading="lazy"></a>
+      <figcaption>Slide 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-s">Asset volatility σ_V: <b id="dd-s-v"></b></label><input type="range" id="dd-s" min="0.1" max="0.6" step="0.01" value="0.25"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><div class="we" id="dd-st-box"><p class="we-h">Worked example: distance to default</p><div class="we-f">\[\mathrm{DD} = \frac{\ln(V_0/D) + (\mu - \sigma_V^2/2)T}{\sigma_V\sqrt{T}}, \qquad \mathrm{PD} = \Phi(-\mathrm{DD})\]</div><div class="wctl"><div class="ctl"><label for="dd-e">Equity value E (step 3)</label><select id="dd-e"><option value="40" selected>40 (lecture)</option><option value="30">30</option><option value="60">60</option></select></div></div><ol id="dd-st"></ol></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises σ_V. What is the one-year PD at σ_V = 40% (6.66% at 25%)?</div><details><summary>Answer</summary><p>20.7%: DD falls to (0.3567 + 0.05 − 0.08)/0.40 = 0.817. Volatility enters twice: it lowers the drift term and divides the distance.</p></details>
+</section>
+<section class="blk" id="merton">
+  <h3>Merton: Asset Paths and PD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter12_scoring_models.pdf#page=63" target="_blank" rel="noopener"><img src="slides/sfm_ch12_merton_en.jpg" alt="Slide 62: Merton: Asset Paths and PD" loading="lazy"></a>
+      <figcaption>Slide 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="me-m">Drift μ: <b id="me-m-v"></b></label><input type="range" id="me-m" min="0" max="0.1" step="0.01" value="0.05"></div><div class="ctl"><label for="me-s">Asset volatility σ_V</label><select id="me-s"><option value="0.25" selected>25% (lecture)</option><option value="0.15">15%</option><option value="0.4">40%</option></select></div><button class="btn play" id="me-play" type="button"></button></div><div class="charts "><div class="chart" id="me-chart"></div></div><ul class="out" id="me-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The same 40 paths, σ_V = 40% instead of 25%: how many end below the debt of 70?</div>
+  <details><summary>Answer</summary><p>8 of 40, against 3 at 25% and none at 15%; the model PD at D/V = 70% is 20.7%, 6.66% and 0.42%. With 40 paths the counts are noisy: 8/40 = 20%.</p></details>
+</section>
+<p class="src foot">South German Credit (Grömping, 2019; UCI, doi:10.24432/C5QG88): 1,000 consumer credits of 1973–1975, 300 bad; stratified 700/300 split (seed 2026). Taiwan credit card data (Yeh and Lien, 2009; UCI, doi:10.24432/C55S3H): 30,000 clients, test sample of 9,000. Both data sets are saved in data/credit. From the South German Credit records the browser computes the WoE tables, IV, the logit and LDA models, the scorecard, the confusion matrices, ROC, AUC, DeLong, Gini, CAP, KS, Brier and Hosmer–Lemeshow; from the PD, outcome, sex and age of the 9,000 Taiwan test clients, the calibration and the fairness figures. The AUC of the 100 cross-validation folds, the Merton paths (seed 2026) and the reject-inference experiment come from the code of the lecture. Other variables, samples, cut-offs, costs, confidence levels, approval and acceptance shares (50, 60, 80 and 90%) are extra runs of the same code.</p>
+</main>
+</body>
+</html>
