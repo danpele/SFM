@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 10 · VaR, ES and Backtesting</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch10.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch10_data.js?v=20261101a", "ch10_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch10.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 10 · VaR, ES and Backtesting</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_10" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch10.html" class="lang-btn active">EN</a><a href="ch10_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: VaR (value at risk), ES (expected shortfall), HS (historical simulation), EVT (extreme value theory), POT (peaks over threshold), GPD (generalised Pareto distribution), GARCH (generalised autoregressive conditional heteroskedasticity), FHS (filtered historical simulation), POF (proportion of failures), LR (likelihood ratio), BCBS (Basel Committee on Banking Supervision), FRTB (Fundamental Review of the Trading Book), MAR32 and MAR33 (chapters 32 and 33 of the Basel market risk standard), BVB (Bucharest Stock Exchange), CLT (central limit theorem).</p>
+<p class="toc"><a href="#s-def">VaR and ES: Definitions</a> · <a href="#s-est">Estimating VaR and ES</a> · <a href="#s-cond">Conditional VaR: GARCH and Filtered Historical Simulation</a> · <a href="#s-port">Portfolio VaR and Dependence</a> · <a href="#s-bt">Backtesting</a></p>
+<h2 class="sec" id="s-def">VaR and ES: Definitions</h2>
+<section class="blk" id="def">
+  <h3>VaR 1% and ES 2.5% of the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=13" target="_blank" rel="noopener"><img src="slides/sfm_ch10_var_es_def_en.jpg" alt="Slide 12: VaR 1% and ES 2.5% of the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="df-s">Series</label><select id="df-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="df-v">VaR level</label><select id="df-v"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="df-e">ES level</label><select id="df-e"><option value="0.025" selected>2.5% (lecture)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div><button class="btn play" id="df-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="df-chart"></div></div><ul class="out" id="df-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the S&P 500 since 2000, the historical VaR 1% is 3.46%. What is the historical ES 2.5%?</div>
+  <details><summary>Answer</summary><p>3.76%: the average of the worst 168 days, with the sign changed. VaR 2.5% = 2.51% is only the edge of this tail, while ES 2.5% averages the whole tail, including the days of 2008 and 2020. ES 2.5% and VaR 1% are close (3.76% against 3.46%), which is why FRTB could replace VaR 1% by ES 2.5% without changing the capital level much (<a href="https://www.bis.org/bcbs/publ/d457.htm" target="_blank" rel="noopener">BCBS (2019)</a>; <a href="https://www.bis.org/basel_framework/chapter/MAR/33.htm" target="_blank" rel="noopener">BCBS (2023b)</a>).</p></details>
+</section>
+<section class="blk" id="normal-we">
+  <h3>Worked Example: Normal VaR and ES of the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=15" target="_blank" rel="noopener"><img src="slides/ch10_normal-we_en.jpg" alt="Slide 14: Worked Example: Normal VaR and ES of the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 14</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nw-s">Series</label><select id="nw-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="nw-play" type="button"></button></div><div class="charts "><div class="chart" id="nw-chart"></div></div><div class="we" id="nw-we-box"><p class="we-h">Worked example: Normal VaR and ES</p><div class="we-f">\[\mathrm{VaR}_\alpha = -(\mu + \sigma z_\alpha), \qquad \mathrm{ES}_\alpha = -\mu + \sigma\,\frac{\varphi(z_\alpha)}{\alpha}\]</div><div class="wctl"><div class="ctl"><label for="nw-a">VaR level</label><select id="nw-a"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="nw-e">ES level</label><select id="nw-e"><option value="0.025" selected>2.5% (lecture)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div></div><ol id="nw-we"></ol></div><ul class="out" id="nw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What happens to the Normal VaR 1% relative to the historical one when we move to the other five series?</div><details><summary>Answer</summary><p>It stays below the historical one everywhere, by 14–24%: 22% for the DAX, 23% for the BET, 24% for Bitcoin, 22% for TLV, 14% for SNP (S&P 500: 19%). Two parameters, the mean and the standard deviation, cannot describe a heavy tail: the Normal distribution puts too little probability beyond 2.3 standard deviations.</p></details>
+</section>
+<section class="blk" id="horizon">
+  <h3>From One Day to Ten Days</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=17" target="_blank" rel="noopener"><img src="slides/ch10_horizon_en.jpg" alt="Slide 16: From One Day to Ten Days" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hz-s">Series</label><select id="hz-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="hz-h">Horizon h (days): <b id="hz-h-v"></b></label><input type="range" id="hz-h" min="1" max="20" step="1" value="10"></div><button class="btn play" id="hz-play" type="button"></button></div><div class="charts "><div class="chart" id="hz-chart"></div></div><ul class="out" id="hz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The VaR 1% of the 10-day S&P 500 returns: is it above or below √10 × the one-day VaR (10.93%)?</div><details><summary>Answer</summary><p>Below: 10.37%, that is 3.00 times the one-day VaR, against √10 = 3.16. The sum of 10 heavy-tailed returns is closer to the Normal distribution (CLT), and the first-order autocorrelation of the S&P 500 returns is −0.10, so consecutive days partly offset each other. For the BET the ratio is 3.86, above √10: its autocorrelation is +0.11.</p></details>
+</section><h2 class="sec" id="s-est">Estimating VaR and ES</h2>
+<section class="blk" id="hs-we">
+  <h3>Historical Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=23" target="_blank" rel="noopener"><img src="slides/ch10_hs-we_en.jpg" alt="Slide 22: Historical Simulation" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hs-s">Series</label><select id="hs-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="hs-n">Window</label><select id="hs-n"><option value="0" selected>all days (lecture)</option><option value="250">last 250 days</option><option value="500">last 500 days</option><option value="1000">last 1000 days</option><option value="2500">last 2500 days</option></select></div><button class="btn play" id="hs-play" type="button"></button></div><div class="charts "><div class="chart" id="hs-chart"></div></div><div class="we" id="hs-wx-box"><p class="we-h">Worked example: historical VaR and ES</p><div class="we-f">\[\widehat{\mathrm{VaR}}_\alpha = -r_{(k)},\ k = \lceil n\alpha \rceil, \qquad \widehat{\mathrm{ES}}_\alpha = -\frac{1}{k}\sum_{i=1}^{k} r_{(i)}\]</div><ol id="hs-wx"></ol></div><ul class="out" id="hs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the last 250 days of the S&P 500, which worst day does the historical VaR 1% rest on?</div><details><summary>Answer</summary><p>The third: k = ⌈250 × 0.01⌉ = ⌈2.5⌉ = 3. With 250 days, VaR 1% depends on 3 observations and ES 2.5% on 7 (⌈6.25⌉); on the whole sample of 6,714 days, VaR 1% is the 68th worst day.</p></details>
+</section>
+<section class="blk" id="precision">
+  <h3>How Precise Is a Historical VaR?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch10_precision_en.jpg" alt="Slide 23: How Precise Is a Historical VaR?" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-s">Series</label><select id="pr-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="pr-n">Last n days (right panel)</label><select id="pr-n"><option value="500" selected>500 (lecture)</option><option value="250">250</option><option value="1000">1000</option><option value="2500">2500</option></select></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the last 500 days of the S&P 500, how many times wider is the 95% bootstrap interval for VaR 1% than on all 6,714 days?</div><details><summary>Answer</summary><p>About 6 times: [1.99, 4.96], that is 2.97 percentage points, against [3.18, 3.66], that is 0.48. The √n rule would give √(6,714/500) = 3.7; the interval is wider because VaR 1% rests on the 5th worst day, and the five worst days of the window are far apart. On the last 250 days the interval is only 1.12 points wide: a window without extreme days looks precise although it has fewer observations.</p></details>
+</section>
+<section class="blk" id="cf-we">
+  <h3>The Cornish–Fisher Expansion</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=25" target="_blank" rel="noopener"><img src="slides/ch10_cf-we_en.jpg" alt="Slide 24: The Cornish–Fisher Expansion" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cf-s">Series</label><select id="cf-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="cf-play" type="button"></button></div><div class="charts "><div class="chart" id="cf-chart"></div></div><div class="we" id="cf-wx-box"><p class="we-h">Worked example: the Cornish–Fisher quantile</p><div class="we-f">\[z_{CF} = z + \frac{(z^2-1)S}{6} + \frac{(z^3-3z)K}{24} - \frac{(2z^3-5z)S^2}{36}, \qquad \mathrm{VaR}_\alpha = -(\mu + \sigma z_{CF})\]</div><div class="wctl"><div class="ctl"><label for="cf-a">VaR level</label><select id="cf-a"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div></div><ol id="cf-wx"></ol></div><ul class="out" id="cf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500: S = −0.35, K = 10.7. How does the Cornish–Fisher VaR 1% compare with the historical one (3.46%)?</div><details><summary>Answer</summary><p>It is almost double: 6.08%. The kurtosis term (z³ − 3z)K/24 = −2.49 alone adds more than the distance between the Normal and the empirical quantile; the expansion is a small correction around the Normal distribution and no longer holds when K exceeds 10.</p></details>
+</section>
+<section class="blk" id="evt-we">
+  <h3>EVT: Peaks over Threshold (Chapter 5)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=26" target="_blank" rel="noopener"><img src="slides/ch10_evt-we_en.jpg" alt="Slide 25: EVT: Peaks over Threshold (Chapter 5)" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ev-s">Series</label><select id="ev-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ev-u">EVT threshold: quantile of the losses</label><select id="ev-u"><option value="0.9" selected>90% (lecture)</option><option value="0.85">85%</option><option value="0.95">95%</option><option value="0.975">97.5%</option></select></div><button class="btn play" id="ev-play" type="button"></button></div><div class="charts "><div class="chart" id="ev-chart"></div></div><div class="we" id="ev-we-box"><p class="we-h">Worked example: VaR and ES from the GPD</p><div class="we-f">\[\mathrm{VaR}_\alpha = u + \frac{\beta}{\xi}\Big[\Big(\frac{n\alpha}{N_u}\Big)^{-\xi} - 1\Big], \qquad \mathrm{ES}_\alpha = \frac{\mathrm{VaR}_\alpha + \beta - \xi u}{1 - \xi}\]</div><div class="wctl"><div class="ctl"><label for="ev-a">VaR level</label><select id="ev-a"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.001">0.1%</option><option value="0.025">2.5%</option></select></div></div><ol id="ev-we"></ol></div><ul class="out" id="ev-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> We raise the EVT threshold of the S&P 500 from the 90% to the 97.5% quantile of the losses. What does the EVT VaR 1% do?</div><details><summary>Answer</summary><p>It changes little: 3.56% at 90%, 3.54% at 95%, 3.50% at 97.5% (3.59% at 85%). ξ̂ rises from 0.16 to 0.23, but at 1% we are still close to the data used; the difference shows at 0.1%, where the EVT VaR moves from 6.91% to 7.13%.</p></details>
+</section>
+<section class="blk" id="curves">
+  <h3>VaR across Tail Probabilities</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch10_var_curves_en.jpg" alt="Slide 26: VaR across Tail Probabilities" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cv-s">Series of the right panel</label><select id="cv-s"><option value="bet" selected>BET (lecture)</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="cv-u">EVT threshold: quantile of the losses</label><select id="cv-u"><option value="0.9" selected>90% (lecture)</option><option value="0.85">85%</option><option value="0.95">95%</option><option value="0.975">97.5%</option></select></div><button class="btn play" id="cv-play" type="button"></button></div><div class="charts "><div class="chart" id="cv-chart"></div></div><ul class="out" id="cv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At α = 0.1%, which method gives the largest VaR for the S&P 500?</div>
+  <details><summary>Answer</summary><p>Cornish–Fisher: 15.06%, almost double the historical 7.90%. Student-t gives 8.58%, EVT 6.91%, the Normal distribution only 3.72%. At α = 5% all methods lie between 1.67% and 1.97%.</p></details>
+</section>
+<section class="blk" id="var-table">
+  <h3>VaR 1% by Method on Six Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch10_var-table_en.jpg" alt="Slide 27: VaR 1% by Method on Six Series" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-a">VaR level</label><select id="vt-a"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">VaR by method, full samples, in % (K: excess kurtosis)</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At VaR 5%, is the Normal VaR still below the historical one?</div><details><summary>Answer</summary><p>No: at 5% the Normal VaR is above the historical one for all six series, by 3–16% (S&P 500: 1.97% against 1.85%). A heavy-tailed distribution with the same variance has more probability in the centre and in the far tail and less on the "shoulders": its 5% quantile is closer to 0 than the Normal one.</p></details>
+</section>
+<section class="blk" id="es-table">
+  <h3>ES 2.5% by Method on Six Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=29" target="_blank" rel="noopener"><img src="slides/ch10_es-table_en.jpg" alt="Slide 28: ES 2.5% by Method on Six Series" loading="lazy"></a>
+      <figcaption>Slide 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-a">ES level</label><select id="et-a"><option value="0.025" selected>2.5% (lecture)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">ES by method, full samples, in %</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the Normal distribution, ES 2.5% / VaR 1% = 1.005. In the data, by how much does the historical ES 2.5% exceed the historical VaR 1%?</div><details><summary>Answer</summary><p>By 1.5–10.5%, depending on the series (DAX 1.5%, BET 10.5%, from the unrounded values). The historical ES 2.5% averages a longer tail than the Normal distribution predicts, so the ratio exceeds 1.005.</p></details>
+</section><h2 class="sec" id="s-cond">Conditional VaR: GARCH and Filtered Historical Simulation</h2>
+<section class="blk" id="cond-we">
+  <h3>Worked Example: the S&P 500 on 18 September 2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch10_cond-we_en.jpg" alt="Slide 30: Worked Example: the S&P 500 on 18 September 2026" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cw-s">Series</label><select id="cw-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="cw-play" type="button"></button></div><div class="charts "><div class="chart" id="cw-chart"></div></div><div class="we" id="cw-we-box"><p class="we-h">Worked example: conditional VaR and ES</p><div class="we-f">\[\mathrm{VaR}_{t+1} = -\big(\mu + \sigma_{t+1}\,q_\alpha(z)\big), \qquad \mathrm{ES}_{t+1} = -\mu + \sigma_{t+1}\,\mathrm{ES}_\alpha(z)\]</div><div class="wctl"><div class="ctl"><label for="cw-a">VaR level</label><select id="cw-a"><option value="0.01" selected>1% (lecture)</option><option value="0.005">0.5%</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div></div><ol id="cw-we"></ol></div><ul class="out" id="cw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, 18 September 2026: how does the next-day GARCH-t VaR 1% compare with the historical VaR 1% (3.46%)?</div><details><summary>Answer</summary><p>It is about half: 1.75%. σ(t + 1) = 0.714% is far below the sample standard deviation of 1.21%: the market is calm. FHS gives 1.91%, because the standardised residuals have a 1% quantile of −2.787, lower than −2.557 for the fitted Student-t.</p></details>
+</section>
+<section class="blk" id="cond-table">
+  <h3>Next-Day VaR and ES on Six Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch10_cond-table_en.jpg" alt="Slide 31: Next-Day VaR and ES on Six Series" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ct-l">Levels</label><select id="ct-l"><option value="0.01|0.025" selected>VaR 1%, ES 2.5% (lecture)</option><option value="0.005|0.01">VaR 0.5%, ES 1%</option><option value="0.025|0.05">VaR 2.5%, ES 5%</option></select></div><button class="btn play" id="ct-play" type="button"></button></div><div class="charts "><div class="chart" id="ct-chart"></div></div><p class="xh">Forecasts for the day after 18 September 2026, in %</p><div class="tw" id="ct-tab"></div><ul class="out" id="ct-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For which of the six series is tomorrow's GARCH-t VaR 1% above the historical VaR 1%?</div><details><summary>Answer</summary><p>BET (4.51% against 4.14%), TLV (7.18% against 5.11%) and SNP (5.06% against 4.29%): current volatility is high there. For the S&P 500, the DAX and Bitcoin the period is calm.</p></details>
+</section>
+<section class="blk" id="rolling">
+  <h3>VaR 1% through 2008 and 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch10_rolling_var_en.jpg" alt="Slide 33: VaR 1% through 2008 and 2020" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-s">Series</label><select id="rv-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option></select></div><div class="ctl"><label for="rv-a">VaR level</label><select id="rv-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From June 2007 to December 2009, on the S&P 500: which method has the most exceptions of VaR 1%?</div>
+  <details><summary>Answer</summary><p>The Normal method: 44, against 27 for HS and 15 for GARCH-t and FHS. The 500-day window changes slowly, and the Normal distribution has too thin a tail; after the crisis, HS stays high for two years (ghost effect).</p></details>
+</section>
+<section class="blk" id="stress-table">
+  <h3>Stress Periods: Exceptions in 2008 and 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch10_stress-table_en.jpg" alt="Slide 34: Stress Periods: Exceptions in 2008 and 2020" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sx-a">VaR level</label><select id="sx-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option></select></div><button class="btn play" id="sx-play" type="button"></button></div><div class="charts "><div class="chart" id="sx-chart"></div></div><p class="xh">VaR exceptions: days with r(t) &lt; −VaR(t)</p><div class="tw" id="sx-tab"></div><ul class="out" id="sx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From September 2008 to March 2009, how many times was the Normal VaR 1% of the S&P 500 exceeded, out of 146 days?</div><details><summary>Answer</summary><p>21 times, against 1.46 expected; HS 15 times, GARCH-t and FHS 5 times each. The volatility forecast matters more than the shape of the tail.</p></details>
+</section><h2 class="sec" id="s-port">Portfolio VaR and Dependence</h2>
+<section class="blk" id="vc-we">
+  <h3>The Variance–Covariance Method</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch10_vc-we_en.jpg" alt="Slide 37: The Variance–Covariance Method" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vc-w">Weight of the BET: <b id="vc-w-v"></b></label><input type="range" id="vc-w" min="0" max="1" step="0.05" value="0.5"></div><div class="ctl"><label for="vc-r">Correlation used</label><select id="vc-r"><option value="s" selected>sample correlation 0.21 (lecture)</option><option value="calm">2017 (calm year): 0.20</option><option value="2008">Sep 2008 – Mar 2009: 0.37</option><option value="2020">Feb – May 2020: 0.71</option><option value="one">1</option></select></div><button class="btn play" id="vc-play" type="button"></button></div><div class="charts "><div class="chart" id="vc-chart"></div></div><div class="we" id="vc-wx-box"><p class="we-h">Worked example: VaR of the 50/50 portfolio</p><div class="we-f">\[\sigma_p^2 = w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2w_1w_2\rho\sigma_1\sigma_2, \qquad \mathrm{VaR}_p = -(\mu_p + z_\alpha\sigma_p)\]</div><ol id="vc-wx"></ol></div><ul class="out" id="vc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With ρ = 1 instead of the sample correlation, what becomes of the VaR 1% of the 50/50 portfolio?</div><details><summary>Answer</summary><p>3.03%: the weighted sum of the two Normal VaRs, 0.5 × 3.23 + 0.5 × 2.82; the diversification benefit, 22% with ρ = 0.21, disappears. With ρ = 0.71 (spring 2020) the VaR is 2.80% and the benefit only 8%.</p></details>
+</section>
+<section class="blk" id="corr">
+  <h3>Correlation Rises in Crises</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch10_rolling_corr_en.jpg" alt="Slide 38: Correlation Rises in Crises" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-w">Correlation window (days)</label><select id="rc-w"><option value="250" selected>250 (lecture)</option><option value="60">60</option><option value="125">125</option><option value="500">500</option></select></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> When did the 250-day correlation of the BET and the S&P 500 reach its maximum?</div>
+  <details><summary>Answer</summary><p>On 25 March 2020, at 0.67. The correlation within each period: 0.20 in 2017, 0.37 from September 2008 to March 2009, 0.71 from February to May 2020. The BVB trades until 17:45 Romanian time and New York opens at 16:30, so part of the New York move reaches Bucharest only the next day.</p></details>
+</section>
+<section class="blk" id="tail-dep">
+  <h3>Correlation Is Not Tail Dependence</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=40" target="_blank" rel="noopener"><img src="slides/ch10_tail-dep_en.jpg" alt="Slide 39: Correlation Is Not Tail Dependence" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="td-q">q: <b id="td-q-v"></b></label><input type="range" id="td-q" min="0.005" max="0.1" step="0.005" value="0.05"></div><div class="ctl"><label for="td-p">Period</label><select id="td-p"><option value="all" selected>January 2000 – September 2026 (lecture)</option><option value="p1">2000–2009</option><option value="p2">2010–2019</option><option value="p3">2020–2026</option></select></div><button class="btn play" id="td-play" type="button"></button></div><div class="charts "><div class="chart" id="td-chart"></div></div><ul class="out" id="td-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At q = 1%: what is P(BET among its worst 1% | S&P 500 among its worst 1%)?</div><details><summary>Answer</summary><p>0.19, 19 times more than under independence (0.01). At q = 5% the probability is 0.22. The Pearson correlation of 0.21 is dominated by ordinary days and says nothing about how often the two indices fall together.</p></details>
+</section>
+<section class="blk" id="copula-we">
+  <h3>Gaussian and t Copulas</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch10_copula-we_en.jpg" alt="Slide 41: Gaussian and t Copulas" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cq-n">ν: <b id="cq-n-v"></b></label><input type="range" id="cq-n" min="2" max="40" step="0.25" value="4.5"></div><div class="ctl"><label for="cq-r">ρ</label><select id="cq-r"><option value="tau" selected>0.157 = sin(πτ̂/2) (lecture)</option><option value="s">0.21 (Pearson)</option><option value="2008">0.37 (2008)</option><option value="2020">0.71 (2020)</option></select></div><button class="btn play" id="cq-play" type="button"></button></div><div class="charts "><div class="chart" id="cq-chart"></div></div><div class="we" id="cq-we-box"><p class="we-h">Worked example: lower tail dependence of the t copula</p><div class="we-f">\[\rho = \sin(\pi\hat\tau/2), \qquad \lambda_L = 2\,t_{\nu+1}\Big(-\sqrt{(\nu + 1)(1 - \rho)/(1 + \rho)}\Big)\]</div><ol id="cq-we"></ol></div><ul class="out" id="cq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What happens to the λ_L of the t copula when ν rises from 4.5 to 40, with ρ = 0.157?</div><details><summary>Answer</summary><p>It falls towards 0: 0.096 at ν = 4.5, 0.016 at ν = 10 and practically 0 at ν = 40. As ν → ∞, the t copula becomes the Gaussian copula, which has λ_L = 0.</p></details>
+</section>
+<section class="blk" id="copula">
+  <h3>Joint Bad Days: Data and Two Copulas</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch10_copula_en.jpg" alt="Slide 42: Joint Bad Days: Data and Two Copulas" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cp-q">Threshold of the square q: <b id="cp-q-v"></b></label><input type="range" id="cp-q" min="0.01" max="0.1" step="0.01" value="0.05"></div><div class="ctl"><label for="cp-s">Seeds of the copula samples</label><select id="cp-s"><option value="2027" selected>2027 and 2028 (lecture)</option><option value="2037">2037 and 2038</option><option value="2047">2047 and 2048</option></select></div><button class="btn play" id="cp-play" type="button"></button></div><div class="charts "><div class="chart" id="cp-chart"></div></div><ul class="out" id="cp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In 6,466 days, on how many days are both indices among their worst 5%?</div>
+  <details><summary>Answer</summary><p>On 70 days, against about 16 (6,466 × 0.05²) under independence. The fitted Gaussian copula gives 37, the t copula 55: only the t copula reproduces part of the joint crashes.</p></details>
+</section>
+<section class="blk" id="port-table">
+  <h3>Portfolio VaR 1% and ES 2.5% by Method</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=45" target="_blank" rel="noopener"><img src="slides/ch10_port-table_en.jpg" alt="Slide 44: Portfolio VaR 1% and ES 2.5% by Method" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pt-w">Weight of the BET</label><select id="pt-w"><option value="0.5" selected>0.5 (lecture)</option><option value="0.1">0.1</option><option value="0.25">0.25</option><option value="0.75">0.75</option><option value="0.9">0.9</option></select></div><button class="btn play" id="pt-play" type="button"></button></div><div class="charts "><div class="chart" id="pt-chart"></div></div><p class="xh">Portfolio VaR 1% and ES 2.5%, in %</p><div class="tw" id="pt-tab"></div><ul class="out" id="pt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The 50/50 BET–S&P 500 portfolio: which method gives the largest VaR 1%?</div><details><summary>Answer</summary><p>Historical simulation: 3.08%. The t copula gives 2.81%, the Gaussian copula 2.75%, the variance–covariance method 2.35%. The t copula stays below the historical value: the link between the two indices is stronger in crises than a constant copula can describe.</p></details>
+</section><h2 class="sec" id="s-bt">Backtesting</h2>
+<section class="blk" id="binom">
+  <h3>Exceptions in 250 Days under a Correct VaR 1%</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch10_binomial_en.jpg" alt="Slide 46: Exceptions in 250 Days under a Correct VaR 1%" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bn-p">True exceedance rate: <b id="bn-p-v"></b></label><input type="range" id="bn-p" min="0.005" max="0.03" step="0.0025" value="0.01"></div><div class="ctl"><label for="bn-n">Days</label><select id="bn-n"><option value="250" selected>250 (lecture)</option><option value="500">500</option><option value="1000">1000</option></select></div><button class="btn play" id="bn-play" type="button"></button></div><div class="charts "><div class="chart" id="bn-chart"></div></div><ul class="out" id="bn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> A model has a true exceedance rate of 2%, double that of VaR 1%. With what probability does it stay in the green zone in one year (250 days)?</div>
+  <details><summary>Answer</summary><p>About 44% (P(X ≤ 4) = 43.9% under Binomial(250, 0.02)). One year of data separates a good model from a bad one only roughly; a correct model lands in the yellow zone with probability 10.8% (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>).</p></details>
+</section>
+<section class="blk" id="kupiec-we">
+  <h3>Kupiec's POF Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch10_kupiec-we_en.jpg" alt="Slide 47: Kupiec's POF Test" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kp-x">Exceptions x: <b id="kp-x-v"></b></label><input type="range" id="kp-x" min="0" max="15" step="1" value="7"></div><div class="ctl"><label for="kp-n">Days n</label><select id="kp-n"><option value="250" selected>250 (lecture)</option><option value="500">500</option><option value="1000">1000</option></select></div><button class="btn play" id="kp-play" type="button"></button></div><div class="charts "><div class="chart" id="kp-chart"></div></div><div class="we" id="kp-we-box"><p class="we-h">Worked example: the POF test</p><div class="we-f">\[LR_{uc} = -2\big[(n-x)\ln(1-\alpha) + x\ln\alpha - (n-x)\ln(1-\hat\pi) - x\ln\hat\pi\big], \qquad \hat\pi = x/n, \quad \alpha = 0.01\]</div><ol id="kp-we"></ol></div><ul class="out" id="kp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> 250 days and 0 exceptions: does the Kupiec test reject the model at 5%?</div><details><summary>Answer</summary><p>Yes: ln L₀ = 250 ln 0.99 = −2.51, ln L₁ = 0, LR_uc = 5.03 > 3.84. Too few exceptions point to an overly prudent VaR that wastes capital. With 250 days, the test does not reject only the counts from 1 to 6.</p></details>
+</section>
+<section class="blk" id="kupiec-sp">
+  <h3>Kupiec on 21 Years of S&P 500 Forecasts</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=49" target="_blank" rel="noopener"><img src="slides/ch10_kupiec-sp_en.jpg" alt="Slide 48: Kupiec on 21 Years of S&P 500 Forecasts" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ks-s">Series</label><select id="ks-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="ks-m">Method</label><select id="ks-m"><option value="HS">HS</option><option value="Normal">Normal</option><option value="GARCH-t" selected>GARCH-t (lecture)</option><option value="FHS">FHS</option></select></div><button class="btn play" id="ks-play" type="button"></button></div><div class="charts "><div class="chart" id="ks-chart"></div></div><div class="we" id="ks-we-box"><p class="we-h">Worked example: Kupiec on the forecasts of the lecture</p><div class="we-f">\[\begin{gathered}\ln L_0 = (n - x)\ln(1-\alpha) + x\ln\alpha, \qquad \ln L_1 = (n - x)\ln(1-\hat\pi) + x\ln\hat\pi \\ LR_{uc} = -2(\ln L_0 - \ln L_1)\end{gathered}\]</div><ol id="ks-we"></ol></div><ul class="out" id="ks-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Apart from GARCH-t, does any method pass the Kupiec test at 5% on the S&P 500, from 2005 to 2026?</div><details><summary>Answer</summary><p>None: HS has the rate 1.41% (p = 0.004), FHS 1.58%, the Normal method 2.71% (both p &lt; 0.001). With 5,460 days the test has high power and rejects even rates of 1.4%.</p></details>
+</section>
+<section class="blk" id="chris-we">
+  <h3>Christoffersen's Independence Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch10_chris-we_en.jpg" alt="Slide 49: Christoffersen's Independence Test" loading="lazy"></a>
+      <figcaption>Slide 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cr-s">Series</label><select id="cr-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="cr-m">Method</label><select id="cr-m"><option value="HS" selected>HS (lecture)</option><option value="Normal">Normal</option><option value="GARCH-t">GARCH-t</option><option value="FHS">FHS</option></select></div><button class="btn play" id="cr-play" type="button"></button></div><div class="charts "><div class="chart" id="cr-chart"></div></div><div class="we" id="cr-we-box"><p class="we-h">Worked example: independence and conditional coverage</p><div class="we-f">\[LR_{ind} = -2\ln\frac{(1 - \hat\pi)^{n_{00} + n_{10}}\hat\pi^{n_{01} + n_{11}}}{(1 - \hat\pi_{01})^{n_{00}}\hat\pi_{01}^{n_{01}}(1 - \hat\pi_{11})^{n_{10}}\hat\pi_{11}^{n_{11}}}, \qquad LR_{cc} = LR_{uc} + LR_{ind}\]</div><ol id="cr-we"></ol></div><ul class="out" id="cr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For which methods does Christoffersen's independence test reject at 5% on the S&P 500?</div><details><summary>Answer</summary><p>HS (p &lt; 0.001; π̂₁₁ = 10.4% against π̂₀₁ = 1.28%) and the Normal method (p &lt; 0.001). GARCH-t (p = 0.114) and FHS (p = 0.060) are not rejected: the volatility forecast breaks up the clusters of exceptions. The test looks only at consecutive days.</p></details>
+</section>
+<section class="blk" id="basel">
+  <h3>The Basel Traffic Light</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch10_basel_en.jpg" alt="Slide 50: The Basel Traffic Light" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bs-s">Series</label><select id="bs-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="bs-m">Method</label><select id="bs-m"><option value="HS" selected>HS</option><option value="Normal">Normal</option><option value="GARCH-t">GARCH-t</option><option value="FHS">FHS</option></select></div><button class="btn play" id="bs-play" type="button"></button></div><div class="charts "><div class="chart" id="bs-chart"></div></div><p class="xh">The Basel traffic light: Binomial(250, 0.01) (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>)</p><div class="tw" id="bs-tab"></div><div class="we" id="bs-we1-box"><p class="we-h">Worked example: the zone from the number of exceptions</p><div class="we-f">\[x \le 4: \text{green}, \quad 5 \le x \le 9: \text{yellow}, \quad x \ge 10: \text{red}\]</div><div class="wctl"><div class="ctl"><label for="bs-x">Exceptions in 250 days: <b id="bs-x-v"></b></label><input type="range" id="bs-x" min="0" max="12" step="1" value="6"></div></div><ol id="bs-we1"></ol></div><div class="we" id="bs-we2-box"><p class="we-h">Worked example: the capital requirement (<a href="https://www.bis.org/publ/bcbs24.htm" target="_blank" rel="noopener">BCBS (1996a)</a>)</p><div class="we-f">\[\text{Capital} = \max\{\mathrm{VaR}_{t-1},\ (3 + \text{plus}) \times \overline{\mathrm{VaR}}_{60}\}\]</div><div class="wctl"><div class="ctl"><label for="bs-d">Date</label><select id="bs-d"><option value="2026-09-18" selected>18 September 2026</option><option value="2008-10-15">15 October 2008</option><option value="2009-03-31">31 March 2009</option><option value="2020-03-31">31 March 2020</option><option value="2022-10-14">14 October 2022</option></select></div></div><ol id="bs-we2"></ol></div><ul class="out" id="bs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> A model has 6 exceptions of VaR 1% in 250 days. Which multiplier applies?</div><details><summary>Answer</summary><p>3.50: P(X ≤ 6) = 98.63% is between 95% and 99.99%, so the yellow zone, with plus factor 0.50 (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>). The capital is max{VaR(t − 1), 3.50 × 60-day average} (<a href="https://www.bis.org/publ/bcbs24.htm" target="_blank" rel="noopener">BCBS (1996a)</a>); FRTB computes the capital from ES 2.5% (<a href="https://www.bis.org/basel_framework/chapter/MAR/33.htm" target="_blank" rel="noopener">BCBS (2023b)</a>), but the backtest still counts the exceptions of VaR 1% (<a href="https://www.bis.org/basel_framework/chapter/MAR/32.htm" target="_blank" rel="noopener">BCBS (2023a)</a>).</p></details>
+</section>
+<section class="blk" id="hits">
+  <h3>When Do the Exceptions Happen?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch10_hits_en.jpg" alt="Slide 51: When Do the Exceptions Happen?" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ht-s">Series</label><select id="ht-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="ht-a">VaR level</label><select id="ht-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option></select></div><button class="btn play" id="ht-play" type="button"></button></div><div class="charts "><div class="chart" id="ht-chart"></div></div><ul class="out" id="ht-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, 2005–2026: which method has the fewest exceptions of VaR 1%?</div>
+  <details><summary>Answer</summary><p>HS: 77, against 86 for FHS, 95 for GARCH-t and 148 for the Normal method; about 55 expected. HS has the fewest exceptions, but they come in clusters during crises, while the GARCH-t and FHS exceptions are spread out and more frequent in calm years.</p></details>
+</section>
+<section class="blk" id="bt-sd">
+  <h3>Backtest Results: S&P 500 and DAX</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=53" target="_blank" rel="noopener"><img src="slides/ch10_bt-sd_en.jpg" alt="Slide 52: Backtest Results: S&P 500 and DAX" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="b1-y">Start of the evaluation</label><select id="b1-y"><option value="0" selected>2005 (lecture)</option><option value="1">2010</option><option value="2">2015</option><option value="3">2020</option></select></div><button class="btn play" id="b1-play" type="button"></button></div><div class="charts "><div class="chart" id="b1-chart"></div></div><p class="xh">Backtests of VaR 1% (p ind.: Christoffersen independence; p c.c.: conditional coverage)</p><div class="tw" id="b1-tab"></div><ul class="out" id="b1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> We evaluate from 2015 instead of 2005. Does the Normal method pass the POF test on the S&P 500 or on the DAX?</div><details><summary>Answer</summary><p>No: from 2015 its rate is 2.72% on the S&P 500 and 2.52% on the DAX, both with p &lt; 0.001. Without 2008 the rate falls a little, but the Normal tail is still too thin.</p></details>
+</section>
+<section class="blk" id="bt-bb">
+  <h3>Backtest Results: BET and Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=54" target="_blank" rel="noopener"><img src="slides/ch10_bt-bb_en.jpg" alt="Slide 53: Backtest Results: BET and Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="b2-y">Start of the evaluation</label><select id="b2-y"><option value="0" selected>2005 (Bitcoin: 2017) (lecture)</option><option value="1">2010 (Bitcoin: 2019)</option><option value="2">2015 (Bitcoin: 2021)</option><option value="3">2020 (Bitcoin: 2023)</option></select></div><button class="btn play" id="b2-play" type="button"></button></div><div class="charts "><div class="chart" id="b2-chart"></div></div><p class="xh">Backtests of VaR 1%, columns as in the previous table</p><div class="tw" id="b2-tab"></div><ul class="out" id="b2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> BET, from 2005: which methods pass all three tests (POF, independence, conditional coverage) at 5%?</div><details><summary>Answer</summary><p>GARCH-t (p 0.158, 0.807, 0.358) and FHS (p 0.158, 0.240, 0.185). HS passes POF (p = 0.123), but its exceptions come in clusters (p ind. 0.001).</p></details>
+</section>
+<section class="blk" id="score">
+  <h3>Ranking the Forecasts, and Today's Zone</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch10_score_en.jpg" alt="Slide 54: Ranking the Forecasts, and Today's Zone" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-d">Last day of the evaluation</label><select id="sc-d"><option value="2026-09-18" selected>18 September 2026 (lecture)</option><option value="2009-03-31">31 March 2009</option><option value="2020-05-29">29 May 2020</option><option value="2022-12-30">30 December 2022</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><p class="xh">Mean quantile loss × 100 (in green: the smallest) and the exceptions of the last 250 days</p><div class="tw" id="sc-tab"></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin: which method has the smallest mean quantile loss?</div><details><summary>Answer</summary><p>GARCH-t, by a hair: 13.53 against 13.57 for HS, 13.75 for FHS and 14.52 for the Normal method. On the stock indices the differences are large (S&P 500: 3.68 for FHS, 5.80 for the Normal method); on Bitcoin the four methods are close.</p></details>
+</section>
+<section class="blk" id="traffic">
+  <h3>The Traffic Light through Time</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch10_traffic_time_en.jpg" alt="Slide 55: The Traffic Light through Time" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tt-s">Series</label><select id="tt-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="tt-play" type="button"></button></div><div class="charts "><div class="chart" id="tt-chart"></div></div><ul class="out" id="tt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, from early 2006: what share of the days did the Normal VaR spend in the red zone?</div>
+  <details><summary>Answer</summary><p>One third (33.3%); HS 11.8%, GARCH-t 0.5%. The largest number of exceptions in 250 days: 29 for the Normal method, 18 for HS, 10 for GARCH-t. A bank with a Normal VaR would have paid the red-zone penalty (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>) for most of 2008–2009.</p></details>
+</section>
+<section class="blk" id="es-bt">
+  <h3>Backtesting ES: Acerbi and Székely</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter10_var_es_backtesting.pdf#page=57" target="_blank" rel="noopener"><img src="slides/ch10_es-bt_en.jpg" alt="Slide 56: Backtesting ES: Acerbi and Székely" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eb-s">Series</label><select id="eb-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="eb-play" type="button"></button></div><div class="charts "><div class="chart" id="eb-chart"></div></div><div class="we" id="eb-we-box"><p class="we-h">Worked example: the Z₂ statistic</p><div class="we-f">\[Z_2 = \frac{1}{T\alpha}\sum_{t=1}^{T}\frac{r_t I_t}{\mathrm{ES}_t} + 1, \qquad I_t = \mathbf{1}\{r_t < -\mathrm{VaR}_t\}, \quad \alpha = 0.025\]</div><div class="wctl"><div class="ctl"><label for="eb-m">Method</label><select id="eb-m"><option value="HS">HS</option><option value="Normal">Normal</option><option value="GARCH-t">GARCH-t</option><option value="FHS" selected>FHS (lecture)</option></select></div></div><ol id="eb-we"></ol></div><ul class="out" id="eb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What is the sign of Z₂ for the ES 2.5% forecasts of the S&P 500, and what does it mean?</div><details><summary>Answer</summary><p>Negative for all four methods: HS −0.39, Normal −1.15, GARCH-t −0.54, FHS −0.20 (p 0.013 for FHS, below 0.001 for the others). The losses beyond VaR are larger or more frequent than ES forecasts; FHS is closest to 0 because it takes the tail of z from the data.</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: S&P 500, DAX and BET from January 2000, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV) and OMV Petrom (SNP) from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. The portfolio: simple returns of the BET and the S&P 500 on the 6,466 common days. EODHD prices. From the returns the browser computes the historical, Normal, Cornish–Fisher and EVT VaR and ES, the 500-day HS and Normal forecasts, the correlations, the pseudo-observations and the tail dependence; the Student-t, GPD and GARCH(1,1)-t parameters are those estimated by the code of the lecture. The rolling GARCH-t and FHS forecasts (re-estimated every 250 days) are rebuilt from the conditional volatility and the parameters of each re-estimation; the exceedances, the Kupiec and Christoffersen tests, the Basel traffic light, the quantile loss and Z₂ are recomputed in the browser. The p-values of Z₂ (1000 simulations), the bootstrap (2000 resamples) and the copula simulations (200,000 draws) come from the code of the lecture. Other EVT thresholds, windows, levels, portfolio weights, seeds and evaluation starts, and the Basel capital requirement computed from the forecasts, are extra runs of the same code.</p>
+</main>
+</body>
+</html>

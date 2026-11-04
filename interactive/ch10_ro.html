@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 10 · VaR, ES și backtesting</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch10.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch10_data.js?v=20261101a", "ch10_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch10.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 10 · VaR, ES și backtesting</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_10" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch10.html" class="lang-btn">EN</a><a href="ch10_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: VaR (value at risk, valoarea expusă la risc), ES (expected shortfall, pierderea așteptată în coadă), HS (historical simulation, simularea istorică), EVT (extreme value theory, teoria valorilor extreme), POT (peaks over threshold, metoda vîrfurilor peste prag), GPD (generalised Pareto distribution, distribuția Pareto generalizată), GARCH (generalised autoregressive conditional heteroskedasticity, heteroscedasticitate condiționată autoregresivă generalizată), FHS (filtered historical simulation, simularea istorică filtrată), POF (proportion of failures, proporția depășirilor), LR (likelihood ratio, raportul de verosimilitate), BCBS (Basel Committee on Banking Supervision, Comitetul de la Basel pentru supraveghere bancară), FRTB (Fundamental Review of the Trading Book, revizuirea fundamentală a portofoliului de tranzacționare), MAR32 și MAR33 (capitolele 32 și 33 ale standardului Basel pentru riscul de piață), BVB (Bursa de Valori București), CLT (central limit theorem, teorema limită centrală).</p>
+<p class="toc"><a href="#s-def">VaR și ES: definiții</a> · <a href="#s-est">Estimarea VaR și ES</a> · <a href="#s-cond">VaR condiționat: GARCH și simularea istorică filtrată</a> · <a href="#s-port">VaR de portofoliu și dependența</a> · <a href="#s-bt">Backtesting</a></p>
+<h2 class="sec" id="s-def">VaR și ES: definiții</h2>
+<section class="blk" id="def">
+  <h3>VaR 1% și ES 2,5% pentru S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch10_var_es_def_ro.jpg" alt="Slide-ul 13: VaR 1% și ES 2,5% pentru S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="df-s">Seria</label><select id="df-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="df-v">Nivelul VaR</label><select id="df-v"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="df-e">Nivelul ES</label><select id="df-e"><option value="0.025" selected>2,5% (curs)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div><button class="btn play" id="df-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="df-chart"></div></div><ul class="out" id="df-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe S&P 500 din 2000, VaR 1% istoric este 3,46%. Cît este ES 2,5% istoric?</div>
+  <details><summary>Răspuns</summary><p>3,76%: media celor mai proaste 168 de zile, cu semn schimbat. VaR 2,5% = 2,51% este doar marginea acestei cozi, iar ES 2,5% face media întregii cozi, inclusiv a zilelor din 2008 și 2020. ES 2,5% și VaR 1% sînt apropiate (3,76% față de 3,46%), de aceea FRTB a putut înlocui VaR 1% cu ES 2,5% fără să schimbe mult nivelul capitalului (<a href="https://www.bis.org/bcbs/publ/d457.htm" target="_blank" rel="noopener">BCBS (2019)</a>; <a href="https://www.bis.org/basel_framework/chapter/MAR/33.htm" target="_blank" rel="noopener">BCBS (2023b)</a>).</p></details>
+</section>
+<section class="blk" id="normal-we">
+  <h3>Exemplu rezolvat: VaR și ES Normale pentru S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch10_normal-we_ro.jpg" alt="Slide-ul 15: Exemplu rezolvat: VaR și ES Normale pentru S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nw-s">Seria</label><select id="nw-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="nw-play" type="button"></button></div><div class="charts "><div class="chart" id="nw-chart"></div></div><div class="we" id="nw-we-box"><p class="we-h">Exemplu lucrat: VaR și ES Normale</p><div class="we-f">\[\mathrm{VaR}_\alpha = -(\mu + \sigma z_\alpha), \qquad \mathrm{ES}_\alpha = -\mu + \sigma\,\frac{\varphi(z_\alpha)}{\alpha}\]</div><div class="wctl"><div class="ctl"><label for="nw-a">Nivelul VaR</label><select id="nw-a"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="nw-e">Nivelul ES</label><select id="nw-e"><option value="0.025" selected>2,5% (curs)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div></div><ol id="nw-we"></ol></div><ul class="out" id="nw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ce se întîmplă cu VaR 1% Normal față de cel istoric cînd trecem la celelalte cinci serii?</div><details><summary>Răspuns</summary><p>Rămîne sub cel istoric peste tot, cu 14–24%: 22% la DAX, 23% la BET, 24% la Bitcoin, 22% la TLV, 14% la SNP (S&P 500: 19%). Doi parametri, media și abaterea standard, nu pot descrie o coadă groasă: distribuția Normală pune prea puțină probabilitate dincolo de 2,3 abateri standard.</p></details>
+</section>
+<section class="blk" id="horizon">
+  <h3>De la o zi la zece zile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=18" target="_blank" rel="noopener"><img src="slides/ch10_horizon_ro.jpg" alt="Slide-ul 17: De la o zi la zece zile" loading="lazy"></a>
+      <figcaption>Slide-ul 17</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hz-s">Seria</label><select id="hz-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="hz-h">Orizontul h (zile): <b id="hz-h-v"></b></label><input type="range" id="hz-h" min="1" max="20" step="1" value="10"></div><button class="btn play" id="hz-play" type="button"></button></div><div class="charts "><div class="chart" id="hz-chart"></div></div><ul class="out" id="hz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> VaR 1% al randamentelor S&P 500 pe 10 zile: este peste sau sub √10 × VaR-ul pe o zi (10,93%)?</div><details><summary>Răspuns</summary><p>Sub: 10,37%, adică de 3,00 ori VaR-ul pe o zi, față de √10 = 3,16. Suma a 10 randamente cu cozi groase este mai aproape de distribuția Normală (CLT), iar autocorelația de ordinul 1 a randamentelor S&P 500 este −0,10, deci zilele succesive se compensează parțial. La BET raportul este 3,86, peste √10: autocorelația lui este +0,11.</p></details>
+</section><h2 class="sec" id="s-est">Estimarea VaR și ES</h2>
+<section class="blk" id="hs-we">
+  <h3>Simularea istorică</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch10_hs-we_ro.jpg" alt="Slide-ul 23: Simularea istorică" loading="lazy"></a>
+      <figcaption>Slide-ul 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hs-s">Seria</label><select id="hs-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="hs-n">Fereastra</label><select id="hs-n"><option value="0" selected>toate zilele (curs)</option><option value="250">ultimele 250 de zile</option><option value="500">ultimele 500 de zile</option><option value="1000">ultimele 1000 de zile</option><option value="2500">ultimele 2500 de zile</option></select></div><button class="btn play" id="hs-play" type="button"></button></div><div class="charts "><div class="chart" id="hs-chart"></div></div><div class="we" id="hs-wx-box"><p class="we-h">Exemplu lucrat: VaR și ES istorice</p><div class="we-f">\[\widehat{\mathrm{VaR}}_\alpha = -r_{(k)},\ k = \lceil n\alpha \rceil, \qquad \widehat{\mathrm{ES}}_\alpha = -\frac{1}{k}\sum_{i=1}^{k} r_{(i)}\]</div><ol id="hs-wx"></ol></div><ul class="out" id="hs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ultimele 250 de zile ale S&P 500, pe a cîta cea mai proastă zi se sprijină VaR 1% istoric?</div><details><summary>Răspuns</summary><p>Pe a treia: k = ⌈250 × 0,01⌉ = ⌈2,5⌉ = 3. Cu 250 de zile, VaR 1% depinde de 3 observații, iar ES 2,5% de 7 (⌈6,25⌉); pe tot eșantionul de 6 714 zile, VaR 1% este a 68-a cea mai proastă zi.</p></details>
+</section>
+<section class="blk" id="precision">
+  <h3>Precizia unui VaR istoric</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=25" target="_blank" rel="noopener"><img src="slides/ch10_precision_ro.jpg" alt="Slide-ul 24: Precizia unui VaR istoric" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-s">Seria</label><select id="pr-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="pr-n">Ultimele n zile (panoul din dreapta)</label><select id="pr-n"><option value="500" selected>500 (curs)</option><option value="250">250</option><option value="1000">1000</option><option value="2500">2500</option></select></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe ultimele 500 de zile ale S&P 500, intervalul bootstrap de 95% pentru VaR 1% este de cîte ori mai lat decît pe toate cele 6 714 zile?</div><details><summary>Răspuns</summary><p>De circa 6 ori: [1,99; 4,96], adică 2,97 puncte procentuale, față de [3,18; 3,66], adică 0,48. Regula √n ar da √(6 714/500) = 3,7; intervalul este mai lat, pentru că VaR 1% se sprijină pe a 5-a cea mai proastă zi, iar între cele cinci zile proaste ale ferestrei sînt salturi mari. Pe ultimele 250 de zile intervalul are doar 1,12 puncte: o fereastră fără zile extreme pare precisă, deși are mai puține observații.</p></details>
+</section>
+<section class="blk" id="cf-we">
+  <h3>Dezvoltarea Cornish–Fisher</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=26" target="_blank" rel="noopener"><img src="slides/ch10_cf-we_ro.jpg" alt="Slide-ul 25: Dezvoltarea Cornish–Fisher" loading="lazy"></a>
+      <figcaption>Slide-ul 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cf-s">Seria</label><select id="cf-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="cf-play" type="button"></button></div><div class="charts "><div class="chart" id="cf-chart"></div></div><div class="we" id="cf-wx-box"><p class="we-h">Exemplu lucrat: cuantila Cornish–Fisher</p><div class="we-f">\[z_{CF} = z + \frac{(z^2-1)S}{6} + \frac{(z^3-3z)K}{24} - \frac{(2z^3-5z)S^2}{36}, \qquad \mathrm{VaR}_\alpha = -(\mu + \sigma z_{CF})\]</div><div class="wctl"><div class="ctl"><label for="cf-a">Nivelul VaR</label><select id="cf-a"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div></div><ol id="cf-wx"></ol></div><ul class="out" id="cf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500: S = −0,35, K = 10,7. Cum se compară VaR 1% Cornish–Fisher cu cel istoric (3,46%)?</div><details><summary>Răspuns</summary><p>Este aproape dublu: 6,08%. Termenul de boltire (z³ − 3z)K/24 = −2,49 adaugă singur mai mult decît distanța dintre cuantila Normală și cea empirică; dezvoltarea este o corecție mică în jurul distribuției Normale și nu mai este valabilă cînd K trece de 10.</p></details>
+</section>
+<section class="blk" id="evt-we">
+  <h3>EVT: peaks over threshold (Capitolul 5)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch10_evt-we_ro.jpg" alt="Slide-ul 26: EVT: peaks over threshold (Capitolul 5)" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ev-s">Seria</label><select id="ev-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ev-u">Pragul EVT: cuantila pierderilor</label><select id="ev-u"><option value="0.9" selected>90% (curs)</option><option value="0.85">85%</option><option value="0.95">95%</option><option value="0.975">97,5%</option></select></div><button class="btn play" id="ev-play" type="button"></button></div><div class="charts "><div class="chart" id="ev-chart"></div></div><div class="we" id="ev-we-box"><p class="we-h">Exemplu lucrat: VaR și ES din GPD</p><div class="we-f">\[\mathrm{VaR}_\alpha = u + \frac{\beta}{\xi}\Big[\Big(\frac{n\alpha}{N_u}\Big)^{-\xi} - 1\Big], \qquad \mathrm{ES}_\alpha = \frac{\mathrm{VaR}_\alpha + \beta - \xi u}{1 - \xi}\]</div><div class="wctl"><div class="ctl"><label for="ev-a">Nivelul VaR</label><select id="ev-a"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.001">0,1%</option><option value="0.025">2,5%</option></select></div></div><ol id="ev-we"></ol></div><ul class="out" id="ev-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ridicăm pragul EVT al S&P 500 de la cuantila de 90% la cea de 97,5% a pierderilor. Ce face VaR 1% EVT?</div><details><summary>Răspuns</summary><p>Se schimbă puțin: 3,56% la 90%, 3,54% la 95%, 3,50% la 97,5% (3,59% la 85%). ξ̂ crește de la 0,16 la 0,23, dar la 1% suntem încă aproape de datele folosite; diferența apare la 0,1%, unde VaR EVT trece de la 6,91% la 7,13%.</p></details>
+</section>
+<section class="blk" id="curves">
+  <h3>VaR pentru diferite probabilități ale cozii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch10_var_curves_ro.jpg" alt="Slide-ul 27: VaR pentru diferite probabilități ale cozii" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cv-s">Seria din panoul din dreapta</label><select id="cv-s"><option value="bet" selected>BET (curs)</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="cv-u">Pragul EVT: cuantila pierderilor</label><select id="cv-u"><option value="0.9" selected>90% (curs)</option><option value="0.85">85%</option><option value="0.95">95%</option><option value="0.975">97,5%</option></select></div><button class="btn play" id="cv-play" type="button"></button></div><div class="charts "><div class="chart" id="cv-chart"></div></div><ul class="out" id="cv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La α = 0,1%, care metodă dă cel mai mare VaR pentru S&P 500?</div>
+  <details><summary>Răspuns</summary><p>Cornish–Fisher: 15,06%, aproape dublu față de valoarea istorică de 7,90%. Student-t dă 8,58%, EVT 6,91%, distribuția Normală doar 3,72%. La α = 5% toate metodele sînt între 1,67% și 1,97%.</p></details>
+</section>
+<section class="blk" id="var-table">
+  <h3>VaR 1% pe metode, pentru șase serii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=29" target="_blank" rel="noopener"><img src="slides/ch10_var-table_ro.jpg" alt="Slide-ul 28: VaR 1% pe metode, pentru șase serii" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-a">Nivelul VaR</label><select id="vt-a"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">VaR pe metode, eșantioanele complete, în % (K: excesul de boltire)</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La VaR 5%, mai este VaR-ul Normal sub cel istoric?</div><details><summary>Răspuns</summary><p>Nu: la 5% VaR-ul Normal este peste cel istoric pentru toate cele șase serii, cu 3–16% (S&P 500: 1,97% față de 1,85%). O distribuție cu cozi groase și aceeași varianță are mai multă probabilitate în centru și în coada extremă și mai puțină pe „umeri”: cuantila ei de 5% este mai aproape de 0 decît cea Normală.</p></details>
+</section>
+<section class="blk" id="es-table">
+  <h3>ES 2,5% pe metode, pentru șase serii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=30" target="_blank" rel="noopener"><img src="slides/ch10_es-table_ro.jpg" alt="Slide-ul 29: ES 2,5% pe metode, pentru șase serii" loading="lazy"></a>
+      <figcaption>Slide-ul 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-a">Nivelul ES</label><select id="et-a"><option value="0.025" selected>2,5% (curs)</option><option value="0.01">1%</option><option value="0.05">5%</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">ES pe metode, eșantioanele complete, în %</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru distribuția Normală, ES 2,5% / VaR 1% = 1,005. Pe date, cu cît depășește ES 2,5% istoric VaR 1% istoric?</div><details><summary>Răspuns</summary><p>Cu 1,5–10,5%, după serie (DAX 1,5%, BET 10,5%, din valorile nerotunjite). ES 2,5% istoric face media unei cozi mai lungi decît prevede distribuția Normală, deci raportul trece de 1,005.</p></details>
+</section><h2 class="sec" id="s-cond">VaR condiționat: GARCH și simularea istorică filtrată</h2>
+<section class="blk" id="cond-we">
+  <h3>Exemplu rezolvat: S&P 500 la 18 septembrie 2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch10_cond-we_ro.jpg" alt="Slide-ul 31: Exemplu rezolvat: S&P 500 la 18 septembrie 2026" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cw-s">Seria</label><select id="cw-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="cw-play" type="button"></button></div><div class="charts "><div class="chart" id="cw-chart"></div></div><div class="we" id="cw-we-box"><p class="we-h">Exemplu lucrat: VaR și ES condiționate</p><div class="we-f">\[\mathrm{VaR}_{t+1} = -\big(\mu + \sigma_{t+1}\,q_\alpha(z)\big), \qquad \mathrm{ES}_{t+1} = -\mu + \sigma_{t+1}\,\mathrm{ES}_\alpha(z)\]</div><div class="wctl"><div class="ctl"><label for="cw-a">Nivelul VaR</label><select id="cw-a"><option value="0.01" selected>1% (curs)</option><option value="0.005">0,5%</option><option value="0.025">2,5%</option><option value="0.05">5%</option></select></div></div><ol id="cw-we"></ol></div><ul class="out" id="cw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, 18 septembrie 2026: cum se compară VaR 1% GARCH-t pentru ziua următoare cu VaR 1% istoric (3,46%)?</div><details><summary>Răspuns</summary><p>Este cam jumătate: 1,75%. σ(t + 1) = 0,714% este mult sub abaterea standard de selecție de 1,21%: piața este liniștită. FHS dă 1,91%, pentru că reziduurile standardizate au cuantila de 1% −2,787, mai jos decît −2,557 pentru Student-t estimată.</p></details>
+</section>
+<section class="blk" id="cond-table">
+  <h3>VaR și ES pentru ziua următoare, pe șase serii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch10_cond-table_ro.jpg" alt="Slide-ul 32: VaR și ES pentru ziua următoare, pe șase serii" loading="lazy"></a>
+      <figcaption>Slide-ul 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ct-l">Nivelurile</label><select id="ct-l"><option value="0.01|0.025" selected>VaR 1%, ES 2,5% (curs)</option><option value="0.005|0.01">VaR 0,5%, ES 1%</option><option value="0.025|0.05">VaR 2,5%, ES 5%</option></select></div><button class="btn play" id="ct-play" type="button"></button></div><div class="charts "><div class="chart" id="ct-chart"></div></div><p class="xh">Prognoze pentru ziua de după 18 septembrie 2026, în %</p><div class="tw" id="ct-tab"></div><ul class="out" id="ct-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru care dintre cele șase serii este VaR 1% GARCH-t de mîine peste VaR 1% istoric?</div><details><summary>Răspuns</summary><p>BET (4,51% față de 4,14%), TLV (7,18% față de 5,11%) și SNP (5,06% față de 4,29%): pe acestea volatilitatea curentă este mare. Pe S&P 500, DAX și Bitcoin perioada este liniștită.</p></details>
+</section>
+<section class="blk" id="rolling">
+  <h3>VaR 1% în 2008 și în 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch10_rolling_var_ro.jpg" alt="Slide-ul 34: VaR 1% în 2008 și în 2020" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-s">Seria</label><select id="rv-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option></select></div><div class="ctl"><label for="rv-a">Nivelul VaR</label><select id="rv-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Din iunie 2007 pînă în decembrie 2009, pe S&P 500: care metodă are cele mai multe depășiri ale VaR 1%?</div>
+  <details><summary>Răspuns</summary><p>Metoda Normală: 44, față de 27 pentru HS și 15 pentru GARCH-t și FHS. Fereastra de 500 de zile se schimbă încet, iar distribuția Normală are coada prea subțire; după criză, HS rămîne ridicat doi ani (ghost effect).</p></details>
+</section>
+<section class="blk" id="stress-table">
+  <h3>Perioade de stres: depășiri în 2008 și 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=36" target="_blank" rel="noopener"><img src="slides/ch10_stress-table_ro.jpg" alt="Slide-ul 35: Perioade de stres: depășiri în 2008 și 2020" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sx-a">Nivelul VaR</label><select id="sx-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option></select></div><button class="btn play" id="sx-play" type="button"></button></div><div class="charts "><div class="chart" id="sx-chart"></div></div><p class="xh">Depășiri ale VaR: zile cu r(t) &lt; −VaR(t)</p><div class="tw" id="sx-tab"></div><ul class="out" id="sx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Din septembrie 2008 pînă în martie 2009, de cîte ori a fost depășit VaR 1% Normal al S&P 500, din 146 de zile?</div><details><summary>Răspuns</summary><p>De 21 de ori, față de 1,46 așteptate; HS de 15 ori, GARCH-t și FHS de cîte 5 ori. Prognoza volatilității contează mai mult decît forma cozii.</p></details>
+</section><h2 class="sec" id="s-port">VaR de portofoliu și dependența</h2>
+<section class="blk" id="vc-we">
+  <h3>Metoda varianță–covarianță</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch10_vc-we_ro.jpg" alt="Slide-ul 38: Metoda varianță–covarianță" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vc-w">Ponderea BET: <b id="vc-w-v"></b></label><input type="range" id="vc-w" min="0" max="1" step="0.05" value="0.5"></div><div class="ctl"><label for="vc-r">Corelația folosită</label><select id="vc-r"><option value="s" selected>corelația de selecție 0,21 (curs)</option><option value="calm">2017 (an liniștit): 0,20</option><option value="2008">sep, 2008 – mar, 2009: 0,37</option><option value="2020">feb, – mai 2020: 0,71</option><option value="one">1</option></select></div><button class="btn play" id="vc-play" type="button"></button></div><div class="charts "><div class="chart" id="vc-chart"></div></div><div class="we" id="vc-wx-box"><p class="we-h">Exemplu lucrat: VaR-ul portofoliului 50/50</p><div class="we-f">\[\sigma_p^2 = w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2w_1w_2\rho\sigma_1\sigma_2, \qquad \mathrm{VaR}_p = -(\mu_p + z_\alpha\sigma_p)\]</div><ol id="vc-wx"></ol></div><ul class="out" id="vc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ρ = 1 în locul corelației de selecție, ce devine VaR 1% al portofoliului 50/50?</div><details><summary>Răspuns</summary><p>3,03%: suma ponderată a celor două VaR Normale, 0,5 × 3,23 + 0,5 × 2,82; beneficiul diversificării, 22% cu ρ = 0,21, dispare. Cu ρ = 0,71 (primăvara lui 2020) VaR-ul este 2,80% și beneficiul doar 8%.</p></details>
+</section>
+<section class="blk" id="corr">
+  <h3>Corelația crește în crize</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch10_rolling_corr_ro.jpg" alt="Slide-ul 39: Corelația crește în crize" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-w">Fereastra corelației (zile)</label><select id="rc-w"><option value="250" selected>250 (curs)</option><option value="60">60</option><option value="125">125</option><option value="500">500</option></select></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cînd a atins corelația pe 250 de zile dintre BET și S&P 500 maximul?</div>
+  <details><summary>Răspuns</summary><p>Pe 25 martie 2020, 0,67. Corelația din fiecare perioadă: 0,20 în 2017, 0,37 din septembrie 2008 pînă în martie 2009, 0,71 din februarie pînă în mai 2020. BVB tranzacționează pînă la 17:45, ora României, iar New York se deschide la 16:30, deci o parte din mișcarea de la New York ajunge la București abia a doua zi.</p></details>
+</section>
+<section class="blk" id="tail-dep">
+  <h3>Corelația nu este dependență în cozi</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=41" target="_blank" rel="noopener"><img src="slides/ch10_tail-dep_ro.jpg" alt="Slide-ul 40: Corelația nu este dependență în cozi" loading="lazy"></a>
+      <figcaption>Slide-ul 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="td-q">q: <b id="td-q-v"></b></label><input type="range" id="td-q" min="0.005" max="0.1" step="0.005" value="0.05"></div><div class="ctl"><label for="td-p">Perioada</label><select id="td-p"><option value="all" selected>ianuarie 2000 – septembrie 2026 (curs)</option><option value="p1">2000–2009</option><option value="p2">2010–2019</option><option value="p3">2020–2026</option></select></div><button class="btn play" id="td-play" type="button"></button></div><div class="charts "><div class="chart" id="td-chart"></div></div><ul class="out" id="td-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La q = 1%: cît este P(BET printre cele mai proaste 1% ale lui | S&P 500 printre cele mai proaste 1% ale lui)?</div><details><summary>Răspuns</summary><p>0,19, de 19 ori mai mult decît la independență (0,01). La q = 5% probabilitatea este 0,22. Corelația Pearson de 0,21 este dominată de zilele obișnuite și nu spune nimic despre cît de des cad cei doi indici împreună.</p></details>
+</section>
+<section class="blk" id="copula-we">
+  <h3>Copula Gaussiană și copula t</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=43" target="_blank" rel="noopener"><img src="slides/ch10_copula-we_ro.jpg" alt="Slide-ul 42: Copula Gaussiană și copula t" loading="lazy"></a>
+      <figcaption>Slide-ul 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cq-n">ν: <b id="cq-n-v"></b></label><input type="range" id="cq-n" min="2" max="40" step="0.25" value="4.5"></div><div class="ctl"><label for="cq-r">ρ</label><select id="cq-r"><option value="tau" selected>0,157 = sin(πτ̂/2) (curs)</option><option value="s">0,21 (Pearson)</option><option value="2008">0,37 (2008)</option><option value="2020">0,71 (2020)</option></select></div><button class="btn play" id="cq-play" type="button"></button></div><div class="charts "><div class="chart" id="cq-chart"></div></div><div class="we" id="cq-we-box"><p class="we-h">Exemplu lucrat: dependența în coada stîngă a copulei t</p><div class="we-f">\[\rho = \sin(\pi\hat\tau/2), \qquad \lambda_L = 2\,t_{\nu+1}\Big(-\sqrt{(\nu + 1)(1 - \rho)/(1 + \rho)}\Big)\]</div><ol id="cq-we"></ol></div><ul class="out" id="cq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ce se întîmplă cu λ_L al copulei t cînd ν crește de la 4,5 la 40, cu ρ = 0,157?</div><details><summary>Răspuns</summary><p>Scade spre 0: 0,096 la ν = 4,5, 0,016 la ν = 10 și practic 0 la ν = 40. Cînd ν → ∞, copula t devine copula Gaussiană, care are λ_L = 0.</p></details>
+</section>
+<section class="blk" id="copula">
+  <h3>Zile proaste comune: datele și două copule</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=44" target="_blank" rel="noopener"><img src="slides/sfm_ch10_copula_ro.jpg" alt="Slide-ul 43: Zile proaste comune: datele și două copule" loading="lazy"></a>
+      <figcaption>Slide-ul 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cp-q">Pragul pătratului q: <b id="cp-q-v"></b></label><input type="range" id="cp-q" min="0.01" max="0.1" step="0.01" value="0.05"></div><div class="ctl"><label for="cp-s">Semințele eșantioanelor copulelor</label><select id="cp-s"><option value="2027" selected>2027 și 2028 (curs)</option><option value="2037">2037 și 2038</option><option value="2047">2047 și 2048</option></select></div><button class="btn play" id="cp-play" type="button"></button></div><div class="charts "><div class="chart" id="cp-chart"></div></div><ul class="out" id="cp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În 6 466 de zile, în cîte zile sînt ambii indici printre cele mai proaste 5% ale lor?</div>
+  <details><summary>Răspuns</summary><p>În 70 de zile, față de circa 16 (6 466 × 0,05²) la independență. Copula Gaussiană estimată dă 37, copula t 55: doar copula t reproduce o parte din prăbușirile simultane.</p></details>
+</section>
+<section class="blk" id="port-table">
+  <h3>VaR 1% și ES 2,5% ale portofoliului, pe metode</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=46" target="_blank" rel="noopener"><img src="slides/ch10_port-table_ro.jpg" alt="Slide-ul 45: VaR 1% și ES 2,5% ale portofoliului, pe metode" loading="lazy"></a>
+      <figcaption>Slide-ul 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pt-w">Ponderea BET</label><select id="pt-w"><option value="0.5" selected>0,5 (curs)</option><option value="0.1">0,1</option><option value="0.25">0,25</option><option value="0.75">0,75</option><option value="0.9">0,9</option></select></div><button class="btn play" id="pt-play" type="button"></button></div><div class="charts "><div class="chart" id="pt-chart"></div></div><p class="xh">VaR 1% și ES 2,5% ale portofoliului, în %</p><div class="tw" id="pt-tab"></div><ul class="out" id="pt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Portofoliul 50/50 BET–S&P 500: care metodă dă cel mai mare VaR 1%?</div><details><summary>Răspuns</summary><p>Simularea istorică: 3,08%. Copula t dă 2,81%, copula Gaussiană 2,75%, metoda varianță–covarianță 2,35%. Copula t rămîne sub datele istorice: legătura dintre cei doi indici este mai puternică în crize decît poate descrie o copulă constantă.</p></details>
+</section><h2 class="sec" id="s-bt">Backtesting</h2>
+<section class="blk" id="binom">
+  <h3>Depășiri în 250 de zile pentru un VaR 1% corect</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch10_binomial_ro.jpg" alt="Slide-ul 47: Depășiri în 250 de zile pentru un VaR 1% corect" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bn-p">Rata reală a depășirilor: <b id="bn-p-v"></b></label><input type="range" id="bn-p" min="0.005" max="0.03" step="0.0025" value="0.01"></div><div class="ctl"><label for="bn-n">Zile</label><select id="bn-n"><option value="250" selected>250 (curs)</option><option value="500">500</option><option value="1000">1000</option></select></div><button class="btn play" id="bn-play" type="button"></button></div><div class="charts "><div class="chart" id="bn-chart"></div></div><ul class="out" id="bn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Un model are rata reală a depășirilor 2%, dublu față de VaR 1%. Cu ce probabilitate rămîne în zona verde într-un an (250 de zile)?</div>
+  <details><summary>Răspuns</summary><p>Circa 44% (P(X ≤ 4) = 43,9% pentru Binomial(250; 0,02)). Un an de date separă doar aproximativ un model bun de unul prost; un model corect ajunge în zona galbenă cu probabilitatea 10,8% (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>).</p></details>
+</section>
+<section class="blk" id="kupiec-we">
+  <h3>Testul POF al lui Kupiec</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=49" target="_blank" rel="noopener"><img src="slides/ch10_kupiec-we_ro.jpg" alt="Slide-ul 48: Testul POF al lui Kupiec" loading="lazy"></a>
+      <figcaption>Slide-ul 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kp-x">Depășiri x: <b id="kp-x-v"></b></label><input type="range" id="kp-x" min="0" max="15" step="1" value="7"></div><div class="ctl"><label for="kp-n">Zile n</label><select id="kp-n"><option value="250" selected>250 (curs)</option><option value="500">500</option><option value="1000">1000</option></select></div><button class="btn play" id="kp-play" type="button"></button></div><div class="charts "><div class="chart" id="kp-chart"></div></div><div class="we" id="kp-we-box"><p class="we-h">Exemplu lucrat: testul POF</p><div class="we-f">\[LR_{uc} = -2\big[(n-x)\ln(1-\alpha) + x\ln\alpha - (n-x)\ln(1-\hat\pi) - x\ln\hat\pi\big], \qquad \hat\pi = x/n, \quad \alpha = 0{,}01\]</div><ol id="kp-we"></ol></div><ul class="out" id="kp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> 250 de zile și 0 depășiri: respinge testul Kupiec modelul la 5%?</div><details><summary>Răspuns</summary><p>Da: ln L₀ = 250 ln 0,99 = −2,51, ln L₁ = 0, LR_uc = 5,03 > 3,84. Prea puține depășiri indică un VaR prea prudent, care irosește capital. Cu 250 de zile, testul nu respinge doar numerele de depășiri de la 1 la 6.</p></details>
+</section>
+<section class="blk" id="kupiec-sp">
+  <h3>Testul Kupiec pe 21 de ani de prognoze pentru S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch10_kupiec-sp_ro.jpg" alt="Slide-ul 49: Testul Kupiec pe 21 de ani de prognoze pentru S&P 500" loading="lazy"></a>
+      <figcaption>Slide-ul 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ks-s">Seria</label><select id="ks-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="ks-m">Metoda</label><select id="ks-m"><option value="HS">HS</option><option value="Normal">Normală</option><option value="GARCH-t" selected>GARCH-t (curs)</option><option value="FHS">FHS</option></select></div><button class="btn play" id="ks-play" type="button"></button></div><div class="charts "><div class="chart" id="ks-chart"></div></div><div class="we" id="ks-we-box"><p class="we-h">Exemplu lucrat: testul Kupiec pe prognozele din curs</p><div class="we-f">\[\begin{gathered}\ln L_0 = (n - x)\ln(1-\alpha) + x\ln\alpha, \qquad \ln L_1 = (n - x)\ln(1-\hat\pi) + x\ln\hat\pi \\ LR_{uc} = -2(\ln L_0 - \ln L_1)\end{gathered}\]</div><ol id="ks-we"></ol></div><ul class="out" id="ks-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În afară de GARCH-t, trece vreo metodă testul Kupiec la 5% pe S&P 500, din 2005 pînă în 2026?</div><details><summary>Răspuns</summary><p>Niciuna: HS are rata 1,41% (p = 0,004), FHS 1,58%, metoda Normală 2,71% (ambele p &lt; 0,001). Cu 5 460 de zile, testul are o putere mare și respinge chiar rate de 1,4%.</p></details>
+</section>
+<section class="blk" id="chris-we">
+  <h3>Testul de independență al lui Christoffersen</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch10_chris-we_ro.jpg" alt="Slide-ul 50: Testul de independență al lui Christoffersen" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cr-s">Seria</label><select id="cr-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="cr-m">Metoda</label><select id="cr-m"><option value="HS" selected>HS (curs)</option><option value="Normal">Normală</option><option value="GARCH-t">GARCH-t</option><option value="FHS">FHS</option></select></div><button class="btn play" id="cr-play" type="button"></button></div><div class="charts "><div class="chart" id="cr-chart"></div></div><div class="we" id="cr-we-box"><p class="we-h">Exemplu lucrat: independența și acoperirea condiționată</p><div class="we-f">\[LR_{ind} = -2\ln\frac{(1 - \hat\pi)^{n_{00} + n_{10}}\hat\pi^{n_{01} + n_{11}}}{(1 - \hat\pi_{01})^{n_{00}}\hat\pi_{01}^{n_{01}}(1 - \hat\pi_{11})^{n_{10}}\hat\pi_{11}^{n_{11}}}, \qquad LR_{cc} = LR_{uc} + LR_{ind}\]</div><ol id="cr-we"></ol></div><ul class="out" id="cr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru care metode respinge testul de independență Christoffersen la 5% pe S&P 500?</div><details><summary>Răspuns</summary><p>HS (p &lt; 0,001; π̂₁₁ = 10,4% față de π̂₀₁ = 1,28%) și metoda Normală (p &lt; 0,001). GARCH-t (p = 0,114) și FHS (p = 0,060) nu sînt respinse: prognoza volatilității desface grupurile de depășiri. Testul privește doar zilele consecutive.</p></details>
+</section>
+<section class="blk" id="basel">
+  <h3>Semaforul Basel</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=52" target="_blank" rel="noopener"><img src="slides/ch10_basel_ro.jpg" alt="Slide-ul 51: Semaforul Basel" loading="lazy"></a>
+      <figcaption>Slide-ul 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bs-s">Seria</label><select id="bs-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="bs-m">Metoda</label><select id="bs-m"><option value="HS" selected>HS</option><option value="Normal">Normală</option><option value="GARCH-t">GARCH-t</option><option value="FHS">FHS</option></select></div><button class="btn play" id="bs-play" type="button"></button></div><div class="charts "><div class="chart" id="bs-chart"></div></div><p class="xh">Semaforul Basel: Binomial(250; 0,01) (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>)</p><div class="tw" id="bs-tab"></div><div class="we" id="bs-we1-box"><p class="we-h">Exemplu lucrat: zona din numărul depășirilor</p><div class="we-f">\[x \le 4: \text{verde}, \quad 5 \le x \le 9: \text{galbenă}, \quad x \ge 10: \text{roșie}\]</div><div class="wctl"><div class="ctl"><label for="bs-x">Depășiri în 250 de zile: <b id="bs-x-v"></b></label><input type="range" id="bs-x" min="0" max="12" step="1" value="6"></div></div><ol id="bs-we1"></ol></div><div class="we" id="bs-we2-box"><p class="we-h">Exemplu lucrat: cerința de capital (<a href="https://www.bis.org/publ/bcbs24.htm" target="_blank" rel="noopener">BCBS (1996a)</a>)</p><div class="we-f">\[\text{Capital} = \max\{\mathrm{VaR}_{t-1},\ (3 + \text{adaos}) \times \overline{\mathrm{VaR}}_{60}\}\]</div><div class="wctl"><div class="ctl"><label for="bs-d">Ziua</label><select id="bs-d"><option value="2026-09-18" selected>18 septembrie 2026</option><option value="2008-10-15">15 octombrie 2008</option><option value="2009-03-31">31 martie 2009</option><option value="2020-03-31">31 martie 2020</option><option value="2022-10-14">14 octombrie 2022</option></select></div></div><ol id="bs-we2"></ol></div><ul class="out" id="bs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Un model are 6 depășiri ale VaR 1% în 250 de zile. Ce factor de multiplicare se aplică?</div><details><summary>Răspuns</summary><p>3,50: P(X ≤ 6) = 98,63% este între 95% și 99,99%, deci zona galbenă, cu adaosul 0,50 (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>). Capitalul este max{VaR(t − 1), 3,50 × media pe 60 de zile} (<a href="https://www.bis.org/publ/bcbs24.htm" target="_blank" rel="noopener">BCBS (1996a)</a>); FRTB calculează capitalul din ES 2,5% (<a href="https://www.bis.org/basel_framework/chapter/MAR/33.htm" target="_blank" rel="noopener">BCBS (2023b)</a>), dar backtesting-ul numără tot depășirile VaR 1% (<a href="https://www.bis.org/basel_framework/chapter/MAR/32.htm" target="_blank" rel="noopener">BCBS (2023a)</a>).</p></details>
+</section>
+<section class="blk" id="hits">
+  <h3>Depășirile în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch10_hits_ro.jpg" alt="Slide-ul 52: Depășirile în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ht-s">Seria</label><select id="ht-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="ht-a">Nivelul VaR</label><select id="ht-a"><option value="0.01" selected>1% (curs)</option><option value="0.025">2,5%</option></select></div><button class="btn play" id="ht-play" type="button"></button></div><div class="charts "><div class="chart" id="ht-chart"></div></div><ul class="out" id="ht-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, 2005–2026: care metodă are cele mai puține depășiri ale VaR 1%?</div>
+  <details><summary>Răspuns</summary><p>HS: 77, față de 86 pentru FHS, 95 pentru GARCH-t și 148 pentru metoda Normală; așteptate circa 55. HS are cele mai puține depășiri, dar ele apar grupat în crize, în timp ce depășirile GARCH-t și FHS sînt răspîndite și mai multe în anii liniștiți.</p></details>
+</section>
+<section class="blk" id="bt-sd">
+  <h3>Rezultatele backtesting-ului: S&P 500 și DAX</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=54" target="_blank" rel="noopener"><img src="slides/ch10_bt-sd_ro.jpg" alt="Slide-ul 53: Rezultatele backtesting-ului: S&P 500 și DAX" loading="lazy"></a>
+      <figcaption>Slide-ul 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="b1-y">Începutul evaluării</label><select id="b1-y"><option value="0" selected>2005 (curs)</option><option value="1">2010</option><option value="2">2015</option><option value="3">2020</option></select></div><button class="btn play" id="b1-play" type="button"></button></div><div class="charts "><div class="chart" id="b1-chart"></div></div><p class="xh">Backtesting-ul VaR 1% (p ind.: independența Christoffersen; p ac.c.: acoperirea condiționată)</p><div class="tw" id="b1-tab"></div><ul class="out" id="b1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Evaluăm din 2015 în loc de 2005. Trece metoda Normală testul POF pe S&P 500 sau pe DAX?</div><details><summary>Răspuns</summary><p>Nu: din 2015 rata ei este 2,72% pe S&P 500 și 2,52% pe DAX, ambele cu p &lt; 0,001. Fără 2008 rata scade puțin, dar coada Normală rămîne prea subțire.</p></details>
+</section>
+<section class="blk" id="bt-bb">
+  <h3>Rezultatele backtesting-ului: BET și Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch10_bt-bb_ro.jpg" alt="Slide-ul 54: Rezultatele backtesting-ului: BET și Bitcoin" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="b2-y">Începutul evaluării</label><select id="b2-y"><option value="0" selected>2005 (Bitcoin: 2017) (curs)</option><option value="1">2010 (Bitcoin: 2019)</option><option value="2">2015 (Bitcoin: 2021)</option><option value="3">2020 (Bitcoin: 2023)</option></select></div><button class="btn play" id="b2-play" type="button"></button></div><div class="charts "><div class="chart" id="b2-chart"></div></div><p class="xh">Backtesting-ul VaR 1%, coloanele ca în tabelul precedent</p><div class="tw" id="b2-tab"></div><ul class="out" id="b2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> BET, din 2005: care metode trec toate cele trei teste (POF, independență, acoperire condiționată) la 5%?</div><details><summary>Răspuns</summary><p>GARCH-t (p 0,158; 0,807; 0,358) și FHS (p 0,158; 0,240; 0,185). HS trece POF (p = 0,123), dar depășirile ei apar grupat (p ind. 0,001).</p></details>
+</section>
+<section class="blk" id="score">
+  <h3>Ordonarea prognozelor și zona de azi</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch10_score_ro.jpg" alt="Slide-ul 55: Ordonarea prognozelor și zona de azi" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-d">Ultima zi a evaluării</label><select id="sc-d"><option value="2026-09-18" selected>18 septembrie 2026 (curs)</option><option value="2009-03-31">31 martie 2009</option><option value="2020-05-29">29 mai 2020</option><option value="2022-12-30">30 decembrie 2022</option></select></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><p class="xh">Pierderea cuantilă medie × 100 (cu verde: cea mai mică) și depășirile din ultimele 250 de zile</p><div class="tw" id="sc-tab"></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Bitcoin: care metodă are cea mai mică pierdere cuantilă medie?</div><details><summary>Răspuns</summary><p>GARCH-t, la limită: 13,53 față de 13,57 pentru HS, 13,75 pentru FHS și 14,52 pentru metoda Normală. Pe indicii de acțiuni diferențele sînt mari (S&P 500: 3,68 pentru FHS, 5,80 pentru metoda Normală); pe Bitcoin cele patru metode sînt apropiate.</p></details>
+</section>
+<section class="blk" id="traffic">
+  <h3>Semaforul Basel în timp</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch10_traffic_time_ro.jpg" alt="Slide-ul 56: Semaforul Basel în timp" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tt-s">Seria</label><select id="tt-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="tt-play" type="button"></button></div><div class="charts "><div class="chart" id="tt-chart"></div></div><ul class="out" id="tt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, de la începutul lui 2006: ce pondere din zile a petrecut VaR Normal în zona roșie?</div>
+  <details><summary>Răspuns</summary><p>O treime (33,3%); HS 11,8%, GARCH-t 0,5%. Cel mai mare număr de depășiri în 250 de zile: 29 pentru metoda Normală, 18 pentru HS, 10 pentru GARCH-t. O bancă cu VaR Normal ar fi plătit penalizarea zonei roșii (<a href="https://www.bis.org/publ/bcbs22.htm" target="_blank" rel="noopener">BCBS (1996b)</a>) în cea mai mare parte din 2008–2009.</p></details>
+</section>
+<section class="blk" id="es-bt">
+  <h3>Backtesting pentru ES: Acerbi și Székely</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol10_var_es_backtesting.pdf#page=58" target="_blank" rel="noopener"><img src="slides/ch10_es-bt_ro.jpg" alt="Slide-ul 57: Backtesting pentru ES: Acerbi și Székely" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eb-s">Seria</label><select id="eb-s"><option value="sp500" selected>S&P 500 (curs)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="eb-play" type="button"></button></div><div class="charts "><div class="chart" id="eb-chart"></div></div><div class="we" id="eb-we-box"><p class="we-h">Exemplu lucrat: statistica Z₂</p><div class="we-f">\[Z_2 = \frac{1}{T\alpha}\sum_{t=1}^{T}\frac{r_t I_t}{\mathrm{ES}_t} + 1, \qquad I_t = \mathbf{1}\{r_t < -\mathrm{VaR}_t\}, \quad \alpha = 0{,}025\]</div><div class="wctl"><div class="ctl"><label for="eb-m">Metoda</label><select id="eb-m"><option value="HS">HS</option><option value="Normal">Normală</option><option value="GARCH-t">GARCH-t</option><option value="FHS" selected>FHS (curs)</option></select></div></div><ol id="eb-we"></ol></div><ul class="out" id="eb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ce semn are Z₂ pentru prognozele ES 2,5% ale S&P 500 și ce înseamnă?</div><details><summary>Răspuns</summary><p>Negativ pentru toate cele patru metode: HS −0,39, Normal −1,15, GARCH-t −0,54, FHS −0,20 (p 0,013 pentru FHS, sub 0,001 pentru celelalte). Pierderile de dincolo de VaR sînt mai mari sau mai dese decît prognozează ES; FHS este cel mai aproape de 0, pentru că preia coada lui z din date.</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: S&P 500, DAX și BET din ianuarie 2000, Bitcoin din septembrie 2014 (7 zile pe săptămînă), Banca Transilvania (TLV) și OMV Petrom (SNP) din 2010, din prețul ajustat, pînă la 18 septembrie 2026; cele două zile greșite ale TLV din mai 2016 sînt eliminate. Portofoliul: randamente simple ale BET și S&P 500 pe cele 6 466 de zile comune. Prețuri EODHD. Browserul calculează din randamente VaR și ES istorice, Normale, Cornish–Fisher și EVT, prognozele HS și Normale pe 500 de zile, corelațiile, pseudo-observațiile și dependența în cozi; parametrii Student-t, GPD și GARCH(1,1)-t sînt cei estimați de codul din curs. Prognozele GARCH-t și FHS pe fereastră mobilă (reestimate la fiecare 250 de zile) sînt reconstruite din volatilitatea condiționată și din parametrii fiecărei reestimări; depășirile, testele Kupiec și Christoffersen, semaforul Basel, pierderea cuantilă și Z₂ sînt recalculate în browser. Valorile p ale lui Z₂ (1000 de simulări), bootstrap-ul (2000 de reeșantionări) și simulările copulelor (200 000 de extrageri) vin din codul din curs. Alte praguri EVT, alte ferestre, alte niveluri, alte ponderi ale portofoliului, alte semințe, alte începuturi ale evaluării și cerința de capital Basel calculată din prognoze sînt rulări suplimentare ale aceluiași cod.</p>
+</main>
+</body>
+</html>
