@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 13 · Machine Learning in Finance</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch13.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch13_data.js?v=20261101a", "ch13_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch13.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 13 · Machine Learning in Finance</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_13" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch13.html" class="lang-btn active">EN</a><a href="ch13_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: ML (machine learning), OLS (ordinary least squares), CV (cross-validation), SSE (sum of squared errors), MSE (mean squared error), RMSE (root mean squared error), RV (realised variance), HAR (heterogeneous autoregressive model), RF (random forest), GB (gradient boosting), MLP (multilayer perceptron), ReLU (rectified linear unit), RBF (radial basis function), GARCH (generalised autoregressive conditional heteroskedasticity), QLIKE (quasi-likelihood loss), DM (Diebold–Mariano test), LRV (long-run variance), OOS (out-of-sample), AUC (area under the ROC curve), VaR (value at risk), QR (quantile regression), QGB (quantile gradient boosting), HS (historical simulation), SR (Sharpe ratio), PSR (probabilistic Sharpe ratio), DSR (deflated Sharpe ratio), MA (moving average), H-L (top decile minus bottom decile), BET (index of the Bucharest Stock Exchange), pp (percentage points).</p>
+<p class="toc"><a href="#s-bv">Overfitting, Bias and Variance</a> · <a href="#s-val">Validation for Time Series</a> · <a href="#s-pen">Penalised Regression: Ridge and Lasso</a> · <a href="#s-trees">Trees, Random Forest and Gradient Boosting</a> · <a href="#s-nn">Neural Networks</a> · <a href="#s-rv">Application: Forecasting Realised Volatility</a> · <a href="#s-sign">Application: the Sign of Tomorrow’s Return</a> · <a href="#s-var">Application: VaR 1% by Quantile Methods</a> · <a href="#s-snoop">Data Snooping and the Deflated Sharpe Ratio</a> · <a href="#s-gkx">Case Study: Gu, Kelly and Xiu (2020)</a></p>
+<h2 class="sec" id="s-bv">Overfitting, Bias and Variance</h2>
+<section class="blk" id="bv">
+  <h3>Bias and Variance of Regression Trees</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=16" target="_blank" rel="noopener"><img src="slides/sfm_ch13_bias_variance_en.jpg" alt="Slide 15: Bias and Variance of Regression Trees" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bv-d">Highlighted tree depth: <b id="bv-d-v"></b></label><input type="range" id="bv-d" min="1" max="10" step="1" value="3"></div><div class="ctl"><label for="bv-s">Noise variance σ²</label><select id="bv-s"><option value="0.3" selected>0.09 (lecture)</option><option value="0.2">0.04</option><option value="0.5">0.25</option></select></div><button class="btn play" id="bv-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="bv-chart"></div></div><ul class="out" id="bv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With noise variance σ² = 0.04 instead of 0.09 (extra run), at which depth is the expected test error lowest?</div>
+  <details><summary>Answer</summary><p>At depth 4 (0.063), against depth 3 (0.132) with σ² = 0.09. With less noise the variance of deep trees costs less, so the optimum moves to a more flexible model; with σ² = 0.25 the minimum stays at depth 3 (0.329).</p></details>
+</section><h2 class="sec" id="s-val">Validation for Time Series</h2>
+<section class="blk" id="cvs">
+  <h3>Three Validation Schemes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=20" target="_blank" rel="noopener"><img src="slides/sfm_ch13_cv_schemes_en.jpg" alt="Slide 19: Three Validation Schemes" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cs-k">Number of folds K: <b id="cs-k-v"></b></label><input type="range" id="cs-k" min="3" max="8" step="1" value="5"></div><div class="ctl"><label for="cs-h">Rows purged: <b id="cs-h-v"></b></label><input type="range" id="cs-h" min="0" max="6" step="1" value="3"></div><div class="ctl"><label for="cs-e">Embargo rows: <b id="cs-e-v"></b></label><input type="range" id="cs-e" min="0" max="5" step="1" value="2"></div><button class="btn play" id="cs-play" type="button"></button></div><div class="charts "><div class="chart" id="cs-chart"></div></div><ul class="out" id="cs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Random K-fold, fold 1 (K = 5): of its 12 test observations, how many have at least one neighbour (the day before or the day after) in training?</div>
+  <details><summary>Answer</summary><p>11 of 12. A random fold scatters the test days among the training days, and with overlapping targets the neighbour has almost the same target: the model has practically seen the answer. With K = 8 it is the same, 7 of 8.</p></details>
+</section>
+<section class="blk" id="wf-we">
+  <h3>Walk-Forward Validation, Step by Step</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=21" target="_blank" rel="noopener"><img src="slides/ch13_wf-we_en.jpg" alt="Slide 20: Walk-Forward Validation, Step by Step" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wf-y">Test year: <b id="wf-y-v"></b></label><input type="range" id="wf-y" min="2013" max="2026" step="1" value="2013"></div><button class="btn play" id="wf-play" type="button"></button></div><div class="charts "><div class="chart" id="wf-chart"></div></div><p class="xh">The 14 walk-forward folds (S&P 500)</p><div class="tw" id="wf-tab"></div><div class="we" id="wf-st-box"><p class="we-h">Worked example: one walk-forward fold with purging</p><div class="we-f">\[\text{train}_Y = \{t < 1\,\text{Jan}\,Y\} \setminus \{\text{last } h \text{ rows}\}, \qquad \text{test}_Y = \{t \in Y\}, \qquad y_t = \ln\Big(\tfrac1h\sum_{j=1}^{h} v_{t+j}\Big)\]</div><div class="wctl"><div class="ctl"><label for="wf-h">Horizon of the target and of the purging h (days)</label><select id="wf-h"><option value="5" selected>5 (lecture)</option><option value="1">1</option><option value="10">10</option><option value="22">22</option></select></div></div><ol id="wf-st"></ol></div><ul class="out" id="wf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 22-day target (h = 22, extra run), how many training days does the 2013 fold have?</div><details><summary>Answer</summary><p>1,171: the purging removes 22 rows instead of 5, so 17 fewer than the 1,188 days with h = 5; the last training day becomes 28 November 2012. The test remains the 252 days of 2013.</p></details>
+</section>
+<section class="blk" id="leak">
+  <h3>Leakage in Practice: Random Folds on Overlapping Targets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=22" target="_blank" rel="noopener"><img src="slides/sfm_ch13_leakage_en.jpg" alt="Slide 21: Leakage in Practice: Random Folds on Overlapping Targets" loading="lazy"></a>
+      <figcaption>Slide 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lk-h">Target horizon h (days)</label><select id="lk-h"><option value="21" selected>21 (lecture)</option><option value="5">5</option><option value="63">63</option></select></div><button class="btn play" id="lk-play" type="button"></button></div><div class="charts "><div class="chart" id="lk-chart"></div></div><ul class="out" id="lk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 5-day target instead of 21 (extra run), what R² does random K-fold report for the simulated random walk?</div>
+  <details><summary>Answer</summary><p>17.8%, against 34.5% with 21 days: the targets of two neighbouring days now share 4 of 5 returns, not 20 of 21, so the leakage is smaller but still large. Walk-forward stays negative (−17.5%); with 63 days random K-fold rises to 35.8%.</p></details>
+</section><h2 class="sec" id="s-pen">Penalised Regression: Ridge and Lasso</h2>
+<section class="blk" id="ridge-we">
+  <h3>Ridge Regression (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=26" target="_blank" rel="noopener"><img src="slides/ch13_ridge-we_en.jpg" alt="Slide 25: Ridge Regression (2/2)" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rw-l">Penalty λ: <b id="rw-l-v"></b></label><input type="range" id="rw-l" min="0" max="200" step="5" value="50"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><div class="we" id="rw-we-box"><p class="we-h">Worked example: ridge with one variable</p><div class="we-f">\[\hat\beta^{\,ridge} = \frac{S_{xy}}{S_{xx} + \lambda} = \frac{S_{xx}}{S_{xx} + \lambda}\,\hat\beta^{\,OLS}, \qquad \hat\beta^{\,OLS} = \frac{S_{xy}}{S_{xx}}\]</div><div class="wctl"><div class="ctl"><label for="rw-s">S_xx</label><select id="rw-s"><option value="100" selected>100 (slide)</option><option value="50">50</option><option value="200">200</option></select></div></div><ol id="rw-we"></ol></div><ul class="out" id="rw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises λ from 50 to 200. What is the ridge β̂ now?</div><details><summary>Answer</summary><p>0.10 = 30/(100 + 200); the shrinkage factor falls from 0.67 to 0.33. The coefficient approaches zero but is not zero for any finite λ; the lasso with λ = 200 is already 0.</p></details>
+</section>
+<section class="blk" id="lasso-we">
+  <h3>The Lasso</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch13_lasso-we_en.jpg" alt="Slide 26: The Lasso" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lw-l">Penalty λ: <b id="lw-l-v"></b></label><input type="range" id="lw-l" min="0" max="100" step="2" value="20"></div><button class="btn play" id="lw-play" type="button"></button></div><div class="charts "><div class="chart" id="lw-chart"></div></div><div class="we" id="lw-we-box"><p class="we-h">Worked example: soft thresholding</p><div class="we-f">\[\hat\beta^{\,lasso} = \mathrm{sign}(S_{xy})\,\frac{\max(|S_{xy}| - \lambda/2,\, 0)}{S_{xx}}, \qquad S_{xx} = 100\]</div><div class="wctl"><div class="ctl"><label for="lw-s">S_xy</label><select id="lw-s"><option value="30" selected>30 (slide)</option><option value="-30">−30</option><option value="10">10</option></select></div></div><ol id="lw-we"></ol></div><ul class="out" id="lw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises λ from 20 to 60. What is the lasso β̂ now?</div><details><summary>Answer</summary><p>Exactly 0: λ/2 = 30 = |S_xy|, so max(30 − 30, 0) = 0, and it stays 0 for any λ ≥ 60. Ridge with the same λ would give 30/160 = 0.19.</p></details>
+</section>
+<section class="blk" id="shrink">
+  <h3>Ridge and Lasso Paths for the Volatility Features</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch13_shrinkage_en.jpg" alt="Slide 27: Ridge and Lasso Paths for the Volatility Features" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-i">Penalty (position on the grid of 60 values): <b id="sh-i-v"></b></label><input type="range" id="sh-i" min="0" max="59" step="1" value="28"></div><div class="ctl"><label for="sh-f">Highlighted feature</label><select id="sh-f"><option value="d">log RV day</option><option value="w" selected>log RV week (lecture)</option><option value="m">log RV month</option><option value="d1">log RV lag 1</option><option value="d2">log RV lag 2</option><option value="d3">log RV lag 3</option><option value="d4">log RV lag 4</option><option value="q">log RV quarter</option><option value="r">return</option><option value="r_neg">negative return</option><option value="abs_r">absolute return</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the lasso penalty up to λ = 1. Which feature is the last with a non-zero coefficient?</div>
+  <details><summary>Answer</summary><p>Log RV week: it stays non-zero up to λ = 0.86 on the grid, after log RV month (0.46), log RV day (0.21) and the negative return (0.18). On its own, the weekly variance is the most informative feature; ridge, on the left, sets no coefficient to zero.</p></details>
+</section><h2 class="sec" id="s-trees">Trees, Random Forest and Gradient Boosting</h2>
+<section class="blk" id="split-we">
+  <h3>Worked Example: One Split, Step by Step</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch13_split-we_en.jpg" alt="Slide 30: Worked Example: One Split, Step by Step" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sp-s">Candidate threshold s</label><select id="sp-s"><option value="1.25" selected>1.25 (slide)</option><option value="0.7">0.70</option><option value="0.9">0.90</option><option value="1.75">1.75</option><option value="2.2">2.20</option></select></div><button class="btn play" id="sp-play" type="button"></button></div><div class="charts "><div class="chart" id="sp-chart"></div></div><p class="xh">The candidate splits (the table of the slide)</p><div class="tw" id="sp-tab"></div><div class="we" id="sp-we-box"><p class="we-h">Worked example: choosing the threshold</p><div class="we-f">\[\mathrm{SSE}(s) = \sum_{x_t \le s}(y_t - \bar y_L)^2 + \sum_{x_t > s}(y_t - \bar y_R)^2\]</div><div class="wctl"><div class="ctl"><label for="sp-m">Minimum number of observations in a leaf</label><select id="sp-m"><option value="1" selected>1 (slide)</option><option value="2">2</option></select></div></div><ol id="sp-we"></ol></div><ul class="out" id="sp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What share of the variation does the threshold s = 1.75, the second best in the table, explain?</div><details><summary>Answer</summary><p>0.78 = 1 − 0.505/2.268, against 0.90 for s = 1.25. The threshold 1.75 moves the week with x = 1.5 (y = 1.6) into the left leaf, whose mean rises to 1.00 and whose deviations grow.</p></details>
+</section>
+<section class="blk" id="tree">
+  <h3>A Depth-2 Tree for Next Week's Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch13_tree_en.jpg" alt="Slide 31: A Depth-2 Tree for Next Week's Volatility" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tr-d">Maximum depth</label><select id="tr-d"><option value="2" selected>2 (lecture)</option><option value="1">1</option><option value="3">3</option></select></div><div class="ctl"><label for="tr-l">Minimum number of days in a leaf</label><select id="tr-l"><option value="50" selected>50 (lecture)</option><option value="20">20</option><option value="100">100</option></select></div><button class="btn play" id="tr-play" type="button"></button></div><div class="charts "><div class="chart" id="tr-chart"></div></div><ul class="out" id="tr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to depth 3 (extra run). Do all splits still use log RV week?</div>
+  <details><summary>Answer</summary><p>No: 5 of the 6 splits use log RV week, one uses log RV month (≤ 0.069), in the branch with moderate weekly volatility. The first split stays log RV week ≤ 0.44, because a greedy tree does not revise its choices at the top.</p></details>
+</section>
+<section class="blk" id="rf-we">
+  <h3>Random Forest</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch13_rf-we_en.jpg" alt="Slide 32: Random Forest" loading="lazy"></a>
+      <figcaption>Slide 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bg-B">Number of trees B: <b id="bg-B-v"></b></label><input type="range" id="bg-B" min="1" max="300" step="1" value="10"></div><button class="btn play" id="bg-play" type="button"></button></div><div class="charts "><div class="chart" id="bg-chart"></div></div><div class="we" id="bg-we-box"><p class="we-h">Worked example: the variance of an average of trees</p><div class="we-f">\[\mathrm{Var}\Big(\frac1B\sum_{b=1}^{B}\hat f_b\Big) = \rho\sigma^2 + \frac{(1 - \rho)\,\sigma^2}{B}\]</div><div class="wctl"><div class="ctl"><label for="bg-r">Correlation between trees ρ</label><select id="bg-r"><option value="0.3" selected>0.3 (slide)</option><option value="0">0</option><option value="0.1">0.1</option><option value="0.6">0.6</option></select></div></div><ol id="bg-we"></ol></div><ul class="out" id="bg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises B from 10 to 300, with ρ = 0.3 and σ² = 1. What is the variance of the average now?</div><details><summary>Answer</summary><p>0.302 = 0.3 + 0.7/300, against 0.370 at B = 10. The shared part ρσ² = 0.3 does not vanish however many trees are added; the floor falls only if the trees become less correlated.</p></details>
+</section>
+<section class="blk" id="gb-we">
+  <h3>Gradient Boosting</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=34" target="_blank" rel="noopener"><img src="slides/ch13_gb-we_en.jpg" alt="Slide 33: Gradient Boosting" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gb-m">Number of steps m: <b id="gb-m-v"></b></label><input type="range" id="gb-m" min="1" max="50" step="1" value="1"></div><button class="btn play" id="gb-play" type="button"></button></div><div class="charts "><div class="chart" id="gb-chart"></div></div><div class="we" id="gb-st-box"><p class="we-h">Worked example: boosting with depth-1 trees on the six weeks (extra computation)</p><div class="we-f">\[F_0 = \bar y, \qquad h_m = \arg\min_{h}\sum_t \big(y_t - F_{m-1}(x_t) - h(x_t)\big)^2, \qquad F_m = F_{m-1} + \nu\,h_m\]</div><div class="wctl"><div class="ctl"><label for="gb-v">Learning rate ν</label><select id="gb-v"><option value="0.1" selected>0.1</option><option value="0.3">0.3</option><option value="0.03">0.03</option><option value="1">1</option></select></div></div><ol id="gb-st"></ol></div><ul class="out" id="gb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Extra computation, ν = 0.1: after how many steps does the training SSE fall below half of 2.268?</div><details><summary>Answer</summary><p>After 4 steps: the SSE falls to 1.880, 1.566, 1.312 and 1.101. Each step applies only ν = 10% of the tree fitted to the current residuals, so the error falls geometrically, not linearly. After 50 steps the SSE is 0.007: on the training data boosting gets close to zero, which is why the number of steps is chosen on validation data.</p></details>
+</section>
+<section class="blk" id="ens">
+  <h3>One Tree, a Forest and Boosting on Volatility Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch13_ensembles_en.jpg" alt="Slide 34: One Tree, a Forest and Boosting on Volatility Data" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="en-n">Number of trees (random forest: at most 200): <b id="en-n-v"></b></label><input type="range" id="en-n" min="1" max="500" step="1" value="200"></div><div class="ctl"><label for="en-d">Marked depth (random forest): <b id="en-d-v"></b></label><input type="range" id="en-d" min="1" max="14" step="1" value="8"></div><button class="btn play" id="en-play" type="button"></button></div><div class="charts "><div class="chart" id="en-chart"></div></div><ul class="out" id="en-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ reduces the forest to a single tree (B = 1). What is the validation MSE at depth 8?</div>
+  <details><summary>Answer</summary><p>0.670, more than the plain tree of the same depth (0.631) and far above 0.458 with 200 trees. Each tree of the forest sees a bootstrap sample and only half of the features at a split, so alone it is weaker than an ordinary tree; the average removes its variance, and with 10 trees the MSE is already 0.478.</p></details>
+</section><h2 class="sec" id="s-nn">Neural Networks</h2>
+<section class="blk" id="mlp-we">
+  <h3>From the Perceptron to the Multilayer Perceptron (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch13_mlp-we_en.jpg" alt="Slide 37: From the Perceptron to the Multilayer Perceptron (2/2)" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mw-k">Hidden neurons K: <b id="mw-k-v"></b></label><input type="range" id="mw-k" min="1" max="64" step="1" value="16"></div><button class="btn play" id="mw-play" type="button"></button></div><div class="charts "><div class="chart" id="mw-chart"></div></div><div class="we" id="mw-we-box"><p class="we-h">Worked example: the number of parameters</p><div class="we-f">\[\hat y = c + \sum_{k=1}^{K} v_k\, g(b_k + w_k^\top x), \qquad \#\theta = \underbrace{pK + K}_{\text{hidden}} + \underbrace{K + 1}_{\text{output}}\]</div><div class="wctl"><div class="ctl"><label for="mw-p">Number of inputs p</label><select id="mw-p"><option value="11" selected>11 (slide)</option><option value="3">3</option><option value="5">5</option></select></div></div><ol id="mw-we"></ol></div><ul class="out" id="mw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 11 inputs and K = 32 hidden neurons, how many parameters does the network have?</div><details><summary>Answer</summary><p>417 = 11 × 32 + 32 + 32 + 1. It does not double from 209: each extra neuron adds p + 2 = 13 parameters, and the output constant does not depend on K.</p></details>
+</section>
+<section class="blk" id="mlp">
+  <h3>A Small Network and Its Activation Functions</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch13_mlp_en.jpg" alt="Slide 38: A Small Network and Its Activation Functions" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ml-g">Activation function g</label><select id="ml-g"><option value="relu" selected>ReLU</option><option value="logistic">logistic</option><option value="tanh">tanh</option></select></div><div class="ctl"><label for="ml-z">Argument z: <b id="ml-z-v"></b></label><input type="range" id="ml-z" min="-4" max="4" step="0.25" value="1"></div><div class="ctl"><label for="ml-k">Hidden neurons K: <b id="ml-k-v"></b></label><input type="range" id="ml-k" min="1" max="8" step="1" value="5"></div><button class="btn play" id="ml-play" type="button"></button></div><div class="charts "><div class="chart" id="ml-chart"></div></div><ul class="out" id="ml-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At z = 4, which activation function has the largest gradient g′(z)?</div>
+  <details><summary>Answer</summary><p>ReLU: g′(4) = 1. The logistic has g′(4) = 0.018 and tanh 0.0013: both saturate for large |z|, so the gradient passing through the neuron almost vanishes. This is why ReLU networks train faster.</p></details>
+</section>
+<section class="blk" id="nnarch">
+  <h3>Neural-Network ARCH for GBP/USD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=44" target="_blank" rel="noopener"><img src="slides/sfm_ch13_nnarch_en.jpg" alt="Slide 43: Neural-Network ARCH for GBP/USD" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="na-p">Period</label><select id="na-p"><option value="all" selected>2010–2026 (lecture)</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014">2014</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><div class="ctl"><label for="na-u">Units of the RBF network</label><select id="na-u"><option value="3" selected>3 (lecture)</option><option value="2">2</option><option value="5">5</option></select></div><button class="btn play" id="na-play" type="button"></button></div><div class="charts "><div class="chart" id="na-chart"></div></div><ul class="out" id="na-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 5 RBF units instead of 3 (extra run), does the correlation of the network volatility with GARCH (0.45 with 3 units) rise or fall?</div>
+  <details><summary>Answer</summary><p>It rises to 0.61, and the maximum of the network goes from 22.0% to 27.6%; with 2 units the correlation falls to 0.26. More units give a more flexible shape, but the network still sees only the last 3 returns: the GARCH peak after the Brexit vote, 37.3%, stays far away.</p></details>
+</section>
+<section class="blk" id="nnjpy">
+  <h3>The RBF Network against the Random Walk</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch13_nnjpy_en.jpg" alt="Slide 46: The RBF Network against the Random Walk" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nj-s">Share of training days</label><select id="nj-s"><option value="0.8" selected>80% (lecture)</option><option value="0.6">60%</option><option value="0.9">90%</option></select></div><button class="btn play" id="nj-play" type="button"></button></div><div class="charts "><div class="chart" id="nj-chart"></div></div><ul class="out" id="nj-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 90% of the days for training (extra run), how many times larger is the test RMSE of the network than that of the random walk?</div>
+  <details><summary>Answer</summary><p>13 times (12.12 against 0.91 yen), against 31 times with 80%. The training maximum rises to 151.6, but the test reaches 163.9: the network still cannot extrapolate beyond the levels it has seen.</p></details>
+</section><h2 class="sec" id="s-rv">Application: Forecasting Realised Volatility</h2>
+<section class="blk" id="har-we">
+  <h3>The HAR Benchmark (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch13_har-we_en.jpg" alt="Slide 49: The HAR Benchmark (1/2)" loading="lazy"></a>
+      <figcaption>Slide 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hw-y">Fold (test year): <b id="hw-y-v"></b></label><input type="range" id="hw-y" min="2013" max="2026" step="1" value="2013"></div><button class="btn play" id="hw-play" type="button"></button></div><div class="charts "><div class="chart" id="hw-chart"></div></div><div class="we" id="hw-we-box"><p class="we-h">Worked example: one HAR forecast</p><div class="we-f">\[\hat y_t = \hat\beta_0 + \hat\beta_d\ln v_t + \hat\beta_w\ln v_t^{(w)} + \hat\beta_m\ln v_t^{(m)}, \qquad \hat h_t = \exp(\hat y_t + \hat s^2/2)\]</div><div class="wctl"><div class="ctl"><label for="hw-d">Day of the forecast</label><select id="hw-d"><option value="first" selected>the first day of the year</option><option value="max">the day with the highest forecast</option><option value="last">the last day</option></select></div></div><ol id="hw-we"></ol></div><ul class="out" id="hw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Fold 2020, the day with the highest HAR forecast (18 March 2020): is the forecast above or below the volatility realised over the next 5 days?</div><details><summary>Answer</summary><p>Slightly above: 69.3% against 66.1% per year. The peak of the realised volatility in 2020, 102.4%, came before the peak of the forecast: HAR reacts after the shock, it does not anticipate it.</p></details>
+</section>
+<section class="blk" id="r2-we">
+  <h3>Evaluation (1/3): Out-of-Sample R²</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=52" target="_blank" rel="noopener"><img src="slides/ch13_r2-we_en.jpg" alt="Slide 51: Evaluation (1/3): Out-of-Sample R²" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="r2-m">Model</label><select id="r2-m"><option value="MLP" selected>MLP (lecture)</option><option value="Lasso">lasso</option><option value="RF">random forest</option><option value="GB">gradient boosting</option><option value="Mean">training mean</option></select></div><button class="btn play" id="r2-play" type="button"></button></div><div class="charts "><div class="chart" id="r2-chart"></div></div><div class="we" id="r2-st-box"><p class="we-h">Worked example: the out-of-sample R²</p><div class="we-f">\[R^2_{OOS} = 1 - \frac{\sum_t (y_t - \hat y_t)^2}{\sum_t (y_t - \tilde y_t)^2}\]</div><div class="wctl"><div class="ctl"><label for="r2-b">Benchmark</label><select id="r2-b"><option value="HAR" selected>HAR (lecture)</option><option value="Mean">training mean</option></select></div><div class="ctl"><label for="r2-a">Series</label><select id="r2-a"><option value="sp500" selected>S&P 500 (lecture)</option><option value="btc">Bitcoin</option></select></div></div><ol id="r2-st"></ol></div><ul class="out" id="r2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the random forest (S&P 500, against HAR). What is R²_OOS?</div><details><summary>Answer</summary><p>+1.0%: MSE 0.429 against 0.433. Against the training mean the same model has 61.9%: R²_OOS depends on the benchmark, and HAR is a much tougher one. The DM test does not separate this gain from noise (p = 0.747).</p></details>
+</section>
+<section class="blk" id="qlike-we">
+  <h3>Evaluation (2/3): QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=53" target="_blank" rel="noopener"><img src="slides/ch13_qlike-we_en.jpg" alt="Slide 52: Evaluation (2/3): QLIKE" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ql-h">Variance forecast ĥ: <b id="ql-h-v"></b></label><input type="range" id="ql-h" min="0.1" max="3.5" step="0.05" value="0.5"></div><button class="btn play" id="ql-play" type="button"></button></div><div class="charts "><div class="chart" id="ql-chart"></div></div><div class="we" id="ql-we-box"><p class="we-h">Worked example: the QLIKE loss</p><div class="we-f">\[L_t = \frac{\mathrm{RV}_t}{\hat h_t} + \ln\hat h_t\]</div><div class="wctl"><div class="ctl"><label for="ql-r">Realised variance RV</label><select id="ql-r"><option value="1" selected>1 (slide)</option><option value="0.5">0.5</option><option value="2">2</option></select></div></div><ol id="ql-we"></ol></div><ul class="out" id="ql-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> RV = 1: which forecast costs more in QLIKE, ĥ = 1/3 or ĥ = 3?</div><details><summary>Answer</summary><p>ĥ = 1/3: 3 + ln(1/3) = 1.901, against 1/3 + ln 3 = 1.432. Underestimating three times costs more than overestimating three times, although the squared error ranks them the other way: (1 − 1/3)² = 0.444 and (1 − 3)² = 4.</p></details>
+</section>
+<section class="blk" id="dm-we">
+  <h3>Evaluation (3/3): the Diebold–Mariano Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=54" target="_blank" rel="noopener"><img src="slides/ch13_dm-we_en.jpg" alt="Slide 53: Evaluation (3/3): the Diebold–Mariano Test" loading="lazy"></a>
+      <figcaption>Slide 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dm-l">Newey–West lags: <b id="dm-l-v"></b></label><input type="range" id="dm-l" min="0" max="22" step="1" value="5"></div><button class="btn play" id="dm-play" type="button"></button></div><div class="charts "><div class="chart" id="dm-chart"></div></div><div class="we" id="dm-st-box"><p class="we-h">Worked example: the Diebold–Mariano statistic</p><div class="we-f">\[d_t = L_t^{A} - L_t^{HAR}, \qquad \widehat{\mathrm{LRV}} = \hat\gamma_0 + 2\sum_{j=1}^{q}\Big(1 - \frac{j}{q + 1}\Big)\hat\gamma_j, \qquad \mathrm{DM} = \frac{\bar d}{\sqrt{\widehat{\mathrm{LRV}}/n}}\]</div><div class="wctl"><div class="ctl"><label for="dm-m">Model A</label><select id="dm-m"><option value="MLP" selected>MLP (lecture)</option><option value="Lasso">lasso</option><option value="RF">random forest</option><option value="GB">gradient boosting</option></select></div><div class="ctl"><label for="dm-a">Series</label><select id="dm-a"><option value="sp500" selected>S&P 500 (lecture)</option><option value="btc">Bitcoin</option></select></div></div><ol id="dm-st"></ol></div><ul class="out" id="dm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lowers the number of Newey–West lags from 5 to 0. What happens to the DM statistic of the MLP against HAR (S&P 500, −3.96)?</div><details><summary>Answer</summary><p>It grows in absolute value, to −4.61: the long-run variance with 5 lags is 1.35 times the plain variance, because the 5-day targets overlap and make d_t autocorrelated. Without the correction the test looks surer than it is; here the conclusion (MLP better) stays the same.</p></details>
+</section>
+<section class="blk" id="rv-tab">
+  <h3>Results: S&P 500 and Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch13_rv-tab_en.jpg" alt="Slide 54: Results: S&P 500 and Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rt-p">Test period</label><select id="rt-p"><option value="all" selected>the whole period (lecture)</option><option value="pre">up to 2019</option><option value="post">from 2020</option></select></div><button class="btn play" id="rt-play" type="button"></button></div><div class="charts "><div class="chart" id="rt-chart"></div></div><p class="xh">Out-of-sample results: R²_OOS on log RV (%), QLIKE, DM statistic against HAR (p-value)</p><div class="wctl"><div class="ctl"><label for="rt-l">Newey–West lags of the DM test</label><select id="rt-l"><option value="5" selected>5 (lecture)</option><option value="0">0</option><option value="10">10</option><option value="22">22</option></select></div></div><div class="tw" id="rt-tab"></div><ul class="out" id="rt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the test days from 2020. Is the MLP still significantly better than HAR on the S&P 500 at 5%?</div><details><summary>Answer</summary><p>Yes: R²_OOS +7.9%, DM −2.28 (p = 0.023); lasso +7.4%, DM −3.42. The random forest and boosting are not significantly better than HAR in either subperiod: up to 2019 they have −1.5% and −11.0%, from 2020 +3.5% and +5.8%, with p above 0.6.</p></details>
+</section>
+<section class="blk" id="rvf">
+  <h3>Forecasts in Two Storms: 2020 and 2025</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=56" target="_blank" rel="noopener"><img src="slides/sfm_ch13_rv_forecasts_en.jpg" alt="Slide 55: Forecasts in Two Storms: 2020 and 2025" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rf-m">Models compared with HAR</label><select id="rf-m"><option value="RF,MLP" selected>random forest and MLP (lecture)</option><option value="Lasso,GB">lasso and gradient boosting</option><option value="Lasso,MLP">lasso and MLP</option><option value="RF,GB">random forest and gradient boosting</option></select></div><div class="ctl"><label for="rf-a">Series</label><select id="rf-a"><option value="sp500" selected>S&P 500 (lecture)</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="rf-y">Year on the left</label><select id="rf-y"><option value="2020" selected>2020 (lecture)</option><option value="2018">2018</option><option value="2022">2022</option></select></div><button class="btn play" id="rf-play" type="button"></button></div><div class="charts "><div class="chart" id="rf-chart"></div></div><ul class="out" id="rf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In 2020, is the peak of the random-forest forecast above or below the peak of the realised volatility (102% per year)?</div>
+  <details><summary>Answer</summary><p>Far below: 53%, against 69% for HAR and 159% for the MLP. A random forest predicts averages of training leaves, so it stays below extreme values; the MLP and the lasso (172%) extrapolate and can overshoot the target.</p></details>
+</section>
+<section class="blk" id="imp">
+  <h3>The Features Used by the Forest</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch13_importance_en.jpg" alt="Slide 57: The Features Used by the Forest" loading="lazy"></a>
+      <figcaption>Slide 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="im-f">Shapley values shown</label><select id="im-f"><option value="all" selected>all three (lecture)</option><option value="d">day</option><option value="w">week</option><option value="m">month</option></select></div><button class="btn play" id="im-play" type="button"></button></div><div class="charts "><div class="chart" id="im-chart"></div></div><p class="xh">Permutation importance (10 shuffles) and mean |φ| (random forest on the 3 HAR features)</p><div class="tw" id="im-tab"></div><ul class="out" id="im-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ shows log RV day only. Is the range of its Shapley values wider or narrower than for log RV week?</div>
+  <details><summary>Answer</summary><p>Narrower: daily φ between −0.32 and 0.35, against −0.66 and 2.25 for the week; mean |φ| 0.13 against 0.52. The forest relies on the weekly variance, which already contains part of the information of the day.</p></details>
+</section><h2 class="sec" id="s-sign">Application: the Sign of Tomorrow’s Return</h2>
+<section class="blk" id="sign-we">
+  <h3>The Right Baseline</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=60" target="_blank" rel="noopener"><img src="slides/ch13_sign-we_en.jpg" alt="Slide 59: The Right Baseline" loading="lazy"></a>
+      <figcaption>Slide 59</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sz-m">Model</label><select id="sz-m"><option value="RF" selected>random forest (lecture)</option><option value="GB">gradient boosting</option><option value="Logit">logit</option></select></div><button class="btn play" id="sz-play" type="button"></button></div><div class="charts "><div class="chart" id="sz-chart"></div></div><div class="we" id="sz-we-box"><p class="we-h">Worked example: the test against the baseline</p><div class="we-f">\[z = \frac{\widehat{\mathrm{acc}} - \mathrm{acc}_0}{\sqrt{\mathrm{acc}_0(1 - \mathrm{acc}_0)/n}} \approx N(0, 1)\]</div><div class="wctl"><div class="ctl"><label for="sz-a">Series</label><select id="sz-a"><option value="sp500" selected>S&P 500 (lecture)</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div></div><ol id="sz-we"></ol></div><ul class="out" id="sz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> BET instead of the S&P 500, random forest: what is the z statistic against the baseline?</div><details><summary>Answer</summary><p>−0.21 (53.6% against 53.8%, p = 0.84). On the S&P 500 the random forest has z = −1.79, on Bitcoin −0.99: on no market is a model significantly better than “always up”.</p></details>
+</section>
+<section class="blk" id="sign">
+  <h3>Accuracy against the Baseline</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=61" target="_blank" rel="noopener"><img src="slides/sfm_ch13_sign_en.jpg" alt="Slide 60: Accuracy against the Baseline" loading="lazy"></a>
+      <figcaption>Slide 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-e">Last test year: <b id="sg-e-v"></b></label><input type="range" id="sg-e" min="2010" max="2026" step="1" value="2026"></div><div class="ctl"><label for="sg-c">Probability cut-off for “up”</label><select id="sg-c"><option value="0.5" selected>0.5 (lecture)</option><option value="0.52">0.52</option><option value="0.55">0.55</option></select></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ tests only up to 2012 (5 years). Is any model significantly worse than the baseline on the S&P 500?</div>
+  <details><summary>Answer</summary><p>Yes: gradient boosting, −3.9 points, z = −2.77; logit and the random forest have z = −1.36 and −1.30. The 95% band is wider with fewer days, yet boosting stays outside it: the model learns patterns from the noise of the training years.</p></details>
+</section><h2 class="sec" id="s-var">Application: VaR 1% by Quantile Methods</h2>
+<section class="blk" id="pin-we">
+  <h3>Quantile Regression (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=63" target="_blank" rel="noopener"><img src="slides/ch13_pin-we_en.jpg" alt="Slide 62: Quantile Regression (1/2)" loading="lazy"></a>
+      <figcaption>Slide 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pl-q">Constant forecast q (%): <b id="pl-q-v"></b></label><input type="range" id="pl-q" min="-8" max="1" step="0.05" value="-2.7"></div><button class="btn play" id="pl-play" type="button"></button></div><div class="charts "><div class="chart" id="pl-chart"></div></div><div class="we" id="pl-we-box"><p class="we-h">Worked example: the quantile loss on the S&P 500 returns</p><div class="we-f">\[\rho_\alpha(u) = u\,(\alpha - \mathbf{1}\{u < 0\}), \qquad u = y - q, \qquad \hat q = \arg\min_q \frac1n\sum_t \rho_\alpha(y_t - q)\]</div><div class="wctl"><div class="ctl"><label for="pl-a">Level α</label><select id="pl-a"><option value="0.01" selected>0.01 (lecture)</option><option value="0.05">0.05</option><option value="0.1">0.10</option></select></div></div><ol id="pl-we"></ol></div><ul class="out" id="pl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With α = 0.05, which constant forecast q minimises the mean loss on the S&P 500 test returns?</div><details><summary>Answer</summary><p>q = −1.59%, the empirical 5% quantile: 4.99% of the days lie below it. For α = 0.01 the minimum is at −3.07% (0.99% of the days below). The mean return, 0.05%, minimises the squared error, not the quantile loss.</p></details>
+</section>
+<section class="blk" id="var-tab">
+  <h3>Backtest of VaR 1%: Quantile Methods, HS and GARCH-t (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=65" target="_blank" rel="noopener"><img src="slides/ch13_var-tab_en.jpg" alt="Slide 64: Backtest of VaR 1%: Quantile Methods, HS and GARCH-t (1/2)" loading="lazy"></a>
+      <figcaption>Slide 64</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-p">Test period</label><select id="vt-p"><option value="all" selected>the whole period (lecture)</option><option value="pre">up to 2019</option><option value="post">from 2020</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">Backtest of VaR 1% (the table of the slide)</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves to the test days from 2020. Does the Kupiec test reject the exceedance rate of GARCH-t on the S&P 500 at 5%?</div><details><summary>Answer</summary><p>Yes: 1.60% (27 of 1,686 days), p = 0.022. QR has 0.71% (p = 0.21), and the HS exceedances cluster (p ind. 0.005). For Bitcoin from 2020, QR is exceeded too rarely: 0.45%, p Kupiec 0.002.</p></details>
+</section>
+<section class="blk" id="qvar">
+  <h3>VaR 1% Forecasts in 2020 and 2025</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=67" target="_blank" rel="noopener"><img src="slides/sfm_ch13_qvar_en.jpg" alt="Slide 66: VaR 1% Forecasts in 2020 and 2025" loading="lazy"></a>
+      <figcaption>Slide 66</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qv-m">Exceedances marked</label><select id="qv-m"><option value="QR" selected>QR (lecture)</option><option value="QGB">QGB</option><option value="HS">HS</option><option value="GARCH-t">GARCH-t</option></select></div><div class="ctl"><label for="qv-a">Series</label><select id="qv-a"><option value="sp500" selected>S&P 500 (lecture)</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="qv-y">Year on the left</label><select id="qv-y"><option value="2020" selected>2020 (lecture)</option><option value="2018">2018</option><option value="2022">2022</option></select></div><button class="btn play" id="qv-play" type="button"></button></div><div class="charts "><div class="chart" id="qv-chart"></div></div><ul class="out" id="qv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In 2025 (up to September), which method has the most exceedances on the S&P 500?</div>
+  <details><summary>Answer</summary><p>HS: 5 exceedances, against 4 for GARCH-t and 1 each for QR and QGB. After 500 calm days, historical simulation enters April 2025 with a VaR that is too small and reacts slowly.</p></details>
+</section><h2 class="sec" id="s-snoop">Data Snooping and the Deflated Sharpe Ratio</h2>
+<section class="blk" id="maxsr-we">
+  <h3>The Best of N Strategies (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=69" target="_blank" rel="noopener"><img src="slides/ch13_maxsr-we_en.jpg" alt="Slide 68: The Best of N Strategies (2/2)" loading="lazy"></a>
+      <figcaption>Slide 68</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mx-n">Number of strategies N (position on the grid): <b id="mx-n-v"></b></label><input type="range" id="mx-n" min="0" max="9" step="1" value="6"></div><button class="btn play" id="mx-play" type="button"></button></div><div class="charts "><div class="chart" id="mx-chart"></div></div><div class="we" id="mx-we-box"><p class="we-h">Worked example: the expected maximum of N Sharpe ratios</p><div class="we-f">\[\mathrm{E}[\max] \approx \sigma\Big[(1 - \gamma)\,\Phi^{-1}\big(1 - \tfrac1N\big) + \gamma\,\Phi^{-1}\big(1 - \tfrac{1}{Ne}\big)\Big], \qquad \sigma = 1/\sqrt{Y}\]</div><div class="wctl"><div class="ctl"><label for="mx-y">Years of data Y</label><select id="mx-y"><option value="10" selected>10 (slide)</option><option value="5">5</option><option value="20">20</option></select></div></div><ol id="mx-we"></ol></div><ul class="out" id="mx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 20 years of data instead of 10, what is the expected maximum for N = 100?</div><details><summary>Answer</summary><p>0.566 = 0.800/√2, because σ = 1/√20 = 0.224; the simulation gives 0.559. More years reduce the selection bias only by √Y: with N = 1,000 the maximum is still 0.728.</p></details>
+</section>
+<section class="blk" id="snoop">
+  <h3>Selection Bias in Practice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=70" target="_blank" rel="noopener"><img src="slides/sfm_ch13_snooping_en.jpg" alt="Slide 69: Selection Bias in Practice" loading="lazy"></a>
+      <figcaption>Slide 69</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sn-n">Rules tried N: <b id="sn-n-v"></b></label><input type="range" id="sn-n" min="1" max="30" step="1" value="30"></div><div class="ctl"><label for="sn-s">End of the estimation sample</label><select id="sn-s"><option value="2014" selected>2014 (lecture)</option><option value="2009">2009</option><option value="2019">2019</option></select></div><div class="ctl"><label for="sn-y">Years of data in the simulation Y</label><select id="sn-y"><option value="10" selected>10 (lecture)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="sn-play" type="button"></button></div><div class="charts "><div class="chart" id="sn-chart"></div></div><ul class="out" id="sn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ tries only the first 10 rules. Which is the best in sample, and what is its rank after 2014?</div>
+  <details><summary>Answer</summary><p>MA 5/200 (Sharpe 0.57 in sample), with 0.74 after 2014, rank 3 of 30. With all 30 rules the winner, MA 50/200 (0.66), ends at rank 22: choosing among more rules raises the in-sample Sharpe ratio, not the future one.</p></details>
+</section>
+<section class="blk" id="dsr-we">
+  <h3>The Deflated Sharpe Ratio (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=72" target="_blank" rel="noopener"><img src="slides/ch13_dsr-we_en.jpg" alt="Slide 71: The Deflated Sharpe Ratio (2/2)" loading="lazy"></a>
+      <figcaption>Slide 71</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-n">Number of rules tried N: <b id="ds-n-v"></b></label><input type="range" id="ds-n" min="1" max="200" step="1" value="30"></div><button class="btn play" id="ds-play" type="button"></button></div><div class="charts "><div class="chart" id="ds-chart"></div></div><div class="we" id="ds-we-box"><p class="we-h">Worked example: the deflated Sharpe ratio of the best MA rule</p><div class="we-f">\[\mathrm{DSR} = \Phi\Big(\frac{(\widehat{SR} - SR_0)\sqrt{T - 1}}{\sqrt{1 - \hat\gamma_3\widehat{SR} + \frac{\hat\gamma_4 - 1}{4}\widehat{SR}^2}}\Big)\]</div><div class="wctl"><div class="ctl"><label for="ds-k">Skewness and kurtosis</label><select id="ds-k"><option value="sample" selected>sample, γ₃ = −0.44, γ₄ = 12.0 (lecture)</option><option value="normal">Normal distribution, γ₃ = 0, γ₄ = 3</option></select></div></div><ol id="ds-we"></ol></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Up to which number of rules tried does the best MA rule stay significant (DSR > 0.95)?</div><details><summary>Answer</summary><p>Up to N = 6: DSR = 0.961 at N = 5, 0.955 at N = 6 and 0.949 at N = 7; at N = 30, 0.884. Without the correction (PSR) the rule would look significant, with 0.994: SR₀ grows slowly with N, but SR̂ = 0.0416 per day has a thin margin.</p></details>
+</section><h2 class="sec" id="s-gkx">Case Study: Gu, Kelly and Xiu (2020)</h2>
+<section class="blk" id="gkx">
+  <h3>Results: Small R², Large Economic Value</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter13_machine_learning.pdf#page=75" target="_blank" rel="noopener"><img src="slides/sfm_ch13_gkx_en.jpg" alt="Slide 74: Results: Small R², Large Economic Value" loading="lazy"></a>
+      <figcaption>Slide 74</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gk-m">Highlighted model</label><select id="gk-m"><option value="NN3" selected>NN3</option><option value="OLS-3+H">OLS-3+H</option><option value="PLS">PLS</option><option value="PCR">PCR</option><option value="ENet+H">ENet+H</option><option value="GLM+H">GLM+H</option><option value="RF">RF</option><option value="GBRT+H">GBRT+H</option><option value="NN1">NN1</option><option value="NN2">NN2</option><option value="NN4">NN4</option><option value="NN5">NN5</option></select></div><button class="btn play" id="gk-play" type="button"></button></div><div class="charts "><div class="chart" id="gk-chart"></div></div><ul class="out" id="gk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Is the model with the highest R²_OOS on all stocks also the one with the highest Sharpe ratio?</div>
+  <details><summary>Answer</summary><p>No: NN3 has the highest R² (0.40%), NN4 the highest Sharpe ratio (1.35, against 1.20 for NN3). The R² differences between the networks are a few hundredths of a percentage point, and the ranking by economic value can differ.</p></details>
+</section>
+<p class="src foot">Course data in data/market (up to 18 September 2026): S&P 500 and Bitcoin (open, high, low and close prices), BET, GBP/USD, the German 10-year yield, gold, USD/JPY. The bias–variance simulation, the validation diagram, the ridge and lasso paths, the trees, the random-forest and boosting curves, the RBF and MLP networks, and the walk-forward forecasts of the six volatility models, of the sign classifiers and of the four VaR methods come from the code of the lecture (Quantlets/Ch_13, seeds 2026 and 3); the heavy models are not refitted in the browser. From these forecasts the browser recomputes HAR, the out-of-sample R², QLIKE, the Diebold–Mariano test, accuracy, the z test, AUC, the Kupiec and Christoffersen tests, the quantile loss, the expected maximum Sharpe ratio and the DSR. Gu, Kelly and Xiu (2020): the values published in Tables 1 and 7 of the paper. Other noise levels, horizons, depths, numbers of trees and units, training shares, periods and split years are extra runs of the same code; the boosting example on the six weeks is an extra computation.</p>
+</main>
+</body>
+</html>

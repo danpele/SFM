@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 13 · Învățarea automată în finanțe</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch13.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch13_data.js?v=20261101a", "ch13_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch13.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 13 · Învățarea automată în finanțe</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_13" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch13.html" class="lang-btn">EN</a><a href="ch13_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: ML (machine learning, învățare automată), OLS (ordinary least squares, metoda celor mai mici pătrate), CV (cross-validation, validare încrucișată), SSE (suma pătratelor erorilor), MSE (mean squared error, eroarea pătratică medie), RMSE (rădăcina erorii pătratice medii), RV (varianța realizată), HAR (heterogeneous autoregressive, modelul autoregresiv heterogen), RF (random forest), GB (gradient boosting), MLP (multilayer perceptron, perceptron multistrat), ReLU (rectified linear unit), RBF (radial basis function, funcție de bază radială), GARCH (generalised autoregressive conditional heteroskedasticity), QLIKE (pierderea quasi-likelihood), DM (testul Diebold–Mariano), LRV (long-run variance, varianța pe termen lung), OOS (out-of-sample, în afara eșantionului), AUC (area under the curve, aria de sub curba ROC), VaR (value at risk), QR (regresie cuantilică), QGB (quantile gradient boosting), HS (simulare istorică), SR (raportul Sharpe), PSR (probabilistic Sharpe ratio), DSR (deflated Sharpe ratio, raportul Sharpe deflatat), MA (medie mobilă), H-L (decila de sus minus decila de jos), BET (indicele Bursei de Valori București), pp (puncte procentuale).</p>
+<p class="toc"><a href="#s-bv">Overfitting, deplasare și varianță</a> · <a href="#s-val">Validarea pentru serii de timp</a> · <a href="#s-pen">Regresia penalizată: ridge și lasso</a> · <a href="#s-trees">Arbori de decizie, random forest și gradient boosting</a> · <a href="#s-nn">Rețele neuronale</a> · <a href="#s-rv">Aplicație: prognoza volatilității realizate</a> · <a href="#s-sign">Aplicație: semnul randamentului de mîine</a> · <a href="#s-var">Aplicație: VaR 1% prin metode cuantilice</a> · <a href="#s-snoop">Data snooping și raportul Sharpe deflatat</a> · <a href="#s-gkx">Studiu de caz: Gu, Kelly și Xiu (2020)</a></p>
+<h2 class="sec" id="s-bv">Overfitting, deplasare și varianță</h2>
+<section class="blk" id="bv">
+  <h3>Deplasarea și varianța arborilor de regresie</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch13_bias_variance_ro.jpg" alt="Slide-ul 16: Deplasarea și varianța arborilor de regresie" loading="lazy"></a>
+      <figcaption>Slide-ul 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bv-d">Adîncimea arborelui evidențiat: <b id="bv-d-v"></b></label><input type="range" id="bv-d" min="1" max="10" step="1" value="3"></div><div class="ctl"><label for="bv-s">Varianța zgomotului σ²</label><select id="bv-s"><option value="0.3" selected>0,09 (curs)</option><option value="0.2">0,04</option><option value="0.5">0,25</option></select></div><button class="btn play" id="bv-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="bv-chart"></div></div><ul class="out" id="bv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu varianța zgomotului σ² = 0,04 în loc de 0,09 (rulare suplimentară), la ce adîncime este minimă eroarea de test așteptată?</div>
+  <details><summary>Răspuns</summary><p>La adîncimea 4 (0,063), față de adîncimea 3 (0,132) cu σ² = 0,09. Cu mai puțin zgomot, varianța arborilor adînci costă mai puțin, deci optimul se mută spre un model mai flexibil; cu σ² = 0,25 minimul rămîne la adîncimea 3 (0,329).</p></details>
+</section><h2 class="sec" id="s-val">Validarea pentru serii de timp</h2>
+<section class="blk" id="cvs">
+  <h3>Trei scheme de validare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch13_cv_schemes_ro.jpg" alt="Slide-ul 20: Trei scheme de validare" loading="lazy"></a>
+      <figcaption>Slide-ul 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cs-k">Numărul de partiții K: <b id="cs-k-v"></b></label><input type="range" id="cs-k" min="3" max="8" step="1" value="5"></div><div class="ctl"><label for="cs-h">Rînduri eliminate prin purging: <b id="cs-h-v"></b></label><input type="range" id="cs-h" min="0" max="6" step="1" value="3"></div><div class="ctl"><label for="cs-e">Rînduri de embargo: <b id="cs-e-v"></b></label><input type="range" id="cs-e" min="0" max="5" step="1" value="2"></div><button class="btn play" id="cs-play" type="button"></button></div><div class="charts "><div class="chart" id="cs-chart"></div></div><ul class="out" id="cs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> K-fold aleator, partiția 1 (K = 5): din cele 12 observații de test, cîte au cel puțin o vecină (ziua dinainte sau ziua de după) în antrenare?</div>
+  <details><summary>Răspuns</summary><p>11 din 12. Partiția aleatoare împrăștie testul printre zilele de antrenare, iar cu ținte suprapuse vecina are aproape aceeași țintă: modelul a văzut practic răspunsul. Cu K = 8 situația este aceeași, 7 din 8.</p></details>
+</section>
+<section class="blk" id="wf-we">
+  <h3>Validarea walk-forward, pas cu pas</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=22" target="_blank" rel="noopener"><img src="slides/ch13_wf-we_ro.jpg" alt="Slide-ul 21: Validarea walk-forward, pas cu pas" loading="lazy"></a>
+      <figcaption>Slide-ul 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wf-y">Anul de test: <b id="wf-y-v"></b></label><input type="range" id="wf-y" min="2013" max="2026" step="1" value="2013"></div><button class="btn play" id="wf-play" type="button"></button></div><div class="charts "><div class="chart" id="wf-chart"></div></div><p class="xh">Cele 14 partiții walk-forward (S&P 500)</p><div class="tw" id="wf-tab"></div><div class="we" id="wf-st-box"><p class="we-h">Exemplu lucrat: o partiție walk-forward cu purging</p><div class="we-f">\[\text{antrenare}_Y = \{t < 1\,\text{ian.}\,Y\} \setminus \{\text{ultimele } h \text{ rînduri}\}, \qquad \text{test}_Y = \{t \in Y\}, \qquad y_t = \ln\Big(\tfrac1h\sum_{j=1}^{h} v_{t+j}\Big)\]</div><div class="wctl"><div class="ctl"><label for="wf-h">Orizontul țintei și al purging-ului h (zile)</label><select id="wf-h"><option value="5" selected>5 (curs)</option><option value="1">1</option><option value="10">10</option><option value="22">22</option></select></div></div><ol id="wf-st"></ol></div><ul class="out" id="wf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ținta pe 22 de zile (h = 22, rulare suplimentară), cîte zile de antrenare are partiția 2013?</div><details><summary>Răspuns</summary><p>1171: purging-ul elimină 22 de rînduri în loc de 5, deci cu 17 mai puține decît cele 1188 de zile cu h = 5; ultima zi de antrenare devine 28 noiembrie 2012. Testul rămîne cele 252 de zile din 2013.</p></details>
+</section>
+<section class="blk" id="leak">
+  <h3>Leakage în practică: partiții aleatoare pe ținte suprapuse</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch13_leakage_ro.jpg" alt="Slide-ul 22: Leakage în practică: partiții aleatoare pe ținte suprapuse" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lk-h">Orizontul țintei h (zile)</label><select id="lk-h"><option value="21" selected>21 (curs)</option><option value="5">5</option><option value="63">63</option></select></div><button class="btn play" id="lk-play" type="button"></button></div><div class="charts "><div class="chart" id="lk-chart"></div></div><ul class="out" id="lk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ținta pe 5 zile în loc de 21 (rulare suplimentară), ce R² raportează K-fold aleator pentru mersul aleator simulat?</div>
+  <details><summary>Răspuns</summary><p>17,8%, față de 34,5% cu 21 de zile: țintele a două zile vecine au acum 4 din 5 randamente comune, nu 20 din 21, deci leakage-ul este mai mic, dar tot mare. Walk-forward rămîne negativ (−17,5%); cu 63 de zile, K-fold aleator urcă la 35,8%.</p></details>
+</section><h2 class="sec" id="s-pen">Regresia penalizată: ridge și lasso</h2>
+<section class="blk" id="ridge-we">
+  <h3>Regresia ridge (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch13_ridge-we_ro.jpg" alt="Slide-ul 26: Regresia ridge (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rw-l">Penalizarea λ: <b id="rw-l-v"></b></label><input type="range" id="rw-l" min="0" max="200" step="5" value="50"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><div class="we" id="rw-we-box"><p class="we-h">Exemplu lucrat: ridge cu o singură variabilă</p><div class="we-f">\[\hat\beta^{\,ridge} = \frac{S_{xy}}{S_{xx} + \lambda} = \frac{S_{xx}}{S_{xx} + \lambda}\,\hat\beta^{\,OLS}, \qquad \hat\beta^{\,OLS} = \frac{S_{xy}}{S_{xx}}\]</div><div class="wctl"><div class="ctl"><label for="rw-s">S_xx</label><select id="rw-s"><option value="100" selected>100 (slide)</option><option value="50">50</option><option value="200">200</option></select></div></div><ol id="rw-we"></ol></div><ul class="out" id="rw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește λ de la 50 la 200. Cît devine β̂ ridge?</div><details><summary>Răspuns</summary><p>0,10 = 30/(100 + 200); factorul de contracție scade de la 0,67 la 0,33. Coeficientul se apropie de zero, dar nu devine zero pentru niciun λ finit; lasso cu λ = 200 este deja 0.</p></details>
+</section>
+<section class="blk" id="lasso-we">
+  <h3>Lasso</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch13_lasso-we_ro.jpg" alt="Slide-ul 27: Lasso" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lw-l">Penalizarea λ: <b id="lw-l-v"></b></label><input type="range" id="lw-l" min="0" max="100" step="2" value="20"></div><button class="btn play" id="lw-play" type="button"></button></div><div class="charts "><div class="chart" id="lw-chart"></div></div><div class="we" id="lw-we-box"><p class="we-h">Exemplu lucrat: soft thresholding</p><div class="we-f">\[\hat\beta^{\,lasso} = \mathrm{sign}(S_{xy})\,\frac{\max(|S_{xy}| - \lambda/2,\, 0)}{S_{xx}}, \qquad S_{xx} = 100\]</div><div class="wctl"><div class="ctl"><label for="lw-s">S_xy</label><select id="lw-s"><option value="30" selected>30 (slide)</option><option value="-30">−30</option><option value="10">10</option></select></div></div><ol id="lw-we"></ol></div><ul class="out" id="lw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește λ de la 20 la 60. Cît devine β̂ lasso?</div><details><summary>Răspuns</summary><p>Exact 0: λ/2 = 30 = |S_xy|, deci max(30 − 30, 0) = 0, și rămîne 0 pentru orice λ ≥ 60. Ridge cu același λ ar da 30/160 = 0,19.</p></details>
+</section>
+<section class="blk" id="shrink">
+  <h3>Traiectoriile ridge și lasso pentru variabilele de volatilitate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch13_shrinkage_ro.jpg" alt="Slide-ul 28: Traiectoriile ridge și lasso pentru variabilele de volatilitate" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-i">Penalizarea (poziția pe grila de 60 de valori): <b id="sh-i-v"></b></label><input type="range" id="sh-i" min="0" max="59" step="1" value="28"></div><div class="ctl"><label for="sh-f">Variabila evidențiată</label><select id="sh-f"><option value="d">log RV zilnic</option><option value="w" selected>log RV săptămînal (curs)</option><option value="m">log RV lunar</option><option value="d1">log RV, lagul 1</option><option value="d2">log RV, lagul 2</option><option value="d3">log RV, lagul 3</option><option value="d4">log RV, lagul 4</option><option value="q">log RV trimestrial</option><option value="r">randamentul</option><option value="r_neg">randamentul negativ</option><option value="abs_r">randamentul absolut</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mărește penalizarea lasso pînă la λ = 1. Care variabilă rămîne ultima cu coeficient nenul?</div>
+  <details><summary>Răspuns</summary><p>Log RV săptămînal: rămîne nenul pînă la λ = 0,86 pe grilă, după log RV lunar (0,46), log RV zilnic (0,21) și randamentul negativ (0,18). Luată singură, varianța săptămînală este cea mai informativă variabilă; ridge, în stînga, nu anulează niciun coeficient.</p></details>
+</section><h2 class="sec" id="s-trees">Arbori de decizie, random forest și gradient boosting</h2>
+<section class="blk" id="split-we">
+  <h3>Exemplu rezolvat: o împărțire, pas cu pas</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch13_split-we_ro.jpg" alt="Slide-ul 31: Exemplu rezolvat: o împărțire, pas cu pas" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sp-s">Pragul candidat s</label><select id="sp-s"><option value="1.25" selected>1,25 (slide)</option><option value="0.7">0,70</option><option value="0.9">0,90</option><option value="1.75">1,75</option><option value="2.2">2,20</option></select></div><button class="btn play" id="sp-play" type="button"></button></div><div class="charts "><div class="chart" id="sp-chart"></div></div><p class="xh">Împărțirile candidate (tabelul de pe slide)</p><div class="tw" id="sp-tab"></div><div class="we" id="sp-we-box"><p class="we-h">Exemplu lucrat: alegerea pragului</p><div class="we-f">\[\mathrm{SSE}(s) = \sum_{x_t \le s}(y_t - \bar y_L)^2 + \sum_{x_t > s}(y_t - \bar y_R)^2\]</div><div class="wctl"><div class="ctl"><label for="sp-m">Numărul minim de observații într-o frunză</label><select id="sp-m"><option value="1" selected>1 (slide)</option><option value="2">2</option></select></div></div><ol id="sp-we"></ol></div><ul class="out" id="sp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ce pondere din variație explică pragul s = 1,75, al doilea cel mai bun din tabel?</div><details><summary>Răspuns</summary><p>0,78 = 1 − 0,505/2,268, față de 0,90 pentru s = 1,25. Pragul 1,75 trece săptămîna cu x = 1,5 (y = 1,6) în frunza din stînga, unde media urcă la 1,00 și abaterile cresc.</p></details>
+</section>
+<section class="blk" id="tree">
+  <h3>Un arbore de adîncime 2 pentru volatilitatea săptămînii viitoare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=33" target="_blank" rel="noopener"><img src="slides/sfm_ch13_tree_ro.jpg" alt="Slide-ul 32: Un arbore de adîncime 2 pentru volatilitatea săptămînii viitoare" loading="lazy"></a>
+      <figcaption>Slide-ul 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="tr-d">Adîncimea maximă</label><select id="tr-d"><option value="2" selected>2 (curs)</option><option value="1">1</option><option value="3">3</option></select></div><div class="ctl"><label for="tr-l">Numărul minim de zile într-o frunză</label><select id="tr-l"><option value="50" selected>50 (curs)</option><option value="20">20</option><option value="100">100</option></select></div><button class="btn play" id="tr-play" type="button"></button></div><div class="charts "><div class="chart" id="tr-chart"></div></div><ul class="out" id="tr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la adîncimea 3 (rulare suplimentară). Folosesc toate împărțirile tot log RV săptămînal?</div>
+  <details><summary>Răspuns</summary><p>Nu: 5 din cele 6 împărțiri folosesc log RV săptămînal, una folosește log RV lunar (≤ 0,069), în ramura cu volatilitate săptămînală moderată. Prima împărțire rămîne log RV săptămînal ≤ 0,44, pentru că un arbore greedy nu își revizuiește alegerile de sus.</p></details>
+</section>
+<section class="blk" id="rf-we">
+  <h3>Random forest</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=34" target="_blank" rel="noopener"><img src="slides/ch13_rf-we_ro.jpg" alt="Slide-ul 33: Random forest" loading="lazy"></a>
+      <figcaption>Slide-ul 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bg-B">Numărul de arbori B: <b id="bg-B-v"></b></label><input type="range" id="bg-B" min="1" max="300" step="1" value="10"></div><button class="btn play" id="bg-play" type="button"></button></div><div class="charts "><div class="chart" id="bg-chart"></div></div><div class="we" id="bg-we-box"><p class="we-h">Exemplu lucrat: varianța unei medii de arbori</p><div class="we-f">\[\mathrm{Var}\Big(\frac1B\sum_{b=1}^{B}\hat f_b\Big) = \rho\sigma^2 + \frac{(1 - \rho)\,\sigma^2}{B}\]</div><div class="wctl"><div class="ctl"><label for="bg-r">Corelația dintre arbori ρ</label><select id="bg-r"><option value="0.3" selected>0,3 (slide)</option><option value="0">0</option><option value="0.1">0,1</option><option value="0.6">0,6</option></select></div></div><ol id="bg-we"></ol></div><ul class="out" id="bg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ crește B de la 10 la 300, cu ρ = 0,3 și σ² = 1. Cît devine varianța mediei?</div><details><summary>Răspuns</summary><p>0,302 = 0,3 + 0,7/300, față de 0,370 la B = 10. Partea comună ρσ² = 0,3 nu dispare oricîți arbori am adăuga; pragul coboară doar dacă arborii devin mai puțin corelați.</p></details>
+</section>
+<section class="blk" id="gb-we">
+  <h3>Gradient boosting</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch13_gb-we_ro.jpg" alt="Slide-ul 34: Gradient boosting" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gb-m">Numărul de pași m: <b id="gb-m-v"></b></label><input type="range" id="gb-m" min="1" max="50" step="1" value="1"></div><button class="btn play" id="gb-play" type="button"></button></div><div class="charts "><div class="chart" id="gb-chart"></div></div><div class="we" id="gb-st-box"><p class="we-h">Exemplu lucrat: boosting cu arbori de adîncime 1 pe cele șase săptămîni (calcul suplimentar)</p><div class="we-f">\[F_0 = \bar y, \qquad h_m = \arg\min_{h}\sum_t \big(y_t - F_{m-1}(x_t) - h(x_t)\big)^2, \qquad F_m = F_{m-1} + \nu\,h_m\]</div><div class="wctl"><div class="ctl"><label for="gb-v">Rata de învățare ν</label><select id="gb-v"><option value="0.1" selected>0,1</option><option value="0.3">0,3</option><option value="0.03">0,03</option><option value="1">1</option></select></div></div><ol id="gb-st"></ol></div><ul class="out" id="gb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Calcul suplimentar, ν = 0,1: după cîți pași scade SSE de antrenare sub jumătate din 2,268?</div><details><summary>Răspuns</summary><p>După 4 pași: SSE scade la 1,880, 1,566, 1,312 și 1,101. Fiecare pas aplică doar ν = 10% din ajustarea arborelui pe reziduurile curente, deci eroarea scade geometric, nu liniar. După 50 de pași SSE = 0,007: pe datele de antrenare boosting ajunge aproape la zero, de aceea numărul de pași se alege pe validare.</p></details>
+</section>
+<section class="blk" id="ens">
+  <h3>Un arbore, un random forest și boosting pe date de volatilitate</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch13_ensembles_ro.jpg" alt="Slide-ul 35: Un arbore, un random forest și boosting pe date de volatilitate" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="en-n">Numărul de arbori (random forest: cel mult 200): <b id="en-n-v"></b></label><input type="range" id="en-n" min="1" max="500" step="1" value="200"></div><div class="ctl"><label for="en-d">Adîncimea marcată (random forest): <b id="en-d-v"></b></label><input type="range" id="en-d" min="1" max="14" step="1" value="8"></div><button class="btn play" id="en-play" type="button"></button></div><div class="charts "><div class="chart" id="en-chart"></div></div><ul class="out" id="en-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ reduce pădurea la un singur arbore (B = 1). Cît este MSE de validare la adîncimea 8?</div>
+  <details><summary>Răspuns</summary><p>0,670, mai mult decît arborele simplu de aceeași adîncime (0,631) și mult peste 0,458 cu 200 de arbori. Fiecare arbore al pădurii vede un eșantion bootstrap și doar jumătate din variabile la o împărțire, deci singur este mai slab decît un arbore obișnuit; media îi elimină varianța, iar cu 10 arbori MSE este deja 0,478.</p></details>
+</section><h2 class="sec" id="s-nn">Rețele neuronale</h2>
+<section class="blk" id="mlp-we">
+  <h3>De la perceptron la perceptronul multistrat (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch13_mlp-we_ro.jpg" alt="Slide-ul 38: De la perceptron la perceptronul multistrat (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mw-k">Neuroni ascunși K: <b id="mw-k-v"></b></label><input type="range" id="mw-k" min="1" max="64" step="1" value="16"></div><button class="btn play" id="mw-play" type="button"></button></div><div class="charts "><div class="chart" id="mw-chart"></div></div><div class="we" id="mw-we-box"><p class="we-h">Exemplu lucrat: numărul de parametri</p><div class="we-f">\[\hat y = c + \sum_{k=1}^{K} v_k\, g(b_k + w_k^\top x), \qquad \#\theta = \underbrace{pK + K}_{\text{strat ascuns}} + \underbrace{K + 1}_{\text{ieșire}}\]</div><div class="wctl"><div class="ctl"><label for="mw-p">Numărul de intrări p</label><select id="mw-p"><option value="11" selected>11 (slide)</option><option value="3">3</option><option value="5">5</option></select></div></div><ol id="mw-we"></ol></div><ul class="out" id="mw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 11 intrări și K = 32 de neuroni ascunși, cîți parametri are rețeaua?</div><details><summary>Răspuns</summary><p>417 = 11 × 32 + 32 + 32 + 1. Nu se dublează față de 209: fiecare neuron în plus adaugă p + 2 = 13 parametri, iar constanta ieșirii nu depinde de K.</p></details>
+</section>
+<section class="blk" id="mlp">
+  <h3>O rețea mică și funcțiile ei de activare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch13_mlp_ro.jpg" alt="Slide-ul 39: O rețea mică și funcțiile ei de activare" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ml-g">Funcția de activare g</label><select id="ml-g"><option value="relu" selected>ReLU</option><option value="logistic">logistică</option><option value="tanh">tanh</option></select></div><div class="ctl"><label for="ml-z">Argumentul z: <b id="ml-z-v"></b></label><input type="range" id="ml-z" min="-4" max="4" step="0.25" value="1"></div><div class="ctl"><label for="ml-k">Neuroni ascunși K: <b id="ml-k-v"></b></label><input type="range" id="ml-k" min="1" max="8" step="1" value="5"></div><button class="btn play" id="ml-play" type="button"></button></div><div class="charts "><div class="chart" id="ml-chart"></div></div><ul class="out" id="ml-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru z = 4, care funcție de activare are cel mai mare gradient g′(z)?</div>
+  <details><summary>Răspuns</summary><p>ReLU: g′(4) = 1. Logistica are g′(4) = 0,018, iar tanh 0,0013: ambele se saturează pentru |z| mare, deci gradientul care trece prin neuron aproape dispare. De aceea rețelele cu ReLU se antrenează mai repede.</p></details>
+</section>
+<section class="blk" id="nnarch">
+  <h3>ARCH cu rețea neuronală pentru GBP/USD</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch13_nnarch_ro.jpg" alt="Slide-ul 44: ARCH cu rețea neuronală pentru GBP/USD" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="na-p">Perioada</label><select id="na-p"><option value="all" selected>2010–2026 (curs)</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014">2014</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><div class="ctl"><label for="na-u">Unitățile rețelei RBF</label><select id="na-u"><option value="3" selected>3 (curs)</option><option value="2">2</option><option value="5">5</option></select></div><button class="btn play" id="na-play" type="button"></button></div><div class="charts "><div class="chart" id="na-chart"></div></div><ul class="out" id="na-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 5 unități RBF în loc de 3 (rulare suplimentară), crește sau scade corelația volatilității rețelei cu GARCH (0,45 cu 3 unități)?</div>
+  <details><summary>Răspuns</summary><p>Crește la 0,61, iar maximul rețelei urcă de la 22,0% la 27,6%; cu 2 unități corelația scade la 0,26. Mai multe unități dau o formă mai flexibilă, dar rețeaua vede tot doar ultimele 3 randamente: maximul GARCH de după votul pentru Brexit, 37,3%, rămîne departe.</p></details>
+</section>
+<section class="blk" id="nnjpy">
+  <h3>Rețeaua RBF comparată cu mersul aleator</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch13_nnjpy_ro.jpg" alt="Slide-ul 47: Rețeaua RBF comparată cu mersul aleator" loading="lazy"></a>
+      <figcaption>Slide-ul 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="nj-s">Ponderea zilelor de antrenare</label><select id="nj-s"><option value="0.8" selected>80% (curs)</option><option value="0.6">60%</option><option value="0.9">90%</option></select></div><button class="btn play" id="nj-play" type="button"></button></div><div class="charts "><div class="chart" id="nj-chart"></div></div><ul class="out" id="nj-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 90% din zile la antrenare (rulare suplimentară), de cîte ori este RMSE de test al rețelei mai mare decît al mersului aleator?</div>
+  <details><summary>Răspuns</summary><p>De 13 ori (12,12 față de 0,91 yeni), față de 31 de ori cu 80%. Maximul din antrenare urcă la 151,6, dar testul ajunge la 163,9: rețeaua tot nu poate extrapola dincolo de nivelurile văzute.</p></details>
+</section><h2 class="sec" id="s-rv">Aplicație: prognoza volatilității realizate</h2>
+<section class="blk" id="har-we">
+  <h3>Reperul HAR (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch13_har-we_ro.jpg" alt="Slide-ul 50: Reperul HAR (1/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hw-y">Partiția (anul de test): <b id="hw-y-v"></b></label><input type="range" id="hw-y" min="2013" max="2026" step="1" value="2013"></div><button class="btn play" id="hw-play" type="button"></button></div><div class="charts "><div class="chart" id="hw-chart"></div></div><div class="we" id="hw-we-box"><p class="we-h">Exemplu lucrat: o prognoză HAR</p><div class="we-f">\[\hat y_t = \hat\beta_0 + \hat\beta_d\ln v_t + \hat\beta_w\ln v_t^{(w)} + \hat\beta_m\ln v_t^{(m)}, \qquad \hat h_t = \exp(\hat y_t + \hat s^2/2)\]</div><div class="wctl"><div class="ctl"><label for="hw-d">Ziua prognozei</label><select id="hw-d"><option value="first" selected>prima zi a anului</option><option value="max">ziua cu prognoza maximă</option><option value="last">ultima zi</option></select></div></div><ol id="hw-we"></ol></div><ul class="out" id="hw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Partiția 2020, ziua cu prognoza HAR maximă (18 martie 2020): este prognoza peste sau sub volatilitatea realizată în următoarele 5 zile?</div><details><summary>Răspuns</summary><p>Puțin peste: 69,3% față de 66,1% pe an. Maximul volatilității realizate în 2020, 102,4%, a venit însă înaintea vîrfului prognozei: HAR reacționează după șoc, nu îl anticipează.</p></details>
+</section>
+<section class="blk" id="r2-we">
+  <h3>Evaluarea (1/3): R² în afara eșantionului</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=53" target="_blank" rel="noopener"><img src="slides/ch13_r2-we_ro.jpg" alt="Slide-ul 52: Evaluarea (1/3): R² în afara eșantionului" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="r2-m">Modelul</label><select id="r2-m"><option value="MLP" selected>MLP (curs)</option><option value="Lasso">lasso</option><option value="RF">random forest</option><option value="GB">gradient boosting</option><option value="Mean">media de antrenare</option></select></div><button class="btn play" id="r2-play" type="button"></button></div><div class="charts "><div class="chart" id="r2-chart"></div></div><div class="we" id="r2-st-box"><p class="we-h">Exemplu lucrat: R² în afara eșantionului</p><div class="we-f">\[R^2_{OOS} = 1 - \frac{\sum_t (y_t - \hat y_t)^2}{\sum_t (y_t - \tilde y_t)^2}\]</div><div class="wctl"><div class="ctl"><label for="r2-b">Reperul</label><select id="r2-b"><option value="HAR" selected>HAR (curs)</option><option value="Mean">media de antrenare</option></select></div><div class="ctl"><label for="r2-a">Seria</label><select id="r2-a"><option value="sp500" selected>S&P 500 (curs)</option><option value="btc">Bitcoin</option></select></div></div><ol id="r2-st"></ol></div><ul class="out" id="r2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la random forest (S&P 500, față de HAR). Cît este R²_OOS?</div><details><summary>Răspuns</summary><p>+1,0%: MSE 0,429 față de 0,433. Față de media de antrenare, același model are 61,9%: R²_OOS depinde de reper, iar HAR este un reper mult mai exigent. Testul DM nu separă acest cîștig de zgomot (p = 0,747).</p></details>
+</section>
+<section class="blk" id="qlike-we">
+  <h3>Evaluarea (2/3): QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=54" target="_blank" rel="noopener"><img src="slides/ch13_qlike-we_ro.jpg" alt="Slide-ul 53: Evaluarea (2/3): QLIKE" loading="lazy"></a>
+      <figcaption>Slide-ul 53</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ql-h">Prognoza varianței ĥ: <b id="ql-h-v"></b></label><input type="range" id="ql-h" min="0.1" max="3.5" step="0.05" value="0.5"></div><button class="btn play" id="ql-play" type="button"></button></div><div class="charts "><div class="chart" id="ql-chart"></div></div><div class="we" id="ql-we-box"><p class="we-h">Exemplu lucrat: pierderea QLIKE</p><div class="we-f">\[L_t = \frac{\mathrm{RV}_t}{\hat h_t} + \ln\hat h_t\]</div><div class="wctl"><div class="ctl"><label for="ql-r">Varianța realizată RV</label><select id="ql-r"><option value="1" selected>1 (slide)</option><option value="0.5">0,5</option><option value="2">2</option></select></div></div><ol id="ql-we"></ol></div><ul class="out" id="ql-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> RV = 1: care prognoză costă mai mult în QLIKE, ĥ = 1/3 sau ĥ = 3?</div><details><summary>Răspuns</summary><p>ĥ = 1/3: 3 + ln(1/3) = 1,901, față de 1/3 + ln 3 = 1,432. Subestimarea de trei ori costă mai mult decît supraestimarea de trei ori, deși eroarea pătratică ordonează invers: (1 − 1/3)² = 0,444 și (1 − 3)² = 4.</p></details>
+</section>
+<section class="blk" id="dm-we">
+  <h3>Evaluarea (3/3): testul Diebold–Mariano</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch13_dm-we_ro.jpg" alt="Slide-ul 54: Evaluarea (3/3): testul Diebold–Mariano" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dm-l">Laguri Newey–West: <b id="dm-l-v"></b></label><input type="range" id="dm-l" min="0" max="22" step="1" value="5"></div><button class="btn play" id="dm-play" type="button"></button></div><div class="charts "><div class="chart" id="dm-chart"></div></div><div class="we" id="dm-st-box"><p class="we-h">Exemplu lucrat: statistica Diebold–Mariano</p><div class="we-f">\[d_t = L_t^{A} - L_t^{HAR}, \qquad \widehat{\mathrm{LRV}} = \hat\gamma_0 + 2\sum_{j=1}^{q}\Big(1 - \frac{j}{q + 1}\Big)\hat\gamma_j, \qquad \mathrm{DM} = \frac{\bar d}{\sqrt{\widehat{\mathrm{LRV}}/n}}\]</div><div class="wctl"><div class="ctl"><label for="dm-m">Modelul A</label><select id="dm-m"><option value="MLP" selected>MLP (curs)</option><option value="Lasso">lasso</option><option value="RF">random forest</option><option value="GB">gradient boosting</option></select></div><div class="ctl"><label for="dm-a">Seria</label><select id="dm-a"><option value="sp500" selected>S&P 500 (curs)</option><option value="btc">Bitcoin</option></select></div></div><ol id="dm-st"></ol></div><ul class="out" id="dm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ coboară numărul de laguri Newey–West de la 5 la 0. Ce se întîmplă cu statistica DM a MLP față de HAR (S&P 500, −3,96)?</div><details><summary>Răspuns</summary><p>Crește în valoare absolută, la −4,61: varianța pe termen lung cu 5 laguri este de 1,35 ori varianța simplă, pentru că țintele pe 5 zile se suprapun și fac d_t autocorelat. Fără corecție testul pare mai sigur decît este; aici concluzia (MLP mai bun) rămîne aceeași.</p></details>
+</section>
+<section class="blk" id="rv-tab">
+  <h3>Rezultatele: S&P 500 și Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch13_rv-tab_ro.jpg" alt="Slide-ul 55: Rezultatele: S&P 500 și Bitcoin" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rt-p">Perioada de test</label><select id="rt-p"><option value="all" selected>toată perioada (curs)</option><option value="pre">pînă în 2019</option><option value="post">din 2020</option></select></div><button class="btn play" id="rt-play" type="button"></button></div><div class="charts "><div class="chart" id="rt-chart"></div></div><p class="xh">Rezultatele în afara eșantionului: R²_OOS pe log RV (%), QLIKE, statistica DM față de HAR (p-value)</p><div class="wctl"><div class="ctl"><label for="rt-l">Laguri Newey–West ale testului DM</label><select id="rt-l"><option value="5" selected>5 (curs)</option><option value="0">0</option><option value="10">10</option><option value="22">22</option></select></div></div><div class="tw" id="rt-tab"></div><ul class="out" id="rt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la zilele de test din 2020. Mai este MLP semnificativ mai bun decît HAR pe S&P 500 la 5%?</div><details><summary>Răspuns</summary><p>Da: R²_OOS +7,9%, DM −2,28 (p = 0,023); lasso +7,4%, DM −3,42. Random forest și boosting nu sînt semnificativ mai bune decît HAR în nicio subperioadă: pînă în 2019 au −1,5% și −11,0%, din 2020 +3,5% și +5,8%, cu p peste 0,6.</p></details>
+</section>
+<section class="blk" id="rvf">
+  <h3>Prognozele în două furtuni: 2020 și 2025</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch13_rv_forecasts_ro.jpg" alt="Slide-ul 56: Prognozele în două furtuni: 2020 și 2025" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rf-m">Modelele comparate cu HAR</label><select id="rf-m"><option value="RF,MLP" selected>random forest și MLP (curs)</option><option value="Lasso,GB">lasso și gradient boosting</option><option value="Lasso,MLP">lasso și MLP</option><option value="RF,GB">random forest și gradient boosting</option></select></div><div class="ctl"><label for="rf-a">Seria</label><select id="rf-a"><option value="sp500" selected>S&P 500 (curs)</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="rf-y">Anul din stînga</label><select id="rf-y"><option value="2020" selected>2020 (curs)</option><option value="2018">2018</option><option value="2022">2022</option></select></div><button class="btn play" id="rf-play" type="button"></button></div><div class="charts "><div class="chart" id="rf-chart"></div></div><ul class="out" id="rf-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În 2020, este maximul prognozei random forest peste sau sub maximul volatilității realizate (102% pe an)?</div>
+  <details><summary>Răspuns</summary><p>Mult sub: 53%, față de 69% pentru HAR și 159% pentru MLP. Un random forest prezice medii ale frunzelor din antrenare, deci rămîne sub valorile extreme; MLP și lasso (172%) extrapolează și pot depăși ținta.</p></details>
+</section>
+<section class="blk" id="imp">
+  <h3>Variabilele folosite de random forest</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=59" target="_blank" rel="noopener"><img src="slides/sfm_ch13_importance_ro.jpg" alt="Slide-ul 58: Variabilele folosite de random forest" loading="lazy"></a>
+      <figcaption>Slide-ul 58</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="im-f">Valorile Shapley afișate</label><select id="im-f"><option value="all" selected>toate trei (curs)</option><option value="d">ziua</option><option value="w">săptămîna</option><option value="m">luna</option></select></div><button class="btn play" id="im-play" type="button"></button></div><div class="charts "><div class="chart" id="im-chart"></div></div><p class="xh">Importanța prin permutare (10 amestecări) și media |φ| (random forest pe cele 3 variabile HAR)</p><div class="tw" id="im-tab"></div><ul class="out" id="im-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ afișează doar log RV zilnic. Este intervalul valorilor Shapley mai larg sau mai îngust decît la log RV săptămînal?</div>
+  <details><summary>Răspuns</summary><p>Mai îngust: φ zilnic între −0,32 și 0,35, față de −0,66 și 2,25 pentru săptămînă; media |φ| este 0,13, față de 0,52. Pădurea se bazează pe varianța săptămînală, care conține deja o parte din informația zilei.</p></details>
+</section><h2 class="sec" id="s-sign">Aplicație: semnul randamentului de mîine</h2>
+<section class="blk" id="sign-we">
+  <h3>Reperul corect</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=61" target="_blank" rel="noopener"><img src="slides/ch13_sign-we_ro.jpg" alt="Slide-ul 60: Reperul corect" loading="lazy"></a>
+      <figcaption>Slide-ul 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sz-m">Modelul</label><select id="sz-m"><option value="RF" selected>random forest (curs)</option><option value="GB">gradient boosting</option><option value="Logit">logit</option></select></div><button class="btn play" id="sz-play" type="button"></button></div><div class="charts "><div class="chart" id="sz-chart"></div></div><div class="we" id="sz-we-box"><p class="we-h">Exemplu lucrat: testul față de reper</p><div class="we-f">\[z = \frac{\widehat{\mathrm{acc}} - \mathrm{acc}_0}{\sqrt{\mathrm{acc}_0(1 - \mathrm{acc}_0)/n}} \approx N(0, 1)\]</div><div class="wctl"><div class="ctl"><label for="sz-a">Seria</label><select id="sz-a"><option value="sp500" selected>S&P 500 (curs)</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div></div><ol id="sz-we"></ol></div><ul class="out" id="sz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> BET în loc de S&P 500, random forest: cît este statistica z față de reper?</div><details><summary>Răspuns</summary><p>−0,21 (53,6% față de 53,8%, p = 0,84). Pe S&P 500 random forest are z = −1,79, pe Bitcoin −0,99: pe nicio piață un model nu este semnificativ mai bun decît „mereu creștere”.</p></details>
+</section>
+<section class="blk" id="sign">
+  <h3>Acuratețea față de reper</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=62" target="_blank" rel="noopener"><img src="slides/sfm_ch13_sign_ro.jpg" alt="Slide-ul 61: Acuratețea față de reper" loading="lazy"></a>
+      <figcaption>Slide-ul 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-e">Ultimul an de test: <b id="sg-e-v"></b></label><input type="range" id="sg-e" min="2010" max="2026" step="1" value="2026"></div><div class="ctl"><label for="sg-c">Pragul probabilității pentru „creștere”</label><select id="sg-c"><option value="0.5" selected>0,5 (curs)</option><option value="0.52">0,52</option><option value="0.55">0,55</option></select></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ testează doar pînă în 2012 (5 ani). Este vreun model semnificativ mai slab decît reperul pe S&P 500?</div>
+  <details><summary>Răspuns</summary><p>Da: gradient boosting, −3,9 puncte, z = −2,77; logit și random forest au z = −1,36 și −1,30. Banda de 95% este mai largă cu mai puține zile, totuși boosting rămîne în afara ei: modelul învață tipare din zgomotul anilor de antrenare.</p></details>
+</section><h2 class="sec" id="s-var">Aplicație: VaR 1% prin metode cuantilice</h2>
+<section class="blk" id="pin-we">
+  <h3>Regresia cuantilică (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=64" target="_blank" rel="noopener"><img src="slides/ch13_pin-we_ro.jpg" alt="Slide-ul 63: Regresia cuantilică (1/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pl-q">Prognoza constantă q (%): <b id="pl-q-v"></b></label><input type="range" id="pl-q" min="-8" max="1" step="0.05" value="-2.7"></div><button class="btn play" id="pl-play" type="button"></button></div><div class="charts "><div class="chart" id="pl-chart"></div></div><div class="we" id="pl-we-box"><p class="we-h">Exemplu lucrat: pierderea cuantilică pe randamentele S&P 500</p><div class="we-f">\[\rho_\alpha(u) = u\,(\alpha - \mathbf{1}\{u < 0\}), \qquad u = y - q, \qquad \hat q = \arg\min_q \frac1n\sum_t \rho_\alpha(y_t - q)\]</div><div class="wctl"><div class="ctl"><label for="pl-a">Nivelul α</label><select id="pl-a"><option value="0.01" selected>0,01 (curs)</option><option value="0.05">0,05</option><option value="0.1">0,10</option></select></div></div><ol id="pl-we"></ol></div><ul class="out" id="pl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu α = 0,05, ce prognoză constantă q minimizează pierderea medie pe randamentele de test ale S&P 500?</div><details><summary>Răspuns</summary><p>q = −1,59%, cuantila empirică de 5%: 4,99% din zile se află sub ea. Pentru α = 0,01 minimul este la −3,07% (0,99% din zile sub el). Media randamentelor, 0,05%, minimizează eroarea pătratică, nu pierderea cuantilică.</p></details>
+</section>
+<section class="blk" id="var-tab">
+  <h3>Backtesting pentru VaR 1%: metode cuantilice, HS și GARCH-t (1/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=66" target="_blank" rel="noopener"><img src="slides/ch13_var-tab_ro.jpg" alt="Slide-ul 65: Backtesting pentru VaR 1%: metode cuantilice, HS și GARCH-t (1/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 65</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-p">Perioada de test</label><select id="vt-p"><option value="all" selected>toată perioada (curs)</option><option value="pre">pînă în 2019</option><option value="post">din 2020</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">Backtesting pentru VaR 1% (tabelul de pe slide)</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ trece la zilele de test din 2020. Respinge testul Kupiec la 5% rata depășirilor GARCH-t pe S&P 500?</div><details><summary>Răspuns</summary><p>Da: 1,60% (27 din 1686 de zile), p = 0,022. QR are 0,71% (p = 0,21), iar depășirile HS apar grupat (p ind. 0,005). Pentru Bitcoin din 2020, QR este depășit prea rar: 0,45%, p Kupiec 0,002.</p></details>
+</section>
+<section class="blk" id="qvar">
+  <h3>Prognozele VaR 1% în 2020 și 2025</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=68" target="_blank" rel="noopener"><img src="slides/sfm_ch13_qvar_ro.jpg" alt="Slide-ul 67: Prognozele VaR 1% în 2020 și 2025" loading="lazy"></a>
+      <figcaption>Slide-ul 67</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qv-m">Depășirile marcate</label><select id="qv-m"><option value="QR" selected>QR (curs)</option><option value="QGB">QGB</option><option value="HS">HS</option><option value="GARCH-t">GARCH-t</option></select></div><div class="ctl"><label for="qv-a">Seria</label><select id="qv-a"><option value="sp500" selected>S&P 500 (curs)</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="qv-y">Anul din stînga</label><select id="qv-y"><option value="2020" selected>2020 (curs)</option><option value="2018">2018</option><option value="2022">2022</option></select></div><button class="btn play" id="qv-play" type="button"></button></div><div class="charts "><div class="chart" id="qv-chart"></div></div><ul class="out" id="qv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În 2025 (pînă în septembrie), care metodă are cele mai multe depășiri pe S&P 500?</div>
+  <details><summary>Răspuns</summary><p>HS: 5 depășiri, față de 4 pentru GARCH-t și cîte 1 pentru QR și QGB. După 500 de zile liniștite, simularea istorică intră în aprilie 2025 cu un VaR prea mic și reacționează lent.</p></details>
+</section><h2 class="sec" id="s-snoop">Data snooping și raportul Sharpe deflatat</h2>
+<section class="blk" id="maxsr-we">
+  <h3>Cea mai bună dintre N strategii (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=70" target="_blank" rel="noopener"><img src="slides/ch13_maxsr-we_ro.jpg" alt="Slide-ul 69: Cea mai bună dintre N strategii (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 69</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mx-n">Numărul de strategii N (poziția pe grilă): <b id="mx-n-v"></b></label><input type="range" id="mx-n" min="0" max="9" step="1" value="6"></div><button class="btn play" id="mx-play" type="button"></button></div><div class="charts "><div class="chart" id="mx-chart"></div></div><div class="we" id="mx-we-box"><p class="we-h">Exemplu lucrat: maximul așteptat al celor N rapoarte Sharpe</p><div class="we-f">\[\mathrm{E}[\max] \approx \sigma\Big[(1 - \gamma)\,\Phi^{-1}\big(1 - \tfrac1N\big) + \gamma\,\Phi^{-1}\big(1 - \tfrac{1}{Ne}\big)\Big], \qquad \sigma = 1/\sqrt{Y}\]</div><div class="wctl"><div class="ctl"><label for="mx-y">Anii de date Y</label><select id="mx-y"><option value="10" selected>10 (slide)</option><option value="5">5</option><option value="20">20</option></select></div></div><ol id="mx-we"></ol></div><ul class="out" id="mx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu 20 de ani de date în loc de 10, cît este maximul așteptat pentru N = 100?</div><details><summary>Răspuns</summary><p>0,566 = 0,800/√2, pentru că σ = 1/√20 = 0,224; simularea dă 0,559. Mai mulți ani reduc distorsiunea de selecție doar cu √Y: cu N = 1000 maximul este tot 0,728.</p></details>
+</section>
+<section class="blk" id="snoop">
+  <h3>Distorsiunea de selecție în practică</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=71" target="_blank" rel="noopener"><img src="slides/sfm_ch13_snooping_ro.jpg" alt="Slide-ul 70: Distorsiunea de selecție în practică" loading="lazy"></a>
+      <figcaption>Slide-ul 70</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sn-n">Regulile încercate N: <b id="sn-n-v"></b></label><input type="range" id="sn-n" min="1" max="30" step="1" value="30"></div><div class="ctl"><label for="sn-s">Sfîrșitul eșantionului de estimare</label><select id="sn-s"><option value="2014" selected>2014 (curs)</option><option value="2009">2009</option><option value="2019">2019</option></select></div><div class="ctl"><label for="sn-y">Anii de date în simulare Y</label><select id="sn-y"><option value="10" selected>10 (curs)</option><option value="5">5</option><option value="20">20</option></select></div><button class="btn play" id="sn-play" type="button"></button></div><div class="charts "><div class="chart" id="sn-chart"></div></div><ul class="out" id="sn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ încearcă doar primele 10 reguli. Care este cea mai bună în eșantion și ce loc ocupă după 2014?</div>
+  <details><summary>Răspuns</summary><p>MA 5/200 (Sharpe 0,57 în eșantion), cu 0,74 după 2014, locul 3 din 30. Cu toate cele 30 de reguli, cîștigătoarea, MA 50/200 (0,66), ajunge pe locul 22: alegerea dintre mai multe reguli ridică raportul Sharpe din eșantion, nu pe cel viitor.</p></details>
+</section>
+<section class="blk" id="dsr-we">
+  <h3>Raportul Sharpe deflatat (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=73" target="_blank" rel="noopener"><img src="slides/ch13_dsr-we_ro.jpg" alt="Slide-ul 72: Raportul Sharpe deflatat (2/2)" loading="lazy"></a>
+      <figcaption>Slide-ul 72</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-n">Numărul de reguli încercate N: <b id="ds-n-v"></b></label><input type="range" id="ds-n" min="1" max="200" step="1" value="30"></div><button class="btn play" id="ds-play" type="button"></button></div><div class="charts "><div class="chart" id="ds-chart"></div></div><div class="we" id="ds-we-box"><p class="we-h">Exemplu lucrat: raportul Sharpe deflatat al celei mai bune reguli MA</p><div class="we-f">\[\mathrm{DSR} = \Phi\Big(\frac{(\widehat{SR} - SR_0)\sqrt{T - 1}}{\sqrt{1 - \hat\gamma_3\widehat{SR} + \frac{\hat\gamma_4 - 1}{4}\widehat{SR}^2}}\Big)\]</div><div class="wctl"><div class="ctl"><label for="ds-k">Asimetria și boltirea</label><select id="ds-k"><option value="sample" selected>din eșantion, γ₃ = −0,44, γ₄ = 12,0 (curs)</option><option value="normal">distribuția Normală, γ₃ = 0, γ₄ = 3</option></select></div></div><ol id="ds-we"></ol></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pînă la ce număr de reguli încercate rămîne cea mai bună regulă MA semnificativă (DSR > 0,95)?</div><details><summary>Răspuns</summary><p>Pînă la N = 6: DSR = 0,961 la N = 5, 0,955 la N = 6 și 0,949 la N = 7; la N = 30, 0,884. Fără corecție (PSR) regula ar părea semnificativă, cu 0,994: SR₀ crește lent cu N, dar SR̂ = 0,0416 pe zi are o margine mică.</p></details>
+</section><h2 class="sec" id="s-gkx">Studiu de caz: Gu, Kelly și Xiu (2020)</h2>
+<section class="blk" id="gkx">
+  <h3>Rezultatele: R² mic, valoare economică mare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol13_invatare_automata.pdf#page=76" target="_blank" rel="noopener"><img src="slides/sfm_ch13_gkx_ro.jpg" alt="Slide-ul 75: Rezultatele: R² mic, valoare economică mare" loading="lazy"></a>
+      <figcaption>Slide-ul 75</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gk-m">Modelul evidențiat</label><select id="gk-m"><option value="NN3" selected>NN3</option><option value="OLS-3+H">OLS-3+H</option><option value="PLS">PLS</option><option value="PCR">PCR</option><option value="ENet+H">ENet+H</option><option value="GLM+H">GLM+H</option><option value="RF">RF</option><option value="GBRT+H">GBRT+H</option><option value="NN1">NN1</option><option value="NN2">NN2</option><option value="NN4">NN4</option><option value="NN5">NN5</option></select></div><button class="btn play" id="gk-play" type="button"></button></div><div class="charts "><div class="chart" id="gk-chart"></div></div><ul class="out" id="gk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Este modelul cu cel mai mare R²_OOS pe toate acțiunile și modelul cu cel mai mare raport Sharpe același?</div>
+  <details><summary>Răspuns</summary><p>Nu: NN3 are cel mai mare R² (0,40%), NN4 cel mai mare raport Sharpe (1,35, față de 1,20 pentru NN3). Diferențele de R² dintre rețele sînt de cîteva sutimi de punct procentual, iar clasamentul după valoarea economică poate diferi.</p></details>
+</section>
+<p class="src foot">Datele cursului din data/market (pînă la 18 septembrie 2026): S&P 500 și Bitcoin (prețuri de deschidere, maxim, minim și închidere), BET, GBP/USD, randamentul obligațiunilor germane pe 10 ani, aurul, USD/JPY. Simularea deplasare–varianță, schema de validare, traiectoriile ridge și lasso, arborii, curbele random forest și boosting, rețelele RBF și MLP, prognozele walk-forward ale celor șase modele de volatilitate, ale clasificatorilor de semn și ale celor patru metode VaR vin din codul din curs (Quantlets/Ch_13, semințele 2026 și 3); modelele grele nu sînt reestimate în browser. Browserul recalculează din aceste prognoze HAR, R² în afara eșantionului, QLIKE, testul Diebold–Mariano, acuratețea, testul z, AUC, testele Kupiec și Christoffersen, pierderea cuantilică, maximul așteptat al raportului Sharpe și DSR. Gu, Kelly și Xiu (2020): valorile publicate în tabelele 1 și 7 ale lucrării. Alte niveluri de zgomot, orizonturi, adîncimi, numere de arbori și de unități, ponderi de antrenare, perioade și ani de separare sînt rulări suplimentare ale aceluiași cod; exemplul de boosting pe cele șase săptămîni este un calcul suplimentar.</p>
+</main>
+</body>
+</html>
