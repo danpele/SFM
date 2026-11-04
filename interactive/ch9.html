@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 9 · ARCH and GARCH Models</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch9.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch9_data.js?v=20261101a", "ch9_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch9.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 9 · ARCH and GARCH Models</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_09" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch9.html" class="lang-btn active">EN</a><a href="ch9_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: ARCH (autoregressive conditional heteroskedasticity), GARCH (generalised ARCH), GJR (Glosten–Jagannathan–Runkle), EGARCH (exponential GARCH), IGARCH (integrated GARCH), EWMA (exponentially weighted moving average), SE (standard error), LR (likelihood ratio), AIC and BIC (Akaike and Bayesian information criteria), ACF (autocorrelation function), ARCH-LM (Lagrange multiplier test for ARCH effects), QLIKE (quasi-likelihood), DM (Diebold–Mariano), VaR (value at risk).</p>
+<p class="toc"><a href="#s-ep">Volatility Comes in Episodes</a> · <a href="#s-cm">Conditional Mean and Conditional Variance</a> · <a href="#s-arch">The ARCH Model</a> · <a href="#s-garch">The GARCH(1,1) Model</a> · <a href="#s-ml">Estimation by Maximum Likelihood</a> · <a href="#s-tails">Heavy-Tailed Innovations</a> · <a href="#s-mk">GARCH in Six Markets</a> · <a href="#s-asym">Asymmetry and the Leverage Effect</a> · <a href="#s-diag">Diagnostics</a> · <a href="#s-sel">Model Selection</a> · <a href="#s-fc">Forecasting Volatility</a> · <a href="#s-var">VaR 1% from a GARCH Model</a></p>
+<h2 class="sec" id="s-ep">Volatility Comes in Episodes</h2>
+<section class="blk" id="returns">
+  <h3>S&P 500: Calm Years and Storms</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=7" target="_blank" rel="noopener"><img src="slides/sfm_ch9_returns_en.jpg" alt="Slide 6: S&P 500: Calm Years and Storms" loading="lazy"></a>
+      <figcaption>Slide 6</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rt-s">Series</label><select id="rt-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="rt-y">Calm year for the comparison: <b id="rt-y-v"></b></label><input type="range" id="rt-y" min="2000" max="2026" step="1" value="2017"></div><button class="btn play" id="rt-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="rt-chart"></div></div><ul class="out" id="rt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The daily standard deviation of the S&P 500 was 0.42% in 2017. How many times larger was it from September 2008 to March 2009?</div>
+  <details><summary>Answer</summary><p>8.3 times: 3.52/0.422 = 8.34; from February to May 2020, 3.70/0.422 = 8.76. The whole-sample standard deviation, 1.21%, averages calm and stormy days and describes neither regime: the 2008 episode is 2.9 times above it.</p></details>
+</section><h2 class="sec" id="s-cm">Conditional Mean and Conditional Variance</h2>
+<section class="blk" id="mix">
+  <h3>Worked Example: Conditional and Unconditional Variance</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=13" target="_blank" rel="noopener"><img src="slides/ch9_mix_en.jpg" alt="Slide 12: Worked Example: Conditional and Unconditional Variance" loading="lazy"></a>
+      <figcaption>Slide 12</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mx-s">Variance of the stormy days σ²: <b id="mx-s-v"></b></label><input type="range" id="mx-s" min="1" max="10" step="0.5" value="4.5"></div><div class="ctl"><label for="mx-p">Share of the stormy days: <b id="mx-p-v"></b></label><input type="range" id="mx-p" min="0.05" max="0.95" step="0.05" value="0.5"></div><button class="btn play" id="mx-play" type="button"></button></div><div class="charts "><div class="chart" id="mx-chart"></div></div><div class="we" id="mx-we-box"><p class="we-h">Worked example: the law of total variance</p><div class="we-f">\[\mathrm{Var}(r_t) = E[\mathrm{Var}(r_t \mid \mathcal{F}_{t-1})] + \mathrm{Var}(E[r_t \mid \mathcal{F}_{t-1}]), \qquad K = \frac{3\,E[\sigma_t^4]}{(E[\sigma_t^2])^2}\]</div><div class="wctl"><div class="ctl"><label for="mx-c">Variance of the calm days σ²</label><select id="mx-c"><option value="0.5" selected>0.5 (lecture)</option><option value="0.25">0.25</option><option value="1">1</option></select></div></div><ol id="mx-we"></ol></div><ul class="out" id="mx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Calm days with σ² = 0.5 and stormy days with σ² = 4.5, each with probability 1/2, mean 0. What is the unconditional standard deviation?</div><details><summary>Answer</summary><p>1.58%: the unconditional variance is the average of the variances, 0.5 × 0.5 + 0.5 × 4.5 = 2.50, and √2.50 = 1.58. The average of the volatilities, (0.71 + 2.12)/2 = 1.41%, is smaller, because the square root is concave. The mixture has kurtosis 4.92, although each regime is Normal.</p></details>
+</section><h2 class="sec" id="s-arch">The ARCH Model</h2>
+<section class="blk" id="arch1">
+  <h3>ARCH(1): Properties</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch9_arch1_en.jpg" alt="Slide 15: ARCH(1): Properties" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="a1-a">α of the ARCH(1): <b id="a1-a-v"></b></label><input type="range" id="a1-a" min="0" max="0.95" step="0.05" value="0.5"></div><div class="ctl"><label for="a1-e">Yesterday's shock ε(t − 1): <b id="a1-e-v"></b></label><input type="range" id="a1-e" min="-4" max="4" step="0.5" value="2"></div><button class="btn play" id="a1-play" type="button"></button></div><div class="charts "><div class="chart" id="a1-chart"></div></div><div class="we" id="a1-we-box"><p class="we-h">Worked example: unconditional variance, kurtosis and one ARCH(1) step</p><div class="we-f">\[\bar\sigma^2 = \frac{\omega}{1-\alpha}, \qquad K = 3\,\frac{1-\alpha^2}{1-3\alpha^2}, \qquad \sigma_t^2 = \omega + \alpha\,\varepsilon_{t-1}^2\]</div><div class="wctl"><div class="ctl"><label for="a1-w">ω</label><select id="a1-w"><option value="0.5" selected>0.5 (lecture)</option><option value="0.25">0.25</option><option value="1">1</option></select></div></div><ol id="a1-we"></ol></div><ul class="out" id="a1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ARCH(1) with ω = 0.5: for α = 0.5 the kurtosis is 9.0. What happens to the kurtosis when ▶ takes α to 0.6?</div><details><summary>Answer</summary><p>It becomes infinite: 3α² = 1.08 ≥ 1, that is α exceeds 1/√3 = 0.577 and the fourth moment no longer exists. The unconditional variance stays finite, ω/(1 − α) = 0.5/0.4 = 1.25.</p></details>
+</section>
+<section class="blk" id="simulated">
+  <h3>Simulated Paths: i.i.d., ARCH(1) and GARCH(1,1)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=17" target="_blank" rel="noopener"><img src="slides/sfm_ch9_simulated_en.jpg" alt="Slide 16: Simulated Paths: i.i.d., ARCH(1) and GARCH(1,1)" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sm-s">Generator seed</label><select id="sm-s"><option value="2026" selected>2026 (lecture)</option><option value="2036">2036</option><option value="2046">2046</option><option value="2056">2056</option><option value="2066">2066</option><option value="2076">2076</option></select></div><div class="ctl"><label for="sm-a">α of the ARCH(1), with ω = 1 − α: <b id="sm-a-v"></b></label><input type="range" id="sm-a" min="0.05" max="0.95" step="0.05" value="0.5"></div><div class="ctl"><label for="sm-b">β of the GARCH(1,1), with α = 0.10 and ω = 0.9 − β: <b id="sm-b-v"></b></label><input type="range" id="sm-b" min="0.5" max="0.89" step="0.01" value="0.88"></div><button class="btn play" id="sm-play" type="button"></button></div><div class="charts "><div class="chart" id="sm-chart"></div></div><ul class="out" id="sm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For ARCH(1) with ω = α = 0.5 the theoretical kurtosis is 9.0. What kurtosis does the simulated series of 1000 values have?</div>
+  <details><summary>Answer</summary><p>4.91, far below 9.0: the fourth moment converges slowly, because it depends on a few rare spikes. The i.i.d. series has 3.12 (theory 3), GARCH(1,1) has 3.74 (theory 6.06). With other seeds of the generator the sample values change a lot.</p></details>
+</section>
+<section class="blk" id="archq">
+  <h3>ARCH(q) and Its Limits</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=18" target="_blank" rel="noopener"><img src="slides/ch9_archq_en.jpg" alt="Slide 17: ARCH(q) and Its Limits" loading="lazy"></a>
+      <figcaption>Slide 17</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aq-s">Series</label><select id="aq-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="aq-q">Order q of the second row: <b id="aq-q-v"></b></label><input type="range" id="aq-q" min="2" max="9" step="1" value="5"></div><button class="btn play" id="aq-play" type="button"></button></div><div class="charts "><div class="chart" id="aq-chart"></div></div><p class="xh">Models with Normal innovations (in green: the smallest AIC and BIC)</p><div class="tw" id="aq-tab"></div><ul class="out" id="aq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500: ARCH(10) has 12 parameters and log-likelihood −9,227.6; GARCH(1,1) has 4 parameters and −9,218.0. Which model does BIC prefer?</div><details><summary>Answer</summary><p>GARCH(1,1): BIC 18,471.2 against 18,561.0 for ARCH(10), 89.8 lower. It has a higher likelihood with a third of the parameters: the term βσ²(t − 1) summarises all past shocks with geometric weights. The BIC of ARCH(q) falls with every added lag up to q = 10, but stays above that of GARCH(1,1).</p></details>
+</section><h2 class="sec" id="s-garch">The GARCH(1,1) Model</h2>
+<section class="blk" id="kurt">
+  <h3>Stationarity, Long-Run Variance and Kurtosis</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=21" target="_blank" rel="noopener"><img src="slides/ch9_kurt_en.jpg" alt="Slide 20: Stationarity, Long-Run Variance and Kurtosis" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ku-a">α: <b id="ku-a-v"></b></label><input type="range" id="ku-a" min="0.02" max="0.3" step="0.01" value="0.1"></div><div class="ctl"><label for="ku-b">β: <b id="ku-b-v"></b></label><input type="range" id="ku-b" min="0.5" max="0.97" step="0.01" value="0.88"></div><button class="btn play" id="ku-play" type="button"></button></div><div class="charts "><div class="chart" id="ku-chart"></div></div><div class="we" id="ku-we-box"><p class="we-h">Worked example: long-run variance and kurtosis</p><div class="we-f">\[\bar\sigma^2 = \frac{\omega}{1-\alpha-\beta}, \qquad K = 3\,\frac{1-(\alpha+\beta)^2}{1-(\alpha+\beta)^2-2\alpha^2}\]</div><div class="wctl"><div class="ctl"><label for="ku-w">ω</label><select id="ku-w"><option value="0.02" selected>0.02 (lecture)</option><option value="0.01">0.01</option><option value="0.05">0.05</option></select></div></div><ol id="ku-we"></ol></div><ul class="out" id="ku-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> α = 0.10 and β = 0.88 give kurtosis 6.06. What does the kurtosis become when ▶ takes β to 0.89?</div><details><summary>Answer</summary><p>Infinite: (α + β)² + 2α² = 0.9801 + 0.02 = 1.0001 ≥ 1. The unconditional variance stays finite (α + β = 0.99 &lt; 1; with ω = 0.02, σ̄² = 2.00), but the fourth moment no longer exists: the condition for the kurtosis is stricter than that for stationarity.</p></details>
+</section>
+<section class="blk" id="half-life">
+  <h3>Persistence and Half-Life</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=22" target="_blank" rel="noopener"><img src="slides/ch9_half-life_en.jpg" alt="Slide 21: Persistence and Half-Life" loading="lazy"></a>
+      <figcaption>Slide 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hl-p">Persistence α + β: <b id="hl-p-v"></b></label><input type="range" id="hl-p" min="0.8" max="0.999" step="0.0001" value="0.98"></div><button class="btn play" id="hl-play" type="button"></button></div><div class="charts "><div class="chart" id="hl-chart"></div></div><div class="we" id="hl-we-box"><p class="we-h">Worked example: the half-life</p><div class="we-f">\[(\alpha+\beta)^{h} = \tfrac12 \;\Rightarrow\; h_{1/2} = \frac{\ln 0.5}{\ln(\alpha+\beta)} \approx \frac{\ln 2}{1-\alpha-\beta}\]</div><ol id="hl-we"></ol></div><ul class="out" id="hl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For α + β = 0.98 the half-life is 34.3 days. What is it for α + β = 0.99?</div><details><summary>Answer</summary><p>69.0 days, almost double: h½ ≈ ln 2/(1 − α − β), and 1 − α − β halves, from 0.02 to 0.01. For 0.90 it is 6.6 days; for the S&P 500 (α + β = 0.9947), 131 days.</p></details>
+</section>
+<section class="blk" id="step">
+  <h3>Worked Example: One GARCH(1,1) Step</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=23" target="_blank" rel="noopener"><img src="slides/ch9_step_en.jpg" alt="Slide 22: Worked Example: One GARCH(1,1) Step" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="st-r">Today's return r(t) (%): <b id="st-r-v"></b></label><input type="range" id="st-r" min="-6" max="6" step="0.5" value="-3"></div><div class="ctl"><label for="st-s">Today's variance σ²(t): <b id="st-s-v"></b></label><input type="range" id="st-s" min="0.5" max="4" step="0.1" value="1.2"></div><button class="btn play" id="st-play" type="button"></button></div><div class="charts "><div class="chart" id="st-chart"></div></div><div class="we" id="st-we-box"><p class="we-h">Worked example: one GARCH(1,1) step</p><div class="we-f">\[\sigma_{t+1}^2 = \omega + \alpha\,\varepsilon_t^2 + \beta\,\sigma_t^2, \qquad \varepsilon_t = r_t - \mu\]</div><div class="wctl"><div class="ctl"><label for="st-p">Parameters</label><select id="st-p"><option value="deck" selected>ω = 0.02, α = 0.10, β = 0.88, μ = 0 (lecture)</option><option value="sp500">S&P 500, GARCH(1,1)-t</option></select></div></div><ol id="st-we"></ol></div><ul class="out" id="st-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With σ²(t) = 1.2 and r(t) = −3%, σ²(t + 1) = 1.976. What is σ²(t + 1) after r(t) = +3%?</div><details><summary>Answer</summary><p>Also 1.976: GARCH(1,1) uses ε², so the sign of the shock does not matter (here μ = 0). The value 1.376 = 0.02 + 0.10 × 3 + 0.88 × 1.2 forgets the square. Asymmetry needs GJR-GARCH or EGARCH (Section 8).</p></details>
+</section>
+<section class="blk" id="igarch">
+  <h3>IGARCH and the EWMA Link</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch9_igarch_en.jpg" alt="Slide 23: IGARCH and the EWMA Link" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ig-l">EWMA λ: <b id="ig-l-v"></b></label><input type="range" id="ig-l" min="0.9" max="0.99" step="0.01" value="0.94"></div><div class="ctl"><label for="ig-w">ω of the IGARCH</label><select id="ig-w"><option value="0" selected>0 (EWMA) (lecture)</option><option value="0.0157">0.0157 (ω of the S&P 500)</option><option value="0.194">0.194 (ω of Bitcoin)</option></select></div><button class="btn play" id="ig-play" type="button"></button></div><div class="charts "><div class="chart" id="ig-chart"></div></div><div class="we" id="ig-we-box"><p class="we-h">Worked example: IGARCH and GARCH forecasts after a crash</p><div class="we-f">\[\alpha+\beta = 1: \quad E_t[\sigma_{t+h}^2] = \sigma_{t+1}^2 + (h-1)\,\omega; \qquad \alpha+\beta < 1: \quad E_t[\sigma_{t+h}^2] = \bar\sigma^2 + (\alpha+\beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2)\]</div><ol id="ig-we"></ol></div><ul class="out" id="ig-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> An analyst forecasts the volatility one year ahead with EWMA right after a crash. What goes wrong?</div><details><summary>Answer</summary><p>EWMA keeps the crisis level for the whole year. S&P 500, at the close of 16 March 2020: EWMA (λ = 0.94) forecasts 84.0% a year for every horizon; GARCH(1,1)-t starts at 111.0% and falls to 62.0% after 250 days, towards the long-run level of 27.3%. EWMA is an IGARCH with ω = 0: no mean reversion.</p></details>
+</section><h2 class="sec" id="s-ml">Estimation by Maximum Likelihood</h2>
+<section class="blk" id="lik-arch1">
+  <h3>The Likelihood of ARCH(1)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=26" target="_blank" rel="noopener"><img src="slides/sfm_ch9_lik_arch1_en.jpg" alt="Slide 25: The Likelihood of ARCH(1)" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="l1-a">True α of the simulation (ω = 1 − α): <b id="l1-a-v"></b></label><input type="range" id="l1-a" min="0.1" max="0.9" step="0.05" value="0.5"></div><button class="btn play" id="l1-play" type="button"></button></div><div class="charts "><div class="chart" id="l1-chart"></div></div><ul class="out" id="l1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With n = 100, α̂ = 0.432 and the standard error is 0.127. How does the standard error change with n = 1000?</div>
+  <details><summary>Answer</summary><p>It falls to 0.035, 3.6 times smaller; the √n rule gives √10 = 3.16. The log-likelihood curve gets sharper, and α̂ = 0.491 is closer to the true value 0.5.</p></details>
+</section>
+<section class="blk" id="lik-garch">
+  <h3>The Likelihood of GARCH(1,1)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch9_lik_garch_en.jpg" alt="Slide 26: The Likelihood of GARCH(1,1)" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lg-s">Generator seed</label><select id="lg-s"><option value="2033" selected>2033 (lecture)</option><option value="2043">2043</option><option value="2053">2053</option><option value="2063">2063</option><option value="2073">2073</option><option value="2083">2083</option></select></div><div class="ctl"><label for="lg-n">n of the left panel</label><select id="lg-n"><option value="250">250</option><option value="500" selected>500 (lecture)</option><option value="1000">1000</option></select></div><button class="btn play" id="lg-play" type="button"></button></div><div class="charts "><div class="chart" id="lg-chart"></div></div><ul class="out" id="lg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With n = 500 the maximum on the grid is at (0.045, 0.63), far from the true values (0.1, 0.8). Where is the maximum with n = 2000?</div>
+  <details><summary>Answer</summary><p>At (0.100, 0.78), close to the true values: the long ridge along which α and β trade off narrows as n grows. With other seeds of the generator (extra runs) the maximum for n = 500 ranges from (0.025, 0.95) to (0.205, 0.67).</p></details>
+</section>
+<section class="blk" id="step-table">
+  <h3>Estimation Step by Step and with a Package</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch9_step-table_en.jpg" alt="Slide 27: Estimation Step by Step and with a Package" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-s">Series</label><select id="et-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">GARCH(1,1) with Normal innovations: step by step (scipy) and with the arch package</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, GARCH(1,1) with Normal innovations: the classic SE of α̂ is 0.0086. What is the robust SE?</div><details><summary>Answer</summary><p>0.0118, 1.37 times larger (β: 1.37; ω: 1.63; μ: 1.02). The innovations have heavy tails, and the classic SE, computed as if z(t) were Normal, overstate the precision of the variance parameters. For the BET the ratio exceeds 2.6.</p></details>
+</section><h2 class="sec" id="s-tails">Heavy-Tailed Innovations</h2>
+<section class="blk" id="dist-table">
+  <h3>S&P 500: Three Innovation Distributions</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch9_dist-table_en.jpg" alt="Slide 30: S&P 500: Three Innovation Distributions" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dt-s">Series</label><select id="dt-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="dt-play" type="button"></button></div><div class="charts "><div class="chart" id="dt-chart"></div></div><p class="xh">GARCH(1,1) with three innovation distributions</p><div class="tw" id="dt-tab"></div><ul class="out" id="dt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Moving from Normal to Student-t innovations raises the S&P 500 log-likelihood from −9,218.0 to −9,062.5. Do α and β change much?</div><details><summary>Answer</summary><p>Little: α from 0.121 to 0.123, β from 0.860 to 0.872; the persistence rises from 0.980 to 0.995. The LR statistic, 311.0, is far above 3.84: the innovation distribution matters for the tail quantiles (VaR) more than for σ(t).</p></details>
+</section>
+<section class="blk" id="qq">
+  <h3>QQ Plots of the Standardised Residuals</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch9_qq_en.jpg" alt="Slide 31: QQ Plots of the Standardised Residuals" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="qq-s">Series</label><select id="qq-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="qq-play" type="button"></button></div><div class="charts "><div class="chart" id="qq-chart"></div></div><ul class="out" id="qq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The 0.1% quantile of the GARCH-N residuals is −4.81, against −3.09 for the Normal distribution. What is the 0.1% quantile of the standardised t with ν̂ = 6.26?</div>
+  <details><summary>Answer</summary><p>−4.19 = t⁻¹(0.001) × √((ν − 2)/ν) = −5.08 × 0.825. The GARCH-t residuals have −4.79: the t tail is much closer, but the largest falls are still deeper.</p></details>
+</section><h2 class="sec" id="s-mk">GARCH in Six Markets</h2>
+<section class="blk" id="mk-table">
+  <h3>GARCH(1,1)-t Estimates</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch9_mk-table_en.jpg" alt="Slide 32: GARCH(1,1)-t Estimates" loading="lazy"></a>
+      <figcaption>Slide 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mt-d">Distribution of the innovations</label><select id="mt-d"><option value="t" selected>Student-t (lecture)</option><option value="n">Normal</option><option value="st">skewed t</option></select></div><button class="btn play" id="mt-play" type="button"></button></div><div class="charts "><div class="chart" id="mt-chart"></div></div><p class="xh">GARCH(1,1) in six markets (robust SE; annualised volatilities, in %)</p><div class="tw" id="mt-tab"></div><ul class="out" id="mt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The BET has the largest α̂ of the six series (0.192). What does it mean?</div><details><summary>Answer</summary><p>A stronger reaction to yesterday's news: a 2% shock adds 0.192 × 4 = 0.77 to tomorrow's variance, against 0.123 × 4 = 0.49 for the S&P 500. The persistence is close, though (0.9907 against 0.9947), because the β̂ of the BET is smaller (0.799).</p></details>
+</section>
+<section class="blk" id="longrun">
+  <h3>Interpretation: Bitcoin and the Long-Run Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=34" target="_blank" rel="noopener"><img src="slides/ch9_longrun_en.jpg" alt="Slide 33: Interpretation: Bitcoin and the Long-Run Volatility" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lr-s">Series</label><select id="lr-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="lr-play" type="button"></button></div><div class="charts "><div class="chart" id="lr-chart"></div></div><div class="we" id="lr-we-box"><p class="we-h">Worked example: the long-run volatility</p><div class="we-f">\[\bar\sigma^2 = \frac{\omega}{1-\alpha-\beta}, \qquad \bar\sigma_{\text{year}} = \sqrt{A\,\bar\sigma^2}\]</div><ol id="lr-we"></ol></div><ul class="out" id="lr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500: long-run volatility 27.3%, sample volatility 19.2%. Is the model wrong?</div><details><summary>Answer</summary><p>Not necessarily: σ̄² = ω/(1 − α − β) divides by 1 − α − β = 0.0053, a small and imprecise number. With α + β lower by 0.002 (0.9927) the long-run volatility would be 23.3%; the Normal GARCH gives 18.1%. The long-run level is the least reliable output of a persistent GARCH.</p></details>
+</section>
+<section class="blk" id="vol-sd">
+  <h3>Conditional Volatility: S&P 500 and DAX</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=35" target="_blank" rel="noopener"><img src="slides/sfm_ch9_vol_sp500_dax_en.jpg" alt="Slide 34: Conditional Volatility: S&P 500 and DAX" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="v1-d">Distribution of the innovations</label><select id="v1-d"><option value="t" selected>Student-t (lecture)</option><option value="n">Normal</option><option value="st">skewed t</option></select></div><div class="ctl"><label for="v1-y">Start of the sample</label><select id="v1-y"><option value="0" selected>2000 (Bitcoin: 2014) (lecture)</option><option value="1">2005 (Bitcoin: 2016)</option><option value="2">2010 (Bitcoin: 2018)</option><option value="3">2015 (Bitcoin: 2020)</option></select></div><button class="btn play" id="v1-play" type="button"></button></div><div class="charts "><div class="chart" id="v1-chart"></div></div><ul class="out" id="v1-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The 2020 peak of the S&P 500 GARCH-t volatility is 111% a year (17 March 2020). What was the 2008 peak?</div>
+  <details><summary>Answer</summary><p>93%, on 16 October 2008: lower than in 2020, although the 2008 crisis lasted longer; the peak reflects the largest shocks of a short interval, not the length of the crisis. DAX: 80% in 2008 and 82% in 2020. The S&P 500 median is 14%, and the value on 18 September 2026 is 12%.</p></details>
+</section>
+<section class="blk" id="vol-bb">
+  <h3>Conditional Volatility: BET and Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch9_vol_bet_btc_en.jpg" alt="Slide 35: Conditional Volatility: BET and Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="v2-d">Distribution of the innovations</label><select id="v2-d"><option value="t" selected>Student-t (lecture)</option><option value="n">Normal</option><option value="st">skewed t</option></select></div><div class="ctl"><label for="v2-y">Start of the sample</label><select id="v2-y"><option value="0" selected>2000 (Bitcoin: 2014) (lecture)</option><option value="1">2005 (Bitcoin: 2016)</option><option value="2">2010 (Bitcoin: 2018)</option><option value="3">2015 (Bitcoin: 2020)</option></select></div><button class="btn play" id="v2-play" type="button"></button></div><div class="charts "><div class="chart" id="v2-chart"></div></div><ul class="out" id="v2-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The median GARCH-t volatility of Bitcoin is 59% a year, that of the S&P 500 14%. How many times more volatile is Bitcoin?</div>
+  <details><summary>Answer</summary><p>4.1 times (58.7/14.3); the ratio of the variances would be 4.1² ≈ 17. Peaks: Bitcoin 301% on 13 March 2020, BET 117% on 15 October 2008 and 88% in March 2020.</p></details>
+</section>
+<section class="blk" id="persistence">
+  <h3>How Long Does a Shock Last?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch9_persistence_en.jpg" alt="Slide 36: How Long Does a Shock Last?" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ps-m">Model</label><select id="ps-m"><option value="garch:t" selected>GARCH(1,1)-t (lecture)</option><option value="garch:n">GARCH(1,1)-N</option><option value="gjr:t">GJR-GARCH(1,1)-t</option><option value="egarch:t">EGARCH(1,1)-t</option></select></div><div class="ctl"><label for="ps-h">Horizon (days): <b id="ps-h-v"></b></label><input type="range" id="ps-h" min="50" max="500" step="10" value="250"></div><button class="btn play" id="ps-play" type="button"></button></div><div class="charts "><div class="chart" id="ps-chart"></div></div><ul class="out" id="ps-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What is the half-life of a variance shock for Bitcoin?</div>
+  <details><summary>Answer</summary><p>There is none: α̂ + β̂ = 1.000 (IGARCH), so a shock does not die out. The S&P 500 needs 131 days, the DAX 88, the BET 74, TLV 18, SNP 12. With GJR-t the S&P 500 persistence (α + β + γ/2) is 0.983, a half-life of 41.5 days.</p></details>
+</section><h2 class="sec" id="s-asym">Asymmetry and the Leverage Effect</h2>
+<section class="blk" id="gjr">
+  <h3>GJR-GARCH and EGARCH</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch9_gjr_en.jpg" alt="Slide 38: GJR-GARCH and EGARCH" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gj-e">Size of the shock |ε(t − 1)| (%): <b id="gj-e-v"></b></label><input type="range" id="gj-e" min="0.5" max="5" step="0.5" value="2"></div><div class="ctl"><label for="gj-s">Series</label><select id="gj-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><button class="btn play" id="gj-play" type="button"></button></div><div class="charts "><div class="chart" id="gj-chart"></div></div><div class="we" id="gj-we-box"><p class="we-h">Worked example: the impact of a fall and of a rise</p><div class="we-f">\[\sigma_t^2 = \omega + (\alpha + \gamma\,I_{t-1})\,\varepsilon_{t-1}^2 + \beta\,\bar\sigma^2, \qquad I_{t-1} = 1 \text{ if } \varepsilon_{t-1} < 0\]</div><ol id="gj-we"></ol></div><ul class="out" id="gj-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, GJR-t: α̂ = 0 and γ̂ = 0.205. By how much does a 2% rise raise tomorrow's variance, compared with a day without a shock?</div><details><summary>Answer</summary><p>By 0: good news has the slope α = 0. After a 2% fall the term (α + γ)ε² adds 0.205 × 4 = 0.821; with σ²(t − 1) fixed at the sample variance 1.471, tomorrow's variance is 2.136 after the fall and 1.315 after the rise: the ratio 1.62.</p></details>
+</section>
+<section class="blk" id="nic">
+  <h3>News Impact Curves: S&P 500 and Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch9_nic_en.jpg" alt="Slide 39: News Impact Curves: S&P 500 and Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ni-s">Series of the right panel</label><select id="ni-s"><option value="btc" selected>Bitcoin (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ni-v">σ²(t − 1), in multiples of the sample variance: <b id="ni-v-v"></b></label><input type="range" id="ni-v" min="0.25" max="4" step="0.25" value="1"></div><button class="btn play" id="ni-play" type="button"></button></div><div class="charts "><div class="chart" id="ni-chart"></div></div><ul class="out" id="ni-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, GJR: the variance after a 2% fall is 1.62 times that after a 2% rise, with σ²(t − 1) equal to the sample variance. What happens to the ratio when ▶ raises σ²(t − 1) to 4 times the sample variance?</div>
+  <details><summary>Answer</summary><p>It falls to 1.16: the common term βσ²(t − 1) grows while the difference γε² stays the same, so it matters relatively less. With σ²(t − 1) at a quarter of the sample variance the ratio rises to 3.39: asymmetry shows most in calm periods.</p></details>
+</section>
+<section class="blk" id="asym-table">
+  <h3>Asymmetry in Six Markets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=41" target="_blank" rel="noopener"><img src="slides/ch9_asym-table_en.jpg" alt="Slide 40: Asymmetry in Six Markets" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="at-d">Distribution of the innovations</label><select id="at-d"><option value="t" selected>Student-t (lecture)</option><option value="n">Normal</option><option value="st">skewed t</option></select></div><button class="btn play" id="at-play" type="button"></button></div><div class="charts "><div class="chart" id="at-chart"></div></div><p class="xh">GJR-GARCH(1,1) and EGARCH(1,1): the asymmetry parameter γ (t statistics with robust SE)</p><div class="tw" id="at-tab"></div><ul class="out" id="at-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> BET: γ̂ = 0.043, t = 2.1, the LR test has p = 0.026, but BIC prefers the symmetric GARCH. Why?</div><details><summary>Answer</summary><p>BIC needs LR to exceed ln T = ln 6,670 = 8.8 for one more parameter; LR = 4.9 passes 3.84 (the 5% threshold) but not 8.8: the BET leverage effect is weak. For Bitcoin BIC picks EGARCH although γ is not significant: the logarithmic form fits the variance dynamics better, not the asymmetry.</p></details>
+</section><h2 class="sec" id="s-diag">Diagnostics</h2>
+<section class="blk" id="acf-diag">
+  <h3>What GARCH Removes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=43" target="_blank" rel="noopener"><img src="slides/sfm_ch9_acf_diag_en.jpg" alt="Slide 42: What GARCH Removes" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ad-s">Series</label><select id="ad-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ad-m">Model of the residuals</label><select id="ad-m"><option value="garch:t" selected>GARCH(1,1)-t (lecture)</option><option value="garch:n">GARCH(1,1)-N</option><option value="gjr:t">GJR-GARCH(1,1)-t</option><option value="egarch:t">EGARCH(1,1)-t</option></select></div><div class="ctl"><label for="ad-k">Lags: <b id="ad-k-v"></b></label><input type="range" id="ad-k" min="10" max="100" step="10" value="50"></div><button class="btn play" id="ad-play" type="button"></button></div><div class="charts "><div class="chart" id="ad-chart"></div></div><ul class="out" id="ad-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ACF of r² at lag 1 is 0.31. What is the ACF of ẑ² (GARCH-t) at lag 1?</div>
+  <details><summary>Answer</summary><p>−0.005, inside the band ±0.024; the largest absolute value over 50 lags is 0.028. Three variance parameters absorb almost all the volatility clustering; at lag 50 the ACF of r² is still 0.053.</p></details>
+</section>
+<section class="blk" id="diag-table">
+  <h3>Diagnostics on Real Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch9_diag-table_en.jpg" alt="Slide 43: Diagnostics on Real Data" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dg-s">Series</label><select id="dg-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="dg-m">Ljung–Box lags m: <b id="dg-m-v"></b></label><input type="range" id="dg-m" min="5" max="30" step="1" value="10"></div><button class="btn play" id="dg-play" type="button"></button></div><div class="charts "><div class="chart" id="dg-chart"></div></div><p class="xh">Tests on the returns and on the standardised residuals</p><div class="tw" id="dg-tab"></div><ul class="out" id="dg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, GARCH-t: Q(10) on ẑ² has p = 0.192, and the sign-bias test has p &lt; 0.001. Is the model correct?</div><details><summary>Answer</summary><p>Not entirely: no ARCH effects are left (Q(10) of the squares falls from 6,133 to 13.6), but the sign of past shocks still anticipates the variance (sign t = 3.56): the asymmetry is missing. A test that does not reject does not prove the model correct.</p></details>
+</section><h2 class="sec" id="s-sel">Model Selection</h2>
+<section class="blk" id="ms-table">
+  <h3>Nine Models for the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=45" target="_blank" rel="noopener"><img src="slides/ch9_ms-table_en.jpg" alt="Slide 44: Nine Models for the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-s">Series</label><select id="ms-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ms-c">Criterion</label><select id="ms-c"><option value="bic" selected>BIC (lecture)</option><option value="aic">AIC</option></select></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><p class="xh">Log-likelihood and the difference from the best model (in green)</p><div class="tw" id="ms-tab"></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, starting from GARCH with Normal innovations: which lowers BIC more, asymmetry (EGARCH with Normal innovations) or heavy tails (GARCH with skewed t)?</div><details><summary>Answer</summary><p>Heavy tails: 341, against 276 for asymmetry; both together (EGARCH with skewed t) lower BIC by 649, the best of the nine models. AIC gives the same order.</p></details>
+</section><h2 class="sec" id="s-fc">Forecasting Volatility</h2>
+<section class="blk" id="fc-we">
+  <h3>Worked Example: the S&P 500 on 18 September 2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=47" target="_blank" rel="noopener"><img src="slides/ch9_fc-we_en.jpg" alt="Slide 46: Worked Example: the S&P 500 on 18 September 2026" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fw-h">Horizon H (days): <b id="fw-h-v"></b></label><input type="range" id="fw-h" min="1" max="250" step="1" value="10"></div><div class="ctl"><label for="fw-d">Forecast date</label><select id="fw-d"><option value="2026-09-18" selected>18 September 2026 (lecture)</option><option value="2020-03-16">16 March 2020</option><option value="2017-11-03">3 November 2017</option></select></div><button class="btn play" id="fw-play" type="button"></button></div><div class="charts "><div class="chart" id="fw-chart"></div></div><div class="we" id="fw-we-box"><p class="we-h">Worked example: the H-day forecast</p><div class="we-f">\[E_t[\sigma_{t+h}^2] = \bar\sigma^2 + (\alpha+\beta)^{h-1}(\sigma_{t+1}^2 - \bar\sigma^2), \qquad \mathrm{Var}_t\Big(\sum_{h=1}^{H} r_{t+h}\Big) = \sum_{h=1}^{H} E_t[\sigma_{t+h}^2]\]</div><ol id="fw-we"></ol></div><ul class="out" id="fw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On 18 September 2026, σ²(t + 1) = 0.509, below σ̄² = 2.972. The square-root-of-time rule gives the 10-day volatility √(10 × 0.509) = 2.26%. What does the sum of the GARCH forecasts give?</div><details><summary>Answer</summary><p>2.38%: the daily forecasts rise towards the long-run level (day 10: 0.624), so their sum, 5.67, exceeds 10 × 0.509 = 5.09. In a crisis the relation reverses: the square-root rule gives values that are too large.</p></details>
+</section>
+<section class="blk" id="term">
+  <h3>The Term Structure of Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=48" target="_blank" rel="noopener"><img src="slides/sfm_ch9_term_structure_en.jpg" alt="Slide 47: The Term Structure of Volatility" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ts-m">Model</label><select id="ts-m"><option value="t" selected>GARCH(1,1)-t (lecture)</option><option value="n">GARCH(1,1)-N</option></select></div><div class="ctl"><label for="ts-d">Date of the third forecast: <b id="ts-d-v"></b></label><input type="range" id="ts-d" min="250" max="6713" step="1" value="6713"></div><button class="btn play" id="ts-play" type="button"></button></div><div class="charts "><div class="chart" id="ts-chart"></div></div><ul class="out" id="ts-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On 16 March 2020 the forecast for the next day is 111.0% a year. What is the forecast average volatility over the next 250 days?</div>
+  <details><summary>Answer</summary><p>84.7%: with α + β = 0.9947 the gap to the long-run level shrinks by only 0.53% a day, and after 250 days the daily forecast is still 62.0%. On a calm day (3 November 2017) the curve rises: 7.3% tomorrow, 19.0% on average over a year.</p></details>
+</section>
+<section class="blk" id="fc-eval">
+  <h3>GARCH against EWMA, Out of Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=50" target="_blank" rel="noopener"><img src="slides/sfm_ch9_forecast_eval_en.jpg" alt="Slide 49: GARCH against EWMA, Out of Sample" loading="lazy"></a>
+      <figcaption>Slide 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fe-y">Start of the evaluation</label><select id="fe-y"><option value="2015" selected>2015 (lecture)</option><option value="2017">2017</option><option value="2019">2019</option><option value="2021">2021</option><option value="2023">2023</option></select></div><div class="ctl"><label for="fe-l">EWMA λ: <b id="fe-l-v"></b></label><input type="range" id="fe-l" min="0.9" max="0.99" step="0.01" value="0.94"></div><button class="btn play" id="fe-play" type="button"></button></div><div class="charts "><div class="chart" id="fe-chart"></div></div><p class="xh">Next-day variance forecasts (in green: the smallest QLIKE; DM: t and p)</p><div class="tw" id="fe-tab"></div><ul class="out" id="fe-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin, 2015–2026: QLIKE GARCH-t 3.383, EWMA 3.390, DM test t = −0.20 (p = 0.845). What do you conclude?</div>
+  <details><summary>Answer</summary><p>No detectable difference: the Bitcoin GARCH is an IGARCH, that is almost an EWMA. A large p does not show that the forecasts are equal, only that the test does not separate them. For the S&P 500 (t = −3.69), the DAX (−3.19) and the BET (−2.22) GARCH-t is significantly better.</p></details>
+</section><h2 class="sec" id="s-var">VaR 1% from a GARCH Model</h2>
+<section class="blk" id="var-we">
+  <h3>Conditional VaR</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch9_var-we_en.jpg" alt="Slide 50: Conditional VaR" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vw-a">VaR level</label><select id="vw-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="vw-h">Horizon H (days): <b id="vw-h-v"></b></label><input type="range" id="vw-h" min="1" max="20" step="1" value="10"></div><button class="btn play" id="vw-play" type="button"></button></div><div class="charts "><div class="chart" id="vw-chart"></div></div><div class="we" id="vw-we-box"><p class="we-h">Worked example: one-day and H-day VaR</p><div class="we-f">\[\mathrm{VaR}_{t+1} = -\big(\mu + \sigma_{t+1}\,q_\alpha(z)\big), \qquad q_\alpha(z) = t_\nu^{-1}(\alpha)\sqrt{\tfrac{\nu-2}{\nu}}\]</div><ol id="vw-we"></ol></div><ul class="out" id="vw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500 on 18 September 2026: the one-day VaR 1% is 1.75%. The √10 rule gives over 10 days 1.75 × √10 = 5.52%. What does the sum of the variance forecasts give (with the t quantile and without μ)?</div><details><summary>Answer</summary><p>6.09% = 2.557 × √5.67: volatility is expected to rise towards its long-run level, so the √10 rule gives too little. This is an approximation: the 10-day return is not Student-t with the same ν, and its exact quantile needs simulation.</p></details>
+</section>
+<section class="blk" id="var">
+  <h3>VaR 1% through the COVID-19 Crash</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch9_var_en.jpg" alt="Slide 51: VaR 1% through the COVID-19 Crash" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vr-s">Series</label><select id="vr-s"><option value="sp500" selected>S&P 500 (lecture)</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="vr-w">The two-year window starts in July</label><select id="vr-w"><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019" selected>2019 (lecture)</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option></select></div><div class="ctl"><label for="vr-a">VaR level</label><select id="vr-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="vr-play" type="button"></button></div><div class="charts "><div class="chart" id="vr-chart"></div></div><ul class="out" id="vr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, July 2019 – June 2021, 505 days: how many times is the GARCH-t VaR 1% exceeded?</div>
+  <details><summary>Answer</summary><p>13 times, against about 5 expected (1% of 505); EWMA-Normal is exceeded 17 times. Both models react, but only after the first large falls of March 2020: a one-day forecast cannot anticipate the first shock.</p></details>
+</section>
+<section class="blk" id="exc">
+  <h3>Exceedances 2015–2026: a Preview of Backtesting</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter9_arch_garch_models.pdf#page=53" target="_blank" rel="noopener"><img src="slides/ch9_exc_en.jpg" alt="Slide 52: Exceedances 2015–2026: a Preview of Backtesting" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ex-a">VaR level</label><select id="ex-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><div class="ctl"><label for="ex-y">Start of the evaluation</label><select id="ex-y"><option value="2015" selected>2015 (lecture)</option><option value="2017">2017</option><option value="2019">2019</option><option value="2021">2021</option><option value="2023">2023</option></select></div><button class="btn play" id="ex-play" type="button"></button></div><div class="charts "><div class="chart" id="ex-chart"></div></div><p class="xh">Exceedances of the one-day VaR, out of sample</p><div class="tw" id="ex-tab"></div><ul class="out" id="ex-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> EWMA with Normal innovations exceeds the VaR 1% on 2.2–2.5% of the days in all four markets. Why?</div><details><summary>Answer</summary><p>The Normal quantile, −2.326, is not deep enough for heavy tails. GARCH-t, with the Student-t quantile, has 1.2–1.7%: much closer to 1%, but still above 1% in all four markets. Whether the differences are significant is tested in Chapter 10 (the Kupiec test).</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: S&P 500, DAX and BET from January 2000, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV) and OMV Petrom (SNP) from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. EODHD prices. The models are estimated with the arch package, with the code of the lecture (maximum likelihood, robust SE); from the fitted parameters the browser rebuilds the conditional variance day by day and computes from it the standardised residuals, the QQ plots, the news impact curves, the diagnostic tests, the information criteria, the forecasts and the VaR. The out-of-sample forecasts of GARCH-t and GJR-t (re-estimated every 250 days) are those of the lecture; the EWMA, the QLIKE losses, the DM tests and the exceedances are recomputed in the browser. The simulations use the Normal draws of the lecture's generator (the same seed). Other innovation distributions, other sample starts, other markets for the S&P 500 tables, ARCH(q) of other orders, other seeds and parameters of the simulations, other VaR levels and other evaluation periods are extra runs of the same code.</p>
+</main>
+</body>
+</html>
