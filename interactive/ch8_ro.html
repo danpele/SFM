@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 8 · Estimatori ai volatilității</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch8.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch8.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 8 · Estimatori ai volatilității</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_08" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch8.html" class="lang-btn">EN</a><a href="ch8_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură sau același tabel, calculat în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas; tabelele și exemplele lucrate se recalculează odată cu el. Abrevieri: CC (close-to-close, închidere–închidere), P (Parkinson), GK (Garman–Klass), RS (Rogers–Satchell), YZ (Yang–Zhang), OHLC (open, high, low, close: deschidere, maxim, minim, închidere), EWMA (exponentially weighted moving average, media mobilă ponderată exponențial), RV (realised variance, varianța realizată), ACF (autocorrelation function, funcția de autocorelație), ARCH-LM (testul multiplicatorului Lagrange pentru efecte ARCH), GARCH (generalised autoregressive conditional heteroskedasticity), VIX (indicele de volatilitate al Cboe), MSE (mean squared error, eroarea pătratică medie), QLIKE (quasi-likelihood, cvasi-verosimilitate), MZ (Mincer–Zarnowitz), DM (Diebold–Mariano).</p>
+<p class="toc"><a href="#s-def">Volatilitatea: definiție și caracter latent</a> · <a href="#s-hist">Volatilitatea istorică și alegerea ferestrei</a> · <a href="#s-ewma">EWMA și RiskMetrics</a> · <a href="#s-range">Estimatori de amplitudine (range-based)</a> · <a href="#s-rv">Volatilitatea realizată</a> · <a href="#s-cl">Volatility clustering</a> · <a href="#s-lt">Comportamentul pe termen lung, VIX și efectul de levier</a> · <a href="#s-fc">Evaluarea prognozelor de volatilitate</a></p>
+<h2 class="sec" id="s-def">Volatilitatea: definiție și caracter latent</h2>
+<section class="blk" id="returns-bursts">
+  <h3>Patru piețe, același tipar</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_ro.jpg" alt="Slide-ul 8: Patru piețe, același tipar" loading="lazy"></a>
+      <figcaption>Slide-ul 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rb-k">Pragul: |r| peste k abateri standard: <b id="rb-k-v"></b></label><input type="range" id="rb-k" min="3" max="10" step="1" value="5"></div><button class="btn play" id="rb-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xt tr.sel td{background:#EEF3FB}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="rb-chart"></div></div><ul class="out" id="rb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Abaterea standard zilnică a S&P 500 din 1990 este 1,13%. Cîte dintre cele 9 240 de zile au |r| peste 5 abateri standard, adică peste 5,67%?</div>
+  <details><summary>Răspuns</summary><p>30 de zile, față de 0,0053 așteptate dacă randamentele ar urma distribuția Normală. DAX are 20 de astfel de zile, BET 31, Bitcoin 8. Cea mai mare variație a S&P 500 (−12,8% pe 16 martie 2020) reprezintă 11,3 abateri standard; pentru cele patru piețe valorile sînt între 8,9 și 13,3.</p></details>
+</section>
+<section class="blk" id="vol-table">
+  <h3>Interpretarea volatilității pe patru piețe</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=10" target="_blank" rel="noopener"><img src="slides/ch8_vol-table_ro.jpg" alt="Slide-ul 9: Interpretarea volatilității pe patru piețe" loading="lazy"></a>
+      <figcaption>Slide-ul 9</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-y">Începutul eșantionului (anul): <b id="vt-y-v"></b></label><input type="range" id="vt-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">Volatilitatea pe patru piețe</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cea mai mare variație zilnică a Bitcoin este −46,5%, a S&P 500 −12,8%. Măsurată în abaterile standard ale propriei serii, care este mai extremă?</div><details><summary>Răspuns</summary><p>Bitcoin: 46,5/3,49 = 13,3 abateri standard, față de 12,8/1,13 = 11,3 la S&P 500, 9,5 la DAX și 8,9 la BET. Pentru distribuția Normală, probabilitatea unei variații de peste 9 abateri standard este de ordinul 10⁻¹⁹: excesul de boltire (10,9; 6,0; 9,9; 12,0) arată cozi groase pe toate cele patru piețe.</p></details>
+</section>
+<section class="blk" id="annual">
+  <h3>Exemplu rezolvat: anualizarea volatilității</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch8_annual_ro.jpg" alt="Slide-ul 11: Exemplu rezolvat: anualizarea volatilității" loading="lazy"></a>
+      <figcaption>Slide-ul 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="an-c">Convenția de anualizare</label><select id="an-c"><option value="act" selected>frecvența reală, ca în curs</option><option value="252">A = 252</option><option value="250">A = 250</option><option value="260">A = 260</option><option value="365">A = 365</option></select></div><button class="btn play" id="an-play" type="button"></button></div><div class="charts "><div class="chart" id="an-chart"></div></div><div class="we" id="an-we-box"><p class="we-h">Exemplu lucrat: anualizarea</p><div class="we-f">\[\sigma_{\text{an}} = \sigma_{\text{zi}}\sqrt{A}, \qquad A = \frac{n}{D/365{,}25}\]</div><div class="wctl"><div class="ctl"><label for="an-s">Seria exemplului lucrat</label><select id="an-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc" selected>Bitcoin</option></select></div></div><ol id="an-we"></ol></div><ul class="out" id="an-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Dacă folosim A = 252 pentru toate cele patru serii, cum se schimbă volatilitățile anualizate?</div><details><summary>Răspuns</summary><p>Bitcoin scade de la 66,6% la 55,3% (−16,9%, factorul √(252/365,3) = 0,831); S&P 500 rămîne 18,0%, DAX 21,8%, iar BET trece de la 23,4% la 23,5%, pentru că frecvența lor reală (251,7; 253,0; 249,9 observații pe an) este aproape de 252. Cu A = 252, Bitcoin ar părea mai puțin riscant cu o șesime.</p></details>
+</section><h2 class="sec" id="s-hist">Volatilitatea istorică și alegerea ferestrei</h2>
+<section class="blk" id="rolling-windows">
+  <h3>S&P 500: trei ferestre, trei răspunsuri</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_ro.jpg" alt="Slide-ul 13: S&P 500: trei ferestre, trei răspunsuri" loading="lazy"></a>
+      <figcaption>Slide-ul 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rw-n">Fereastra scurtă n (zile; 63 și 252 rămîn fixe): <b id="rw-n-v"></b></label><input type="range" id="rw-n" min="5" max="126" step="1" value="21"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><ul class="out" id="rw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În ce fereastră ați avea încredere în ziua de după un crah?</div>
+  <details><summary>Răspuns</summary><p>O fereastră scurtă sau EWMA: media pe o fereastră lungă include încă zilele liniștite dinaintea crahului. Fereastra de 21 de zile a urcat la 97,5% pe 6 aprilie 2020; cea de 252 de zile a atins maximul, 45,6%, abia pe 15 iulie 2009, la cîteva luni după vîrful crizei din 2008. Prețul reacției rapide este zgomotul: variația zilnică tipică a lui ln σ̂ este 6,7% la 21 de zile și 0,8% la 252 de zile.</p></details>
+</section>
+<section class="blk" id="precision">
+  <h3>Precizia unei volatilități de selecție</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch8_precision_ro.jpg" alt="Slide-ul 15: Precizia unei volatilități de selecție" loading="lazy"></a>
+      <figcaption>Slide-ul 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-n">Fereastra n (zile): <b id="pr-n-v"></b></label><input type="range" id="pr-n" min="5" max="252" step="1" value="21"></div><div class="ctl"><label for="pr-s">Seria</label><select id="pr-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><div class="we" id="pr-we-box"><p class="we-h">Exemplu lucrat: intervalul pentru ultima volatilitate</p><div class="we-f">\[\frac{\mathrm{SE}(\hat\sigma)}{\sigma} \approx \frac{1}{\sqrt{2n}}, \qquad \frac{\mathrm{SE}(\hat\sigma)}{\sigma} \approx \sqrt{\frac{\kappa - 1}{4n}}, \qquad \hat\sigma\,\big(1 \pm 1{,}96\,\mathrm{SE}/\sigma\big)\]</div><ol id="pr-we"></ol></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Coeficientul de boltire al S&P 500 este κ = 13,9. Care este eroarea standard relativă a unei volatilități calculate pe 21 de zile?</div><details><summary>Răspuns</summary><p>39,1%, de 2,54 ori mai mult decît 15,4% din formula pentru randamente Normale (raportul este √((κ − 1)/2)). Pentru ultima volatilitate pe 21 de zile, 9,6%, intervalul aproximativ de 95% este [6,7%; 12,5%] cu randamente Normale și [2,2%; 17,0%] cu boltirea observată. Chiar și cu n = 252, eroarea relativă rămîne 11,3%; 4,5% este valoarea pentru n = 252 cu randamente Normale.</p></details>
+</section><h2 class="sec" id="s-ewma">EWMA și RiskMetrics</h2>
+<section class="blk" id="ewma-weights">
+  <h3>Ponderile EWMA față de ponderile unei ferestre mobile</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=19" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ewma_weights_ro.jpg" alt="Slide-ul 18: Ponderile EWMA față de ponderile unei ferestre mobile" loading="lazy"></a>
+      <figcaption>Slide-ul 18</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ew-l">Factorul de atenuare λ (linia roșie): <b id="ew-l-v"></b></label><input type="range" id="ew-l" min="0.8" max="0.99" step="0.01" value="0.94"></div><div class="ctl"><label for="ew-n">Fereastra mobilă n (zile): <b id="ew-n-v"></b></label><input type="range" id="ew-n" min="10" max="252" step="1" value="63"></div><button class="btn play" id="ew-play" type="button"></button></div><div class="charts "><div class="chart" id="ew-chart"></div></div><ul class="out" id="ew-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru λ = 0,94, 99% din pondere se află în ultimele 74,4 zile. Cîte zile sînt necesare pentru λ = 0,99?</div>
+  <details><summary>Răspuns</summary><p>458,2 zile, aproape doi ani de tranzacționare: ln 0,01/ln 0,99. Timpul de înjumătățire este 69,0 zile, iar lagul mediu 100 de zile. Pentru orice λ, numărul de zile care poartă 99% din pondere este de 6,64 ori timpul de înjumătățire (ln 0,01/ln 0,5).</p></details>
+</section>
+<section class="blk" id="ewma-update">
+  <h3>Exemplu rezolvat: o actualizare EWMA</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch8_ewma-update_ro.jpg" alt="Slide-ul 19: Exemplu rezolvat: o actualizare EWMA" loading="lazy"></a>
+      <figcaption>Slide-ul 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eu-l">Factorul de atenuare λ: <b id="eu-l-v"></b></label><input type="range" id="eu-l" min="0.8" max="0.99" step="0.01" value="0.94"></div><div class="ctl"><label for="eu-r">Randamentul de ieri r(t − 1) (%): <b id="eu-r-v"></b></label><input type="range" id="eu-r" min="-8" max="8" step="0.5" value="-3"></div><button class="btn play" id="eu-play" type="button"></button></div><div class="charts "><div class="chart" id="eu-chart"></div></div><div class="we" id="eu-we-box"><p class="we-h">Exemplu lucrat: o actualizare EWMA</p><div class="we-f">\[\sigma_t^2 = \lambda\,\sigma_{t-1}^2 + (1-\lambda)\,r_{t-1}^2\]</div><div class="wctl"><div class="ctl"><label for="eu-x">Exemplul</label><select id="eu-x"><option value="deck" selected>σ²(t − 1) = 1,00 și r(t − 1) ales (curs)</option><option value="sp">S&P 500, 16 martie 2020</option></select></div></div><ol id="eu-we"></ol></div><ul class="out" id="eu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu σ²(t − 1) = 1,00 și r(t − 1) = −3%, λ = 0,94 dă σ²(t) = 1,48. Cît este σ²(t) cu λ = 0,80?</div><details><summary>Răspuns</summary><p>2,60 = 0,80 × 1 + 0,20 × 9, deci σ(t) = 1,61% pe zi. Un λ mai mic dă o pondere mai mare (1 − λ = 0,20) șocului de ieri: reacția este mai puternică, iar memoria mai scurtă (timpul de înjumătățire scade de la 11,2 la 3,1 zile). Varianta 1,40 uită să ridice randamentul la pătrat.</p></details>
+</section>
+<section class="blk" id="ghost">
+  <h3>Ghost effect: martie–iunie 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ghost_ro.jpg" alt="Slide-ul 20: Ghost effect: martie–iunie 2020" loading="lazy"></a>
+      <figcaption>Slide-ul 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gh-n">Fereastra mobilă n (zile): <b id="gh-n-v"></b></label><input type="range" id="gh-n" min="21" max="126" step="21" value="63"></div><div class="ctl"><label for="gh-l">λ al EWMA</label><select id="gh-l"><option value="0.9">0,90</option><option value="0.94" selected>0,94 (curs)</option><option value="0.97">0,97</option></select></div><button class="btn play" id="gh-play" type="button"></button></div><div class="charts "><div class="chart" id="gh-chart"></div></div><ul class="out" id="gh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> De ce scade brusc linia albastră (fereastra de 63 de zile) la mijlocul lui iunie 2020, într-o zi liniștită?</div>
+  <details><summary>Răspuns</summary><p>Pe 15 iunie 2020, randamentul din 16 martie 2020 (−12,8%) a ieșit din fereastra de 63 de zile: volatilitatea pe fereastră a scăzut de la 50,4% la 43,0% într-o singură zi, fără nicio știre. Cu o fereastră de 21 de zile, aceeași zi de crah iese pe 15 aprilie 2020 (de la 78,8% la 64,0%), cu 126 de zile pe 14 septembrie 2020. EWMA s-a modificat în ziua respectivă cu doar −0,9 puncte procentuale.</p></details>
+</section><h2 class="sec" id="s-range">Estimatori de amplitudine (range-based)</h2>
+<section class="blk" id="ohlc-path">
+  <h3>O zi de tranzacționare în datele OHLC</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ohlc_path_ro.jpg" alt="Slide-ul 24: O zi de tranzacționare în datele OHLC" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="op-s">Sămînța generatorului</label><select id="op-s"><option value="1">1</option><option value="2">2</option><option value="3" selected>3 (curs)</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div><div class="ctl"><label for="op-o">Saltul overnight o (%): <b id="op-o-v"></b></label><input type="range" id="op-o" min="-1" max="1" step="0.05" value="0.35"></div><button class="btn play" id="op-play" type="button"></button></div><div class="charts "><div class="chart" id="op-chart"></div></div><ul class="out" id="op-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Dacă saltul overnight crește de la 0,35% la 1%, ce se schimbă pentru această zi simulată?</div>
+  <details><summary>Răspuns</summary><p>Randamentul zilei r = o + c crește de la 0,985% la 1,635%, iar r² de la 0,970 la 2,672. Maximul, minimul și închiderea sînt măsurate față de deschiderea zilei, deci Parkinson (0,627), Garman–Klass (0,714) și Rogers–Satchell (0,681) rămîn aceleași: estimatorii de amplitudine nu văd varianța nopții.</p></details>
+</section>
+<section class="blk" id="parkinson">
+  <h3>Estimatorul Parkinson (1980)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=26" target="_blank" rel="noopener"><img src="slides/ch8_parkinson_ro.jpg" alt="Slide-ul 25: Estimatorul Parkinson (1980)" loading="lazy"></a>
+      <figcaption>Slide-ul 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pk-s">Seria</label><select id="pk-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="pk-y">Anul: <b id="pk-y-v"></b></label><input type="range" id="pk-y" min="2006" max="2026" step="1" value="2020"></div><button class="btn play" id="pk-play" type="button"></button></div><div class="charts "><div class="chart" id="pk-chart"></div></div><div class="we" id="pk-we-box"><p class="we-h">Exemplu lucrat: Parkinson din H și L, ziua cu cea mai mare amplitudine a anului</p><div class="we-f">\[\hat\sigma^2_{P,t} = \frac{(u_t - d_t)^2}{4\ln 2}, \qquad u_t - d_t = \ln(H_t/L_t)\]</div><ol id="pk-we"></ol></div><ul class="out" id="pk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, 13 martie 2020: H = 2 711,33 și L = 2 492,37, deci ln(H/L) = 8,421%. Cît este volatilitatea zilnică Parkinson?</div><details><summary>Răspuns</summary><p>σ̂²_P = 8,421²/2,7726 = 25,57, deci σ̂_P = 5,06% pe zi. Amplitudinea depășește σ în medie de √(4 ln 2) = 1,67 ori, iar împărțirea la 4 ln 2 corectează exact acest lucru. Randamentul închidere–închidere al zilei a fost 8,88%, cu r² = 78,87, de trei ori estimarea Parkinson. Varianta 8,42% este amplitudinea nescalată, iar 3,04% împarte amplitudinea la 4 ln 2 fără rădăcina pătrată.</p></details>
+</section>
+<section class="blk" id="gk-rs">
+  <h3>Garman–Klass (1980) și Rogers–Satchell (1991)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch8_gk-rs_ro.jpg" alt="Slide-ul 26: Garman–Klass (1980) și Rogers–Satchell (1991)" loading="lazy"></a>
+      <figcaption>Slide-ul 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gr-s">Seria</label><select id="gr-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="btc" selected>Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gr-y">Anul: <b id="gr-y-v"></b></label><input type="range" id="gr-y" min="2006" max="2026" step="1" value="2021"></div><button class="btn play" id="gr-play" type="button"></button></div><div class="charts "><div class="chart" id="gr-chart"></div></div><div class="we" id="gr-we-box"><p class="we-h">Exemplu lucrat: Garman–Klass și Rogers–Satchell</p><div class="we-f">\[\hat\sigma^2_{GK,t} = 0{,}5\,(u_t - d_t)^2 - (2\ln 2 - 1)\,c_t^2, \qquad \hat\sigma^2_{RS,t} = u_t(u_t - c_t) + d_t(d_t - c_t)\]</div><ol id="gr-we"></ol></div><ul class="out" id="gr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Bitcoin, 19 mai 2021: u = 1,390%, d = −33,626%, c = −14,894%. Cît este termenul Rogers–Satchell u(u − c) + d(d − c)?</div><details><summary>Răspuns</summary><p>652,5 (%²) = 1,390 × 16,284 + (−33,626) × (−18,732) = 22,6 + 629,9, deci σ̂_RS = 25,5% pe zi. Garman–Klass dă 527,4, Parkinson 442,2. Ziua a avut o tendință puternică (c = −14,9%), iar Rogers–Satchell, nedeplasat pentru orice tendință, dă cea mai mare estimare. Varianta 1 133 = u² + d² omite termenii cu c.</p></details>
+</section>
+<section class="blk" id="yz">
+  <h3>Yang–Zhang (2000): adăugarea nopții</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch8_yz_ro.jpg" alt="Slide-ul 27: Yang–Zhang (2000): adăugarea nopții" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="yz-n">Fereastra n (zile, pînă la 31 martie 2020): <b id="yz-n-v"></b></label><input type="range" id="yz-n" min="2" max="126" step="1" value="21"></div><button class="btn play" id="yz-play" type="button"></button></div><div class="charts "><div class="chart" id="yz-chart"></div></div><div class="we" id="yz-we-box"><p class="we-h">Exemplu lucrat: ponderea k și estimatorul Yang–Zhang</p><div class="we-f">\[\hat\sigma^2_{YZ} = \hat\sigma_O^2 + k\,\hat\sigma_C^2 + (1-k)\,\hat\sigma_{RS}^2, \qquad k = \frac{0{,}34}{1{,}34 + (n+1)/(n-1)}\]</div><div class="wctl"><div class="ctl"><label for="yz-s">Seria exemplului lucrat</label><select id="yz-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div></div><ol id="yz-we"></ol></div><ul class="out" id="yz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru n = 21, k = 0,34/(1,34 + 22/20) = 0,139. Ce se întîmplă cu k cînd fereastra crește la 126 de zile?</div><details><summary>Răspuns</summary><p>k(126) = 0,34/(1,34 + 127/125) = 0,144, iar limita pentru n mare este 0,34/2,34 = 0,145; pentru n = 2, k = 0,078. Ponderea variază puțin cu n: Yang–Zhang este dominat de varianța nopții σ̂²_O și de termenul Rogers–Satchell, cu ponderea 1 − k ≈ 0,86.</p></details>
+</section>
+<section class="blk" id="march16">
+  <h3>Exemplu rezolvat: S&P 500 pe 16 martie 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=29" target="_blank" rel="noopener"><img src="slides/ch8_march16_ro.jpg" alt="Slide-ul 28: Exemplu rezolvat: S&P 500 pe 16 martie 2020" loading="lazy"></a>
+      <figcaption>Slide-ul 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-s">Seria</label><select id="ms-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ms-d">Ziua (cele 10 zile cu cel mai mare |r|)</label><select id="ms-d"><option value="2020-03-16" selected>2020-03-16</option></select></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><div class="we" id="ms-we-box"><p class="we-h">Exemplu lucrat: o zi, șase estimări</p><div class="we-f">\[o_t = \ln\frac{O_t}{C_{t-1}}, \quad u_t = \ln\frac{H_t}{O_t}, \quad d_t = \ln\frac{L_t}{O_t}, \quad c_t = \ln\frac{C_t}{O_t}, \quad r_t = o_t + c_t\]</div><ol id="ms-we"></ol></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500 pe 16 martie 2020: r = −12,765%, din care overnight o = −7,760%. Ce parte din r² = 163,0 reprezintă o²?</div><details><summary>Răspuns</summary><p>o² = 60,2, adică 37% din r². Restul nu se împarte simplu, pentru că r² = o² + c² + 2oc: aici c = −5,005%, c² = 25,0 și 2oc = 77,7. Estimatorii care ignoră noaptea (Parkinson 19,6, Garman–Klass 17,5, Rogers–Satchell 16,5) văd mai puțin de o optime din r²; overnight plus Rogers–Satchell dă 76,7. Varianta 61% compară randamentele, nu pătratele lor (7,760/12,765), iar 12% este raportul Parkinson/r².</p></details>
+</section>
+<section class="blk" id="efficiency">
+  <h3>Eficiența estimatorilor prin simulare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=30" target="_blank" rel="noopener"><img src="slides/sfm_ch8_efficiency_ro.jpg" alt="Slide-ul 29: Eficiența estimatorilor prin simulare" loading="lazy"></a>
+      <figcaption>Slide-ul 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ef-n">Fereastra n (zile)</label><select id="ef-n"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (curs)</option><option value="63">63</option></select></div><div class="ctl"><label for="ef-s">Panoul din dreapta</label><select id="ef-s"><option value="overnight" selected>salt overnight (curs)</option><option value="discrete">26 de prețuri pe zi</option></select></div><button class="btn play" id="ef-play" type="button"></button></div><div class="charts "><div class="chart" id="ef-chart"></div></div><ul class="out" id="ef-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu ferestre de 21 de zile, Garman–Klass este de 9,3 ori mai eficient decît CC. Ce se întîmplă cu eficiența lui cînd fereastra are doar 5 zile?</div>
+  <details><summary>Răspuns</summary><p>Rămîne aproape aceeași: 10,3 la n = 5 și 8,0 la n = 63 (rulări suplimentare ale simulării). Ambele varianțe scad aproximativ ca 1/n, deci raportul lor se schimbă puțin: cîștigul de eficiență vine din informația dintr-o zi, nu din lungimea ferestrei. Cu salt overnight, deplasarea Parkinson, GK și RS rămîne în jur de −22% la orice n.</p></details>
+</section>
+<section class="blk" id="eff-table">
+  <h3>Interpretarea simulării: precizie și deplasare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch8_eff-table_ro.jpg" alt="Slide-ul 30: Interpretarea simulării: precizie și deplasare" loading="lazy"></a>
+      <figcaption>Slide-ul 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-n">Fereastra n (zile)</label><select id="et-n"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (curs)</option><option value="63">63</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">Eficiență, deplasare și raportul MSE (1 000 de ferestre)</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu salt overnight, varianța estimării Parkinson este de 8,8 ori mai mică decît a CC, dar raportul MSE este doar 1,8. De ce?</div><details><summary>Răspuns</summary><p>MSE = varianță + deplasare². Cu salt overnight, Parkinson, GK și RS măsoară doar ședința și subestimează varianța cu circa 22%, iar eroarea lor pătratică medie este dominată de această deplasare, deși varianța lor este de 8,8–13,6 ori mai mică decît a CC. Yang–Zhang adaugă σ̂²_O: deplasarea −2% și raportul MSE 9,0.</p></details>
+</section>
+<section class="blk" id="est-table">
+  <h3>Date reale: cinci estimatori, cinci active</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_ro.jpg" alt="Slide-ul 31: Date reale: cinci estimatori, cinci active" loading="lazy"></a>
+      <figcaption>Slide-ul 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="es-y">Începutul eșantionului OHLC (anul; 2006 = începutul fiecărei serii): <b id="es-y-v"></b></label><input type="range" id="es-y" min="2006" max="2024" step="2" value="2006"></div><button class="btn play" id="es-play" type="button"></button></div><div class="charts "><div class="chart" id="es-chart"></div></div><p class="xh">Volatilitatea anualizată (%) pe eșantionul OHLC</p><div class="tw" id="es-tab"></div><ul class="out" id="es-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pentru S&P 500, YZ (16,3%) rămîne sub CC (19,9%), deși include varianța nopții. Ce explică diferența?</div><details><summary>Răspuns</summary><p>Var(r) = Var(o) + Var(c) + 2Cov(o, c), iar la S&P 500 corr(o, c) = 0,22; o explicație probabilă sînt prețurile stale (neactualizate) din deschiderea indicelui. La DAX și Bitcoin corelația este 0,02, iar raportul YZ/CC este 0,97 și 0,95. Ponderea nopții (13%) este deja inclusă în YZ, iar S&P 500 nu are zile cu H = L.</p></details>
+</section>
+<section class="blk" id="range-rolling">
+  <h3>S&P 500: estimări pe 21 de zile din 2019</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch8_range_rolling_ro.jpg" alt="Slide-ul 33: S&P 500: estimări pe 21 de zile din 2019" loading="lazy"></a>
+      <figcaption>Slide-ul 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-n">Fereastra n (zile): <b id="rr-n-v"></b></label><input type="range" id="rr-n" min="5" max="63" step="1" value="21"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu fereastra de 21 de zile, variația zilnică tipică a logaritmului estimării este 7,1% pentru CC și 4,3% pentru Parkinson. Cum se schimbă aceste valori pentru o fereastră de 5 zile?</div>
+  <details><summary>Răspuns</summary><p>Ambele cresc mult: 31,1% pentru CC, 13,7% pentru Parkinson și 13,9% pentru YZ; la 63 de zile scad la 2,7% și 1,9%. Avantajul estimatorilor de amplitudine este mai mare pe ferestrele scurte: raportul CC/Parkinson este 2,3 la n = 5, 1,7 la n = 21 și 1,4 la n = 63.</p></details>
+</section><h2 class="sec" id="s-rv">Volatilitatea realizată</h2>
+<section class="blk" id="rv-def">
+  <h3>Varianța realizată din randamentele intrazilnice</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch8_rv-def_ro.jpg" alt="Slide-ul 34: Varianța realizată din randamentele intrazilnice" loading="lazy"></a>
+      <figcaption>Slide-ul 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rd-d">Ziua simulată: <b id="rd-d-v"></b></label><input type="range" id="rd-d" min="1" max="60" step="1" value="1"></div><div class="ctl"><label for="rd-m">Intervalul de eșantionare (minute)</label><select id="rd-m"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5" selected>5 (curs)</option><option value="10">10</option><option value="15">15</option><option value="30">30</option><option value="65">65</option><option value="130">130</option><option value="390">390</option></select></div><button class="btn play" id="rd-play" type="button"></button></div><div class="charts "><div class="chart" id="rd-chart"></div></div><div class="we" id="rd-we-box"><p class="we-h">Exemplu lucrat: varianța realizată a unei zile</p><div class="we-f">\[\mathrm{RV}_t = \sum_{i=1}^{M} r_{t,i}^2, \qquad M = 390/m\]</div><ol id="rd-we"></ol></div><ul class="out" id="rd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Ziua 1: √RV din randamente de 5 minute este 1,151%, iar volatilitatea reală 1,000%. Ce dă √RV din randamente de un minut?</div><details><summary>Răspuns</summary><p>1,051% (390 de randamente, eroarea +5,1%). Simularea nu are zgomot de microstructură, deci RV converge către varianța integrată cînd M crește: pe cele 60 de zile, eroarea relativă absolută medie scade de la 5,9% (5 minute) la 2,9% (un minut). Cu zgomot, signature plot arată efectul opus la intervalele scurte.</p></details>
+</section>
+<section class="blk" id="realised">
+  <h3>Exemplu simulat: RV urmărește volatilitatea reală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch8_realised_ro.jpg" alt="Slide-ul 35: Exemplu simulat: RV urmărește volatilitatea reală" loading="lazy"></a>
+      <figcaption>Slide-ul 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="re-m">Intervalul randamentelor RV (minute)</label><select id="re-m"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5" selected>5 (curs)</option><option value="10">10</option><option value="15">15</option><option value="30">30</option><option value="65">65</option><option value="130">130</option><option value="390">390</option></select></div><button class="btn play" id="re-play" type="button"></button></div><div class="charts "><div class="chart" id="re-chart"></div></div><ul class="out" id="re-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Eroarea relativă absolută medie este 6% pentru RV la 5 minute, 23% pentru Parkinson și 58% pentru |r|. Cît devine eroarea RV dacă folosim randamente pe 390 de minute, adică un singur randament pe zi?</div>
+  <details><summary>Răspuns</summary><p>58%, ca |r|: cu M = 1, RV este chiar r², iar corelația cu volatilitatea reală scade la 0,59. La un minut eroarea este 3%, cu corelația 0,997. Parkinson (23%) folosește doar maximul și minimul și se află între cele două extreme.</p></details>
+</section>
+<section class="blk" id="signature">
+  <h3>Zgomotul de microstructură și signature plot</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch8_signature_ro.jpg" alt="Slide-ul 36: Zgomotul de microstructură și signature plot" loading="lazy"></a>
+      <figcaption>Slide-ul 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-z">Abaterea standard a zgomotului (% din preț)</label><select id="sg-z"><option value="0.0">0</option><option value="0.005">0,005</option><option value="0.01">0,01</option><option value="0.025" selected>0,025 (curs)</option><option value="0.05">0,05</option><option value="0.1">0,1</option></select></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu zgomot de 0,025%, RV la un minut supraestimează varianța de 1,79 ori. De cîte ori o supraestimează dacă zgomotul se dublează, la 0,05%?</div>
+  <details><summary>Răspuns</summary><p>De 4,16 ori în simulare și de 4,15 ori după formula 1 + 2M × varianța zgomotului/varianța reală, cu M = 390: excesul de 0,79 crește cu pătratul zgomotului, la circa 4 × 0,79 = 3,16. La 5 minute (M = 78) raportul este 1,62. Fiecare randament observat la pătrat conține, în medie, de două ori varianța zgomotului.</p></details>
+</section><h2 class="sec" id="s-cl">Volatility clustering</h2>
+<section class="blk" id="acf-clustering">
+  <h3>Semnul este imprevizibil, mărimea nu</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch8_acf_clustering_ro.jpg" alt="Slide-ul 38: Semnul este imprevizibil, mărimea nu" loading="lazy"></a>
+      <figcaption>Slide-ul 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ac-y">Începutul eșantionului (anul): <b id="ac-y-v"></b></label><input type="range" id="ac-y" min="1990" max="2020" step="2" value="1990"></div><button class="btn play" id="ac-play" type="button"></button></div><div class="charts "><div class="chart" id="ac-chart"></div></div><ul class="out" id="ac-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe eșantionul din curs, toate cele 100 de autocorelații ale lui |r| ale S&P 500 sînt în afara benzii. Cîte rămîn în afara benzii dacă eșantionul începe în 2010?</div>
+  <details><summary>Răspuns</summary><p>72 pentru |r| și 40 pentru r². Banda ±1,96/√T se lărgește de la ±0,020 la ±0,030 cînd T scade de la 9 240 la 4 202, iar ρ̂₁₀₀(|r|) scade de la 0,09 la 0,02. La lagurile mici volatility clustering rămîne evident; pentru BET din 2010, 53 de laguri ale lui |r| sînt în afara benzii.</p></details>
+</section>
+<section class="blk" id="acf-table">
+  <h3>Interpretarea volatility clustering pe trei piețe</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=40" target="_blank" rel="noopener"><img src="slides/ch8_acf-table_ro.jpg" alt="Slide-ul 39: Interpretarea volatility clustering pe trei piețe" loading="lazy"></a>
+      <figcaption>Slide-ul 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="at-k">Lagul k: <b id="at-k-v"></b></label><input type="range" id="at-k" min="1" max="100" step="1" value="1"></div><button class="btn play" id="at-play" type="button"></button></div><div class="charts "><div class="chart" id="at-chart"></div></div><p class="xh">Autocorelațiile lui |r| și r² (în afara benzii: din 100 de laguri)</p><div class="tw" id="at-tab"></div><ul class="out" id="at-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La lagul 1, pentru ce putere d este cea mai mare autocorelația lui |r|<sup>d</sup> a BET?</div><details><summary>Răspuns</summary><p>d = 1,00 (0,414): |r| este mai autocorelat decît r² (0,333), efectul Taylor. Optimul depinde însă de serie și de lag: la lagul 1, d = 1,75 pentru S&P 500 și 0,75 pentru Bitcoin; la lagul 10, 1,25, 0,75 și 0,50. Puterile mari dau o pondere mare cîtorva zile extreme.</p></details>
+</section>
+<section class="blk" id="shuffle">
+  <h3>Amestecarea zilelor: un test pentru volatility clustering</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_ro.jpg" alt="Slide-ul 40: Amestecarea zilelor: un test pentru volatility clustering" loading="lazy"></a>
+      <figcaption>Slide-ul 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-b">Amestecăm blocuri de b zile</label><select id="sh-b"><option value="1" selected>b = 1, zile individuale (curs)</option><option value="5">5</option><option value="21">21</option><option value="63">63</option><option value="252">252</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Amestecarea zilelor una cîte una duce ρ̂₁(|r|) de la 0,27 la −0,02. Ce se întîmplă dacă amestecăm blocuri de cîte 5 zile consecutive?</div>
+  <details><summary>Răspuns</summary><p>ρ̂₁(|r|) rămîne 0,23, pentru că patru din cinci perechi de zile consecutive rămîn în același bloc, dar Q(10) pentru r² scade de la 8 015 la 1 413: lagurile mai lungi decît blocul își pierd structura. Cu blocuri de 63 de zile, ρ̂₁(|r|) = 0,27 și Q(10) = 7 038. Excesul de boltire rămîne 10,9 în toate cazurile.</p></details>
+</section>
+<section class="blk" id="lb-sq">
+  <h3>Testarea volatility clustering: Ljung–Box pe randamentele la pătrat</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch8_lb-sq_ro.jpg" alt="Slide-ul 41: Testarea volatility clustering: Ljung–Box pe randamentele la pătrat" loading="lazy"></a>
+      <figcaption>Slide-ul 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lq-s">Seria</label><select id="lq-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="lq-m">Laguri testate m: <b id="lq-m-v"></b></label><input type="range" id="lq-m" min="1" max="20" step="1" value="3"></div><button class="btn play" id="lq-play" type="button"></button></div><div class="charts "><div class="chart" id="lq-chart"></div></div><div class="we" id="lq-we-box"><p class="we-h">Exemplu lucrat: testul McLeod–Li</p><div class="we-f">\[Q(m) = T(T+2)\sum_{k=1}^{m}\frac{\hat\rho_k(r^2)^2}{T-k} \approx \chi^2(m)\]</div><ol id="lq-we"></ol></div><ul class="out" id="lq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, T = 9 240: ρ̂₁, ρ̂₂, ρ̂₃ ale lui r² sînt 0,311; 0,408; 0,250. Cît este Q(3)?</div><details><summary>Răspuns</summary><p>Termenii T(T + 2)ρ̂²/(T − k) sînt 892; 1 540; 579, deci Q(3) = 3 012, mult peste χ²<sub>0,95</sub>(3) = 7,81. Q(3) pentru randamente este 57,7: respinge și el, dar este de 52 de ori mai mic. Varianta 8 958 uită să ridice autocorelațiile la pătrat, iar 0,33 uită factorul T(T + 2)/(T − k).</p></details>
+</section>
+<section class="blk" id="arch-lm">
+  <h3>Testul ARCH-LM (Engle, 1982)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=43" target="_blank" rel="noopener"><img src="slides/ch8_arch-lm_ro.jpg" alt="Slide-ul 42: Testul ARCH-LM (Engle, 1982)" loading="lazy"></a>
+      <figcaption>Slide-ul 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="al-s">Seria</label><select id="al-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="al-q">Laguri q: <b id="al-q-v"></b></label><input type="range" id="al-q" min="1" max="20" step="1" value="5"></div><button class="btn play" id="al-play" type="button"></button></div><div class="charts "><div class="chart" id="al-chart"></div></div><div class="we" id="al-we-box"><p class="we-h">Exemplu lucrat: testul ARCH-LM</p><div class="we-f">\[e_t^2 = c_0 + c_1 e_{t-1}^2 + \dots + c_q e_{t-q}^2 + u_t, \qquad \mathrm{LM} = nR^2 \approx \chi^2(q)\]</div><ol id="al-we"></ol></div><ul class="out" id="al-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> S&P 500, q = 5: R² = 0,2412 și n = 9 235. Cît este statistica LM?</div><details><summary>Răspuns</summary><p>LM = 9 235 × 0,2412 = 2 227, față de χ²<sub>0,95</sub>(5) = 11,07 (p < 0,001). R² spune că circa un sfert din variația lui e²ₜ de la o zi la alta este anticipată de ultimele cinci zile. Varianta 4 535 folosește R în loc de R², iar 1,21 înmulțește R² cu q în loc de n.</p></details>
+</section>
+<section class="blk" id="cl-table">
+  <h3>Testele de volatility clustering pe șase serii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch8_cl-table_ro.jpg" alt="Slide-ul 43: Testele de volatility clustering pe șase serii" loading="lazy"></a>
+      <figcaption>Slide-ul 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ct-m">Laguri Ljung–Box m: <b id="ct-m-v"></b></label><input type="range" id="ct-m" min="1" max="30" step="1" value="10"></div><div class="ctl"><label for="ct-q">Laguri ARCH-LM q</label><select id="ct-q"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div><button class="btn play" id="ct-play" type="button"></button></div><div class="charts "><div class="chart" id="ct-chart"></div></div><p class="xh">Teste pe randamentele zilnice (cu roșu: p-value sub 0,05)</p><div class="tw" id="ct-tab"></div><ul class="out" id="ct-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Bitcoin are excesul de boltire 12,0, dar cea mai mică statistică ARCH-LM(5) din tabel: 115, față de 2 227 la S&P 500. De ce?</div><details><summary>Răspuns</summary><p>LM = nR²: Bitcoin are mai puțin de jumătate din observațiile S&P 500 (4 379 față de 9 235 în regresie), iar R² este 0,026 față de 0,241, pentru că cîteva zile extreme domină regresia pătratelor. Testul respinge totuși puternic (p < 0,001), iar Q(10) pentru |r|, mai puțin sensibil la zilele extreme, este 1 086. Q(10) pentru r respinge și el în toate cele șase serii (p ≤ 0,028), dar este de 10,5–171,7 ori mai mic decît pentru r².</p></details>
+</section>
+<section class="blk" id="kurtosis">
+  <h3>Volatility clustering produce cozi groase</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch8_kurtosis_ro.jpg" alt="Slide-ul 44: Volatility clustering produce cozi groase" loading="lazy"></a>
+      <figcaption>Slide-ul 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ku-s">Raportul abaterilor standard, zile agitate / zile liniștite: <b id="ku-s-v"></b></label><input type="range" id="ku-s" min="1.5" max="5" step="0.5" value="2"></div><div class="ctl"><label for="ku-b">β al GARCH(1,1): <b id="ku-b-v"></b></label><input type="range" id="ku-b" min="0.7" max="0.95" step="0.01" value="0.85"></div><input type="hidden" id="ku-t" value="1"><button class="btn play" id="ku-play" type="button"></button></div><div class="charts "><div class="chart" id="ku-chart"></div></div><ul class="out" id="ku-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Zilele agitate au abaterea standard de 3 ori mai mare decît cele liniștite. Pentru ce pondere p a zilelor agitate este boltirea amestecului cea mai mare?</div>
+  <details><summary>Răspuns</summary><p>La p = 0,1, cu boltirea 8,33; la p = 0,5 boltirea este 4,92, iar la p = 0,02, 5,80. Cînd p tinde spre 0 sau spre 1, amestecul devine o singură distribuție Normală, cu boltirea 3. Pentru raportul 2 și p = 0,2, ca pe slide, boltirea este 4,69.</p></details>
+</section><h2 class="sec" id="s-lt">Comportamentul pe termen lung, VIX și efectul de levier</h2>
+<section class="blk" id="long-term">
+  <h3>Volatilitatea în trei decenii</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch8_long_term_ro.jpg" alt="Slide-ul 45: Volatilitatea în trei decenii" loading="lazy"></a>
+      <figcaption>Slide-ul 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lo-y">Începutul eșantionului (anul): <b id="lo-y-v"></b></label><input type="range" id="lo-y" min="1990" max="2020" step="2" value="1990"></div><div class="ctl"><label for="lo-s">Seria din panoul din dreapta</label><select id="lo-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="lo-play" type="button"></button></div><div class="charts "><div class="chart" id="lo-chart"></div></div><ul class="out" id="lo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Din 1990, AR(1) al logaritmului volatilității lunare a S&P 500 are φ̂ = 0,67 și timpul de înjumătățire 1,7 luni. Ce dă același AR(1) dacă eșantionul începe în 2010?</div>
+  <details><summary>Răspuns</summary><p>φ̂ = 0,53 (SE 0,06) pe 201 luni, timpul de înjumătățire 1,1 luni și nivelul pe termen lung 12,9%; din 2000, φ̂ = 0,66. Eșantionul din 2010 nu conține criza lungă din 2008–2009, iar episodul din 2020 a fost scurt, deci revenirea la medie pare mai rapidă.</p></details>
+</section>
+<section class="blk" id="vix">
+  <h3>VIX față de volatilitatea care a urmat</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch8_vix_ro.jpg" alt="Slide-ul 48: VIX față de volatilitatea care a urmat" loading="lazy"></a>
+      <figcaption>Slide-ul 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vx-h">Orizontul h al volatilității realizate (zile de tranzacționare)</label><select id="vx-h"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (curs)</option><option value="42">42</option><option value="63">63</option></select></div><button class="btn play" id="vx-play" type="button"></button></div><div class="charts "><div class="chart" id="vx-chart"></div></div><ul class="out" id="vx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Linia roșie (VIX) este de obicei deasupra sau dedesubtul celei albastre (volatilitatea realizată din următoarele 21 de zile)?</div>
+  <details><summary>Răspuns</summary><p>Deasupra, în 86% din cele 9 199 de zile; media VIX este 19,4%, media volatilității realizate 15,3%, o diferență de 4,1 puncte. Este prima de risc a varianței: investitorii plătesc pentru a fi asigurați împotriva salturilor de volatilitate. Cu h = 63 de zile, VIX este deasupra în 82% din zile.</p></details>
+</section>
+<section class="blk" id="vix-table">
+  <h3>Interpretarea relației dintre volatilitatea implicită și cea realizată</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch8_vix-table_ro.jpg" alt="Slide-ul 49: Interpretarea relației dintre volatilitatea implicită și cea realizată" loading="lazy"></a>
+      <figcaption>Slide-ul 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vi-h">Orizontul h (zile de tranzacționare)</label><select id="vi-h"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (curs)</option><option value="42">42</option><option value="63">63</option></select></div><div class="ctl"><label for="vi-y">Începutul eșantionului (anul): <b id="vi-y-v"></b></label><input type="range" id="vi-y" min="1990" max="2020" step="2" value="1990"></div><button class="btn play" id="vi-play" type="button"></button></div><div class="charts "><div class="chart" id="vi-chart"></div></div><p class="xh">VIX și volatilitatea realizată în următoarele h zile</p><div class="tw" id="vi-tab"></div><ul class="out" id="vi-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Din 1990, VIX explică R² = 0,52 din volatilitatea realizată a următoarelor 21 de zile, față de 0,44 pentru volatilitatea realizată trecută. Ce se întîmplă dacă eșantionul începe în 2010?</div><details><summary>Răspuns</summary><p>Ambele R² scad, la 0,37 și 0,26, iar VIX rămîne mai informativ; regresia devine realizată = −0,16 + 0,81 VIX. După 2010 sînt mai puține episoade lungi de volatilitate ridicată, deci mai puțină variație de explicat. Panta sub 1 arată că VIX este informativ, dar deplasat ca prognoză.</p></details>
+</section>
+<section class="blk" id="leverage">
+  <h3>Știrile negative cresc volatilitatea viitoare</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch8_leverage_ro.jpg" alt="Slide-ul 51: Știrile negative cresc volatilitatea viitoare" loading="lazy"></a>
+      <figcaption>Slide-ul 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lv-y">Începutul eșantionului (anul): <b id="lv-y-v"></b></label><input type="range" id="lv-y" min="1990" max="2020" step="2" value="1990"></div><div class="ctl"><label for="lv-m">Volatilitatea viitoare măsurată prin</label><select id="lv-m"><option value="abs" selected>|r(t + j)| (curs)</option><option value="sq">r(t + j)²</option></select></div><button class="btn play" id="lv-play" type="button"></button></div><div class="charts "><div class="chart" id="lv-chart"></div></div><ul class="out" id="lv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pe întregul eșantion, corr(r_t, |r_t+1|) este −0,122 la S&P 500 și −0,073 la BET. Ce se întîmplă cu BET dacă eșantionul începe în 2010?</div>
+  <details><summary>Răspuns</summary><p>Efectul devine mai puternic: corelația este −0,141, iar raportul dintre media lui r²ₜ₊₁ după o zi de scădere și după o zi de creștere urcă de la 1,41 la 1,86. La S&P 500 corelația rămîne −0,122. Bitcoin are cea mai slabă asimetrie (raportul 1,06).</p></details>
+</section>
+<section class="blk" id="news-impact">
+  <h3>Volatilitatea neparametrică în funcție de randamentul de ieri</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch8_news_impact_ro.jpg" alt="Slide-ul 52: Volatilitatea neparametrică în funcție de randamentul de ieri" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ni-h">Lățimea de bandă h (randamente zecimale): <b id="ni-h-v"></b></label><input type="range" id="ni-h" min="0.01" max="0.1" step="0.01" value="0.04"></div><button class="btn play" id="ni-play" type="button"></button></div><div class="charts "><div class="chart" id="ni-chart"></div></div><ul class="out" id="ni-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> De ce minimul volatilității condiționate a S&P 500 este la x ≈ 0,65%, nu la 0?</div>
+  <details><summary>Răspuns</summary><p>Din cauza asimetriei: după o zi de creștere moderată urmează, în medie, ziua cea mai liniștită, iar după o scădere de aceeași mărime una mai agitată; σ̂(−2%) = 1,61% față de σ̂(+2%) = 1,16% (raportul 1,39), la DAX 1,79% față de 1,43%. Media randamentelor, 0,03% pe zi, este prea mică pentru a explica deplasarea. Cu h = 0,01 minimul se mută la 0,17%, cu h = 0,10 la 1,61%, dar σ̂(−2%) > σ̂(+2%) rămîne.</p></details>
+</section><h2 class="sec" id="s-fc">Evaluarea prognozelor de volatilitate</h2>
+<section class="blk" id="loss">
+  <h3>Funcții de pierdere: MSE și QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch8_loss_ro.jpg" alt="Slide-ul 54: Funcții de pierdere: MSE și QLIKE" loading="lazy"></a>
+      <figcaption>Slide-ul 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ls-p">Variabila proxy σ̂²: <b id="ls-p-v"></b></label><input type="range" id="ls-p" min="0.25" max="4" step="0.25" value="1"></div><button class="btn play" id="ls-play" type="button"></button></div><div class="charts "><div class="chart" id="ls-chart"></div></div><div class="we" id="ls-we-box"><p class="we-h">Exemplu lucrat: MSE și QLIKE</p><div class="we-f">\[L_{MSE} = (\hat\sigma_t^2 - h_t)^2, \qquad L_{QLIKE} = \frac{\hat\sigma_t^2}{h_t} + \ln h_t\]</div><ol id="ls-we"></ol></div><ul class="out" id="ls-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Varianța reală și variabila proxy sînt egale cu 1, iar prognozele sînt h = 0,5 și h = 2. Ce prognoză preferă fiecare funcție de pierdere?</div><details><summary>Răspuns</summary><p>MSE preferă h = 0,5 (0,25 față de 1), QLIKE preferă h = 2 (1,193 față de 1,307): MSE penalizează mai mult supraestimarea, QLIKE subestimarea, eroarea costisitoare în managementul riscului. QLIKE are minimul la h = proxy. MSE devine indiferent între cele două prognoze la proxy = 1,25, iar QLIKE la proxy = 2 ln 2/1,5 = 0,924.</p></details>
+</section>
+<section class="blk" id="fc-table">
+  <h3>S&P 500: compararea prognozelor</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch8_fc-table_ro.jpg" alt="Slide-ul 55: S&P 500: compararea prognozelor" loading="lazy"></a>
+      <figcaption>Slide-ul 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ft-p">Variabila proxy din grafic</label><select id="ft-p"><option value="r2" selected>r² (curs)</option><option value="range">o² + Garman–Klass</option></select></div><div class="ctl"><label for="ft-y">Începutul evaluării (anul): <b id="ft-y-v"></b></label><input type="range" id="ft-y" min="2010" max="2022" step="2" value="2010"></div><button class="btn play" id="ft-play" type="button"></button></div><div class="charts "><div class="chart" id="ft-chart"></div></div><p class="xh">Prognoze ale varianței pentru ziua următoare (cu verde: cea mai mică pierdere)</p><div class="tw" id="ft-tab"></div><ul class="out" id="ft-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu proxy r², din 2010, ce prognoză a varianței pentru ziua următoare are cel mai mic QLIKE?</div><details><summary>Răspuns</summary><p>VIX (0,799), urmat de EWMA 0,94 (0,808), dar diferența nu este semnificativă: testul DM dă t = −0,32 (p = 0,751). EWMA 0,94 este semnificativ mai bună decît fereastra de 21 de zile (t = −4,50, p < 0,001), iar fereastra de 252 de zile este cea mai slabă (1,099). Cu proxy de amplitudine, VIX coboară pe locul cinci (0,635): acest proxy este în medie mai mic decît r² (0,82 față de 1,18), pentru că nu vede Cov(o, c), iar VIX, care depășește deja volatilitatea realizată, pierde cel mai mult.</p></details>
+</section>
+<section class="blk" id="forecast-paths">
+  <h3>Prognozele din 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch8_forecast_paths_ro.jpg" alt="Slide-ul 56: Prognozele din 2020" loading="lazy"></a>
+      <figcaption>Slide-ul 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fp-y">Anul: <b id="fp-y-v"></b></label><input type="range" id="fp-y" min="2008" max="2025" step="1" value="2020"></div><div class="ctl"><label for="fp-l">λ al EWMA</label><select id="fp-l"><option value="0.94" selected>0,94 (curs)</option><option value="0.97">0,97</option></select></div><button class="btn play" id="fp-play" type="button"></button></div><div class="charts "><div class="chart" id="fp-chart"></div></div><ul class="out" id="fp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> În 2020, VIX și EWMA au atins vîrful în martie, iar fereastra de 252 de zile pe 29 decembrie. Cum arată vîrfurile în 2008?</div>
+  <details><summary>Răspuns</summary><p>EWMA 79,0% pe 29 octombrie, VIX 80,9% pe 21 noiembrie, fereastra de 252 de zile 41,1% pe 31 decembrie. Fereastra lungă cumulează șocurile și scade doar cînd acestea ies din ea, deci vîrful ei vine tîrziu și este mai mic. QLIKE mediu în 2008: 3,132 pentru fereastra de 252 de zile, 2,420 pentru EWMA, 2,350 pentru VIX.</p></details>
+</section>
+<section class="blk" id="lambda">
+  <h3>Alegerea lui λ după QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch8_lambda_ro.jpg" alt="Slide-ul 57: Alegerea lui λ după QLIKE" loading="lazy"></a>
+      <figcaption>Slide-ul 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="la-y">Începutul evaluării (anul): <b id="la-y-v"></b></label><input type="range" id="la-y" min="2010" max="2022" step="2" value="2010"></div><button class="btn play" id="la-play" type="button"></button></div><div class="charts "><div class="chart" id="la-chart"></div></div><ul class="out" id="la-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu evaluarea din 2010, cel mai bun λ pentru S&P 500 este 0,925. Ce λ alege QLIKE dacă evaluarea începe în 2022?</div>
+  <details><summary>Răspuns</summary><p>0,940, valoarea RiskMetrics (diferența de QLIKE la 0,94 este sub 0,001); din 2020, 0,920; din 2016, 0,930. Pentru BET cel mai bun λ este între 0,885 și 0,900, pentru Bitcoin între 0,970 și 0,995. Un singur λ pentru toate activele și perioadele este un compromis comod, nu un optim.</p></details>
+</section>
+<p class="src foot">Randamente logaritmice zilnice, în %: S&P 500 și DAX din ianuarie 1990, BET din septembrie 1997, Bitcoin din septembrie 2014 (7 zile pe săptămînă), Banca Transilvania (TLV) și OMV Petrom (SNP) din 2010, din prețul ajustat, pînă la 18 septembrie 2026; cele două zile greșite ale TLV din mai 2016 sînt eliminate. Prețuri OHLC: S&P 500 din 2008, DAX din 2006, Bitcoin din 2014, TLV și SNP din 2010 (acțiunile ajustate cu factorul prețului de închidere). VIX: închiderile zilnice, pe calendarul S&P 500. Prețuri EODHD. Ziua simulată OHLC, simularea eficienței (1 000 de ferestre), prețurile simulate la un minut și amestecarea randamentelor sînt cele din curs (același cod, aceeași sămînță a generatorului); volatilitățile, estimatorii de amplitudine, autocorelațiile, testele Ljung–Box și ARCH-LM, volatilitățile anuale și lunare, comparația cu VIX, corelațiile de levier, curbele neparametrice și pierderile prognozelor sînt recalculate în browser din aceleași date. Alte semințe, alte ferestre ale simulării, alte niveluri ale zgomotului, amestecarea pe blocuri, alte începuturi ale eșantionului, alte orizonturi, laguri și lățimi de bandă sînt rulări suplimentare ale aceluiași cod.</p>
+</main>
+</body>
+</html>

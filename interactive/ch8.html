@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 8 · Volatility Estimators</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch8.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch8.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 8 · Volatility Estimators</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_08" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch8.html" class="lang-btn active">EN</a><a href="ch8_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: CC (close-to-close), P (Parkinson), GK (Garman–Klass), RS (Rogers–Satchell), YZ (Yang–Zhang), OHLC (open, high, low, close), EWMA (exponentially weighted moving average), RV (realised variance), ACF (autocorrelation function), ARCH-LM (Lagrange multiplier test for ARCH effects), GARCH (generalised autoregressive conditional heteroskedasticity), VIX (Cboe volatility index), MSE (mean squared error), QLIKE (quasi-likelihood), MZ (Mincer–Zarnowitz), DM (Diebold–Mariano).</p>
+<p class="toc"><a href="#s-def">What Is Volatility?</a> · <a href="#s-hist">Historical Volatility and the Choice of the Window</a> · <a href="#s-ewma">EWMA and RiskMetrics</a> · <a href="#s-range">Range-Based Estimators</a> · <a href="#s-rv">Realised Volatility</a> · <a href="#s-cl">Volatility Clustering</a> · <a href="#s-lt">Long-Run Behaviour, the VIX and the Leverage Effect</a> · <a href="#s-fc">Evaluating Volatility Forecasts</a></p>
+<h2 class="sec" id="s-def">What Is Volatility?</h2>
+<section class="blk" id="returns-bursts">
+  <h3>Four Markets, One Pattern</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_en.jpg" alt="Slide 8: Four Markets, One Pattern" loading="lazy"></a>
+      <figcaption>Slide 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rb-k">Threshold: |r| above k standard deviations: <b id="rb-k-v"></b></label><input type="range" id="rb-k" min="3" max="10" step="1" value="5"></div><button class="btn play" id="rb-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xt tr.sel td{background:#EEF3FB}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="rb-chart"></div></div><ul class="out" id="rb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The daily standard deviation of the S&P 500 since 1990 is 1.13%. How many of the 9,240 days have |r| above 5 standard deviations, that is above 5.67%?</div>
+  <details><summary>Answer</summary><p>30 days, against 0.0053 expected if the returns followed the Normal distribution. The DAX has 20 such days, the BET 31, Bitcoin 8. The largest S&P 500 move (−12.8% on 16 March 2020) is 11.3 standard deviations; for the four markets the values are between 8.9 and 13.3.</p></details>
+</section>
+<section class="blk" id="vol-table">
+  <h3>Interpretation: Volatility in Four Markets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=10" target="_blank" rel="noopener"><img src="slides/ch8_vol-table_en.jpg" alt="Slide 9: Interpretation: Volatility in Four Markets" loading="lazy"></a>
+      <figcaption>Slide 9</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-y">Start of the sample (year): <b id="vt-y-v"></b></label><input type="range" id="vt-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">Volatility in four markets</p><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin's largest daily move is −46.5%, the S&P 500's −12.8%. Measured in each series' own standard deviations, which is more extreme?</div><details><summary>Answer</summary><p>Bitcoin: 46.5/3.49 = 13.3 standard deviations, against 12.8/1.13 = 11.3 for the S&P 500, 9.5 for the DAX and 8.9 for the BET. Under the Normal distribution, the probability of a move beyond 9 standard deviations is of the order of 10⁻¹⁹: the excess kurtosis (10.9; 6.0; 9.9; 12.0) shows heavy tails in all four markets.</p></details>
+</section>
+<section class="blk" id="annual">
+  <h3>Worked Example: Annualising Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=12" target="_blank" rel="noopener"><img src="slides/ch8_annual_en.jpg" alt="Slide 11: Worked Example: Annualising Volatility" loading="lazy"></a>
+      <figcaption>Slide 11</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="an-c">Annualisation convention</label><select id="an-c"><option value="act" selected>actual frequency, as in the lecture</option><option value="252">A = 252</option><option value="250">A = 250</option><option value="260">A = 260</option><option value="365">A = 365</option></select></div><button class="btn play" id="an-play" type="button"></button></div><div class="charts "><div class="chart" id="an-chart"></div></div><div class="we" id="an-we-box"><p class="we-h">Worked example: annualisation</p><div class="we-f">\[\sigma_{\text{year}} = \sigma_{\text{day}}\sqrt{A}, \qquad A = \frac{n}{D/365.25}\]</div><div class="wctl"><div class="ctl"><label for="an-s">Series of the worked example</label><select id="an-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc" selected>Bitcoin</option></select></div></div><ol id="an-we"></ol></div><ul class="out" id="an-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> If we use A = 252 for all four series, how do the annualised volatilities change?</div><details><summary>Answer</summary><p>Bitcoin falls from 66.6% to 55.3% (−16.9%, the factor √(252/365.3) = 0.831); the S&P 500 stays at 18.0%, the DAX at 21.8%, and the BET moves from 23.4% to 23.5%, because their actual frequencies (251.7; 253.0; 249.9 observations a year) are close to 252. With A = 252, Bitcoin would look one sixth less risky.</p></details>
+</section><h2 class="sec" id="s-hist">Historical Volatility and the Choice of the Window</h2>
+<section class="blk" id="rolling-windows">
+  <h3>S&P 500: Three Windows, Three Answers</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_en.jpg" alt="Slide 13: S&P 500: Three Windows, Three Answers" loading="lazy"></a>
+      <figcaption>Slide 13</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rw-n">Short window n (days; 63 and 252 stay fixed): <b id="rw-n-v"></b></label><input type="range" id="rw-n" min="5" max="126" step="1" value="21"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><ul class="out" id="rw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Which window would you trust on the day after a crash?</div>
+  <details><summary>Answer</summary><p>A short window or EWMA: the mean over a long window still contains the calm days before the crash. The 21-day window rose to 97.5% on 6 April 2020; the 252-day window reached its maximum, 45.6%, only on 15 July 2009, months after the peak of the 2008 crisis. The price of the fast reaction is noise: the typical daily change of ln σ̂ is 6.7% with 21 days and 0.8% with 252 days.</p></details>
+</section>
+<section class="blk" id="precision">
+  <h3>How Precise Is a Sample Volatility?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch8_precision_en.jpg" alt="Slide 15: How Precise Is a Sample Volatility?" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pr-n">Window n (days): <b id="pr-n-v"></b></label><input type="range" id="pr-n" min="5" max="252" step="1" value="21"></div><div class="ctl"><label for="pr-s">Series</label><select id="pr-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="pr-play" type="button"></button></div><div class="charts "><div class="chart" id="pr-chart"></div></div><div class="we" id="pr-we-box"><p class="we-h">Worked example: the interval for the latest volatility</p><div class="we-f">\[\frac{\mathrm{SE}(\hat\sigma)}{\sigma} \approx \frac{1}{\sqrt{2n}}, \qquad \frac{\mathrm{SE}(\hat\sigma)}{\sigma} \approx \sqrt{\frac{\kappa - 1}{4n}}, \qquad \hat\sigma\,\big(1 \pm 1.96\,\mathrm{SE}/\sigma\big)\]</div><ol id="pr-we"></ol></div><ul class="out" id="pr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The kurtosis of the S&P 500 is κ = 13.9. What is the relative standard error of a volatility computed from 21 days?</div><details><summary>Answer</summary><p>39.1%, 2.54 times the 15.4% of the formula for Normal returns (the ratio is √((κ − 1)/2)). For the latest 21-day volatility, 9.6%, the approximate 95% interval is [6.7%; 12.5%] with Normal returns and [2.2%; 17.0%] with the observed kurtosis. Even with n = 252 the relative error is still 11.3%; 4.5% is the value for n = 252 with Normal returns.</p></details>
+</section><h2 class="sec" id="s-ewma">EWMA and RiskMetrics</h2>
+<section class="blk" id="ewma-weights">
+  <h3>EWMA Weights against a Rolling Window</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=19" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ewma_weights_en.jpg" alt="Slide 18: EWMA Weights against a Rolling Window" loading="lazy"></a>
+      <figcaption>Slide 18</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ew-l">Decay factor λ (red line): <b id="ew-l-v"></b></label><input type="range" id="ew-l" min="0.8" max="0.99" step="0.01" value="0.94"></div><div class="ctl"><label for="ew-n">Rolling window n (days): <b id="ew-n-v"></b></label><input type="range" id="ew-n" min="10" max="252" step="1" value="63"></div><button class="btn play" id="ew-play" type="button"></button></div><div class="charts "><div class="chart" id="ew-chart"></div></div><ul class="out" id="ew-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For λ = 0.94, 99% of the weight lies in the last 74.4 days. How many days are needed for λ = 0.99?</div>
+  <details><summary>Answer</summary><p>458.2 days, almost two years of trading: ln 0.01/ln 0.99. The half-life is 69.0 days and the mean lag 100 days. For any λ, the number of days that carry 99% of the weight is 6.64 times the half-life (ln 0.01/ln 0.5).</p></details>
+</section>
+<section class="blk" id="ewma-update">
+  <h3>Worked Example: One EWMA Update</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=20" target="_blank" rel="noopener"><img src="slides/ch8_ewma-update_en.jpg" alt="Slide 19: Worked Example: One EWMA Update" loading="lazy"></a>
+      <figcaption>Slide 19</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="eu-l">Decay factor λ: <b id="eu-l-v"></b></label><input type="range" id="eu-l" min="0.8" max="0.99" step="0.01" value="0.94"></div><div class="ctl"><label for="eu-r">Yesterday's return r(t − 1) (%): <b id="eu-r-v"></b></label><input type="range" id="eu-r" min="-8" max="8" step="0.5" value="-3"></div><button class="btn play" id="eu-play" type="button"></button></div><div class="charts "><div class="chart" id="eu-chart"></div></div><div class="we" id="eu-we-box"><p class="we-h">Worked example: one EWMA update</p><div class="we-f">\[\sigma_t^2 = \lambda\,\sigma_{t-1}^2 + (1-\lambda)\,r_{t-1}^2\]</div><div class="wctl"><div class="ctl"><label for="eu-x">Example</label><select id="eu-x"><option value="deck" selected>σ²(t − 1) = 1.00 and the chosen r(t − 1) (lecture)</option><option value="sp">S&P 500, 16 March 2020</option></select></div></div><ol id="eu-we"></ol></div><ul class="out" id="eu-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With σ²(t − 1) = 1.00 and r(t − 1) = −3%, λ = 0.94 gives σ²(t) = 1.48. What is σ²(t) with λ = 0.80?</div><details><summary>Answer</summary><p>2.60 = 0.80 × 1 + 0.20 × 9, so σ(t) = 1.61% a day. A smaller λ gives a larger weight (1 − λ = 0.20) to yesterday's shock: the reaction is stronger and the memory shorter (the half-life falls from 11.2 to 3.1 days). The option 1.40 forgets to square the return.</p></details>
+</section>
+<section class="blk" id="ghost">
+  <h3>The Ghost Effect: March–June 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ghost_en.jpg" alt="Slide 20: The Ghost Effect: March–June 2020" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gh-n">Rolling window n (days): <b id="gh-n-v"></b></label><input type="range" id="gh-n" min="21" max="126" step="21" value="63"></div><div class="ctl"><label for="gh-l">EWMA λ</label><select id="gh-l"><option value="0.9">0.90</option><option value="0.94" selected>0.94 (lecture)</option><option value="0.97">0.97</option></select></div><button class="btn play" id="gh-play" type="button"></button></div><div class="charts "><div class="chart" id="gh-chart"></div></div><ul class="out" id="gh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Why does the blue line (63-day window) drop abruptly in mid-June 2020, on a calm day?</div>
+  <details><summary>Answer</summary><p>On 15 June 2020 the return of 16 March 2020 (−12.8%) left the 63-day window: the window volatility fell from 50.4% to 43.0% in a single day, without any news. With a 21-day window the same crash day leaves on 15 April 2020 (from 78.8% to 64.0%), with 126 days on 14 September 2020. The EWMA moved by only −0.9 percentage points that day.</p></details>
+</section><h2 class="sec" id="s-range">Range-Based Estimators</h2>
+<section class="blk" id="ohlc-path">
+  <h3>One Trading Day: What OHLC Records</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch8_ohlc_path_en.jpg" alt="Slide 24: One Trading Day: What OHLC Records" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="op-s">Generator seed</label><select id="op-s"><option value="1">1</option><option value="2">2</option><option value="3" selected>3 (lecture)</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div><div class="ctl"><label for="op-o">Overnight gap o (%): <b id="op-o-v"></b></label><input type="range" id="op-o" min="-1" max="1" step="0.05" value="0.35"></div><button class="btn play" id="op-play" type="button"></button></div><div class="charts "><div class="chart" id="op-chart"></div></div><ul class="out" id="op-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> If the overnight gap rises from 0.35% to 1%, what changes for this simulated day?</div>
+  <details><summary>Answer</summary><p>The return of the day r = o + c rises from 0.985% to 1.635% and r² from 0.970 to 2.672. The high, the low and the close are measured from the open of the day, so Parkinson (0.627), Garman–Klass (0.714) and Rogers–Satchell (0.681) stay the same: the range-based estimators do not see the variance of the night.</p></details>
+</section>
+<section class="blk" id="parkinson">
+  <h3>The Parkinson Estimator (1980)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=26" target="_blank" rel="noopener"><img src="slides/ch8_parkinson_en.jpg" alt="Slide 25: The Parkinson Estimator (1980)" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pk-s">Series</label><select id="pk-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="pk-y">Year: <b id="pk-y-v"></b></label><input type="range" id="pk-y" min="2006" max="2026" step="1" value="2020"></div><button class="btn play" id="pk-play" type="button"></button></div><div class="charts "><div class="chart" id="pk-chart"></div></div><div class="we" id="pk-we-box"><p class="we-h">Worked example: Parkinson from H and L, the day with the widest range of the year</p><div class="we-f">\[\hat\sigma^2_{P,t} = \frac{(u_t - d_t)^2}{4\ln 2}, \qquad u_t - d_t = \ln(H_t/L_t)\]</div><ol id="pk-we"></ol></div><ul class="out" id="pk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, 13 March 2020: H = 2,711.33 and L = 2,492.37, so ln(H/L) = 8.421%. What is the daily Parkinson volatility?</div><details><summary>Answer</summary><p>σ̂²_P = 8.421²/2.7726 = 25.57, so σ̂_P = 5.06% a day. The range exceeds σ on average by a factor √(4 ln 2) = 1.67, and dividing by 4 ln 2 corrects exactly for this. The close-to-close return of the day was 8.88%, with r² = 78.87, three times the Parkinson estimate. The option 8.42% is the unscaled range, and 3.04% divides the range by 4 ln 2 without the square root.</p></details>
+</section>
+<section class="blk" id="gk-rs">
+  <h3>Garman–Klass (1980) and Rogers–Satchell (1991)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch8_gk-rs_en.jpg" alt="Slide 26: Garman–Klass (1980) and Rogers–Satchell (1991)" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gr-s">Series</label><select id="gr-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="btc" selected>Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="gr-y">Year: <b id="gr-y-v"></b></label><input type="range" id="gr-y" min="2006" max="2026" step="1" value="2021"></div><button class="btn play" id="gr-play" type="button"></button></div><div class="charts "><div class="chart" id="gr-chart"></div></div><div class="we" id="gr-we-box"><p class="we-h">Worked example: Garman–Klass and Rogers–Satchell</p><div class="we-f">\[\hat\sigma^2_{GK,t} = 0.5\,(u_t - d_t)^2 - (2\ln 2 - 1)\,c_t^2, \qquad \hat\sigma^2_{RS,t} = u_t(u_t - c_t) + d_t(d_t - c_t)\]</div><ol id="gr-we"></ol></div><ul class="out" id="gr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin, 19 May 2021: u = 1.390%, d = −33.626%, c = −14.894%. What is the Rogers–Satchell term u(u − c) + d(d − c)?</div><details><summary>Answer</summary><p>652.5 (%²) = 1.390 × 16.284 + (−33.626) × (−18.732) = 22.6 + 629.9, so σ̂_RS = 25.5% a day. Garman–Klass gives 527.4, Parkinson 442.2. The day had a strong drift (c = −14.9%), and Rogers–Satchell, unbiased for any drift, gives the largest estimate. The option 1,133 = u² + d² leaves out the terms in c.</p></details>
+</section>
+<section class="blk" id="yz">
+  <h3>Yang–Zhang (2000): Adding the Night</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=28" target="_blank" rel="noopener"><img src="slides/ch8_yz_en.jpg" alt="Slide 27: Yang–Zhang (2000): Adding the Night" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="yz-n">Window n (days, to 31 March 2020): <b id="yz-n-v"></b></label><input type="range" id="yz-n" min="2" max="126" step="1" value="21"></div><button class="btn play" id="yz-play" type="button"></button></div><div class="charts "><div class="chart" id="yz-chart"></div></div><div class="we" id="yz-we-box"><p class="we-h">Worked example: the weight k and the Yang–Zhang estimator</p><div class="we-f">\[\hat\sigma^2_{YZ} = \hat\sigma_O^2 + k\,\hat\sigma_C^2 + (1-k)\,\hat\sigma_{RS}^2, \qquad k = \frac{0.34}{1.34 + (n+1)/(n-1)}\]</div><div class="wctl"><div class="ctl"><label for="yz-s">Series of the worked example</label><select id="yz-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div></div><ol id="yz-we"></ol></div><ul class="out" id="yz-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For n = 21, k = 0.34/(1.34 + 22/20) = 0.139. What happens to k when the window grows to 126 days?</div><details><summary>Answer</summary><p>k(126) = 0.34/(1.34 + 127/125) = 0.144, and the limit for large n is 0.34/2.34 = 0.145; for n = 2, k = 0.078. The weight varies little with n: Yang–Zhang is dominated by the night variance σ̂²_O and by the Rogers–Satchell term, with the weight 1 − k ≈ 0.86.</p></details>
+</section>
+<section class="blk" id="march16">
+  <h3>Worked Example: S&P 500 on 16 March 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=29" target="_blank" rel="noopener"><img src="slides/ch8_march16_en.jpg" alt="Slide 28: Worked Example: S&P 500 on 16 March 2020" loading="lazy"></a>
+      <figcaption>Slide 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ms-s">Series</label><select id="ms-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="ms-d">Day (the 10 days with the largest |r|)</label><select id="ms-d"><option value="2020-03-16" selected>2020-03-16</option></select></div><button class="btn play" id="ms-play" type="button"></button></div><div class="charts "><div class="chart" id="ms-chart"></div></div><div class="we" id="ms-we-box"><p class="we-h">Worked example: one day, six estimates</p><div class="we-f">\[o_t = \ln\frac{O_t}{C_{t-1}}, \quad u_t = \ln\frac{H_t}{O_t}, \quad d_t = \ln\frac{L_t}{O_t}, \quad c_t = \ln\frac{C_t}{O_t}, \quad r_t = o_t + c_t\]</div><ol id="ms-we"></ol></div><ul class="out" id="ms-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500 on 16 March 2020: r = −12.765%, of which overnight o = −7.760%. What share of r² = 163.0 is o²?</div><details><summary>Answer</summary><p>o² = 60.2, that is 37% of r². The rest does not split simply, because r² = o² + c² + 2oc: here c = −5.005%, c² = 25.0 and 2oc = 77.7. The estimators that ignore the night (Parkinson 19.6, Garman–Klass 17.5, Rogers–Satchell 16.5) see less than one eighth of r²; overnight plus Rogers–Satchell gives 76.7. The option 61% compares the returns, not their squares (7.760/12.765), and 12% is the ratio Parkinson/r².</p></details>
+</section>
+<section class="blk" id="efficiency">
+  <h3>Efficiency by Simulation</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=30" target="_blank" rel="noopener"><img src="slides/sfm_ch8_efficiency_en.jpg" alt="Slide 29: Efficiency by Simulation" loading="lazy"></a>
+      <figcaption>Slide 29</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ef-n">Window n (days)</label><select id="ef-n"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (lecture)</option><option value="63">63</option></select></div><div class="ctl"><label for="ef-s">Right panel</label><select id="ef-s"><option value="overnight" selected>overnight jump (lecture)</option><option value="discrete">26 prices a day</option></select></div><button class="btn play" id="ef-play" type="button"></button></div><div class="charts "><div class="chart" id="ef-chart"></div></div><ul class="out" id="ef-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 21-day windows, Garman–Klass is 9.3 times as efficient as CC. What happens to its efficiency when the window has only 5 days?</div>
+  <details><summary>Answer</summary><p>It stays about the same: 10.3 at n = 5 and 8.0 at n = 63 (extra runs of the simulation). Both variances fall roughly as 1/n, so their ratio changes little: the efficiency gain comes from the information within a day, not from the length of the window. With an overnight jump, the bias of Parkinson, GK and RS stays around −22% for every n.</p></details>
+</section>
+<section class="blk" id="eff-table">
+  <h3>Interpretation: Precision Is Not Accuracy</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch8_eff-table_en.jpg" alt="Slide 30: Interpretation: Precision Is Not Accuracy" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-n">Window n (days)</label><select id="et-n"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (lecture)</option><option value="63">63</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">Efficiency, bias and MSE ratio (1,000 windows)</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With an overnight jump, the variance of the Parkinson estimate is 8.8 times smaller than that of CC, but its MSE ratio is only 1.8. Why?</div><details><summary>Answer</summary><p>MSE = variance + bias². With an overnight jump, Parkinson, GK and RS measure only the session and underestimate the variance by about 22%; their mean squared error is dominated by this bias, although their variance is 8.8–13.6 times smaller than that of CC. Yang–Zhang adds σ̂²_O: bias −2% and MSE ratio 9.0.</p></details>
+</section>
+<section class="blk" id="est-table">
+  <h3>Real Data: Five Estimators, Five Assets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_en.jpg" alt="Slide 31: Real Data: Five Estimators, Five Assets" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="es-y">Start of the OHLC sample (year; 2006 = start of each series): <b id="es-y-v"></b></label><input type="range" id="es-y" min="2006" max="2024" step="2" value="2006"></div><button class="btn play" id="es-play" type="button"></button></div><div class="charts "><div class="chart" id="es-chart"></div></div><p class="xh">Annualised volatility (%) on the OHLC sample</p><div class="tw" id="es-tab"></div><ul class="out" id="es-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500, YZ (16.3%) stays below CC (19.9%), although it includes the night variance. What explains the gap?</div><details><summary>Answer</summary><p>Var(r) = Var(o) + Var(c) + 2Cov(o, c), and for the S&P 500 corr(o, c) = 0.22; a likely explanation is the stale prices in the opening value of the index. For the DAX and Bitcoin the correlation is 0.02, and the ratio YZ/CC is 0.97 and 0.95. The night share (13%) is already in YZ, and the S&P 500 has no days with H = L.</p></details>
+</section>
+<section class="blk" id="range-rolling">
+  <h3>S&P 500: Rolling 21-Day Estimates since 2019</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=34" target="_blank" rel="noopener"><img src="slides/sfm_ch8_range_rolling_en.jpg" alt="Slide 33: S&P 500: Rolling 21-Day Estimates since 2019" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-n">Window n (days): <b id="rr-n-v"></b></label><input type="range" id="rr-n" min="5" max="63" step="1" value="21"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the 21-day window, the typical daily change of the log estimate is 7.1% for CC and 4.3% for Parkinson. How do these values change for a 5-day window?</div>
+  <details><summary>Answer</summary><p>Both rise sharply: 31.1% for CC, 13.7% for Parkinson and 13.9% for YZ; with 63 days they fall to 2.7% and 1.9%. The advantage of the range-based estimators is larger for short windows: the ratio CC/Parkinson is 2.3 at n = 5, 1.7 at n = 21 and 1.4 at n = 63.</p></details>
+</section><h2 class="sec" id="s-rv">Realised Volatility</h2>
+<section class="blk" id="rv-def">
+  <h3>Realised Variance from Intraday Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=35" target="_blank" rel="noopener"><img src="slides/ch8_rv-def_en.jpg" alt="Slide 34: Realised Variance from Intraday Returns" loading="lazy"></a>
+      <figcaption>Slide 34</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rd-d">Simulated day: <b id="rd-d-v"></b></label><input type="range" id="rd-d" min="1" max="60" step="1" value="1"></div><div class="ctl"><label for="rd-m">Sampling interval (minutes)</label><select id="rd-m"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5" selected>5 (lecture)</option><option value="10">10</option><option value="15">15</option><option value="30">30</option><option value="65">65</option><option value="130">130</option><option value="390">390</option></select></div><button class="btn play" id="rd-play" type="button"></button></div><div class="charts "><div class="chart" id="rd-chart"></div></div><div class="we" id="rd-we-box"><p class="we-h">Worked example: the realised variance of one day</p><div class="we-f">\[\mathrm{RV}_t = \sum_{i=1}^{M} r_{t,i}^2, \qquad M = 390/m\]</div><ol id="rd-we"></ol></div><ul class="out" id="rd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Day 1: √RV from 5-minute returns is 1.151%, and the true volatility 1.000%. What does √RV from one-minute returns give?</div><details><summary>Answer</summary><p>1.051% (390 returns, an error of +5.1%). The simulation has no microstructure noise, so RV converges to the integrated variance as M grows: over the 60 days the mean absolute relative error falls from 5.9% (5 minutes) to 2.9% (one minute). With noise, the signature plot shows the opposite effect at short intervals.</p></details>
+</section>
+<section class="blk" id="realised">
+  <h3>Simulated Example: RV Tracks the True Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch8_realised_en.jpg" alt="Slide 35: Simulated Example: RV Tracks the True Volatility" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="re-m">Interval of the RV returns (minutes)</label><select id="re-m"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5" selected>5 (lecture)</option><option value="10">10</option><option value="15">15</option><option value="30">30</option><option value="65">65</option><option value="130">130</option><option value="390">390</option></select></div><button class="btn play" id="re-play" type="button"></button></div><div class="charts "><div class="chart" id="re-chart"></div></div><ul class="out" id="re-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The mean absolute relative error is 6% for 5-minute RV, 23% for Parkinson and 58% for |r|. What is the error of RV if we use 390-minute returns, a single return a day?</div>
+  <details><summary>Answer</summary><p>58%, as for |r|: with M = 1, RV is just r², and the correlation with the true volatility falls to 0.59. At one minute the error is 3%, with a correlation of 0.997. Parkinson (23%) uses only the high and the low and lies between the two extremes.</p></details>
+</section>
+<section class="blk" id="signature">
+  <h3>Microstructure Noise and the Signature Plot</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch8_signature_en.jpg" alt="Slide 36: Microstructure Noise and the Signature Plot" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sg-z">Standard deviation of the noise (% of the price)</label><select id="sg-z"><option value="0.0">0</option><option value="0.005">0.005</option><option value="0.01">0.01</option><option value="0.025" selected>0.025 (lecture)</option><option value="0.05">0.05</option><option value="0.1">0.1</option></select></div><button class="btn play" id="sg-play" type="button"></button></div><div class="charts "><div class="chart" id="sg-chart"></div></div><ul class="out" id="sg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With noise of 0.025%, one-minute RV overstates the variance 1.79 times. How many times does it overstate it if the noise doubles, to 0.05%?</div>
+  <details><summary>Answer</summary><p>4.16 times in the simulation and 4.15 times by the formula 1 + 2M × noise variance/true variance, with M = 390: the excess of 0.79 grows with the square of the noise, to about 4 × 0.79 = 3.16. At 5 minutes (M = 78) the ratio is 1.62. Each squared observed return contains, on average, twice the noise variance.</p></details>
+</section><h2 class="sec" id="s-cl">Volatility Clustering</h2>
+<section class="blk" id="acf-clustering">
+  <h3>The Sign Is Unpredictable, the Size Is Not</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=39" target="_blank" rel="noopener"><img src="slides/sfm_ch8_acf_clustering_en.jpg" alt="Slide 38: The Sign Is Unpredictable, the Size Is Not" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ac-y">Start of the sample (year): <b id="ac-y-v"></b></label><input type="range" id="ac-y" min="1990" max="2020" step="2" value="1990"></div><button class="btn play" id="ac-play" type="button"></button></div><div class="charts "><div class="chart" id="ac-chart"></div></div><ul class="out" id="ac-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In the lecture sample, all 100 autocorrelations of |r| of the S&P 500 are outside the band. How many stay outside if the sample starts in 2010?</div>
+  <details><summary>Answer</summary><p>72 for |r| and 40 for r². The band ±1.96/√T widens from ±0.020 to ±0.030 as T falls from 9,240 to 4,202, and ρ̂₁₀₀(|r|) falls from 0.09 to 0.02. At short lags volatility clustering remains evident; for the BET from 2010, 53 lags of |r| are outside the band.</p></details>
+</section>
+<section class="blk" id="acf-table">
+  <h3>Interpretation: Clustering in Three Markets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=40" target="_blank" rel="noopener"><img src="slides/ch8_acf-table_en.jpg" alt="Slide 39: Interpretation: Clustering in Three Markets" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="at-k">Lag k: <b id="at-k-v"></b></label><input type="range" id="at-k" min="1" max="100" step="1" value="1"></div><button class="btn play" id="at-play" type="button"></button></div><div class="charts "><div class="chart" id="at-chart"></div></div><p class="xh">Autocorrelations of |r| and r² (outside the band: of 100 lags)</p><div class="tw" id="at-tab"></div><ul class="out" id="at-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At lag 1, for which power d is the autocorrelation of |r|<sup>d</sup> of the BET largest?</div><details><summary>Answer</summary><p>d = 1.00 (0.414): |r| is more autocorrelated than r² (0.333), the Taylor effect. The optimum depends on the series and the lag, though: at lag 1, d = 1.75 for the S&P 500 and 0.75 for Bitcoin; at lag 10, 1.25, 0.75 and 0.50. Large powers give a large weight to a few extreme days.</p></details>
+</section>
+<section class="blk" id="shuffle">
+  <h3>Is Clustering Real? Shuffle the Days</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_en.jpg" alt="Slide 40: Is Clustering Real? Shuffle the Days" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-b">We shuffle blocks of b days</label><select id="sh-b"><option value="1" selected>b = 1, single days (lecture)</option><option value="5">5</option><option value="21">21</option><option value="63">63</option><option value="252">252</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Shuffling the days one by one takes ρ̂₁(|r|) from 0.27 to −0.02. What happens if we shuffle blocks of 5 consecutive days?</div>
+  <details><summary>Answer</summary><p>ρ̂₁(|r|) stays at 0.23, because four of five pairs of consecutive days remain in the same block, but Q(10) of r² falls from 8,015 to 1,413: the lags longer than the block lose their structure. With 63-day blocks, ρ̂₁(|r|) = 0.27 and Q(10) = 7,038. The excess kurtosis stays 10.9 in all cases.</p></details>
+</section>
+<section class="blk" id="lb-sq">
+  <h3>Testing for Clustering: Ljung–Box on Squared Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=42" target="_blank" rel="noopener"><img src="slides/ch8_lb-sq_en.jpg" alt="Slide 41: Testing for Clustering: Ljung–Box on Squared Returns" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lq-s">Series</label><select id="lq-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="lq-m">Lags tested m: <b id="lq-m-v"></b></label><input type="range" id="lq-m" min="1" max="20" step="1" value="3"></div><button class="btn play" id="lq-play" type="button"></button></div><div class="charts "><div class="chart" id="lq-chart"></div></div><div class="we" id="lq-we-box"><p class="we-h">Worked example: the McLeod–Li test</p><div class="we-f">\[Q(m) = T(T+2)\sum_{k=1}^{m}\frac{\hat\rho_k(r^2)^2}{T-k} \approx \chi^2(m)\]</div><ol id="lq-we"></ol></div><ul class="out" id="lq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, T = 9,240: ρ̂₁, ρ̂₂, ρ̂₃ of r² are 0.311; 0.408; 0.250. What is Q(3)?</div><details><summary>Answer</summary><p>The terms T(T + 2)ρ̂²/(T − k) are 892; 1,540; 579, so Q(3) = 3,012, far above χ²<sub>0.95</sub>(3) = 7.81. Q(3) of the returns is 57.7: it rejects too, but it is 52 times smaller. The option 8,958 forgets to square the autocorrelations, and 0.33 forgets the factor T(T + 2)/(T − k).</p></details>
+</section>
+<section class="blk" id="arch-lm">
+  <h3>The ARCH-LM Test (Engle, 1982)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=43" target="_blank" rel="noopener"><img src="slides/ch8_arch-lm_en.jpg" alt="Slide 42: The ARCH-LM Test (Engle, 1982)" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="al-s">Series</label><select id="al-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option></select></div><div class="ctl"><label for="al-q">Lags q: <b id="al-q-v"></b></label><input type="range" id="al-q" min="1" max="20" step="1" value="5"></div><button class="btn play" id="al-play" type="button"></button></div><div class="charts "><div class="chart" id="al-chart"></div></div><div class="we" id="al-we-box"><p class="we-h">Worked example: the ARCH-LM test</p><div class="we-f">\[e_t^2 = c_0 + c_1 e_{t-1}^2 + \dots + c_q e_{t-q}^2 + u_t, \qquad \mathrm{LM} = nR^2 \approx \chi^2(q)\]</div><ol id="al-we"></ol></div><ul class="out" id="al-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> S&P 500, q = 5: R² = 0.2412 and n = 9,235. What is the LM statistic?</div><details><summary>Answer</summary><p>LM = 9,235 × 0.2412 = 2,227, against χ²<sub>0.95</sub>(5) = 11.07 (p < 0.001). R² says that about a quarter of the day-to-day variation of e²ₜ is anticipated by the last five days. The option 4,535 uses R instead of R², and 1.21 multiplies R² by q instead of n.</p></details>
+</section>
+<section class="blk" id="cl-table">
+  <h3>Clustering Tests in Six Series</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch8_cl-table_en.jpg" alt="Slide 43: Clustering Tests in Six Series" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ct-m">Ljung–Box lags m: <b id="ct-m-v"></b></label><input type="range" id="ct-m" min="1" max="30" step="1" value="10"></div><div class="ctl"><label for="ct-q">ARCH-LM lags q</label><select id="ct-q"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div><button class="btn play" id="ct-play" type="button"></button></div><div class="charts "><div class="chart" id="ct-chart"></div></div><p class="xh">Tests on the daily returns (in red: p-value below 0.05)</p><div class="tw" id="ct-tab"></div><ul class="out" id="ct-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Bitcoin has an excess kurtosis of 12.0, but the smallest ARCH-LM(5) statistic of the table: 115, against 2,227 for the S&P 500. Why?</div><details><summary>Answer</summary><p>LM = nR²: Bitcoin has less than half the observations of the S&P 500 (4,379 against 9,235 in the regression), and its R² is 0.026 against 0.241, because a few extreme days dominate the regression of squares. The test still rejects strongly (p < 0.001), and Q(10) of |r|, less sensitive to extreme days, is 1,086. Q(10) of r also rejects in all six series (p ≤ 0.028), but it is 10.5–171.7 times smaller than that of r².</p></details>
+</section>
+<section class="blk" id="kurtosis">
+  <h3>Clustering Creates Heavy Tails</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=45" target="_blank" rel="noopener"><img src="slides/sfm_ch8_kurtosis_en.jpg" alt="Slide 44: Clustering Creates Heavy Tails" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ku-s">Ratio of standard deviations, turbulent / calm days: <b id="ku-s-v"></b></label><input type="range" id="ku-s" min="1.5" max="5" step="0.5" value="2"></div><div class="ctl"><label for="ku-b">β of the GARCH(1,1): <b id="ku-b-v"></b></label><input type="range" id="ku-b" min="0.7" max="0.95" step="0.01" value="0.85"></div><input type="hidden" id="ku-t" value="1"><button class="btn play" id="ku-play" type="button"></button></div><div class="charts "><div class="chart" id="ku-chart"></div></div><ul class="out" id="ku-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Turbulent days have a standard deviation 3 times that of calm days. For which share p of turbulent days is the kurtosis of the mixture largest?</div>
+  <details><summary>Answer</summary><p>At p = 0.1, with kurtosis 8.33; at p = 0.5 the kurtosis is 4.92, at p = 0.02, 5.80. As p tends to 0 or 1 the mixture becomes a single Normal distribution, with kurtosis 3. For the ratio 2 and p = 0.2, as on the slide, the kurtosis is 4.69.</p></details>
+</section><h2 class="sec" id="s-lt">Long-Run Behaviour, the VIX and the Leverage Effect</h2>
+<section class="blk" id="long-term">
+  <h3>Volatility over Three Decades</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch8_long_term_en.jpg" alt="Slide 45: Volatility over Three Decades" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lo-y">Start of the sample (year): <b id="lo-y-v"></b></label><input type="range" id="lo-y" min="1990" max="2020" step="2" value="1990"></div><div class="ctl"><label for="lo-s">Series of the right panel</label><select id="lo-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><button class="btn play" id="lo-play" type="button"></button></div><div class="charts "><div class="chart" id="lo-chart"></div></div><ul class="out" id="lo-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Since 1990, the AR(1) of the log monthly volatility of the S&P 500 has φ̂ = 0.67 and a half-life of 1.7 months. What does the same AR(1) give if the sample starts in 2010?</div>
+  <details><summary>Answer</summary><p>φ̂ = 0.53 (SE 0.06) on 201 months, a half-life of 1.1 months and a long-run level of 12.9%; from 2000, φ̂ = 0.66. The sample from 2010 does not contain the long 2008–2009 crisis, and the 2020 episode was short, so mean reversion looks faster.</p></details>
+</section>
+<section class="blk" id="vix">
+  <h3>VIX against the Volatility That Followed</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=49" target="_blank" rel="noopener"><img src="slides/sfm_ch8_vix_en.jpg" alt="Slide 48: VIX against the Volatility That Followed" loading="lazy"></a>
+      <figcaption>Slide 48</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vx-h">Horizon h of the realised volatility (trading days)</label><select id="vx-h"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (lecture)</option><option value="42">42</option><option value="63">63</option></select></div><button class="btn play" id="vx-play" type="button"></button></div><div class="charts "><div class="chart" id="vx-chart"></div></div><ul class="out" id="vx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Is the red line (VIX) usually above or below the blue one (the realised volatility of the next 21 days)?</div>
+  <details><summary>Answer</summary><p>Above, on 86% of the 9,199 days; the mean VIX is 19.4%, the mean realised volatility 15.3%, a gap of 4.1 points. This is the variance risk premium: investors pay to be insured against volatility jumps. With h = 63 days, the VIX is above on 82% of the days.</p></details>
+</section>
+<section class="blk" id="vix-table">
+  <h3>Interpretation: Implied against Realised Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=50" target="_blank" rel="noopener"><img src="slides/ch8_vix-table_en.jpg" alt="Slide 49: Interpretation: Implied against Realised Volatility" loading="lazy"></a>
+      <figcaption>Slide 49</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vi-h">Horizon h (trading days)</label><select id="vi-h"><option value="5">5</option><option value="10">10</option><option value="21" selected>21 (lecture)</option><option value="42">42</option><option value="63">63</option></select></div><div class="ctl"><label for="vi-y">Start of the sample (year): <b id="vi-y-v"></b></label><input type="range" id="vi-y" min="1990" max="2020" step="2" value="1990"></div><button class="btn play" id="vi-play" type="button"></button></div><div class="charts "><div class="chart" id="vi-chart"></div></div><p class="xh">VIX and the realised volatility of the next h days</p><div class="tw" id="vi-tab"></div><ul class="out" id="vi-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Since 1990 the VIX explains R² = 0.52 of the realised volatility of the next 21 days, against 0.44 for the past realised volatility. What happens if the sample starts in 2010?</div><details><summary>Answer</summary><p>Both R² fall, to 0.37 and 0.26, and the VIX stays more informative; the regression becomes realised = −0.16 + 0.81 VIX. After 2010 there are fewer long episodes of high volatility, so less variation to explain. The slope below 1 shows that the VIX is informative but biased as a forecast.</p></details>
+</section>
+<section class="blk" id="leverage">
+  <h3>Bad News Raises Future Volatility</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch8_leverage_en.jpg" alt="Slide 51: Bad News Raises Future Volatility" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lv-y">Start of the sample (year): <b id="lv-y-v"></b></label><input type="range" id="lv-y" min="1990" max="2020" step="2" value="1990"></div><div class="ctl"><label for="lv-m">Future volatility measured by</label><select id="lv-m"><option value="abs" selected>|r(t + j)| (lecture)</option><option value="sq">r(t + j)²</option></select></div><button class="btn play" id="lv-play" type="button"></button></div><div class="charts "><div class="chart" id="lv-chart"></div></div><ul class="out" id="lv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over the whole sample, corr(r_t, |r_t+1|) is −0.122 for the S&P 500 and −0.073 for the BET. What happens for the BET if the sample starts in 2010?</div>
+  <details><summary>Answer</summary><p>The effect becomes stronger: the correlation is −0.141, and the ratio of the mean of r²ₜ₊₁ after a down day to that after an up day rises from 1.41 to 1.86. For the S&P 500 the correlation stays at −0.122. Bitcoin has the weakest asymmetry (ratio 1.06).</p></details>
+</section>
+<section class="blk" id="news-impact">
+  <h3>Nonparametric Volatility Given Yesterday's Return</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch8_news_impact_en.jpg" alt="Slide 52: Nonparametric Volatility Given Yesterday's Return" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ni-h">Bandwidth h (decimal returns): <b id="ni-h-v"></b></label><input type="range" id="ni-h" min="0.01" max="0.1" step="0.01" value="0.04"></div><button class="btn play" id="ni-play" type="button"></button></div><div class="charts "><div class="chart" id="ni-chart"></div></div><ul class="out" id="ni-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Why is the minimum of the conditional volatility of the S&P 500 at x ≈ 0.65%, not at 0?</div>
+  <details><summary>Answer</summary><p>Because of the asymmetry: a moderate up day is followed, on average, by the calmest day, and a fall of the same size by a more turbulent one; σ̂(−2%) = 1.61% against σ̂(+2%) = 1.16% (ratio 1.39), for the DAX 1.79% against 1.43%. The mean return, 0.03% a day, is too small to explain the shift. With h = 0.01 the minimum moves to 0.17%, with h = 0.10 to 1.61%, but σ̂(−2%) > σ̂(+2%) remains.</p></details>
+</section><h2 class="sec" id="s-fc">Evaluating Volatility Forecasts</h2>
+<section class="blk" id="loss">
+  <h3>Loss Functions: MSE and QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=55" target="_blank" rel="noopener"><img src="slides/ch8_loss_en.jpg" alt="Slide 54: Loss Functions: MSE and QLIKE" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ls-p">Proxy σ̂²: <b id="ls-p-v"></b></label><input type="range" id="ls-p" min="0.25" max="4" step="0.25" value="1"></div><button class="btn play" id="ls-play" type="button"></button></div><div class="charts "><div class="chart" id="ls-chart"></div></div><div class="we" id="ls-we-box"><p class="we-h">Worked example: MSE and QLIKE</p><div class="we-f">\[L_{MSE} = (\hat\sigma_t^2 - h_t)^2, \qquad L_{QLIKE} = \frac{\hat\sigma_t^2}{h_t} + \ln h_t\]</div><ol id="ls-we"></ol></div><ul class="out" id="ls-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The true variance and the proxy are both 1, and the forecasts are h = 0.5 and h = 2. Which forecast does each loss prefer?</div><details><summary>Answer</summary><p>MSE prefers h = 0.5 (0.25 against 1), QLIKE prefers h = 2 (1.193 against 1.307): MSE penalises overestimation more, QLIKE underestimation, the costly error in risk management. QLIKE has its minimum at h = proxy. MSE becomes indifferent between the two forecasts at proxy = 1.25, QLIKE at proxy = 2 ln 2/1.5 = 0.924.</p></details>
+</section>
+<section class="blk" id="fc-table">
+  <h3>S&P 500: Which Forecast Is Best?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=56" target="_blank" rel="noopener"><img src="slides/ch8_fc-table_en.jpg" alt="Slide 55: S&P 500: Which Forecast Is Best?" loading="lazy"></a>
+      <figcaption>Slide 55</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ft-p">Proxy in the chart</label><select id="ft-p"><option value="r2" selected>r² (lecture)</option><option value="range">o² + Garman–Klass</option></select></div><div class="ctl"><label for="ft-y">Start of the evaluation (year): <b id="ft-y-v"></b></label><input type="range" id="ft-y" min="2010" max="2022" step="2" value="2010"></div><button class="btn play" id="ft-play" type="button"></button></div><div class="charts "><div class="chart" id="ft-chart"></div></div><p class="xh">Next-day variance forecasts (in green: the smallest loss)</p><div class="tw" id="ft-tab"></div><ul class="out" id="ft-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the r² proxy, from 2010, which next-day variance forecast has the smallest QLIKE?</div><details><summary>Answer</summary><p>The VIX (0.799), followed by EWMA 0.94 (0.808), but the difference is not significant: the DM test gives t = −0.32 (p = 0.751). EWMA 0.94 is significantly better than the 21-day window (t = −4.50, p < 0.001), and the 252-day window is the weakest (1.099). With the range proxy the VIX drops to fifth place (0.635): this proxy is on average smaller than r² (0.82 against 1.18), because it does not see Cov(o, c), and the VIX, which already exceeds the realised volatility, loses most.</p></details>
+</section>
+<section class="blk" id="forecast-paths">
+  <h3>Forecasts in 2020</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch8_forecast_paths_en.jpg" alt="Slide 56: Forecasts in 2020" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="fp-y">Year: <b id="fp-y-v"></b></label><input type="range" id="fp-y" min="2008" max="2025" step="1" value="2020"></div><div class="ctl"><label for="fp-l">EWMA λ</label><select id="fp-l"><option value="0.94" selected>0.94 (lecture)</option><option value="0.97">0.97</option></select></div><button class="btn play" id="fp-play" type="button"></button></div><div class="charts "><div class="chart" id="fp-chart"></div></div><ul class="out" id="fp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In 2020 the VIX and the EWMA peaked in March, the 252-day window on 29 December. What do the peaks look like in 2008?</div>
+  <details><summary>Answer</summary><p>EWMA 79.0% on 29 October, VIX 80.9% on 21 November, the 252-day window 41.1% on 31 December. The long window accumulates the shocks and falls only when they leave it, so its peak comes late and is lower. Mean QLIKE in 2008: 3.132 for the 252-day window, 2.420 for the EWMA, 2.350 for the VIX.</p></details>
+</section>
+<section class="blk" id="lambda">
+  <h3>Choosing λ by QLIKE</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=58" target="_blank" rel="noopener"><img src="slides/sfm_ch8_lambda_en.jpg" alt="Slide 57: Choosing λ by QLIKE" loading="lazy"></a>
+      <figcaption>Slide 57</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="la-y">Start of the evaluation (year): <b id="la-y-v"></b></label><input type="range" id="la-y" min="2010" max="2022" step="2" value="2010"></div><button class="btn play" id="la-play" type="button"></button></div><div class="charts "><div class="chart" id="la-chart"></div></div><ul class="out" id="la-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the evaluation from 2010, the best λ for the S&P 500 is 0.925. Which λ does QLIKE choose if the evaluation starts in 2022?</div>
+  <details><summary>Answer</summary><p>0.940, the RiskMetrics value (the QLIKE difference at 0.94 is below 0.001); from 2020, 0.920; from 2016, 0.930. For the BET the best λ is between 0.885 and 0.900, for Bitcoin between 0.970 and 0.995. A single λ for all assets and periods is a convenient compromise, not an optimum.</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: S&P 500 and DAX from January 1990, BET from September 1997, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV) and OMV Petrom (SNP) from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. OHLC prices: S&P 500 from 2008, DAX from 2006, Bitcoin from 2014, TLV and SNP from 2010 (stocks adjusted with the factor of the close). VIX: daily closes on the S&P 500 calendar. EODHD prices. The simulated OHLC day, the efficiency simulation (1,000 windows), the simulated one-minute prices and the shuffle of the returns are those of the lecture (the same code and the same generator seed); the volatilities, the range-based estimators, the autocorrelations, the Ljung–Box and ARCH-LM tests, the annual and monthly volatilities, the VIX comparison, the leverage correlations, the nonparametric curves and the forecast losses are recomputed in the browser from the same data. Other seeds, other windows of the simulation, other noise levels, the block shuffle, other sample starts, horizons, lags and bandwidths are extra runs of the same code.</p>
+</main>
+</body>
+</html>
