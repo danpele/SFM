@@ -245,8 +245,9 @@ D.frame('⟦Evaluation||Evaluare⟧', items(
       '⟦covers the lectures and the seminars of Chapters 0--16||acoperă cursurile și seminariile Capitolelor 0--16⟧']),
     ('⟦\\textbf{Team project: 20\\%}||\\textbf{Proiect de echipă: 20\\%}⟧',
      ['⟦one research question on real market data, answered with the methods of the course||o întrebare de cercetare pe date reale de piață, cu metodele cursului⟧']),
-    ('⟦\\textbf{Attendance: 10\\%}||\\textbf{Prezență: 10\\%}⟧',
-     ['⟦lectures and seminars||cursuri și seminarii⟧'])))
+    ('⟦\\textbf{Attendance and quizzes: 10\\%}||\\textbf{Prezență și quiz-uri: 10\\%}⟧',
+     ['⟦lectures and seminars||cursuri și seminarii⟧',
+      '⟦the chapter quizzes on the website, taken with the ASE account; name and score are recorded||quiz-urile capitolelor de pe site, rezolvate cu contul ASE; numele și scorul se înregistrează⟧'])))
 
 D.frame('⟦Textbook and Further Reading||Manual și bibliografie suplimentară⟧', items(
     ('⟦\\textbf{Main textbook}||\\textbf{Manualul de bază}⟧',
@@ -317,7 +318,7 @@ D.frame('⟦AI Policy||Politica privind AI⟧', items(
      ['⟦if you cannot explain a line of your code, it does not count as your work||o linie de cod pe care nu o puteți explica nu este considerată muncă proprie⟧'])))
 
 D.recap(('Organisation', 'organizarea'), [
-    '⟦Grade: 70\\% written exam, 20\\% team project, 10\\% attendance||Nota: 70\\% examen scris, 20\\% proiect de echipă, 10\\% prezență⟧',
+    '⟦Grade: 70\\% written exam, 20\\% team project, 10\\% attendance and quizzes||Nota: 70\\% examen scris, 20\\% proiect de echipă, 10\\% prezență și quiz-uri⟧',
     '⟦Textbook: \\refFHH; seminars: \\refBHL||Manual: \\refFHH; seminarii: \\refBHL⟧',
     '⟦Seminars come before lectures; nothing is handed in||Seminariile preced cursurile; temele nu se notează⟧',
     '⟦AI is allowed, declared in \\texttt{AI\\_USE.md}, and checked at the oral defence||AI este permis, declarat în \\texttt{AI\\_USE.md} și verificat la susținerea orală⟧'])

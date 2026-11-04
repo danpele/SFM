@@ -14,24 +14,24 @@ window.SFM_DATA.quizzes['intro'] = {
                 "text": "How is the final grade of the course made up?",
                 "options": [
                     "50% exam, 50% project",
-                    "70% written exam, 20% team project, 10% attendance",
+                    "70% written exam, 20% team project, 10% attendance and quizzes",
                     "60% exam, 40% project",
                     "100% written exam"
                 ],
-                "correctExplanation": "The grade is 70% written exam, 20% team project and 10% attendance.",
-                "incorrectExplanation": "The grade combines a written exam (70%), a team project (20%) and attendance (10%)."
+                "correctExplanation": "The grade is 70% written exam, 20% team project and 10% attendance and quizzes.",
+                "incorrectExplanation": "The grade combines a written exam (70%), a team project (20%) and attendance and quizzes (10%)."
             },
             "ro": {
                 "title": "Evaluare",
                 "text": "Cum se formează nota finală a cursului?",
                 "options": [
                     "50% examen, 50% proiect",
-                    "70% examen scris, 20% proiect de echipă, 10% prezență",
+                    "70% examen scris, 20% proiect de echipă, 10% prezență și quiz-uri",
                     "60% examen, 40% proiect",
                     "100% examen scris"
                 ],
-                "correctExplanation": "Nota finală se compune din examenul scris (70%), proiectul de echipă (20%) și prezență (10%).",
-                "incorrectExplanation": "Nota finală combină examenul scris (70%), proiectul de echipă (20%) și prezența (10%)."
+                "correctExplanation": "Nota finală se compune din examenul scris (70%), proiectul de echipă (20%), prezență și quiz-uri (10%).",
+                "incorrectExplanation": "Nota finală combină examenul scris (70%), proiectul de echipă (20%), prezența și quiz-urile (10%)."
             }
         },
         {

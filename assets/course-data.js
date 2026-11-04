@@ -77,7 +77,7 @@
                 aiTitle: 'Using AI in this course',
                 quizzes: 'Self-Assessment Quizzes',
                 quizIntro: 'Each attempt draws up to 20 questions at random from the chapter bank and shuffles the answers. An answer is locked once selected.',
-                loginPrompt: 'Sign in with your ASE Google account (@ase.ro or @stud.ase.ro) to take the quizzes.',
+                loginPrompt: 'Sign in with your ASE Google account (@ase.ro or @stud.ase.ro) to take the quizzes. Your name and score are recorded for the course grade.',
                 loginRequired: 'Sign in above with your ASE Google account to see this quiz.',
                 loginWrongDomain: 'Please use your ASE account (@ase.ro or @stud.ase.ro).',
                 saving: 'Saving your score...',
@@ -144,7 +144,7 @@
                 aiTitle: 'Utilizarea instrumentelor AI',
                 quizzes: 'Quiz-uri de autoevaluare',
                 quizIntro: 'La fiecare încercare se extrag aleator cel mult 20 de întrebări din banca de întrebări a capitolului, iar ordinea variantelor de răspuns se schimbă. Un răspuns ales nu mai poate fi modificat.',
-                loginPrompt: 'Autentificați-vă cu contul Google ASE (@ase.ro sau @stud.ase.ro) pentru a rezolva quiz-urile.',
+                loginPrompt: 'Autentificați-vă cu contul Google ASE (@ase.ro sau @stud.ase.ro) pentru a rezolva quiz-urile. Numele și scorul se înregistrează pentru nota de la curs.',
                 loginRequired: 'Autentificați-vă mai sus cu contul Google ASE pentru a vedea acest quiz.',
                 loginWrongDomain: 'Folosiți contul ASE (@ase.ro sau @stud.ase.ro).',
                 saving: 'Se salvează scorul...',
@@ -185,14 +185,14 @@
             en: [
                 { h: 'Course', p: ['Statistics of Financial Markets', "Bachelor's programme Statistics and Data Science", 'Year 3, semester 2, academic year 2026/2027'] },
                 { h: 'Prerequisites', p: ['Probability and statistics', 'Linear algebra', 'Python programming'] },
-                { h: 'Assessment', p: ['Written exam: 70%', 'Team project: 20%', 'Attendance: 10%'] },
+                { h: 'Assessment', p: ['Written exam: 70%', 'Team project: 20%', 'Attendance and quizzes: 10%'] },
                 { h: 'Main textbook', p: ['Franke, Härdle &amp; Hafner, <a href="https://doi.org/10.1007/978-3-030-13751-9" target="_blank" rel="noopener"><em>Statistics of Financial Markets</em></a>, 5th ed., Springer, 2019', 'With the companion volume <a href="https://doi.org/10.1007/978-3-642-33929-5" target="_blank" rel="noopener"><em>Exercises and Solutions</em></a>'] },
                 { h: 'Tools', p: ['Python, Jupyter / Google Colab', 'GitHub, Quantlet, Quantinar'] }
             ],
             ro: [
                 { h: 'Curs', p: ['Statistica piețelor financiare', 'Programul de licență Statistică și Data Science', 'Anul III, semestrul 2, anul universitar 2026/2027'] },
                 { h: 'Cunoștințe prealabile', p: ['Probabilități și statistică', 'Algebră liniară', 'Programare în Python'] },
-                { h: 'Evaluare', p: ['Examen scris: 70%', 'Proiect de echipă: 20%', 'Prezență: 10%'] },
+                { h: 'Evaluare', p: ['Examen scris: 70%', 'Proiect de echipă: 20%', 'Prezență și quiz-uri: 10%'] },
                 { h: 'Manual de bază', p: ['Franke, Härdle și Hafner, <a href="https://doi.org/10.1007/978-3-030-13751-9" target="_blank" rel="noopener"><em>Statistics of Financial Markets</em></a>, ediția a 5-a, Springer, 2019', 'Cu volumul însoțitor <a href="https://doi.org/10.1007/978-3-642-33929-5" target="_blank" rel="noopener"><em>Exercises and Solutions</em></a>'] },
                 { h: 'Instrumente', p: ['Python, Jupyter / Google Colab', 'GitHub, Quantlet, Quantinar'] }
             ]
