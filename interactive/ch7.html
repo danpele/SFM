@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 7 · Efficient Markets, Random Walk and Variance-Ratio Tests</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch7.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch7_data.js?v=20261101a", "ch7_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch7.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 7 · Efficient Markets, Random Walk and Variance-Ratio Tests</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_07" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch7.html" class="lang-btn active">EN</a><a href="ch7_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: ACF (autocorrelation function), VR (variance ratio), ADF (augmented Dickey–Fuller), PP (Phillips–Perron), KPSS (Kwiatkowski–Phillips–Schmidt–Shin), LB (Ljung–Box), CD (Chow–Denning), OLS (ordinary least squares), GARCH (generalised autoregressive conditional heteroskedasticity).</p>
+<p class="toc"><a href="#s-prev">Can Prices Be Predicted?</a> · <a href="#s-rw">Random Walk Hypotheses</a> · <a href="#s-wn">White Noise and the Autocorrelation Function</a> · <a href="#s-act">Testing for Autocorrelation</a> · <a href="#s-ur">Unit Roots: Prices against Returns</a> · <a href="#s-vr">The Variance-Ratio Test</a> · <a href="#s-mk">Efficiency across Markets and over Time</a> · <a href="#s-an">Semi-Strong Form, Strong Form and Anomalies</a></p>
+<h2 class="sec" id="s-prev">Can Prices Be Predicted?</h2>
+<section class="blk" id="rw-paths">
+  <h3>Which One Is the S&P 500?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch7_rw_paths_en.jpg" alt="Slide 8: Which One Is the S&P 500?" loading="lazy"></a>
+      <figcaption>Slide 8</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rw-y">Paths up to the end of: <b id="rw-y-v"></b></label><input type="range" id="rw-y" min="1991" max="2026" step="1" value="2026"></div><button class="btn play" id="rw-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid #C5D2E8}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xt tr.sel td{background:#EEF3FB}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:420px}
+</style><div class="charts "><div class="chart" id="rw-chart"></div></div><ul class="out" id="rw-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Four random walks with i.i.d. Normal steps (the mean and standard deviation of the S&P 500) and the S&P 500 itself. The ▶ button draws the paths year by year, from 1991 to 2026. At the end of 2008, how many of the four random walks are above the S&P 500?</div>
+  <details><summary>Answer</summary><p>Three. At the end of 2008 the S&P 500 is at 0.91 (log price minus its first value), the simulated walks at 1.12, 1.24, 2.69 and 0.65. In September 2026 only one (4.50) is above the S&P 500 (3.06). The falls of 2000–2002 and 2008 have the size of episodes that pure noise also produces: a single path does not separate the S&P 500 from a random walk.</p></details>
+</section>
+<section class="blk" id="scatter-lag">
+  <h3>Does Yesterday Predict Today?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=11" target="_blank" rel="noopener"><img src="slides/sfm_ch7_scatter_lag_en.jpg" alt="Slide 10: Does Yesterday Predict Today?" loading="lazy"></a>
+      <figcaption>Slide 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sc-k">Lag k: r(t) against r(t − k): <b id="sc-k-v"></b></label><input type="range" id="sc-k" min="1" max="10" step="1" value="1"></div><button class="btn play" id="sc-play" type="button"></button></div><div class="charts "><div class="chart" id="sc-chart"></div></div><ul class="out" id="sc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The correlation between today's and yesterday's return is −0.079 for the S&P 500 and 0.156 for the BET. The ▶ button moves the lag from 1 to 10. What is the BET correlation at lag 2, between today's return and that of two days ago?</div>
+  <details><summary>Answer</summary><p>0.033, almost five times smaller; at lag 3 it is −0.008, at lag 5 0.031, at lag 10 0.004. For the S&P 500 the lag-2 correlation is −0.004. Almost all the dependence of the BET returns sits at lag 1, as thin trading produces: news enters the index over two days.</p></details>
+</section><h2 class="sec" id="s-rw">Random Walk Hypotheses</h2>
+<section class="blk" id="sqrt-time">
+  <h3>Worked Example: How Risk Grows with the Horizon</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=22" target="_blank" rel="noopener"><img src="slides/ch7_sqrt-time_en.jpg" alt="Slide 21: Worked Example: How Risk Grows with the Horizon" loading="lazy"></a>
+      <figcaption>Slide 21</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="st-s">Series</label><select id="st-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div><button class="btn play" id="st-play" type="button"></button></div><div class="charts "><div class="chart" id="st-chart"></div></div><p class="xh">Standard deviation of q-day returns: the square-root rule and the data</p><div class="tw" id="st-tab"></div><div class="we" id="st-we-box"><p class="we-h">Worked example: the square-root-of-time rule</p><div class="we-f">\[\mathrm{sd}\big(r_t(q)\big) = \sigma\sqrt{q}, \qquad \frac{\mathrm{sd}\big(r_t(q)\big)}{\sigma\sqrt{q}} \approx \sqrt{\mathrm{VR}(q)}\]</div><div class="wctl"><div class="ctl"><label for="st-q">Horizon q of the worked example (days): <b id="st-q-v"></b></label><input type="range" id="st-q" min="1" max="250" step="1" value="60"></div></div><ol id="st-we"></ol></div><ul class="out" id="st-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The square-root-of-time rule gives the S&P 500 a 250-day standard deviation of 1.1337% × √250 = 17.92%. Is the standard deviation of 250-day returns, computed directly from the overlapping sums, larger or smaller?</div><details><summary>Answer</summary><p>Smaller: 15.66%, that is 0.874 of the rule's value. The daily S&P 500 returns are slightly negatively autocorrelated (ρ̂(1) = −0.079, VR(250) = 0.785), so daily moves partly cancel over time. The BET, with ρ̂(1) = 0.156, shows the opposite: 35.91% against 23.38% (1.54 times). The rule assumes uncorrelated returns; scaling VaR or volatility by √q inherits this assumption.</p></details>
+</section><h2 class="sec" id="s-wn">White Noise and the Autocorrelation Function</h2>
+<section class="blk" id="white-noise">
+  <h3>Gaussian White Noise and Its Sample ACF</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=24" target="_blank" rel="noopener"><img src="slides/sfm_ch7_white_noise_en.jpg" alt="Slide 23: Gaussian White Noise and Its Sample ACF" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wn-n">Number of draws n: <b id="wn-n-v"></b></label><input type="range" id="wn-n" min="100" max="1000" step="100" value="1000"></div><button class="btn play" id="wn-play" type="button"></button></div><div class="charts "><div class="chart" id="wn-chart"></div></div><ul class="out" id="wn-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For n = 1,000 draws the 95% band is ±0.062 and 0 of 30 sample autocorrelations lie outside it. The ▶ button uses only the first n draws, from 100 to 1,000. For n = 100, with the band ±0.196, how many autocorrelations lie outside the band?</div>
+  <details><summary>Answer</summary><p>One: the largest in absolute value is 0.223. With 30 lags we expect 1.5 exceedances by chance alone, at any n: the band widens as 1/√n, and the sample autocorrelations of white noise grow at the same rate. At n = 400 one lies outside as well, at the other values of n none.</p></details>
+</section>
+<section class="blk" id="acf-processes">
+  <h3>Theoretical and Sample ACF of Six Processes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=26" target="_blank" rel="noopener"><img src="slides/sfm_ch7_acf_processes_en.jpg" alt="Slide 25: Theoretical and Sample ACF of Six Processes" loading="lazy"></a>
+      <figcaption>Slide 25</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ap-n">Length of the path n: <b id="ap-n-v"></b></label><input type="range" id="ap-n" min="50" max="1000" step="50" value="1000"></div><button class="btn play" id="ap-play" type="button"></button></div><div class="charts "><div class="chart" id="ap-chart"></div></div><ul class="out" id="ap-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The red points are the sample ACF of one simulated path of 1,000 values. The ▶ button uses only the first n values, from 50 to 1,000. For the AR(1) with α = 0.9, how far does the sample ACF get from the theoretical one at n = 50?</div>
+  <details><summary>Answer</summary><p>Up to 0.40 (the largest deviation over lags 1–20), against 0.08 at n = 1,000. The white-noise band for n = 50 is ±0.28 (1/√50 = 0.14), but the deviation is larger, because the variance of ρ̂(k) of a persistent process exceeds 1/T. For the MA(2), the largest deviation is 0.19 at n = 50 and 0.06 at n = 1,000.</p></details>
+</section>
+<section class="blk" id="acf-returns">
+  <h3>The ACF of Daily Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=27" target="_blank" rel="noopener"><img src="slides/sfm_ch7_acf_returns_en.jpg" alt="Slide 26: The ACF of Daily Returns" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ar-y">Start of the sample (year): <b id="ar-y-v"></b></label><input type="range" id="ar-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="ar-play" type="button"></button></div><div class="charts "><div class="chart" id="ar-chart"></div></div><div class="we" id="ar-we-box"><p class="we-h">Worked example: the robust band of the ACF</p><div class="we-f">\[\hat\delta(k) = \frac{T\sum_t e_t^2 e_{t-k}^2}{\big(\sum_t e_t^2\big)^2}, \qquad \pm 1.96\sqrt{\hat\delta(k)/T}, \qquad e_t = r_t - \bar r\]</div><div class="wctl"><div class="ctl"><label for="ar-s">Series of the worked example</label><select id="ar-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option></select></div><div class="ctl"><label for="ar-k">Lag k: <b id="ar-k-v"></b></label><input type="range" id="ar-k" min="1" max="20" step="1" value="1"></div></div><ol id="ar-we"></ol></div><ul class="out" id="ar-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From 1990, the S&P 500 has 9 autocorrelations (of 20) outside the i.i.d. band and 3 outside the robust band. The ▶ button moves the start of the sample towards 2022. What happens to the S&P 500 ρ̂(1) on the sample that starts in 2016?</div>
+  <details><summary>Answer</summary><p>It becomes more negative: −0.142, against −0.079 from 1990, with 13 lags outside the i.i.d. band and 7 outside the robust band. On the sample that starts in 2022, ρ̂(1) is only −0.015. On rolling windows (section "Efficiency across Markets and over Time") the S&P 500 reversals are strongest in crises: the sample from 2016 includes 2020, the one from 2022 does not.</p></details>
+</section>
+<section class="blk" id="acf-abs">
+  <h3>Returns Are Almost Uncorrelated, Their Size Is Not</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch7_acf_abs_en.jpg" alt="Slide 28: Returns Are Almost Uncorrelated, Their Size Is Not" loading="lazy"></a>
+      <figcaption>Slide 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="aa-d">Power d in |r(t)|^d: <b id="aa-d-v"></b></label><input type="range" id="aa-d" min="0.25" max="2" step="0.25" value="1"></div><button class="btn play" id="aa-play" type="button"></button></div><div class="charts "><div class="chart" id="aa-chart"></div></div><ul class="out" id="aa-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The ACF of |r<sub>t</sub>| for the S&P 500 is 0.27 at lag 1, 0.22 at lag 20 and 0.09 at lag 100. The ▶ button raises the power d in |r<sub>t</sub>|<sup>d</sup> up to 2 (squared returns). What happens to the lag-100 autocorrelation when d goes from 1 to 2?</div>
+  <details><summary>Answer</summary><p>It falls: 0.039 for d = 2, against 0.092 for d = 1; at lag 1 it rises slightly (0.311 against 0.275). High powers give weight to a few extreme days, and their autocorrelation dies out faster. For every d the size of the returns stays correlated, so RW1 and RW2 are rejected.</p></details>
+</section><h2 class="sec" id="s-act">Testing for Autocorrelation</h2>
+<section class="blk" id="lb-example">
+  <h3>Worked Example: Ljung–Box Step by Step</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch7_lb-example_en.jpg" alt="Slide 30: Worked Example: Ljung–Box Step by Step" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lb-T">Number of returns T: <b id="lb-T-v"></b></label><input type="range" id="lb-T" min="500" max="5000" step="500" value="1000"></div><div class="ctl"><label for="lb-m">Lags tested m</label><select id="lb-m"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option></select></div><button class="btn play" id="lb-play" type="button"></button></div><div class="charts "><div class="chart" id="lb-chart"></div></div><div class="we" id="lb-we-box"><p class="we-h">Worked example: Box–Pierce and Ljung–Box</p><div class="we-f">\[Q_{BP}(m) = T\sum_{k=1}^{m}\hat\rho(k)^2, \qquad Q_{LB}(m) = T(T+2)\sum_{k=1}^{m}\frac{\hat\rho(k)^2}{T-k} \approx \chi^2(m)\]</div><ol id="lb-we"></ol></div><ul class="out" id="lb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With T = 1,000 and the autocorrelations 0.06, −0.04 and 0.03, Q<sub>LB</sub>(3) = 6.12 < 7.81: we do not reject. The ▶ button raises T up to 5,000, with the same autocorrelations. From which T does the test reject at 5%?</div><details><summary>Answer</summary><p>From T = 1,500 (in steps of 500): Q<sub>LB</sub>(3) = 9.17 > 7.81, p = 0.027. The statistic grows almost in proportion to T (30.52 at T = 5,000); the exact threshold is around T = 1,280. The autocorrelations are the same; with more data they are estimated more precisely and separate from zero. In long samples, small autocorrelations become significant without being larger.</p></details>
+</section>
+<section class="blk" id="ac-tests">
+  <h3>Autocorrelation Tests on Real Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=33" target="_blank" rel="noopener"><img src="slides/ch7_ac-tests_en.jpg" alt="Slide 32: Autocorrelation Tests on Real Data" loading="lazy"></a>
+      <figcaption>Slide 32</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="at-m">Number of lags m: <b id="at-m-v"></b></label><input type="range" id="at-m" min="1" max="30" step="1" value="10"></div><button class="btn play" id="at-play" type="button"></button></div><div class="charts "><div class="chart" id="at-chart"></div></div><p class="xh">Tests on the daily returns (p-value below 0.05 in red)</p><div class="tw" id="at-tab"></div><div class="we" id="at-we-box"><p class="we-h">Worked example: Q<sub>LB</sub> and Q̃ on real data</p><div class="we-f">\[\tilde Q(m) = \sum_{k=1}^{m}\frac{T\hat\rho(k)^2}{\hat\delta(k)} \approx \chi^2(m)\]</div><div class="wctl"><div class="ctl"><label for="at-s">Series of the worked example</label><select id="at-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div></div><ol id="at-we"></ol></div><ul class="out" id="at-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With m = 10 lags, the classical Q<sub>LB</sub> rejects for all eight series, the robust Q̃ only for the S&P 500 and the BET. The ▶ button raises m up to 30. With m = 30, for which series does the robust Q̃ reject?</div><details><summary>Answer</summary><p>Only for the BET (Q̃(30) = 67.9 > 43.77). The S&P 500 no longer rejects: Q̃(30) = 39.7, because its lag-1 autocorrelation is diluted among 29 nearly zero lags; the slide says the same: a larger m dilutes a short-lived effect. The classical Q<sub>LB</sub> rejects at m = 30 for five series, with a χ² distribution that ignores volatility clustering.</p></details>
+</section>
+<section class="blk" id="runs">
+  <h3>The Runs Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=34" target="_blank" rel="noopener"><img src="slides/ch7_runs_en.jpg" alt="Slide 33: The Runs Test" loading="lazy"></a>
+      <figcaption>Slide 33</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ru-y">Start of the sample (year): <b id="ru-y-v"></b></label><input type="range" id="ru-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="ru-play" type="button"></button></div><div class="charts "><div class="chart" id="ru-chart"></div></div><div class="tw" id="ru-tab"></div><div class="we" id="ru-we-box"><p class="we-h">Worked example: the runs test</p><div class="we-f">\[E[R] = \frac{2n_1n_2}{n} + 1, \quad \mathrm{Var}(R) = \frac{2n_1n_2(2n_1n_2 - n)}{n^2(n-1)}, \quad z = \frac{R - E[R]}{\sqrt{\mathrm{Var}(R)}}\]</div><div class="wctl"><div class="ctl"><label for="ru-s">Series of the worked example</label><select id="ru-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet" selected>BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div></div><ol id="ru-we"></ol></div><ul class="out" id="ru-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over the whole sample, the BET has 3,278 runs against 3,606 expected (z = −7.75), the S&P 500 4,738 against 4,596 (z = 2.97). The ▶ button moves the start of the sample towards 2022. On the sample that starts in 2022, does either of these two rejections remain?</div><details><summary>Answer</summary><p>Only the BET one, much weaker: z = −2.03, against 0.06 for the S&P 500. The BET signs persist in recent years too, but much less than over the whole sample; for the S&P 500 the alternation of signs disappears. From 2022, BRD has z = −3.79.</p></details>
+</section><h2 class="sec" id="s-ur">Unit Roots: Prices against Returns</h2>
+<section class="blk" id="spurious">
+  <h3>Why It Matters: Spurious Regression</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=36" target="_blank" rel="noopener"><img src="slides/sfm_ch7_spurious_en.jpg" alt="Slide 35: Why It Matters: Spurious Regression" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sp-T">Length of the series T (100, 250, 500, 1,000, 2,000): <b id="sp-T-v"></b></label><input type="range" id="sp-T" min="0" max="4" step="1" value="2"></div><button class="btn play" id="sp-play" type="button"></button></div><div class="charts "><div class="chart" id="sp-chart"></div></div><ul class="out" id="sp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With T = 500, regressing one random walk on another, independent one gives |t| > 1.96 in 90% of the 2,000 replications. The ▶ button raises T to 1,000 and 2,000 (T ≠ 500: extra runs of the lecture code). Does the share of rejections approach 5% as T grows?</div>
+  <details><summary>Answer</summary><p>No, it rises: 92.7% at T = 1,000 and 94.5% at T = 2,000 (77.3% at T = 100); |t| > 40 occurs in 21.6% of the regressions at T = 2,000. In the regression in levels the t-statistic grows with T, so more data make the spurious relation more convincing. The median R² stays between 0.16 and 0.18. In increments, the share stays between 5.1% and 6.0% for every T.</p></details>
+</section>
+<section class="blk" id="adf-example">
+  <h3>The Augmented Test and a Worked Example</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch7_adf-example_en.jpg" alt="Slide 37: The Augmented Test and a Worked Example" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="df-s">Series</label><select id="df-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet" selected>BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div><div class="ctl"><label for="df-c">Deterministic terms</label><select id="df-c"><option value="c" selected>constant</option><option value="ct">constant and trend</option></select></div><button class="btn play" id="df-play" type="button"></button></div><div class="charts "><div class="chart" id="df-chart"></div></div><div class="we" id="df-we-box"><p class="we-h">Worked example: the Dickey–Fuller regression</p><div class="we-f">\[\Delta p_t = c + bt + \gamma\, p_{t-1} + \sum_{j=1}^{L}\delta_j\Delta p_{t-j} + \varepsilon_t, \qquad \tau = \frac{\hat\gamma}{\mathrm{SE}(\hat\gamma)}\]</div><div class="wctl"><div class="ctl"><label for="df-L">Lags L of the differences: <b id="df-L-v"></b></label><input type="range" id="df-L" min="0" max="12" step="1" value="0"></div></div><ol id="df-we"></ol></div><ul class="out" id="df-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the BET log price, the Dickey–Fuller regression with a constant and no lags gives τ = −0.09. The ▶ button runs through the eight series; the curve shows τ for L = 0–40 lags of the differences. Does the test with a constant reject the unit root for any series, at any L?</div><details><summary>Answer</summary><p>No. The lowest τ with a constant is −1.41 (Bitcoin, L = 20), far from −2.86; for TLV, SNP, BRD and TGN τ is even positive. Prices grow over time, so the right specification has a constant and a trend: with it, TLV falls below −3.41 at 12 of the 16 values of L (τ = −3.46 at L = 20, the order chosen by AIC).</p></details>
+</section>
+<section class="blk" id="unit-root-bet">
+  <h3>The BET: Log Price and Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=40" target="_blank" rel="noopener"><img src="slides/sfm_ch7_unit_root_bet_en.jpg" alt="Slide 39: The BET: Log Price and Returns" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ub-s">Series</label><select id="ub-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet" selected>BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div><button class="btn play" id="ub-play" type="button"></button></div><div class="charts "><div class="chart" id="ub-chart"></div></div><ul class="out" id="ub-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the BET, ADF on the log price is −1.73 (p = 0.736) and KPSS 2.30: the price is I(1). The ▶ button runs through the eight series. For which series do the tests on the log price not give the conclusion I(1)?</div>
+  <details><summary>Answer</summary><p>TLV: ADF = −3.46 < −3.41 (p = 0.044) rejects the unit root, and KPSS = 0.57 > 0.146 rejects trend stationarity. The tests contradict each other: an inconclusive case, not evidence of reversion to a trend. For the other seven series ADF does not reject and KPSS rejects. The returns are I(0) for all eight.</p></details>
+</section>
+<section class="blk" id="ur-table">
+  <h3>Unit-Root Tests on Prices and Returns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=41" target="_blank" rel="noopener"><img src="slides/ch7_ur-table_en.jpg" alt="Slide 40: Unit-Root Tests on Prices and Returns" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ut-l">Bandwidth l for PP and KPSS</label><select id="ut-l"><option value="rule" selected>12(T/100)^(1/4), as in the lecture</option><option value="0">0</option><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="40">40</option><option value="80">80</option></select></div><button class="btn play" id="ut-play" type="button"></button></div><div class="charts "><div class="chart" id="ut-chart"></div></div><div class="wctl"><div class="ctl"><label for="ut-L">ADF lags in the table</label><select id="ut-L"><option value="aic" selected>chosen by AIC, as in the lecture</option><option value="0">0</option><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></div></div><p class="xh">Test statistics (in red: rejection at 5%)</p><div class="tw" id="ut-tab"></div><div class="we" id="ut-we-box"><p class="we-h">Worked example: the KPSS statistic on the log price</p><div class="we-f">\[\mathrm{KPSS} = \frac{\sum_{t=1}^{T} S_t^2}{T^2\hat\lambda^2}, \quad S_t = \sum_{s \le t} e_s, \quad \hat\lambda^2 = \hat\gamma(0) + 2\sum_{j=1}^{l}\Big(1 - \frac{j}{l+1}\Big)\hat\gamma(j)\]</div><div class="wctl"><div class="ctl"><label for="ut-s">Series of the worked example</label><select id="ut-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div></div><ol id="ut-we"></ol></div><ul class="out" id="ut-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the bandwidth of the lecture (l = 38 for the S&P 500), KPSS rejects stationarity of the prices for all eight series; KPSS on the S&P 500 price is 2.23. The ▶ button changes the bandwidth l of the long-run variance, starting with l = 0. What is KPSS for the S&P 500 price at l = 0?</div><details><summary>Answer</summary><p>86.0. An integrated price has large positive autocovariances; without them, λ̂² is just the variance of the residuals and understates the long-run variance by a factor of several dozen. The statistic falls as l grows, but at l = 80 it is still 1.09 > 0.146. On returns, KPSS stays below 0.463 for every l: the conclusion I(1) for prices and I(0) for returns does not depend on the bandwidth.</p></details>
+</section><h2 class="sec" id="s-vr">The Variance-Ratio Test</h2>
+<section class="blk" id="vr-acf">
+  <h3>Worked Example: VR from the ACF of the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=44" target="_blank" rel="noopener"><img src="slides/ch7_vr-acf_en.jpg" alt="Slide 43: Worked Example: VR from the ACF of the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 43</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="va-q">Horizon q: <b id="va-q-v"></b></label><input type="range" id="va-q" min="2" max="20" step="1" value="5"></div><div class="ctl"><label for="va-s">Series</label><select id="va-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div><button class="btn play" id="va-play" type="button"></button></div><div class="charts "><div class="chart" id="va-chart"></div></div><div class="we" id="va-we-box"><p class="we-h">Worked example: VR from the ACF</p><div class="we-f">\[\mathrm{VR}(q) = 1 + 2\sum_{k=1}^{q-1}\Big(1 - \frac{k}{q}\Big)\hat\rho(k)\]</div><ol id="va-we"></ol></div><ul class="out" id="va-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From the ACF of the S&P 500, VR(5) = 1 + 1.6ρ̂(1) + 1.2ρ̂(2) + 0.8ρ̂(3) + 0.4ρ̂(4) = 0.855, and the Lo–MacKinlay estimator gives 0.856. The ▶ button raises q up to 20. How much do the two values differ at q = 20?</div><details><summary>Answer</summary><p>Very little: 0.768 from the ACF and 0.767 with the Lo–MacKinlay estimator, a difference of 0.0005. For the BET at q = 20: 1.514 and 1.517. The two forms differ only by small-sample corrections, which matter little with T = 9,240 and q = 20.</p></details>
+</section>
+<section class="blk" id="lm-tests">
+  <h3>Lo and MacKinlay (1988): Estimator and Tests</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=45" target="_blank" rel="noopener"><img src="slides/ch7_lm-tests_en.jpg" alt="Slide 44: Lo and MacKinlay (1988): Estimator and Tests" loading="lazy"></a>
+      <figcaption>Slide 44</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lm-q">Horizon q: <b id="lm-q-v"></b></label><input type="range" id="lm-q" min="2" max="40" step="1" value="2"></div><button class="btn play" id="lm-play" type="button"></button></div><div class="charts "><div class="chart" id="lm-chart"></div></div><div class="we" id="lm-we-box"><p class="we-h">Worked example: Z(q) and Z*(q)</p><div class="we-f">\[Z(q) = \frac{\widehat{\mathrm{VR}}(q) - 1}{\sqrt{2(2q-1)(q-1)/(3qT)}}, \qquad Z^*(q) = \frac{\widehat{\mathrm{VR}}(q) - 1}{\sqrt{\hat\theta(q)/T}}, \qquad \hat\theta(q) = \sum_{j=1}^{q-1}\Big[\frac{2(q-j)}{q}\Big]^2\hat\delta(j)\]</div><div class="wctl"><div class="ctl"><label for="lm-s">Series of the worked example</label><select id="lm-s"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div></div><ol id="lm-we"></ol></div><ul class="out" id="lm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For the S&P 500 at q = 2, Z(2) = −7.54 and Z*(2) = −3.37: the homoskedastic statistic is 2.24 times larger in absolute value. The ▶ button raises q up to 40. At q = 40, does Z* still reject the random walk for the S&P 500?</div><details><summary>Answer</summary><p>No: Z*(40) = −1.81, although Z(40) = −3.70 still rejects. At q = 40, Z* rejects only for the BET. The ratio Z/Z* stays between 2.0 and 2.3 at all horizons: volatility clustering doubles the standard error of the estimated VR(q), and Z(q) ignores it.</p></details>
+</section>
+<section class="blk" id="vr-size">
+  <h3>Why the Robust Test: a Monte Carlo Check</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch7_vr_size_en.jpg" alt="Slide 45: Why the Robust Test: a Monte Carlo Check" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vs-a">GARCH reaction α (β = 0.86): <b id="vs-a-v"></b></label><input type="range" id="vs-a" min="0" max="4" step="1" value="4"></div><button class="btn play" id="vs-play" type="button"></button></div><div class="charts "><div class="chart" id="vs-chart"></div></div><ul class="out" id="vs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Under a GARCH(1,1) martingale with α = 0.12 and β = 0.86, Z(2) rejects the true null in 17.1% of the cases, Z*(2) in 4.7%. The ▶ button moves the reaction α from 0 to 0.12, with β = 0.86 fixed (α ≠ 0.12: extra runs of the lecture simulation). At α = 0.09, how often does Z(2) reject?</div>
+  <details><summary>Answer</summary><p>In 9.0% of the cases; at α = 0.06 in 6.2%, at α = 0 in 4.8%. The distortion grows fast as α + β approaches 1 (0.95 at α = 0.09, 0.98 at α = 0.12), because volatility becomes very persistent. Z*(2) stays between 4.3% and 4.9% for every α.</p></details>
+</section>
+<section class="blk" id="vr-profile">
+  <h3>Variance Ratios for Horizons of 2 to 40 Days</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=47" target="_blank" rel="noopener"><img src="slides/sfm_ch7_vr_profile_en.jpg" alt="Slide 46: Variance Ratios for Horizons of 2 to 40 Days" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vp-y">Start of the sample (year): <b id="vp-y-v"></b></label><input type="range" id="vp-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="vp-play" type="button"></button></div><div class="charts "><div class="chart" id="vp-chart"></div></div><ul class="out" id="vp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> From 1990, VR(40) is 0.724 for the S&P 500 and 1.743 for the BET, and Z* rejects for the BET at all 39 horizons. The ▶ button moves the start of the sample towards 2022. On the sample that starts in 2010, does Z* still reject the BET momentum at any horizon q = 2, …, 40?</div>
+  <details><summary>Answer</summary><p>No: the BET VR(40) falls to 1.193 and no Z*(q) exceeds 1.96. The BET momentum comes from the early years (1997–2006, ρ̂(1) = 0.270). From 2010 the S&P 500 rejects at a single horizon of 39, with VR(40) = 0.663, below the value from 1990: the mean reversion remains, but the robust band widens with the shorter sample.</p></details>
+</section>
+<section class="blk" id="vr-table">
+  <h3>Variance Ratios and Robust Tests</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch7_vr-table_en.jpg" alt="Slide 47: Variance Ratios and Robust Tests" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-y">Start of the sample (year): <b id="vt-y-v"></b></label><input type="range" id="vt-y" min="1990" max="2022" step="2" value="1990"></div><div class="ctl"><label for="vt-z">Statistic</label><select id="vt-z"><option value="zs" selected>robust Z*, as in the lecture</option><option value="z">homoskedastic Z</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><div class="tw" id="vt-tab"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Over the whole sample, 10 of the 32 Z* statistics in the table exceed 1.96 in absolute value. The ▶ button moves the start of the sample towards 2022. On the sample that starts in 2010, how many remain?</div><details><summary>Answer</summary><p>Three: the S&P 500 at q = 2 and Transgaz at q = 2 and 5 (for Transgaz the sample starts in 2010 anyway). The BET no longer rejects at any horizon. With the homoskedastic Z there would be 13, because Z ignores volatility clustering. With 32 independent tests at 5% we would expect 1.6 false rejections on average.</p></details>
+</section>
+<section class="blk" id="cd-table">
+  <h3>Joint and Automatic Tests on Real Data</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=51" target="_blank" rel="noopener"><img src="slides/ch7_cd-table_en.jpg" alt="Slide 50: Joint and Automatic Tests on Real Data" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cd-h">Horizons of the Chow–Denning test</label><select id="cd-h"><option value="lec" selected>2, 5, 10, 20 (lecture)</option><option value="pow2">2, 4, 8, 16</option><option value="short">2, 3, 4, 5</option><option value="long">5, 10, 20, 40</option><option value="all">2, 3, …, 20</option></select></div><div class="ctl"><label for="cd-a">Significance level</label><select id="cd-a"><option value="0.01">1%</option><option value="0.05" selected>5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="cd-play" type="button"></button></div><div class="charts "><div class="chart" id="cd-chart"></div></div><div class="tw" id="cd-tab"></div><div class="we" id="cd-we-box"><p class="we-h">Worked example: the Chow–Denning test</p><div class="we-f">\[\mathrm{CD} = \max_i |Z^*(q_i)|, \qquad P(\mathrm{CD} \le c) = \big(2\Phi(c) - 1\big)^m\]</div><div class="wctl"><div class="ctl"><label for="cd-s">Series of the worked example</label><select id="cd-s"><option value="sp500">S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn" selected>Transgaz (TGN)</option></select></div></div><ol id="cd-we"></ol></div><div class="we" id="av-we-box"><p class="we-h">Worked example: the automatic VR test</p><div class="we-f">\[\hat k = 1.3221\,(\hat a_2 T)^{1/5}, \quad \hat a_2 = \frac{4\hat\rho^2}{(1-\hat\rho)^4}, \qquad \frac{\sqrt{T/\hat k}\,\big(\mathrm{VR}(\hat k) - 1\big)}{\sqrt 2} \approx N(0, 1)\]</div><div class="wctl"><div class="ctl"><label for="cd-s2">Series of the worked example</label><select id="cd-s2"><option value="sp500" selected>S&P 500</option><option value="dax">DAX</option><option value="bet">BET</option><option value="btc">Bitcoin</option><option value="tlv">Banca Transilvania (TLV)</option><option value="snp">OMV Petrom (SNP)</option><option value="brd">BRD</option><option value="tgn">Transgaz (TGN)</option></select></div></div><ol id="av-we"></ol></div><ul class="out" id="cd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With the horizons 2, 5, 10, 20 (m = 4), the 5% Chow–Denning critical value is 2.49 and the test rejects for the S&P 500, the BET and Transgaz. The ▶ button changes the set of horizons. With all horizons 2, …, 20 (m = 19), which series still reject?</div><details><summary>Answer</summary><p>The S&P 500 and the BET. The critical value rises to 3.00, and Transgaz, with CD = 2.77, no longer exceeds it. More horizons mean more chances of a false rejection, hence a higher threshold; CD rises only if the added horizons have a larger |Z*|.</p></details>
+</section><h2 class="sec" id="s-mk">Efficiency across Markets and over Time</h2>
+<section class="blk" id="vr-markets">
+  <h3>Sixteen Markets over the Last Ten Years</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=52" target="_blank" rel="noopener"><img src="slides/sfm_ch7_vr_markets_en.jpg" alt="Slide 51: Sixteen Markets over the Last Ten Years" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vm-q">Horizon q: <b id="vm-q-v"></b></label><input type="range" id="vm-q" min="2" max="20" step="1" value="5"></div><div class="ctl"><label for="vm-c">Interval level</label><select id="vm-c"><option value="0.9">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></div><button class="btn play" id="vm-play" type="button"></button></div><div class="charts "><div class="chart" id="vm-chart"></div></div><ul class="out" id="vm-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At q = 5, only the robust 95% intervals of PX (Z* = 2.08) and the BET (Z* = 2.03) exclude the value 1. The ▶ button raises the horizon q up to 20. At q = 20, which market excludes the value 1?</div>
+  <details><summary>Answer</summary><p>Only Ethereum (VR(20) = 1.29, Z* = 2.45); PX and the BET return inside the interval. At q = 2 it is the S&P 500 (VR(2) = 0.86, Z* = −2.33). Each horizon shows a different market: with 16 markets and many horizons, some intervals exclude 1 by chance, and the Chow–Denning test on four horizons rejects for no market.</p></details>
+</section>
+<section class="blk" id="rolling-vr">
+  <h3>Rolling Variance Ratios</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch7_rolling_vr_en.jpg" alt="Slide 54: Rolling Variance Ratios" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-w">Window length (days)</label><select id="rv-w"><option value="250">250</option><option value="500" selected>500</option><option value="750">750</option><option value="1000">1,000</option><option value="1500">1,500</option></select></div><div class="ctl"><label for="rv-q">Horizon q</label><select id="rv-q"><option value="2">2</option><option value="5" selected>5</option><option value="10">10</option><option value="20">20</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On 500-day windows, 29% of the BET windows and 4% of the S&P 500 windows reject at 5%. The ▶ button lengthens the window to 750, 1,000 and 1,500 days. What happens to the share of rejecting S&P 500 windows at 1,500 days?</div>
+  <details><summary>Answer</summary><p>It rises to 20%, all with VR < 1. A long window estimates the same small negative autocorrelation more precisely, so it separates it from zero more easily; at 250 days the share is 1.6%. Consecutive windows share 1,479 of 1,500 days, so the share describes the data and is not a test.</p></details>
+</section>
+<section class="blk" id="sub-table">
+  <h3>Three Sub-Periods per Market</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=57" target="_blank" rel="noopener"><img src="slides/ch7_sub-table_en.jpg" alt="Slide 56: Three Sub-Periods per Market" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sb-q">Horizon q</label><select id="sb-q"><option value="2">2</option><option value="5" selected>5</option><option value="10">10</option><option value="20">20</option></select></div><button class="btn play" id="sb-play" type="button"></button></div><div class="charts "><div class="chart" id="sb-chart"></div></div><div class="tw" id="sb-tab"></div><ul class="out" id="sb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At q = 5, the S&P 500 rejects in 2002–2013 (Z*(5) = −2.53). The ▶ button raises q to 10 and 20. At q = 20, does any S&P 500 sub-period still reject?</div><details><summary>Answer</summary><p>None: Z*(20) = −1.33, −1.54 and −0.91, although VR(20) = 0.72 in 2002–2013, further from 1 than VR(5) = 0.80. The variance of VR(q) grows with q, and with about 3,000 days per sub-period the robust interval becomes wide. Only the BET 1997–2006 rejects at q = 20 (Z*(20) = 5.14).</p></details>
+</section><h2 class="sec" id="s-an">Semi-Strong Form, Strong Form and Anomalies</h2>
+<section class="blk" id="calendar">
+  <h3>Day-of-Week Returns: S&P 500 and BET</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter7_efficient_markets_random_walk_vr.pdf#page=61" target="_blank" rel="noopener"><img src="slides/sfm_ch7_calendar_en.jpg" alt="Slide 60: Day-of-Week Returns: S&P 500 and BET" loading="lazy"></a>
+      <figcaption>Slide 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ca-v">Grouping</label><select id="ca-v"><option value="day" selected>days of the week</option><option value="month">months</option></select></div><div class="ctl"><label for="ca-l">Newey–West lags</label><select id="ca-l"><option value="0">0</option><option value="5" selected>5 (lecture)</option><option value="10">10</option><option value="20">20</option></select></div><div class="ctl"><label for="ca-y">Start of the sample (year): <b id="ca-y-v"></b></label><input type="range" id="ca-y" min="1990" max="2022" step="2" value="1990"></div><button class="btn play" id="ca-play" type="button"></button></div><div class="charts "><div class="chart" id="ca-chart"></div></div><div class="we" id="ca-we-box"><p class="we-h">Worked example: the January effect</p><div class="we-f">\[r_t = a + b\,\mathbf{1}\{\text{January}\}_t + u_t, \qquad t = \frac{\hat b}{\mathrm{SE}_{NW}(\hat b)}\]</div><div class="wctl"><div class="ctl"><label for="ca-s">Series of the worked example</label><select id="ca-s"><option value="sp500">S&P 500</option><option value="bet" selected>BET</option></select></div></div><ol id="ca-we"></ol></div><ul class="out" id="ca-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The Wald test of equal means across the days of the week gives p = 0.69 for the S&P 500 and 0.24 for the BET (Newey–West standard errors with 5 lags). The ▶ button moves the start of the sample towards 2022. Does the BET p-value fall below 0.05 for any start?</div>
+  <details><summary>Answer</summary><p>No: the lowest is 0.088, for the sample that starts in 2016; the S&P 500 stays above 0.62. Trying 17 different starts is itself a repeated search of the data: even a p below 0.05 at one of them would not be evidence of a day-of-week effect.</p></details>
+</section>
+<p class="src foot">Daily log returns, in %: S&P 500 and DAX from January 1990, BET from September 1997, Bitcoin from September 2014 (7 days a week), Banca Transilvania (TLV), OMV Petrom (SNP), BRD and Transgaz (TGN) from 2010, from the adjusted price, to 18 September 2026; the two erroneous TLV days of May 2016 are removed. Cross-market comparison: 16 indices and cryptocurrencies, 19 September 2016 to 18 September 2026. EODHD closing prices. The simulated random walks, the white noise, the ARMA paths, the spurious regressions, the size simulation of Z and Z*, the ADF lag orders chosen by AIC and the wild-bootstrap p-values are those of the lecture (the same code and the same generator seed); the autocorrelations, the portmanteau and runs tests, the Dickey–Fuller regressions, PP, KPSS, the variance ratios, the Chow–Denning test, the automatic VR test, the rolling windows, the sub-periods and the calendar regressions are recomputed in the browser from the same data. Other lengths T of the spurious regression, other values α of the GARCH simulation, and other bandwidths, lags, horizons and sample starts are extra runs of the same code.</p>
+</main>
+</body>
+</html>

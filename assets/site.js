@@ -117,7 +117,7 @@
     }
 
     // web lecture (web/chN.html) for every chapter and interactive page (interactive/chN.html) where ready, right after the slides
-    const INTERACTIVE_READY = [1, 2, 3, 4, 5, 6];
+    const INTERACTIVE_READY = [1, 2, 3, 4, 5, 6, 7];
     function withWeb(links) {
         const s = links.find(l => l.type === 'slides' && !l.soon), m = s && /(?:chapter|capitol)(\d+)_/.exec(s.href);
         if (!m) return links;
