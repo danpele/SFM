@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 14 · Crypto Assets</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch14.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch14_data.js?v=20261101a", "ch14_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch14.js?v=20261101a", []);
+</script>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 14 · Crypto Assets</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_14" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch14.html" class="lang-btn active">EN</a><a href="ch14_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure or table on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step; the tables and worked examples are recomputed with it. Abbreviations: BTC (Bitcoin), ETF (exchange-traded fund), IBIT (iShares Bitcoin Trust), USDT (Tether), USDC (USD Coin), DAI (Dai), UST (TerraUSD), SVB (Silicon Valley Bank), FDIC (Federal Deposit Insurance Corporation), ACF (autocorrelation function), VR (variance ratio), HAC (heteroskedasticity- and autocorrelation-consistent standard errors), GARCH (generalised autoregressive conditional heteroskedasticity), GJR (the asymmetric GARCH of Glosten, Jagannathan and Runkle), IGARCH (integrated GARCH), AR(1) (autoregressive process of order 1), CI (confidence interval), HS (historical simulation), VaR (value at risk), ES (expected shortfall), TE (tracking error), bp (basis points), i.i.d. (independent and identically distributed).</p>
+<p class="toc"><a href="#s-btc">Bitcoin and Ethereum in Brief</a> · <a href="#s-asset">Crypto as an Asset Class</a> · <a href="#s-tails">Tails and Volatility Clustering</a> · <a href="#s-eff">Is the Crypto Market Efficient?</a> · <a href="#s-corr">Correlation with Equities and Gold</a> · <a href="#s-bub">Bubbles and Crashes</a> · <a href="#s-etf">Spot Bitcoin ETFs</a> · <a href="#s-stable">Stablecoins</a> · <a href="#s-risk">The Risk of a Crypto Position</a></p>
+<h2 class="sec" id="s-btc">Bitcoin and Ethereum in Brief</h2>
+<section class="blk" id="halving">
+  <h3>Bitcoin Price and Supply</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=11" target="_blank" rel="noopener"><img src="slides/sfm_ch14_halving_en.jpg" alt="Slide 10: Bitcoin Price and Supply" loading="lazy"></a>
+      <figcaption>Slide 10</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hv-h">Horizon after the halving (days): <b id="hv-h-v"></b></label><input type="range" id="hv-h" min="30" max="730" step="5" value="365"></div><button class="btn play" id="hv-play" type="button"></button></div><style>
+.tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.xt{border-collapse:collapse;font-size:.84rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xt th,.xt td{padding:.22rem .5rem;border-bottom:1px solid #E3E9F4;text-align:right;vertical-align:top}
+.xt th:first-child,.xt td:first-child,.xt td.l,.xt th.l{text-align:left}
+.xt thead th{border-bottom:2px solid #1F2A44;color:#1F2A44;font-weight:600}
+.xt .hi{font-weight:700;color:#2E7D32}.xt .bad{color:#CD0000}
+.xh{font-weight:600;font-size:.92rem;color:#1F2A44;margin:.9rem 0 .1rem}
+.we{border:1px solid #C5D2E8;border-left:4px solid #1A3A6E;border-radius:6px;padding:.55rem .8rem;margin:.8rem 0 .4rem;background:#F6F8FC}
+.we-h{font-weight:600;margin:0 0 .2rem;color:#1A3A6E}
+.we-f{overflow-x:auto;overflow-y:hidden;font-size:.95rem}
+.we ol{margin:.3rem 0 0 1.3rem;padding:0;font-size:.92rem}.we li{margin:.18rem 0;overflow-wrap:anywhere}
+.tw.veiled-chart,.we.veiled-chart{filter:blur(10px);opacity:.35;user-select:none}
+.xhold{display:none}
+.wctl{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:flex-end;margin:.3rem 0 .2rem;max-width:520px}
+</style><div class="charts "><div class="chart" id="hv-chart"></div></div><ul class="out" id="hv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ shortens the horizon to 180 days (extra run). How much higher was the price 180 days after the April 2024 halving?</div>
+  <details><summary>Answer</summary><p>By 3.7%, against 31% after one year. For the 2016 and 2020 halvings the 180-day changes are 56% and 72%. The change after a date known in advance depends strongly on the horizon chosen, and three observations allow no conclusion: in an efficient market, an announced cut in supply is already in the price.</p></details>
+</section><h2 class="sec" id="s-asset">Crypto as an Asset Class</h2>
+<section class="blk" id="ann-we">
+  <h3>Annualisation with the Actual Frequency (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=16" target="_blank" rel="noopener"><img src="slides/ch14_ann-we_en.jpg" alt="Slide 15: Annualisation with the Actual Frequency (2/2)" loading="lazy"></a>
+      <figcaption>Slide 15</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="an-A">Number of returns per year A: <b id="an-A-v"></b></label><input type="range" id="an-A" min="200" max="400" step="1" value="365"></div><button class="btn play" id="an-play" type="button"></button></div><div class="charts "><div class="chart" id="an-chart"></div></div><div class="we" id="an-we-box"><p class="we-h">Worked example: annualisation with the actual frequency</p><div class="we-f">\[\text{annual volatility} = \sqrt{A}\,s, \qquad \text{annual mean} = A\,\bar r\]</div><div class="wctl"><div class="ctl"><label for="an-k">Series</label><select id="an-k"><option value="btc" selected>Bitcoin (slide)</option><option value="eth">Ethereum</option><option value="sol">Solana</option><option value="sp500">S&P 500</option><option value="gold">gold</option></select></div></div><ol id="an-we"></ol></div><ul class="out" id="an-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> By how much does the 252 rule understate Bitcoin’s annual volatility, compared with A = 365?</div><details><summary>Answer</summary><p>By 16.9% = 1 − √(252/365): 55.3% instead of 66.6%. The mean is understated more, by 31.0% = 1 − 252/365 (29.8% instead of 43.1%), because the mean scales with A and the volatility only with √A.</p></details>
+</section>
+<section class="blk" id="desc-tab">
+  <h3>Five Assets Side by Side</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=17" target="_blank" rel="noopener"><img src="slides/ch14_desc-tab_en.jpg" alt="Slide 16: Five Assets Side by Side" loading="lazy"></a>
+      <figcaption>Slide 16</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ds-s">Start of the sample</label><select id="ds-s"><option value="full" selected>the start of each series (lecture)</option><option value="2020-04-11">11 April 2020 (start of the Solana series)</option><option value="2022-01-01">1 January 2022</option><option value="2024-01-01">1 January 2024</option></select></div><button class="btn play" id="ds-play" type="button"></button></div><div class="charts "><div class="chart" id="ds-chart"></div></div><p class="xh">Statistics of the daily log returns (the table of the slide)</p><div class="tw" id="ds-tab"></div><ul class="out" id="ds-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ starts all series on 1 January 2024 (extra run). How many times as volatile as the S&P 500 is Bitcoin?</div><details><summary>Answer</summary><p>3.1 times (47.5% against 15.2%), against 3.8 times on the whole sample; Ethereum 4.5 times, Solana 5.2 times. Bitcoin’s volatility has fallen, but the ratio stays large.</p></details>
+</section>
+<section class="blk" id="rvol">
+  <h3>Volatility Through Time</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=18" target="_blank" rel="noopener"><img src="slides/sfm_ch14_rolling_vol_en.jpg" alt="Slide 17: Volatility Through Time" loading="lazy"></a>
+      <figcaption>Slide 17</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rv-w">Window for crypto (days): <b id="rv-w-v"></b></label><input type="range" id="rv-w" min="7" max="180" step="1" value="30"></div><div class="ctl"><label for="rv-a">Annualisation for crypto</label><select id="rv-a"><option value="365" selected>√365 (lecture)</option><option value="252">√252 (wrong for crypto)</option></select></div><button class="btn play" id="rv-play" type="button"></button></div><div class="charts "><div class="chart" id="rv-chart"></div></div><ul class="out" id="rv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 7-day window (▶, extra run), on what share of the days is Bitcoin’s volatility below that of the S&P 500?</div>
+  <details><summary>Answer</summary><p>On 3.8% of the common days, against 0.11% with the 30-day window. On 7 returns the estimates are much noisier, so the two curves cross more often, although the median ratio stays 3.9.</p></details>
+</section>
+<section class="blk" id="weekday">
+  <h3>Bitcoin Volatility by Day of the Week</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=21" target="_blank" rel="noopener"><img src="slides/sfm_ch14_weekday_en.jpg" alt="Slide 20: Bitcoin Volatility by Day of the Week" loading="lazy"></a>
+      <figcaption>Slide 20</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="wd-y">Year added to the chart</label><select id="wd-y"><option value="none" selected>none (lecture)</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><div class="ctl"><label for="wd-m">Statistic</label><select id="wd-m"><option value="sd" selected>standard deviation (lecture)</option><option value="mean">mean</option></select></div><button class="btn play" id="wd-play" type="button"></button></div><div class="charts "><div class="chart" id="wd-chart"></div></div><ul class="out" id="wd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ adds one year at a time. In which year is Bitcoin’s ratio of the weekend to the weekday variance lowest?</div>
+  <details><summary>Answer</summary><p>In 2022: 0.30 (Brown–Forsythe p < 0.001), then 2023 (0.31) and 2024 and 2026 (0.32). Before 2020 the ratio was closer to 1: 0.66 in 2015 and 0.89 in 2016. The weekend mean is not significantly different from the weekday mean in any year.</p></details>
+</section><h2 class="sec" id="s-tails">Tails and Volatility Clustering</h2>
+<section class="blk" id="hill-tab">
+  <h3>Heavy Tails: the Hill Estimator (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=23" target="_blank" rel="noopener"><img src="slides/ch14_hill-tab_en.jpg" alt="Slide 22: Heavy Tails: the Hill Estimator (2/2)" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hl-k">k as a share of n</label><select id="hl-k"><option value="0.025" selected>2.5% (lecture)</option><option value="0.01">1%</option><option value="0.05">5%</option><option value="0.1">10%</option></select></div><button class="btn play" id="hl-play" type="button"></button></div><div class="charts "><div class="chart" id="hl-chart"></div></div><p class="xh">Hill tail indices (the table of the slide)</p><div class="tw" id="hl-tab"></div><ul class="out" id="hl-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With k = 10% of n (▶, extra run), what happens to Bitcoin’s left-tail α̂?</div><details><summary>Answer</summary><p>It falls to 1.83 (k = 438), from 2.71 with k = 2.5%; with k = 1% it rises to 3.83. A large k takes in observations from the centre of the distribution, where the power law does not hold, and the estimate falls; k = 2.5% of n is a choice, not a result.</p></details>
+</section>
+<section class="blk" id="lb-we">
+  <h3>Reading the ACF and the Ljung–Box Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=24" target="_blank" rel="noopener"><img src="slides/ch14_lb-we_en.jpg" alt="Slide 23: Reading the ACF and the Ljung–Box Test" loading="lazy"></a>
+      <figcaption>Slide 23</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="lb-m">Number of lags m: <b id="lb-m-v"></b></label><input type="range" id="lb-m" min="1" max="30" step="1" value="10"></div><button class="btn play" id="lb-play" type="button"></button></div><div class="charts "><div class="chart" id="lb-chart"></div></div><p class="xh">The Ljung–Box Q(m) of rₜ and rₜ², with p-values</p><div class="tw" id="lb-tab"></div><div class="we" id="lb-st-box"><p class="we-h">Worked example: the Ljung–Box statistic</p><div class="we-f">\[Q(m) = n(n + 2)\sum_{k=1}^{m}\frac{\hat\rho(k)^2}{n - k} \sim \chi^2(m)\]</div><div class="wctl"><div class="ctl"><label for="lb-k">Series</label><select id="lb-k"><option value="btc" selected>Bitcoin (slide)</option><option value="eth">Ethereum</option><option value="sol">Solana</option><option value="sp500">S&P 500</option><option value="gold">gold</option></select></div><div class="ctl"><label for="lb-x">Series tested</label><select id="lb-x"><option value="r" selected>returns rₜ (slide)</option><option value="r2">squares rₜ² (slide)</option></select></div></div><ol id="lb-st"></ol></div><ul class="out" id="lb-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For Bitcoin’s returns rₜ, from which m is Q(m) significant at 5% for the first time (▶, m = 1 … 30)?</div><details><summary>Answer</summary><p>From m = 10: Q(10) = 20.2 against the critical value 18.3. At m = 12 it is not (20.6 < 21.0), nor at m = 30 (43.5 < 43.8). The autocorrelations of the returns are small, so the verdict depends on the number of lags; for rₜ² Q(m) exceeds the critical value at every m.</p></details>
+</section>
+<section class="blk" id="acf">
+  <h3>Volatility Clustering in Bitcoin</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch14_acf_en.jpg" alt="Slide 24: Volatility Clustering in Bitcoin" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ac-k">Series</label><select id="ac-k"><option value="btc" selected>Bitcoin (lecture)</option><option value="eth">Ethereum</option><option value="sol">Solana</option><option value="sp500">S&P 500</option><option value="gold">gold</option></select></div><div class="ctl"><label for="ac-L">Lags shown: <b id="ac-L-v"></b></label><input type="range" id="ac-L" min="10" max="60" step="1" value="30"></div><button class="btn play" id="ac-play" type="button"></button></div><div class="charts "><div class="chart" id="ac-chart"></div></div><ul class="out" id="ac-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ goes through the five series. Which has the largest first-order autocorrelation of the squared returns?</div>
+  <details><summary>Answer</summary><p>The S&P 500: ρ̂(1) = 0.451, then Solana 0.247, Ethereum 0.175, Bitcoin 0.137 and gold 0.090. Volatility clustering is not about the level of volatility: equities have a lower volatility, but one that is more persistent from one day to the next.</p></details>
+</section>
+<section class="blk" id="garch-tab">
+  <h3>GARCH(1,1)-t for Crypto and Traditional Assets (2/2)</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=27" target="_blank" rel="noopener"><img src="slides/ch14_garch-tab_en.jpg" alt="Slide 26: GARCH(1,1)-t for Crypto and Traditional Assets (2/2)" loading="lazy"></a>
+      <figcaption>Slide 26</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gt-h">Days after the shock h: <b id="gt-h-v"></b></label><input type="range" id="gt-h" min="0" max="400" step="1" value="100"></div><button class="btn play" id="gt-play" type="button"></button></div><div class="charts "><div class="chart" id="gt-chart"></div></div><p class="xh">GARCH(1,1)-t and GJR estimates (the table of the slide) and the share of a shock left</p><div class="tw" id="gt-tab"></div><div class="we" id="gt-we-box"><p class="we-h">Worked example: the half-life of a shock</p><div class="we-f">\[h_{1/2} = \frac{\ln 0.5}{\ln(\alpha + \beta)}, \qquad \text{share left after } h \text{ days} = (\alpha + \beta)^h\]</div><div class="wctl"><div class="ctl"><label for="gt-k">Asset</label><select id="gt-k"><option value="sp500" selected>S&P 500 (slide)</option><option value="gold">gold (slide)</option><option value="btc">Bitcoin</option><option value="eth">Ethereum</option></select></div></div><ol id="gt-we"></ol></div><ul class="out" id="gt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> What share of a volatility shock is still in the S&P 500 variance after 200 days?</div><details><summary>Answer</summary><p>About 25%: 0.9931²⁰⁰ = 0.251, two half-lives of 100 days. For gold 29% is left, for Bitcoin practically 100%, because α̂ + β̂ = 1.</p></details>
+</section>
+<section class="blk" id="garch">
+  <h3>Conditional Volatility: Bitcoin and the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=29" target="_blank" rel="noopener"><img src="slides/sfm_ch14_garch_vol_en.jpg" alt="Slide 28: Conditional Volatility: Bitcoin and the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 28</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="gv-h">Forecast horizon (days): <b id="gv-h-v"></b></label><input type="range" id="gv-h" min="0" max="365" step="1" value="0"></div><div class="ctl"><label for="gv-k">Series</label><select id="gv-k"><option value="both" selected>Bitcoin and S&P 500 (lecture)</option><option value="btc">Bitcoin</option><option value="sp500">S&P 500</option></select></div><button class="btn play" id="gv-play" type="button"></button></div><div class="charts "><div class="chart" id="gv-chart"></div></div><ul class="out" id="gv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ extends the forecast to 365 days. What volatility does the model give for Bitcoin one year ahead?</div>
+  <details><summary>Answer</summary><p>About 169%, from 54% for the next day. With α̂ + β̂ = 1 the forecast variance grows by ω̂ = 0.194 every day, with no return to a long-run level. For the S&P 500 the forecast rises from 11.5% to 28.4%, towards the long-run level of 29.4%.</p></details>
+</section><h2 class="sec" id="s-eff">Is the Crypto Market Efficient?</h2>
+<section class="blk" id="vr-tab">
+  <h3>Variance-Ratio Tests on the Whole Sample</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=31" target="_blank" rel="noopener"><img src="slides/ch14_vr-tab_en.jpg" alt="Slide 30: Variance-Ratio Tests on the Whole Sample" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vt-q">Horizon q of Z*</label><select id="vt-q"><option value="5" selected>5 (lecture)</option><option value="2">2</option><option value="10">10</option><option value="20">20</option></select></div><button class="btn play" id="vt-play" type="button"></button></div><div class="charts "><div class="chart" id="vt-chart"></div></div><p class="xh">Whole sample (the first table of the slide)</p><div class="tw" id="vt-tab"></div><p class="xh">Sub-periods (the second table of the slide)</p><div class="tw" id="vt-tab2"></div><ul class="out" id="vt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With q = 2 (▶, extra run), does any whole-sample Z* reject the random walk at 5%?</div><details><summary>Answer</summary><p>Yes, for the S&P 500: Z*(2) = −2.30 (p 0.022), because VR(2) = 0.875 ≈ 1 + ρ̂(1) reflects the daily mean reversion of the index. Bitcoin (−0.88) and Ethereum (−0.43) do not reject. The rejection comes from the market seen as the most efficient, not from crypto.</p></details>
+</section>
+<section class="blk" id="rvr">
+  <h3>Efficiency Through Time</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=32" target="_blank" rel="noopener"><img src="slides/sfm_ch14_rolling_vr_en.jpg" alt="Slide 31: Efficiency Through Time" loading="lazy"></a>
+      <figcaption>Slide 31</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vr-q">Horizon q</label><select id="vr-q"><option value="5" selected>5 (lecture)</option><option value="2">2</option><option value="10">10</option></select></div><div class="ctl"><label for="vr-w">Window (observations): <b id="vr-w-v"></b></label><input type="range" id="vr-w" min="250" max="1000" step="50" value="500"></div><div class="ctl"><label for="vr-z">Statistic</label><select id="vr-z"><option value="zs" selected>robust Z* (lecture)</option><option value="z">i.i.d. Z</option></select></div><button class="btn play" id="vr-play" type="button"></button></div><div class="charts "><div class="chart" id="vr-chart"></div></div><ul class="out" id="vr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With windows of 1,000 observations (▶, extra run), what share of the S&P 500 windows reject with the i.i.d. Z(5)?</div>
+  <details><summary>Answer</summary><p>About 50% (50.5%), against 21.7% with windows of 500, and still 0% with the robust Z*. A longer window gives more power to a wrong test: ignoring volatility clustering creates false rejections.</p></details>
+</section><h2 class="sec" id="s-corr">Correlation with Equities and Gold</h2>
+<section class="blk" id="rc-we">
+  <h3>Measuring Correlation Across Calendars</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=36" target="_blank" rel="noopener"><img src="slides/ch14_rc-we_en.jpg" alt="Slide 35: Measuring Correlation Across Calendars" loading="lazy"></a>
+      <figcaption>Slide 35</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rc-w">Window (common days): <b id="rc-w-v"></b></label><input type="range" id="rc-w" min="60" max="500" step="10" value="250"></div><button class="btn play" id="rc-play" type="button"></button></div><div class="charts "><div class="chart" id="rc-chart"></div></div><div class="we" id="rc-st-box"><p class="we-h">Worked example: the correlation on one rolling window</p><div class="we-f">\[\hat\rho = \frac{\widehat{\mathrm{Cov}}(r^A, r^B)}{s_A\,s_B}, \qquad \mathrm{SE}(\hat\rho) \approx \frac{1 - \hat\rho^2}{\sqrt{w}}\]</div><div class="wctl"><div class="ctl"><label for="rc-p">Pair</label><select id="rc-p"><option value="btc_sp500" selected>Bitcoin – S&P 500 (slide)</option><option value="btc_gold">Bitcoin – gold (slide)</option><option value="eth_sp500">Ethereum – S&P 500</option></select></div><div class="ctl"><label for="rc-e">End of the window</label><select id="rc-e"><option value="max" selected>the day of the maximum (slide)</option><option value="min">the day of the minimum</option><option value="last">the last day, 18 September 2026</option></select></div></div><ol id="rc-st"></ol></div><ul class="out" id="rc-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 60-day window (▶, extra run), is the highest Bitcoin–S&P 500 rolling correlation above or below 0.57?</div><details><summary>Answer</summary><p>Above: 0.67, on 25 October 2024. The standard error near ρ = 0 is 1/√60 = 0.13, against 0.063 with 250 days: short windows give more extreme values.</p></details>
+</section>
+<section class="blk" id="corr">
+  <h3>Rolling Correlation with Equities and Gold</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=37" target="_blank" rel="noopener"><img src="slides/sfm_ch14_rolling_corr_en.jpg" alt="Slide 36: Rolling Correlation with Equities and Gold" loading="lazy"></a>
+      <figcaption>Slide 36</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="co-w">Window (common days): <b id="co-w-v"></b></label><input type="range" id="co-w" min="60" max="500" step="10" value="250"></div><button class="btn play" id="co-play" type="button"></button></div><div class="charts "><div class="chart" id="co-chart"></div></div><ul class="out" id="co-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a 500-day window (▶, extra run), what is the maximum of the Bitcoin–gold rolling correlation?</div>
+  <details><summary>Answer</summary><p>About 0.25, on 18 September 2026, against 0.37 on 11 September 2026 with 250 days. The long window mixes 2026 with 2024–2025, when the correlation was 0.12, so the rise of 2026 is diluted.</p></details>
+</section>
+<section class="blk" id="corr-tab">
+  <h3>Correlation Year by Year</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=38" target="_blank" rel="noopener"><img src="slides/ch14_corr-tab_en.jpg" alt="Slide 37: Correlation Year by Year" loading="lazy"></a>
+      <figcaption>Slide 37</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cy-y">Year highlighted</label><select id="cy-y"><option value="2014">2014</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022" selected>2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><div class="ctl"><label for="cy-f">Returns</label><select id="cy-f"><option value="d" selected>daily (lecture)</option><option value="w">weekly (Friday to Friday)</option></select></div><button class="btn play" id="cy-play" type="button"></button></div><div class="charts "><div class="chart" id="cy-chart"></div></div><p class="xh">Correlation year by year (the slide shows 2019–2025)</p><div class="tw" id="cy-tab"></div><ul class="out" id="cy-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With weekly returns (extra run), is the 2022 correlation of Bitcoin and the S&P 500 higher or lower than with daily returns?</div><details><summary>Answer</summary><p>Lower: 0.43 against 0.56; over the whole period 0.19 against 0.24. Asynchronous closes would lower the daily correlation, not the weekly one; one year has only about 50 weekly returns, so the estimate is noisier.</p></details>
+</section>
+<section class="blk" id="crisis-tab">
+  <h3>Three Crisis Episodes</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=39" target="_blank" rel="noopener"><img src="slides/ch14_crisis-tab_en.jpg" alt="Slide 38: Three Crisis Episodes" loading="lazy"></a>
+      <figcaption>Slide 38</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="cr-e">Episode</label><select id="cr-e"><option value="COVID-19" selected>COVID-19</option><option value="Terra/Luna">Terra/Luna</option><option value="FTX">FTX</option></select></div><div class="ctl"><label for="cr-x">Days added before and after: <b id="cr-x-v"></b></label><input type="range" id="cr-x" min="0" max="30" step="1" value="0"></div><button class="btn play" id="cr-play" type="button"></button></div><div class="charts "><div class="chart" id="cr-chart"></div></div><p class="xh">Cumulative log returns (%), the table of the slide</p><div class="tw" id="cr-tab"></div><ul class="out" id="cr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> During the FTX episode (5–21 November 2022), what did the S&P 500 do?</div><details><summary>Answer</summary><p>It rose by 4.6%, and gold by 3.4%, while Bitcoin lost 29.9% and Ethereum 38.4%. A shock specific to crypto did not reach equities.</p></details>
+</section>
+<section class="blk" id="haven-we">
+  <h3>Hedge or Safe Haven?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=40" target="_blank" rel="noopener"><img src="slides/ch14_haven-we_en.jpg" alt="Slide 39: Hedge or Safe Haven?" loading="lazy"></a>
+      <figcaption>Slide 39</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sh-q">Share of the worst S&P 500 days: <b id="sh-q-v"></b></label><input type="range" id="sh-q" min="1" max="20" step="0.5" value="5"></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><div class="we" id="sh-we-box"><p class="we-h">Worked example: the safe-haven test</p><div class="we-f">\[t = \frac{\bar r_{\mathrm{bad}}}{s_{\mathrm{bad}}/\sqrt{n_{\mathrm{bad}}}} \sim t(n_{\mathrm{bad}} - 1)\]</div><div class="wctl"><div class="ctl"><label for="sh-k">Asset</label><select id="sh-k"><option value="btc" selected>Bitcoin (slide)</option><option value="gold">gold (slide)</option></select></div></div><ol id="sh-we"></ol></div><ul class="out" id="sh-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> On the worst 1% of S&P 500 days (▶, extra run), what is gold’s mean return?</div><details><summary>Answer</summary><p>−0.39% (t = −1.27, p 0.215), not significantly different from zero on those 31 days, while Bitcoin has −6.30% (t = −3.23, p 0.003). Gold holds its value, without rising on the hardest days.</p></details>
+</section><h2 class="sec" id="s-bub">Bubbles and Crashes</h2>
+<section class="blk" id="mdd-we">
+  <h3>Drawdown</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=41" target="_blank" rel="noopener"><img src="slides/ch14_mdd-we_en.jpg" alt="Slide 40: Drawdown" loading="lazy"></a>
+      <figcaption>Slide 40</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="md-d">Loss d: <b id="md-d-v"></b></label><input type="range" id="md-d" min="1" max="95" step="1" value="75"></div><button class="btn play" id="md-play" type="button"></button></div><div class="charts "><div class="chart" id="md-chart"></div></div><div class="we" id="md-we-box"><p class="we-h">Worked example: the maximum drawdown and the gain needed</p><div class="we-f">\[D_t = \frac{P_t}{\max_{s \le t} P_s} - 1, \qquad (1 - d)(1 + g) = 1 \;\Rightarrow\; g = \frac{d}{1 - d}\]</div><div class="wctl"><div class="ctl"><label for="md-k">Asset</label><select id="md-k"><option value="btc" selected>Bitcoin (slide)</option><option value="eth">Ethereum</option><option value="sp500">S&P 500</option></select></div></div><ol id="md-we"></ol></div><ul class="out" id="md-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Ethereum’s maximum drawdown is −94.0%. What gain does it need to recover?</div><details><summary>Answer</summary><p>1,556% = 0.940/0.060: from 6.0% of its record value it has to rise about 16.6 times. Ethereum was back at its record on 2 February 2021.</p></details>
+</section>
+<section class="blk" id="dd">
+  <h3>Drawdowns of Bitcoin, Ethereum and the S&P 500</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=42" target="_blank" rel="noopener"><img src="slides/sfm_ch14_drawdowns_en.jpg" alt="Slide 41: Drawdowns of Bitcoin, Ethereum and the S&P 500" loading="lazy"></a>
+      <figcaption>Slide 41</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-y">Start year: <b id="dd-y-v"></b></label><input type="range" id="dd-y" min="2016" max="2024" step="1" value="2016"></div><div class="ctl"><label for="dd-t">Threshold below the record: <b id="dd-t-v"></b></label><input type="range" id="dd-t" min="5" max="75" step="5" value="10"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ starts the sample in 2022 (extra run). What is Bitcoin’s maximum drawdown?</div>
+  <details><summary>Answer</summary><p>−66.9%, against −83.4% since 2016. The drawdown is measured from the highest price in the sample, and the peak of November 2021 is no longer in it. Ethereum −74.1%, S&P 500 −25.4%.</p></details>
+</section>
+<section class="blk" id="dd-tab">
+  <h3>Bitcoin's Large Drawdowns</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=43" target="_blank" rel="noopener"><img src="slides/ch14_dd-tab_en.jpg" alt="Slide 42: Bitcoin's Large Drawdowns" loading="lazy"></a>
+      <figcaption>Slide 42</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="de-t">Minimum depth of an episode</label><select id="de-t"><option value="50" selected>50% (lecture)</option><option value="30">30%</option><option value="40">40%</option><option value="60">60%</option><option value="70">70%</option></select></div><button class="btn play" id="de-play" type="button"></button></div><div class="charts "><div class="chart" id="de-chart"></div></div><p class="xh">Bitcoin episodes since September 2014 (the table of the slide)</p><div class="tw" id="de-tab"></div><ul class="out" id="de-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a threshold of 30% (▶, extra run), how many Bitcoin episodes are there since September 2014?</div><details><summary>Answer</summary><p>Eight: three falls of 2017 (−32.6%, −34.8% and −35.5%), recovered within months, join the five of the slide.</p></details>
+</section><h2 class="sec" id="s-etf">Spot Bitcoin ETFs</h2>
+<section class="blk" id="etf">
+  <h3>Volatility and the Weekend Share Around the ETFs</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=46" target="_blank" rel="noopener"><img src="slides/sfm_ch14_etf_en.jpg" alt="Slide 45: Volatility and the Weekend Share Around the ETFs" loading="lazy"></a>
+      <figcaption>Slide 45</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ef-w">Volatility window (days): <b id="ef-w-v"></b></label><input type="range" id="ef-w" min="30" max="365" step="5" value="90"></div><div class="ctl"><label for="ef-y">Year highlighted</label><select id="ef-y"><option value="none" selected>none (lecture)</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div><button class="btn play" id="ef-play" type="button"></button></div><div class="charts "><div class="chart" id="ef-chart"></div></div><ul class="out" id="ef-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> In which year since 2020 was the weekend share of Bitcoin’s squared returns highest?</div>
+  <details><summary>Answer</summary><p>In 2025: 19.0%, against 10.9–14.0% in the other years; still below 2/7 = 28.6%, the value for an equal variance on every day.</p></details>
+</section>
+<section class="blk" id="etf-tab">
+  <h3>Before and After: a Simple Comparison</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=47" target="_blank" rel="noopener"><img src="slides/ch14_etf-tab_en.jpg" alt="Slide 46: Before and After: a Simple Comparison" loading="lazy"></a>
+      <figcaption>Slide 46</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="et-L">Length of each window</label><select id="et-L"><option value="2" selected>2 years (lecture)</option><option value="1">1 year</option><option value="1.5">1.5 years</option><option value="2.5">2.5 years</option></select></div><button class="btn play" id="et-play" type="button"></button></div><div class="charts "><div class="chart" id="et-chart"></div></div><p class="xh">Bitcoin before and after 11 January 2024 (the table of the slide)</p><div class="tw" id="et-tab"></div><ul class="out" id="et-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With windows of one year (▶, extra run), does the Brown–Forsythe test find a significant change in volatility?</div><details><summary>Answer</summary><p>Yes (p 0.001), but volatility rose, from 44.4% to 52.9%. With 2.5 years it is also significant (p 0.008), in the opposite direction (57.2% to 48.0%), and with two years it is not (p 0.27). The result depends on the window, so the before–after comparison does not measure a causal effect of the ETFs.</p></details>
+</section>
+<section class="blk" id="ibit-we">
+  <h3>How Well Does an ETF Track Bitcoin?</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=48" target="_blank" rel="noopener"><img src="slides/ch14_ibit-we_en.jpg" alt="Slide 47: How Well Does an ETF Track Bitcoin?" loading="lazy"></a>
+      <figcaption>Slide 47</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ib-k">Return horizon (trading days of the ETF)</label><select id="ib-k"><option value="1" selected>1 (lecture)</option><option value="2">2</option><option value="5">5 (a week)</option><option value="10">10</option></select></div><button class="btn play" id="ib-play" type="button"></button></div><div class="charts "><div class="chart" id="ib-chart"></div></div><div class="we" id="ib-we-box"><p class="we-h">Worked example: tracking error</p><div class="we-f">\[\mathrm{TE} = \sqrt{252/k}\;\mathrm{sd}\big(r^{\mathrm{IBIT}}_t - r^{\mathrm{BTC}}_t\big)\]</div><div class="wctl"><div class="ctl"><label for="ib-s">Sample</label><select id="ib-s"><option value="all" selected>all 671 days (slide)</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div></div><ol id="ib-we"></ol></div><ul class="out" id="ib-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With 5-day returns (▶, extra run), what is IBIT’s tracking error?</div><details><summary>Answer</summary><p>8.9% a year, with a correlation of 0.98, against 20.8% for daily returns. The gap between the New York close and the midnight UTC close averages out within days.</p></details>
+</section><h2 class="sec" id="s-stable">Stablecoins</h2>
+<section class="blk" id="supply">
+  <h3>Supply of Stablecoins</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch14_stablecoin_supply_en.jpg" alt="Slide 50: Supply of Stablecoins" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="su-y">Date marked</label><select id="su-y"><option value="end" selected>18 September 2026 (lecture)</option><option value="2020-01-01">1 January 2020</option><option value="2022-04-02">2 April 2022 (the 2022 maximum)</option><option value="2023-03-10">10 March 2023</option><option value="2023-08-19">19 August 2023 (the trough)</option><option value="2023-12-31">31 December 2023</option></select></div><div class="ctl"><label for="su-c">Series</label><select id="su-c"><option value="all" selected>all (lecture)</option><option value="usdt">total and USDT</option><option value="usdc">total and USDC</option><option value="dai">total and DAI</option></select></div><button class="btn play" id="su-play" type="button"></button></div><div class="charts "><div class="chart" id="su-chart"></div></div><ul class="out" id="su-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> By how much did the total stablecoin supply fall between 2 April 2022 (187 billion USD) and 19 August 2023 (123 billion)?</div>
+  <details><summary>Answer</summary><p>By 34.5% = 1 − 122.7/187.4. On the slides the total on 18 September 2026 is 308 billion USD; the download of 4 November 2026 gives 303 billion for the same date, because DefiLlama revises its history.</p></details>
+</section>
+<section class="blk" id="bp-we">
+  <h3>Peg Deviation in Basis Points</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=52" target="_blank" rel="noopener"><img src="slides/ch14_bp-we_en.jpg" alt="Slide 51: Peg Deviation in Basis Points" loading="lazy"></a>
+      <figcaption>Slide 51</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bp-d">Day of March 2023: <b id="bp-d-v"></b></label><input type="range" id="bp-d" min="8" max="20" step="1" value="11"></div><button class="btn play" id="bp-play" type="button"></button></div><div class="charts "><div class="chart" id="bp-chart"></div></div><div class="we" id="bp-st-box"><p class="we-h">Worked example: the peg deviation and the loss</p><div class="we-f">\[d_t = 10\,000\,(P_t - 1)\ \text{bp}, \qquad \text{loss} = W\,(1 - P_t)\]</div><div class="wctl"><div class="ctl"><label for="bp-k">Coin</label><select id="bp-k"><option value="usdc" selected>USDC (slide)</option><option value="dai">DAI</option><option value="usdt">USDT</option></select></div><div class="ctl"><label for="bp-p">Price</label><select id="bp-p"><option value="close" selected>close (slide)</option><option value="low">daily low (slide)</option></select></div><div class="ctl"><label for="bp-W">Position W (coins)</label><select id="bp-W"><option value="1000000" selected>1,000,000 (slide)</option><option value="100000">100,000</option><option value="10000000">10,000,000</option></select></div></div><ol id="bp-st"></ol></div><ul class="out" id="bp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> DAI’s low on 11 March 2023 was 0.8970 USD. What is its peg deviation?</div><details><summary>Answer</summary><p>−1,030 bp = 10,000 × (0.8970 − 1), that is −10.3%. The USDC low on the same day was −1,226 bp.</p></details>
+</section>
+<section class="blk" id="peg">
+  <h3>Peg Deviations of USDT, USDC and DAI</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch14_peg_en.jpg" alt="Slide 52: Peg Deviations of USDT, USDC and DAI" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="pg-t">Threshold (bp)</label><select id="pg-t"><option value="10" selected>10 (lecture)</option><option value="5">5</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div><div class="ctl"><label for="pg-p">Price</label><select id="pg-p"><option value="close" selected>close (lecture)</option><option value="low">daily low</option></select></div><button class="btn play" id="pg-play" type="button"></button></div><div class="charts "><div class="chart" id="pg-chart"></div></div><p class="xh">Peg statistics since 2021 (the numbers of the slide)</p><div class="tw" id="pg-tab"></div><ul class="out" id="pg-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With a threshold of 50 bp (▶), on what share of the days does DAI’s close deviate by more?</div>
+  <details><summary>Answer</summary><p>On 0.57% of the days (12 of 2,087), against 0.14% for USDT and for USDC; at the 10 bp threshold the shares are 10.7%, 11.4% and 1.5%.</p></details>
+</section>
+<section class="blk" id="svb">
+  <h3>The USDC Depeg, Day by Day</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=55" target="_blank" rel="noopener"><img src="slides/sfm_ch14_svb_en.jpg" alt="Slide 54: The USDC Depeg, Day by Day" loading="lazy"></a>
+      <figcaption>Slide 54</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sv-d">Last day shown (March 2023): <b id="sv-d-v"></b></label><input type="range" id="sv-d" min="8" max="20" step="1" value="20"></div><div class="ctl"><label for="sv-c">Coins</label><select id="sv-c"><option value="all" selected>all three (lecture)</option><option value="usdc">USDC</option><option value="dai">DAI</option><option value="usdt">USDT</option></select></div><button class="btn play" id="sv-play" type="button"></button></div><div class="charts "><div class="chart" id="sv-chart"></div></div><ul class="out" id="sv-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> Where did USDC close on 13 March 2023?</div>
+  <details><summary>Answer</summary><p>At 0.9989 USD, that is −11 bp, back near the peg after the guarantee of the SVB deposits on the evening of 12 March (<a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm" target="_blank" rel="noopener">U.S. Treasury, Federal Reserve & FDIC, 2023</a>). On 11 March the close had been 0.9715 (−285 bp). USDT closed at +39 bp on 13 March.</p></details>
+</section>
+<section class="blk" id="ust">
+  <h3>The Collapse of UST, May 2022</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=57" target="_blank" rel="noopener"><img src="slides/sfm_ch14_ust_en.jpg" alt="Slide 56: The Collapse of UST, May 2022" loading="lazy"></a>
+      <figcaption>Slide 56</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="us-d">Last day shown: <b id="us-d-v"></b></label><input type="range" id="us-d" min="0" max="75" step="1" value="75"></div><button class="btn play" id="us-play" type="button"></button></div><div class="charts "><div class="chart" id="us-chart"></div></div><ul class="out" id="us-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> By how much had the UST supply fallen between its peak on 7 May 2022 and the last published day, 11 May?</div>
+  <details><summary>Answer</summary><p>By 27%, from 18.8 to 13.7 billion UST, in four days. The price fell further: 0.75 USD on 9 May, 0.37 on 13 May and 0.02 on 31 May.</p></details>
+</section><h2 class="sec" id="s-risk">The Risk of a Crypto Position</h2>
+<section class="blk" id="usd-we">
+  <h3>VaR 1% and ES 2.5% in Dollars</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=61" target="_blank" rel="noopener"><img src="slides/ch14_usd-we_en.jpg" alt="Slide 60: VaR 1% and ES 2.5% in Dollars" loading="lazy"></a>
+      <figcaption>Slide 60</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="ud-W">Position W (thousand USD): <b id="ud-W-v"></b></label><input type="range" id="ud-W" min="10" max="1000" step="10" value="100"></div><button class="btn play" id="ud-play" type="button"></button></div><div class="charts "><div class="chart" id="ud-chart"></div></div><div class="we" id="ud-we-box"><p class="we-h">Worked example: from the log return to dollars</p><div class="we-f">\[\text{loss} = W\,\big(1 - e^{-v/100}\big)\]</div><div class="wctl"><div class="ctl"><label for="ud-k">Asset</label><select id="ud-k"><option value="btc" selected>Bitcoin (slide)</option><option value="eth">Ethereum</option><option value="sp500">S&P 500</option></select></div><div class="ctl"><label for="ud-m">Measure</label><select id="ud-m"><option value="hs_v" selected>VaR 1% HS (slide)</option><option value="n_v">VaR 1% Normal</option><option value="t_v">VaR 1% Student-t</option><option value="g_v">VaR 1% GARCH-t</option><option value="hs_e">ES 2.5% HS</option><option value="n_e">ES 2.5% Normal</option><option value="t_e">ES 2.5% Student-t</option><option value="g_e">ES 2.5% GARCH-t</option><option value="hs10">10-day VaR 1% HS</option></select></div></div><ol id="ud-we"></ol></div><ul class="out" id="ud-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The S&P 500 HS VaR 1% is a log return of −3.256%. What is it for a position of 1,000,000 USD?</div><details><summary>Answer</summary><p>32,037 USD = 1,000,000 × (1 − e^(−0.03256)). Read as a simple return, the same number would give 32,562 USD.</p></details>
+</section>
+<section class="blk" id="var-tab">
+  <h3>Four Methods, Three Assets</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=62" target="_blank" rel="noopener"><img src="slides/ch14_var-tab_en.jpg" alt="Slide 61: Four Methods, Three Assets" loading="lazy"></a>
+      <figcaption>Slide 61</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vq-a">VaR level α</label><select id="vq-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="vq-play" type="button"></button></div><div class="charts "><div class="chart" id="vq-chart"></div></div><p class="xh">VaR and ES in percent (the first table of the slide)</p><div class="tw" id="vq-tab"></div><p class="xh">In USD, for a position of 100,000 USD (the second table of the slide)</p><div class="tw" id="vq-tab2"></div><ul class="out" id="vq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> At α = 5% (▶, extra run), is Bitcoin’s Normal VaR still below the historical one?</div><details><summary>Answer</summary><p>No: 5.62% against 5.33% historical, 5% above. Bitcoin’s distribution has heavy tails and a more peaked centre than the Normal distribution: at 1% the Normal distribution understates the loss (7.99% against 10.54%), at 5% it overstates it.</p></details>
+</section>
+<section class="blk" id="sqrt-we">
+  <h3>Interpretation of the Risk Numbers</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=63" target="_blank" rel="noopener"><img src="slides/ch14_sqrt-we_en.jpg" alt="Slide 62: Interpretation of the Risk Numbers" loading="lazy"></a>
+      <figcaption>Slide 62</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="sq-h">Horizon h (days): <b id="sq-h-v"></b></label><input type="range" id="sq-h" min="1" max="30" step="1" value="10"></div><button class="btn play" id="sq-play" type="button"></button></div><div class="charts "><div class="chart" id="sq-chart"></div></div><div class="we" id="sq-we-box"><p class="we-h">Worked example: the square-root-of-time rule</p><div class="we-f">\[\mathrm{VaR}(h\ \text{days}) \overset{?}{=} \sqrt{h}\,\mathrm{VaR}(1\ \text{day})\]</div><div class="wctl"><div class="ctl"><label for="sq-k">Asset</label><select id="sq-k"><option value="btc" selected>Bitcoin (slide)</option><option value="eth">Ethereum</option><option value="sp500">S&P 500</option></select></div></div><ol id="sq-we"></ol></div><ul class="out" id="sq-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> For Bitcoin and h = 30 days (▶), does the square-root-of-time rule give more or less than the historical 30-day VaR 1%?</div><details><summary>Answer</summary><p>More: 57.7% against 48.2%, 20% above. With a tail index between 2 and 4, the extreme quantiles of sums grow more slowly than √h.</p></details>
+</section>
+<section class="blk" id="kup-we">
+  <h3>Backtesting: the Kupiec Test</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=64" target="_blank" rel="noopener"><img src="slides/ch14_kup-we_en.jpg" alt="Slide 63: Backtesting: the Kupiec Test" loading="lazy"></a>
+      <figcaption>Slide 63</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="kp-x">Number of exceptions x: <b id="kp-x-v"></b></label><input type="range" id="kp-x" min="0" max="80" step="1" value="29"></div><button class="btn play" id="kp-play" type="button"></button></div><div class="charts "><div class="chart" id="kp-chart"></div></div><div class="we" id="kp-we-box"><p class="we-h">Worked example: the Kupiec test</p><div class="we-f">\[LR_{uc} = -2\ln\frac{(1 - \alpha)^{n - x}\,\alpha^{x}}{(1 - \hat\pi)^{n - x}\,\hat\pi^{x}}, \qquad \hat\pi = \frac{x}{n}\]</div><div class="wctl"><div class="ctl"><label for="kp-a">Level α</label><select id="kp-a"><option value="0.01" selected>0.01 (slide)</option><option value="0.005">0.005</option><option value="0.02">0.02</option></select></div></div><ol id="kp-we"></ol></div><ul class="out" id="kp-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With n = 3,183 days and α = 1%, which numbers of exceptions does the Kupiec test accept at 5%?</div><details><summary>Answer</summary><p>From 22 to 43. HS (29) and GARCH-t (41) are inside; 41 is near the edge (LR_uc = 2.45, p 0.12). The test also rejects too few exceptions, not only too many.</p></details>
+</section>
+<section class="blk" id="btcvar">
+  <h3>Backtesting Bitcoin VaR 1%</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter14_crypto_assets.pdf#page=65" target="_blank" rel="noopener"><img src="slides/sfm_ch14_btc_var_en.jpg" alt="Slide 64: Backtesting Bitcoin VaR 1%" loading="lazy"></a>
+      <figcaption>Slide 64</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="bt-w">HS window (days): <b id="bt-w-v"></b></label><input type="range" id="bt-w" min="100" max="1000" step="5" value="365"></div><div class="ctl"><label for="bt-a">VaR level α</label><select id="bt-a"><option value="0.01" selected>1% (lecture)</option><option value="0.025">2.5%</option><option value="0.05">5%</option></select></div><button class="btn play" id="bt-play" type="button"></button></div><div class="charts "><div class="chart" id="bt-chart"></div></div><ul class="out" id="bt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> With an HS window of 1,000 days (▶, extra run), what does the Kupiec test say?</div>
+  <details><summary>Answer</summary><p>It rejects, for too few exceptions: 21 (0.66%), p 0.04. The long window keeps the losses of 2018–2022 and gives a mean VaR of 10.1%, too large for the calmer years.</p></details>
+</section>
+<p class="src foot">Course data in data/market (up to 18 September 2026): daily closes of Bitcoin, Ethereum, Solana, the S&P 500, gold (XAU/USD) and the IBIT ETF; daily closes and lows of USDT, USDC and DAI since 2021. The stablecoin supply and the TerraUSD series come from DefiLlama, downloaded with the chapter’s function on 4 November 2026 and cut at 18 September 2026; where the download differs from the values on the slides, the page shows both. The GARCH(1,1)-t and GJR estimates, the conditional volatilities, the Student-t fits and the GARCH-t forecasts of the backtest come from the code of the chapter (Quantlets/Ch_14). From the prices the browser recomputes the returns, the descriptive statistics, the Hill indices, the ACF and the Ljung–Box test, the variance ratios, the correlations, the drawdowns, the weekend and safe-haven tests, the peg deviations, VaR, ES and the Kupiec test. Other windows, thresholds, horizons, periods and levels α are extra runs of the same code; the GARCH persistence on ETF windows of 1, 1.5 and 2.5 years is an extra estimation with the chapter’s code, and the multi-day GARCH forecasts and the share of a shock left are extra computations from the estimates on the slide.</p>
+</main>
+</body>
+</html>
