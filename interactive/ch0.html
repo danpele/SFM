@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 0 · Introduction</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'en';</script>
+<link rel="preload" as="script" href="ch0.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch0_data.js?v=20261101a", "ch0_text_en.js?v=20261101a", "common.js?v=20261101a"], "ch0.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index.html">Statistics of Financial Markets</a></h1><p>Chapter 0 · Introduction</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index.html#chapters">← Course site</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf" target="_blank" rel="noopener">Lecture PDF</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_00" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch0.html" class="lang-btn active">EN</a><a href="ch0_ro.html" class="lang-btn">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">The slide of the lecture is on the left, the same figure on the right, computed in the browser from the same data. The ▶ button moves the parameter step by step. Abbreviations: DAX (Deutscher Aktienindex, the index of the Frankfurt Stock Exchange), BET (Bucharest Exchange Trading, the benchmark index of the Bucharest Stock Exchange), BET-TR (BET total return, with dividends reinvested), WIG20 (the index of the 20 largest companies on the Warsaw Stock Exchange), TLT (an ETF of US Treasury bonds with maturities over 20 years), ETF (exchange-traded fund), VIX (Cboe Volatility Index, the S&P 500 volatility expected by the options market), SE (standard error), GARCH (generalised autoregressive conditional heteroskedasticity).</p>
+<p class="toc"><a href="#s-mk">Markets in 2026: What the Data Show</a> · <a href="#s-ret">From Prices to Returns: a First Look</a></p>
+<h2 class="sec" id="s-mk">Markets in 2026: What the Data Show</h2>
+<section class="blk" id="markets">
+  <h3>Five Markets since 2015: Growth of 100</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch0_markets_en.jpg" alt="Slide 22: Five Markets since 2015: Growth of 100" loading="lazy"></a>
+      <figcaption>Slide 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mk-y">The window starts in January (slide: 2015): <b id="mk-y-v"></b></label><input type="range" id="mk-y" min="2015" max="2025" step="1" value="2015"></div><button class="btn play" id="mk-play" type="button"></button></div><div class="charts "><div class="chart" id="mk-chart"></div></div><ul class="out" id="mk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves the start of the window year by year, up to January 2025 (extra runs). Which of the five markets has the lowest annual return in the window from 2025?</div>
+  <details><summary>Answer</summary><p>Bitcoin: −9.0% a year (100 becomes 86), although in the window from 2015 it had the highest return, 47.4%; in the window from 2025 the BET-TR leads with 44.0%. Over short windows the ranking depends almost entirely on the start date: a mean return estimated over less than two years is very imprecise.</p></details>
+</section>
+<section class="blk" id="risk-return">
+  <h3>Risk and Return, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch0_risk_return_en.jpg" alt="Slide 24: Risk and Return, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-y">The window starts in January (slide: 2015): <b id="rr-y-v"></b></label><input type="range" id="rr-y" min="2015" max="2024" step="1" value="2015"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves the start of the window up to 2024 (extra runs). Where does Ethereum, the most volatile asset, land in the window from January 2022?</div>
+  <details><summary>Answer</summary><p>Below zero: −7.8% a year with a volatility of 68.9%, below the S&P 500 (9.9%) and the BET-TR (26.2%). The chart does not prove that higher risk brings higher return: the points are averages of one sample. The standard error of an annual mean return over Y years is σ/√Y; for the S&P 500 since 2015, 17.7/√11.7 = 5.2 percentage points, for Bitcoin 19.5 points.</p></details>
+</section>
+<section class="blk" id="drawdowns">
+  <h3>Crises and Drawdowns, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch0_drawdowns_en.jpg" alt="Slide 27: Crises and Drawdowns, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-y">The data stop at the end of year (slide: 18.09.2026): <b id="dd-y-v"></b></label><input type="range" id="dd-y" min="2001" max="2026" step="1" value="2026"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ moves the end of the data from 2001 to 2026. In which year does the BET regain its peak of 24 July 2007?</div>
+  <details><summary>Answer</summary><p>In 2021, on 16 March, more than 13 years later; the S&P 500 had regained its peak of 9 October 2007 on 28 March 2013. From the trough of 25 February 2009 (−82.5%) the BET needed a gain of 473%, a 5.7-fold rise; the S&P 500, after −56.8%, a gain of 131%. After a loss x, recovery needs a gain of x/(1 − x).</p></details>
+</section>
+<section class="blk" id="vix">
+  <h3>The Fear Index: VIX, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=31" target="_blank" rel="noopener"><img src="slides/sfm_ch0_vix_en.jpg" alt="Slide 30: The Fear Index: VIX, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vx-t">VIX threshold: <b id="vx-t-v"></b></label><input type="range" id="vx-t" min="20" max="80" step="5" value="30"></div><button class="btn play" id="vx-play" type="button"></button></div><div class="charts "><div class="chart" id="vx-chart"></div></div><ul class="out" id="vx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> The threshold is 30. On a day when the VIX closes above 30, how likely is it that the next day also closes above 30?</div>
+  <details><summary>Answer</summary><p>The empirical probability is 88.2%, although only 9.3% of the days since 2000 close above 30. High-volatility days come in episodes (74 episodes above 30, the longest 170 trading days long): this is volatility clustering, modelled with GARCH in Chapter 9.</p></details>
+</section><h2 class="sec" id="s-ret">From Prices to Returns: a First Look</h2>
+<section class="blk" id="returns">
+  <h3>S&P 500 Daily Returns, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch0_returns_en.jpg" alt="Slide 50: S&P 500 Daily Returns, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rt-w">Window of the rolling volatility</label><select id="rt-w"><option value="21" selected>21 days (one month)</option><option value="63">63 days (one quarter)</option><option value="126">126 days (half a year)</option><option value="252">252 days (one year)</option></select></div><button class="btn play" id="rt-play" type="button"></button></div><div class="charts "><div class="chart" id="rt-chart"></div></div><ul class="out" id="rt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ lengthens the window of the rolling volatility from 21 to 252 days. What happens to the highest annualised rolling volatility?</div>
+  <details><summary>Answer</summary><p>It falls to less than half: from 97.4% (7 April 2020) to 45.6% (16 July 2009). A long window mixes crisis days with calm days and smooths the peaks. For every window, between 6.0% and 6.7% of the days fall outside the band ±2 rolling standard deviations, against 4.6% for the Normal distribution.</p></details>
+</section>
+<section class="blk" id="histogram">
+  <h3>Returns versus the Normal Distribution</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter0_introduction.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch0_histogram_en.jpg" alt="Slide 52: Returns versus the Normal Distribution" loading="lazy"></a>
+      <figcaption>Slide 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hs-k">Threshold: standard deviations from the mean (slide: 4): <b id="hs-k-v"></b></label><input type="range" id="hs-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="hs-play" type="button"></button></div><div class="charts "><div class="chart" id="hs-chart"></div></div><ul class="out" id="hs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Question for the room</span> ▶ raises the threshold from 4 to 6 standard deviations. How does the ratio of the observed number of days beyond the threshold to the number expected under the Normal distribution change?</div>
+  <details><summary>Answer</summary><p>It grows enormously: at 4 standard deviations, 46 days against 0.43 expected (108 times as many); at 6 standard deviations, 12 days against 0.000013 (about 906,000 times as many). The tail of the Normal distribution falls much faster than the tail of the returns, so risk computed with the Normal distribution is underestimated in the tails (Chapters 2, 5 and 10).</p></details>
+</section>
+<p class="src foot">Course data in data/market (source: EODHD), daily closes up to 18 September 2026, each series on its own calendar: the five markets and the eleven markets of the risk–return chart from January 2015, the S&P 500, the BET and the VIX from January 2000. The browser recomputes the growth of 100, the annualised returns and volatilities, the drawdowns, the VIX statistics, the rolling volatility, the histogram and the number of days in the tails. Other start dates of the window, other thresholds and other rolling windows are extra runs of the same computation.</p>
+</main>
+</body>
+</html>

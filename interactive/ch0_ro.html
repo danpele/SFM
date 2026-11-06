@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitolul 0 · Introducere</title>
+<link rel="icon" href="../logos/ida_square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css?v=20261016e">
+<link rel="stylesheet" href="interactive.css?v=20261101a">
+<script>window.SFM_LANG = 'ro';</script>
+<link rel="preload" as="script" href="ch0.js?v=20261101a">
+<script>
+(function (early, page, rest) {
+  'use strict';
+  let left = early.length, ok = true, parsed = document.readyState !== 'loading', started = false;
+  function add(src, k, done, ordered) {
+    const s = document.createElement('script');
+    s.src = k ? src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + k : src;
+    s.async = !ordered;
+    s.onload = () => done(true);
+    s.onerror = () => { s.remove(); if (k < 3) setTimeout(() => add(src, k + 1, done, ordered), 300 * (k + 1)); else done(false); };
+    document.head.appendChild(s);
+  }
+  function chain(list) { if (list.length) add(list[0], 0, () => chain(list.slice(1)), true); }
+  function go() {
+    if (started || left || !parsed) return;
+    started = true;
+    if (!ok || !window.SFMI) console.error('SFM: a script of the interactive charts did not load; the live charts are off.');
+    chain((ok && window.SFMI ? [page] : []).concat(rest));
+  }
+  early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
+  if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
+  go();
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch0_data.js?v=20261101a", "ch0_text_ro.js?v=20261101a", "common.js?v=20261101a"], "ch0.js?v=20261101a", []);
+</script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="https://www.ase.ro" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ase_logo.png" alt="ASE"></a>
+    <div class="header-title"><h1><a class="home-link" href="../index_ro.html">Statistica piețelor financiare</a></h1><p>Capitolul 0 · Introducere</p></div>
+    <a href="https://www.theida.net/" target="_blank" rel="noopener"><img class="header-logo" src="../logos/ida_logo.png" alt="IDA"></a>
+  </div>
+</header>
+<nav><ul>
+  <li><a href="../index_ro.html#chapters">← Site-ul cursului</a></li>
+  <li><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf" target="_blank" rel="noopener">PDF-ul cursului</a></li>
+  <li><a href="https://github.com/danpele/SFM/tree/main/Quantlets/Ch_00" target="_blank" rel="noopener">Quantlets</a></li>
+  <li class="lang-switcher"><a href="ch0.html" class="lang-btn">EN</a><a href="ch0_ro.html" class="lang-btn active">RO</a></li>
+</ul></nav>
+<main class="imain">
+<p class="lead">În stînga este slide-ul din curs, în dreapta aceeași figură, calculată în browser din aceleași date. Butonul ▶ modifică parametrul pas cu pas. Abrevieri: DAX (Deutscher Aktienindex, indicele bursei din Frankfurt), BET (Bucharest Exchange Trading, indicele de referință al Bursei de Valori București), BET-TR (BET total return, cu dividendele reinvestite), WIG20 (indicele celor mai mari 20 de firme de la bursa din Varșovia), TLT (un ETF de titluri de stat americane cu scadența peste 20 de ani), ETF (exchange-traded fund, fond tranzacționat la bursă), VIX (Cboe Volatility Index, volatilitatea S&P 500 așteptată de piața de opțiuni), SE (eroarea standard), GARCH (generalised autoregressive conditional heteroskedasticity).</p>
+<p class="toc"><a href="#s-mk">Piețele în 2026, în cifre</a> · <a href="#s-ret">De la prețuri la randamente: primii pași</a></p>
+<h2 class="sec" id="s-mk">Piețele în 2026, în cifre</h2>
+<section class="blk" id="markets">
+  <h3>Cinci piețe din 2015: evoluția a 100 de unități investite</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=23" target="_blank" rel="noopener"><img src="slides/sfm_ch0_markets_ro.jpg" alt="Slide-ul 22: Cinci piețe din 2015: evoluția a 100 de unități investite" loading="lazy"></a>
+      <figcaption>Slide-ul 22</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="mk-y">Fereastra începe în ianuarie (slide: 2015): <b id="mk-y-v"></b></label><input type="range" id="mk-y" min="2015" max="2025" step="1" value="2015"></div><button class="btn play" id="mk-play" type="button"></button></div><div class="charts "><div class="chart" id="mk-chart"></div></div><ul class="out" id="mk-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută începutul ferestrei an cu an, pînă în ianuarie 2025 (rulări suplimentare). Care dintre cele cinci piețe are cel mai mic randament anual în fereastra din 2025?</div>
+  <details><summary>Răspuns</summary><p>Bitcoin: −9,0% pe an (100 de unități devin 86), deși în fereastra din 2015 avea cel mai mare randament, 47,4%; în fereastra din 2025 conduce BET-TR, cu 44,0%. Pe ferestre scurte, clasamentul depinde aproape în întregime de data de început: un randament mediu estimat pe mai puțin de doi ani este foarte imprecis.</p></details>
+</section>
+<section class="blk" id="risk-return">
+  <h3>Risc și randament, 2015–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=25" target="_blank" rel="noopener"><img src="slides/sfm_ch0_risk_return_ro.jpg" alt="Slide-ul 24: Risc și randament, 2015–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 24</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rr-y">Fereastra începe în ianuarie (slide: 2015): <b id="rr-y-v"></b></label><input type="range" id="rr-y" min="2015" max="2024" step="1" value="2015"></div><button class="btn play" id="rr-play" type="button"></button></div><div class="charts "><div class="chart" id="rr-chart"></div></div><ul class="out" id="rr-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută începutul ferestrei pînă în 2024 (rulări suplimentare). Unde ajunge Ethereum, activul cu cea mai mare volatilitate, în fereastra din ianuarie 2022?</div>
+  <details><summary>Răspuns</summary><p>Sub zero: −7,8% pe an, cu o volatilitate de 68,9%, sub S&P 500 (9,9%) și BET-TR (26,2%). Graficul nu demonstrează că riscul mai mare aduce un randament mai mare: punctele sînt medii ale unui singur eșantion. Eroarea standard a randamentului mediu anual pe Y ani este σ/√Y; pentru S&P 500 din 2015, 17,7/√11,7 = 5,2 puncte procentuale, pentru Bitcoin 19,5 puncte.</p></details>
+</section>
+<section class="blk" id="drawdowns">
+  <h3>Crize și drawdown-uri, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=28" target="_blank" rel="noopener"><img src="slides/sfm_ch0_drawdowns_ro.jpg" alt="Slide-ul 27: Crize și drawdown-uri, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 27</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="dd-y">Datele se opresc la sfîrșitul anului (slide: 18.09.2026): <b id="dd-y-v"></b></label><input type="range" id="dd-y" min="2001" max="2026" step="1" value="2026"></div><button class="btn play" id="dd-play" type="button"></button></div><div class="charts "><div class="chart" id="dd-chart"></div></div><ul class="out" id="dd-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mută sfîrșitul datelor din 2001 pînă în 2026. În ce an revine BET la vîrful din 24 iulie 2007?</div>
+  <details><summary>Răspuns</summary><p>În 2021, pe 16 martie, după mai mult de 13 ani; S&P 500 revenise la vîrful din 9 octombrie 2007 pe 28 martie 2013. De la minimul din 25 februarie 2009 (−82,5%), BET avea nevoie de un cîștig de 473%, adică de o creștere de 5,7 ori; S&P 500, după −56,8%, de un cîștig de 131%. După o pierdere x, revenirea cere un cîștig x/(1 − x).</p></details>
+</section>
+<section class="blk" id="vix">
+  <h3>Indicele fricii: VIX, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=31" target="_blank" rel="noopener"><img src="slides/sfm_ch0_vix_ro.jpg" alt="Slide-ul 30: Indicele fricii: VIX, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 30</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="vx-t">Prag VIX: <b id="vx-t-v"></b></label><input type="range" id="vx-t" min="20" max="80" step="5" value="30"></div><button class="btn play" id="vx-play" type="button"></button></div><div class="charts "><div class="chart" id="vx-chart"></div></div><ul class="out" id="vx-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Pragul este 30. Într-o zi în care VIX închide peste 30, cît de probabil este ca și ziua următoare să închidă peste 30?</div>
+  <details><summary>Răspuns</summary><p>Probabilitatea empirică este 88,2%, deși doar 9,3% dintre zilele din 2000 au închideri peste 30. Zilele cu volatilitate mare vin în episoade (74 de episoade peste 30, cel mai lung de 170 de zile de tranzacționare): este fenomenul de volatility clustering, modelat cu GARCH în Capitolul 9.</p></details>
+</section><h2 class="sec" id="s-ret">De la prețuri la randamente: primii pași</h2>
+<section class="blk" id="returns">
+  <h3>Randamentele zilnice ale S&P 500, 2000–2026</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=51" target="_blank" rel="noopener"><img src="slides/sfm_ch0_returns_ro.jpg" alt="Slide-ul 50: Randamentele zilnice ale S&P 500, 2000–2026" loading="lazy"></a>
+      <figcaption>Slide-ul 50</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="rt-w">Fereastra volatilității mobile</label><select id="rt-w"><option value="21" selected>21 de zile (o lună)</option><option value="63">63 de zile (un trimestru)</option><option value="126">126 de zile (jumătate de an)</option><option value="252">252 de zile (un an)</option></select></div><button class="btn play" id="rt-play" type="button"></button></div><div class="charts "><div class="chart" id="rt-chart"></div></div><ul class="out" id="rt-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ mărește fereastra volatilității mobile de la 21 la 252 de zile. Ce se întîmplă cu cea mai mare volatilitate mobilă anualizată?</div>
+  <details><summary>Răspuns</summary><p>Scade la mai puțin de jumătate: de la 97,4% (7 aprilie 2020) la 45,6% (16 iulie 2009). O fereastră lungă amestecă zilele de criză cu zile calme și netezește vîrfurile. Pentru orice fereastră, între 6,0% și 6,7% dintre zile ies din banda ±2 abateri standard mobile, față de 4,6% la distribuția Normală.</p></details>
+</section>
+<section class="blk" id="histogram">
+  <h3>Randamentele față de distribuția Normală</h3>
+  <div class="pair">
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol0_introducere.pdf#page=53" target="_blank" rel="noopener"><img src="slides/sfm_ch0_histogram_ro.jpg" alt="Slide-ul 52: Randamentele față de distribuția Normală" loading="lazy"></a>
+      <figcaption>Slide-ul 52</figcaption></figure>
+    <div class="live"><div class="ctls"><div class="ctl"><label for="hs-k">Prag: abateri standard de la medie (slide: 4): <b id="hs-k-v"></b></label><input type="range" id="hs-k" min="2" max="6" step="0.5" value="4"></div><button class="btn play" id="hs-play" type="button"></button></div><div class="charts "><div class="chart" id="hs-chart"></div></div><ul class="out" id="hs-out"></ul></div>
+  </div>
+  <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> ▶ ridică pragul de la 4 la 6 abateri standard. Cum se schimbă raportul dintre numărul de zile observate dincolo de prag și numărul așteptat la distribuția Normală?</div>
+  <details><summary>Răspuns</summary><p>Crește foarte mult: la 4 abateri standard, 46 de zile față de 0,43 așteptate (de 108 ori mai multe); la 6 abateri standard, 12 zile față de 0,000013 (de circa 906 000 de ori mai multe). Coada distribuției Normale scade mult mai repede decît coada randamentelor, de aceea riscul calculat cu distribuția Normală este subestimat în cozi (Capitolele 2, 5 și 10).</p></details>
+</section>
+<p class="src foot">Datele cursului din data/market (sursa EODHD), închideri zilnice pînă la 18 septembrie 2026, fiecare serie pe propriul calendar: cele cinci piețe și cele unsprezece piețe ale graficului risc–randament din ianuarie 2015, S&P 500, BET și VIX din ianuarie 2000. Browserul recalculează creșterea a 100 de unități, randamentele și volatilitățile anualizate, drawdown-urile, statisticile VIX, volatilitatea mobilă, histograma și numărul de zile din cozi. Alte date de început ale ferestrei, alte praguri și alte ferestre ale volatilității mobile sînt rulări suplimentare ale aceluiași calcul.</p>
+</main>
+</body>
+</html>
