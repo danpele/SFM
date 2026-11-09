@@ -402,7 +402,7 @@ window.SFM_DATA.quizzes['probability'] = {
         {
             "correct": 2,
             "en": {
-                "title": "What GBM misses",
+                "title": "Limitations of GBM",
                 "text": "The S&P 500, 2000–2026, has excess kurtosis about 10.7 and $\\mathrm{Corr}(r_t^2, r_{t-1}^2) \\approx 0.31$; 300 GBM simulations of the same length stay within about $\\pm 0.1$ and $\\pm 0.02$. What does GBM miss?",
                 "options": ["The average return", "The overall volatility", "Heavy tails and volatility clustering", "Nothing: the differences are sampling noise"],
                 "correctExplanation": "GBM has i.i.d. Normal log returns: zero excess kurtosis and no autocorrelation of squared returns, far from the real values.",

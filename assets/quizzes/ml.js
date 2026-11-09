@@ -551,7 +551,7 @@ window.SFM_DATA.quizzes['ml'] = {
         {
             "correct": 1,
             "en": {
-                "title": "The right baseline",
+                "title": "The majority-class baseline",
                 "text": "The S&P 500 rose on 54.4% of the days since 2008. A random forest predicts the daily sign correctly on 53.1% of the days. What do you conclude?",
                 "options": [
                     "The forest has skill, since 53.1% is above 50%",
@@ -563,7 +563,7 @@ window.SFM_DATA.quizzes['ml'] = {
                 "incorrectExplanation": "A coin is the wrong benchmark: when the market rises on most days, a constant forecast of up already beats 50%."
             },
             "ro": {
-                "title": "Reperul corect",
+                "title": "Reperul clasei majoritare",
                 "text": "S&P 500 a crescut în 54,4% din zile din 2008. Un random forest prezice corect semnul zilnic în 53,1% din zile. Ce concluzionați?",
                 "options": [
                     "Random forest are o abilitate reală, deoarece 53,1% este peste 50%",

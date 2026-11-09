@@ -386,7 +386,7 @@ chart(T('Real Data: Banca Transilvania, Close vs Adjusted Close', 'Date reale: B
           T('Since 2015 the daily returns of the two series differ by more than 2 percentage points on @{tlv.nev} days (dividends, bonus shares)',
             'Din 2015, randamentele zilnice ale celor două serii diferă cu peste 2 puncte procentuale în @{tlv.nev} zile (dividende, acțiuni gratuite)')])
 
-chart(T('Dividends Matter: BET vs BET-TR', 'Dividendele contează: BET și BET-TR'), 'sfm_ch1_bet_bettr', 'SFM_ch1_data_quality', [
+chart(T('The Effect of Dividends: BET vs BET-TR', 'Efectul dividendelor: BET și BET-TR'), 'sfm_ch1_bet_bettr', 'SFM_ch1_data_quality', [
     T('100 invested on @{bt.start}: @{bt.bet} in the BET (price index), @{bt.tr} in the BET-TR (dividends reinvested)',
       '100 de unități investite pe @{bt.start}: @{bt.bet} în BET (indice de preț), @{bt.tr} în BET-TR (dividende reinvestite)'),
     T('Growth rate: @{bt.gbet}\\% vs @{bt.gtr}\\% a year; dividends add @{bt.gap} percentage points a year',
@@ -402,7 +402,7 @@ chart(T('Data Errors: Two EUR/RON Series', 'Erori în date: două serii EUR/RON'
     T('Fix: use the primary source of the number, the BNR reference rate', 'Soluția: folosiți sursa primară a cifrei, cursul de referință BNR')],
     h='0.54\\textheight')
 
-D.frame(T('Three Biases That Make Results Look Too Good', 'Trei erori sistematice care fac rezultatele să pară prea bune'), items(
+D.frame(T('Three Biases That Overstate Performance', 'Trei erori sistematice care supraestimează performanța'), items(
     (T('\\textbf{Survivorship bias}: only firms or funds that still exist are in the sample', '\\textbf{Survivorship bias}: în eșantion apar doar firmele sau fondurile care încă există'),
      [T('the losers have disappeared, so the average return is too high \\refBGIR', 'firmele cu rezultate slabe au dispărut, deci randamentul mediu este supraestimat \\refBGIR'),
       T('example: today\'s members of the BET, followed back to 2000', 'exemplu: componența actuală a BET, urmărită înapoi pînă în 2000')]),
@@ -972,7 +972,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Related evidence: many published return patterns do not survive new data \\refHLZ', 'Rezultate conexe: multe regularități ale randamentelor, publicate în literatură, nu se confirmă pe date noi \\refHLZ'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list papers on the persistence of performance and summarise their methods',
       '\\textbf{Literatura}: identificarea lucrărilor despre persistența performanței și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft a Python function for rolling Sharpe ratios on the course data',
@@ -996,7 +996,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Selection: if you tried ten windows, say so; a backtest tried many times overfits \\refBBLZ',
       'Selecția: dacă ați încercat zece ferestre, precizați acest lucru; un backtest repetat de multe ori duce la supraajustare (overfitting) \\refBBLZ')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: do Sharpe ratios of BVB stocks persist from one period to the next?', '\\textbf{Întrebarea}: persistă rapoartele Sharpe ale acțiunilor BVB de la o perioadă la alta?'),
      [T('data: adjusted closes of 10--15 BVB stocks, 2010--2026, from the course data', 'date: prețurile ajustate a 10--15 acțiuni BVB, 2010--2026, din datele cursului')]),
     (T('Steps', 'Pași'),

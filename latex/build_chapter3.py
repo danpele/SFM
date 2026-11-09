@@ -162,7 +162,7 @@ D.frame(T('Cotton: an Old Market with Long Price Records', 'Bumbacul: o piață 
         'Image: Edgar Degas (1873); public domain; Wikimedia Commons', 'Imagine: Edgar Degas (1873); domeniu public; Wikimedia Commons',
         h='0.42\\textheight'), wl='0.52', wr='0.44'))
 
-D.frame(T('What Mandelbrot Saw', 'Observația lui Mandelbrot'), cols(items(
+D.frame(T('Mandelbrot\'s Observations on Cotton Prices', 'Observațiile lui Mandelbrot asupra prețurilor bumbacului'), cols(items(
     (T('\\textbf{Too many large changes}: far more big moves than the Normal distribution allows',
        '\\textbf{Prea multe variații mari}: mult mai multe variații mari decît permite distribuția Normală'),
      [T('the sample variance did not settle as the sample grew', 'varianța de selecție nu se stabiliza pe măsură ce creștea eșantionul')]),
@@ -194,7 +194,7 @@ D.frame(T('Fama Tests the Idea on Stocks', 'Fama testează ideea pe acțiuni'), 
         'Photo: Bengt Nyman (2013); CC BY 2.0; Wikimedia Commons', 'Foto: Bengt Nyman (2013); CC BY 2.0; Wikimedia Commons',
         h='0.45\\textheight'), wl='0.62', wr='0.34'))
 
-D.frame(T('Why the Law of a Sum Matters', 'Importanța legii unei sume'), items(
+D.frame(T('The Importance of the Law of a Sum', 'Importanța legii unei sume'), items(
     (T('A monthly log return is the sum of about 21 daily log returns', 'Un randament logaritmic lunar este suma a circa 21 de randamente logaritmice zilnice'),
      [T('a model for daily returns implies a model for weekly, monthly and yearly returns',
         'un model pentru randamentele zilnice implică un model pentru randamentele săptămînale, lunare și anuale')]),
@@ -419,7 +419,7 @@ chart(T('S1 vs S0 near $\\alpha = 1$', 'S1 și S0 în apropiere de $\\alpha = 1$
     T('S0 (right): the same four laws, shifted; the mode stays near 0 and changes smoothly',
       'S0 (dreapta): aceleași patru legi, deplasate; modul rămîne lîngă 0 și se schimbă lin')])
 
-D.frame(T('Mind the Parameterisation in Software', 'Atenție la parametrizare în software'), items(
+D.frame(T('Parameterisations of Stable Laws in Software', 'Parametrizările legilor stabile în software'), items(
     (T('\\texttt{scipy.stats.levy\\_stable} uses \\textbf{S1} by default', '\\texttt{scipy.stats.levy\\_stable} folosește implicit \\textbf{S1}'),
      [T('switch with \\texttt{levy\\_stable.parameterization = \'S0\'}', 'se schimbă cu \\texttt{levy\\_stable.parameterization = \'S0\'}'),
       T('arguments: \\texttt{levy\\_stable.pdf(x, alpha, beta, loc=delta, scale=gamma)}', 'argumente: \\texttt{levy\\_stable.pdf(x, alpha, beta, loc=delta, scale=gamma)}')]),
@@ -834,7 +834,7 @@ D.frame(T('Why Do Daily Returns Look Stable?', 'Originea aspectului stabil al ra
       T('\\refGS: such laws explain why returns look stable at short horizons and Normal at long ones',
         '\\refGS: astfel de legi explică de ce randamentele par stabile pe orizonturi scurte și Normale pe orizonturi lungi')])))
 
-D.frame(T('Verdict', 'Verdictul'), items(
+D.frame(T('Conclusion of the Critique', 'Concluzia criticii'), items(
     (T('\\textbf{Mandelbrot was right} about the facts', '\\textbf{Mandelbrot a avut dreptate} în privința faptelor'),
      [T('daily returns have heavy tails; the Normal distribution fails badly', 'randamentele zilnice au cozi groase; distribuția Normală descrie foarte slab datele')]),
     (T('\\textbf{The infinite variance is not supported}', '\\textbf{Varianța infinită nu este susținută}'),
@@ -865,7 +865,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Full sample: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), the lowest of our four series', 'Eșantionul complet: $\\hat\\alpha = @{f.btc.s.alpha}$ (SE $@{f.btc.s.se_alpha}$), cel mai mic dintre cele patru serii'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list papers on tail estimates for crypto assets and summarise their methods',
       '\\textbf{Literatura}: inventarierea lucrărilor despre estimarea cozilor activelor cripto și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft a rolling-window McCulloch estimator with bootstrap intervals', '\\textbf{Cod}: o primă versiune a unui estimator McCulloch pe ferestre mobile, cu intervale bootstrap'),
@@ -884,7 +884,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Numbers: recompute one window with a second method (ML or the quantile tables)', 'Rezultatele numerice: recalculați o fereastră cu o a doua metodă (ML sau tabelele de cuantile)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: is the tail of Bitcoin returns lighter now than in 2014--2018?', '\\textbf{Întrebarea}: este coada randamentelor Bitcoin mai subțire acum decît în 2014--2018?'),
      [T('data: Bitcoin daily closes from the course data (EODHD), 2014--2026', 'date: prețurile de închidere zilnice ale Bitcoin din datele cursului (EODHD), 2014--2026')]),
     (T('Steps', 'Pași'),

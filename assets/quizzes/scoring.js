@@ -173,7 +173,7 @@ window.SFM_DATA.quizzes['scoring'] = {
         {
             "correct": 0,
             "en": {
-                "title": "A lesson in data checking",
+                "title": "Coding errors in the German Credit data",
                 "text": "In the widely used UCI Statlog German credit data, \"no checking account\" was the safest group (11.7% bad). What did the corrected South German Credit data show?",
                 "options": [
                     "The label was wrong: those 394 credits have a balance of at least 200 DM or a salary account; no checking account is the riskiest group (49.3% bad)",

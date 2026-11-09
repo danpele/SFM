@@ -734,7 +734,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
      [T('flows and prices move together; flows do not predict the next week: cause, effect or common demand?', 'fluxurile și prețurile se mișcă împreună; fluxurile nu prognozează săptămîna următoare: cauză, efect sau cerere comună?')]),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on stablecoin issuance and crypto prices, with their data and periods', '\\textbf{Literatura}: o listă a studiilor despre emisiunea de stablecoins și prețurile cripto, cu datele și perioadele lor'),
     T('\\textbf{Data}: code that downloads the supply of each stablecoin from DefiLlama and aligns it with daily prices', '\\textbf{Date}: cod care descarcă oferta fiecărui stablecoin de la DefiLlama și o aliniază cu prețurile zilnice'),
     T('\\textbf{Robustness}: daily and weekly data, USDT and USDC separately, sub-periods, Granger causality in both directions', '\\textbf{Robustețe}: date zilnice și săptămînale, USDT și USDC separat, subperioade, cauzalitate Granger în ambele direcții'),

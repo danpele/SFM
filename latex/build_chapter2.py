@@ -329,9 +329,9 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. DE CE CONTEAZĂ DISTRIBUȚIA
 # =============================================================================
-D.section('Why the Distribution Matters', 'Importanța distribuției')
+D.section('The Importance of the Distribution', 'Importanța distribuției')
 
-D.frame(T('A Day That Should Not Happen', 'O zi care n-ar trebui să existe'), items(
+D.frame(T('An Extreme Day under the Normal Distribution', 'O zi extremă în ipoteza distribuției Normale'), items(
     T('16 March 2020: the S\\&P 500 fell by $@{m.sp500.min}\\%$ (log return) in one day',
       '16 martie 2020: S\\&P 500 a scăzut cu $@{m.sp500.min}\\%$ (randament logaritmic) într-o singură zi'),
     (T('Daily mean and standard deviation @{y0}--@{y1}: $@{sp.mean3}\\%$ and $@{sp.sd3}\\%$, so the fall was $(@{sp.min2} - @{sp.mean3})/@{sp.sd3} = @{m.sp500.zmin}$ standard deviations',
@@ -605,7 +605,7 @@ chart(T('DAX Returns vs the Normal Density (SFEDaxReturnDistribution)', 'Randame
           T('Tails (log scale): at $-6\\%$ the estimated density is @{dax.ratio6} times the Normal one', 'Cozile (scară logaritmică): la $-6\\%$ densitatea estimată este de @{dax.ratio6} de ori mai mare decît densitatea Normală')],
       h='0.60\\textheight')
 
-D.frame(T('Check the Data Before Measuring Tails', 'Verificați datele înainte de a măsura cozile'), items(
+D.frame(T('Data Checks before Tail Estimation', 'Verificarea datelor înaintea estimării cozilor'), items(
     T('Banca Transilvania (TLV), 27--31 May 2016: the close falls from @{tlv.c0} to @{tlv.c1} lei, the ex-date of a bonus share issue',
       'Banca Transilvania (TLV), 27--31 mai 2016: prețul de închidere scade de la @{tlv.c0} la @{tlv.c1} lei, data ex a unei distribuiri de acțiuni gratuite'),
     (T('The adjusted close in our data: @{tlv.a0}, then @{tlv.a1}, then @{tlv.a2}', 'Prețul ajustat din datele noastre: @{tlv.a0}, apoi @{tlv.a1}, apoi @{tlv.a2}'),
@@ -646,7 +646,7 @@ D.frame(T('Worked Example: Jarque--Bera for the S\\&P 500', 'Exemplu lucrat: Jar
      [T('indices and Bitcoin: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}', 'indici și Bitcoin: BET @{m.bet.jb}, DAX @{m.dax.jb}, Bitcoin @{m.btc.jb}'),
       T('BVB stocks: SNP @{m.snp.jb}, BRD @{m.brd.jb}, SNN @{m.snn.jb}, SNG @{m.sng.jb}', 'acțiuni BVB: SNP @{m.snp.jb}, BRD @{m.brd.jb}, SNN @{m.snn.jb}, SNG @{m.sng.jb}')])))
 
-D.frame(T('What Jarque--Bera Does Not Tell You', 'Limitele testului Jarque--Bera'), items(
+D.frame(T('Limitations of the Jarque--Bera Test', 'Limitele testului Jarque--Bera'), items(
     (T('With thousands of observations it rejects even tiny departures', 'Cu mii de observații respinge chiar și abateri foarte mici'),
      [T('report the size of $S$ and $K$, not only the p-value', 'raportați mărimea lui $S$ și $K$, nu doar p-value-ul')]),
     (T('It assumes i.i.d. data; with volatility clustering its standard errors are too small', 'Testul presupune date i.i.d.; cu volatility clustering, erorile standard ale lui $S$ și $K$ sînt prea mici'),
@@ -747,7 +747,7 @@ chart(T('QQ Plots against the Fitted Student-$t$', 'QQ plots față de distribu�
       'Extremele: distribuția $t$ estimată prevede minime mai mici decît cele observate: S\\&P 500 $@{qqt.sp.tmin}\\%$ față de $@{qqt.sp.min}\\%$; Bitcoin $@{qqt.btc.tmin}\\%$ față de $@{qqt.btc.min}\\%$'),
     T('With $\\hat\\nu$ close to 2 the model overshoots the most extreme quantiles', 'Cu $\\hat\\nu$ apropiat de 2, modelul supraestimează cuantilele cele mai extreme')], h='0.60\\textheight')
 
-D.frame(T('What the Student-$t$ Still Misses', 'Limitele distribuției Student-$t$'), items(
+D.frame(T('Limitations of the Student-$t$ Distribution', 'Limitele distribuției Student-$t$'), items(
     (T('\\textbf{Symmetry}: the $t$ cannot reproduce the negative skewness', '\\textbf{Simetria}: $t$ nu poate reproduce asimetria negativă'),
      [T('skewed $t$ distributions exist; they are beyond this chapter', 'există distribuții $t$ asimetrice, dar depășesc cadrul acestui capitol')]),
     (T('\\textbf{Independence}: an i.i.d. $t$ model has no volatility clustering', '\\textbf{Independența}: un model $t$ i.i.d. nu are volatility clustering'),
@@ -947,7 +947,7 @@ side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare 
     T('Why it is open: @{yr.n} noisy yearly estimates, one year (2020, excess kurtosis @{yr.k2020}) dominated by one day', 'De ce rămîne deschisă: @{yr.n} estimări anuale imprecise, un an (2020, exces de boltire @{yr.k2020}) dominat de o singură zi'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')], w=0.50, h='0.72\\textheight')
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: find studies of tail indices of crypto assets and summarise their methods', '\\textbf{Literatura}: găsirea studiilor despre tail index-urile activelor cripto și rezumarea metodelor lor'),
     T('\\textbf{Code}: draft rolling-window estimates of $\\nu$ and of the excess kurtosis', '\\textbf{Cod}: o primă versiune a estimărilor pe ferestre mobile pentru $\\nu$ și excesul de boltire'),
     T('\\textbf{Robustness}: propose other windows, other tail measures (Chapter 5), other crypto assets', '\\textbf{Robustețe}: propunerea altor ferestre, altor măsuri ale cozilor (Capitolul 5), altor active cripto'),
@@ -962,7 +962,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Volatility clustering: thinner yearly tails may only mean calmer years (Chapter 9)', 'Volatility clustering: cozi anuale mai subțiri pot însemna doar ani mai calmi (Capitolul 9)'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: do the tails of crypto assets thin out as their markets mature?', '\\textbf{Întrebarea}: se subțiază cozile activelor cripto pe măsură ce piețele lor se maturizează?'),
      [T('data: Bitcoin, Ethereum and Solana from the course data; S\\&P 500 as a benchmark', 'date: Bitcoin, Ethereum și Solana din datele cursului; S\\&P 500 ca reper')]),
     (T('Steps', 'Pași'),

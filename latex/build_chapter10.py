@@ -229,7 +229,7 @@ D.frame(T('From RiskMetrics to Basel', 'De la RiskMetrics la Basel'), cols(items
     ph('bis', T('The BIS tower in Basel, seat of the Basel Committee', 'Turnul BIS din Basel, sediul Comitetului de la Basel'), h='0.42\\textheight'),
     wl='0.58', wr='0.38'), 'footnotesize')
 
-D.frame(T('Two Storms: 2008 and 2020', 'Două crize: 2008 și 2020'), cols(
+D.frame(T('The Crises of 2008 and 2020', 'Crizele din 2008 și 2020'), cols(
     ph('lehman', T('Lehman Brothers headquarters, New York, 15 September 2008', 'Sediul Lehman Brothers, New York, 15 septembrie 2008'), h='0.30\\textheight'),
     ph('fidi', T('The Financial District of New York, 25 March 2020', 'Districtul financiar din New York, 25 martie 2020'), h='0.30\\textheight'),
     wl='0.48', wr='0.48') + items(
@@ -387,7 +387,7 @@ D.frame(T('Elicitability: Can a Forecast Be Scored?', 'Elicitabilitatea: evaluar
 D.section('Estimating VaR and ES', 'Estimarea VaR și ES')
 
 TB = '>{\\raggedright\\arraybackslash}'
-D.frame(T('Five Unconditional Methods at a Glance', 'Cinci metode necondiționate, pe scurt'), table(
+D.frame(T('Summary of the Five Unconditional Methods', 'Sinteza celor cinci metode necondiționate'), table(
     TB + 'p{2.3cm}' + TB + 'p{4.0cm}' + TB + 'p{4.6cm}',
     T('\\textbf{Method}', '\\textbf{Metoda}') + ' & ' + T('\\textbf{Assumption}', '\\textbf{Ipoteza}') + ' & ' + T('\\textbf{Weak point}', '\\textbf{Punctul slab}'),
     [T('historical simulation (HS)', 'simulare istorică (HS)') + ' & ' + T('the past window is a sample of tomorrow', 'fereastra trecută este un eșantion din ziua de mîine') + ' & ' + T('few tail points; nothing beyond the worst day', 'puține puncte în coadă; nimic dincolo de cea mai proastă zi'),
@@ -591,7 +591,7 @@ chart(T('Correlation Rises in Crises', 'Corelația crește în crize'), 'sfm_ch1
       'Interpretare: diversificarea este cea mai slabă exact cînd este nevoie de ea: un VaR construit pe corelația medie este prea optimist într-o criză')],
     h='0.45\\textheight')
 
-D.frame(T('Correlation Is Not Tail Dependence', 'Corelația nu este dependență în cozi'), items(
+D.frame(T('Correlation and Tail Dependence', 'Corelația și dependența în cozi'), items(
     (T('Pearson correlation measures linear co-movement over all days; it is dominated by ordinary days \\refEMS', 'Corelația Pearson măsoară co-mișcarea liniară pe toate zilele; este dominată de zilele obișnuite \\refEMS'),
      [T('rank correlations (Spearman, Kendall\'s $\\tau$) use only the order of the returns: Kendall $\\hat\\tau = @{cop.tau}$, Spearman $@{cop.sp}$', 'corelațiile de rang (Spearman, $\\tau$ al lui Kendall) folosesc doar ordinea randamentelor: Kendall $\\hat\\tau = @{cop.tau}$, Spearman $@{cop.sp}$')]),
     (T('\\textbf{Lower tail dependence}: $\\lambda_L = \\lim_{q \\to 0} P(U_1 \\le q \\mid U_2 \\le q)$, $U_i = F_i(X_i)$ (the returns on a uniform scale)',
@@ -601,7 +601,7 @@ D.frame(T('Correlation Is Not Tail Dependence', 'Corelația nu este dependență
       T('data: $q = 5\\%$: $@{p.td5}$; $q = 1\\%$: $@{p.td1}$; under independence both would equal $q$', 'datele: $q = 5\\%$: $@{p.td5}$; $q = 1\\%$: $@{p.td1}$; la independență, ambele ar fi egale cu $q$')]),
     T('Joint crash (both below their own 1\\% quantile): @{p.j.emp}\\% of the days, against @{p.j.ind}\\% under independence', 'Prăbușire simultană (ambele sub propria cuantilă de 1\\%): @{p.j.emp}\\% dintre zile, față de @{p.j.ind}\\% la independență')))
 
-D.frame(T('Copulas: a Light Introduction', 'Copule: o introducere'), items(
+D.frame(T('Copulas: an Introduction', 'Copule: o introducere'), items(
     (T('\\textbf{Sklar\'s theorem}: every joint distribution function can be written as $F(x_1, x_2) = C(F_1(x_1), F_2(x_2))$ \\refQRM',
        '\\textbf{Teorema lui Sklar}: orice funcție de repartiție comună se poate scrie $F(x_1, x_2) = C(F_1(x_1), F_2(x_2))$ \\refQRM'),
      [T('$F_1$, $F_2$: the marginal distributions (each asset alone); $C$: the \\textbf{copula}, a joint distribution of uniforms on $[0,1]^2$',
@@ -624,7 +624,7 @@ D.frame(T('Gaussian and t Copulas', 'Copula Gaussiană și copula t'), items(
      [T('log-likelihood: Gaussian $@{cop.llg}$, t $@{cop.llt}$; LR $= @{cop.lr}$, far above $\\chi^2_{0.95}(1) = @{chi1}$: the t copula wins', 'log-verosimilitatea: Gaussiană $@{cop.llg}$, t $@{cop.llt}$; LR $= @{cop.lr}$, mult peste $\\chi^2_{0.95}(1) = @{chi1}$: copula t este mai bună'),
       T('implied tail dependence $\\lambda_L = @{cop.lam}$, against 0 for the Gaussian copula', 'dependența în coadă implicată $\\lambda_L = @{cop.lam}$, față de 0 pentru copula Gaussiană')])), 'footnotesize')
 
-chart(T('Joint Bad Days: Data and Two Copulas', 'Zile proaste comune: datele și două copule'), 'sfm_ch10_copula', 'SFM_ch10_portfolio_copula', [
+chart(T('Joint Large Losses: Data and Two Copulas', 'Pierderi mari simultane: datele și două copule'), 'sfm_ch10_copula', 'SFM_ch10_portfolio_copula', [
     T('Lower-left corner of the uniform scale: pseudo-observations and samples of the same size (@{p.n}) from the fitted copulas', 'Colțul din stînga jos al scalei uniforme: pseudo-observațiile și eșantioane de aceeași mărime (@{p.n}) din copulele estimate'),
     T('Days on which both indices are among their worst 5\\%: data @{cf.corner_data}, Gaussian @{cf.corner_gauss}, t @{cf.corner_t}; independence: about @{cf.exp}',
       'Zile în care ambii indici sînt printre cele mai proaste 5\\% ale lor: datele @{cf.corner_data}, copula Gaussiană @{cf.corner_gauss}, copula t @{cf.corner_t}; independența: circa @{cf.exp}'),
@@ -818,7 +818,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Related work on entropy as a risk measure, as further reading: \\refPeleA; \\refPeleB', 'Lucrări înrudite despre entropie ca măsură de risc, ca lectură suplimentară: \\refPeleA; \\refPeleB'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on time-varying copulas and on contagion between emerging and developed markets', '\\textbf{Literatura}: o listă a studiilor despre copule variabile în timp și despre contagiunea dintre piețele emergente și cele dezvoltate'),
     T('\\textbf{Code}: a first draft of rolling t-copula estimates (250 days) for BET and S\\&P 500, with $\\rho$, $\\nu$ and $\\lambda_L$ over time', '\\textbf{Cod}: o primă versiune a estimărilor copulei t pe ferestre mobile (250 de zile) pentru BET și S\\&P 500, cu $\\rho$, $\\nu$ și $\\lambda_L$ în timp'),
     T('\\textbf{Robustness}: two-day returns (different trading hours), DAX instead of S\\&P 500, other windows', '\\textbf{Robustețe}: randamente pe două zile (ore de tranzacționare diferite), DAX în loc de S\\&P 500, alte ferestre'),

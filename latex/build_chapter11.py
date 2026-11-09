@@ -179,7 +179,7 @@ D.frame(T('Investment Horizons and Liquidity: an Example', 'Orizonturi investiț
     T('\\textbf{Fractal}: the same pattern of behaviour repeats at every horizon, with statistically similar returns at different scales',
       '\\textbf{Fractal}: același tipar de comportament se repetă pe fiecare orizont, cu randamente asemănătoare statistic la scale diferite')))
 
-D.frame(T('1987: a Crash as a Collapse of Horizons', '1987: un crah ca prăbușire a orizonturilor'), cols(items(
+D.frame(T('The 1987 Crash in the Fractal Market Hypothesis', 'Crahul din 1987 în ipoteza piețelor fractale'), cols(items(
     T('19 October 1987: the S\\&P 500 fell by about 20\\% in one day \\refCarlson', '19 octombrie 1987: S\\&P 500 a scăzut cu circa 20\\% într-o singură zi \\refCarlson'),
     (T('The FMH reading', 'Interpretarea FMH'),
      [T('portfolio insurance and program trading made long-term portfolios sell like short-term traders', 'asigurarea de portofoliu și tranzacționarea automată au făcut ca portofoliile pe termen lung să vîndă ca traderii pe termen scurt'),
@@ -443,7 +443,7 @@ D.frame(T('Worked Example: ARFIMA(0, 0.3, 0)', 'Exemplu rezolvat: ARFIMA(0; 0,3;
 # =============================================================================
 D.section('Estimators of Long Memory', 'Estimatori ai memoriei lungi')
 
-D.frame(T('Four Tools', 'Patru instrumente'), table(
+D.frame(T('Summary of the Long-Memory Methods', 'Sinteza metodelor pentru memoria lungă'), table(
     TB + 'p{2.0cm}' + TB + 'p{1.7cm}' + TB + 'p{3.4cm}' + TB + 'p{3.6cm}',
     T('\\textbf{Tool} & \\textbf{Domain} & \\textbf{What it gives} & \\textbf{Weak point}', '\\textbf{Instrument} & \\textbf{Domeniu} & \\textbf{Rezultat} & \\textbf{Punct slab}'),
     [T('R/S & time & $\\hat H$, slope of a log-log plot & biased upwards in small samples; sensitive to short memory', 'R/S & timp & $\\hat H$, panta unui grafic log-log & deplasat în sus în eșantioane mici; sensibil la memoria scurtă'),
@@ -580,7 +580,7 @@ chart(T('Simulated Spurious Long Memory', 'Memorie lungă aparentă în simulăr
       'Dreapta: GARCH(1,1), un model cu memorie scurtă (Capitolul 9); pentru $|r_t|$, DFA dă $@{ga.095.adfa}$ la $\\alpha + \\beta = 0.95$ și $@{ga.099.adfa}$ la $0.99$; randamentele rămîn la $@{ga.099.rdfa}$')],
     h='0.48\\textheight')
 
-D.frame(T('Volatility Clustering Mimics Long Memory', 'Volatility clustering imită memoria lungă'), items(
+D.frame(T('Volatility Clustering and Apparent Long Memory', 'Volatility clustering și memoria lungă aparentă'), items(
     (T('In GARCH(1,1), the ACF of $r_t^2$ decays like $(\\alpha + \\beta)^k$: short memory', 'În GARCH(1,1), ACF a lui $r_t^2$ scade ca $(\\alpha + \\beta)^k$: memorie scurtă'),
      [T('with $\\alpha + \\beta$ close to 1, the decay is so slow that a sample of a few thousand days cannot separate it from $k^{2d - 1}$', 'cu $\\alpha + \\beta$ apropiat de 1, scăderea este atît de lentă încît un eșantion de cîteva mii de zile nu o poate deosebi de $k^{2d - 1}$')]),
     T('Consequence: a high $\\hat H$ for $|r_t|$ is compatible with a persistent GARCH; it is not by itself proof of fractional dynamics',
@@ -722,7 +722,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Why it is open: few crises, overlapping windows, volatility regimes, many possible estimators', 'Întrebarea rămîne deschisă: puține crize, ferestre suprapuse, regimuri de volatilitate, mulți estimatori posibili'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on Hurst exponents as early-warning indicators, with their data and estimators', '\\textbf{Literatura}: o listă a studiilor despre exponenții Hurst ca indicatori de avertizare timpurie, cu datele și estimatorii folosiți'),
     T('\\textbf{Code}: a first draft of rolling R/S, DFA and GPH with Monte Carlo bands', '\\textbf{Cod}: o primă versiune pentru R/S, DFA și GPH pe ferestre mobile, cu benzi Monte Carlo'),
     T('\\textbf{Robustness}: other window lengths, wavelet estimators, a GARCH-based null, other crises (2011, 2022)', '\\textbf{Robustețe}: alte lungimi ale ferestrei, estimatori wavelet, o ipoteză nulă pe baza unui GARCH, alte crize (2011, 2022)'),

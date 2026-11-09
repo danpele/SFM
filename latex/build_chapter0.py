@@ -225,7 +225,7 @@ D.frame('⟦What Statistics of Financial Markets Studies||Obiectul statisticii p
       '⟦markets fall together in crises: diversification weakens when it is most needed||în crize, piețele scad simultan: diversificarea își pierde efectul tocmai cînd este cea mai necesară⟧']),
     '⟦These regularities are the \\emph{stylised facts} of returns (\\refCont), studied in Chapter 2||Aceste regularități sînt \\emph{faptele stilizate} ale randamentelor (\\refCont), studiate în Capitolul 2⟧'))
 
-D.frame('⟦The Course at a Glance||Cursul pe scurt⟧', cols(
+D.frame('⟦Course Overview||Prezentarea cursului⟧', cols(
     items(('⟦\\textbf{Programme}||\\textbf{Program}⟧',
            ["⟦Bachelor's programme Statistics and Data Science, year 3, semester 2||Licență, programul Statistică și Data Science, anul III, semestrul 2⟧",
             '⟦Faculty of Cybernetics, Statistics and Economic Informatics (CSIE), ASE Bucharest||Facultatea de Cibernetică, Statistică și Informatică Economică (CSIE), ASE București⟧',
@@ -396,7 +396,7 @@ D.frame('⟦How a Price Is Formed: the Order Book||Formarea prețului: registrul
             '⟦the best ask becomes 100.02, the spread widens to 0.03: the order moved the price||cel mai bun ask devine 100,02, spread-ul crește la 0,03: ordinul a mișcat prețul⟧'])),
     '0.42', '0.55'), size='footnotesize')
 
-D.frame('⟦Why Statistics?||Rolul statisticii⟧', items(
+D.frame('⟦The Role of Statistics||Rolul statisticii⟧', items(
     ('⟦\\textbf{Tomorrow\'s price is uncertain}: we model it as a random variable||\\textbf{Prețul de mîine este incert}: îl modelăm ca pe o variabilă aleatoare⟧',
      ['⟦$P_t$: the price on day $t$; the sequence $P_1, P_2, \\ldots$ is a \\textbf{time series}||$P_t$: prețul din ziua $t$; șirul $P_1, P_2, \\ldots$ este o \\textbf{serie de timp}⟧']),
     ('⟦\\textbf{What we measure in this course}||\\textbf{Mărimi studiate în acest curs}⟧',
@@ -407,7 +407,7 @@ D.frame('⟦Why Statistics?||Rolul statisticii⟧', items(
     ('⟦\\textbf{The big question}: can past prices predict future returns?||\\textbf{Marea întrebare}: pot prețurile trecute prezice randamentele viitoare?⟧',
      ['⟦the efficient market hypothesis says: hardly (Chapter 7)||potrivit ipotezei pieței eficiente, aproape deloc (Capitolul 7)⟧'])))
 
-D.recap(('Why financial markets?', 'importanța piețelor financiare'), [
+D.recap(('the role of financial markets', 'importanța piețelor financiare'), [
     '⟦Markets allocate capital, share risk, provide liquidity and discover prices||Piețele alocă capitalul, împart riscul, asigură lichiditatea și descoperă prețurile⟧',
     '⟦Prices come from the order book: the spread is the cost of trading at once||Prețurile se formează în registrul de ordine: spread-ul este costul unei tranzacții imediate⟧',
     '⟦Six asset classes, one statistical toolbox||Șase clase de active, un singur set de instrumente statistice⟧',
@@ -743,7 +743,7 @@ D.frame('⟦An Open Question||O întrebare deschisă⟧', items(
       '⟦other explanations exist: a calmer market overall, a larger and more liquid market||există alte explicații: o piață mai calmă în ansamblu, o piață mai mare și mai lichidă⟧',
       '⟦related evidence: cryptos and traditional assets move closer over time (\\refPeleCrypto)||rezultate conexe: activele cripto și cele tradiționale se apropie în timp (\\refPeleCrypto)⟧'])))
 
-D.frame('⟦How AI Could Help||Contribuția posibilă a AI⟧', items(
+D.frame('⟦Possible Uses of AI Tools||Utilizări posibile ale instrumentelor AI⟧', items(
     ('⟦\\textbf{Literature}: ask for peer-reviewed papers on Bitcoin volatility, with DOIs||\\textbf{Literatura}: cereți articole din reviste cu evaluare colegială (peer review) despre volatilitatea Bitcoin, cu DOI⟧',
      ['⟦then open every DOI yourself: AI assistants invent plausible references||apoi deschideți dumneavoastră fiecare DOI: asistenții AI inventează referințe plauzibile⟧']),
     ('⟦\\textbf{Hypotheses}: ask for three competing explanations of a fall in volatility||\\textbf{Ipoteze}: cereți trei explicații concurente pentru o scădere a volatilității⟧',
@@ -769,7 +769,7 @@ D.frame('⟦What to Check||Verificări necesare⟧', items(
       '⟦one year is a short sample: a single calm year is not a trend||un an este un eșantion scurt: un singur an calm nu este o tendință⟧']),
     '⟦\\textbf{Say what the result cannot show}: a fall after 2024 does not prove that the ETFs caused it||\\textbf{Precizați ce nu poate arăta rezultatul}: o scădere după 2024 nu dovedește că ETF-urile au cauzat-o⟧'))
 
-D.frame('⟦Your Turn: a Project Seed||Rîndul dumneavoastră: o idee de proiect⟧', items(
+D.frame('⟦Project Idea||Idee de proiect⟧', items(
     '⟦\\textbf{Question}: is Bitcoin\'s volatility, relative to the S\\&P 500, lower after January 2024 than before?||\\textbf{Întrebarea}: este volatilitatea Bitcoin, raportată la S\\&P 500, mai mică după ianuarie 2024 decît înainte?⟧',
     ('⟦\\textbf{Steps}||\\textbf{Pașii}⟧',
      ['⟦replicate the chart of the mini-case from the course data||reproduceți graficul mini-studiului de caz din datele cursului⟧',

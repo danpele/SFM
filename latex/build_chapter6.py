@@ -368,7 +368,7 @@ chart(T('The Candidates Side by Side', 'Candidații comparați'), 'sfm_ch6_candi
       'Toate au media 0 și varianța 1 (distribuția stabilă: același interval intercuartilic ca distribuția Normală); panoul din dreapta folosește scara logaritmică'),
     T('Near the centre they look alike; in the tails they differ by orders of magnitude', 'În centru arată aproape la fel; în cozi diferă cu cîteva ordine de mărime')], h='0.58\\textheight')
 
-D.frame(T('Same Variance, Very Different Tails', 'Aceeași varianță, cozi foarte diferite'), items(
+D.frame(T('Tail Probabilities at Equal Variance', 'Probabilitățile din cozi la varianță egală'), items(
     (T('$P(X < -4)$, a move of four standard deviations, under each candidate of the chart:', '$P(X < -4)$, o mișcare de patru abateri standard, pentru fiecare candidat din grafic:'),
      [T('Normal $@{ca.Normal}$; GED $@{ca.GED}$; Student-t $@{ca.Student-t}$; Normal mixture $@{ca.Mixture}$',
         'Normală $@{ca.Normal}$; GED $@{ca.GED}$; Student-t $@{ca.Student-t}$; amestec Normal $@{ca.Mixture}$'),
@@ -398,7 +398,7 @@ D.frame(T('Summary Statistics: Monthly DAX and Daily Returns', 'Statistici descr
         'BET $@{ds.bet.kurt}$, S\\&P 500 $@{ds.sp500.kurt}$, DAX $@{ds.dax.kurt}$, Bitcoin $@{ds.btc.kurt}$, TLV $@{ds.tlv.kurt}$, SNP $@{ds.snp.kurt}$, BRD $@{ds.brd.kurt}$'),
       T('skewness: S\\&P 500 $@{ds.sp500.skew}$, BET $@{ds.bet.skew}$, Bitcoin $@{ds.btc.skew}$', 'asimetria: S\\&P 500 $@{ds.sp500.skew}$, BET $@{ds.bet.skew}$, Bitcoin $@{ds.btc.skew}$')])) + ql('SFM_ch6_summary'), size='footnotesize')
 
-D.frame(T('Data Before Models: Two Bad Days', 'Datele înaintea modelelor: două zile greșite'), items(
+D.frame(T('Data Errors: Two Days in the Banca Transilvania Series', 'Erori în date: două zile din seria Banca Transilvania'), items(
     (T('Banca Transilvania (TLV), adjusted close from EODHD: log returns of $@{tlv.bad1}\\%$ on 30 May 2016 and $@{tlv.bad2}\\%$ on 31 May 2016',
        'Banca Transilvania (TLV), prețul ajustat de la EODHD: randamente logaritmice de $@{tlv.bad1}\\%$ pe 30 mai 2016 și $@{tlv.bad2}\\%$ pe 31 mai 2016'),
      [T('the adjustment for the bonus shares is applied one day late (Chapter 2): a fake crash followed by a fake rally',
@@ -808,7 +808,7 @@ D.frame(T('Counting Exceedances: the Kupiec Test', 'Numărarea depășirilor: te
 # =============================================================================
 D.section('Out of Sample: Validation and Overfitting', 'În afara eșantionului: validare și supraajustare')
 
-D.frame(T('Why Out of Sample?', 'Rolul validării în afara eșantionului'), items(
+D.frame(T('The Role of Out-of-Sample Validation', 'Rolul validării în afara eșantionului'), items(
     (T('In sample, a larger model always fits at least as well: $\\ell$ never decreases when parameters are added', 'În eșantion, un model mai general se ajustează cel puțin la fel de bine: $\\ell$ nu scade niciodată cînd adăugăm parametri'),
      [T('\\textbf{overfitting}: the extra parameters fit noise of the estimation sample, not features of future returns',
         '\\textbf{supraajustare} (overfitting): parametrii suplimentari modelează zgomotul eșantionului de estimare, nu trăsături ale randamentelor viitoare')]),
@@ -893,7 +893,7 @@ chart(T('The VaR Reliability Plot (SFEVaRqqplot)', 'Graficul de fiabilitate VaR 
 # =============================================================================
 D.section('Model Uncertainty', 'Incertitudinea de model')
 
-chart(T('How Sure Are We of the Winner?', 'Stabilitatea cîștigătorului'), 'sfm_ch6_model_uncertainty', 'SFM_ch6_model_uncertainty', [
+chart(T('Uncertainty of the Model Ranking', 'Incertitudinea clasamentului modelelor'), 'sfm_ch6_model_uncertainty', 'SFM_ch6_model_uncertainty', [
     T('S\\&P 500, @{u.B} moving-block bootstrap resamples (blocks of 20 days keep the volatility clusters); in each, the six models other than the stable law (Normal, Student-t, skewed-t, GED, Normal mixture, NIG) are refitted',
       'S\\&P 500, @{u.B} de reeșantionări bootstrap pe blocuri mobile (blocurile de 20 de zile păstrează volatility clustering); în fiecare reeșantionare sînt reestimate cele șase modele în afară de distribuția stabilă (Normală, Student-t, skewed-t, GED, amestec Normal, NIG)'),
     T('Left: NIG has the lowest AIC in $@{u.w.NIG}\\%$ of the resamples; right: the bootstrap spread of VaR 1\\% under each model',
@@ -943,7 +943,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Starting point: on raw returns the winner depends on the market (the $\\Delta$AIC map of Section 4)', 'Punctul de plecare: pe randamentele brute, modelul cîștigător depinde de piață (harta $\\Delta$AIC din Secțiunea 4)'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list studies that compare return distributions after GARCH filtering, with their samples and criteria',
       '\\textbf{Literatura}: lista studiilor care compară distribuțiile randamentelor după filtrarea GARCH, cu eșantioanele și criteriile lor'),
     T('\\textbf{Code}: draft the loop ``standardise, fit seven models, rank by AIC and BIC, test out of sample\'\'', '\\textbf{Cod}: o primă versiune a buclei „standardizează, ajustează șapte modele, ordonează după AIC și BIC, testează în afara eșantionului”'),
@@ -961,7 +961,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Parameterisations: scale vs standard deviation in the Student-t; S0 vs S1 for the stable law', 'Parametrizările: scală sau abatere standard la Student-t; S0 sau S1 la distribuția stabilă'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: does the best distribution for standardised returns differ from the best one for raw returns?',
        '\\textbf{Întrebarea}: diferă cea mai bună distribuție pentru randamentele standardizate de cea pentru randamentele brute?'),
      [T('data: BET, S\\&P 500, DAX, Bitcoin and BVB stocks from the course data (EODHD)', 'date: BET, S\\&P 500, DAX, Bitcoin și acțiunile BVB din datele cursului (EODHD)')]),

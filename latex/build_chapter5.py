@@ -163,7 +163,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. DE CE CONTEAZĂ COZILE
 # =============================================================================
-D.section('Why Tails Matter', 'Importanța cozilor')
+D.section('The Importance of Tails', 'Importanța cozilor')
 
 D.frame(T('19 October 1987: Black Monday', '19 octombrie 1987: Lunea Neagră'), cols(items(
     (T('On 19 October 1987 the S\\&P 500 fell about 20\\% in one day \\refCarlson', 'Pe 19 octombrie 1987, S\\&P 500 a scăzut cu aproximativ 20\\% într-o singură zi \\refCarlson'),
@@ -246,7 +246,7 @@ D.frame(T('Where Extreme Value Theory Comes From', 'Originile teoriei valorilor 
         'Photo: unknown author (c. 1931); public domain; Wikimedia Commons', 'Foto: autor necunoscut (c. 1931); domeniu public; Wikimedia Commons',
         h='0.44\\textheight'), wl='0.62', wr='0.34'))
 
-D.frame(T('Why the Tail Matters for Risk', 'Rolul cozii în măsurarea riscului'), items(
+D.frame(T('The Role of the Tail in Risk Measurement', 'Rolul cozii în măsurarea riscului'), items(
     (T('\\textbf{VaR} (Value at Risk) at level $p$: the loss exceeded with probability $p$', '\\textbf{VaR} (Value at Risk, valoarea expusă la risc) la nivelul $p$: pierderea depășită cu probabilitatea $p$'),
      [T('$\\mathrm{VaR}_p = -q_p(r)$, with $q_p$ the $p$-quantile of the return; for example VaR 1\\%', '$\\mathrm{VaR}_p = -q_p(r)$, cu $q_p$ cuantila de ordin $p$ a randamentului; de exemplu VaR 1\\%')]),
     (T('\\textbf{ES} (expected shortfall) at level $p$: the average loss on the worst $p$ share of days',
@@ -296,7 +296,7 @@ D.frame(T('Regular Variation and the Tail Index', 'Variația regulată și tail 
       T('$\\alpha$-stable with $\\alpha < 2$ (Chapter 3): the same $\\alpha$; Normal: no power tail ($\\alpha = \\infty$)',
         '$\\alpha$-stabilă cu $\\alpha < 2$ (Capitolul 3): același $\\alpha$; distribuția Normală: fără coadă de tip putere ($\\alpha = \\infty$)')])))
 
-D.frame(T('The Tail Index Decides Which Moments Exist', 'Tail index-ul determină momentele care există'), items(
+D.frame(T('The Tail Index and the Existence of Moments', 'Tail index-ul și existența momentelor'), items(
     (T('For a regularly varying tail: $E|L|^m < \\infty$ if $m < \\alpha$ and $E|L|^m = \\infty$ if $m > \\alpha$',
        'Pentru o coadă cu variație regulată: $E|L|^m < \\infty$ dacă $m < \\alpha$ și $E|L|^m = \\infty$ dacă $m > \\alpha$'),
      [T('$E|L|^m$: the moment of order $m$; it is finite only for orders below the tail index', '$E|L|^m$: momentul de ordin $m$; este finit doar pentru ordine mai mici decît tail index-ul'),
@@ -511,7 +511,7 @@ D.frame(T('The GEV Distribution', 'Distribuția GEV'), items(
       T('$\\sigma$: stretches it (the spread of the maxima)', '$\\sigma$: o dilată (dispersia maximelor)'),
       T('$\\xi$: the shape of the right tail; the larger $\\xi$, the heavier the tail', '$\\xi$: forma cozii drepte; cu cît $\\xi$ este mai mare, cu atît coada este mai groasă')])))
 
-D.frame(T('Three Types in One Family', 'Trei tipuri într-o singură familie'), cols(items(
+D.frame(T('The Three Types of the GEV Distribution', 'Cele trei tipuri ale distribuției GEV'), cols(items(
     (T('\\textbf{Fréchet} ($\\xi > 0$): heavy tail, $1 - H(x) \\sim x^{-1/\\xi}$', '\\textbf{Fréchet} ($\\xi > 0$): coadă groasă, $1 - H(x) \\sim x^{-1/\\xi}$'),
      [T('tail index $\\alpha = 1/\\xi$; the case of financial losses', 'tail index-ul $\\alpha = 1/\\xi$; cazul pierderilor financiare')]),
     (T('\\textbf{Gumbel} ($\\xi = 0$): light, exponential tail', '\\textbf{Gumbel} ($\\xi = 0$): coadă subțire, exponențială'),
@@ -754,7 +754,7 @@ def v01row(k):
     return (f'{NAMES[k]} & $@{{r.{k}.var01.EVT}}$ & $@{{r.{k}.var01.Hill}}$ & $@{{r.{k}.var01.Historical}}$ & $@{{r.{k}.var01.Normal}}$ & $@{{r.{k}.max}}$')
 
 
-D.frame(T('Far in the Tail: VaR 0.1\\%', 'Departe în coadă: VaR 0,1\\%'), table(
+D.frame(T('VaR at the 0.1\\% Level', 'VaR la nivelul de 0,1\\%'), table(
     'lrrrrr', T('& EVT (POT) & Hill & historical & Normal & largest loss', '& EVT (POT) & Hill & istoric & Normal & cea mai mare pierdere'),
     [v01row(k) for k in ASSETS + STOCKS], size='scriptsize') + items(
     T('VaR 0.1\\% (\\%): the loss exceeded on one day in 1\\,000; BVB stocks since 2010',
@@ -810,7 +810,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
      [T('is the change in the tail or in the volatility?', 'schimbarea este în coadă sau în volatilitate?')]),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')) + ql('SFM_ch5_hill'))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list studies of tail indices in emerging markets and summarise their methods',
       '\\textbf{Literatura}: lista studiilor despre tail index-urile de pe piețele emergente și rezumatul metodelor lor'),
     T('\\textbf{Code}: a first draft of a Hill and POT analysis on rolling windows, with block-bootstrap intervals',
@@ -827,7 +827,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Rolling windows overlap: their estimates are not independent tests', 'Ferestrele mobile se suprapun: estimările lor nu sînt teste independente'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: is the tail of BET losses lighter or heavier today than before 2010, once volatility is removed?',
        '\\textbf{Întrebarea}: este coada pierderilor BET mai subțire sau mai groasă azi decît înainte de 2010, după ce eliminăm volatilitatea?'),
      [T('data: BET daily closes since 1997 (EODHD); optionally BET-TR since 2014', 'date: închiderile zilnice BET din 1997 (EODHD); opțional BET-TR din 2014')]),

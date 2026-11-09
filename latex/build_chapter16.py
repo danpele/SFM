@@ -3,7 +3,7 @@ build_chapter16.py -- Capitolul 16 (Recapitulare), EN + RO dintr-o singură surs
 ================================================================================
 Harta cursului, cîte un slide de recapitulare pentru fiecare capitol 0--15 (formule, fapte empirice, greșeli
 frecvente), sinteza metodelor, examenul (format, criterii, tipuri de probleme, opt probleme rezolvate pas cu pas),
-proiectul de echipă și secțiunea finală „Contribuția posibilă a AI”.
+proiectul de echipă și secțiunea finală „Utilizări posibile ale instrumentelor AI”.
 Cifrele @{cheie}: faptele empirice vin din fișierele de cifre ale fiecărui capitol (Quantlets/Ch_NN/chN_numbers.json),
 tabelul comun din Quantlets/Ch_16/ch16_numbers.json, iar rezolvările problemelor sînt calculate aici, în Python.
 Convenția nivelului: VaR 1% (VaR_alpha = -q_alpha), ES 2,5%; niciodată „VaR 99%”.
@@ -324,7 +324,7 @@ D.frame(T('The Course Map: Chapters 0--15', 'Harta cursului: Capitolele 0--15'),
     T('Row 2: dependence in time; the sign of returns is hard to predict (Chapters 7, 11), their size is predictable (Chapters 8--9)', 'Rîndul 2: dependența în timp; semnul randamentelor este greu de anticipat (Capitolele 7, 11), mărimea lor este previzibilă (Capitolele 8--9)'),
     T('Row 3: the same tools applied to credit, prediction, crypto assets and the banking system', 'Rîndul 3: aceleași instrumente aplicate creditului, predicției, activelor cripto și sistemului bancar')), 'footnotesize')
 
-D.frame(T('The Main Thread: From Prices to Decisions', 'Firul principal: de la prețuri la decizii'), items(
+D.frame(T('The Structure of the Course', 'Structura cursului'), items(
     (T('\\textbf{Data} (Chapters 0--1): prices from one source, adjusted, on the right calendar', '\\textbf{Datele} (Capitolele 0--1): prețuri dintr-o singură sursă, ajustate, pe calendarul corect'),
      [T('returns: $r_t = \\ln(P_t/P_{t-1})$, in \\% for one day', 'randamente: $r_t = \\ln(P_t/P_{t-1})$, în \\% pe o zi')]),
     (T('\\textbf{Distribution} (Chapters 2--6): heavy tails, not the Normal distribution', '\\textbf{Distribuția} (Capitolele 2--6): cozi groase, nu distribuția Normală'),
@@ -353,7 +353,7 @@ TROW = [
     (T('ES 2.5\\%, historical (\\%)', 'ES 2,5\\%, istoric (\\%)'), lambda k: f'$@{{s.{k}.ehs}}$'),
     (T('Hurst (R/S): $r_t$; $|r_t|$', 'Hurst (R/S): $r_t$; $|r_t|$'), lambda k: f'$@{{s.{k}.hr}}$; $@{{s.{k}.ha}}$'),
 ]
-D.frame(T('The Course in One Table', 'Cursul într-un singur tabel'), table(
+D.frame(T('Summary Table of the Course', 'Tabelul de sinteză al cursului'), table(
     'lrrr', T('\\textbf{Daily log returns}', '\\textbf{Randamente logaritmice zilnice}') + ' & S\\&P 500 & BET & Bitcoin',
     [lab + ' & ' + ' & '.join(f(k) for k in ('sp500', 'bet', 'btc')) for lab, f in TROW], size='scriptsize') + items(
     T('Window: first return @{s.sp500.first} (S\\&P 500), @{s.bet.first} (BET), @{s.btc.first} (Bitcoin) -- @{s.last}; each series on its own calendar (Bitcoin: 365 days a year); critical value of $\\chi^2(10)$ at 5\\%: $@{s.crit}$',
@@ -811,7 +811,7 @@ D.frame(T('The Research Loop', 'Bucla de cercetare'), enum(
     T('\\textbf{Replication}: a second person runs the code and gets the same numbers', '\\textbf{Replicarea}: o a doua persoană rulează codul și obține aceleași cifre')) + '\n' + items(
     T('AI can speed up every step; it replaces none of the checks \\refWang', 'AI poate accelera fiecare pas; nu înlocuiește nicio verificare \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a first list of studies on the efficiency and the tails of emerging markets, each to be checked by its DOI', '\\textbf{Literatura}: o primă listă de studii despre eficiența și cozile piețelor emergente, fiecare verificat prin DOI'),
     T('\\textbf{Code}: a first draft of rolling VR(5), Hill and GARCH estimates on windows of 500 days', '\\textbf{Codul}: o primă versiune a estimărilor VR(5), Hill și GARCH pe ferestre mobile de 500 de zile'),
     T('\\textbf{Robustness}: a grid of choices (window, $k$, level $\\alpha$, series) and one table of all results', '\\textbf{Robustețea}: o grilă de alegeri (fereastra, $k$, nivelul $\\alpha$, seria) și un singur tabel cu toate rezultatele'),

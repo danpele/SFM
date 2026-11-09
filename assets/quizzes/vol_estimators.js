@@ -281,7 +281,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
         {
             "correct": 3,
             "en": {
-                "title": "The night",
+                "title": "Overnight returns",
                 "text": "Which estimator includes the overnight return $\\ln(O_t/C_{t-1})$?",
                 "options": [
                     "Parkinson",
@@ -293,7 +293,7 @@ window.SFM_DATA.quizzes['vol-estimators'] = {
                 "incorrectExplanation": "Parkinson, Garman–Klass and Rogers–Satchell use only prices of the trading session, so they miss the variance that comes overnight."
             },
             "ro": {
-                "title": "Noaptea",
+                "title": "Randamentele overnight",
                 "text": "Care estimator include randamentul overnight $\\ln(O_t/C_{t-1})$?",
                 "options": [
                     "Parkinson",

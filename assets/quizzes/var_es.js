@@ -632,7 +632,7 @@ window.SFM_DATA.quizzes['var-es'] = {
         {
             "correct": 1,
             "en": {
-                "title": "Joint bad days",
+                "title": "Joint large losses",
                 "text": "Among 6,466 common days of BET and S&P 500, 70 days had both indices among their worst 5%. A fitted Gaussian copula gives about 37 such days, a t copula about 55. What follows?",
                 "options": [
                     "The Gaussian copula fits the tails best",
@@ -644,7 +644,7 @@ window.SFM_DATA.quizzes['var-es'] = {
                 "incorrectExplanation": "Seventy days are far above the 16 expected under independence and above the Gaussian 37; the counts compare the copulas directly with the data."
             },
             "ro": {
-                "title": "Zile proaste comune",
+                "title": "Pierderi mari simultane",
                 "text": "Din 6466 de zile comune BET și S&P 500, în 70 de zile ambii indici au fost printre cele mai proaste 5% ale lor. O copulă Gaussiană estimată dă circa 37 de astfel de zile, o copulă t circa 55. Ce rezultă?",
                 "options": [
                     "Copula Gaussiană descrie cel mai bine cozile",

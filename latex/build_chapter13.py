@@ -229,7 +229,7 @@ D.frame(T('Supervised Learning: Notation and Loss (2/2)', 'Învățarea superviz
      [T('examples: tree depth, penalty $\\lambda$, number of neurons', 'exemple: adîncimea arborelui, penalizarea $\\lambda$, numărul de neuroni'),
       T('the parameters (coefficients, weights) are learned by the fit', 'parametrii (coeficienți, ponderi) se învață prin estimare')])))
 
-D.frame(T('Where ML Helps in Finance, and Where It Struggles', 'Unde ajută machine learning în finanțe și unde întîmpină dificultăți'), items(
+D.frame(T('Strengths and Limitations of Machine Learning in Finance', 'Avantajele și limitele învățării automate în finanțe'), items(
     (T('\\textbf{Helps}: targets with structure and enough data', '\\textbf{Ajută}: ținte cu structură și cu suficiente date'),
      [T('volatility is persistent (Chapters 8--9): a lot to predict, nonlinear effects possible', 'volatilitatea este persistentă (capitolele 8--9): este mult de prezis, iar efectele neliniare sînt posibile'),
       T('cross-sections with thousands of stocks and many characteristics (the case study)', 'secțiuni transversale cu mii de acțiuni și multe caracteristici (studiul de caz)')]),
@@ -352,7 +352,7 @@ D.frame(T('Interpretation: a Forecast of Pure Noise with $R^2 > 30\\%$', 'Interp
 # =============================================================================
 D.section('Penalised Regression: Ridge and Lasso', 'Regresia penalizată: ridge și lasso')
 
-D.frame(T('Many Features, Unstable OLS', 'Multe variabile explicative, OLS instabil'), items(
+D.frame(T('OLS with Many Correlated Features', 'OLS cu multe variabile explicative corelate'), items(
     (T('OLS (ordinary least squares): $\\hat\\beta = \\arg\\min_\\beta \\sum_t (y_t - x_t^\\top\\beta)^2 = (X^\\top X)^{-1}X^\\top y$', 'OLS (ordinary least squares, metoda celor mai mici pătrate): $\\hat\\beta = \\arg\\min_\\beta \\sum_t (y_t - x_t^\\top\\beta)^2 = (X^\\top X)^{-1}X^\\top y$'),
      [T('$X$: the $n \\times p$ matrix whose row $t$ is $x_t^\\top$; $y$: the vector of targets; $\\arg\\min_\\beta$: the $\\beta$ that minimises the sum',
         '$X$: matricea $n \\times p$ cu rîndul $t$ egal cu $x_t^\\top$; $y$: vectorul țintelor; $\\arg\\min_\\beta$: valoarea lui $\\beta$ care minimizează suma'),
@@ -554,7 +554,7 @@ chart(T('Neural-Network ARCH for GBP/USD', 'ARCH cu rețea neuronală pentru GBP
       'Volatilitatea medie: rețeaua @{na.mean_rbf}\\%, GARCH @{na.mean_garch}\\%; corelația celor două traiectorii $@{na.corr}$ (un MLP mic: $@{na.corrm}$)')],
     h='0.50\\textheight')
 
-D.frame(T('Interpretation: Flexible Shape, Short Memory', 'Interpretare: formă flexibilă, memorie scurtă'), items(
+D.frame(T('Interpretation: Neural-Network ARCH and GARCH', 'Interpretare: ARCH cu rețea neuronală și GARCH'), items(
     (T('After the Brexit vote, GARCH peaks at @{na.max_garch}\\% (@{na.dmax}); the network only at @{na.max_rbf}\\%', 'După votul pentru Brexit, GARCH atinge maximul de @{na.max_garch}\\% (@{na.dmax}); rețeaua doar @{na.max_rbf}\\%'),
      [T('the network sees only the last 3 returns: one large return raises its variance for 3 days, then the effect is gone', 'rețeaua vede doar ultimele 3 randamente: un randament mare îi crește varianța timp de 3 zile, apoi efectul dispare'),
       T('GARCH(1,1) (Chapter 9): $\\sigma_t^2 = \\omega + \\alpha\\,r_{t-1}^2 + \\beta\\,\\sigma_{t-1}^2$, with $\\sigma_{t-1}^2$ yesterday\'s conditional variance', 'GARCH(1,1) (Capitolul 9): $\\sigma_t^2 = \\omega + \\alpha\\,r_{t-1}^2 + \\beta\\,\\sigma_{t-1}^2$, cu $\\sigma_{t-1}^2$ varianța condiționată de ieri'),
@@ -667,7 +667,7 @@ D.frame(T('Results: S\\&P 500 and Bitcoin', 'Rezultatele: S\\&P 500 și Bitcoin'
       'S\\&P 500: lasso și MLP depășesc semnificativ HAR ($@{rv.sp500.Lasso.r2h}\\%$; $@{rv.sp500.MLP.r2h}\\%$); random forest și boosting nu'),
     T('Bitcoin: no model beats HAR; boosting is significantly worse (DM $@{rv.btc.GB.dm}$)', 'Bitcoin: niciun model nu depășește HAR; boosting este semnificativ mai slab (DM $@{rv.btc.GB.dm}$)')) + ql('SFM_ch13_volatility_forecast'), 'footnotesize')
 
-chart(T('Forecasts in Two Storms: 2020 and 2025', 'Prognozele în două furtuni: 2020 și 2025'), 'sfm_ch13_rv_forecasts', 'SFM_ch13_volatility_forecast', [
+chart(T('Forecasts in the Turbulent Periods of 2020 and 2025', 'Prognozele în perioadele turbulente din 2020 și 2025'), 'sfm_ch13_rv_forecasts', 'SFM_ch13_volatility_forecast', [
     T('S\\&P 500: annualised realised volatility of the next 5 days, $\\sqrt{252\\,\\mathrm{RV}_t}$, and the HAR, random forest and MLP forecasts made at the close of day $t$',
       'S\\&P 500: volatilitatea realizată anualizată din următoarele 5 zile, $\\sqrt{252\\,\\mathrm{RV}_t}$, și prognozele HAR, random forest și MLP făcute la închiderea zilei $t$'),
     T('Interpretation: all models react only after the first shock (March 2020, April 2025); the forest is capped by the largest values it saw in training, the MLP can overshoot',
@@ -708,7 +708,7 @@ D.frame(T('A Classification Problem', 'O problemă de clasificare'), items(
     (T('Why expect little: weak-form efficiency (Chapter 7)', 'Motivul unor așteptări modeste: eficiența în formă slabă (Capitolul 7)'),
      [T('any reliable pattern in past returns would be traded away', 'orice tipar sigur din randamentele trecute ar dispărea prin tranzacționare')])))
 
-D.frame(T('The Right Baseline', 'Reperul corect'), items(
+D.frame(T('The Majority-Class Baseline', 'Reperul clasei majoritare'), items(
     (T('\\textbf{Majority-class baseline}: always forecast the more frequent class of the training sample (here: ``up\'\')', '\\textbf{Reperul clasei majoritare}: prognozăm mereu clasa mai frecventă din eșantionul de antrenare (aici: „creștere”)'),
      [T('S\\&P 500 since 2008: @{sg.sp500.up}\\% of the days are up, so ``always up\'\' is right on @{sg.sp500.base}\\% of the days', 'S\\&P 500 din 2008: @{sg.sp500.up}\\% din zile sînt în creștere, deci „mereu creștere” are dreptate în @{sg.sp500.base}\\% din zile'),
       T('an accuracy of 53\\% sounds like skill; against this baseline it is a loss', 'o acuratețe de 53\\% pare o abilitate; față de acest reper este o pierdere')]),
@@ -871,7 +871,7 @@ D.frame(T('Evaluation in the Paper', 'Evaluarea din lucrare'), items(
     (T('Economic value: each month, sort stocks into deciles by forecast; buy the top decile, sell the bottom one', 'Valoarea economică: în fiecare lună, sortăm acțiunile în decile după prognoză; cumpărăm decila de sus și vindem decila de jos'),
      [T('value-weighted portfolios; Sharpe ratio, drawdown and turnover (the share of the portfolio traded each month)', 'portofolii ponderate cu valoarea de piață; raportul Sharpe, drawdown și rulajul (ponderea portofoliului tranzacționată lunar)')])))
 
-chart(T('Results: Small $R^2$, Large Economic Value', 'Rezultatele: $R^2$ mic, valoare economică mare'), 'sfm_ch13_gkx', 'SFM_ch13_case_gkx', [
+chart(T('Results: Predictive $R^2$ and Economic Value', 'Rezultatele: $R^2$ predictiv și valoarea economică'), 'sfm_ch13_gkx', 'SFM_ch13_case_gkx', [
     T('Left: monthly $R^2_{OOS}$ (Table 1): OLS with all 920 features $@{gkx.ols}\\%$; OLS-3 (size, value, momentum) $@{gkx.OLS3.r2}\\%$; random forest $@{gkx.RF.r2}\\%$; NN3 $@{gkx.NN3.r2}\\%$ ($@{gkx.NN3.top}\\%$ for the 1,000 largest stocks)',
       'Stînga: $R^2_{OOS}$ lunar (tabelul 1): OLS cu toate cele 920 de variabile $@{gkx.ols}\\%$; OLS-3 (mărime, valoare, momentum) $@{gkx.OLS3.r2}\\%$; random forest $@{gkx.RF.r2}\\%$; NN3 $@{gkx.NN3.r2}\\%$ ($@{gkx.NN3.top}\\%$ pentru cele mai mari 1\\,000 de acțiuni)'),
     T('Right: annual Sharpe ratio of the value-weighted decile spread (Table 7): OLS-3 $@{gkx.OLS3.sr}$, random forest $@{gkx.RF.sr}$, NN4 $@{gkx.NN4.sr}$',
@@ -903,7 +903,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       'Lucrări înrudite, ca lectură suplimentară: \\refPeleA{} (clasificarea statistică a activelor cripto); \\refPeleB{} (cît de precise pot fi comparațiile de prognoze)'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on HAR and machine learning for emerging and frontier markets', '\\textbf{Literatura}: o listă a studiilor despre HAR și machine learning pentru piețele emergente și de frontieră'),
     T('\\textbf{Code}: a first draft of the walk-forward comparison of HAR, lasso and random forest for the BET and three BVB stocks', '\\textbf{Cod}: o primă versiune a comparației walk-forward dintre HAR, lasso și random forest pentru BET și trei acțiuni BVB'),
     T('\\textbf{Robustness}: other proxies (absolute returns, two-day returns), other horizons (1, 5, 22 days), S\\&P 500 features of the previous close', '\\textbf{Robustețe}: alte variabile proxy (randamente absolute, randamente pe două zile), alte orizonturi (1, 5, 22 de zile), variabile S\\&P 500 de la închiderea precedentă'),

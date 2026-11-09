@@ -352,7 +352,7 @@ D.frame(T('Worked Example: WoE and IV of the Checking Account', 'Exemplu rezolva
     T('Interpretation: IV $= @{sw.iv} > 0.3$: a strong variable; the WoE falls monotonically from the safest to the riskiest group',
       'Interpretare: IV $= @{sw.iv} > 0{,}3$: o variabilă puternică; WoE scade monoton de la grupul cel mai sigur la cel mai riscant')), 'footnotesize')
 
-D.frame(T('Binning: Rules of the Trade', 'Discretizarea (binning): reguli practice'), items(
+D.frame(T('Binning: Practical Rules', 'Discretizarea (binning): reguli practice'), items(
     (T('Why bins: they capture non-linear effects, limit the influence of outliers and give every applicant a small table of points',
        'Rolul intervalelor: surprind efectele neliniare, limitează influența valorilor extreme și dau fiecărui solicitant un tabel mic de puncte'),
      [T('numeric variables: a few intervals (here duration $\\le 12$, 13--18, 19--24, 25--36, $> 36$ months); categorical: the categories', 'variabile numerice: cîteva intervale (aici durata $\\le 12$, 13--18, 19--24, 25--36, $> 36$ de luni); categoriale: categoriile')]),
@@ -813,7 +813,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       'Întrebarea rămîne deschisă: cîștigurile depind de setul de date, de măsură și de populație; rezultatele solicitanților respinși nu se văd niciodată'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of benchmark studies of credit scoring and of studies on fairness in lending, with their data sets', '\\textbf{Literatura}: o listă a comparațiilor de metode de scoring și a studiilor despre echitatea creditării, cu seturile lor de date'),
     T('\\textbf{Code}: a first draft of a cross-validated comparison of the WoE logit with gradient boosting on the Taiwan data', '\\textbf{Cod}: o primă versiune a unei comparații prin validare încrucișată a logit-ului WoE cu gradient boosting pe datele din Taiwan'),
     T('\\textbf{Robustness}: other cut-offs, other measures (Brier, cost), group-wise AUC and calibration', '\\textbf{Robustețe}: alte praguri, alte măsuri (Brier, cost), AUC și calibrare pe grupuri'),

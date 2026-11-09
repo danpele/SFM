@@ -552,7 +552,7 @@ D.frame(T('Independence and Uncorrelatedness', 'Independență și necorelare'),
       T('but $Y$ is a function of $X$: completely dependent', 'dar $Y$ este o funcție de $X$: complet dependente')]),
     T('Exception: for jointly Normal variables, uncorrelated $\\Leftrightarrow$ independent', 'Excepție: pentru variabile cu distribuție Normală comună (bivariată), necorelate $\\Leftrightarrow$ independente')))
 
-chart(T('Returns Are Uncorrelated, Squared Returns Are Not', 'Randamentele sînt necorelate, pătratele lor nu'), 'sfm_ch4_uncorrelated_dependent', 'SFM_ch4_dependence', [
+chart(T('Autocorrelation of Returns and of Squared Returns', 'Autocorelația randamentelor și a pătratelor randamentelor'), 'sfm_ch4_uncorrelated_dependent', 'SFM_ch4_dependence', [
     T('Left: simulated $Y = X^2$, sample correlation $@{dep.xy}$, yet $Y$ is determined by $X$', 'Stînga: $Y = X^2$ simulat, corelația de selecție $@{dep.xy}$, deși $Y$ este determinat de $X$'),
     (T('Right: $\\text{Corr}(r_t, r_{t-1})$ is small: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$', 'Dreapta: $\\text{Corr}(r_t, r_{t-1})$ este mică: S\\&P 500 $@{dep.sp500.r}$, DAX $@{dep.dax.r}$, Bitcoin $@{dep.btc.r}$'),
      [T('$\\text{Corr}(r_t^2, r_{t-1}^2)$ is far outside the band: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$; BET $@{dep.bet.r2}$', '$\\text{Corr}(r_t^2, r_{t-1}^2)$ iese mult din bandă: $@{dep.sp500.r2}$, $@{dep.dax.r2}$, $@{dep.btc.r2}$; BET $@{dep.bet.r2}$'),
@@ -642,7 +642,7 @@ D.frame(T('Two Limit Theorems', 'Două teoreme limită'), items(
       T('infinite variance: sums converge to $\\alpha$-stable laws instead (Chapter 3)', 'varianță infinită: sumele converg, în schimb, către legi $\\alpha$-stabile (Capitolul 3)')]),
     T('Both need some form of independence; dependent returns converge more slowly', 'Ambele au nevoie de o formă de independență; randamentele dependente converg mai încet')))
 
-chart(T('The LLN for the Mean Return: Slow', 'LLN pentru randamentul mediu: convergență lentă'), 'sfm_ch4_lln', 'SFM_ch4_monte_carlo', [
+chart(T('The LLN for the Mean Return: Slow Convergence', 'LLN pentru randamentul mediu: convergență lentă'), 'sfm_ch4_lln', 'SFM_ch4_monte_carlo', [
     (T('S\\&P 500, @{lln.years} years: mean $@{an.m}\\%$ a day, standard error $\\sigma/\\sqrt{n} = @{lln.se}\\%$', 'S\\&P 500, @{lln.years} ani: media $@{an.m}\\%$ pe zi, eroarea standard $\\sigma/\\sqrt{n} = @{lln.se}\\%$'),
      [T('$t$ = mean / standard error $= @{lln.t}$; $|t| > 1.96$ would mean a mean significantly different from 0 at 5\\%', '$t$ = media / eroarea standard $= @{lln.t}$; $|t| > 1.96$ ar indica o medie semnificativ diferită de 0, la pragul de 5\\%')]),
     (T('Annual mean @{an.ma}\\%, 95\\% interval $[@{lln.lo}\\%, @{lln.hi}\\%]$', 'Media anuală @{an.ma}\\%, intervalul de încredere de 95\\%: $[@{lln.lo}\\%; @{lln.hi}\\%]$'),
@@ -875,7 +875,7 @@ D.recap(('Discrete-Time Processes', 'Procese în timp discret'), [
 # =============================================================================
 D.section('The Wiener Process and Geometric Brownian Motion', 'Procesul Wiener și mișcarea browniană geometrică')
 
-D.frame(T('From Pollen to Prices: Brownian Motion', 'De la polen la prețuri: mișcarea browniană'), cols(items(
+D.frame(T('A History of Brownian Motion', 'Scurt istoric al mișcării browniene'), cols(items(
     T('1827: the botanist Robert Brown sees pollen particles jiggling in water', '1827: botanistul Robert Brown observă mișcarea neregulată a particulelor de polen în apă'),
     T('1900: Louis Bachelier models the Paris bond market with the same motion, five years before physics \\refBachelier', '1900: Louis Bachelier modelează piața obligațiunilor de la Paris cu aceeași mișcare, cu cinci ani înaintea lui Einstein \\refBachelier'),
     T('1905: Albert Einstein explains it by molecular collisions \\refEinstein', '1905: Albert Einstein o explică prin ciocniri moleculare \\refEinstein'),
@@ -902,7 +902,7 @@ chart(T('From Random Walks to the Wiener Process (SFEWienerProcess)', 'De la mer
     (T('Right: 20 Wiener paths; $\\text{Var}(W(t)) = t$, so they spread like $\\pm\\sqrt{t}$', 'Dreapta: 20 de traiectorii Wiener; $\\text{Var}(W(t)) = t$, deci dispersia crește ca $\\pm\\sqrt{t}$'),
      [T('simulated $\\text{Var}(W(1)) = @{w.v1}$; @{w.in1}\\% of $W(1)$ inside $\\pm 1$ (theory @{w.in1th}\\%)', '$\\text{Var}(W(1))$ simulată $= @{w.v1}$; @{w.in1}\\% din valorile $W(1)$ în $\\pm 1$ (teoretic @{w.in1th}\\%)')])], h='0.50\\textheight')
 
-D.frame(T('Strange Properties of Wiener Paths', 'Proprietăți neobișnuite ale traiectoriilor Wiener'), items(
+D.frame(T('Properties of Wiener Paths', 'Proprietățile traiectoriilor Wiener'), items(
     (T('Continuous everywhere, differentiable nowhere', 'Continue peste tot, nicăieri derivabile'),
      [T('the slope $(W(t + h) - W(t))/h \\sim N(0, 1/h)$ has a variance $1/h$ that grows without bound as $h \\to 0$', 'panta $(W(t + h) - W(t))/h \\sim N(0, 1/h)$ are varianța $1/h$, care crește nelimitat cînd $h \\to 0$')]),
     (T('\\textbf{Quadratic variation}: $\\sum_k (W(t_{k+1}) - W(t_k))^2 \\to t$ on a finer and finer grid', '\\textbf{Variația pătratică}: $\\sum_k (W(t_{k+1}) - W(t_k))^2 \\to t$ pe o grilă tot mai fină'),
@@ -945,7 +945,7 @@ chart(T('Real Paths in the GBM Fan', 'Traiectorii reale în evantaiul GBM'), 'sf
     (T('Bitcoin: $\\sigma = @{f.btc.sigma}\\%$ a year makes the fan enormous', 'Bitcoin: cu $\\sigma = @{f.btc.sigma}\\%$ pe an, evantaiul este foarte larg'),
      [T('annualised with $A = 365$: crypto trades every calendar day ($A = 252$ for the indices)', 'anualizată cu $A = 365$: activele cripto se tranzacționează în fiecare zi calendaristică ($A = 252$ pentru indici)')])], h='0.46\\textheight', size='scriptsize')
 
-chart(T('What GBM Misses', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_ch4_wiener_gbm', [
+chart(T('Limitations of the GBM Model', 'Limitele modelului GBM'), 'sfm_ch4_gbm_check', 'SFM_ch4_wiener_gbm', [
     T('Excess kurtosis: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% of 300 GBM simulations lie within $[@{ck.sp500.klo}, @{ck.sp500.khi}]$',
       'Excesul de boltire: S\\&P 500 @{ck.sp500.k}, BET @{ck.bet.k}, Bitcoin @{ck.btc.k}; 90\\% din 300 de simulări GBM sînt în $[@{ck.sp500.klo}, @{ck.sp500.khi}]$'),
     T('Volatility clustering: $\\text{Corr}(r_t^2, r_{t-1}^2) = @{ck.sp500.a}$, $@{ck.bet.a}$, $@{ck.btc.a}$ vs at most $@{ck.btc.ahi}$ under GBM',
@@ -967,14 +967,14 @@ D.recap(('Wiener Process and GBM', 'Procesul Wiener și GBM'), [
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
 chart(T('An Open Question: Does GBM Get Drawdown Risk Right?', 'O întrebare deschisă: estimează GBM corect riscul de drawdown?'), 'sfm_ch4_drawdown_years', 'SFM_ch4_drawdown_open', [
-    (T('Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{What GBM Misses}}), here within a calendar year', 'Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitele modelului GBM}}), aici în cursul unui an calendaristic'),
+    (T('Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitations of the GBM Model}}), here within a calendar year', 'Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitele modelului GBM}}), aici în cursul unui an calendaristic'),
      [T('beyond 20\\%: S\\&P 500 in @{dd.sp500.nh} of @{dd.sp500.ny} years (@{dd.sp500.sr}\\%) vs @{dd.sp500.pg}\\% under GBM; BET @{dd.bet.sr}\\% vs @{dd.bet.pg}\\%', 'peste 20\\%: S\\&P 500 în @{dd.sp500.nh} din @{dd.sp500.ny} ani (@{dd.sp500.sr}\\%), față de @{dd.sp500.pg}\\% în GBM; BET @{dd.bet.sr}\\% față de @{dd.bet.pg}\\%')]),
     (T('Beyond 40\\%: GBM expects @{dd.sp500.e40} such years for the S\\&P 500 and @{dd.bet.e40} for the BET', 'Peste 40\\%: GBM prevede, în medie, @{dd.sp500.e40} asemenea ani pentru S\\&P 500 și @{dd.bet.e40} pentru BET'),
      [T('both had @{dd.sp500.n40} (2008: @{dd.sp500.w}\\% and @{dd.bet.w}\\%)', 'fiecare indice a avut @{dd.sp500.n40} (2008: $@{dd.sp500.w}\\%$ și $@{dd.bet.w}\\%$)')]),
     (T('Open question', 'Întrebare deschisă'),
      [T('does GBM overstate moderate drawdowns and understate extreme ones because calm and crisis years cluster?', 'supraestimează GBM drawdown-urile moderate și le subestimează pe cele extreme pentru că anii calmi și cei de criză apar grupat?')])], h='0.42\\textheight', size='scriptsize')
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: find studies of drawdown distributions and of their link to volatility clustering, and summarise them', '\\textbf{Literatura}: identificarea și rezumarea studiilor despre distribuția drawdown-urilor și legătura lor cu volatility clustering'),
     T('\\textbf{Code}: draft simulations of yearly drawdowns under GBM, the i.i.d. bootstrap and a GARCH model', '\\textbf{Cod}: o primă versiune a simulărilor drawdown-urilor anuale în GBM, în bootstrap i.i.d. și într-un model GARCH'),
     T('\\textbf{Design}: propose a test that compares the observed number of bad years with the model probability', '\\textbf{Design}: propunerea unui test care compară numărul observat de ani nefavorabili cu probabilitatea din model'),
@@ -989,7 +989,7 @@ D.frame(T('What to Check', 'Verificări necesare'), items(
     T('Mechanism: the i.i.d. bootstrap keeps heavy tails but removes clustering; the difference isolates the effect of clustering', 'Mecanismul: bootstrap-ul i.i.d. păstrează cozile groase, dar elimină clustering-ul; diferența izolează efectul clustering-ului'),
     T('References: every cited paper must exist; check the DOI', 'Referințele: fiecare lucrare citată trebuie să existe; verificați DOI-ul')))
 
-D.frame(T('Project Seed', 'Idee de proiect'), items(
+D.frame(T('Project Idea', 'Idee de proiect'), items(
     (T('\\textbf{Question}: how wrong is GBM about the probability of a bad year, and why?', '\\textbf{Întrebarea}: cît de mult greșește GBM probabilitatea unui an nefavorabil și de ce?'),
      [T('data: S\\&P 500, DAX, BET and Bitcoin from the course data', 'date: S\\&P 500, DAX, BET și Bitcoin din datele cursului')]),
     (T('Steps', 'Pași'),

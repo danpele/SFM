@@ -186,7 +186,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 D.section('Volatility Clustering', 'Volatility clustering')
 
-chart(T('S\\&P 500: Calm Years and Storms', 'S\\&P 500: ani liniștiți și perioade turbulente'), 'sfm_ch9_returns', 'SFM_ch9_volatility_markets', [
+chart(T('S\\&P 500: Calm Years and Turbulent Periods', 'S\\&P 500: ani liniștiți și perioade turbulente'), 'sfm_ch9_returns', 'SFM_ch9_volatility_markets', [
     T('Daily log returns $r_t = 100(\\ln P_t - \\ln P_{t-1})$, in \\%, @{ret.n} days to @{end}; the largest fall: $@{ret.min}\\%$ on @{ret.dmin}; the largest rise: $@{ret.max}\\%$ on @{ret.dmax}',
       'Randamente logaritmice zilnice $r_t = 100(\\ln P_t - \\ln P_{t-1})$, în \\%, @{ret.n} zile pînă la @{end}; cea mai mare scădere: $@{ret.min}\\%$ pe @{ret.dmin}; cea mai mare creștere: $@{ret.max}\\%$ pe @{ret.dmax}'),
     T('Standard deviation: $@{ret.sd2017}\\%$ in 2017, $@{ret.sd2008}\\%$ from September 2008 to March 2009, $@{ret.sd2020}\\%$ from February to May 2020',
@@ -194,7 +194,7 @@ chart(T('S\\&P 500: Calm Years and Storms', 'S\\&P 500: ani liniștiți și peri
     T('Large changes follow large changes, of either sign: volatility clustering \\refEngle', 'Variațiile mari urmează după variații mari, de orice semn: volatility clustering \\refEngle')],
     h='0.50\\textheight')
 
-D.frame(T('Two Storms: 2008 and 2020', 'Două crize: 2008 și 2020'), cols(
+D.frame(T('The Crises of 2008 and 2020', 'Crizele din 2008 și 2020'), cols(
     ph('lehman', T('Lehman Brothers headquarters, New York, 15 September 2008', 'Sediul Lehman Brothers, New York, 15 septembrie 2008'), h='0.30\\textheight'),
     ph('fidi', T('The Financial District of New York, 25 March 2020', 'Districtul financiar din New York, 25 martie 2020'), h='0.30\\textheight'),
     wl='0.48', wr='0.48') + items(
@@ -628,7 +628,7 @@ D.frame(T('Checking a Fitted Model', 'Verificarea unui model estimat'), items(
         'testul comun $T R^2 \\sim \\chi^2(3)$: o respingere înseamnă că semnul șocurilor trecute încă anticipează varianța (lipsește asimetria)')]),
     T('A passed diagnostic does not prove the model right; a failed one shows where it is wrong', 'Un diagnostic fără respingere nu dovedește că modelul este corect; o respingere arată unde greșește')))
 
-chart(T('What GARCH Removes', 'Autocorelațiile eliminate de GARCH'), 'sfm_ch9_acf_diag', 'SFM_ch9_diagnostics', [
+chart(T('Autocorrelations Removed by GARCH', 'Autocorelațiile eliminate de GARCH'), 'sfm_ch9_acf_diag', 'SFM_ch9_diagnostics', [
     T('ACF of $r_t^2$: $@{acf.r1}$ at lag 1 and still $@{acf.r50}$ at lag 50; ACF of $\\hat z_t^2$ (GARCH(1,1)-t): $@{acf.z1}$ at lag 1, at most $@{acf.zmax}$ in absolute value; band $\\pm@{acf.band}$',
       'ACF a lui $r_t^2$: $@{acf.r1}$ la lagul 1 și încă $@{acf.r50}$ la lagul 50; ACF a lui $\\hat z_t^2$ (GARCH(1,1)-t): $@{acf.z1}$ la lagul 1, cel mult $@{acf.zmax}$ în valoare absolută; banda $\\pm@{acf.band}$'),
     T('Interpretation: three parameters absorb almost all the volatility clustering in the daily data since 2000', 'Interpretare: trei parametri absorb aproape tot volatility clustering din datele zilnice de după 2000')],
@@ -788,7 +788,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Why it is open: regime changes, the 2022 crypto crash and the ETF launch overlap; the answer depends on the window', 'Întrebarea rămîne deschisă: schimbările de regim, prăbușirea pieței cripto din 2022 și lansarea ETF-urilor se suprapun; răspunsul depinde de fereastra aleasă'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on GARCH models for crypto assets and the models they use', '\\textbf{Literatura}: o listă a studiilor despre modelele GARCH pentru active cripto și a modelelor folosite'),
     T('\\textbf{Code}: a first draft of rolling GJR-GARCH-t estimates for Bitcoin and the S\\&P 500 with the \\texttt{arch} package', '\\textbf{Cod}: o primă versiune a estimărilor GJR-GARCH-t pe ferestre mobile pentru Bitcoin și S\\&P 500, cu pachetul \\texttt{arch}'),
     T('\\textbf{Robustness}: other windows, Ethereum, weekend days removed, skewed-t innovations', '\\textbf{Robustețe}: alte ferestre, Ethereum, eliminarea zilelor de weekend, inovații t asimetrice'),

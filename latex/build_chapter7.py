@@ -163,7 +163,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 D.section('Can Prices Be Predicted?', 'Previzibilitatea prețurilor')
 
-D.frame(T('Can You Beat the Market?', 'Randamente peste cele ale pieței'), cols(items(
+D.frame(T('Returns above the Market', 'Randamente peste cele ale pieței'), cols(items(
     (T('If past prices predicted future returns, a simple rule would earn money with no risk', 'Dacă prețurile trecute ar anticipa randamentele viitoare, o regulă simplă ar aduce bani fără risc'),
      [T('traders would use the rule; their trades would move prices until the pattern disappears',
         'investitorii ar folosi regula; tranzacțiile lor ar muta prețurile pînă cînd tiparul dispare')]),
@@ -205,7 +205,7 @@ D.frame(T('1965: Properly Anticipated Prices Fluctuate Randomly', '1965: prețur
     ph('samuelson', T('Paul A. Samuelson (1915--2009), Nobel Prize 1970', 'Paul A. Samuelson (1915--2009), Premiul Nobel 1970'),
        h='0.34\\textheight'), wl='0.54', wr='0.42'))
 
-chart(T('Does Yesterday Predict Today?', 'Randamentul de ieri și randamentul de azi'), 'sfm_ch7_scatter_lag', 'SFM_ch7_random_walk', [
+chart(T('Yesterday\'s Return and Today\'s Return', 'Randamentul de ieri și randamentul de azi'), 'sfm_ch7_scatter_lag', 'SFM_ch7_random_walk', [
     T('Each point: (return yesterday, return today); the line: least squares; its slope is the first autocorrelation $\\hat\\rho(1)$',
       'Fiecare punct: (randamentul de ieri, randamentul de azi); dreapta: cele mai mici pătrate; panta ei este prima autocorelație $\\hat\\rho(1)$'),
     T('S\\&P 500: $\\hat\\rho(1) = @{sc.sp500.rho}$ (a slight reversal); BET: $\\hat\\rho(1) = @{sc.bet.rho}$ (a slight continuation); are these numbers different from zero?',
@@ -406,7 +406,7 @@ D.frame(T('Reading the ACF of Returns', 'Interpretarea ACF-ului randamentelor'),
     T('The i.i.d.\\ band tests RW1; the robust band tests RW3, the hypothesis that matters for efficiency',
       'Banda i.i.d.\\ testează RW1; banda robustă testează RW3, ipoteza care contează pentru eficiență')) + ql('SFM_ch7_autocorrelation_tests'))
 
-chart(T('Returns Are Almost Uncorrelated, Their Size Is Not', 'Randamentele sînt aproape necorelate, mărimea lor nu'), 'sfm_ch7_acf_abs', 'SFM_ch7_autocorrelation_tests', [
+chart(T('Autocorrelation of Returns and of Absolute Returns', 'Autocorelația randamentelor și a randamentelor absolute'), 'sfm_ch7_acf_abs', 'SFM_ch7_autocorrelation_tests', [
     T('ACF of $|r_t|$: S\\&P 500 $@{aa.sp500.abs1}$ at lag 1, $@{aa.sp500.abs20}$ at lag 20, $@{aa.sp500.abs100}$ at lag 100; the returns themselves: dotted lines near 0',
       'ACF-ul lui $|r_t|$: S\\&P 500 $@{aa.sp500.abs1}$ la lagul 1, $@{aa.sp500.abs20}$ la lagul 20, $@{aa.sp500.abs100}$ la lagul 100; randamentele însele: linii punctate în jurul lui 0'),
     T('Large moves follow large moves: RW1 and RW2 are rejected by eye; RW3 and the martingale are not touched by this chart',
@@ -496,7 +496,7 @@ D.frame(T('Stationary and Integrated Series', 'Serii staționare și serii integ
      [T('the name: the root of $1 - \\phi z = 0$ is $z = 1/\\phi = 1$', 'denumirea: rădăcina ecuației $1 - \\phi z = 0$ este $z = 1/\\phi = 1$')]),
     T('Question of this section: are log prices $I(1)$ and returns $I(0)$?', 'Întrebarea acestei secțiuni: sînt prețurile logaritmice $I(1)$ și randamentele $I(0)$?')))
 
-chart(T('Why It Matters: Spurious Regression', 'Importanța practică: regresia falsă'), 'sfm_ch7_spurious', 'SFM_ch7_unit_roots', [
+chart(T('Practical Consequence: Spurious Regression', 'Consecința practică: regresia falsă'), 'sfm_ch7_spurious', 'SFM_ch7_unit_roots', [
     (T('Regress one random walk on another, independent one ($T = 500$, 2\\,000 repetitions) \\refGN', 'Estimăm regresia unui mers aleator pe altul, independent ($T = 500$, 2\\,000 de repetări) \\refGN'),
      [T('$|t| > 1.96$ in @{sp.lev}\\% of cases, median $R^2 = @{sp.r2}$: a ``relation\'\' that does not exist', '$|t| > 1{,}96$ în @{sp.lev}\\% din cazuri, $R^2$ median $= @{sp.r2}$: o „relație” care nu există')]),
     (T('On the increments: $|t| > 1.96$ in @{sp.dif}\\% of cases, as it should be', 'Pe diferențe: $|t| > 1{,}96$ în @{sp.dif}\\% din cazuri, cum este de așteptat'),
@@ -570,7 +570,7 @@ D.frame(T('Unit-Root Tests on Prices and Returns', 'Teste de rădăcină unitar�
     T('Returns: ADF and PP reject strongly; KPSS never rejects (p @{ur.sp500.ret.kpss.p}): returns are $I(0)$',
       'Randamentele: ADF și PP resping puternic; KPSS nu respinge niciodată (p @{ur.sp500.ret.kpss.p}): randamentele sînt $I(0)$')) + ql('SFM_ch7_unit_roots'), 'footnotesize')
 
-D.frame(T('A Unit Root Is Not Proof of Efficiency', 'O rădăcină unitară nu dovedește eficiența'), items(
+D.frame(T('Unit Roots and Market Efficiency', 'Rădăcina unitară și eficiența pieței'), items(
     (T('A unit root in prices is \\textbf{necessary} for a random walk, but \\textbf{not sufficient}', 'O rădăcină unitară în prețuri este \\textbf{necesară} pentru un mers aleator, dar \\textbf{nu suficientă}'),
      [T('example: $r_t = 0.3\\,r_{t-1} + \\varepsilon_t$ makes $p_t$ an $I(1)$ series whose increments are predictable',
         'exemplu: $r_t = 0{,}3\\,r_{t-1} + \\varepsilon_t$ face din $p_t$ o serie $I(1)$ ale cărei creșteri sînt previzibile'),
@@ -812,7 +812,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
      [T('is the index or each stock the right unit?', 'care este unitatea potrivită de analiză, indicele sau fiecare acțiune?')]),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea rezultatelor \\refWang')) + ql('SFM_ch7_adaptive_markets'))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list studies of efficiency in Central and Eastern European markets and the tests they use',
       '\\textbf{Literatura}: o listă a studiilor despre eficiența piețelor din Europa Centrală și de Est și a testelor folosite în ele'),
     T('\\textbf{Code}: a first draft of rolling Lo--MacKinlay and automatic VR tests for BET stocks, with wild-bootstrap p-values',

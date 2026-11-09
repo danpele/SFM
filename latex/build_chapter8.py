@@ -307,7 +307,7 @@ D.frame(T('How Precise Is a Sample Volatility?', 'Precizia unei volatilități d
 # =============================================================================
 D.section('EWMA and RiskMetrics', 'EWMA și RiskMetrics')
 
-D.frame(T('1994: RiskMetrics Makes Volatility a Daily Number', '1994: RiskMetrics transformă volatilitatea într-un indicator zilnic'), cols(items(
+D.frame(T('1994: RiskMetrics and Daily Volatility Estimates', '1994: RiskMetrics și estimarea zilnică a volatilității'), cols(items(
     (T('J.P. Morgan launched RiskMetrics in October 1994 and published its methods and data free of charge \\refRM',
        'J.P. Morgan a lansat RiskMetrics în octombrie 1994 și a publicat gratuit metodele și datele \\refRM'),
      [T('goal: one common yardstick for market risk across banks', 'scopul: un etalon comun pentru riscul de piață, valabil pentru toate băncile'),
@@ -354,7 +354,7 @@ chart(T('The Ghost Effect: March--June 2020', 'Ghost effect: martie--iunie 2020'
     T('\\textbf{Question for the room}: why does the blue line fall sharply in mid-June 2020, on a calm day?', '\\textbf{Întrebare pentru sală}: de ce scade brusc linia albastră la mijlocul lui iunie 2020, într-o zi liniștită?')],
     h='0.54\\textheight')
 
-D.frame(T('Interpretation: Ghosts and Fading Memory', 'Interpretarea: ghost effect și atenuarea treptată a memoriei'), items(
+D.frame(T('Interpretation: the Ghost Effect and EWMA Weighting', 'Interpretarea: ghost effect și ponderarea EWMA'), items(
     (T('\\textbf{Answer}: on @{gh.dropd} the return of @{gh.left} ($@{gh.leftr}\\%$) left the 63-day window', '\\textbf{Răspuns}: pe @{gh.dropd}, randamentul din @{gh.left} ($@{gh.leftr}\\%$) a ieșit din fereastra de 63 de zile'),
      [T('the rolling volatility fell from @{gh.before}\\% to @{gh.after}\\% in one day, with no news at all', 'volatilitatea pe fereastra mobilă a scăzut de la @{gh.before}\\% la @{gh.after}\\% într-o singură zi, fără nicio știre'),
       T('this artefact is the \\textbf{ghost effect}: an old shock leaves the window abruptly', 'acest artefact este \\textbf{ghost effect}: un șoc vechi iese brusc din fereastră')]),
@@ -422,7 +422,7 @@ D.frame(T('Garman--Klass (1980) and Rogers--Satchell (1991)', 'Garman--Klass (19
     T('Both still ignore the overnight return $o_t$: they measure the variance of the trading session only',
       'Ambele ignoră însă randamentul overnight $o_t$: măsoară doar varianța ședinței de tranzacționare')))
 
-D.frame(T('Yang--Zhang (2000): Adding the Night', 'Yang--Zhang (2000): adăugarea nopții'), items(
+D.frame(T('Yang--Zhang (2000): Including the Overnight Return', 'Yang--Zhang (2000): includerea randamentului overnight'), items(
     (T('On a window of $n$ days \\refYZ:', 'Pe o fereastră de $n$ zile \\refYZ:'),
      [T('$\\hat\\sigma_{YZ}^2 = \\hat\\sigma_O^2 + k\\,\\hat\\sigma_C^2 + (1-k)\\,\\hat\\sigma_{RS}^2$, \\quad $k = \\dfrac{0.34}{1.34 + (n+1)/(n-1)}$',
         '$\\hat\\sigma_{YZ}^2 = \\hat\\sigma_O^2 + k\\,\\hat\\sigma_C^2 + (1-k)\\,\\hat\\sigma_{RS}^2$, \\quad $k = \\dfrac{0{,}34}{1{,}34 + (n+1)/(n-1)}$'),
@@ -453,7 +453,7 @@ chart(T('Efficiency by Simulation', 'Eficiența estimatorilor prin simulare'), '
     h='0.52\\textheight')
 
 TB = '>{\\raggedright\\arraybackslash}'
-D.frame(T('Interpretation: Precision Is Not Accuracy', 'Interpretarea simulării: precizie și deplasare'), table(
+D.frame(T('Interpretation: Precision and Bias of the Estimators', 'Interpretarea simulării: precizie și deplasare'), table(
     'lrrrrr', T('& \\textbf{CC} & \\textbf{Parkinson} & \\textbf{GK} & \\textbf{RS} & \\textbf{YZ}', '& \\textbf{CC} & \\textbf{Parkinson} & \\textbf{GK} & \\textbf{RS} & \\textbf{YZ}'),
     [T('Efficiency, continuous trading', 'Eficiența, tranzacționare continuă') + ' & ' + ' & '.join(f'@{{ef.continuous.{e}.eff}}' for e in ['cc', 'park', 'gk', 'rs', 'yz']),
      T('Bias (\\%), continuous trading', 'Deplasarea (\\%), tranzacționare continuă') + ' & ' + ' & '.join(f'${{@{{ef.continuous.{e}.bias}}}}$' for e in ['cc', 'park', 'gk', 'rs', 'yz']),
@@ -555,7 +555,7 @@ D.frame(T('1982: Engle and the ARCH Model', '1982: Engle și modelul ARCH'), col
     T('This section: tests for clustering; Chapter 9: the models', 'Această secțiune: testele pentru volatility clustering; Capitolul 9: modelele')),
     ph('engle', T('Robert F. Engle (b. 1942), Santiago, 2017', 'Robert F. Engle (n. 1942), Santiago, 2017'), h='0.40\\textheight'), wl='0.60', wr='0.36'))
 
-chart(T('The Sign Is Unpredictable, the Size Is Not', 'Semnul este imprevizibil, mărimea nu'), 'sfm_ch8_acf_clustering', 'SFM_ch8_clustering', [
+chart(T('ACF of Returns, Squared Returns and Absolute Returns', 'ACF-ul randamentelor, al pătratelor și al valorilor absolute'), 'sfm_ch8_acf_clustering', 'SFM_ch8_clustering', [
     T('Sample ACF (autocorrelation function, Chapter 7) of $r_t$, $r_t^2$ and $|r_t|$, lags 1--100, with the 95\\% band $\\pm 1.96/\\sqrt{T}$ for i.i.d.\\ data',
       'ACF de selecție (funcția de autocorelație, Capitolul 7) pentru $r_t$, $r_t^2$ și $|r_t|$, lagurile 1--100, cu banda de 95\\% $\\pm 1{,}96/\\sqrt{T}$ pentru date i.i.d.'),
     T('S\\&P 500: all 100 autocorrelations of $r_t^2$ and of $|r_t|$ lie above the band; at lag 100, $|r_t|$ still has $@{ac.sp500.abs100}$',
@@ -786,7 +786,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
       'Întrebarea rămîne deschisă: răspunsul diferă de la o acțiune la alta; contează lichiditatea, licitația de deschidere sau mărimea mișcării overnight?'),
     T('AI tools can speed up such a study, but its results must still be checked \\refWang', 'Instrumentele AI pot accelera un astfel de studiu, dar rezultatele lui trebuie verificate \\refWang')) + ql('SFM_ch8_bvb_range'))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: list studies of range-based and realised volatility in emerging and thin markets, with their data and estimators',
       '\\textbf{Literatura}: o listă a studiilor despre volatilitatea de amplitudine și cea realizată pe piețe emergente și puțin lichide, cu datele și estimatorii folosiți'),
     T('\\textbf{Code}: a first draft of the five estimators, rolling forecasts and QLIKE comparisons for all BET stocks',

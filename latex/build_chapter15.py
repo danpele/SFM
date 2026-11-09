@@ -232,7 +232,7 @@ D.frame(T('Too Big to Fail', 'Too big to fail'), items(
     T('Market measures (CoVaR, SRISK) let us rank banks without waiting for a failure', 'Măsurile din datele de piață (CoVaR, SRISK) permit ordonarea băncilor fără a aștepta un faliment')))
 
 TB = '>{\\raggedright\\arraybackslash}'
-D.frame(T('Measures of This Chapter at a Glance', 'Măsurile capitolului, pe scurt'), table(
+D.frame(T('Summary of the Systemic Risk Measures', 'Sinteza măsurilor riscului sistemic'), table(
     TB + 'p{2.4cm}' + TB + 'p{5.6cm}' + TB + 'p{3.4cm}',
     T('\\textbf{Measure}', '\\textbf{Măsura}') + ' & ' + T('\\textbf{Question}', '\\textbf{Întrebarea}') + ' & ' + T('\\textbf{Tool}', '\\textbf{Instrumentul}'),
     [T('correlation, tail dependence', 'corelația, dependența în cozi') + ' & ' + T('do banks and markets crash together?', 'se prăbușesc băncile și piețele împreună?') + ' & ' + T('pseudo-observations, t copula', 'pseudo-observații, copula t'),
@@ -412,7 +412,7 @@ D.frame(T('Tail Dependence of Banks and Markets', 'Dependența în cozi dintre b
       'Interpretare: în peste jumătate dintre cele mai proaste zile ale pieței, și băncile sînt în cele mai proaste zile ale lor; $\\hat\\nu$ mic (circa 3--4) înseamnă prăbușiri simultane puternice, pe care o copulă Gaussiană nu le surprinde deloc'),
     T('$\\lambda(1\\%)$ rests on a few dozen days: an imprecise estimate', '$\\lambda(1\\%)$ se sprijină pe cîteva zeci de zile: o estimare imprecisă')) + ql('SFM_ch15_dependence'), 'footnotesize')
 
-chart(T('Joint Bad Days', 'Zile proaste comune'), 'sfm_ch15_tail_scatter', 'SFM_ch15_dependence', [
+chart(T('Joint Large Losses', 'Pierderi mari simultane'), 'sfm_ch15_tail_scatter', 'SFM_ch15_dependence', [
     T('Lower-left corner of the pseudo-observations; orange: both the bank portfolio and the index in their worst 5\\% of days',
       'Regiunea lower tail a pseudo-observațiilor (ranguri mici pentru ambele serii); portocaliu: atît portofoliul de bănci, cît și indicele sînt în cele mai proaste 5\\% dintre zile'),
     T('US: @{tf.US.both} joint bad days against @{tf.US.exp} under independence (about @{tf.US.ratio} times more); Romania: @{tf.RO.both} against @{tf.RO.exp}',
@@ -469,7 +469,7 @@ D.frame(T('Worked Example: JPMorgan Chase and the S\\&P 500', 'Exemplu rezolvat:
     T('Interpretation: when JPM is in distress, the loss of the index exceeded with probability 1\\% is @{qr.covar_u}\\%, against @{qr.covar_med}\\% on a normal JPM day',
       'Interpretare: cînd JPM este în dificultate, pierderea indicelui depășită cu probabilitatea 1\\% este de @{qr.covar_u}\\%, față de @{qr.covar_med}\\% într-o zi obișnuită pentru JPM')))
 
-chart(T('CoVaR in a Picture', 'CoVaR într-un grafic'), 'sfm_ch15_covar_qr', 'SFM_ch15_covar', [
+chart(T('CoVaR: a Graphical Illustration', 'CoVaR: ilustrare grafică'), 'sfm_ch15_covar_qr', 'SFM_ch15_covar', [
     T('Red line: the 1\\% quantile of the S\\&P 500 given JPM; green line: the median; dashed: the 1\\% quantile and the median of JPM',
       'Linia roșie: cuantila de 1\\% a S\\&P 500 condiționat de JPM; linia verde: mediana; linii întrerupte: cuantila de 1\\% și mediana JPM'),
     T('$\\Delta$CoVaR is the vertical distance between the red dot and the green square on the red line: $@{qr.dcovar}\\%$', '$\\Delta$CoVaR este distanța pe verticală dintre punctul roșu și pătratul verde de pe dreapta roșie: $@{qr.dcovar}\\%$')],
@@ -498,7 +498,7 @@ D.frame(T('Worked Example: Banca Transilvania and the BET', 'Exemplu rezolvat: B
     (T('Interpretation: a distress day of TLV moves the 1\\% quantile of the BET down by about @{cv.TLV.d} percentage points', 'Interpretare: o zi de criză pentru TLV coboară cuantila de 1\\% a BET cu aproximativ @{cv.TLV.d} puncte procentuale'),
      [T('part of this is mechanical: TLV is one of the largest weights in the BET; a cleaner system would be the BET without TLV', 'o parte este mecanică: TLV are una dintre cele mai mari ponderi în BET; un sistem mai curat ar fi BET fără TLV')])))
 
-chart(T('VaR Is Not $\\Delta$CoVaR', 'VaR nu este $\\Delta$CoVaR'), 'sfm_ch15_var_vs_dcovar', 'SFM_ch15_covar', [
+chart(T('VaR and $\\Delta$CoVaR Compared', 'Comparația dintre VaR și $\\Delta$CoVaR'), 'sfm_ch15_var_vs_dcovar', 'SFM_ch15_covar', [
     T('Each point: a bank, its own VaR 1\\% (horizontal) and its $\\Delta$CoVaR 1\\% (vertical); Spearman rank correlation $@{sp.vd}$', 'Fiecare punct: o bancă, propriul VaR 1\\% (orizontal) și $\\Delta$CoVaR 1\\% (vertical); corelația rangurilor Spearman $@{sp.vd}$'),
     T('Interpretation: @{vd.b1} and @{vd.b2} are among the three largest VaR 1\\% and among the three smallest $\\Delta$CoVaR; regulating banks by their own VaR misses systemic risk \\refAB',
       'Interpretare: @{vd.b1} și @{vd.b2} sînt printre primele trei după VaR 1\\% și printre ultimele trei după $\\Delta$CoVaR; reglementarea băncilor după propriul VaR scapă din vedere riscul sistemic \\refAB')],
@@ -711,7 +711,7 @@ D.frame(T('Basel III Capital Buffers', 'Amortizoarele de capital din Basel III')
     ph('bis', T('The BIS tower in Basel', 'Turnul BIS din Basel'), h='0.36\\textheight'),
     wl='0.62', wr='0.34'), 'footnotesize')
 
-D.frame(T('Who Does It: the ESRB and the BNR', 'Autoritățile macroprudențiale: ESRB și BNR'), cols(items(
+D.frame(T('Macroprudential Authorities: the ESRB and the BNR', 'Autoritățile macroprudențiale: ESRB și BNR'), cols(items(
     (T('\\textbf{ESRB} (European Systemic Risk Board), set up in 2010 after the crisis, chaired by the President of the ECB \\refESRB', '\\textbf{ESRB} (European Systemic Risk Board, Comitetul European pentru Risc Sistemic), înființat în 2010, după criză, condus de președintele ECB \\refESRB'),
      [T('monitors systemic risk in the EU, issues warnings and recommendations to national authorities', 'urmărește riscul sistemic în UE și emite avertismente și recomandări către autoritățile naționale')]),
     (T('Romania: \\textbf{CNSM} (Comitetul Național pentru Supravegherea Macroprudențială), with the BNR, the ASF (financial supervisory authority) and the Government \\refCNSM',
@@ -733,7 +733,7 @@ D.frame(T('An Open Question', 'O întrebare deschisă'), items(
     T('Why it is open: two banks, few crises, different trading hours (Bucharest, Frankfurt, New York), thin trading in some years', 'Întrebarea rămîne deschisă: două bănci, puține crize, ore de tranzacționare diferite (București, Frankfurt, New York), lichiditate redusă în unii ani'),
     T('AI tools can speed up such a study; they do not replace checking it \\refWang', 'Instrumentele AI pot accelera un astfel de studiu; nu înlocuiesc verificarea lui \\refWang')))
 
-D.frame(T('How AI Could Help', 'Contribuția posibilă a AI'), items(
+D.frame(T('Possible Uses of AI Tools', 'Utilizări posibile ale instrumentelor AI'), items(
     T('\\textbf{Literature}: a list of studies on systemic risk in Central and Eastern Europe and on parent--subsidiary contagion', '\\textbf{Literatura}: o listă a studiilor despre riscul sistemic în Europa Centrală și de Est și despre contagiunea dintre băncile-mamă și filiale'),
     T('\\textbf{Code}: a first draft of $\\Delta$CoVaR of TLV and BRD with the euro-area bank portfolio as the conditioning variable and state variables', '\\textbf{Cod}: o primă versiune a $\\Delta$CoVaR pentru TLV și BRD, cu portofoliul băncilor din zona euro ca variabilă de condiționare și cu variabile de stare'),
     T('\\textbf{Robustness}: two-day returns (trading hours), weekly data, CoVaR at 5\\%, other state variables', '\\textbf{Robustețe}: randamente pe două zile (orele de tranzacționare), date săptămînale, CoVaR la 5\\%, alte variabile de stare'),

@@ -632,7 +632,7 @@ window.SFM_DATA.quizzes['distributions'] = {
         {
             "correct": 1,
             "en": {
-                "title": "Check the data before the tails",
+                "title": "Data checks before tail analysis",
                 "text": "A stock's adjusted close gives returns of $-15\\%$ and $+20.5\\%$ on two consecutive days, on the ex-date of a bonus share issue. What should you do first?",
                 "options": [
                     "Keep them: they prove heavy tails",
