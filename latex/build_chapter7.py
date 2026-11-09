@@ -274,7 +274,7 @@ D.frame(T('The Grossman--Stiglitz Paradox', 'Paradoxul Grossman--Stiglitz'), ite
       T('the question becomes ``how efficient, where and when?\'\', not ``yes or no?\'\'', 'întrebarea devine „cît de eficientă, unde și cînd?”, nu „da sau nu?”')]),
     T('This view leads to the adaptive markets hypothesis of Section 8', 'Această perspectivă duce la ipoteza piețelor adaptive din secțiunea 8')))
 
-D.frame(T('2013: One Nobel Prize, Two Views', '2013: un Premiu Nobel, două perspective'), cols(
+D.frame(T('The 2013 Nobel Prize: Fama and Shiller', 'Premiul Nobel din 2013: Fama și Shiller'), cols(
     ph('fama', T('Eugene F. Fama: prices are hard to predict over days and weeks', 'Eugene F. Fama: prețurile sînt greu de anticipat pe zile și săptămîni'), h='0.38\\textheight'),
     ph('shiller', T('Robert J. Shiller: prices swing too much compared with fundamentals', 'Robert J. Shiller: prețurile oscilează prea mult față de valorile fundamentale'), h='0.38\\textheight'),
     wl='0.48', wr='0.48') + items(

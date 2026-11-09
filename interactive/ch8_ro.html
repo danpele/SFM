@@ -34,7 +34,7 @@
   early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
   if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
   go();
-})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_ro.js?v=20261101a", "common.js?v=20261108s"], "ch8.js?v=20261101a", []);
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_ro.js?v=20261101a", "common.js?v=20261109m"], "ch8.js?v=20261101a", []);
 </script>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
@@ -58,9 +58,9 @@
 <p class="toc"><a href="#s-def">Volatilitatea: definiție și caracter latent</a> · <a href="#s-hist">Volatilitatea istorică și alegerea ferestrei</a> · <a href="#s-ewma">EWMA și RiskMetrics</a> · <a href="#s-range">Estimatori de amplitudine (range-based)</a> · <a href="#s-rv">Volatilitatea realizată</a> · <a href="#s-cl">Volatility clustering</a> · <a href="#s-lt">Comportamentul pe termen lung, VIX și efectul de levier</a> · <a href="#s-fc">Evaluarea prognozelor de volatilitate</a></p>
 <h2 class="sec" id="s-def">Volatilitatea: definiție și caracter latent</h2>
 <section class="blk" id="returns-bursts">
-  <h3>Patru piețe, același tipar</h3>
+  <h3>Volatility clustering pe patru piețe</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_ro.jpg" alt="Slide-ul 8: Patru piețe, același tipar" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_ro.jpg" alt="Slide-ul 8: Volatility clustering pe patru piețe" loading="lazy"></a>
       <figcaption>Slide-ul 8</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="rb-k">Pragul: |r| peste k abateri standard: <b id="rb-k-v"></b></label><input type="range" id="rb-k" min="3" max="10" step="1" value="5"></div><button class="btn play" id="rb-play" type="button"></button></div><style>
 .tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
@@ -103,9 +103,9 @@
   <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Dacă folosim A = 252 pentru toate cele patru serii, cum se schimbă volatilitățile anualizate?</div><details><summary>Răspuns</summary><p>Bitcoin scade de la 66,6% la 55,3% (−16,9%, factorul √(252/365,3) = 0,831); S&P 500 rămîne 18,0%, DAX 21,8%, iar BET trece de la 23,4% la 23,5%, pentru că frecvența lor reală (251,7; 253,0; 249,9 observații pe an) este aproape de 252. Cu A = 252, Bitcoin ar părea mai puțin riscant cu o șesime.</p></details>
 </section><h2 class="sec" id="s-hist">Volatilitatea istorică și alegerea ferestrei</h2>
 <section class="blk" id="rolling-windows">
-  <h3>S&P 500: trei ferestre, trei răspunsuri</h3>
+  <h3>S&P 500: volatilitatea pe ferestre mobile de 21, 63 și 252 de zile</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_ro.jpg" alt="Slide-ul 13: S&P 500: trei ferestre, trei răspunsuri" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_ro.jpg" alt="Slide-ul 13: S&P 500: volatilitatea pe ferestre mobile de 21, 63 și 252 de zile" loading="lazy"></a>
       <figcaption>Slide-ul 13</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="rw-n">Fereastra scurtă n (zile; 63 și 252 rămîn fixe): <b id="rw-n-v"></b></label><input type="range" id="rw-n" min="5" max="126" step="1" value="21"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><ul class="out" id="rw-out"></ul></div>
   </div>
@@ -216,9 +216,9 @@
   <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> Cu salt overnight, varianța estimării Parkinson este de 8,8 ori mai mică decît a CC, dar raportul MSE este doar 1,8. De ce?</div><details><summary>Răspuns</summary><p>MSE = varianță + deplasare². Cu salt overnight, Parkinson, GK și RS măsoară doar ședința și subestimează varianța cu circa 22%, iar eroarea lor pătratică medie este dominată de această deplasare, deși varianța lor este de 8,8–13,6 ori mai mică decît a CC. Yang–Zhang adaugă σ̂²_O: deplasarea −2% și raportul MSE 9,0.</p></details>
 </section>
 <section class="blk" id="est-table">
-  <h3>Date reale: cinci estimatori, cinci active</h3>
+  <h3>Estimatorii volatilității pentru cinci active</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_ro.jpg" alt="Slide-ul 31: Date reale: cinci estimatori, cinci active" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_ro.jpg" alt="Slide-ul 31: Estimatorii volatilității pentru cinci active" loading="lazy"></a>
       <figcaption>Slide-ul 31</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="es-y">Începutul eșantionului OHLC (anul; 2006 = începutul fiecărei serii): <b id="es-y-v"></b></label><input type="range" id="es-y" min="2006" max="2024" step="2" value="2006"></div><button class="btn play" id="es-play" type="button"></button></div><div class="charts "><div class="chart" id="es-chart"></div></div><p class="xh">Volatilitatea anualizată (%) pe eșantionul OHLC</p><div class="tw" id="es-tab"></div><ul class="out" id="es-out"></ul></div>
   </div>
@@ -283,9 +283,9 @@
   <div class="ask"><span class="ask-tag">Întrebare pentru sală</span> La lagul 1, pentru ce putere d este cea mai mare autocorelația lui |r|<sup>d</sup> a BET?</div><details><summary>Răspuns</summary><p>d = 1,00 (0,414): |r| este mai autocorelat decît r² (0,333), efectul Taylor. Optimul depinde însă de serie și de lag: la lagul 1, d = 1,75 pentru S&P 500 și 0,75 pentru Bitcoin; la lagul 10, 1,25, 0,75 și 0,50. Puterile mari dau o pondere mare cîtorva zile extreme.</p></details>
 </section>
 <section class="blk" id="shuffle">
-  <h3>Amestecarea zilelor: un test pentru volatility clustering</h3>
+  <h3>Un test de permutare pentru volatility clustering</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_ro.jpg" alt="Slide-ul 40: Amestecarea zilelor: un test pentru volatility clustering" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../RO/Cursuri/capitol8_estimatori_volatilitate.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_ro.jpg" alt="Slide-ul 40: Un test de permutare pentru volatility clustering" loading="lazy"></a>
       <figcaption>Slide-ul 40</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="sh-b">Amestecăm blocuri de b zile</label><select id="sh-b"><option value="1" selected>b = 1, zile individuale (curs)</option><option value="5">5</option><option value="21">21</option><option value="63">63</option><option value="252">252</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
   </div>

@@ -187,7 +187,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 D.section('What Is Volatility?', 'Volatilitatea: definiție și caracter latent')
 
-D.frame(T('Volatility Comes in Bursts', 'Volatilitatea apare în episoade'), cols(items(
+D.frame(T('Volatility Clustering and the Uses of Volatility', 'Volatility clustering și utilizările volatilității'), cols(items(
     (T('``Large changes tend to be followed by large changes, of either sign, and small changes tend to be followed by small changes\'\' \\refMandelbrot',
        '„Variațiile mari tind să fie urmate de variații mari, de orice semn, iar variațiile mici, de variații mici” \\refMandelbrot'),
      [T('after the crash of 19 October 1987, markets stayed turbulent for weeks', 'după crahul din 19 octombrie 1987, piețele au rămas agitate săptămîni la rînd')]),
@@ -210,7 +210,7 @@ D.frame(T('Volatility: Definition and Units', 'Volatilitatea: definiție și uni
     (T('Volatility measures dispersion in both directions: a large gain counts as much as a large loss', 'Volatilitatea măsoară dispersia în ambele sensuri: un cîștig mare contează la fel de mult ca o pierdere mare'),
      [T('other measures of uncertainty exist, for example the information entropy of returns \\refPeleA', 'există și alte măsuri ale incertitudinii, de exemplu entropia informațională a randamentelor \\refPeleA')])))
 
-chart(T('Four Markets, One Pattern', 'Patru piețe, același tipar'), 'sfm_ch8_returns_bursts', 'SFM_ch8_returns_volatility', [
+chart(T('Volatility Clustering in Four Markets', 'Volatility clustering pe patru piețe'), 'sfm_ch8_returns_bursts', 'SFM_ch8_returns_volatility', [
     T('Daily log returns in \\%: S\\&P 500 and DAX since 1990, BET since @{b.bet.y0}, Bitcoin since @{b.btc.y0}; last day @{end}',
       'Randamente logaritmice zilnice în \\%: S\\&P 500 și DAX din 1990, BET din @{b.bet.y0}, Bitcoin din @{b.btc.y0}; ultima zi: @{end}'),
     T('Quiet years alternate with turbulent months in all four series', 'Anii liniștiți alternează cu luni agitate în toate cele patru serii')],
@@ -269,7 +269,7 @@ D.frame(T('Historical (Rolling) Volatility', 'Volatilitatea istorică (pe fereas
     (T('Usual windows: $n = 21$ (a month), $63$ (a quarter), $252$ (a year) of trading days', 'Ferestre uzuale: $n = 21$ (o lună), $63$ (un trimestru), $252$ (un an) de zile de tranzacționare'),
      [T('each $\\hat\\sigma_t$ is annualised with $\\sqrt{A}$ and plotted at the last day of its window', 'fiecare $\\hat\\sigma_t$ se anualizează cu $\\sqrt{A}$ și se reprezintă în ultima zi a ferestrei')])))
 
-chart(T('S\\&P 500: Three Windows, Three Answers', 'S\\&P 500: trei ferestre, trei răspunsuri'), 'sfm_ch8_rolling_windows', 'SFM_ch8_returns_volatility', [
+chart(T('S\\&P 500: Rolling Volatility with 21-, 63- and 252-Day Windows', 'S\\&P 500: volatilitatea pe ferestre mobile de 21, 63 și 252 de zile'), 'sfm_ch8_rolling_windows', 'SFM_ch8_returns_volatility', [
     T('Rolling volatility of the S\\&P 500, annualised; dashed line: the whole-sample volatility, @{w.whole}\\%',
       'Volatilitatea S\\&P 500 pe ferestre mobile, anualizată; linia punctată: volatilitatea pe întregul eșantion, @{w.whole}\\%'),
     T('\\textbf{Question for the room}: which window would you trust on the day after a crash?', '\\textbf{Întrebare pentru sală}: în ce fereastră ați avea încredere în ziua de după un crah?')],
@@ -474,7 +474,7 @@ def est_row(k):
             f'@{{es.{k}.night}}\\% & ${{@{{es.{k}.corr}}}}$')
 
 
-D.frame(T('Real Data: Five Estimators, Five Assets', 'Date reale: cinci estimatori, cinci active'), table(
+D.frame(T('Volatility Estimators for Five Assets', 'Estimatorii volatilității pentru cinci active'), table(
     'lrrrrrrrr', T('& \\textbf{Since} & \\textbf{CC} & \\textbf{P} & \\textbf{GK} & \\textbf{RS} & \\textbf{YZ} & \\textbf{Night share} & $\\mathrm{corr}(o, c)$',
                    '& \\textbf{Din} & \\textbf{CC} & \\textbf{P} & \\textbf{GK} & \\textbf{RS} & \\textbf{YZ} & \\textbf{Ponderea nopții} & $\\mathrm{corr}(o, c)$'),
     [est_row(k) for k in OHLC_ASSETS], size='footnotesize') + items(
@@ -574,7 +574,7 @@ D.frame(T('Interpretation: Clustering in Three Markets', 'Interpretarea volatili
     T('Bitcoin: weaker clustering in $r_t^2$ (@{ac.btc.outsq} of 100 lags outside the band): a few huge days dominate the squares',
       'Bitcoin: volatility clustering mai slab în $r_t^2$ (@{ac.btc.outsq} din 100 de laguri în afara benzii): cîteva zile cu variații extreme domină pătratele')) + ql('SFM_ch8_clustering'), 'footnotesize')
 
-chart(T('Is Clustering Real? Shuffle the Days', 'Amestecarea zilelor: un test pentru volatility clustering'), 'sfm_ch8_shuffle', 'SFM_ch8_clustering', [
+chart(T('A Permutation Test for Volatility Clustering', 'Un test de permutare pentru volatility clustering'), 'sfm_ch8_shuffle', 'SFM_ch8_clustering', [
     T('The same S\\&P 500 returns in a random order: same distribution and same kurtosis (excess @{sh.k}), but no clustering',
       'Aceleași randamente S\\&P 500 într-o ordine aleatoare: aceeași distribuție și aceeași boltire (excesul de boltire @{sh.k}), dar fără volatility clustering'),
     T('$\\hat\\rho_1(|r|)$: $@{sh.a1}$ in the actual order, $@{sh.a1s}$ after shuffling; Ljung--Box $Q(10)$ of $r_t^2$: @{sh.lb} against @{sh.lbs}',

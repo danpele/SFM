@@ -184,7 +184,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. MOTIVAȚIE
 # =============================================================================
-D.section('Volatility Comes in Bursts', 'Volatilitatea apare în episoade')
+D.section('Volatility Clustering', 'Volatility clustering')
 
 chart(T('S\\&P 500: Calm Years and Storms', 'S\\&P 500: ani liniștiți și perioade turbulente'), 'sfm_ch9_returns', 'SFM_ch9_volatility_markets', [
     T('Daily log returns $r_t = 100(\\ln P_t - \\ln P_{t-1})$, in \\%, @{ret.n} days to @{end}; the largest fall: $@{ret.min}\\%$ on @{ret.dmin}; the largest rise: $@{ret.max}\\%$ on @{ret.dmax}',

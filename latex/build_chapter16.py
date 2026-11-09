@@ -2,7 +2,7 @@ r"""
 build_chapter16.py -- Capitolul 16 (Recapitulare), EN + RO dintr-o singură sursă
 ================================================================================
 Harta cursului, cîte un slide de recapitulare pentru fiecare capitol 0--15 (formule, fapte empirice, greșeli
-frecvente), trusa de instrumente, examenul (format, criterii, tipuri de probleme, opt probleme rezolvate pas cu pas),
+frecvente), sinteza metodelor, examenul (format, criterii, tipuri de probleme, opt probleme rezolvate pas cu pas),
 proiectul de echipă și secțiunea finală „Contribuția posibilă a AI”.
 Cifrele @{cheie}: faptele empirice vin din fișierele de cifre ale fiecărui capitol (Quantlets/Ch_NN/chN_numbers.json),
 tabelul comun din Quantlets/Ch_16/ch16_numbers.json, iar rezolvările problemelor sînt calculate aici, în Python.
@@ -256,7 +256,7 @@ D.frame(T("Today's Question and Route", 'Întrebarea de azi și traseul'), cols(
        '\\textbf{Întrebarea}: ce spune întregul curs despre randamentele BET, S\\&P 500 și Bitcoin și cum se evaluează aceste cunoștințe la examen?'),
      [T('one chapter that ties Chapters 0--15 together', 'un capitol care leagă Capitolele 0--15')]),
     (T('\\textbf{Route}', '\\textbf{Traseul}'),
-     [T('Part I: the course map, two recap slides per chapter, the toolbox of tests and models', 'Partea I: harta cursului, cîte două slide-uri de recapitulare pentru fiecare capitol, trusa de teste și modele'),
+     [T('Part I: the course map, two recap slides per chapter, an overview of tests and models', 'Partea I: harta cursului, cîte două slide-uri de recapitulare pentru fiecare capitol, sinteza testelor și modelelor'),
       T('Part II: the exam (format, grading, eight solved problems) and the team project', 'Partea a II-a: examenul (format, criterii de notare, opt probleme rezolvate) și proiectul de echipă'),
       T('Part III: how AI could help in your own research', 'Partea a III-a: contribuția posibilă a AI în propria cercetare')])),
     ph('bvb2023', T('The Stock Exchange Palace, Bucharest', 'Palatul Bursei, București'), h='0.40\\textheight'), '0.58', '0.38'))
@@ -334,7 +334,7 @@ D.frame(T('The Main Thread: From Prices to Decisions', 'Firul principal: de la p
     (T('\\textbf{Risk} (Chapter 10): VaR 1\\% and ES 2.5\\%, with a backtest', '\\textbf{Riscul} (Capitolul 10): VaR 1\\% și ES 2,5\\%, cu backtesting'),
      [T('the applications (Chapters 12--15) reuse the same chain: data, distribution, dependence, risk, evaluation', 'aplicațiile (Capitolele 12--15) refolosesc același lanț: date, distribuție, dependență, risc, evaluare')])))
 
-chart(T('Three Series, One Window: S\\&P 500, BET, Bitcoin', 'Trei serii, aceeași fereastră: S\\&P 500, BET, Bitcoin'), 'sfm_ch16_three_series', 'SFM_ch16_course_summary', [
+chart(T('S\\&P 500, BET and Bitcoin over a Common Period', 'S\\&P 500, BET și Bitcoin în aceeași perioadă'), 'sfm_ch16_three_series', 'SFM_ch16_course_summary', [
     T('100 invested on 2 January 2015 (log scale) and the drawdown $P_t/\\max_{s \\le t}P_s - 1$', '100 investiți la 2 ianuarie 2015 (scală logaritmică) și drawdown-ul $P_t/\\max_{s \\le t}P_s - 1$'),
     T('Maximum drawdown: S\\&P 500 $@{s.sp500.mdd}\\%$, BET $@{s.bet.mdd}\\%$ (both in March 2020), Bitcoin $@{s.btc.mdd}\\%$', 'Drawdown maxim: S\\&P 500 $@{s.sp500.mdd}\\%$, BET $@{s.bet.mdd}\\%$ (ambele în martie 2020), Bitcoin $@{s.btc.mdd}\\%$')],
     h='0.55\\textheight')
@@ -368,7 +368,7 @@ D.frame(T('Interpreting the Table', 'Interpretarea tabelului'), items(
      [T('the robust VR test rejects no random walk at 5\\% here; $H$ of $|r_t|$ is far above 0.5', 'testul VR robust nu respinge aici mersul aleator la 5\\%; $H$ pentru $|r_t|$ este mult peste 0,5'),
       T('volatility is persistent: $\\alpha + \\beta$ close to 1 (Bitcoin: an IGARCH, $\\alpha + \\beta = 1$)', 'volatilitatea este persistentă: $\\alpha + \\beta$ aproape de 1 (Bitcoin: un IGARCH, $\\alpha + \\beta = 1$)')])))
 
-chart(T('Stylised Facts in One Chart', 'Faptele stilizate într-un singur grafic'), 'sfm_ch16_stylised', 'SFM_ch16_course_summary', [
+chart(T('Stylised Facts: ACF of Returns and Absolute Returns', 'Faptele stilizate: ACF a randamentelor și a randamentelor absolute'), 'sfm_ch16_stylised', 'SFM_ch16_course_summary', [
     T('Returns: autocorrelations small and mostly inside the band $\\pm 1.96/\\sqrt{T}$; absolute returns: positive at @{s.sp500.apos}, @{s.bet.apos} and @{s.btc.apos} of the 50 lags (BET lag @{s.bet.aminlag}: $@{s.bet.amin}$)', 'Randamentele: autocorelații mici și în mare parte în interiorul benzii $\\pm 1{,}96/\\sqrt{T}$; randamentele absolute: pozitive la @{s.sp500.apos}, @{s.bet.apos} și @{s.btc.apos} din cele 50 de laguri (BET, lagul @{s.bet.aminlag}: $@{s.bet.amin}$)'),
     T('Uncorrelated is not independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)', 'Necorelat nu înseamnă independent: $\\hat\\rho_1(|r|) = @{s.sp500.a1}$ (S\\&P 500), $@{s.bet.a1}$ (BET), $@{s.btc.a1}$ (Bitcoin)')],
     h='0.52\\textheight')
@@ -530,13 +530,13 @@ review(15, ('Systemic Risk', 'risc sistemic'),
 # =============================================================================
 # 6. TRUSA DE INSTRUMENTE
 # =============================================================================
-D.section('The Toolbox', 'Trusa de instrumente')
+D.section('Overview of Methods', 'Sinteza metodelor')
 
 TB = '>{\\raggedright\\arraybackslash}'
 TH = (T('\\textbf{Question}', '\\textbf{Întrebarea}') + ' & ' + T('\\textbf{Tool}', '\\textbf{Instrumentul}') + ' & '
       + T('\\textbf{Decision}', '\\textbf{Decizia}') + ' & \\textbf{' + T('Ch.', 'Cap.') + '}')
 SPEC = TB + 'p{3.6cm}' + TB + 'p{3.4cm}' + TB + 'p{3.4cm}' + 'c'
-D.frame(T('Toolbox (1/2): Returns, Distributions and Tails', 'Trusa de instrumente (1/2): randamente, distribuții și cozi'), table(
+D.frame(T('Overview of Methods (1/2): Returns, Distributions and Tails', 'Sinteza metodelor (1/2): randamente, distribuții și cozi'), table(
     SPEC, TH,
     [T('How good was the investment?', 'Cît de bună a fost investiția?') + ' & CAGR, Sharpe, Sortino, MDD & ' + T('compare with SE and a benchmark', 'comparăm cu SE și un reper') + ' & 1',
      T('Are returns Normal?', 'Sînt randamentele Normale?') + ' & ' + T('JB, QQ plot', 'JB, QQ plot') + ' & ' + T('reject if JB $> 5.99$', 'respingem dacă JB $> 5{,}99$') + ' & 2',
@@ -546,7 +546,7 @@ D.frame(T('Toolbox (1/2): Returns, Distributions and Tails', 'Trusa de instrumen
      T('Is the variance finite?', 'Este varianța finită?') + ' & ' + T('running variance, aggregation of $\\hat\\alpha$', 'varianța cumulativă, agregarea lui $\\hat\\alpha$') + ' & ' + T('stable sample variance: finite', 'varianță de selecție stabilă: finită') + ' & 3'],
     size='footnotesize'))
 
-D.frame(T('Toolbox (2/2): Dependence in Time, Volatility and Risk', 'Trusa de instrumente (2/2): dependență în timp, volatilitate și risc'), table(
+D.frame(T('Overview of Methods (2/2): Dependence in Time, Volatility and Risk', 'Sinteza metodelor (2/2): dependență în timp, volatilitate și risc'), table(
     SPEC, TH,
     [T('Are returns predictable?', 'Sînt randamentele previzibile?') + ' & ' + T('ACF, Ljung--Box, robust VR $Z^*(q)$', 'ACF, Ljung--Box, VR robust $Z^*(q)$') + ' & ' + T('reject if $|Z^*| > 1.96$', 'respingem dacă $|Z^*| > 1{,}96$') + ' & 7',
      T('Is there volatility clustering?', 'Există volatility clustering?') + ' & ' + T('Ljung--Box on $r_t^2$, ARCH-LM', 'Ljung--Box pe $r_t^2$, ARCH-LM') + ' & ' + T('reject: model the variance', 'respingem: modelăm varianța') + ' & 8',
@@ -567,7 +567,7 @@ D.frame(T('Conventions Used Throughout the Course', 'Convențiile folosite în t
     (T('\\textbf{Tests}: state $H_0$, the statistic, its distribution, the critical value and the decision at 5\\%', '\\textbf{Testele}: precizăm $H_0$, statistica, distribuția ei, valoarea critică și decizia la 5\\%'),
      [T('then one sentence on what the decision means for the data', 'apoi o frază despre semnificația deciziei pentru date')])))
 
-D.frame(T('Six Pitfalls Across the Course', 'Șase capcane din tot cursul'), items(
+D.frame(T('Common Methodological Errors', 'Erori metodologice frecvente'), items(
     T('\\textbf{Data}: aligning returns instead of prices; unadjusted prices; weekends dropped from crypto', '\\textbf{Datele}: alinierea randamentelor în loc de prețuri; prețuri neajustate; weekenduri eliminate la cripto'),
     T('\\textbf{Distribution}: the Normal distribution for tail quantiles; excess kurtosis confused with kurtosis', '\\textbf{Distribuția}: distribuția Normală pentru cuantilele din coadă; confuzia dintre boltire și excesul de boltire'),
     T('\\textbf{Inference}: i.i.d. standard errors with volatility clustering; a statistic without its SE', '\\textbf{Inferența}: erori standard i.i.d.\\ în prezența volatility clustering; o statistică fără SE'),
@@ -763,7 +763,7 @@ D.frame(T('Project Grading Criteria', 'Criterii de evaluare a proiectului'), ite
     (T('\\textbf{The question}: clear, answerable with the data, relevant for investors or regulators', '\\textbf{Întrebarea}: clară, cu răspuns posibil pe baza datelor, relevantă pentru investitori sau pentru autorități'),
      [T('``Is the BET today less volatile than in 2008?\'\' is a question; ``an analysis of the BET\'\' is not', '„Este BET azi mai puțin volatil decît în 2008?” este o întrebare; „o analiză a BET” nu este')]),
     (T('\\textbf{The methods and the checks}', '\\textbf{Metodele și verificările}'),
-     [T('the right test for the question (the toolbox); robust standard errors; out-of-sample evaluation', 'testul potrivit pentru întrebare (trusa de instrumente); erori standard robuste; evaluare în afara eșantionului'),
+     [T('the right test for the question (overview of methods); robust standard errors; out-of-sample evaluation', 'testul potrivit pentru întrebare (sinteza metodelor); erori standard robuste; evaluare în afara eșantionului'),
       T('robustness: another window, another series, another estimator', 'robustețe: altă fereastră, altă serie, alt estimator')]),
     (T('\\textbf{The interpretation}: what the numbers mean, and what the data cannot show', '\\textbf{Interpretarea}: ce înseamnă cifrele și ce nu pot arăta datele'),
      [T('\\textbf{Reproducibility}: the repository runs from the saved data to every chart', '\\textbf{Reproductibilitatea}: repository-ul rulează de la datele salvate pînă la fiecare grafic')])))
@@ -790,9 +790,9 @@ D.frame(T('The File AI\\_USE.md', 'Fișierul AI\\_USE.md'), items(
 # =============================================================================
 # 9. CONTRIBUȚIA POSIBILĂ A AI
 # =============================================================================
-D.section('How AI Could Help: Your Own Research', 'Contribuția posibilă a AI: propria cercetare')
+D.section('AI Tools for a Research Project', 'Instrumente AI pentru un proiect de cercetare')
 
-D.frame(T('An Open Question for Your Own Research', 'O întrebare deschisă pentru propria cercetare'), cols(items(
+D.frame(T('An Open Research Question on the BET', 'O întrebare de cercetare deschisă despre BET'), cols(items(
     (T('\\textbf{Has the BET become a ``normal\'\' market?}', '\\textbf{A devenit BET o piață „obișnuită”?}'),
      [T('since @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) and tail index @{f5.a.bet}', 'din @{f7.y0.bet}: VR(5) $= @{f7.vr.bet}$ (momentum) și tail index-ul @{f5.a.bet}'),
       T('since 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, tail index @{s.bet.hill}', 'din 2015: VR(5) $= @{s.bet.vr}$, $Z^* = @{s.bet.zs}$, tail index-ul @{s.bet.hill}')]),
@@ -805,7 +805,7 @@ D.frame(T('An Open Question for Your Own Research', 'O întrebare deschisă pent
 D.frame(T('The Research Loop', 'Bucla de cercetare'), enum(
     T('\\textbf{Question}: one sentence, with a number that would answer it', '\\textbf{Întrebarea}: o frază, cu o cifră care i-ar răspunde'),
     T('\\textbf{Data}: series, source, calendar, window, fixed before looking at the results', '\\textbf{Datele}: seria, sursa, calendarul, fereastra, fixate înainte de a vedea rezultatele'),
-    T('\\textbf{Method}: the test from the toolbox, with its null hypothesis', '\\textbf{Metoda}: testul din trusa de instrumente, cu ipoteza nulă'),
+    T('\\textbf{Method}: the test chosen from the overview of methods, with its null hypothesis', '\\textbf{Metoda}: testul ales din sinteza metodelor, cu ipoteza nulă'),
     T('\\textbf{Checks}: robust SE, Monte Carlo band, subsamples, another estimator', '\\textbf{Verificările}: SE robuste, bandă Monte Carlo, subeșantioane, alt estimator'),
     T('\\textbf{Interpretation}: the answer, its uncertainty, its limits', '\\textbf{Interpretarea}: răspunsul, incertitudinea lui, limitele lui'),
     T('\\textbf{Replication}: a second person runs the code and gets the same numbers', '\\textbf{Replicarea}: o a doua persoană rulează codul și obține aceleași cifre')) + '\n' + items(

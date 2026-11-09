@@ -437,7 +437,7 @@ D.recap(('Data', 'date'), [
 # =============================================================================
 D.section('From Prices to Returns', 'De la prețuri la randamente')
 
-D.frame(T('Why Returns, Not Prices?', 'Randamentele în locul prețurilor'), items(
+D.frame(T('Returns as the Object of Analysis', 'Randamentele în locul prețurilor'), items(
     (T('A price has a unit and a scale; a return does not', 'Un preț are unitate de măsură și scară; un randament nu are'),
      [T('a 1-leu move is large for a 2-leu share and small for a 500-leu share', 'o variație de 1 leu este mare pentru o acțiune de 2 lei și mică pentru una de 500 de lei')]),
     T('Returns of different assets, currencies and periods can be compared directly',
@@ -552,7 +552,7 @@ D.frame(T('Question for the Room: Up 50\\%, Down 50\\%', 'Întrebare pentru sal�
       T('log returns: $\\ln 1.5 + \\ln 0.5 = \\ln 0.75 = @{ex.halflog}\\%$', 'randamente logaritmice: $\\ln 1.5 + \\ln 0.5 = \\ln 0.75 = @{ex.halflog}\\%$'),
       T('a loss of $x$ needs a gain of $x/(1-x)$ to recover: 50\\% needs 100\\%', 'o pierdere $x$ cere un cîștig de $x/(1-x)$ pentru revenire: 50\\% cere 100\\%')])))
 
-D.frame(T('Which Return When?', 'Alegerea tipului de randament'), table(
+D.frame(T('Choosing the Type of Return', 'Alegerea tipului de randament'), table(
     TBL + 'p{4.2cm}' + TBL + 'p{2.6cm}' + TBL + 'p{5.6cm}',
     T('\\textbf{Task}', '\\textbf{Situația}') + ' & ' + T('\\textbf{Use}', '\\textbf{Randament}') + ' & ' + T('\\textbf{Reason}', '\\textbf{Motivul}'),
     [T('Aggregating over time', 'Agregarea în timp') + ' & ' + T('log', 'logaritmic') + ' & ' + T('$r_{t}(k) = r_t + \\dots + r_{t-k+1}$, a sum', '$r_{t}(k) = r_t + \\dots + r_{t-k+1}$, o sumă'),
@@ -787,7 +787,7 @@ D.recap(('Descriptive Statistics', 'statistici descriptive'), [
 # =============================================================================
 D.section('Performance Indicators', 'Indicatori de performanță')
 
-D.frame(T('Why One Number Is Not Enough', 'Limitele unui singur indicator'), items(
+D.frame(T('Limits of a Single Performance Indicator', 'Limitele unui singur indicator'), items(
     T('Return alone rewards risk taking: a leveraged bet can show a high return for years',
       'Randamentul, luat izolat, favorizează asumarea de risc: o poziție cu efect de levier poate avea un randament mare ani la rînd'),
     (T('Three questions an investor asks', 'Trei întrebări pe care le pune un investitor'),

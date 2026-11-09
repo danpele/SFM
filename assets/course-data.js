@@ -234,7 +234,7 @@
             ml: { src: 'charts/sfm_ch13_rv_forecasts.png', en: 'S&P 500 realised volatility and HAR, random forest and MLP forecasts in 2020 and 2025', ro: 'Volatilitatea realizată a S&P 500 și prognozele HAR, random forest și MLP în 2020 și 2025' },
             crypto: { src: 'charts/sfm_ch14_drawdowns.png', en: 'Drawdowns of Bitcoin, Ethereum and the S&P 500 since 2016', ro: 'Drawdown-urile Bitcoin, Ethereum și S&P 500 din 2016' },
             systemic: { src: 'charts/sfm_ch15_dcovar_dynamic.png', en: 'ΔCoVaR 1% through time: JPMorgan Chase, Deutsche Bank and Banca Transilvania', ro: 'ΔCoVaR 1% în timp: JPMorgan Chase, Deutsche Bank și Banca Transilvania' },
-            review: { src: 'charts/sfm_ch16_stylised.png', en: 'Stylised facts in one chart: ACF of returns and absolute returns, S&P 500, BET and Bitcoin', ro: 'Faptele stilizate într-un singur grafic: ACF a randamentelor și a randamentelor absolute, S&P 500, BET și Bitcoin' }
+            review: { src: 'charts/sfm_ch16_stylised.png', en: 'Stylised facts: ACF of returns and absolute returns, S&P 500, BET and Bitcoin', ro: 'Faptele stilizate: ACF a randamentelor și a randamentelor absolute, S&P 500, BET și Bitcoin' }
         },
 
         // ---------------------------------------------------------------
@@ -486,8 +486,8 @@
                 id: 'review', num: 16,
                 title: { en: 'Review', ro: 'Recapitulare' },
                 topics: {
-                    en: ['The course map: from returns and their distribution to tested risk measures; one recap per chapter with key formulas, facts on the BET, the S&P 500 and Bitcoin, and common mistakes', 'The toolbox: which test or model answers which question; the exam format, grading criteria and eight exam-type problems solved step by step', 'The team project, its oral defence and AI_USE.md; how AI could help in your own research'],
-                    ro: ['Harta cursului: de la randamente și distribuția lor la măsuri de risc testate; cîte o recapitulare pentru fiecare capitol, cu formule-cheie, fapte despre BET, S&P 500 și Bitcoin și greșeli frecvente', 'Trusa de instrumente: testul sau modelul potrivit pentru fiecare întrebare; formatul examenului, criteriile de notare și opt probleme de tip examen rezolvate pas cu pas', 'Proiectul de echipă, susținerea orală și AI_USE.md; contribuția posibilă a AI în propria cercetare']
+                    en: ['The course map: from returns and their distribution to tested risk measures; one recap per chapter with key formulas, facts on the BET, the S&P 500 and Bitcoin, and common mistakes', 'Overview of methods: which test or model answers which question; the exam format, grading criteria and eight exam-type problems solved step by step', 'The team project, its oral defence and AI_USE.md; AI tools for a research project'],
+                    ro: ['Harta cursului: de la randamente și distribuția lor la măsuri de risc testate; cîte o recapitulare pentru fiecare capitol, cu formule-cheie, fapte despre BET, S&P 500 și Bitcoin și greșeli frecvente', 'Sinteza metodelor: testul sau modelul potrivit pentru fiecare întrebare; formatul examenului, criteriile de notare și opt probleme de tip examen rezolvate pas cu pas', 'Proiectul de echipă, susținerea orală și AI_USE.md; instrumente AI pentru un proiect de cercetare']
                 },
                 links: {
                     en: [pdf('slides', 'EN/Courses/chapter16_review.pdf'), pdf('seminar', 'EN/Seminars/seminar16_review.pdf'), pdf('seminarExtra', 'exam/practice/exam_problems_en.pdf', { en: 'Exam practice problems', ro: 'Probleme de examen' }),

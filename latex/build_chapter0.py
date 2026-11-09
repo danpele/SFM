@@ -324,7 +324,7 @@ D.recap(('Organisation', 'organizarea'), [
     '⟦AI is allowed, declared in \\texttt{AI\\_USE.md}, and checked at the oral defence||AI este permis, declarat în \\texttt{AI\\_USE.md} și verificat la susținerea orală⟧'])
 
 # ===============================================================================================================
-D.section('Why Financial Markets?', 'Importanța piețelor financiare')
+D.section('The Role of Financial Markets', 'Importanța piețelor financiare')
 # ===============================================================================================================
 D.frame('⟦What a Financial Market Does||Rolul unei piețe financiare⟧', items(
     '⟦\\textbf{Financial market}: a place or a system where buyers and sellers exchange claims on future cash flows (shares, bonds, currencies, contracts, tokens) at prices set by supply and demand||\\textbf{Piață financiară}: un loc sau un sistem în care cumpărătorii și vînzătorii schimbă drepturi asupra unor fluxuri de numerar viitoare (acțiuni, obligațiuni, valute, contracte, tokeni), la prețuri stabilite de cerere și ofertă⟧',
@@ -414,7 +414,7 @@ D.recap(('Why financial markets?', 'importanța piețelor financiare'), [
     '⟦Tomorrow\'s price is a random variable: statistics describes its returns, volatility and risk||Prețul de mîine este o variabilă aleatoare: statistica îi descrie randamentele, volatilitatea și riscul⟧'])
 
 # ===============================================================================================================
-D.section('Markets in 2026: What the Data Show', 'Piețele în 2026, în cifre')
+D.section('Financial Markets in 2026: Descriptive Statistics', 'Piețele financiare în 2026: statistici descriptive')
 # ===============================================================================================================
 DATA_ROWS = [
     'S\\&P 500 & ⟦500 large US firms||500 de firme mari din SUA⟧ & ⟦close||închidere⟧ & ⟦US trading days||zilele de tranzacționare din SUA⟧',
@@ -547,7 +547,7 @@ TIMELINE = r"""\begin{center}
 { \draw[\c, thick] (\y,0) -- (\y,\h); \fill[\c] (\y,0) circle (1.2pt); \node[below, text=black, align=center] at (\y,\h) {\y\\\t}; }
 \end{tikzpicture}
 \end{center}"""
-D.frame('⟦Four Centuries in One Line||Patru secole pe o singură linie⟧', TIMELINE + '\n' + items(
+D.frame('⟦A Timeline of Financial Markets||Cronologia piețelor financiare⟧', TIMELINE + '\n' + items(
     '⟦\\textcolor{Forest}{Green}: exchanges; \\textcolor{IDAred}{red}: bubbles and crashes; \\textcolor{MainBlue}{blue}: statistical models of prices||\\textcolor{Forest}{Verde}: burse; \\textcolor{IDAred}{roșu}: bule și crahuri; \\textcolor{MainBlue}{albastru}: modele statistice ale prețurilor⟧',
     '⟦Exchanges, crashes and models grew together: each crisis brought new data and new questions||Bursele, crahurile și modelele au evoluat împreună: fiecare criză a adus date noi și întrebări noi⟧'),
     size='footnotesize')

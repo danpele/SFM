@@ -413,7 +413,7 @@ D.frame(T('Data Before Models: Two Bad Days', 'Datele înaintea modelelor: două
 # =============================================================================
 # 2. VEROSIMILITATEA MAXIMĂ
 # =============================================================================
-D.section('Maximum Likelihood, Recalled', 'Recapitulare: metoda verosimilității maxime')
+D.section('Review of Maximum Likelihood Estimation', 'Recapitulare: metoda verosimilității maxime')
 
 D.frame(T('Likelihood and Log-Likelihood', 'Verosimilitate și log-verosimilitate'), items(
     (T('Data $r_1, \\dots, r_n$, assumed i.i.d.\\ (independent, identically distributed) with density $f(r; \\theta)$', 'Datele $r_1, \\dots, r_n$, presupuse i.i.d.\\ (independente și identic distribuite), cu densitatea $f(r; \\theta)$'),
@@ -470,7 +470,7 @@ chart(T('How Precise Is $\\hat\\nu$? The Profile Log-Likelihood', 'Precizia lui 
     T('95\\% interval: all $\\nu$ with $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, here $[@{pr.lo}, @{pr.hi}]$ around $\\hat\\nu = @{pr.nu}$: the tails are pinned down well',
       'Intervalul de încredere de 95\\%: toate valorile $\\nu$ pentru care $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, aici $[@{pr.lo}; @{pr.hi}]$ în jurul lui $\\hat\\nu = @{pr.nu}$: grosimea cozilor este estimată precis')], h='0.56\\textheight')
 
-D.frame(T('Pitfalls of Numerical ML', 'Capcanele ML numerice'), items(
+D.frame(T('Numerical Problems in Maximum Likelihood', 'Probleme numerice în estimarea ML'), items(
     (T('\\textbf{Local maxima}: the optimiser can stop on a hill that is not the highest', '\\textbf{Maxime locale}: optimizatorul se poate opri pe un deal care nu este cel mai înalt'),
      [T('remedy: several starting values (the mixtures in this chapter use 4 to 12 starts)', 'remediu: mai multe valori inițiale (amestecurile din acest capitol folosesc între 4 și 12 puncte de pornire)')]),
     (T('\\textbf{Boundaries}: $\\nu \\to 2$, a mixture weight $\\to 0$, $|\\lambda| \\to 1$', '\\textbf{Frontiere}: $\\nu \\to 2$, o pondere a amestecului $\\to 0$, $|\\lambda| \\to 1$'),
@@ -746,7 +746,7 @@ chart(T('QQ Plots for BET, Bitcoin and Banca Transilvania', 'Grafice QQ pentru B
 # =============================================================================
 # 7. COZILE: VaR 1%
 # =============================================================================
-D.section('The Purpose Decides: Which Model Gets VaR 1\\% Right?', 'Scopul decide: ce model estimează corect VaR 1\\%?')
+D.section('Comparing the Models on VaR 1\\%', 'Compararea modelelor după VaR 1\\%')
 
 D.frame(T('VaR and ES', 'VaR și ES'), items(
     (T('Return $X$, level $\\alpha$ (here $\\alpha = 1\\%$ or $2.5\\%$, the probability of the tail)', 'Randamentul $X$, nivelul $\\alpha$ (aici $\\alpha = 1\\%$ sau $2{,}5\\%$, probabilitatea cozii)'),
@@ -851,7 +851,7 @@ chart(T('Overfitting: Normal Mixtures with 1 to 6 Components', 'Supraajustare: a
     T('In sample (blue) the fit improves with every component; out of sample (red) it peaks at $c = @{of.best_out}$ and then declines',
       'În eșantion (albastru), calitatea ajustării crește cu fiecare componentă; în afara eșantionului (roșu) atinge maximul la $c = @{of.best_out}$ și apoi scade')], h='0.52\\textheight')
 
-D.frame(T('Which Criterion Warned Us?', 'Criteriul care a semnalat supraajustarea'), items(
+D.frame(T('Information Criteria and Overfitting', 'Criteriile informaționale și supraajustarea'), items(
     (T('Mean log-likelihood per day, in sample $\\to$ out of sample', 'Log-verosimilitatea medie pe zi, în eșantion $\\to$ în afara eșantionului'),
      [T('$c = 1$ (Normal): $@{of.1.in} \\to @{of.1.out}$; $c = 3$: $@{of.3.in} \\to @{of.3.out}$; $c = 6$ (@{of.6.k} parameters): $@{of.6.in} \\to @{of.6.out}$',
         '$c = 1$ (Normală): $@{of.1.in} \\to @{of.1.out}$; $c = 3$: $@{of.3.in} \\to @{of.3.out}$; $c = 6$ (@{of.6.k} parametri): $@{of.6.in} \\to @{of.6.out}$')]),

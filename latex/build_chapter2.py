@@ -841,7 +841,7 @@ chart(T('Facts 3 and 4: ACF of Returns and of Absolute Returns', 'Faptele 3 și 
       'Dreapta: randamentele absolute; toate pozitive, cu scădere lentă: S\\&P 500 $@{acf.sp500.a1}$ la lagul 1, $@{acf.sp500.a10}$ la lagul 10, $@{acf.sp500.a50}$ la lagul 50')],
       h='0.60\\textheight')
 
-D.frame(T('Fact 3: Small but Not Always Zero', 'Faptul 3: autocorelație mică, dar nu întotdeauna nulă'), items(
+D.frame(T('Fact 3: Weak Autocorrelation of Returns', 'Faptul 3: autocorelația slabă a randamentelor'), items(
     (T('Ljung--Box $Q(10)$ for returns: S\\&P 500 @{acf.sp500.lbr}, BET @{acf.bet.lbr}, Bitcoin @{acf.btc.lbr}; critical value @{lb.crit}',
        'Ljung--Box $Q(10)$ pentru randamente: S\\&P 500 @{acf.sp500.lbr}, BET @{acf.bet.lbr}, Bitcoin @{acf.btc.lbr}; valoarea critică @{lb.crit}'),
      [T('formally, some autocorrelation is significant', 'formal, unele autocorelații sînt semnificative')]),
@@ -904,7 +904,7 @@ V.put('ft.lev.weak.lo', min(FT[k]['lev5'] for k in WEAK5), 2)
 V.put('ft.lev.weak.hi', max(FT[k]['lev5'] for k in WEAK5), 2)
 assert all(FT[k]['lev5'] > -0.045 for k in WEAK5) and all(FT[k]['lev5'] < -0.045 for k in ASSETS if k not in WEAK5)
 assert FT['snn']['gl_ratio'] < 1 and all(FT[k]['gl_ratio'] > 1 for k in ASSETS if k != 'snn')
-D.frame(T('Six Facts, Eight Series', 'Șase fapte, opt serii'), table(
+D.frame(T('The Six Stylised Facts in Eight Series', 'Cele șase fapte stilizate în opt serii'), table(
     'lrrrrrr', T('Series', 'Seria') + ' & ' + T('Exc. kurt.', 'Exces bolt.') + ' & ' + T('Exc. kurt., 21 days', 'Exces bolt., 21 zile') + ' & $\\hat\\rho_r(1)$ & $\\hat\\rho_{|r|}(10)$ & $\\bar L(1..5)$ & $|q_{0.01}|/q_{0.99}$',
     [f'{NAMES[k]} & $@{{m.{k}.exkurt}}$ & $@{{ft.{k}.km}}$ & $@{{ft.{k}.r1}}$ & $@{{ft.{k}.a10}}$ & $@{{ft.{k}.lev}}$ & $@{{ft.{k}.gl}}$' for k in ASSETS],
     size='scriptsize') + items(

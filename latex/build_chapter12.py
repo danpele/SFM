@@ -283,7 +283,7 @@ D.frame(T('The South German Credit Data', 'Datele South German Credit'), items(
       T('the cost of accepting a bad credit is set to five times the cost of rejecting a good one', 'costul acceptării unui credit neperformant este stabilit la de cinci ori costul respingerii unuia performant')]),
     T('Licence CC BY 4.0; saved once in the course repository (data/credit)', 'Licența CC BY 4.0; salvate o singură dată în repository-ul cursului (data/credit)')))
 
-D.frame(T('A Lesson in Data Checking', 'O lecție despre verificarea datelor'), items(
+D.frame(T('Coding Errors in the German Credit Data', 'Erori de codificare în datele German Credit'), items(
     (T('The data were used for decades in the UCI version ``Statlog (German Credit)\'\', with code labels that were wrong \\refGroemping',
        'Datele au fost folosite zeci de ani în versiunea UCI „Statlog (German Credit)”, cu etichete greșite ale codurilor \\refGroemping'),
      [T('in that version, ``no checking account\'\' was the safest group: @{st4.n} credits, @{st4.r}\\% bad',

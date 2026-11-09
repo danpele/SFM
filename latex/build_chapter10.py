@@ -363,7 +363,7 @@ D.frame(T('Counterexample: Two Bonds, Step by Step', 'Contraexemplu: două oblig
      [T('one bond: $(4\\% \\times 100 + 1\\% \\times 0)/5\\% = @{bd.es1}$', 'o obligațiune: $(4\\% \\times 100 + 1\\% \\times 0)/5\\% = @{bd.es1}$'),
       T('both: $(@{bd.pboth}\\% \\times 200 + (5 - @{bd.pboth})\\% \\times 100)/5\\% = @{bd.es2} \\le @{bd.es1} + @{bd.es1}$: subadditive', 'ambele: $(@{bd.pboth}\\% \\times 200 + (5 - @{bd.pboth})\\% \\times 100)/5\\% = @{bd.es2} \\le @{bd.es1} + @{bd.es1}$: subaditiv')])), 'footnotesize')
 
-D.frame(T('ES Is Coherent; VaR Only Sometimes', 'ES este coerent; VaR doar uneori'), items(
+D.frame(T('Coherence of ES and VaR', 'Coerența măsurilor ES și VaR'), items(
     (T('\\textbf{ES} satisfies all four axioms \\refAT', '\\textbf{ES} satisface toate cele patru axiome \\refAT'),
      [T('reason: ES is an average of quantiles over the tail, and averaging respects sums', 'motivul: ES este o medie a cuantilelor pe coadă, iar media respectă sumele')]),
     (T('\\textbf{VaR} satisfies the first three; subadditivity can fail', '\\textbf{VaR} le satisface pe primele trei; subaditivitatea poate să nu fie îndeplinită'),
@@ -543,7 +543,7 @@ D.frame(T('Stress Periods: Exceptions in 2008 and 2020', 'Perioade de stres: dep
     T('Interpretation: no method is perfect in a crisis, but the conditional ones fail far less: the volatility forecast matters more than the tail shape',
       'Interpretare: nicio metodă nu este perfectă într-o criză, dar cele condiționate greșesc mult mai rar: prognoza volatilității contează mai mult decît forma cozii')) + ql('SFM_ch10_backtesting'), 'footnotesize')
 
-D.frame(T('Which Method When?', 'Alegerea metodei'), table(
+D.frame(T('Choosing a VaR Method', 'Alegerea metodei'), table(
     TB + 'p{3.6cm}' + TB + 'p{3.3cm}' + TB + 'p{4.0cm}',
     T('\\textbf{Situation}', '\\textbf{Situația}') + ' & ' + T('\\textbf{Method}', '\\textbf{Metoda}') + ' & ' + T('\\textbf{Reason}', '\\textbf{Motivul}'),
     [T('daily VaR of a liquid position', 'VaR zilnic pentru o poziție lichidă') + ' & GARCH-t, FHS & ' + T('follow the volatility; FHS keeps the empirical tail', 'urmăresc volatilitatea; FHS păstrează coada empirică'),

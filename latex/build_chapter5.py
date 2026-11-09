@@ -680,7 +680,7 @@ def wrow(k):
     return f'{NAMES[k]} & ' + T(f'@{{c.{k}.date}}', f'@{{c.{k}.date}}') + f' & ${{@{{c.{k}.ret}}}}$ & $10^{{@{{c.{k}.ly}}}}$ & $@{{w.{k}}}$'
 
 
-D.frame(T('Back to the Crashes: How Often?', 'Înapoi la crahuri: cît de des?'), table(
+D.frame(T('Waiting Times of the Worst Days: Normal Law and EVT', 'Timpii de așteptare ai celor mai mari pierderi zilnice: distribuția Normală și EVT'), table(
     'llrrr', T('& & & \\multicolumn{2}{c}{once in (years)} \\\\ & day & loss (\\%) & Normal law & EVT', '& & & \\multicolumn{2}{c}{o dată la (ani)} \\\\ & ziua & pierdere (\\%) & distribuția Normală & EVT'),
     [wrow(k) for k in ASSETS] + [T('S\\&P 500, Black Monday', 'S\\&P 500, Lunea Neagră') + T(' & 19 October 1987', ' & 19 octombrie 1987') + ' & $@{c87.lr}$ & $10^{@{c87.ly}}$ & $@{w.1987}$'],
     size='footnotesize') + items(

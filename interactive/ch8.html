@@ -34,7 +34,7 @@
   early.forEach(src => add(src, 0, r => { ok = ok && r; left--; go(); }, false));
   if (!parsed) document.addEventListener('DOMContentLoaded', () => { parsed = true; go(); });
   go();
-})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_en.js?v=20261101a", "common.js?v=20261108s"], "ch8.js?v=20261101a", []);
+})(["https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js", "ch8_data.js?v=20261101a", "ch8_text_en.js?v=20261101a", "common.js?v=20261109m"], "ch8.js?v=20261101a", []);
 </script>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'select', 'option', 'button', 'label'] }, startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.setAttribute('data-mj', 'done')) } };</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
@@ -58,9 +58,9 @@
 <p class="toc"><a href="#s-def">What Is Volatility?</a> · <a href="#s-hist">Historical Volatility and the Choice of the Window</a> · <a href="#s-ewma">EWMA and RiskMetrics</a> · <a href="#s-range">Range-Based Estimators</a> · <a href="#s-rv">Realised Volatility</a> · <a href="#s-cl">Volatility Clustering</a> · <a href="#s-lt">Long-Run Behaviour, the VIX and the Leverage Effect</a> · <a href="#s-fc">Evaluating Volatility Forecasts</a></p>
 <h2 class="sec" id="s-def">What Is Volatility?</h2>
 <section class="blk" id="returns-bursts">
-  <h3>Four Markets, One Pattern</h3>
+  <h3>Volatility Clustering in Four Markets</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_en.jpg" alt="Slide 8: Four Markets, One Pattern" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=9" target="_blank" rel="noopener"><img src="slides/sfm_ch8_returns_bursts_en.jpg" alt="Slide 8: Volatility Clustering in Four Markets" loading="lazy"></a>
       <figcaption>Slide 8</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="rb-k">Threshold: |r| above k standard deviations: <b id="rb-k-v"></b></label><input type="range" id="rb-k" min="3" max="10" step="1" value="5"></div><button class="btn play" id="rb-play" type="button"></button></div><style>
 .tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
@@ -103,9 +103,9 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> If we use A = 252 for all four series, how do the annualised volatilities change?</div><details><summary>Answer</summary><p>Bitcoin falls from 66.6% to 55.3% (−16.9%, the factor √(252/365.3) = 0.831); the S&P 500 stays at 18.0%, the DAX at 21.8%, and the BET moves from 23.4% to 23.5%, because their actual frequencies (251.7; 253.0; 249.9 observations a year) are close to 252. With A = 252, Bitcoin would look one sixth less risky.</p></details>
 </section><h2 class="sec" id="s-hist">Historical Volatility and the Choice of the Window</h2>
 <section class="blk" id="rolling-windows">
-  <h3>S&P 500: Three Windows, Three Answers</h3>
+  <h3>S&P 500: Rolling Volatility with 21-, 63- and 252-Day Windows</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_en.jpg" alt="Slide 13: S&P 500: Three Windows, Three Answers" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=14" target="_blank" rel="noopener"><img src="slides/sfm_ch8_rolling_windows_en.jpg" alt="Slide 13: S&P 500: Rolling Volatility with 21-, 63- and 252-Day Windows" loading="lazy"></a>
       <figcaption>Slide 13</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="rw-n">Short window n (days; 63 and 252 stay fixed): <b id="rw-n-v"></b></label><input type="range" id="rw-n" min="5" max="126" step="1" value="21"></div><button class="btn play" id="rw-play" type="button"></button></div><div class="charts "><div class="chart" id="rw-chart"></div></div><ul class="out" id="rw-out"></ul></div>
   </div>
@@ -216,9 +216,9 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> With an overnight jump, the variance of the Parkinson estimate is 8.8 times smaller than that of CC, but its MSE ratio is only 1.8. Why?</div><details><summary>Answer</summary><p>MSE = variance + bias². With an overnight jump, Parkinson, GK and RS measure only the session and underestimate the variance by about 22%; their mean squared error is dominated by this bias, although their variance is 8.8–13.6 times smaller than that of CC. Yang–Zhang adds σ̂²_O: bias −2% and MSE ratio 9.0.</p></details>
 </section>
 <section class="blk" id="est-table">
-  <h3>Real Data: Five Estimators, Five Assets</h3>
+  <h3>Volatility Estimators for Five Assets</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_en.jpg" alt="Slide 31: Real Data: Five Estimators, Five Assets" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=32" target="_blank" rel="noopener"><img src="slides/ch8_est-table_en.jpg" alt="Slide 31: Volatility Estimators for Five Assets" loading="lazy"></a>
       <figcaption>Slide 31</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="es-y">Start of the OHLC sample (year; 2006 = start of each series): <b id="es-y-v"></b></label><input type="range" id="es-y" min="2006" max="2024" step="2" value="2006"></div><button class="btn play" id="es-play" type="button"></button></div><div class="charts "><div class="chart" id="es-chart"></div></div><p class="xh">Annualised volatility (%) on the OHLC sample</p><div class="tw" id="es-tab"></div><ul class="out" id="es-out"></ul></div>
   </div>
@@ -283,9 +283,9 @@
   <div class="ask"><span class="ask-tag">Question for the room</span> At lag 1, for which power d is the autocorrelation of |r|<sup>d</sup> of the BET largest?</div><details><summary>Answer</summary><p>d = 1.00 (0.414): |r| is more autocorrelated than r² (0.333), the Taylor effect. The optimum depends on the series and the lag, though: at lag 1, d = 1.75 for the S&P 500 and 0.75 for Bitcoin; at lag 10, 1.25, 0.75 and 0.50. Large powers give a large weight to a few extreme days.</p></details>
 </section>
 <section class="blk" id="shuffle">
-  <h3>Is Clustering Real? Shuffle the Days</h3>
+  <h3>A Permutation Test for Volatility Clustering</h3>
   <div class="pair">
-    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_en.jpg" alt="Slide 40: Is Clustering Real? Shuffle the Days" loading="lazy"></a>
+    <figure class="slide"><a href="../pdfjs/web/viewer.html?file=../../EN/Courses/chapter8_volatility_estimators.pdf#page=41" target="_blank" rel="noopener"><img src="slides/sfm_ch8_shuffle_en.jpg" alt="Slide 40: A Permutation Test for Volatility Clustering" loading="lazy"></a>
       <figcaption>Slide 40</figcaption></figure>
     <div class="live"><div class="ctls"><div class="ctl"><label for="sh-b">We shuffle blocks of b days</label><select id="sh-b"><option value="1" selected>b = 1, single days (lecture)</option><option value="5">5</option><option value="21">21</option><option value="63">63</option><option value="252">252</option></select></div><button class="btn play" id="sh-play" type="button"></button></div><div class="charts "><div class="chart" id="sh-chart"></div></div><ul class="out" id="sh-out"></ul></div>
   </div>

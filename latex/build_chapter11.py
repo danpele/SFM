@@ -549,7 +549,7 @@ D.frame(T('Interpretation: S\\&P 500', 'Interpretarea rezultatelor: S\\&P 500'),
 # =============================================================================
 D.section('Spurious Long Memory', 'Memorie lungă aparentă')
 
-D.frame(T('Breaks Look Like Memory', 'Rupturile structurale par memorie'), items(
+D.frame(T('Structural Breaks and Spurious Long Memory', 'Rupturile structurale și memoria lungă aparentă'), items(
     (T('A series with a few shifts in the mean has a sample ACF that decays slowly, like long memory', 'O serie cu cîteva schimbări ale mediei are o ACF de selecție care scade lent, ca la memoria lungă'),
      [T('two regimes with means $\\mu_1 \\neq \\mu_2$: every pair of observations from the same regime shares the deviation $\\mu_i - \\bar x$', 'două regimuri cu mediile $\\mu_1 \\neq \\mu_2$: orice pereche de observații din același regim are în comun abaterea $\\mu_i - \\bar x$')]),
     (T('Landmark results', 'Rezultate de referință'),
@@ -558,7 +558,7 @@ D.frame(T('Breaks Look Like Memory', 'Rupturile structurale par memorie'), items
       T('\\refLS: long memory in squared S\\&P 500 returns survives the checks; in returns, it is not found', '\\refLS: memoria lungă a pătratelor randamentelor S\\&P 500 rezistă verificărilor; în randamente nu apare')]),
     T('Tests of true against spurious long memory: \\refFHH, 14.4.3', 'Teste ale memoriei lungi reale față de cea aparentă: \\refFHH, 14.4.3')))
 
-D.frame(T('The Nile in 1898: a Break, Not Only Memory', 'Nilul în 1898: o ruptură, nu doar memorie'), cols(items(
+D.frame(T('The Nile Series: the Structural Break of 1898', 'Seria Nilului: ruptura structurală din 1898'), cols(items(
     T('\\refCobb: the annual flow of the Nile at Aswan, 1871--1970, changes its mean after 1898', '\\refCobb: debitul anual al Nilului la Aswan, 1871--1970, își schimbă media după 1898'),
     T('Mean flow: @{nile.m0} before, @{nile.m1} after (in $10^8$ m$^3$), a drop of @{nile.drop}\\%', 'Debitul mediu: @{nile.m0} înainte, @{nile.m1} după (în $10^8$ m$^3$), o scădere de @{nile.drop}\\%'),
     T('The change coincides with the building of the Aswan Low Dam (1898--1902)', 'Schimbarea coincide cu construcția barajului Aswan Low Dam (1898--1902)'),
@@ -683,7 +683,7 @@ D.frame(T('Case Study: Is Bitcoin Efficient?', 'Studiu de caz: este Bitcoin efic
     ph('btc', T('A Bitcoin cash machine in Prague (2016)', 'Un bancomat Bitcoin la Praga (2016)'), h='0.40\\textheight'),
     wl='0.60', wr='0.36'), 'footnotesize')
 
-D.frame(T('Pitfalls of Rolling Estimates', 'Capcanele estimărilor pe ferestre mobile'), items(
+D.frame(T('Limitations of Rolling Estimates', 'Limitele estimărilor pe ferestre mobile'), items(
     (T('\\textbf{Multiple testing}: @{rl.sp500.nw} windows at 5\\% each give about @{rl.sp500.fa} windows outside the band by chance', '\\textbf{Testarea multiplă}: @{rl.sp500.nw} ferestre, fiecare la 5\\%, dau din întîmplare circa @{rl.sp500.fa} ferestre în afara benzii'),
      [T('look for long runs outside the band, not for isolated windows', 'căutăm perioade lungi în afara benzii, nu ferestre izolate')]),
     T('\\textbf{Overlap}: consecutive windows share 979 of their 1000 observations; the path is smooth by construction', '\\textbf{Suprapunerea}: ferestrele consecutive au în comun 979 dintre cele 1000 de observații; traiectoria este netedă prin construcție'),

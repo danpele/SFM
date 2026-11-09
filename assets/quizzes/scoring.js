@@ -185,7 +185,7 @@ window.SFM_DATA.quizzes['scoring'] = {
                 "incorrectExplanation": "The counts and rates did not change; only the meaning of the codes was corrected."
             },
             "ro": {
-                "title": "O lecție despre verificarea datelor",
+                "title": "Erori de codificare în datele German Credit",
                 "text": "În datele UCI Statlog German credit, larg folosite, „fără cont curent” era grupul cel mai sigur (11,7% neperformante). Ce au arătat datele corectate South German Credit?",
                 "options": [
                     "Eticheta era greșită: acele 394 de credite au un sold de cel puțin 200 DM sau un cont de salariu; „fără cont curent” este grupul cel mai riscant (49,3% neperformante)",

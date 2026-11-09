@@ -684,7 +684,7 @@ D.frame(T('VaR 1\\% and ES 2.5\\% in Dollars', 'VaR 1\\% și ES 2,5\\% în dolar
     T('Horizon: crypto trades every day, so a 10-day VaR covers 10 calendar days, not two trading weeks', 'Orizontul: activele cripto se tranzacționează zilnic, deci un VaR pe 10 zile acoperă 10 zile calendaristice, nu două săptămîni de tranzacționare')))
 
 RK = ['btc', 'eth', 'sp500']
-D.frame(T('Four Methods, Three Assets', 'Patru metode, trei active'), table(
+D.frame(T('VaR 1\\% and ES 2.5\\% under Four Methods', 'VaR 1\\% și ES 2,5\\% prin patru metode'), table(
     'lrrrrrrrr', T('& \\multicolumn{4}{c}{VaR 1\\% (\\%)} & \\multicolumn{4}{c}{ES 2.5\\% (\\%)} \\\\ & HS & Normal & t & GARCH-t & HS & Normal & t & GARCH-t',
                    '& \\multicolumn{4}{c}{VaR 1\\% (\\%)} & \\multicolumn{4}{c}{ES 2,5\\% (\\%)} \\\\ & HS & Normală & t & GARCH-t & HS & Normală & t & GARCH-t'),
     [f'{NM[k]} & ' + ' & '.join(f'$@{{v.{k}.{c}}}$' for c in ['hs_v', 'n_v', 't_v', 'g_v', 'hs_e', 'n_e', 't_e', 'g_e']) for k in RK],
