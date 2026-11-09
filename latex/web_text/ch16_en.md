@@ -36,7 +36,7 @@ Top: the value of 100 units invested at the start of 2015 in the S&P 500 (dark b
 - Overview of Methods | Which test or model answers which question, the course conventions and common methodological errors.
 - The Exam | Format, content, grading criteria and eight solved problems.
 - The Team Project | Deliverables, criteria, the oral defence and the file AI_USE.md.
-- AI Tools for a Research Project | An open question about the BET, the research loop, AI's help and the checks, a project idea.
+- AI Tools for a Research Project | An open question about the BET, the steps of a research project, AI's help and the checks, a project idea.
 - Summary | Key takeaways and self-assessment questions.
 
 # The Course Map
@@ -717,7 +717,7 @@ The team project answers a single clear question, with the right methods and rob
 
 # AI Tools for a Research Project
 
-Every chapter of the course ended with an open question to which the chapter's methods can contribute. This chapter's question brings several tools together: has the statistical behaviour of the Romanian market changed over time? The section describes the research loop, what an AI assistant can do, what must be checked and a project idea.
+Every chapter of the course ended with an open question to which the chapter's methods can contribute. This chapter's question brings several tools together: has the statistical behaviour of the Romanian market changed over time? The section describes the steps of a research project, what an AI assistant can do, what must be checked and a project idea.
 
 ## An Open Research Question on the BET {h=de55203a}
 
@@ -727,9 +727,9 @@ The question remains open for several reasons. Momentum is weakening, but the ta
 
 There is also a more general reason. @MenkveldEtAl2024 gave the same data and the same question to many teams of researchers and found that the results differ widely from team to team; the variation comes from the choices of method, not from the data, and they called it the non-standard error. For the question about the BET, the choice of window, of $k$ or of estimator can change the answer.
 
-## The Research Loop {h=5600b734}
+## Steps of a Research Project {h=7fa20133}
 
-The loop has six steps. The question is stated in one sentence, together with the number that would answer it. The data, that is the series, the source, the calendar and the window, are fixed before seeing the results, so that the choices are not influenced by them. The method is the right test from the toolbox, with its null hypothesis stated.
+The project has six steps. The question is stated in one sentence, together with the number that would answer it. The data, that is the series, the source, the calendar and the window, are fixed before seeing the results, so that the choices are not influenced by them. The method is the right test from the toolbox, with its null hypothesis stated.
 
 Next come the checks: robust standard errors, Monte Carlo bands, subsamples and a second estimator. The interpretation gives the answer, its uncertainty and its limits. The last step is replication: a second person runs the code and gets the same numbers.
 
@@ -761,7 +761,7 @@ The deliverable is a four-panel chart, a table and a paragraph on what the data 
 
 ## @end
 
-Whether the BET has become an "ordinary" market remains an open question: momentum has weakened, but the tails have not thinned, and the results depend on the choices of method. The research loop fixes the data before the results, requires robustness checks and replication, and an AI assistant can speed up every step without replacing any of the checks.
+Whether the BET has become an "ordinary" market remains an open question: momentum has weakened, but the tails have not thinned, and the results depend on the choices of method. The steps of a research project fix the data before the results, require robustness checks and replication, and an AI assistant can speed up every step without replacing any of the checks.
 
 # Summary
 
@@ -775,7 +775,7 @@ Risk is measured by VaR 1% $= -q_{1\%}$ and ES 2.5%, and every risk model is fol
 
 The last idea concerns how an analysis is judged. A calculation is complete when it has the method, the result and the interpretation; a project is good when it asks a clear question and gives it an honest answer, with its limits.
 
-## Check Yourself {h=f9497678}
+## Self-Assessment {h=6e7e5176}
 
 First question: the Ljung–Box test does not reject on $r_t$ but strongly rejects on $r_t^2$. What does this mean? Returns are uncorrelated but not independent: their variance has structure in time (volatility clustering), so the variance must be modelled, for example with GARCH.
 

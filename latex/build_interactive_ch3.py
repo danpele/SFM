@@ -36,10 +36,10 @@ PFX = {'stability-qq': 'sq', 'gclt': 'gc', 'density-alpha': 'da', 'density-beta'
 SECTIONS = {
  'ro': dict(stab='Stabilitatea la adunare', gclt='Teorema limită centrală generalizată', par='Parametrii și funcția caracteristică',
             tail='Cozi și momente', sim='Simulare', est='Estimare', real='Estimarea pe randamente reale',
-            crit='Critica: varianță finită sau infinită?'),
+            crit='Critica modelului stabil: varianță finită sau infinită'),
  'en': dict(stab='Stability under Summation', gclt='The Generalised Central Limit Theorem', par='Parameters and the Characteristic Function',
             tail='Tails and Moments', sim='Simulation', est='Estimation', real='Fitting Real Returns',
-            crit='The Critique: Finite or Infinite Variance?'),
+            crit='Critique of the Stable Model: Finite or Infinite Variance'),
 }
 
 ASSETS = [('bet', 'BET'), ('sp500', 'S&P 500'), ('dax', 'DAX'), ('btc', 'Bitcoin')]
@@ -349,7 +349,7 @@ XBLOCKS = [('horizons', 13, 'stab', 'stability-qq', 'Horizons and Diversificatio
            ('fits-table', 50, 'real', 'estimators-mc', 'Stable Fits of Daily', 'Legi stabile estimate'),
            ('loss-count', 58, 'real', 'tails-real-2', 'Counting Large Losses', 'Numărarea pierderilor'),
            ('var-table', 59, 'real', 'tails-real-2', 'VaR 1% and VaR 0.1%', 'VaR 1% și VaR 0,1%'),
-           ('aic-table', 60, 'real', 'tails-real-2', 'Which Model Fits Best', 'Compararea celor trei')]
+           ('aic-table', 60, 'real', 'tails-real-2', 'Comparison of the Three Models', 'Compararea celor trei')]
 ORDER = ['stability-qq', 'horizons', 'gclt', 'density-alpha', 'density-beta', 's0-s1', 'special-cases', 'cf-s0s1', 'tails-loglog', 'running-var-sim',
          'tail-table', 'cms-draw', 'cms', 'mcculloch-map', 'mcc-bet', 'estimators-mc', 'fits-table', 'fit-density-1', 'fit-density-2', 'qq-real-1',
          'qq-real-2', 'tails-real-1', 'tails-real-2', 'loss-count', 'var-table', 'aic-table', 'aggregation', 'running-var-real']
@@ -652,7 +652,7 @@ TEXT_JS['en'] += r"""Object.assign(window.CH3_TEXT, {
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch3-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch3-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH3_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH3_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

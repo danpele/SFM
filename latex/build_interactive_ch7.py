@@ -32,7 +32,7 @@ XBLOCKS = [('sqrt-time', 23, 'rw', 'scatter-lag'), ('lb-example', 32, 'act', 'ac
 ORDER = ['rw-paths', 'scatter-lag', 'sqrt-time', 'white-noise', 'acf-processes', 'acf-returns', 'acf-abs', 'lb-example', 'ac-tests', 'runs',
          'spurious', 'adf-example', 'unit-root-bet', 'ur-table', 'vr-acf', 'lm-tests', 'vr-size', 'vr-profile', 'vr-table', 'cd-table',
          'vr-markets', 'rolling-vr', 'sub-table', 'calendar']
-TITLES = {'sqrt-time': 'Exemplu lucrat: cum crește riscul cu orizontul', 'lb-example': 'Exemplu lucrat: Ljung–Box pas cu pas',
+TITLES = {'sqrt-time': 'Exemplu lucrat: riscul în funcție de orizont', 'lb-example': 'Exemplu lucrat: Ljung–Box pas cu pas',
           'ac-tests': 'Teste de autocorelație pe date reale', 'runs': 'Testul runs', 'adf-example': 'Testul augmentat și un exemplu lucrat',
           'ur-table': 'Teste de rădăcină unitară pe prețuri și randamente', 'vr-acf': 'Exemplu lucrat: VR din ACF-ul S&P 500',
           'lm-tests': 'Lo și MacKinlay (1988): estimator și teste', 'vr-table': 'Rapoarte ale varianțelor și teste robuste',
@@ -46,7 +46,7 @@ SECTIONS = {
  'ro': dict(prev='Previzibilitatea prețurilor', rw='Ipotezele mersului aleator', wn='Zgomotul alb și funcția de autocorelație', act='Testarea autocorelației',
             ur='Rădăcini unitare: prețuri față de randamente', vr='Testul variance ratio', mk='Eficiența pe piețe și în timp',
             an='Forma semi-tare, forma tare și anomalii'),
- 'en': dict(prev='Can Prices Be Predicted?', rw='Random Walk Hypotheses', wn='White Noise and the Autocorrelation Function', act='Testing for Autocorrelation',
+ 'en': dict(prev='Predictability of Prices', rw='Random Walk Hypotheses', wn='White Noise and the Autocorrelation Function', act='Testing for Autocorrelation',
             ur='Unit Roots: Prices against Returns', vr='The Variance-Ratio Test', mk='Efficiency across Markets and over Time',
             an='Semi-Strong Form, Strong Form and Anomalies'),
 }
@@ -676,7 +676,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch7-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch7-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH7_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH7_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

@@ -604,7 +604,7 @@ window.SFM_DATA.quizzes['intro'] = {
         {
             "correct": 0,
             "en": {
-                "title": "A rival explanation",
+                "title": "Ruling out an alternative explanation",
                 "text": "Bitcoin volatility fell after January 2024. Why compare it with the S&P 500 volatility in the same years?",
                 "options": [
                     "To rule out the explanation that all markets were simply calmer",
@@ -616,7 +616,7 @@ window.SFM_DATA.quizzes['intro'] = {
                 "incorrectExplanation": "Comparing with the S&P 500 checks the rival explanation of a generally calmer market."
             },
             "ro": {
-                "title": "O explicație concurentă",
+                "title": "Excluderea unei explicații alternative",
                 "text": "Volatilitatea Bitcoin a scăzut după ianuarie 2024. De ce o comparăm cu volatilitatea S&P 500 din aceiași ani?",
                 "options": [
                     "Pentru a exclude explicația că toate piețele au fost pur și simplu mai calme",

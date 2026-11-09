@@ -34,7 +34,7 @@ Daily log returns of the BET and the S&P 500 (dots, histogram on a log scale) wi
 - Simulation | The Chambers–Mallows–Stuck method, in the symmetric and in the skewed case.
 - Estimation | McCulloch's quantile method and maximum likelihood, compared in a Monte Carlo study.
 - Fitting Real Returns | Stable, Student-t and Normal laws fitted to the BET, S&P 500, DAX and Bitcoin.
-- The Critique: Finite or Infinite Variance? | Three tests of the infinite-variance hypothesis and the explanations of the apparent stable shape.
+- Critique of the Stable Model: Finite or Infinite Variance | Three tests of the infinite-variance hypothesis and the explanations of the apparent stable shape.
 - AI for Scientific Discovery | An open question on the tails of Bitcoin, the checks it needs and a project idea.
 - Summary | The formulas of the chapter and questions for self-assessment.
 
@@ -58,7 +58,7 @@ The second observation was that the shape of the distribution was the same at ev
 
 His proposal combined the two observations: price changes follow stable Paretian laws with an index $\alpha \approx 1.7$ [@Mandelbrot1963]. "Paretian" refers to tails that decay like a power of $x$, as in Pareto's law of incomes. The consequence, discussed throughout this chapter, is that the variance of price changes would be infinite.
 
-## Fama Tests the Idea on Stocks {h=f1913f09}
+## Fama's Tests on Stock Returns {h=6e53a6bb}
 
 @Fama1965 took the hypothesis from commodities to stocks. He studied the daily returns of the 30 stocks of the Dow Jones Industrial Average and found, for every stock, more large returns than the Normal distribution predicts. His estimates of the index $\alpha$ were below 2, which supported Mandelbrot's hypothesis.
 
@@ -310,7 +310,7 @@ The chart plots the tail probability $P(X > x)$ of symmetric laws $S(\alpha, 0, 
 
 The numbers show the size of the difference. The probability of exceeding 10 is 0.279% for $\alpha = 1.7$, 0.667% for $\alpha = 1.5$, and about $8\times 10^{-11}\%$ for the Normal distribution with the same $\gamma$. A move of ten scale units is a rare but regular event under a stable law with $\alpha = 1.7$ and practically impossible under the Normal distribution.
 
-## Which Moments Exist? {h=097c983e}
+## Existence of Moments {h=32bb486a}
 
 For $0 < \alpha < 2$, the absolute moment of order $p > 0$, $E|X|^p$, is finite if and only if
 
@@ -322,7 +322,7 @@ The consequences follow by comparing $\alpha$ with 1 and 2. For $\alpha < 2$ the
 
 What do you think? Mandelbrot found $\alpha \approx 1.7$ for cotton. Does the mean daily change exist? Yes, because $1 < 1.7$. The variance, however, does not, because $2 > 1.7$.
 
-## The Sample Variance Does Not Settle {h=7be7c7b8}
+## Instability of the Sample Variance {h=3fbde582}
 
 The chart shows what an infinite variance looks like in a sample. It plots the sample variance against the sample size, both on log scales, for a Normal sample (blue), the law $S(2, 0, 1, 0)$ with true variance 2, and for three independent samples from a stable law with $\alpha = 1.7$.
 
@@ -540,7 +540,7 @@ At the 1% level, the Normal model gives values that are too low and the stable m
 
 At the 0.1% level the stable model overshoots much more. Its VaR 0.1% is roughly two to four times the empirical quantile: 23.1% against 9.5% for the BET, 19.7% against 7.2% for the S&P 500, 20.0% against 7.1% for the DAX, and 74.2% against 18.1% for Bitcoin. The Normal model, at 3.7% for the S&P 500, is about half the empirical value.
 
-## Which Model Fits Best? {h=439f9e77}
+## Comparison of the Three Models {h=e15ee800}
 
 The Akaike information criterion (AIC) is $2k - 2\ell(\hat\theta)$, where $k$ is the number of parameters and $\ell(\hat\theta)$ the maximised log-likelihood; a lower value is better. It penalises extra parameters, so a model with more parameters must improve the likelihood enough to be preferred.
 
@@ -558,11 +558,11 @@ It overstates the far tails: it predicts too many extreme losses and gives a VaR
 
 Fitted to real returns, the stable law is a large improvement on the Normal distribution and a worse description than the Student-t. Its $\hat\alpha$ between 1.410 and 1.606 captures the heavy tails near the centre, but the same $\alpha$ forces power-law tails that are too heavy far out: 19.1 expected days with losses beyond 10% for the S&P 500 against one observed, and a VaR 0.1% two to four times the empirical one. The Student-t estimates $\hat\nu$ between 2.23 and 3.09 point to a finite variance. The [next section](#sec-9) tests the infinite variance directly.
 
-# The Critique: Finite or Infinite Variance?
+# Critique of the Stable Model: Finite or Infinite Variance
 
 The fits of the previous section suggest that the far tails of returns are lighter than any stable tail. This section tests the infinite-variance hypothesis directly, with three tests drawn from the theory of the chapter, and then explains why daily returns nevertheless look stable.
 
-## Test 1: Does α Stay the Same When Returns Are Summed? {h=3cde5bbe}
+## Test 1: Stability of α under Aggregation {h=2d3fd6ce}
 
 The first test uses the stability property itself. If daily returns were i.i.d. stable, weekly and monthly sums would be stable with the same $\alpha$. If instead daily returns have a finite variance, the GCLT predicts that the estimated $\alpha$ rises towards 2 as returns are summed over longer horizons.
 
@@ -576,13 +576,13 @@ The BET is the exception: $1.49 \to 1.56 \to 1.50$, without a clear rise. Its mo
 
 The same pattern appears in the classic studies of @Officer1972 and @AkgirayBooth1988. A rising $\alpha$ is exactly what the GCLT predicts for sums of returns with a finite variance that converge slowly to the Normal distribution: in that world the stable fit to daily data is an approximation that the aggregation gradually removes.
 
-## Test 2: Does the Sample Variance Settle? {h=a17691d4}
+## Test 2: Convergence of the Sample Variance {h=d76cacb4}
 
 The second test repeats Mandelbrot's observation on modern data. The chart plots the running sample variance of S&P 500 daily log returns (in %, thick blue line) from 2000 to 2026, on a log scale. The variance jumps in 2008 and 2020, during the two largest crises of the sample, and then settles near 1.47.
 
 The thin lines are paths of the same length simulated from the fitted stable law. They behave as in the [simulation of the tails section](#s34): repeated jumps, slow decay and no convergence. Their final variances lie between 5.4 and 15.6, far above the value of the data. The observed variance is stable in a way that a stable law with $\hat\alpha = 1.540$ does not allow.
 
-## Test 3: How Heavy Is the Far Tail? {h=ca56c855}
+## Test 3: Thickness of the Far Tail {h=6c065ac1}
 
 The stable $\alpha$ is determined by the whole distribution, mostly by its body, where most observations lie. The tail index of the far tail alone is estimated separately, with the Hill estimator [@Hill1975], which uses only the largest observations; Chapter 5 develops it.
 
@@ -590,7 +590,7 @@ For stock indices the far tail decays roughly like $x^{-3}$, the "inverse cubic 
 
 The counts of large losses in the [previous section](#s58) agree: the fitted stable laws expect many more losses beyond 10% than were observed. @LauLauWingender1990 add further evidence against the stable model, from the behaviour of sample moments.
 
-## Why Do Daily Returns Look Stable? {h=aa131683}
+## Origin of the Apparent Stability of Daily Returns {h=e4edb5aa}
 
 Two explanations account for the stable appearance of daily returns. The first is volatility clustering (Chapters 2 and 9): calm and turbulent periods alternate. A mixture of Normal laws with changing variance has heavy tails and a finite variance [@BlattbergGonedes1974]. If a single stable law is fitted to data generated by such a mixture, the estimate is $\hat\alpha < 2$, even though no observation comes from an infinite-variance law.
 
@@ -618,7 +618,7 @@ The three tests reject the infinite variance without rejecting heavy tails. Aggr
 
 The tools of the chapter can be applied to questions that are still open. This section formulates one such question, about the tails of Bitcoin, describes how AI (artificial intelligence) tools could support a study of it, lists the checks that the study needs, and gives a project seed.
 
-## An Open Question {h=f9cf35e3}
+## An Open Research Question {h=09fc87b0}
 
 The open question is whether the tails of Bitcoin returns have become lighter as the market matured. The market gained more participants, futures contracts from 2017 and spot exchange-traded funds (ETFs) from 2024. If the tails have become lighter, risk models fitted on old data overstate today's risk.
 
@@ -660,7 +660,7 @@ The table gathers the formulas of the chapter. Stability is the property @eq:sta
 
 The tails decay as in @eq:tail, $P(X > x) \sim \gamma^\alpha c_\alpha(1 + \beta)x^{-\alpha}$, and for $\alpha < 2$ the absolute moment of order $p$ is finite if and only if $p < \alpha$ @eq:moments. The CMS formula @eq:cms simulates the symmetric case, and McCulloch's ratios @eq:nu are the starting point of estimation.
 
-## Check Yourself {h=a28bdbf1}
+## Self-Assessment {h=60f48d85}
 
 The first question: daily returns are i.i.d. $S(1.5, 0, \gamma, 0)$; by how much does the scale grow from 1 day to 20 days? By the factor $20^{1/1.5} = 7.37$, which is 1.65 times the factor $\sqrt{20}$ of the square-root-of-time rule.
 

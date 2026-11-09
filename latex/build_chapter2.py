@@ -420,7 +420,7 @@ chart(T('The 68--95--99.7 Rule', 'Regula 68--95--99,7'), 'sfm_ch2_normal_pdf', '
     T('Outside 3 standard deviations: one day in @{nt.3.days.r}; the tails of the Normal distribution fall off like $e^{-z^2/2}$, very fast',
       'Dincolo de 3 abateri standard: o zi din @{nt.3.days.r}; cozile distribuției Normale scad ca $e^{-z^2/2}$, foarte repede')], h='0.62\\textheight')
 
-D.frame(T('How Rare Are Large Moves under the Normal Distribution?', 'Frecvența variațiilor mari în cazul distribuției Normale'), table(
+D.frame(T('Frequency of Large Moves under the Normal Distribution', 'Frecvența variațiilor mari în cazul distribuției Normale'), table(
     'crrr', '$k$ & $P(|Z| > k)$ & ' + T('once every \\dots\\ trading days', 'o dată la \\dots\\ zile de tranzacționare') + ' & ' + T('once every \\dots\\ years', 'o dată la \\dots\\ ani'),
     [f'{k} & ${{@{{nt.{k}.p}}}}$ & @{{nt.{k}.days}} & @{{nt.{k}.years}}' for k in range(1, 7)], size='footnotesize') + items(
     T('$P(|Z| > k)$: the probability that a standard Normal variable lies more than $k$ standard deviations from 0', '$P(|Z| > k)$: probabilitatea ca o variabilă Normală standard să se afle la mai mult de $k$ abateri standard de 0'),
@@ -526,7 +526,7 @@ D.frame(T('The Central Limit Theorem', 'Teorema limită centrală'), items(
     T('It explains why the Normal distribution is everywhere, and why sample means have Normal confidence intervals',
       'Explică de ce distribuția Normală apare peste tot și de ce intervalele de încredere pentru medie se construiesc cu distribuția Normală')))
 
-chart(T('The CLT at Work (SFEclt)', 'CLT în practică (SFEclt)'), 'sfm_ch2_clt', 'SFM_ch2_clt_normal_approx', [
+chart(T('Illustration of the CLT (SFEclt)', 'Ilustrarea CLT (SFEclt)'), 'sfm_ch2_clt', 'SFM_ch2_clt_normal_approx', [
     T('Standardised mean of $n$ Bernoulli($0.2$) draws (a skewed variable), 20\\,000 simulations', 'Media standardizată a $n$ extrageri Bernoulli($0.2$) (o variabilă asimetrică), 20\\,000 de simulări'),
     T('Share above $1.96$: @{clt.5.tail}\\% for $n = 5$, @{clt.30.tail}\\% for $n = 30$, @{clt.300.tail}\\% for $n = 300$; Normal distribution: @{clt.ntail}\\%',
       'Ponderea peste $1.96$: @{clt.5.tail}\\% pentru $n = 5$, @{clt.30.tail}\\% pentru $n = 30$, @{clt.300.tail}\\% pentru $n = 300$; distribuția Normală: @{clt.ntail}\\%'),
@@ -574,7 +574,7 @@ D.frame(T('Four Moments', 'Patru momente'), items(
     T('Both are free of units: they describe the shape, not the location or the scale', 'Ambele sînt adimensionale: descriu forma, nu poziția sau scala'),
     T('Fourth powers make the kurtosis very sensitive to a few extreme days', 'Puterile a patra fac boltirea foarte sensibilă la cîteva zile extreme')))
 
-chart(T('What Skewness and Kurtosis Look Like', 'Asimetria și boltirea în grafice'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
+chart(T('Skewness and Kurtosis: Graphical Illustration', 'Asimetria și boltirea: ilustrare grafică'), 'sfm_ch2_shapes', 'SFM_ch2_moments_jarque_bera', [
     T('Left: same mean and variance; the Student-$t(5)$ curve (Section 7) has excess kurtosis 6: more mass in the centre and in the tails, less in the shoulders',
       'Stînga: aceeași medie și varianță; curba Student-$t(5)$ (secțiunea 7) are exces de boltire 6: mai multă masă în centru și în cozi, mai puțină în umeri'),
     T('Right: skew-Normal densities with skewness $\\pm 0.85$; the dashed curve is the Normal distribution', 'Dreapta: densități skew-Normal cu asimetria $\\pm 0.85$; curba punctată este distribuția Normală')], h='0.62\\textheight')
@@ -766,7 +766,7 @@ D.recap(('Student-$t$', 'Student-$t$'), [
 # =============================================================================
 D.section('Stylised Facts of Returns', 'Faptele stilizate ale randamentelor')
 
-D.frame(T('What Is a Stylised Fact?', 'Definiția faptului stilizat'), cols(items(
+D.frame(T('Definition of a Stylised Fact', 'Definiția faptului stilizat'), cols(items(
     T('A \\textbf{stylised fact}: a statistical property shared by many assets, markets and periods \\refCont',
       'Un \\textbf{fapt stilizat}: o proprietate statistică comună multor active, piețe și perioade \\refCont'),
     T('Qualitative, not exact: ``heavy tails\'\', not ``$\\nu = 3.2$\'\'', 'Calitativ, nu exact: „cozi groase”, nu „$\\nu = 3.2$”'),
@@ -784,7 +784,7 @@ D.frame(T('Six Stylised Facts', 'Șase fapte stilizate'), items(
     T('\\textbf{5. Leverage effect}: falls raise future volatility more than rises', '\\textbf{5. Efectul de levier} (leverage effect): scăderile cresc volatilitatea viitoare mai mult decît creșterile'),
     T('\\textbf{6. Gain/loss asymmetry}: large losses are larger and more frequent than large gains', '\\textbf{6. Asimetria cîștig/pierdere}: pierderile mari sînt mai mari și mai frecvente decît cîștigurile mari')))
 
-D.frame(T('Fact 1: Heavy Tails, Counted', 'Faptul 1: cozile groase în cifre'), table(
+D.frame(T('Fact 1: Heavy Tails, Number of $k$-Sigma Days', 'Faptul 1: cozile groase, numărul zilelor de $k$ sigma'), table(
     'lrrrrrr', T('Series', 'Seria') + ' & $n$ & $>3\\sigma$ & $>4\\sigma$ & $>5\\sigma$ & $>6\\sigma$ & p-value (Poisson, $4\\sigma$)',
     [f'{NAMES[k]} & @{{m.{k}.n}} & @{{sg.{k}.3.obs}} & @{{sg.{k}.4.obs}} & @{{sg.{k}.5.obs}} & @{{sg.{k}.6.obs}} & ${{@{{sg.{k}.4.pp}}}}$' for k in INDICES]
     + [T('Normal distribution, $n = @{m.sp500.n}$', 'Distribuția Normală, $n = @{m.sp500.n}$') + ' & & $@{sg.sp500.3.exp}$ & $@{sg.sp500.4.exp}$ & $@{sg.sp500.5.exp}$ & $@{sg.sp500.6.exp}$ & '],
@@ -917,7 +917,7 @@ D.frame(T('The Six Stylised Facts in Eight Series', 'Cele șase fapte stilizate 
     T('A comparison of the return distributions of cryptocurrencies and traditional assets: \\refPeleCrypto', 'O comparație între distribuțiile randamentelor criptomonedelor și cele ale activelor tradiționale: \\refPeleCrypto')) + ql('SFM_ch2_cont_stylised_facts'),
     'footnotesize')
 
-D.frame(T('What the Facts Mean for Models', 'Implicațiile faptelor stilizate pentru modele'), table(
+D.frame(T('Implications of the Stylised Facts for Models', 'Implicațiile faptelor stilizate pentru modele'), table(
     'lcccccc', T('Model', 'Model') + ' & 1 & 2 & 3 & 4 & 5 & 6',
     [T('i.i.d. Normal', 'i.i.d. Normal') + ' & -- & ' + T('trivially', 'trivial') + ' & \\checkmark & -- & -- & --',
      T('i.i.d. Student-$t$', 'i.i.d. Student-$t$') + ' & \\checkmark & \\checkmark & \\checkmark & -- & -- & --',
@@ -940,7 +940,7 @@ D.recap(('Stylised Facts', 'Fapte stilizate'), [
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-side(T('An Open Question: Are Bitcoin\'s Tails Getting Thinner?', 'O întrebare deschisă: devin mai subțiri cozile Bitcoin?'), 'sfm_ch2_tails_by_year', 'SFM_ch2_tails_by_year', [
+side(T('An Open Research Question: Evolution of Bitcoin\'s Tails', 'O întrebare de cercetare deschisă: evoluția cozilor Bitcoin'), 'sfm_ch2_tails_by_year', 'SFM_ch2_tails_by_year', [
     T('As a market matures (more traders, futures, ETFs), its tails might thin out', 'Pe măsură ce o piață se maturizează (mai mulți participanți, futures, ETF-uri), cozile ei s-ar putea subția'),
     T('Bitcoin, @{yr.first}--@{yr.last}: yearly $\\hat\\nu$ between @{yr.numin} and @{yr.numax}; rank correlation with the year $@{yr.rho}$ (p-value $@{yr.p}$)',
       'Bitcoin, @{yr.first}--@{yr.last}: $\\hat\\nu$ anual între @{yr.numin} și @{yr.numax}; corelația rangurilor cu anul $@{yr.rho}$ (p-value $@{yr.p}$)'),
@@ -990,7 +990,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), table(
      T('Leverage', 'Levier') + ' & $L(k) = \\text{Corr}(r_t, |r_{t+k}|)$'],
     size='footnotesize'))
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: daily returns are $N(0.05\\%, 1\\%^2)$; how many standard deviations is a $-3\\%$ day?',
        '\\textbf{Întrebare}: randamentele zilnice sînt $N(0.05\\%, 1\\%^2)$; la cîte abateri standard se află o zi de $-3\\%$?'),
      [T('\\textbf{Answer}: $z = (-3 - 0.05)/1 = @{cy.z}$', '\\textbf{Răspuns}: $z = (-3 - 0.05)/1 = @{cy.z}$')]),

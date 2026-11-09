@@ -34,7 +34,7 @@ ORDER = ['cpd', 'irb-we', 'irb', 'status', 'woe-tab', 'woe-dur', 'iv', 'odds-we'
 TITLES = {'irb-we': 'Exemplu rezolvat: capitalul IRB al unui credit de retail', 'woe-tab': 'Exemplu rezolvat: WoE și IV pentru contul curent',
           'odds-we': 'Șansa (odds) și logaritmul șansei', 'small-tab': 'Un model logit mic pe eșantionul complet', 'pd-we': 'Exemplu rezolvat: PD a unui solicitant',
           'woe-logit-tab': 'Scorecard-ul logit pe variabile WoE', 'prior-we': 'Corecția pentru suprareprezentarea rău-platnicilor',
-          'fisher-we': 'Exemplu rezolvat: direcția Fisher cu două variabile', 'lda-tab': 'Logit sau LDA?', 'scale-we': 'Exemplu rezolvat: scoruri și puncte',
+          'fisher-we': 'Exemplu rezolvat: direcția Fisher cu două variabile', 'lda-tab': 'Compararea modelelor logit și LDA', 'scale-we': 'Exemplu rezolvat: scoruri și puncte',
           'cm-tab': 'Două praguri pe eșantionul de test', 'auc-we': 'Curba ROC și AUC', 'ks-we': 'Curba CAP, raportul de acuratețe și KS',
           'brier-we': 'Calibrarea și scorul Brier', 'reject-tab': 'Un experiment de reject inference pe datele din Taiwan', 'z-we': 'Exemplu rezolvat: un scor Z',
           'dd-we': 'Exemplu rezolvat: distanța pînă la nerambursare'}
@@ -46,10 +46,10 @@ PFX = {'cpd': 'cp', 'irb': 'ir', 'status': 'ds', 'woe-dur': 'wd', 'iv': 'iv', 'l
 
 SECTIONS = {
  'ro': dict(def_='Scorul de credit: definiție', data='Datele de nerambursare', woe='Weight of Evidence și Information Value', logit='Regresia logistică',
-            lda='Analiza discriminantă liniară', card='De la model la scorecard', val='Validarea', rej='Reject inference și echitatea',
+            lda='Analiza discriminantă liniară', card='Construirea scorecard-ului', val='Validarea', rej='Reject inference și echitatea',
             corp='Nerambursarea companiilor: Altman și Merton'),
- 'en': dict(def_='What a Credit Score Is', data='Default Data', woe='Weight of Evidence and Information Value', logit='Logistic Regression',
-            lda='Linear Discriminant Analysis', card='From Model to Scorecard', val='Validation', rej='Reject Inference and Fairness',
+ 'en': dict(def_='The Credit Score: Definition', data='Default Data', woe='Weight of Evidence and Information Value', logit='Logistic Regression',
+            lda='Linear Discriminant Analysis', card='Building the Scorecard', val='Validation', rej='Reject Inference and Fairness',
             corp='Corporate Default: Altman and Merton'),
 }
 for _l in SECTIONS.values():
@@ -848,7 +848,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch12-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch12-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH12_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH12_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

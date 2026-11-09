@@ -276,7 +276,7 @@ D.frame(T('What Financial Data Are', 'Tipuri de date financiare'), items(
      [T('news, social media, satellite images, blockchain transactions', 'știri, rețele sociale, imagini din satelit, tranzacții pe blockchain')]),
     T('This course works mainly with \\textbf{daily market data}', 'Cursul folosește în principal \\textbf{date zilnice de piață}')))
 
-D.frame(T('From the Ticker Tape to Data Feeds', 'De la banda telegrafică la fluxurile de date'), cols(items(
+D.frame(T('Ticker Tape and Electronic Data Feeds', 'Banda telegrafică și fluxurile electronice de date'), cols(items(
     (T('From 1867, \\textbf{stock tickers} printed trade prices on a paper tape, sent by telegraph',
        'Din 1867, \\textbf{telegrafele bursiere} (stock tickers) tipăreau pe o bandă de hîrtie prețurile tranzacțiilor, primite prin telegraf'),
      [T('the first real-time price feed: the price of the last trade, minutes after it happened',
@@ -514,7 +514,7 @@ D.frame(T('The Log Return', 'Randamentul logaritmic'), items(
     T('Log returns are the default in statistics of financial markets: they add up over time (next section)',
       'Randamentele logaritmice sînt alegerea standard în statistica piețelor financiare: se adună în timp (secțiunea următoare)')))
 
-D.frame(T('How Far Apart Are $r$ and $R$?', 'Diferența dintre $r$ și $R$'), items(
+D.frame(T('The Difference between $r$ and $R$', 'Diferența dintre $r$ și $R$'), items(
     (T('Taylor expansion of the logarithm around 0', 'Dezvoltarea în serie Taylor a logaritmului în jurul lui 0'),
      [T('$r = \\ln(1 + R) = R - \\dfrac{R^2}{2} + \\dfrac{R^3}{3} - \\dots$', '$r = \\ln(1 + R) = R - \\dfrac{R^2}{2} + \\dfrac{R^3}{3} - \\dots$'),
       T('$\\ln$ is concave, so $r < R$ for every $R \\neq 0$', '$\\ln$ este concavă, deci $r < R$ pentru orice $R \\neq 0$')]),
@@ -669,7 +669,7 @@ D.frame(T('The Compound Annual Growth Rate', 'Rata anuală compusă de creștere
       'CAGR folosește doar primul și ultimul preț: nu spune nimic despre traiectoria dintre ele'),
     T('Also called the geometric mean return', 'Se mai numește randamentul mediu geometric')))
 
-D.frame(T('How Precisely Do We Know the Mean?', 'Precizia estimării mediei'), items(
+D.frame(T('Precision of the Estimated Mean', 'Precizia estimării mediei'), items(
     (T('Standard error of the annual mean: $\\text{SE}(\\hat\\mu_{\\text{year}}) = \\sigma_{\\text{year}} / \\sqrt{Y}$, with $Y$ years of data',
        'Eroarea standard a mediei anuale: $\\text{SE}(\\hat\\mu_{\\text{an}}) = \\sigma_{\\text{an}} / \\sqrt{Y}$, cu $Y$ ani de date'),
      [T('$\\hat\\mu_{\\text{year}}$: the estimated annual mean (a hat marks an estimate from the sample)',
@@ -768,7 +768,7 @@ chart(T('Histograms vs the Normal Distribution', 'Histogramele față de distrib
       'Dincolo de trei abateri standard: @{h.sp500.out3}\\% din zile, față de @{h.n.out3}\\% în cazul distribuției Normale, adică de @{h.ratio} ori mai multe')],
       h='0.55\\textheight')
 
-chart(T('Volatility Changes over Time', 'Volatilitatea se schimbă în timp'), 'sfm_ch1_rolling_vol_1y', 'SFM_ch1_descriptive_stats', [
+chart(T('Time-Varying Volatility', 'Volatilitatea variabilă în timp'), 'sfm_ch1_rolling_vol_1y', 'SFM_ch1_descriptive_stats', [
     T('Rolling one-year volatility, annualised: S\\&P 500 between @{rv.sp500.min}\\% and @{rv.sp500.max}\\%; Bitcoin between @{rv.btc.min}\\% and @{rv.btc.max}\\%',
       'Volatilitatea pe ferestre mobile de un an, anualizată: S\\&P 500 între @{rv.sp500.min}\\% și @{rv.sp500.max}\\%; Bitcoin între @{rv.btc.min}\\% și @{rv.btc.max}\\%'),
     T('One number for the whole sample hides calm and turbulent periods', 'O singură cifră pentru tot eșantionul ascunde perioadele calme și pe cele agitate'),
@@ -813,7 +813,7 @@ D.frame(T('The Sharpe Ratio', 'Raportul Sharpe'), cols(items(
           T('Photo: Larry D. Moore (2007); CC BY 4.0; Wikimedia Commons', 'Foto: Larry D. Moore (2007); CC BY 4.0; Wikimedia Commons'),
           h='0.55\\textheight'), wl='0.64', wr='0.32'))
 
-D.frame(T('The Sharpe Ratio Is an Estimate', 'Raportul Sharpe este o estimare'), items(
+D.frame(T('Estimation Error of the Sharpe Ratio', 'Eroarea de estimare a raportului Sharpe'), items(
     (T('Standard error for i.i.d. (independent, identically distributed) returns \\refLo', 'Eroarea standard pentru randamente i.i.d. (independente și identic distribuite) \\refLo'),
      [T('$\\text{SE}(\\widehat{\\text{SR}}) \\approx \\sqrt{(1 + \\text{SR}^2/2)/n}$ per period; annual: multiply by $\\sqrt{A}$',
         '$\\text{SE}(\\widehat{\\text{SR}}) \\approx \\sqrt{(1 + \\text{SR}^2/2)/n}$ pe perioadă; anual: înmulțiți cu $\\sqrt{A}$'),
@@ -961,7 +961,7 @@ D.recap(('Performance Indicators', 'indicatori de performanță'), [
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Do Sharpe ratios persist?}', '\\textbf{Persistă în timp rapoartele Sharpe?}'),
      [T('if a BVB stock had a high Sharpe ratio in 2015--2020, did it also have one in 2021--2026?',
         'o acțiune BVB cu un raport Sharpe mare în 2015--2020 a avut un raport Sharpe mare și în 2021--2026?'),
@@ -1027,7 +1027,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), table(
      T('SE of mean, of Sharpe & $\\sigma_{\\text{year}}/\\sqrt{Y}$, \\quad $\\sqrt{(1 + \\text{SR}^2/2)/n}$', 'SE a mediei și a raportului Sharpe & $\\sigma_{\\text{an}}/\\sqrt{Y}$, \\quad $\\sqrt{(1 + \\text{SR}^2/2)/n}$')],
     size='footnotesize'))
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a fund reports daily log returns with mean 0.05\\% and standard deviation 1\\%; what are its annual mean and volatility?',
        '\\textbf{Întrebare}: un fond raportează randamente logaritmice zilnice cu media 0,05\\% și abaterea standard 1\\%; care sînt valorile anuale ale mediei și volatilității?'),
      [T('\\textbf{Answer}: $252 \\times 0.05\\% = @{cy.mu}\\%$ and $\\sqrt{252} \\times 1\\% = @{cy.vol}\\%$', '\\textbf{Răspuns}: $252 \\times 0.05\\% = @{cy.mu}\\%$ și $\\sqrt{252} \\times 1\\% = @{cy.vol}\\%$')]),

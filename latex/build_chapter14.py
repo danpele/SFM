@@ -143,7 +143,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 D.section('Bitcoin and Ethereum in Brief', 'Bitcoin și Ethereum pe scurt')
 
-D.frame(T('From a White Paper to a Market', 'De la o lucrare de nouă pagini la o piață'), cols(items(
+D.frame(T('Nakamoto\'s White Paper (2008)', 'Lucrarea lui Nakamoto (2008)'), cols(items(
     (T('31 October 2008: \\refNakamoto proposes ``a peer-to-peer electronic cash system\'\'', '31 octombrie 2008: \\refNakamoto propune „un sistem de numerar electronic peer-to-peer”'),
      [T('\\textbf{peer-to-peer}: users pay each other directly, without a bank in the middle', '\\textbf{peer-to-peer}: utilizatorii își plătesc direct unii altora, fără o bancă la mijloc'),
       T('the problem solved: \\textbf{double spending}, i.e.\\ paying twice with the same digital coin', 'problema rezolvată: \\textbf{dubla cheltuire} (double spending), adică plata de două ori cu aceeași monedă digitală')]),
@@ -189,7 +189,7 @@ chart(T('Bitcoin Price and Supply', 'Prețul și oferta de Bitcoin'), 'sfm_ch14_
       'Interpretare: la un an după halving-uri, prețul era mai mare cu @{hv.2016.ch}\\%, @{hv.2020.ch}\\% și @{hv.2024.ch}\\%; trei observații nu sînt o dovadă, iar efectul se micșorează')],
     h='0.50\\textheight')
 
-D.frame(T('An Anonymous Founder', 'Un fondator anonim'), cols(items(
+D.frame(T('The Anonymity of Bitcoin\'s Founder', 'Anonimatul fondatorului Bitcoin'), cols(items(
     (T('Nobody knows who ``Satoshi Nakamoto\'\' is; the founder stopped writing in 2011', 'Nimeni nu știe cine este „Satoshi Nakamoto”; fondatorul a încetat să mai scrie în 2011'),
      [T('the rules of Bitcoin are changed only if most nodes accept the new software', 'regulile Bitcoin se schimbă doar dacă majoritatea nodurilor acceptă noul software')]),
     (T('Consequences for a statistician', 'Consecințe pentru un statistician'),
@@ -221,7 +221,7 @@ D.frame(T('Prices and Data', 'Prețuri și date'), cols(items(
 # =============================================================================
 # 2. CRIPTO CA O CLASĂ DE ACTIVE
 # =============================================================================
-D.section('Crypto as an Asset Class', 'Cripto ca o clasă de active')
+D.section('Crypto as an Asset Class', 'Activele cripto ca clasă de active')
 
 D.frame(T('Annualisation with the Actual Frequency (1/2)', 'Anualizarea cu frecvența reală (1/2)'), items(
     (T('With $A$ observations a year and i.i.d.\\ daily returns (Chapter 1):', 'Cu $A$ observații pe an și randamente zilnice i.i.d. (Capitolul 1):'),
@@ -243,7 +243,7 @@ D.frame(T('Annualisation with the Actual Frequency (2/2)', 'Anualizarea cu frecv
 TB = '>{\\raggedright\\arraybackslash}'
 ASSETS = ['btc', 'eth', 'sol', 'sp500', 'gold']
 NM = {'btc': 'Bitcoin', 'eth': 'Ethereum', 'sol': 'Solana', 'sp500': 'S\\&P 500', 'gold': T('Gold', 'Aur')}
-D.frame(T('Five Assets Side by Side', 'Cinci active comparate'), table(
+D.frame(T('Comparison of Five Assets', 'Compararea a cinci active'), table(
     'lrrrrrrrr', T('& since & $n$ & mean (\\%) & sd (\\%) & ann.\\ vol.\\ (\\%) & skew. & exc.\\ kurt. & min (\\%)',
                    '& din & $n$ & media (\\%) & ab.\\ std.\\ (\\%) & vol.\\ anuală (\\%) & asim. & exces de boltire & min (\\%)'),
     [f'{NM[k]} & @{{s.{k}.y0}} & @{{s.{k}.n}} & $@{{s.{k}.mean}}$ & $@{{s.{k}.sd}}$ & $@{{s.{k}.av}}$ & $@{{s.{k}.skew}}$ & $@{{s.{k}.k}}$ & $@{{s.{k}.min}}$' for k in ASSETS],
@@ -272,7 +272,7 @@ D.frame(T('Case Study: Risks and Returns of Cryptocurrency', 'Studiu de caz: ris
     (T('Follow-up \\refLTW: three crypto factors (market, size, momentum) price the cross-section of coins', 'Continuare \\refLTW: trei factori cripto (piața, dimensiunea, momentum) explică randamentele transversale ale monedelor'),
      [T('the link with equities has changed since 2020 (Section 5): results depend on the sample period', 'legătura cu acțiunile s-a schimbat după 2020 (secțiunea 5): rezultatele depind de perioada eșantionului')])))
 
-D.frame(T('Is the Weekend Different?', 'Este weekendul diferit?'), items(
+D.frame(T('Day-of-the-Week Effects in Bitcoin', 'Efectul zilei săptămînii la Bitcoin'), items(
     (T('Stock markets close at weekends; crypto markets do not, but banks, institutional traders and news slow down', 'Bursele de acțiuni se închid în weekend; piețele cripto nu, dar băncile, investitorii instituționali și știrile încetinesc'),
      [T('\\textbf{weekday effect}: different mean or variance of returns on some days of the week \\refCP', '\\textbf{efectul zilei din săptămînă}: medie sau varianță diferită a randamentelor în anumite zile \\refCP')]),
     (T('Two tests on Bitcoin, each day labelled by its closing date', 'Două teste pe Bitcoin, fiecare zi etichetată după data închiderii'),
@@ -368,9 +368,9 @@ chart(T('Conditional Volatility: Bitcoin and the S\\&P 500', 'Volatilitatea cond
 # =============================================================================
 # 4. EFICIENȚA
 # =============================================================================
-D.section('Is the Crypto Market Efficient?', 'Este piața cripto eficientă?')
+D.section('Efficiency of the Crypto Market', 'Eficiența pieței cripto')
 
-D.frame(T('Weak-Form Efficiency: What We Test', 'Eficiența în formă slabă: ipotezele testate'), items(
+D.frame(T('Weak-Form Efficiency: the Tested Hypotheses', 'Eficiența în formă slabă: ipotezele testate'), items(
     (T('\\refFama: in a weak-form efficient market, past prices do not help to predict future returns (Chapter 7)', '\\refFama: pe o piață eficientă în formă slabă, prețurile trecute nu ajută la prognoza randamentelor viitoare (Capitolul 7)'),
      [T('forms of efficiency: weak (past prices), semi-strong (public information), strong (all information)', 'formele eficienței: slabă (prețurile trecute), semi-tare (informația publică), tare (toată informația)')]),
     (T('Tests used here', 'Testele folosite aici'),
@@ -399,7 +399,7 @@ chart(T('Efficiency Through Time', 'Eficiența în timp'), 'sfm_ch14_rolling_vr'
       'Interpretare: la Bitcoin, @{rvr.btc.rej}\\% din @{rvr.btc.n} ferestre resping; cu statistica i.i.d.\\ $Z(5)$, proporția ar fi @{rvr.btc.iid}\\% pentru Bitcoin și @{rvr.sp500.iid}\\% pentru S\\&P 500: ignorarea volatility clustering produce respingeri false')],
     h='0.46\\textheight')
 
-D.frame(T('How Efficiency Evolved', 'Evoluția eficienței'), items(
+D.frame(T('Evolution of Efficiency', 'Evoluția eficienței'), items(
     (T('\\refUrquhart: Bitcoin was inefficient in 2010--2016 as a whole, but moved towards efficiency after 2013', '\\refUrquhart: Bitcoin a fost ineficient în 2010--2016 ca întreg, dar s-a apropiat de eficiență după 2013'),
      [T('\\refNC: a power transformation of the same returns passes the tests: the early verdict was fragile', '\\refNC: o transformare de tip putere a acelorași randamente trece testele: verdictul inițial era fragil'),
       T('\\refTL: an adjusted measure of inefficiency; crypto markets became more efficient after 2017', '\\refTL: o măsură ajustată a ineficienței; piețele cripto au devenit mai eficiente după 2017')]),
@@ -469,7 +469,7 @@ D.frame(T('Three Crisis Episodes', 'Trei episoade de criză'), table(
       T('Terra/Luna (May 2022) and FTX (an exchange that went bankrupt in November 2022): crypto-specific shocks; crypto fell by a quarter or more, the S\\&P 500 much less or not at all', 'Terra/Luna (mai 2022) și FTX (un exchange care a dat faliment în noiembrie 2022): șocuri specifice cripto; activele cripto au scăzut cu un sfert sau mai mult, S\\&P 500 mult mai puțin sau deloc'),
       T('the dependence is asymmetric: equity crashes reach crypto, crypto crashes rarely reach equities', 'dependența este asimetrică: crahurile acțiunilor ajung la cripto, crahurile cripto rareori ajung la acțiuni')])), 'footnotesize')
 
-D.frame(T('Hedge or Safe Haven?', 'Acoperire sau refugiu?'), items(
+D.frame(T('Bitcoin as a Hedge or a Safe Haven', 'Bitcoin ca instrument de acoperire sau activ de refugiu'), items(
     (T('\\refBL: a \\textbf{hedge} is uncorrelated or negatively correlated with equities on average; a \\textbf{safe haven} is so in market crashes', '\\refBL: o \\textbf{acoperire} (hedge) este necorelată sau corelată negativ cu acțiunile în medie; un \\textbf{refugiu} (safe haven) este astfel în timpul crahurilor'),
      [T('test: the mean return on the worst 5\\% of S\\&P 500 days (@{w.btc.nb} common days, S\\&P 500 below $@{w.btc.thr}\\%$, on average $@{w.btc.msp}\\%$)', 'testul: randamentul mediu în cele mai proaste 5\\% dintre zilele S\\&P 500 (@{w.btc.nb} zile comune, S\\&P 500 sub $@{w.btc.thr}\\%$, în medie $@{w.btc.msp}\\%$)')]),
     (T('Bitcoin: $@{w.btc.m}\\%$ on those days ($t = @{w.btc.t}$, p @{w.btc.p}); negative on @{w.btc.neg}\\% of them', 'Bitcoin: $@{w.btc.m}\\%$ în acele zile ($t = @{w.btc.t}$, p @{w.btc.p}); negativ în @{w.btc.neg}\\% dintre ele'),
@@ -510,7 +510,7 @@ D.frame(T('Bitcoin\'s Large Drawdowns', 'Marile drawdown-uri ale Bitcoin'), tabl
      [T('@{dd.nep} falls of more than half in twelve years: a crash of this size is a regular event, not a rare one', '@{dd.nep} scăderi de peste jumătate în doisprezece ani: un crah de această mărime este un eveniment obișnuit, nu unul rar'),
       T('the 2017 and 2021 peaks were recovered after @{dd.d17} and @{dd.d21} days', 'maximele din 2017 și 2021 au fost recuperate după @{dd.d17} și, respectiv, @{dd.d21} zile')])), 'footnotesize')
 
-D.frame(T('Bubbles and the Log-Periodic Idea', 'Bulele și ideea log-periodică'), cols(items(
+D.frame(T('Bubbles and Log-Periodic Models', 'Bulele și modelele log-periodice'), cols(items(
     (T('\\textbf{Bubble}: a price far above the fundamental value, sustained by the expectation of selling higher', '\\textbf{Bulă}: un preț mult peste valoarea fundamentală, susținut de așteptarea unei revînzări la un preț mai mare'),
      [T('\\refCF: the fundamental value of Bitcoin is zero; its price shows speculative bubbles', '\\refCF: valoarea fundamentală a Bitcoin este zero; prețul său arată bule speculative')]),
     (T('Log-periodic power law (LPPL) \\refJLS: before a crash, $\\ln P_t \\approx A + B(t_c - t)^m + C(t_c - t)^m\\cos(\\omega\\ln(t_c - t) - \\phi)$', 'Legea de putere log-periodică (LPPL) \\refJLS: înaintea unui crah, $\\ln P_t \\approx A + B(t_c - t)^m + C(t_c - t)^m\\cos(\\omega\\ln(t_c - t) - \\phi)$'),
@@ -524,7 +524,7 @@ D.frame(T('Bubbles and the Log-Periodic Idea', 'Bulele și ideea log-periodică'
 # =============================================================================
 D.section('Spot Bitcoin ETFs', 'ETF-urile spot pe Bitcoin')
 
-D.frame(T('January 2024: Bitcoin Enters the Stock Exchange', 'Ianuarie 2024: Bitcoin intră la bursă'), cols(items(
+D.frame(T('January 2024: Approval of the Spot Bitcoin ETFs', 'Ianuarie 2024: aprobarea ETF-urilor spot pe Bitcoin'), cols(items(
     (T('\\textbf{ETF} (exchange-traded fund): a fund whose shares trade on a stock exchange; \\textbf{spot}: it holds the asset itself, not futures', '\\textbf{ETF} (exchange-traded fund): un fond ale cărui unități se tranzacționează la bursă; \\textbf{spot}: deține activul însuși, nu contracte futures'),
      [T('10 January 2024: the SEC (Securities and Exchange Commission) approves 11 spot Bitcoin ETFs \\refSEC; trading starts on 11 January', '10 ianuarie 2024: SEC (Securities and Exchange Commission) aprobă 11 ETF-uri spot pe Bitcoin \\refSEC; tranzacționarea începe pe 11 ianuarie')]),
     (T('Why it matters', 'Importanța momentului'),
@@ -539,7 +539,7 @@ chart(T('Volatility and the Weekend Share Around the ETFs', 'Volatilitatea și p
     T('Interpretation: volatility kept falling after January 2024, but it was already falling before; the weekend share has been well below 2/7 since 2020', 'Interpretare: volatilitatea a continuat să scadă după ianuarie 2024, dar era deja în scădere înainte; ponderea weekendului este mult sub 2/7 din 2020')],
     h='0.46\\textheight')
 
-D.frame(T('Before and After: a Simple Comparison', 'Înainte și după: o comparație simplă'), table(
+D.frame(T('Bitcoin before and after the Spot ETFs', 'Bitcoin înainte și după lansarea ETF-urilor spot'), table(
     'lrr', T('Bitcoin & two years before & two years after', 'Bitcoin & doi ani înainte & doi ani după'),
     [T('annualised volatility (\\%)', 'volatilitatea anuală (\\%)') + ' & $@{etf.vol_before}$ & $@{etf.vol_after}$',
      T('weekend/weekday variance', 'varianța weekend/zile lucrătoare') + ' & $@{etf.we_ratio_before}$ & $@{etf.we_ratio_after}$',
@@ -552,7 +552,7 @@ D.frame(T('Before and After: a Simple Comparison', 'Înainte și după: o compar
      [T('a before--after comparison is not a causal effect: interest rates, the halving of April 2024 and the US election changed at the same time', 'o comparație înainte--după nu este un efect cauzal: dobînzile, halving-ul din aprilie 2024 și alegerile din SUA s-au schimbat în același timp'),
       T('a credible study needs a control group (e.g.\\ coins without an ETF) or intraday data around the opening of the stock exchange', 'un studiu credibil are nevoie de un grup de control (de exemplu monede fără ETF) sau de date intrazilnice în jurul deschiderii bursei')])), 'footnotesize')
 
-D.frame(T('How Well Does an ETF Track Bitcoin?', 'Cît de bine urmărește un ETF prețul Bitcoin?'), items(
+D.frame(T('Tracking Error of a Spot Bitcoin ETF', 'Eroarea de replicare a unui ETF spot pe Bitcoin'), items(
     (T('IBIT (iShares Bitcoin Trust), adjusted close, and Bitcoin, prices joined on the @{ibit.n} trading days of the ETF', 'IBIT (iShares Bitcoin Trust), închiderea ajustată, și Bitcoin, prețuri unite în cele @{ibit.n} zile de tranzacționare ale ETF-ului'),
      [T('correlation of daily returns @{ibit.corr}; slope of IBIT on Bitcoin @{ibit.beta}', 'corelația randamentelor zilnice @{ibit.corr}; panta IBIT în funcție de Bitcoin @{ibit.beta}'),
       T('\\textbf{tracking error}: the annualised standard deviation of the return difference, @{ibit.te}\\%', '\\textbf{tracking error}: abaterea standard anualizată a diferenței de randament, @{ibit.te}\\%')]),
@@ -565,7 +565,7 @@ D.frame(T('How Well Does an ETF Track Bitcoin?', 'Cît de bine urmărește un ET
 # =============================================================================
 D.section('Stablecoins', 'Stablecoins')
 
-D.frame(T('What Is a Stablecoin?', 'Stablecoins: definiție și tipuri'), table(
+D.frame(T('Stablecoins: Definition and Types', 'Stablecoins: definiție și tipuri'), table(
     TB + 'p{2.2cm}' + TB + 'p{4.4cm}' + TB + 'p{2.0cm}' + TB + 'p{2.4cm}',
     T('Type & how the peg is held & examples & risk', 'Tipul & cum se menține paritatea & exemple & riscul'),
     [T('fiat-backed & reserves of dollars, deposits and Treasury bills; holders redeem 1 coin for 1 USD at the issuer & USDT, USDC & the reserves and the bank that holds them',
@@ -578,7 +578,7 @@ D.frame(T('What Is a Stablecoin?', 'Stablecoins: definiție și tipuri'), table(
     (T('\\textbf{Stablecoin}: a crypto asset designed to keep a fixed price, usually 1 USD (the \\textbf{peg})', '\\textbf{Stablecoin}: un activ cripto conceput să păstreze un preț fix, de obicei 1 USD (\\textbf{paritatea}, peg)'),
      [T('used as cash on crypto exchanges and for payments across borders; DefiLlama classifies today @{sup.fiat}\\% of the supply as fiat-backed, @{sup.crypto}\\% as crypto-backed', 'folosit ca numerar pe exchange-uri și pentru plăți transfrontaliere; DefiLlama clasifică azi @{sup.fiat}\\% din ofertă ca garantată fiat și @{sup.crypto}\\% ca garantată cripto')])), 'footnotesize')
 
-D.frame(T('How a Peg Is Held: Arbitrage', 'Menținerea parității: arbitrajul'), items(
+D.frame(T('Maintaining the Peg: Arbitrage', 'Menținerea parității: arbitrajul'), items(
     (T('Primary market: authorised traders create a coin for 1 USD at the issuer, or redeem it for 1 USD', 'Piața primară: tranzacționari autorizați creează o monedă pentru 1 USD la emitent sau o răscumpără pentru 1 USD'),
      [T('price 0.99 on exchanges: buy at 0.99, redeem at 1.00, profit 1 cent: demand pushes the price back up', 'prețul 0,99 pe exchange-uri: cumpărăm la 0,99, răscumpărăm la 1,00, profit 1 cent: cererea împinge prețul înapoi în sus'),
       T('price 1.01: create at 1.00, sell at 1.01: supply pushes the price down', 'prețul 1,01: creăm la 1,00, vindem la 1,01: oferta împinge prețul în jos')]),
@@ -726,7 +726,7 @@ chart(T('Backtesting Bitcoin VaR 1\\%', 'Backtesting pentru VaR 1\\% al Bitcoin'
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Do stablecoin flows move crypto prices?}', '\\textbf{Influențează fluxurile de stablecoins prețurile activelor cripto?}'),
      [T('\\refGS found that Tether issuance supported Bitcoin in 2017; the stablecoin market is now about @{sup.growth_x} times larger than in 2020', '\\refGS au găsit că emisiunea de Tether a susținut Bitcoin în 2017; piața stablecoin-urilor este acum de circa @{sup.growth_x} de ori mai mare decît în 2020'),
       T('starter result: weekly log change of the stablecoin supply against Bitcoin\'s return, @{ai.n} weeks since 2020', 'rezultat de pornire: variația logaritmică săptămînală a ofertei de stablecoins față de randamentul Bitcoin, @{ai.n} săptămîni din 2020')]),
@@ -786,7 +786,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      T('VaR in money', 'VaR în bani') + ' & $W(1 - e^{-\\mathrm{VaR}/100})$, $\\mathrm{VaR}_\\alpha = -q_\\alpha$'],
     size='scriptsize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a fund reports a Bitcoin volatility of 55\\% a year from a daily standard deviation of 3.5\\%. Is it right?', '\\textbf{Întrebare}: un fond raportează o volatilitate anuală a Bitcoin de 55\\% pornind de la o abatere standard zilnică de 3,5\\%. Este corect?'),
      [T('\\textbf{Answer}: no: $3.5 \\times \\sqrt{252} \\approx 55.6\\%$; with 365 days it is $3.5 \\times \\sqrt{365} \\approx 66.9\\%$', '\\textbf{Răspuns}: nu: $3{,}5 \\times \\sqrt{252} \\approx 55{,}6\\%$; cu 365 de zile se obține $3{,}5 \\times \\sqrt{365} \\approx 66{,}9\\%$')]),
     (T('\\textbf{Question}: USDT closes at 1.0040 USD. What is the peg deviation?', '\\textbf{Întrebare}: USDT se închide la 1,0040 USD. Cît este abaterea de la paritate?'),

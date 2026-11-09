@@ -179,7 +179,7 @@ D.frame(T('Mandelbrot\'s Observations on Cotton Prices', 'Observațiile lui Mand
         'Photo: Rama (2007); CC BY-SA 2.0 fr; Wikimedia Commons', 'Foto: Rama (2007); CC BY-SA 2.0 fr; Wikimedia Commons',
         h='0.45\\textheight'), wl='0.62', wr='0.34'))
 
-D.frame(T('Fama Tests the Idea on Stocks', 'Fama testează ideea pe acțiuni'), cols(items(
+D.frame(T('Fama\'s Tests on Stock Returns', 'Testele lui Fama pe randamentele acțiunilor'), cols(items(
     (T('\\refFama: daily returns of the 30 stocks of the Dow Jones Industrial Average',
        '\\refFama: randamentele zilnice ale celor 30 de acțiuni din Dow Jones Industrial Average'),
      [T('more large returns than the Normal distribution predicts, for every stock',
@@ -490,7 +490,7 @@ chart(T('Tails on Log-Log Axes', 'Cozile pe axe log-log'), 'sfm_ch3_tails_loglog
     T('$P(X > 10)$: $@{tl.1.7.sf10}\\%$ for $\\alpha = 1.7$, $@{tl.1.5.sf10}\\%$ for $\\alpha = 1.5$, about $@{tl.2.sf10}\\%$ for the Normal distribution',
       '$P(X > 10)$: $@{tl.1.7.sf10}\\%$ pentru $\\alpha = 1.7$, $@{tl.1.5.sf10}\\%$ pentru $\\alpha = 1.5$, circa $@{tl.2.sf10}\\%$ pentru distribuția Normală')])
 
-D.frame(T('Which Moments Exist?', 'Existența momentelor'), items(
+D.frame(T('Existence of Moments', 'Existența momentelor'), items(
     (T('For $0 < \\alpha < 2$: $E|X|^p < \\infty$ if and only if $p < \\alpha$', 'Pentru $0 < \\alpha < 2$: $E|X|^p < \\infty$ dacă și numai dacă $p < \\alpha$'),
      [T('$E|X|^p$: the absolute moment of order $p > 0$; $p = 1$ gives the mean, $p = 2$ the variance', '$E|X|^p$: momentul absolut de ordin $p > 0$; $p = 1$ corespunde mediei, $p = 2$ varianței'),
       T('reason: $|x|^p$ times a density of order $|x|^{-\\alpha-1}$ is integrable only if $p < \\alpha$',
@@ -505,7 +505,7 @@ D.frame(T('Which Moments Exist?', 'Existența momentelor'), items(
     (T('\\textbf{Answer}', '\\textbf{Răspuns}'),
      [T('yes, because $1 < 1.7$; but the variance does not, because $2 > 1.7$', 'da, pentru că $1 < 1.7$; dar varianța nu există, pentru că $2 > 1.7$')])))
 
-chart(T('The Sample Variance Does Not Settle', 'Varianța de selecție nu se stabilizează'), 'sfm_ch3_running_var_sim', 'SFM_ch3_tails_moments', [
+chart(T('Instability of the Sample Variance', 'Instabilitatea varianței de selecție'), 'sfm_ch3_running_var_sim', 'SFM_ch3_tails_moments', [
     T('Normal (blue): the sample variance converges to the true value 2', 'Distribuția Normală (albastru): varianța de selecție converge la valoarea adevărată 2'),
     T('Stable $\\alpha = 1.7$: each large draw makes the variance jump; after 20\\,000 draws the three paths end at $@{rv.path1.vend}$, $@{rv.path2.vend}$, $@{rv.path3.vend}$',
       'Stabilă $\\alpha = 1.7$: fiecare extragere mare produce un salt al varianței; după 20\\,000 de extrageri, cele trei traiectorii ajung la $@{rv.path1.vend}$, $@{rv.path2.vend}$, $@{rv.path3.vend}$'),
@@ -768,7 +768,7 @@ def aicrow(k):
     return f'{NAMES[k]} & @{{f.{k}.aic.n}} & @{{f.{k}.aic.t}} & @{{f.{k}.aic.s}} & $@{{f.{k}.t.nu}}$'
 
 
-D.frame(T('Which Model Fits Best?', 'Compararea celor trei modele'), table(
+D.frame(T('Comparison of the Three Models', 'Compararea celor trei modele'), table(
     'lrrrr', T('& AIC Normal & AIC Student-t & AIC stable & $\\hat\\nu$ (Student-t)', '& AIC Normală & AIC Student-t & AIC stabilă & $\\hat\\nu$ (Student-t)'),
     [aicrow(k) for k in ASSETS], size='footnotesize') + items(
     T('AIC (Akaike information criterion) $= 2k - 2\\ell(\\hat\\theta)$, with $k$ the number of parameters; lower is better',
@@ -788,9 +788,9 @@ D.recap(('Fitting Real Returns', 'Estimarea pe randamente reale'), [
 # =============================================================================
 # 9. CRITICA
 # =============================================================================
-D.section('The Critique: Finite or Infinite Variance?', 'Critica: varianță finită sau infinită?')
+D.section('Critique of the Stable Model: Finite or Infinite Variance', 'Critica modelului stabil: varianță finită sau infinită')
 
-chart(T('Test 1: Does $\\alpha$ Stay the Same When Returns Are Summed?', 'Testul 1: rămîne $\\alpha$ la fel cînd randamentele se adună?'), 'sfm_ch3_aggregation', 'SFM_ch3_aggregation', [
+chart(T('Test 1: Stability of $\\alpha$ under Aggregation', 'Testul 1: stabilitatea lui $\\alpha$ la agregarea randamentelor'), 'sfm_ch3_aggregation', 'SFM_ch3_aggregation', [
     T('If daily returns were i.i.d.\\ stable, weekly and monthly sums would have the \\textbf{same} $\\alpha$ (stability)',
       'Dacă randamentele zilnice ar fi i.i.d.\\ stabile, sumele săptămînale și lunare ar avea \\textbf{același} $\\alpha$ (stabilitatea)'),
     T('ML estimates: S\\&P 500 $@{ag.sp500.daily} \\to @{ag.sp500.weekly} \\to @{ag.sp500.monthly}$; Bitcoin $@{ag.btc.daily} \\to @{ag.btc.weekly} \\to @{ag.btc.monthly}$ (at the bound 2)',
@@ -806,13 +806,13 @@ D.frame(T('Reading the Aggregation Test', 'Interpretarea testului de agregare'),
     T('A rising $\\alpha$ is what the GCLT predicts for sums of finite-variance returns that converge slowly to the Normal distribution',
       'Un $\\alpha$ crescător este exact ceea ce prevede GCLT pentru sume de randamente cu varianță finită care converg lent la distribuția Normală')))
 
-chart(T('Test 2: Does the Sample Variance Settle?', 'Testul 2: se stabilizează varianța de selecție?'), 'sfm_ch3_running_var_real', 'SFM_ch3_aggregation', [
+chart(T('Test 2: Convergence of the Sample Variance', 'Testul 2: convergența varianței de selecție'), 'sfm_ch3_running_var_real', 'SFM_ch3_aggregation', [
     T('S\\&P 500 (blue): after the jumps of 2008 and 2020 the running variance settles near $@{rvr.data}$',
       'S\\&P 500 (albastru): după salturile din 2008 și 2020, varianța cumulată se stabilizează în jur de $@{rvr.data}$'),
     T('Paths simulated from the fitted stable law, same length: final variances between $@{rvr.simmin}$ and $@{rvr.simmax}$, far above the data',
       'Traiectorii de aceeași lungime simulate din legea stabilă estimată: varianțe finale între $@{rvr.simmin}$ și $@{rvr.simmax}$, mult peste date')])
 
-D.frame(T('Test 3: How Heavy Is the Far Tail?', 'Testul 3: cît de groasă este coada îndepărtată?'), items(
+D.frame(T('Test 3: Thickness of the Far Tail', 'Testul 3: grosimea cozii îndepărtate'), items(
     (T('The stable $\\alpha$ is driven by the whole distribution, mostly by the body', '$\\alpha$ stabil este determinat de întreaga distribuție, mai ales de corp'),
      [T('the tail index of the far tail alone is estimated with the Hill estimator \\refHill\\ (Chapter 5)',
         'tail index-ul cozii îndepărtate se estimează separat, cu estimatorul Hill \\refHill\\ (Capitolul 5)')]),
@@ -823,7 +823,7 @@ D.frame(T('Test 3: How Heavy Is the Far Tail?', 'Testul 3: cît de groasă este 
     T('\\refLLW: further evidence against the stable model from the behaviour of sample moments',
       '\\refLLW: alte dovezi împotriva modelului stabil, din comportamentul momentelor de selecție')))
 
-D.frame(T('Why Do Daily Returns Look Stable?', 'Originea aspectului stabil al randamentelor zilnice'), items(
+D.frame(T('Origin of the Apparent Stability of Daily Returns', 'Originea aspectului stabil al randamentelor zilnice'), items(
     (T('\\textbf{Volatility clustering} (Chapters 2 and 9): calm and turbulent periods alternate', '\\textbf{Volatility clustering} (Capitolele 2 și 9): perioadele calme și cele agitate alternează'),
      [T('a mixture of Normal laws with changing variance has heavy tails and a finite variance \\refBG',
         'un amestec de legi Normale cu varianță variabilă are cozi groase și varianță finită \\refBG'),
@@ -857,7 +857,7 @@ D.recap(('The Critique', 'Critica'), [
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Have the tails of Bitcoin become lighter as the market matured?}', '\\textbf{Au devenit mai subțiri cozile Bitcoin pe măsură ce piața s-a maturizat?}'),
      [T('more participants, futures (since 2017) and spot ETFs (exchange-traded funds, since 2024)', 'mai mulți participanți, contracte futures (din 2017) și ETF-uri spot (exchange-traded funds, fonduri tranzacționate la bursă, din 2024)'),
       T('if the tails got lighter, risk models fitted on old data overstate today\'s risk', 'dacă cozile au devenit mai subțiri, modelele de risc estimate pe date vechi supraestimează riscul de azi')]),
@@ -913,7 +913,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'McCulloch & $\\nu_\\alpha = \\dfrac{q_{0.95} - q_{0.05}}{q_{0.75} - q_{0.25}}$, \\quad $\\nu_\\beta = \\dfrac{q_{0.95} + q_{0.05} - 2q_{0.5}}{q_{0.95} - q_{0.05}}$'],
     size='scriptsize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: daily returns are i.i.d.\\ $S(1.5, 0, \\gamma, 0)$; by what factor does the scale grow from 1 day to 20 days?',
        '\\textbf{Întrebare}: randamentele zilnice sînt i.i.d.\\ $S(1.5, 0, \\gamma, 0)$; de cîte ori crește scala de la 1 zi la 20 de zile?'),
      [T('\\textbf{Answer}: $20^{1/1.5} = @{ex.h.1.5}$, i.e.\\ $@{chk.h}$ times the square-root-of-time factor $\\sqrt{20}$',

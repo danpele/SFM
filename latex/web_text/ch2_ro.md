@@ -224,7 +224,7 @@ Teorema are trei condiții: independența termenilor, distribuția lor identică
 
 Viteza convergenței este dată de marginea Berry–Esseen: eroarea maximă dintre funcția de repartiție a mediei standardizate și $\Phi$ scade ca $1/\sqrt{n}$ și crește cu asimetria lui $X$. Teorema explică de ce distribuția Normală apare atît de des în date și de ce intervalele de încredere pentru o medie se construiesc cu cuantilele distribuției Normale, oricare ar fi distribuția datelor.
 
-## CLT în practică (SFEclt) {h=5271ed8a}
+## Ilustrarea CLT (SFEclt) {h=c8702a0c}
 
 Simularea folosește o variabilă puternic asimetrică: o extragere Bernoulli cu probabilitatea de succes $p = 0{,}2$. Pentru $n = 5$, 30 și 300 de extrageri se calculează media standardizată din @eq:clt, iar experimentul se repetă de 20 000 de ori. Fiecare panou compară histograma celor 20 000 de medii standardizate (barele) cu densitatea $N(0,1)$ (curba).
 
@@ -276,7 +276,7 @@ Asimetria $\gamma_1$ folosește puterea a treia, care păstrează semnul fiecăr
 
 Boltirea $\gamma_2$ folosește puterea a patra, care ignoră semnul și amplifică abaterile mari. Pentru distribuția Normală, $\gamma_2 = 3$, de aceea se raportează de obicei excesul de boltire (*excess kurtosis*) $\gamma_2 - 3$. Un exces pozitiv înseamnă cozi groase și un centru înalt și îngust; o asemenea distribuție se numește leptocurtică (*leptokurtic*). Ambele mărimi descriu forma, nu poziția sau scala. Puterea a patra are însă un cost: o singură abatere de 10 abateri standard contribuie la momentul de ordinul patru cît zece mii de abateri de o abatere standard, deci boltirea este foarte sensibilă la cîteva zile extreme.
 
-## Asimetria și boltirea în grafice {h=31d8732f}
+## Asimetria și boltirea: ilustrare grafică {h=dcb40e4a}
 
 Panoul din stînga compară două densități cu aceeași medie, 0, și aceeași varianță, 1: distribuția Normală, cu exces de boltire 0, și distribuția Student-t cu 5 grade de libertate, rescalată la varianța 1, cu exces de boltire 6. Distribuția Student-t este definită în [secțiunea 7](#sec-7). Deși varianțele sînt egale, formele diferă: curba Student-t are mai multă masă în centru și în cozi și mai puțină în umeri, zona aflată la aproximativ una–două abateri standard de medie.
 
@@ -500,7 +500,7 @@ Al treilea fapt este absența autocorelației liniare: randamentele trecute apro
 
 Al cincilea fapt este efectul de levier (*leverage effect*): scăderile de preț cresc volatilitatea viitoare mai mult decît creșterile de aceeași mărime. Al șaselea este asimetria cîștig/pierdere (*gain/loss asymmetry*): pierderile mari sînt mai mari și mai frecvente decît cîștigurile mari. Ultimele două fapte privesc asimetria, în dinamică și în distribuție. Fiecare fapt este verificat în continuare cu o statistică și un grafic.
 
-## Faptul 1: cozile groase în cifre {h=fdcb1260}
+## Faptul 1: cozile groase, numărul zilelor de k sigma {h=6a44a427}
 
 Tabelul numără, pentru S&P 500, DAX, BET și Bitcoin, zilele în care randamentul se află la mai mult de $k$ abateri standard de medie, $|r_t - \bar r| > k\,s$, pentru $k$ de la 3 la 6, unde $s$ este abaterea standard de selecție. Ultimul rînd dă numărul de zile așteptat conform distribuției Normale pentru un eșantion de 4 201 zile, cît are S&P 500: 11,34 zile dincolo de 3 abateri standard, 0,27 zile dincolo de 4, $2{,}4 \times 10^{-3}$ zile dincolo de 5 și $8{,}3 \times 10^{-6}$ zile dincolo de 6.
 
@@ -646,7 +646,7 @@ Faptele stilizate arată că modelul de referință greșește în trei privinț
 
 Secțiunea aplică instrumentele capitolului unei întrebări de cercetare deschise: se subțiază cozile distribuției randamentelor Bitcoin pe măsură ce piața se maturizează? Ea prezintă dovezile preliminare și motivele pentru care întrebarea rămîne deschisă, descrie unde pot ajuta instrumentele de inteligență artificială (AI, *artificial intelligence*) într-un asemenea studiu, ce trebuie verificat în rezultatele lor și propune o idee de proiect.
 
-## O întrebare deschisă: devin mai subțiri cozile Bitcoin? {h=bf49f78e}
+## O întrebare de cercetare deschisă: evoluția cozilor Bitcoin {h=acbdc467}
 
 Ipoteza de lucru este că, pe măsură ce o piață se maturizează, prin mai mulți participanți, contracte futures și ETF-uri (*exchange-traded funds*, fonduri tranzacționate la bursă), cozile distribuției randamentelor ei s-ar putea subția. Graficul arată, pentru Bitcoin și pentru S&P 500 ca reper, excesul de boltire al randamentelor zilnice în fiecare an (sus) și gradele de libertate $\hat\nu$ ale distribuției Student-t estimate separat pentru fiecare an (jos), cu valorile limitate la 30.
 

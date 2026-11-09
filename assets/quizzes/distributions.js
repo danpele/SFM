@@ -119,7 +119,7 @@ window.SFM_DATA.quizzes['distributions'] = {
         {
             "correct": 1,
             "en": {
-                "title": "Why lognormal prices",
+                "title": "Lognormal model of prices",
                 "text": "Why are prices modelled as lognormal rather than Normal?",
                 "options": [
                     "Lognormal prices have thinner tails",
@@ -131,7 +131,7 @@ window.SFM_DATA.quizzes['distributions'] = {
                 "incorrectExplanation": "A Normal price could become negative; the lognormal model keeps prices positive and is right-skewed, not symmetric."
             },
             "ro": {
-                "title": "De ce prețuri lognormale",
+                "title": "Modelul lognormal al prețurilor",
                 "text": "De ce se modelează prețurile ca lognormale și nu ca Normale?",
                 "options": [
                     "Prețurile lognormale au cozi mai subțiri",
@@ -281,7 +281,7 @@ window.SFM_DATA.quizzes['distributions'] = {
         {
             "correct": 1,
             "en": {
-                "title": "What a JB rejection means",
+                "title": "Interpreting a JB rejection",
                 "text": "JB rejects normality for S&P 500 returns with $p \\approx 0$. What can you conclude?",
                 "options": [
                     "The returns follow a Student-t distribution",

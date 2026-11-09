@@ -47,7 +47,7 @@ In October 1994 the bank published its methodology and the data needed to apply 
 
 The publication turned VaR into a common language. Banks, regulators and fund managers could now state their market risk in the same units, a loss in currency at a given probability, and compare positions that had nothing else in common. The simplicity that made the method popular also contains its two weak points, which the chapter examines in turn: the Normal distribution has too thin a tail, and a quantile says nothing about the size of the losses beyond it.
 
-## From RiskMetrics to Basel {h=ec54ca43}
+## RiskMetrics and the Basel Rules {h=e4a6ffa4}
 
 The Basel Committee on Banking Supervision (BCBS), hosted by the Bank for International Settlements (BIS) in Basel, sets the international standards for bank capital ([history of the Basel Committee](https://www.bis.org/bcbs/history.htm)). In 1996 it allowed banks to compute the capital for market risk with their own internal VaR models [@BCBS1996a]. The rule uses VaR 1% over 10 days, multiplied by a factor of at least 3, and the factor increases when the model fails its backtest, that is, when actual losses exceed the VaR too often [@BCBS1996b].
 
@@ -143,7 +143,7 @@ The condition $\nu > 1$ is needed for the mean, and hence the ES, to exist. The 
 
 Fitted to the S&P 500 by maximum likelihood, the distribution has location $\hat m = 0.068$, scale $\hat s = 0.703$ and $\hat\nu = 2.67$ degrees of freedom. The quantile is $t_{0.01} = -5.023$, so the VaR 1% $= -(0.068 + 0.703 \times (-5.023)) = 3.46\%$, exactly the historical value. The ES factor is 5.720, so the ES 2.5% $= -0.068 + 0.703 \times 5.720 = 3.95\%$, above the historical 3.76%. With $\nu < 3$ the fitted tail is very heavy: it matches the 1% quantile, but beyond it the t distribution places more mass than the data show.
 
-## From One Day to Ten Days {h=e693af93}
+## Scaling VaR from One to Ten Days {h=2d80107b}
 
 Regulatory VaR has a 10-day horizon, while data and models are daily. The **square-root-of-time rule** bridges the gap: $\mathrm{VaR}^{(h)} \approx \sqrt{h}\,\mathrm{VaR}^{(1)}$. The rule is exact for i.i.d. Normal returns with mean zero, because the $h$-day return is then Normal with standard deviation $\sigma\sqrt{h}$ and every quantile scales by $\sqrt{h}$. Basel 1996 asked for a 10-day VaR, usually obtained from the one-day VaR by the factor $\sqrt{10} = 3.162$.
 
@@ -183,7 +183,7 @@ VaR satisfies the first three axioms; subadditivity can fail. It fails for discr
 
 ES pays for coherence with a stronger requirement: it needs a finite mean loss, while VaR exists for every distribution. For daily equity returns, whose tail index is around 3, this is not a constraint; for some operational or insurance losses it can be.
 
-## Elicitability: Can a Forecast Be Scored? {h=545f3c1a}
+## Elicitability and Forecast Evaluation {h=efb3b356}
 
 A statistic is **elicitable** if some loss function, or scoring function, is minimised in expectation by its true value [@Gneiting2011]. The mean is elicitable through the squared error, the median through the absolute error. Elicitability matters because it allows competing forecasts to be ranked: the forecaster with the smaller average score is the better one, and no forecaster can lower the expected score by reporting anything other than the true value.
 
@@ -223,7 +223,7 @@ The window length $n$ is a trade-off. A short window of 250 days reacts to recen
 
 A specific artefact of a fixed window is the **ghost effect**. A crash day changes the VaR when it enters the window, which is reasonable, and changes it again, abruptly, $n$ days later when it leaves the window, although nothing happened on that day. With a 500-day window, a crash stays in the estimate for about two years, as the rolling forecasts of the [conditional VaR section](#sec-5) show.
 
-## How Precise Is a Historical VaR? {h=b90b442b}
+## Precision of a Historical VaR {h=2f738ca3}
 
 A VaR estimate is a statistic and has a sampling error. The bootstrap of [Chapter 2](ch2.html) measures it: resample the $n$ returns with replacement 2000 times, recompute VaR and ES on each resample, and read the 2.5% and 97.5% quantiles of the 2000 values as a 95% interval.
 
@@ -287,7 +287,7 @@ For VaR 1% and ES 2.5%, historical simulation, the Student-t and EVT agree on al
 
 The section combines the volatility forecasts of [Chapter 9](ch9.html) with the tail models of the previous section. A VaR forecast becomes the product of tomorrow's volatility and a quantile of the standardised innovation. The section computes such forecasts for six series, evaluates rolling forecasts from 2005 to 2026, and compares conditional and unconditional methods in the crises of 2008 and 2020.
 
-## Why Condition on Today's Volatility? {h=ee20f28c}
+## Conditioning on Current Volatility {h=2ccc22e0}
 
 Volatility clusters ([Chapters 8](ch8.html) and [9](ch9.html)): calm days follow calm days and turbulent days follow turbulent days. An unconditional VaR averages over both regimes, so it is too high in quiet years and too low at the start of a crisis, exactly when it matters most.
 
@@ -375,7 +375,7 @@ Step by step: $w_1\sigma_1 = 0.712$, $w_2\sigma_2 = 0.614$ and the covariance te
 
 The Euler contributions $w_i(\Sigma w)_i/\sigma_p$, where $(\Sigma w)_i$ is the $i$-th component of the vector $\Sigma w$, add up exactly to $\sigma_p$, so they split the portfolio risk among the assets. The BET contributes 56% and the S&P 500 44%: the BET, with the higher volatility, carries more than half of the risk despite its equal weight.
 
-## Correlation Rises in Crises {h=bc249858}
+## Correlation in Crisis Periods {h=3170c09c}
 
 The chart shows the correlation of the daily BET and S&P 500 returns over rolling 250-day windows from 2001, with the two stress periods shaded and the whole-sample correlation, 0.21, as a dashed line. Before 2008 the rolling correlation was close to zero; it jumped in the autumn of 2008 and again, much higher, in March 2020.
 
@@ -451,7 +451,7 @@ Diversification between the BET and the S&P 500 removes 22% of the Normal VaR, b
 
 The section asks whether a VaR forecast was correct, using only the forecasts and the realised returns. It defines the hit sequence, derives the Kupiec test for the number of exceptions and the Christoffersen test for their clustering, presents the Basel traffic light, applies all three to the rolling forecasts of four indices from 2005 to 2026, ranks the forecasts with the quantile loss and ends with the Acerbi–Székely backtest of ES.
 
-## The Idea: the Hit Sequence {h=0d7a55a2}
+## The Hit Sequence {h=b5479988}
 
 An **exception**, or exceedance, is a day on which the loss exceeded the VaR forecast, $r_t < -\mathrm{VaR}_t$. The hit sequence records them: $I_t = \mathbf{1}\{r_t < -\mathrm{VaR}_t\}$. The VaR must be the forecast made one day before, with no information from the future; a VaR estimated on a sample that includes day $t$ will be exceeded less often than a real forecast.
 
@@ -507,7 +507,7 @@ The zones come from the binomial distribution of a correct model: the yellow zon
 
 The capital charge under the 1996 rules is the larger of yesterday's 10-day VaR 1% and $(3 + \text{plus factor})$ times the average 10-day VaR 1% over the last 60 days; in normal times the second term dominates. The FRTB keeps the count of VaR 1% exceptions, at the level of the bank and of each trading desk, under chapter MAR32 [@BCBS2023a].
 
-## When Do the Exceptions Happen? {h=a9263a54}
+## Exceptions over Time {h=4d349b68}
 
 The chart shows the exceptions of the four rolling VaR 1% forecasts of the S&P 500 from 2005 to 2026; each mark is a day on which the method's VaR was exceeded, and the shaded bands are the two stress periods. For about 5,460 days, each method should have about 55 exceptions; the legend gives 77 for HS, 148 for the Normal method, 95 for GARCH-t and 86 for FHS.
 
@@ -531,7 +531,7 @@ For Bitcoin, HS passes all three tests, with 33 exceptions, a rate of 0.93% and 
 
 No method wins everywhere. The ranking depends on the market: the conditional methods are best for the equity indices, while Bitcoin's extreme and frequent volatility shifts are handled reasonably even by a two-year historical window. The Normal method is the only consistent result: it fails on every series.
 
-## Ranking the Forecasts, and Today's Zone {h=6e525e18}
+## Ranking of the Forecasts and the Current Traffic-Light Zone {h=7eb46792}
 
 Tests say whether a model is acceptable; a **scoring function** says which of two models is better. Since VaR is elicitable, the average quantile loss
 
@@ -579,7 +579,7 @@ A correct VaR produces i.i.d. Bernoulli hits. The Kupiec test @eq:kupiec checks 
 
 The section starts from an open question raised by the portfolio results: whether the tail dependence between the Bucharest market and world markets jumps in crises and then returns to its previous level. It shows where AI tools can help a researcher who studies it and which checks they cannot replace.
 
-## An Open Question {h=57d6c02e}
+## An Open Research Question {h=75b8180a}
 
 Does the tail dependence between the BVB and world markets jump in crises and then revert? The chapter's results point in that direction. The BET–S&P 500 correlation was 0.20 in a quiet year and 0.71 in the spring of 2020; a constant t copula gives a tail dependence of $\lambda_L = 0.096$; and a portfolio VaR built on a constant copula stays below the historical VaR ([Portfolio VaR section](#sec-6)).
 
@@ -635,7 +635,7 @@ The conditional VaR @eq:cond scales the quantile of the standardised innovation 
 
 The Kupiec statistic @eq:kupiec tests the exception rate, the Christoffersen statistic @eq:lrind their independence, and their sum $LR_{cc}$ tests conditional coverage against $\chi^2(2)$. The Acerbi–Székely statistic @eq:z2 tests ES and VaR together.
 
-## Check Yourself {h=e06f0bbf}
+## Self-Assessment {h=8add9cc9}
 
 The first question gives a division's report "VaR 1% = −2.4%". The sign is wrong: −2.4% is the quantile $q_{0.01}$ of the returns, and by @eq:var the VaR 1% is $-q_{0.01} = 2.4\%$, a positive loss.
 

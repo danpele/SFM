@@ -25,8 +25,8 @@ BLOCKS = [('markets', 'sfm_ch0_markets', 'mk'), ('risk-return', 'sfm_ch0_risk_re
 PFX = {'markets': 'mk', 'risk-return': 'rr', 'drawdowns': 'dd', 'vix': 'vx', 'returns': 'rt', 'histogram': 'hs'}
 
 SECTIONS = {
- 'ro': dict(mk='Piețele financiare în 2026: statistici descriptive', ret='De la prețuri la randamente: primii pași'),
- 'en': dict(mk='Financial Markets in 2026: Descriptive Statistics', ret='From Prices to Returns: a First Look'),
+ 'ro': dict(mk='Piețele financiare în 2026: statistici descriptive', ret='Prețuri și randamente: primele definiții'),
+ 'en': dict(mk='Financial Markets in 2026: Descriptive Statistics', ret='Prices and Returns: First Definitions'),
 }
 
 L = {
@@ -245,7 +245,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch0-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch0-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH0_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH0_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

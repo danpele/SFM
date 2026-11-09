@@ -32,7 +32,7 @@ Ponderea creditelor neperformante după starea contului curent în datele South 
 - Weight of Evidence și Information Value | Recodificarea unei variabile prin dovada pe care o aduce despre nerambursare, regulile de discretizare și ordonarea celor 20 de variabile.
 - Regresia logistică | Șansa și logaritmul șansei, modelul logit, rapoartele șanselor, un scorecard WoE și corecția pentru suprareprezentare.
 - Analiza discriminantă liniară | Criteriul lui Fisher, LDA ca model de probabilitate și comparația cu modelul logit.
-- De la model la scorecard | Punctele pentru dublarea șansei, punctele fiecărui atribut și scorurile eșantionului de test.
+- Construirea scorecard-ului | Punctele pentru dublarea șansei, punctele fiecărui atribut și scorurile eșantionului de test.
 - Validarea | Matricea de confuzie, praguri și costuri, ROC, AUC, Gini, CAP, KS, calibrarea, scorul Brier, validarea încrucișată și deriva populației.
 - Reject inference și echitatea | Rezultatele lipsă ale solicitanților respinși și trei criterii de echitate, pe datele din Taiwan.
 - Nerambursarea companiilor: Altman și Merton | Scorul Z din indicatori contabili și distanța pînă la nerambursare din prețuri de piață.
@@ -51,7 +51,7 @@ Un scor de credit este un număr calculat din datele unui solicitant, care ordon
 
 Scorurile diferă după client și după informația pe care o folosesc. Scorurile de aplicare (*application scores*) se calculează pentru clienții noi, din datele din cererea lor; scorurile comportamentale (*behavioural scores*) se calculează pentru clienții existenți, din istoricul plăților lor. Scorurile pentru persoane fizice se sprijină pe modele statistice estimate pe multe credite mici, iar scorurile pentru companii folosesc indicatori contabili și prețuri de piață, ca în modelele Altman și Merton din [secțiunea 9](#sec-9).
 
-## De la Durand la FICO {h=8fb83f54}
+## Începuturile scoringului de credit: Durand și FICO {h=a6f47369}
 
 Scoringul statistic de credit este mai vechi decît calculatorul. În 1941, @Durand1941 a studiat creditele în rate ale creditorilor americani și a separat creditele bune de cele rele cu analiza discriminantă pe care Fisher o propusese cu cinci ani mai devreme; acesta este primul studiu statistic de scoring de credit. În 1956, inginerul Bill Fair și matematicianul Earl Isaac au înființat Fair, Isaac and Company, azi [FICO](https://www.myfico.com/credit-education/blog/history-of-the-fico-score). În 1989, compania a introdus scorul FICO, calculat din rapoartele birourilor de credit și cuprins între 300 și 850 de puncte, care a devenit scorul standard pentru persoane fizice în Statele Unite.
 
@@ -81,7 +81,7 @@ unde $\Phi$ și $\Phi^{-1}$ sînt funcția de repartiție (*distribution functio
 
 Logica formulei provine de la @Gordy2003. Termenul $\Phi(z^*)$ este rata de nerambursare a portofoliului într-un an al cărui factor comun este atît de prost încît este depășit doar cu probabilitatea 0,1%, un an care apare o dată la 1 000 de ani. Înmulțit cu LGD, el dă pierderea într-un astfel de an; scăzînd pierderea așteptată, rămîne pierderea neașteptată. $K$ este deci VaR 0,1% al pierderii din credit minus pierderea așteptată, aceeași idee de cuantilă ca VaR din [Capitolul 10](ch10_ro.html), aplicată unui portofoliu de credite.
 
-## PD în ani buni și în ani proști: modelul cu un factor {h=7634fcf6}
+## PD în anii favorabili și nefavorabili: modelul cu un factor {h=a1f45ce6}
 
 Modelul din spatele formulei IRB este un model cu un factor. Debitorul $i$ intră în nerambursare cînd un indice latent al sănătății lui financiare scade sub un prag:
 
@@ -309,7 +309,7 @@ Modelul logit exprimă logaritmul șansei de nerambursare ca funcție liniară d
 
 Discriminantul liniar al lui Fisher a fost prima metodă statistică de scoring de credit și rămîne metoda din spatele scorului Z al lui Altman. Secțiunea prezintă criteriul lui Fisher, arată că, pentru variabile cu distribuția Normală și aceeași matrice de covarianță în ambele grupuri, el dă un logaritm al șansei liniar în variabile, exact ca modelul logit, calculează de mînă direcția discriminantă pentru două variabile și compară cele două metode pe eșantionul de test.
 
-## Ideea lui Fisher (1936) {h=94efbc31}
+## Funcția discriminantă a lui Fisher (1936) {h=f88e4cc7}
 
 @Fisher1936 a întrebat care combinație liniară $w^\top x$ a mai multor măsurători separă cel mai bine două grupuri. El a lucrat cu măsurători ale florilor de iris din specii diferite; cinci ani mai tîrziu, Durand a aplicat aceeași metodă creditelor. Răspunsul depinde de ce înseamnă „cel mai bine”, iar alegerea lui Fisher a fost să compare distanța dintre mediile grupurilor cu dispersia din interiorul grupurilor, ambele măsurate de-a lungul direcției $w$:
 
@@ -355,7 +355,7 @@ Graficul reprezintă durata în funcție de vîrstă pentru fiecare credit, cu o
 
 Trăsătura mai izbitoare este suprapunerea celor doi nori: creditele performante și cele neperformante ocupă în mare parte aceeași regiune a planului. Durata și vîrsta aduc informație, dar mult prea puțină pentru a separa grupurile; un scorecard util are nevoie de mai multe variabile, precum contul curent și istoricul de credit. Alegerea dintre LDA și logit contează mult mai puțin decît alegerea variabilelor.
 
-## Logit sau LDA? {h=75c663e3}
+## Compararea modelelor logit și LDA {h=acb4bf43}
 
 Tabelul pune cele două metode alături. Logit-ul modelează doar $P(Y \mid x)$; LDA modelează distribuția lui $x$ în fiecare grup, ca Normală cu o matrice $\Sigma$ comună. Logit-ul se estimează iterativ prin verosimilitate maximă, LDA cu formule explicite din medii și covarianțe. Cînd $x$ are într-adevăr distribuția Normală, ambele sînt consistente, iar LDA este mai eficientă, pentru că folosește informația din distribuția lui $x$. Cînd $x$ conține variabile indicator, valori WoE sau variabile asimetrice, ipoteza distribuției Normale nu mai este îndeplinită: ordonarea dată de LDA rămîne de obicei bună, dar PD ei pot fi deplasate, în timp ce logit-ul nu este afectat.
 
@@ -367,7 +367,7 @@ Pentru ordonarea solicitanților, cele două metode sînt aici practic identice.
 
 Discriminantul lui Fisher alege direcția $w \propto S_W^{-1}(m_1 - m_0)$, care maximizează distanța dintre mediile grupurilor raportată la dispersia din interiorul grupurilor. Pentru variabile cu distribuția Normală și o matrice de covarianță comună, el dă un logaritm al șansei liniar în $x$, aceeași formă ca la logit, estimată altfel. Cu durata și vîrsta, ambele metode echivalează o lună de durată cu aproximativ doi ani de vîrstă; cu cele șase variabile WoE, ambele ating un AUC de test de 0,801, iar testul DeLong nu găsește nicio diferență. [Secțiunea următoare](#sec-6) transformă logaritmul șansei estimat într-un scorecard de puncte.
 
-# De la model la scorecard
+# Construirea scorecard-ului
 
 Băncile arată rareori PD personalului sau solicitanților; ele arată scoruri. Secțiunea explică cum se rescalează logaritmul șansei dat de un model în puncte cu două convenții, un scor de bază la o șansă dată și numărul de puncte necesar pentru dublarea șansei, cum primește fiecare atribut al unui solicitant propriile puncte și cum sînt distribuite scorurile eșantionului de test.
 
@@ -565,7 +565,7 @@ Modelul este calibrat în fiecare grup: PD medie a fiecărui grup este apropiat�
 
 Graficul ilustrează astfel în cifre conflictul de pe slide-ul anterior. Egalizarea ratelor de aprobare ar cere praguri diferite după sex, ceea ce ar strica calibrarea în fiecare grup și ar folosi explicit variabila protejată.
 
-## Studiu de caz: învățarea automată și creditul inegal {h=b869ee4c}
+## Studiu de caz: învățarea automată și inegalitatea accesului la credit {h=d3aa93dc}
 
 @FusterEtAl2022 au studiat creditele ipotecare din SUA și au prognozat nerambursarea atît cu un logit tradițional, cît și cu modele de învățare automată (*machine learning*). Întrebarea lor merge dincolo de acuratețe: cînd un creditor trece la modelul mai precis, cine cîștigă și cine pierde?
 
@@ -625,7 +625,7 @@ Panoul din stînga al graficului simulează 40 de traiectorii ale valorii active
 
 Panoul din dreapta reprezintă PD pe un an în funcție de gradul de îndatorare $D/V$ pentru trei volatilități ale activelor. PD este aproape zero la îndatorare mică și crește abrupt între o îndatorare de 70% și una de 90%. Cu cît volatilitatea este mai mare, cu atît creșterea începe mai devreme: o companie cu active volatile devine riscantă la o îndatorare care ar fi inofensivă pentru o companie cu active stabile. Acesta este conținutul distanței pînă la nerambursare: îndatorarea raportată la volatilitate.
 
-## Studiu de caz: cît de bun este modelul Merton? {h=1ee6c241}
+## Studiu de caz: acuratețea predictivă a modelului Merton {h=a07e0f27}
 
 @BharathShumway2008 au testat modelul Merton pe companii americane. Ei au comparat DD Merton, obținut prin rezolvarea ecuațiilor de evaluare a opțiunilor, cu un DD „naiv”, care are aceeași formă funcțională, dar înlocuiește soluția cu aproximări simple ale valorii activelor și ale volatilității lor. Ambele au fost folosite în modele de hazard ale nerambursării și în prognoze în afara eșantionului și comparate cu informația din spread-urile swap-urilor pe riscul de nerambursare (CDS, *credit default swap*) și din randamentele obligațiunilor.
 
@@ -641,7 +641,7 @@ Scorul Z al lui Altman este discriminantul lui Fisher aplicat la cinci indicator
 
 Ultima secțiune a fiecărui capitol ia o întrebare de cercetare deschisă din domeniul lui și arată cum pot instrumentele AI să accelereze un studiu al ei și ce verificări rămîn sarcina cercetătorului. Pentru scoringul de credit, întrebarea este dacă scorurile flexibile de învățare automată îmbunătățesc prognoza nerambursării suficient pentru a justifica ce costă ele ca transparență și echitate.
 
-## O întrebare deschisă {h=fa7b6963}
+## O întrebare de cercetare deschisă {h=9ec7ff50}
 
 Întrebarea acestui capitol este: îmbunătățesc scorurile flexibile de învățare automată prognoza nerambursării suficient pentru a justifica costul lor în transparență și echitate? Rezultatele capitolului o încadrează. Logit-ul WoE și LDA ating pe datele germane un AUC de test din validarea încrucișată de aproximativ 0,764. Comparațiile de mari dimensiuni găsesc cîștiguri semnificative pentru ansamblurile de clasificatori [@LessmannEtAl2015]; cîștigurile pot fi inegale între grupurile de debitori [@FusterEtAl2022]; iar mașinile cu vectori suport (*support vector machines*) au fost aplicate prognozei nerambursării de @ChenHardleMoro2011.
 

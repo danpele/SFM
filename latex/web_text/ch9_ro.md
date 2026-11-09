@@ -583,7 +583,7 @@ VaR condiționat, @eq:var, combină volatilitatea prognozată de GARCH cu cuanti
 
 Secțiunea pornește de la o întrebare deschisă ridicată de contrastul dintre Bitcoin și S&P 500 și arată unde pot ajuta instrumentele AI (inteligență artificială, *artificial intelligence*) un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=9fdccf85}
+## O întrebare de cercetare deschisă {h=d5c80f5d}
 
 Devine volatilitatea Bitcoin mai asemănătoare cu volatilitatea unui indice de acțiuni? Pe întregul eșantion, contrastul este clar. Bitcoin este un IGARCH, fără revenire la medie, cu inovații extrem de groase ($\hat\nu = 3{,}18$) și fără efect de levier. S&P 500 are o volatilitate care revine la medie și un efect de levier puternic. Din 2024, fondurile tranzacționate la bursă (ETF, *exchange-traded funds*) pe Bitcoin aduc pe piața cripto investitori din piața de acțiuni, ceea ce ar putea apropia dinamica celor două piețe.
 

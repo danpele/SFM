@@ -43,7 +43,7 @@ Valoarea a 100 de unități investite în portofoliul cu ponderi egale al bănci
 
 Secțiunea definește riscul sistemic și explică de ce VaR-ul calculat separat pentru fiecare bancă nu îl surprinde. Prezintă apoi cele trei canale prin care o problemă locală devine o problemă a sistemului: contagiunea directă, expunerile comune cu vînzările forțate și retragerea depozitelor. Se încheie cu problema băncilor prea mari pentru a fi lăsate să falimenteze și cu un tabel al măsurilor folosite în restul capitolului.
 
-## O definiție {h=e3685ecc}
+## Definiția riscului sistemic {h=78f81aab}
 
 În 2009, la cererea G-20, IMF (*International Monetary Fund*, Fondul Monetar Internațional), BIS (*Bank for International Settlements*, Banca Reglementelor Internaționale) și FSB (*Financial Stability Board*, Consiliul pentru Stabilitate Financiară) au definit riscul sistemic ca riscul ca sistemul financiar în ansamblu să nu își mai îndeplinească funcțiile, adică creditarea, plățile și tranzacționarea, cu costuri mari pentru economia reală [@IMFBISFSB2009]. Accentul cade pe funcții, nu pe instituții: falimentul unei bănci mici, ale cărei servicii sînt preluate imediat de alte bănci, nu este un eveniment sistemic.
 
@@ -187,7 +187,7 @@ Cele patru crize arată toate canalele riscului sistemic: expuneri directe și c
 
 Secțiunea măsoară cît de mult se mișcă băncile împreună și cum se schimbă această mișcare comună în crize. Pornește de la corelațiile mobile, arată de ce o corelație mai mare nu dovedește contagiunea (corecția Forbes–Rigobon) și trece apoi la dependența în cozi, care privește doar zilele proaste, estimată empiric și dintr-o copula t.
 
-## Corelația dintre bănci crește în crize {h=eeeb5179}
+## Corelația dintre bănci în perioadele de criză {h=f45f4eeb}
 
 Graficul arată, pentru fiecare grup de bănci, media corelațiilor dintre perechile de bănci, calculate pe randamente zilnice în ferestre mobile de 120 de zile. Axa verticală merge de la 0 la 1, iar liniile punctate marchează aceleași patru evenimente ca în secțiunea precedentă. Pentru băncile românești, media este simplă corelația dintre TLV și BRD.
 
@@ -195,7 +195,7 @@ Pentru băncile americane, corelația medie a fost de 0,59 înainte de criză, �
 
 Corelația mobilă (*rolling correlation*) arată că legătura dintre bănci nu este constantă. În anii liniștiți, fiecare bancă răspunde în parte propriilor știri; într-o criză, același factor comun domină randamentele tuturor.
 
-## Interpretarea corelațiilor: cînd diversificarea nu mai funcționează {h=5e3eaac6}
+## Interpretarea corelațiilor: limitele diversificării în criză {h=396f3dc8}
 
 Cînd corelația medie se apropie de 1, un portofoliu format din mai multe bănci se comportă aproape ca o singură bancă. Beneficiul diversificării, care se sprijină pe faptul că pierderile unei bănci sînt compensate de cîștigurile alteia, dispare exact în perioada în care ar fi cel mai util. Cauza este factorul comun: piața în ansamblu și stresul de finanțare domină știrile specifice fiecărei bănci.
 
@@ -203,7 +203,7 @@ Cazul celor două bănci românești este cel mai clar, cu o rezervă: seria ati
 
 Două precauții sînt necesare. O corelație estimată pe 120 de zile are o eroare de estimare mare, deci variațiile mici ale liniei nu trebuie interpretate; cu doar două acțiuni, ca în cazul TLV și BRD, chiar și un vîrf poate apărea într-un an liniștit. Iar o creștere a corelației nu dovedește, singură, că legătura dintre bănci s-a întărit: ea poate apărea și numai pentru că volatilitatea a crescut, cum arată slide-ul următor.
 
-## Contagiune sau interdependență? Forbes și Rigobon (1/2) {h=d39230c9}
+## Contagiune și interdependență: Forbes și Rigobon (1/2) {h=2e20a6cf}
 
 @ForbesRigobon2002 pornesc de la un model simplu, $y = \beta x + e$, în care $x$ este randamentul pieței-sursă, $y$ randamentul celeilalte piețe, $\beta$ intensitatea legăturii, iar $e$ un șoc al lui $y$ fără legătură cu $x$. Corelația dintre $x$ și $y$ este $\rho = \beta\sigma_x/\sqrt{\beta^2\sigma_x^2 + \sigma_e^2}$. Dacă varianța lui $x$ crește, iar $\beta$ și $\sigma_e$ rămîn aceleași, corelația crește automat, pentru că partea comună a lui $y$ devine mai mare relativ la zgomotul propriu.
 
@@ -213,7 +213,7 @@ $$ \rho^* = \frac{\rho}{\sqrt{1 + \delta(1 - \rho^2)}}, \qquad \delta = \frac{\s
 
 În @eq:fr, $\rho$ este corelația măsurată în criză, $\sigma^2$ este varianța pieței-sursă în fiecare perioadă, iar $\delta$ este creșterea relativă a acestei varianțe. Corelația corectată $\rho^*$ se compară cu corelația din perioada calmă, $\rho_{\text{calm}}$: dacă $\rho^* > \rho_{\text{calm}}$, legătura s-a întărit și datele indică o contagiune; altfel, creșterea corelației se explică prin volatilitate.
 
-## Contagiune sau interdependență? Forbes și Rigobon (2/2) {h=fbb08347}
+## Contagiune și interdependență: Forbes și Rigobon (2/2) {h=270f4b1b}
 
 Exemplul aplică corecția portofoliului băncilor americane, ca sursă, și portofoliului băncilor europene. Perioada calmă este ianuarie 2005 – iunie 2007, cu 506 zile, iar criza este 15 septembrie – 31 decembrie 2008, cu 72 de zile. Corelația crește de la 0,40 în perioada calmă la 0,60 în criză, o creștere care, privită singură, ar sugera o contagiune.
 
@@ -267,7 +267,7 @@ Imaginea face concretă măsura $\lambda(5\%)$ din tabelul precedent. Pătratul 
 
 Secțiunea definește CoVaR, VaR-ul sistemului condiționat de situația unei instituții, și ΔCoVaR, contribuția instituției la riscul sistemic. Le estimează prin regresie cuantilică pentru JPMorgan Chase și pentru toate cele 13 bănci, compară ΔCoVaR cu VaR-ul propriu și construiește o versiune variabilă în timp. Se încheie cu lucrarea lui Adrian și Brunnermeier.
 
-## De la VaR la CoVaR {h=a69c1438}
+## Definiția CoVaR {h=db24dee2}
 
 Fie $X^i$ randamentul instituției $i$ și $X^{sys}$ randamentul sistemului. Pentru nivelul $\alpha$, probabilitatea cozii, $q_\alpha(X^i)$ este cuantila de ordin $\alpha$ a lui $X^i$, iar $\mathrm{VaR}^i_\alpha = -q_\alpha(X^i)$ este pierderea lui $i$ depășită cu probabilitatea $\alpha$, ca în [Capitolul 10](ch10_ro.html). @AdrianBrunnermeier2016 definesc CoVaR ca VaR-ul sistemului într-o zi în care instituția se află exact la propriul VaR:
 
@@ -419,7 +419,7 @@ MES și ΔCoVaR ordonează diferit cele 13 bănci: corelația Spearman dintre ce
 
 Pentru o autoritate de reglementare, concluzia este că nicio măsură nu este suficientă singură. @BenoitColliardHurlinPerignon2017 recomandă privirea mai multor măsuri, fiecare cu incertitudinea ei; o bancă aflată sus după toate măsurile, cu intervale care nu se suprapun cu cele ale restului, este un candidat mai sigur pentru capital suplimentar decît una aflată sus după o singură măsură.
 
-## Studiu de caz: a prezis MES pierderile din 2008? {h=c9d22613}
+## Studiu de caz: MES și pierderile băncilor din 2008 {h=d6871a79}
 
 @AcharyaPedersenPhilipponRichardson2017 testează dacă MES măsurat înainte de criză anticipează pierderile din criză. Schema este reprodusă aici: MES 5% este măsurat din iunie 2006 pînă în iunie 2007, iar randamentul acțiunii este măsurat din iulie 2007 pînă în decembrie 2008, pentru 11 bănci americane și europene. Graficul are MES 5% dinaintea crizei pe axa orizontală și randamentul din criză pe axa verticală, ambele în procente, cu o dreaptă a celor mai mici pătrate.
 
@@ -427,7 +427,7 @@ Dreapta coboară: băncile cu MES mai mare înainte de criză au pierdut în med
 
 Lecția este una de putere statistică. Cu 11 bănci, chiar o relație reală este greu de distins de zgomot. Lucrarea originală folosește un eșantion mult mai mare de instituții financiare americane și găsește o relație semnificativă; exemplul capitolului arată aceeași direcție, dar nu poate confirma singur rezultatul.
 
-## De la MES la LRMES {h=d93f6442}
+## MES pe termen lung (LRMES) {h=8e274637}
 
 MES zilnic descrie o zi proastă, dar o criză durează luni. Pentru capitalul unei bănci contează pierderea cumulată într-o criză lungă, de exemplu o scădere a pieței cu 40% în șase luni. Această pierdere este LRMES (*long-run MES*), MES pe termen lung. @AcharyaEngleRichardson2012 propun o aproximare simplă:
 
@@ -473,7 +473,7 @@ MES este pierderea medie a unei bănci în zilele proaste ale pieței, cu valori
 
 Secțiunea estimează legăturile dintre bănci din randamente. Prezintă cauzalitatea Granger și gradul de cauzalitate Granger pe ferestre mobile, compară o rețea de criză cu una din anii liniștiți și construiește tabelul de conectivitate Diebold–Yilmaz, static și pe ferestre mobile. Se încheie cu Financial Risk Meter, ca lectură suplimentară.
 
-## Perspectiva rețelei {h=206f8600}
+## Sistemul bancar ca rețea {h=ca673d40}
 
 O rețea este formată din noduri, aici băncile, și din legături orientate, de forma „un șoc la $i$ îl afectează pe $j$”. Perspectiva rețelei pune în centru canalul de contagiune directă din [secțiunea 1](#sec-1): ea întreabă nu doar cît de riscantă este o bancă, ci prin cine se transmite riscul ei.
 
@@ -595,7 +595,7 @@ Politica macroprudențială privește sistemul, nu banca individuală, pe două 
 
 Secțiunea formulează o întrebare de cercetare deschisă despre riscul sistemic al băncilor românești, arată cum poate ajuta un asistent AI (*artificial intelligence*) la studiul ei și ce verificări sînt necesare înainte ca rezultatele să fie crezute. Se încheie cu o idee de proiect.
 
-## O întrebare deschisă {h=6c5bd900}
+## O întrebare de cercetare deschisă {h=8a320485}
 
 Întrebarea este dacă riscul sistemic al băncilor românești este importat de la băncile-mamă din zona euro sau are surse locale. Rezultatele capitolului dau doar indicii. ΔCoVaR al TLV atinge maximul, 12,81%, în martie 2020, odată cu băncile americane și europene. BRD aparține unui grup bancar francez, în timp ce TLV are acționariat românesc, deci cele două bănci ar putea răspunde diferit la un șoc din zona euro.
 

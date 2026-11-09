@@ -26,7 +26,7 @@ Autocorrelation function of the daily S&P 500 returns (dark blue), of the absolu
 - **Explain** how $H$ changes the scaling of risk with the horizon.
 
 @plan
-- From Efficient to Fractal Markets | What the EMH leaves open, Peters's five claims, the 1987 crash and the comparison of the EMH, FMH and AMH.
+- Efficient Markets and Fractal Markets | What the EMH leaves open, Peters's five claims, the 1987 crash and the comparison of the EMH, FMH and AMH.
 - Self-Similarity and Fractals | Mandelbrot, fractal dimension, self-similar processes and the scaling of $h$-day returns.
 - Hurst, the Nile and the R/S Statistic | The Nile reservoir problem, the R/S statistic computed step by step and its bias in small samples.
 - Long Memory: Definitions and Models | Non-summable autocorrelations, fractional Brownian motion, fractional Gaussian noise and ARFIMA.
@@ -38,11 +38,11 @@ Autocorrelation function of the daily S&P 500 returns (dark blue), of the absolu
 - AI for Scientific Discovery | An open question about the Hurst exponent before crises, how AI could help and the checks it needs.
 - Summary | The main ideas, the formulas and self-assessment questions.
 
-# From Efficient to Fractal Markets
+# Efficient Markets and Fractal Markets
 
 The section starts from the efficient market hypothesis and from the facts that its standard model, the random walk with Normal increments, does not explain. It then introduces the fractal market hypothesis, which describes the market through its investors and their horizons, illustrates it with the 1987 crash and shows which of its statistical consequences can be tested. The section ends with a comparison of the efficient market hypothesis, the fractal market hypothesis and the adaptive markets hypothesis.
 
-## What the EMH Leaves Open {h=23a28976}
+## Limitations of the EMH {h=e5382467}
 
 The efficient market hypothesis (EMH) states that prices reflect the available information [@Fama1970]. In its weak form, studied in [Chapter 7](ch7.html), past returns do not help to anticipate future returns. The associated statistical model is the random walk of log prices, with independent increments. In the language of this chapter, the random walk corresponds to the Hurst exponent $H = 0.5$, and any systematic departure from 0.5 points to some form of long-range dependence.
 
@@ -98,7 +98,7 @@ The EMH treats the market as a single representative investor and implies $H = 0
 
 The section introduces the geometric language of the chapter. It starts from the work of Benoît Mandelbrot, defines fractal dimension and self-similar processes, and shows that self-similarity has a direct consequence for returns: the standard deviation of $h$-day returns grows like $h^H$. The slope of this growth, estimated for the S&P 500, the BET and Bitcoin, gives a first estimate of the Hurst exponent.
 
-## Benoît Mandelbrot: Roughness as a Measure {h=242e2cfd}
+## Benoît Mandelbrot and the Measurement of Roughness {h=b78e935e}
 
 Benoît Mandelbrot (1924–2010) brought to finance the idea that roughness can be measured. In @Mandelbrot1963 he showed that changes in cotton prices have heavy tails and that their distribution looks alike at the daily, monthly and yearly scale. The model he proposed then was the family of $\alpha$-stable distributions, the subject of [Chapter 3](ch3.html), which are invariant, up to a rescaling, under the summation of independent variables.
 
@@ -226,7 +226,7 @@ In the frequency domain, the same property appears as a pole of the spectral den
 
 Short memory is that of ARMA (autoregressive moving average) models. For an AR(1) with coefficient $\phi$, $\rho(k) = \phi^k$ decays exponentially, and the sum $\sum_k |\phi|^k$ is finite, equal to $1/(1 - |\phi|)$. The difference between $\phi^k$ and $k^{2d-1}$ is the difference between a shock forgotten after a few periods and a shock that still matters after hundreds of periods. The link with the Hurst exponent is $d = H - 1/2$.
 
-## Worked Example: How Fast Does Memory Fade? {h=ecd26fbd}
+## Worked Example: Autocorrelation Decay under Long and Short Memory {h=0d11e7cb}
 
 The example compares two processes with the same first-order autocorrelation. The first is a fractional Gaussian noise with $H = 0.8$, the long-memory model defined a few slides further on. Its first-order autocorrelation is $\rho(1) = 2^{2H-1} - 1 = 2^{0.6} - 1 = 0.516$, and at long lags the autocorrelations are $\rho(10) = 0.191$, $\rho(50) = 0.100$ and $\rho(100) = 0.076$.
 
@@ -510,7 +510,7 @@ The exponents of absolute returns lie far above the bands, between 0.73 and 0.95
 
 The shuffle test decides where the memory of absolute returns lies. Shuffling keeps exactly the distribution of each series, heavy tails included, but destroys the order of the days. After shuffling, the exponents fall to values between 0.46 and 0.55, all inside the bands. The memory therefore lies in the order of the days, in the succession of quiet and turbulent periods, not in the shape of the distribution.
 
-## Interpretation: What Is Predictable? {h=94d26402}
+## Interpretation: Predictability of Returns and Volatility {h=e46aba57}
 
 Returns have no long memory in the S&P 500, the DAX, TLV and SNP, and Bitcoin sits at the edge of its band. The BET is the exception: its returns show a weak persistence, in line with the variance-ratio tests of [Chapter 7](ch7.html). Part of this persistence is due to the thin trading of the index's early years, as the rolling estimates of [Section 8](#sec-8) show.
 
@@ -534,7 +534,7 @@ The long memory of the market lies in volatility, not in direction. The absolute
 
 The adaptive markets hypothesis and the fractal market hypothesis both predict that the memory of a market changes over time. The section estimates the DFA exponents of returns and absolute returns on rolling windows for the S&P 500, the BET and Bitcoin, interprets the resulting paths, discusses the Bitcoin case in the literature and lists the limitations of this kind of analysis.
 
-## Does Efficiency Change over Time? {h=10cf603e}
+## Time Variation of Market Efficiency {h=5b6d4776}
 
 If the efficiency of a market depends on its environment, as the AMH holds, or on the diversity of horizons, as the FMH holds, then the Hurst exponent is not a constant of the market but a quantity that varies over time. The literature has pursued this idea with rolling-window estimates. @CajueiroTabak2004 estimated rolling Hurst exponents for emerging stock markets, to test whether they become more efficient over time. @Bariviera2017 applied rolling DFA to the returns and volatility of Bitcoin.
 
@@ -558,7 +558,7 @@ For the BET, 20% of the windows lie above the band. The mean exponent of returns
 
 For Bitcoin, the windows start on 13 June 2017. The exponent of returns varies between 0.45 and 0.59, and only 1% of the windows lie above the band. The exponent of absolute returns falls over time, from values around 0.8 to about 0.6–0.7, but stays above the band.
 
-## Case Study: Is Bitcoin Efficient? {h=d9954f23}
+## Case Study: Efficiency of the Bitcoin Market {h=d0f6bae7}
 
 Bitcoin offers a useful case study, because the literature on its efficiency developed quickly, with seemingly contradictory results. @Urquhart2016 applied several efficiency tests, among them R/S, to Bitcoin returns over 2010–2016. The conclusion was that Bitcoin is inefficient over the full sample but moving towards efficiency in its later years.
 
@@ -602,7 +602,7 @@ The $h$-day risk of self-similar returns grows like $h^H$. For a daily volatilit
 
 The section starts from an open question raised by the results of the chapter, whether the Hurst exponent changes before a crisis or only after it, and shows where AI tools can help a researcher who studies it and which checks they cannot replace.
 
-## An Open Question {h=517c3b85}
+## An Open Research Question {h=74cc1219}
 
 The question is whether the change in the Hurst exponent appears before a crisis or only after it. The FMH predicts a collapse of horizons in crises, and in the data of the chapter the exponent of absolute returns rises during and after the crises of 2008 and 2020. If the exponent also changed systematically beforehand, it could serve as an early-warning indicator.
 
@@ -658,7 +658,7 @@ The DFA fluctuation function, @eq:dfa, grows like $n^\alpha$, with $\alpha = H$ 
 
 What the formulas have in common is that $H$ or $d$ appears as an exponent. Small errors in estimating them therefore produce large differences at long horizons, and every estimate must be reported together with its band.
 
-## Check Yourself {h=4e7c233d}
+## Self-Assessment {h=41aa524b}
 
 The first question asks whether an R/S estimate of $\hat H = 0.56$ on 1000 i.i.d. returns is evidence of long memory. It is not: the i.i.d. band for $N = 1000$ is $[0.50, 0.63]$, centred around 0.562, so the estimate is exactly what the R/S estimator produces on memoryless data.
 

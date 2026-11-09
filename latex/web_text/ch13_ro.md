@@ -28,7 +28,7 @@ Volatilitatea realizată anualizată a S&P 500 din următoarele 5 zile și progn
 - **Prognozați** VaR 1% prin regresie cuantilică și corectați un raport Sharpe pentru numărul de strategii încercate.
 
 @plan
-- Contribuția machine learning în statistică | Perceptronul, cele două culturi ale lui Breiman, predicție și inferență, notațiile învățării supervizate.
+- Contribuția învățării automate la statistică | Perceptronul, cele două culturi ale lui Breiman, predicție și inferență, notațiile învățării supervizate.
 - Overfitting, deplasare și varianță | Eroarea de antrenare și de test, descompunerea deplasare–varianță și o simulare cu arbori.
 - Validarea pentru serii de timp | Eșantioanele de antrenare, validare și test, look-ahead bias, leakage și schema walk-forward.
 - Regresia penalizată: ridge și lasso | Contracția coeficienților, selecția variabilelor și traiectoriile pe datele de volatilitate.
@@ -42,7 +42,7 @@ Volatilitatea realizată anualizată a S&P 500 din următoarele 5 zile și progn
 - AI pentru descoperire științifică | O întrebare deschisă despre BVB, ajutorul posibil al AI și verificările necesare.
 - Rezumat | Ideile principale, formulele și întrebări de autoevaluare.
 
-# Contribuția machine learning în statistică
+# Contribuția învățării automate la statistică
 
 Secțiunea așază învățarea automată în istoria statisticii. Pornește de la perceptronul din 1958, prezintă distincția lui Breiman între modelarea datelor și modelarea algoritmică, separă predicția de inferență și fixează notațiile învățării supervizate: variabile explicative, țintă, funcție de pierdere și hiperparametri. Se încheie cu o hartă a domeniilor din finanțe în care aceste metode ajută și a celor în care întîmpină dificultăți.
 
@@ -192,7 +192,7 @@ Primul set de date este un mers aleator simulat, în care randamentele viitoare 
 
 Rezultatele pe datele reale sînt aproape identice cu cele pe mersul aleator. Asemănarea arată că $R^2$ mare al partițiilor aleatoare nu reflectă o predictibilitate a S&P 500, ci schema de validare.
 
-## Interpretare: o prognoză a zgomotului pur cu R² > 30% {h=1681006e}
+## Interpretare: leakage în prognoza unui mers aleator {h=c69eafa1}
 
 Mersul aleator nu are nimic de prezis, totuși partițiile aleatoare raportează un $R^2$ de 34,5%. Explicația este leakage-ul: random forest memorează zilele vecine din antrenare, ale căror ținte au 20 din 21 de randamente comune cu ziua de test. Prognoza „ghicește” ținta pentru că a văzut-o deja aproape în întregime.
 
@@ -354,7 +354,7 @@ Un arbore de regresie împarte datele prin praguri alese lacom și are varianț�
 
 Secțiunea trece de la perceptron la perceptronul multistrat, explică funcțiile de activare, numărul de parametri și antrenarea prin coborîre pe gradient. Aplică apoi rețelele în două Quantlet-uri ale manualului: modelul ARCH cu rețea neuronală pentru GBP/USD și prognoza nivelului cursului USD/JPY.
 
-## De la perceptron la perceptronul multistrat (1/2) {h=ff64bfc4}
+## Perceptronul și perceptronul multistrat (1/2) {h=39f960d0}
 
 Unitatea de bază a unei rețele este neuronul: $h = g(b + w^\top x)$. Neuronul calculează o sumă ponderată a intrărilor $x$, cu ponderile $w$ și constanta $b$ (termenul liber al neuronului), și o trece printr-o funcție de activare (*activation function*) $g$. Rezultatul $h$ este ieșirea neuronului.
 
@@ -362,7 +362,7 @@ Funcția $g$ este neliniară și fixată dinainte. Neliniaritatea este necesară
 
 Perceptronul din [secțiunea 1](#sec-1) folosește o funcție treaptă, cu valorile 0 sau 1. Rețelele moderne folosesc funcții netede sau liniare pe porțiuni, care permit calculul gradientului: funcția logistică $1/(1 + e^{-z})$, tangenta hiperbolică tanh și ReLU (*rectified linear unit*), $\max(0, z)$.
 
-## De la perceptron la perceptronul multistrat (2/2) {h=93c20c22}
+## Perceptronul și perceptronul multistrat (2/2) {h=1f6d11dd}
 
 Un perceptron multistrat (MLP, *multilayer perceptron*) cu un strat ascuns de $K$ neuroni produce prognoza
 
@@ -390,7 +390,7 @@ Retropropagarea [@RumelhartHintonWilliams1986] calculează gradientul strat cu s
 
 Pierderea unei rețele nu este convexă, astfel încît ponderi inițiale diferite duc la rețele diferite. Capitolul fixează semințele aleatoare și face media a cinci rețele, un ansamblu (*ensemble*). Împotriva overfitting-ului, intrările și ținta se standardizează cu statisticile de antrenare, ponderile primesc o penalizare $L_2$, ca la ridge, iar numărul de epoci este fixat. Cu date puține, rețeaua trebuie să fie mică: aici este suficient un strat ascuns cu 16 neuroni.
 
-## De la Deep Blue la deep learning {h=d26c4c19}
+## Deep Blue și deep learning {h=c3f7d542}
 
 În 1997, calculatorul Deep Blue al IBM (*International Business Machines*) l-a învins pe campionul mondial la șah. Succesul a venit mai ales din căutare și din reguli de evaluare scrise de oameni, nu din învățare din date: Deep Blue aparține mai degrabă inteligenței artificiale clasice decît machine learning-ului.
 
@@ -604,7 +604,7 @@ AUC confirmă imaginea. Pentru logit și random forest, AUC este 0,511 și 0,507
 
 Logit prognozează „creștere” în 86% din zilele S&P 500. Probabilitățile estimate de el sînt aproape constante, puțin peste 0,5, astfel încît logit se comportă aproape ca reperul. Aceasta explică de ce el pierde puțin față de reper, iar modelele flexibile pierd mai mult.
 
-## Interpretare: eșecul obișnuit al prognozei semnului {h=259b8093}
+## Interpretare: limitele prognozei semnului {h=58297f15}
 
 Pe nicio piață, niciun model nu este semnificativ superior regulii „mereu creștere”, iar modelele flexibile sînt mai slabe decît logit. Pe S&P 500, diferențele față de reper sînt −0,6 puncte pentru logit, −1,3 pentru random forest și −2,3 pentru boosting; pe Bitcoin, +0,1 pentru logit și −0,9 pentru random forest.
 
@@ -770,7 +770,7 @@ Rezultatele au și limite. Portofoliile construite pe baza rețelelor își schi
 
 Secțiunea formulează o întrebare de cercetare deschisă, legată de piața românească, arată cum poate un asistent AI (*artificial intelligence*) să accelereze studiul ei și ce verificări sînt necesare înainte ca rezultatele să fie crezute. Se încheie cu o idee de proiect.
 
-## O întrebare deschisă {h=8d27e83f}
+## O întrebare de cercetare deschisă {h=156b0fa2}
 
 Întrebarea este dacă prognozele de volatilitate prin machine learning ajută la Bursa de Valori București, unde lichiditatea este redusă și datele intrazilnice sînt rare. Rezultatele de pînă acum sînt mixte: la S&P 500, lasso cîștigă +7,1% față de HAR, iar la Bitcoin nu există un cîștig semnificativ (+2,0%, p 0,520).
 

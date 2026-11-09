@@ -203,7 +203,7 @@ D.frame(T('The Crises of 2008 and 2020', 'Crizele din 2008 și 2020'), cols(
     T('In both episodes the daily standard deviation of the S\\&P 500 was @{ret.r08} and @{ret.ratio} times that of 2017; calm returned only after months',
       'În ambele episoade abaterea standard zilnică a S\\&P 500 a fost de @{ret.r08} și, respectiv, de @{ret.ratio} ori mai mare decît în 2017; calmul a revenit abia după cîteva luni')), 'footnotesize')
 
-D.frame(T('Why Model the Conditional Variance?', 'Utilitatea modelării varianței condiționate'), items(
+D.frame(T('Motivation for Modelling the Conditional Variance', 'Utilitatea modelării varianței condiționate'), items(
     (T('\\textbf{Risk management}: VaR (value at risk) and ES (expected shortfall) need tomorrow\'s volatility, not the average volatility of the last 20 years',
        '\\textbf{Managementul riscului}: VaR (value at risk, valoarea expusă la risc) și ES (expected shortfall) au nevoie de volatilitatea de mîine, nu de volatilitatea medie din ultimii 20 de ani'),
      [T('a constant-variance VaR is too large in calm years and too small in crises (Chapter 10)', 'un VaR cu varianță constantă este prea mare în anii liniștiți și prea mic în crize (Capitolul 10)')]),
@@ -552,7 +552,7 @@ chart(T('Conditional Volatility: BET and Bitcoin', 'Volatilitatea condiționată
       'Interpretare: șocul din 2020 a afectat toate piețele în aceeași săptămînă; volatilitatea mediană a Bitcoin este de @{v.ratio} ori mai mare decît cea a S\\&P 500 (@{v.sp500.med}\\%)')],
     h='0.56\\textheight')
 
-chart(T('How Long Does a Shock Last?', 'Durata unui șoc de volatilitate'), 'sfm_ch9_persistence', 'SFM_ch9_volatility_markets', [
+chart(T('Duration of a Volatility Shock', 'Durata unui șoc de volatilitate'), 'sfm_ch9_persistence', 'SFM_ch9_volatility_markets', [
     T('Share of a variance shock left after $h$ days: $(\\alpha + \\beta)^h$; the half-life is where the curve crosses 1/2',
       'Ponderea unui șoc de varianță rămasă după $h$ zile: $(\\alpha + \\beta)^h$; timpul de înjumătățire este punctul în care curba trece de 1/2'),
     T('Interpretation: after a crisis, the S\\&P 500 needs about half a year to halve the excess variance; OMV Petrom about two weeks; Bitcoin never',
@@ -705,7 +705,7 @@ chart(T('The Term Structure of Volatility', 'Structura la termen a volatilităț
       'Interpretare: toate curbele se îndreaptă spre nivelul pe termen lung (@{ts.lr}\\%) cu aceeași viteză redusă: panta structurii la termen arată dacă sîntem într-o perioadă liniștită sau într-una turbulentă')],
     h='0.50\\textheight')
 
-D.frame(T('How to Evaluate a Volatility Forecast', 'Evaluarea unei prognoze de volatilitate'), items(
+D.frame(T('Evaluating a Volatility Forecast', 'Evaluarea unei prognoze de volatilitate'), items(
     (T('The true $\\sigma_t^2$ is never observed: we compare the forecast $h_t$ with a noisy \\textbf{proxy}, here $r_t^2$', 'Adevăratul $\\sigma_t^2$ nu este observat niciodată: comparăm prognoza $h_t$ cu o \\textbf{aproximare} zgomotoasă, aici $r_t^2$'),
      [T('$E_{t-1}[r_t^2] = \\sigma_t^2$ (with $\\mu \\approx 0$), but $r_t^2$ is very noisy: low $R^2$ even for a perfect forecast \\refAB',
         '$E_{t-1}[r_t^2] = \\sigma_t^2$ (cu $\\mu \\approx 0$), dar $r_t^2$ este foarte zgomotos: un $R^2$ mic chiar și pentru o prognoză perfectă \\refAB')]),
@@ -780,7 +780,7 @@ D.frame(T('Exceedances 2015--2026: a Preview of Backtesting', 'Depășiri 2015--
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Is Bitcoin\'s volatility becoming more like the volatility of an equity index?}', '\\textbf{Devine volatilitatea Bitcoin mai asemănătoare cu volatilitatea unui indice de acțiuni?}'),
      [T('today: IGARCH, $\\hat\\nu = @{m.btc.nu}$, no leverage effect; the S\\&P 500: mean-reverting, strong leverage', 'azi: IGARCH, $\\hat\\nu = @{m.btc.nu}$, fără efect de levier; S\\&P 500: revenire la medie, efect de levier puternic'),
       T('since 2024, spot Bitcoin ETFs (exchange-traded funds) bring equity investors to the crypto market', 'din 2024, ETF-urile (exchange-traded funds, fonduri tranzacționate la bursă) pe Bitcoin aduc investitorii din piața de acțiuni pe piața cripto')]),
@@ -840,7 +840,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'VaR 1\\% & $-(\\mu + \\sigma_{t+1}\\,q_{0.01}(z))$'],
     size='small') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\omega = 0.05$, $\\alpha = 0.05$, $\\beta = 0.90$. What are the long-run variance and the half-life?', '\\textbf{Întrebare}: $\\omega = 0{,}05$, $\\alpha = 0{,}05$, $\\beta = 0{,}90$. Care sînt varianța pe termen lung și timpul de înjumătățire?'),
      [T('\\textbf{Answer}: $0.05/0.05 = 1$; $\\ln 0.5/\\ln 0.95 = 13.5$ days', '\\textbf{Răspuns}: $0{,}05/0{,}05 = 1$; $\\ln 0{,}5/\\ln 0{,}95 = 13{,}5$ zile')]),
     (T('\\textbf{Question}: GJR gives $\\hat\\alpha = 0$, $\\hat\\gamma = 0.2$. What happens after a rise of 3\\%?', '\\textbf{Întrebare}: GJR dă $\\hat\\alpha = 0$, $\\hat\\gamma = 0{,}2$. Ce se întîmplă după o creștere de 3\\%?'),

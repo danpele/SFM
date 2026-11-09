@@ -92,7 +92,7 @@ Argumentul economic spune că o previzibilitate exploatabilă ar trebui să disp
 
 Secțiunea definește eficiența pieței, deosebește cele trei forme ale ei după mulțimea de informații implicată și scrie eficiența ca model al unui joc echitabil. Apoi explică două limite ale conceptului: orice test este și un test al unui model al randamentelor așteptate, iar eficiența perfectă este imposibilă din punct de vedere logic atunci cînd informația costă.
 
-## Piața eficientă: definiția {h=16e26666}
+## Definiția pieței eficiente {h=f7fc5588}
 
 Potrivit lui @Fama1970, o piață este eficientă dacă prețurile „reflectă pe deplin” informația disponibilă $\Omega_t$. Sensul operațional al definiției este că nicio regulă de tranzacționare bazată pe $\Omega_t$ nu cîștigă mai mult decît randamentul care îi compensează riscul. EMH (*efficient market hypothesis*, ipoteza pieței eficiente) este ipoteza că piețele reale au această proprietate.
 
@@ -186,7 +186,7 @@ Martingalul se află între ipotezele de mers aleator. O diferență de martinga
 
 Întrebare pentru sală: este volatility clustering în contradicție cu eficiența în formă slabă? Răspunsul este nu. Volatility clustering respinge RW1 și RW2, pentru că varianța randamentului de mîine depinde de randamentul de azi. Dar o varianță previzibilă nu face randamentul previzibil: a ști că ziua de mîine va fi agitată nu spune dacă prețul va crește sau va scădea. Martingalul și RW3 rămîn valabile, iar odată cu ele și eficiența în formă slabă.
 
-## Exemplu lucrat: cum crește riscul cu orizontul {h=1563c9e4}
+## Exemplu lucrat: riscul în funcție de orizont {h=0909bc3c}
 
 Regula varianței $\mathrm{Var}(r_t(q)) = q\sigma^2$ a mersului aleator dă abaterea standard a randamentului pe $q$ zile, $\mathrm{sd}(r_t(q)) = \sigma\sqrt{q}$. Pentru S&P 500 din 1990, abaterea standard zilnică este $\hat\sigma = 1{,}1337\%$.
 
@@ -418,7 +418,7 @@ Prețurile logaritmice sînt $I(1)$, iar randamentele $I(0)$ în toate cele opt 
 
 Mersul aleator implică faptul că varianța randamentelor crește liniar cu orizontul. Raportul varianțelor (*variance ratio*) compară cei doi membri ai acestei relații și rezumă multe autocorelații într-un singur număr. Secțiunea îl definește, prezintă estimatorul Lo–MacKinlay și testele lui homoscedastic și robust, arată prin simulare de ce este nevoie de testul robust și extinde testul la mai multe orizonturi și la un orizont ales de date.
 
-## Ideea raportului varianțelor {h=6cd9a79d}
+## Raportul varianțelor: definiție {h=ce452c43}
 
 În ipoteza de mers aleator, $\mathrm{Var}(r_t(q)) = q\,\mathrm{Var}(r_t)$: varianța randamentului pe $q$ zile este de $q$ ori varianța zilnică. VR (*variance ratio*, raportul varianțelor) compară cei doi termeni. Pentru o serie staționară de randamente, varianța unei sume de $q$ randamente este $q\gamma(0) + 2\sum_{k=1}^{q-1}(q-k)\gamma(k)$, iar împărțirea la $q\gamma(0)$ dă [@LoMacKinlay1988; @CampbellLoMacKinlay1997]
 
@@ -450,7 +450,7 @@ Ambele statistici urmează aproximativ legea $N(0, 1)$ sub ipotezele lor nule.
 
 Varianța robustă $\hat\theta(q)/T$ rezultă din @eq:vr: $\widehat{\mathrm{VR}}(q) - 1$ este o sumă ponderată de autocorelații de selecție, cu ponderile $2(q-j)/q$, iar fiecare autocorelație are varianța $\hat\delta(j)/T$, cu $\hat\delta(j)$ din banda ACF robustă @eq:delta. Cu randamente i.i.d., $\hat\delta(j) \approx 1$ și $Z^*(q) \approx Z(q)$. Fotografia îl arată pe Andrew W. Lo de la MIT (Massachusetts Institute of Technology), unul dintre cei doi autori ai testului.
 
-## Necesitatea testului robust: o verificare Monte Carlo {h=a3a8579b}
+## Necesitatea testului robust: un studiu Monte Carlo {h=31252244}
 
 Mărimea (*size*) unui test este frecvența cu care respinge o ipoteză nulă adevărată; un test de 5% ar trebui să respingă o $H_0$ adevărată în 5% din eșantioane. Graficul raportează mărimile testelor $Z$ și $Z^*$ într-o simulare: 1 000 de eșantioane de $T = 2000$ de randamente în care $H_0$ este adevărată, generate fie ca randamente Normale i.i.d., fie dintr-un model GARCH(1,1) cu $\alpha = 0{,}12$ și $\beta = 0{,}86$. Randamentele GARCH sînt necorelate, dar au volatility clustering; $\alpha$ măsoară reacția varianței la șocul de ieri, iar $\beta$ persistența ei. Barele dau procentul de respingeri la nivelul de 5% pentru $q = 2$, 5 și 10; linia întreruptă marchează 5%.
 
@@ -474,7 +474,7 @@ Pentru S&P 500, toate cele patru rapoarte sînt sub 1, de la 0,922 la două zile
 
 Tabelul conține patru teste pe fiecare serie și 32 în total, iar cu cît se fac mai multe teste, cu atît apar mai multe orizonturi „semnificative” din întîmplare. O respingere la două orizonturi din patru, ca la Transgaz, cere un test care ține seama de comparațiile multiple. Slide-ul următor îl prezintă.
 
-## Mai multe orizonturi deodată: testul Chow–Denning {h=b9441e76}
+## Testarea simultană a mai multor orizonturi: testul Chow–Denning {h=695ee4e9}
 
 Testarea separată pentru $q = 2$, 5, 10 și 20 la 5% dă o probabilitate mult mai mare de 5% de a obține cel puțin o respingere falsă. Pentru 4 teste independente ea ar fi $1 - 0{,}95^4 = 18{,}5\%$; rapoartele varianțelor la orizonturi diferite sînt corelate pozitiv, deci valoarea reală este mai mică, dar tot mult peste 5%.
 
@@ -606,7 +606,7 @@ Studiile de eveniment testează forma semi-tare prin viteza cu care prețurile a
 
 Instrumentele capitolului se pot aplica unor întrebări încă deschise. Secțiunea formulează o astfel de întrebare, despre eficiența pieței de la București după trecerea ei la statutul de piață emergentă, descrie cum ar putea instrumentele AI (inteligență artificială) să sprijine studiul ei, enumeră verificările de care are nevoie și propune un proiect.
 
-## O întrebare deschisă {h=3fceb899}
+## O întrebare de cercetare deschisă {h=7bf11cfd}
 
 A devenit BET mai eficient după trecerea României la statutul de piață Secondary Emerging de către FTSE Russell, în vigoare din septembrie 2020 [@FTSERussell2019]? Reclasificarea a adus fonduri indexate și investitori străini, care ar trebui să mărească lichiditatea și să reducă prețurile neactualizate care au produs momentumul din primii ani ai BET.
 

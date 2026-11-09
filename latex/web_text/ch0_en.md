@@ -35,7 +35,7 @@ Value of 100 units invested in January 2015 in the S&P 500, the DAX, the BET-TR,
 - The Role of Financial Markets | The functions of a market, its participants, the asset classes, the order book and the role of statistics.
 - Financial Markets in 2026: Descriptive Statistics | Growth, risk and return, drawdowns, the VIX, the Bucharest market and crypto assets since 2015.
 - A Short History of Markets | The first exchanges and bubbles, 1929, electronic trading, the Bucharest Stock Exchange and the statistical models of prices.
-- From Prices to Returns: a First Look | Simple and log returns, mean and volatility, annualisation, heavy tails and the drawdown.
+- Prices and Returns: First Definitions | Simple and log returns, mean and volatility, annualisation, heavy tails and the drawdown.
 - AI for Scientific Discovery | An open question on the volatility of Bitcoin, the use of AI assistants and the checks they require.
 - Conclusions | Self-assessment questions and the questions of Chapter 1.
 
@@ -333,7 +333,7 @@ The crash had consequences for statistics. Stricter disclosure rules followed, r
 
 The crash also shows that long drawdowns are not new. The BET needed thirteen years to recover after 2008, as shown in [Drawdowns: Interpretation](#s29); long recoveries are part of the history of markets, not an exception of one market.
 
-## From the Trading Floor to Screens {h=1e230975}
+## Trading Floors and Electronic Trading {h=abd47616}
 
 From 1867, the stock ticker sent prices by telegraph and printed them on paper strips. For the first time, time series of prices were available outside the exchange, to investors and to researchers.
 
@@ -349,7 +349,7 @@ The re-established Bucharest Stock Exchange (BVB) held its first trading session
 
 For the statistician, this history has a practical consequence: the daily series of the Romanian market start only in the late 1990s, and their first years describe a small, young market. The [BET chart](#s33) shows how different these years were from the later ones.
 
-## Statistics Enters Finance (1/2): Random Walks and Wild Prices {h=634056cd}
+## History of Financial Statistics (1/2): Random Walks and Extreme Price Changes {h=f7568a10}
 
 In his doctoral thesis of 1900, @Bachelier1900 modelled the prices of bonds in Paris as a **random walk**: the price changes are independent and follow the Normal distribution. The model anticipated by several decades the mathematics of Brownian motion used in finance, and its two assumptions became the reference against which later models were tested.
 
@@ -357,7 +357,7 @@ In 1963, @Mandelbrot1963 showed that the changes of cotton prices have much heav
 
 Mandelbrot proposed the α-stable distributions, which keep the stability of the Normal distribution under summation but allow heavy tails; [Chapter 3](ch3.html) studies them. The two portraits frame the course: Bachelier's model is the benchmark, and Mandelbrot's objection is the first of the stylised facts.
 
-## Statistics Enters Finance (2/2): Risk, Efficiency, Volatility {h=997f64ae}
+## History of Financial Statistics (2/2): Risk, Efficiency, Volatility {h=23737f04}
 
 In 1952, @Markowitz1952 measured risk by the variance of returns and built diversified portfolios that minimise this variance for a given expected return. Risk became a quantity that can be estimated from data.
 
@@ -383,7 +383,7 @@ The statistical models followed one another: the random walk (1900), portfolio r
 
 Four centuries of markets show the same pattern: new instruments and new venues, followed by bubbles and crashes, followed by new data and new models. The models that the course studies, from Bachelier's random walk to Engle's ARCH, each answered a failure of the previous one, and the failure was almost always the same: extreme moves and changing volatility. The [next section](#sec-5) introduces the tools to measure both.
 
-# From Prices to Returns: a First Look
+# Prices and Returns: First Definitions
 
 Prices are not compared directly: an index at 32,758 points and a share at 50 lei say nothing about each other. The course works with returns, the relative changes of prices. This section defines simple and log returns and their rules of aggregation, the mean and volatility of returns and their annualisation, and then applies them to the daily returns of the S&P 500 since 2000, which show volatility clustering and heavy tails. It ends with a step-by-step computation of the drawdown.
 
@@ -403,7 +403,7 @@ where $\ln$ is the natural logarithm; $r_t$ is the continuously compounded retur
 
 The example $P_0 = 100$, $P_1 = 110$, $P_2 = 99$ shows the difference. On the first day $R_1 = +10\%$ and $r_1 = \ln 1.1 = +9.53\%$; on the second day $R_2 = -10\%$ and $r_2 = \ln 0.9 = -10.54\%$. The log return is below the simple return in both cases, and the gap is larger on the down day.
 
-## Which Returns Add Up? {h=15c99e1f}
+## Question for the Room: Adding Returns over Two Days {h=69e18140}
 
 Questions for the room, on the same example $100 \to 110 \to 99$: what is the sum of the two simple returns, and did the investor gain, lose or break even over the two days? The sum is $R_1 + R_2 = 10\% - 10\% = 0\%$, yet the investor lost money: $99/100 - 1 = -1\%$.
 
@@ -467,7 +467,7 @@ The **maximum drawdown** (MDD) is the smallest value of $DD_t$ over the sample, 
 
 Investors track the maximum drawdown because it measures the pain of the worst episode, which a volatility does not show. It does not show how long the recovery took, so it should be reported together with the duration of the drawdown, as for the BET after 2008.
 
-## Recap: from prices to returns {h=0d33bd14}
+## Recap: prices and returns {h=3a0e6998}
 
 The simple return $R_t = P_t/P_{t-1} - 1$ compounds over time; the log return $r_t = \ln(P_t/P_{t-1})$ adds up over time. The mean is annualised with $A$ and the volatility with $\sqrt{A}$, with $A = 365$ for Bitcoin.
 
@@ -481,7 +481,7 @@ Returns, not prices, are the object of the course. Log returns add up over time,
 
 Each chapter of the course ends with an open research question that the methods of the chapter can address, together with the ways an AI assistant can help, the checks its output requires, a short case on the course data and a project seed. The question of this chapter is whether Bitcoin has become less volatile since it entered traditional finance.
 
-## An Open Question {h=31491fa8}
+## An Open Research Question {h=52cf06b4}
 
 The question is whether Bitcoin has become less volatile since it entered traditional finance. It matters because a less volatile Bitcoin would be easier to hold in the portfolio of a pension fund or a bank. The spot Bitcoin ETFs approved in January 2024 opened Bitcoin to investors who buy through ordinary brokerage accounts, and these investors may trade differently from the earlier holders.
 
@@ -495,7 +495,7 @@ For the code, it can write a first version that computes the volatility for each
 
 The division of labour is the one described by @LudwigMullainathan2024: machine learning can generate hypotheses, but testing them remains the task of the researcher.
 
-## Mini-Case: Volatility per Year {h=610a5983}
+## Mini Case Study: Volatility by Year {h=3f2a2229}
 
 The chart shows the annualised volatility of the daily log returns in each calendar year, for Bitcoin and for the S&P 500. Bitcoin is annualised with 365 days and the S&P 500 with its own trading frequency; the bar for 2026 covers the year until 18 September.
 
@@ -527,9 +527,9 @@ The open question of the chapter, whether Bitcoin has become less volatile since
 
 The chapter closes with self-assessment questions on its main tools and with the questions that [Chapter 1](ch1.html) answers.
 
-## Check Yourself, and Next: Chapter 1 {h=ca0e97b7}
+## Self-Assessment and Preview of Chapter 1 {h=a48a3c55}
 
-The self-assessment questions cover the four tools of the chapter. Why is the sum of simple returns not the total return? How is the daily volatility of Bitcoin annualised? What does a maximum drawdown of −80% mean for an investor? What must be checked before using a reference generated by AI? Each answer is in this chapter: in [Which Returns Add Up?](#s48), [Mean, Volatility and Annualisation](#s50), [Drawdowns: Interpretation](#s29) and [AI Policy](#s13).
+The self-assessment questions cover the four tools of the chapter. Why is the sum of simple returns not the total return? How is the daily volatility of Bitcoin annualised? What does a maximum drawdown of −80% mean for an investor? What must be checked before using a reference generated by AI? Each answer is in this chapter: in [Question for the Room: Adding Returns over Two Days](#s48), [Mean, Volatility and Annualisation](#s50), [Drawdowns: Interpretation](#s29) and [AI Policy](#s13).
 
 [Chapter 1](ch1.html), on data, returns and indicators, continues from here. It asks where the data come from, which price column to use, how returns are aggregated over days, months and years, what the Sharpe ratio is, and what the volatility drag means.
 

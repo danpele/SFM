@@ -32,7 +32,7 @@ Annualised volatility over roughly one month, since 2016: Bitcoin (orange) and E
 - Bitcoin and Ethereum in Brief | The blockchain, proof of work, the halving and the 21 million supply, Ethereum and proof of stake, the price data.
 - Crypto as an Asset Class | Annualisation with 365 days, five assets side by side, volatility through time and the weekend effect.
 - Tails and Volatility Clustering | The Hill estimator, the ACF and the Ljung–Box test, GARCH(1,1)-t and GJR for Bitcoin, Ethereum, the S&P 500 and gold.
-- Is the Crypto Market Efficient? | Variance-ratio tests on the whole sample and on rolling windows, the literature on Bitcoin efficiency and two case studies.
+- Efficiency of the Crypto Market | Variance-ratio tests on the whole sample and on rolling windows, the literature on Bitcoin efficiency and two case studies.
 - Correlation with Equities and Gold | Correlation across different calendars, rolling and yearly correlation, three crises and the safe-haven test.
 - Bubbles and Crashes | Drawdown, the large falls of Bitcoin and the log-periodic power law.
 - Spot Bitcoin ETFs | Volatility and the weekend share before and after January 2024, and the tracking error of an ETF.
@@ -45,7 +45,7 @@ Annualised volatility over roughly one month, since 2016: Bitcoin (orange) and E
 
 The section describes the mechanism behind the two main crypto assets as far as the statistical analysis needs it: how a blockchain keeps track of ownership, what makes it secure, where the Bitcoin supply rule comes from and what Ethereum changes. It ends with the data: how a daily price series is formed for a market without a central exchange.
 
-## From a White Paper to a Market {h=9b87766d}
+## Nakamoto's White Paper (2008) {h=6cadcc9b}
 
 On 31 October 2008, an author signing as "Satoshi Nakamoto" published a nine-page paper that proposed a peer-to-peer electronic cash system [@Nakamoto2008]. Peer-to-peer means that users pay each other directly, without a bank in between. The problem the paper solves is double spending: a digital coin is a file that can be copied, and without an authority keeping the records nothing prevents paying twice with the same coin.
 
@@ -87,7 +87,7 @@ The right panel shows the Bitcoin supply implied by the protocol rule, in millio
 
 One year after the three halvings, the price was higher by 287%, 559% and 31%, respectively. The figures seem to support a halving effect, but three observations are not statistical evidence: each year also contains other events, and the effect shrinks from one halving to the next. With one event every four years, a credible test will not be possible for a long time.
 
-## An Anonymous Founder {h=1d9195e9}
+## The Anonymity of Bitcoin's Founder {h=c62a4628}
 
 Nobody knows who "Satoshi Nakamoto" is: the founder stopped writing in 2011. Bitcoin's rules change only if the majority of nodes accept the new software, so there is no person or company that decides the network's policy.
 
@@ -137,7 +137,7 @@ The 252 rule therefore understates volatility by 16.9% and the mean by 31.0%. Th
 
 The practical rule is that each series is annualised with its own $A$, never with a common one. A comparison between Bitcoin and the S&P 500 therefore uses 365 for the first and 252 for the second, as in all tables of this chapter.
 
-## Five Assets Side by Side {h=2569540c}
+## Comparison of Five Assets {h=6ef6a46a}
 
 The table summarises the daily log returns of the five assets up to 18 September 2026: Bitcoin since 2014, Ethereum since 2016, Solana since 2020, the S&P 500 since 2014 and gold (the XAU/USD rate) since 2014. The annual volatility is computed with @eq:annual and with each series' actual frequency. Skewness is the mean of $((r_t - \bar r)/s)^3$, and excess kurtosis the mean of $((r_t - \bar r)/s)^4$ minus 3; both are 0 for the Normal distribution.
 
@@ -161,7 +161,7 @@ The main result is that crypto returns have almost no exposure to these factors,
 
 @LiuTsyvinskiWu2022 extend the analysis to the cross-section and show that three crypto factors, market, size and momentum, explain the returns of different coins. Both studies, however, use data from before 2020, and the link with equities changed after that year ([Section 5](#sec-5)): the conclusion of independence from traditional markets depends on the sample period.
 
-## Is the Weekend Different? {h=06fbcdfa}
+## Day-of-the-Week Effects in Bitcoin {h=3f9751ac}
 
 Stock exchanges close at weekends, crypto markets do not. Still, at weekends banks are closed, institutional investors are less active and the news flow slows down. The day-of-the-week effect means a different mean or variance of returns on certain days; @CaporalePlastun2019 study it in the crypto market.
 
@@ -259,11 +259,11 @@ Unlike the rolling-window volatility of [Section 2](#sec-2), the GARCH estimate 
 
 The left tails of all five assets have a tail index below 4, and the intervals for crypto and for equities overlap. Bitcoin returns are nearly uncorrelated, but their squares are strongly autocorrelated. The GARCH(1,1)-t model of crypto assets is integrated, with very heavy-tailed innovations and no leverage effect, unlike the S&P 500.
 
-# Is the Crypto Market Efficient?
+# Efficiency of the Crypto Market
 
 The section applies the weak-form efficiency tests of [Chapter 7](ch7.html) to Bitcoin and Ethereum, on the whole sample, on subperiods and on rolling windows, compares them with the literature on Bitcoin efficiency and shows, through two case studies, what trading data and blockchain data can reveal beyond a single price series.
 
-## Weak-Form Efficiency: What We Test {h=e2b96e3c}
+## Weak-Form Efficiency: the Tested Hypotheses {h=eda22e23}
 
 In a weak-form efficient market [@Fama1970], past prices do not help forecast future returns. The other two forms ask for more: the semi-strong form refers to all public information, the strong form to all information, private included. Statistical tests on a price series concern the weak form only.
 
@@ -291,7 +291,7 @@ All three series stay inside the band over the whole 2016–2026 period: for Bit
 
 The contrast comes from the i.i.d. statistic $Z(5)$, which assumes constant variance. With it, the share of rejecting windows would be 1.6% for Bitcoin and 21.7% for the S&P 500. Ignoring volatility clustering therefore produces false rejections, especially in the equity market, where the negative first-order autocorrelation coincides with periods of high volatility.
 
-## How Efficiency Evolved {h=4cf20d68}
+## Evolution of Efficiency {h=cde6c04f}
 
 The literature on Bitcoin efficiency started from a negative verdict. @Urquhart2016 finds that Bitcoin was inefficient over 2010–2016 as a whole, but moved towards efficiency after 2013. @NadarajahChu2017 show that a power transformation of the same returns passes the efficiency tests, so the initial verdict was fragile. @TranLeirvik2020 propose an adjusted measure of inefficiency and find that crypto markets became more efficient after 2017.
 
@@ -355,7 +355,7 @@ The third episode is the failure of FTX, a crypto exchange that went bankrupt in
 
 The comparison shows an asymmetric dependence. COVID-19 was a global shock: crypto assets fell as much as equities, and gold did not move. Terra/Luna and FTX were shocks specific to the crypto market: crypto assets lost a quarter or more, and the S&P 500 much less or nothing. Equity crashes reach crypto, crypto crashes rarely reach equities.
 
-## Hedge or Safe Haven? {h=3626c627}
+## Bitcoin as a Hedge or a Safe Haven {h=c5d52dc2}
 
 @BaurLucey2010 distinguish two roles of an asset in an equity portfolio. A hedge is uncorrelated or negatively correlated with equities on average. A safe haven has this property during crashes, that is exactly when the investor needs it. An asset can be a weak hedge on average without being a safe haven.
 
@@ -399,7 +399,7 @@ The second long episode started from 67,567 USD on 8 November 2021 and reached 1
 
 Five falls of more than half the value in twelve years show that a crash of this size is, for Bitcoin, an ordinary event, not a rare one. The peaks of 2017 and 2021 each took more than two years to recover.
 
-## Bubbles and the Log-Periodic Idea {h=971d9908}
+## Bubbles and Log-Periodic Models {h=15bdf75c}
 
 A bubble is a price far above fundamental value, sustained by the expectation that the asset can be resold at an even higher price. @CheahFry2015 argue that the fundamental value of Bitcoin is zero and find in its price the signs of speculative bubbles.
 
@@ -419,7 +419,7 @@ Drawdowns of more than 50% are ordinary for Bitcoin: five in twelve years, with 
 
 The section studies an institutional event, the approval of spot Bitcoin ETFs in January 2024. The question is whether Bitcoin volatility, its weekend pattern and its link with equities changed after the asset's listing on the stock exchange, and how well such a fund tracks the Bitcoin price.
 
-## January 2024: Bitcoin Enters the Stock Exchange {h=eacf190f}
+## January 2024: Approval of the Spot Bitcoin ETFs {h=0138ebab}
 
 An ETF (exchange-traded fund) is a fund whose units trade on a stock exchange, like shares. A spot ETF holds the asset itself, not futures contracts on it. On 10 January 2024, the SEC (Securities and Exchange Commission), the US capital-markets regulator, approved 11 spot Bitcoin ETFs [@SEC2024], and trading began on 11 January.
 
@@ -435,7 +435,7 @@ Volatility kept falling after January 2024, but it was already falling before: t
 
 The weekend share is below 2/7 in every year, and since 2020 it is far below that value: the bars for 2020–2026 are, except for 2025, much lower than those for 2015–2019. The change in the weekend pattern thus took place in 2020, four years before the ETFs.
 
-## Before and After: a Simple Comparison {h=9a08d490}
+## Bitcoin before and after the Spot ETFs {h=34cd0a24}
 
 The table compares two two-year windows: 11 January 2022 – 10 January 2024 (729 days) and 11 January 2024 – 10 January 2026 (730 days). Annual volatility fell from 55.2% to 47.5%, the ratio of weekend to weekday variance rose from 0.30 to 0.42, the correlation with the S&P 500 fell from 0.45 to 0.37, and the GARCH(1,1)-t persistence $\hat\alpha + \hat\beta$ fell from 1.000 to 0.97.
 
@@ -443,7 +443,7 @@ The Brown–Forsythe test of equal variances gives a statistic of 1.22, with p-v
 
 Even a significant difference would not be a causal effect. Between the two windows, interest rates changed, the April 2024 halving took place and so did the US elections. A credible study would need a control group, for example coins without an ETF, or intraday data around the US market open, where the effect of ETF trading should be directly visible.
 
-## How Well Does an ETF Track Bitcoin? {h=bb85194a}
+## Tracking Error of a Spot Bitcoin ETF {h=1474c071}
 
 The chapter compares IBIT (iShares Bitcoin Trust), one of the spot ETFs, with Bitcoin. It uses the adjusted close of IBIT, and the prices are joined on the 671 trading days of the ETF. The correlation of daily returns is 0.91, and the slope of the regression of the IBIT return on the Bitcoin return is 0.94.
 
@@ -459,7 +459,7 @@ Bitcoin volatility fell after the launch of the spot ETFs, but the fall had star
 
 The section deals with crypto assets designed not to move: stablecoins. It defines the three types, explains the arbitrage that holds the peg, measures supply and peg deviations, analyses two episodes in which the peg broke and describes the regulatory framework in the European Union and in the United States.
 
-## What Is a Stablecoin? {h=aa35b9a9}
+## Stablecoins: Definition and Types {h=50ad2ab8}
 
 A stablecoin is a crypto asset designed to keep a fixed price, usually 1 USD; this price is called the peg. Stablecoins are used as cash on crypto exchanges and for cross-border payments. The types differ in the mechanism that holds the peg and, from there, in their main risk.
 
@@ -467,7 +467,7 @@ Fiat-backed stablecoins, such as USDT (Tether) and USDC (USD Coin), hold reserve
 
 Algorithmic stablecoins, such as UST (TerraUSD), have no reserves: an algorithm issues and burns a second coin to keep the price at 1 USD. Their risk is a run that destroys both coins. DefiLlama today classifies 91.3% of stablecoin supply as fiat-backed and 8.7% as crypto-backed.
 
-## How a Peg Is Held: Arbitrage {h=0ff90317}
+## Maintaining the Peg: Arbitrage {h=fd0ce9bf}
 
 The peg of a fiat-backed stablecoin is held in the primary market, where authorised traders can create a coin by paying 1 USD to the issuer or redeem a coin for 1 USD. If the price on exchanges is 0.99, an arbitrageur buys at 0.99 and redeems at 1.00, a profit of one cent per coin; his demand pushes the price back up. If the price is 1.01, the arbitrageur creates coins at 1.00 and sells them at 1.01; his supply pushes the price down.
 
@@ -619,7 +619,7 @@ A position in Bitcoin has a historical VaR 1% of 10.54%, three times that of the
 
 The section starts from an open question raised by the chapter, whether stablecoin flows affect crypto prices, and shows where AI (artificial intelligence) tools can help a researcher who studies it and which checks they cannot replace.
 
-## An Open Question {h=1dda4aa3}
+## An Open Research Question {h=bc32360e}
 
 The question is whether stablecoin flows affect crypto asset prices. @GriffinShams2020 found that Tether issuance supported the Bitcoin price in 2017, and the stablecoin market is now about 74 times as large as in 2020. If stablecoin flows are a source of demand for Bitcoin, they should be visible in returns.
 
@@ -675,7 +675,7 @@ The GARCH(1,1) model, @eq:garch, has half-life $\ln 0.5/\ln(\alpha + \beta)$, an
 
 VaR in money follows from @eq:varusd, with $\mathrm{VaR}_\alpha = -q_\alpha$. The half-life has the same form for GARCH and for the peg deviation: the logarithm of 0.5 divided by the logarithm of the persistence coefficient.
 
-## Check Yourself {h=f4068613}
+## Self-Assessment {h=ac009cb9}
 
 The first question asks whether an annual Bitcoin volatility of 55%, reported by a fund from a daily standard deviation of 3.5%, is correct. It is not: $3.5 \times \sqrt{252} \approx 55.6\%$ uses the equity calendar, while 365 days give $3.5 \times \sqrt{365} \approx 66.9\%$.
 

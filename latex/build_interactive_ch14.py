@@ -32,17 +32,17 @@ XBLOCKS = [('ann-we', 16, 'asset', 'rvol'), ('desc-tab', 17, 'asset', 'rvol'), (
 ORDER = ['halving', 'ann-we', 'desc-tab', 'rvol', 'weekday', 'hill-tab', 'lb-we', 'acf', 'garch-tab', 'garch', 'vr-tab', 'rvr', 'rc-we', 'corr', 'corr-tab',
          'crisis-tab', 'haven-we', 'mdd-we', 'dd', 'dd-tab', 'etf', 'etf-tab', 'ibit-we', 'supply', 'bp-we', 'peg', 'svb', 'ust', 'usd-we', 'var-tab',
          'sqrt-we', 'kup-we', 'btcvar']
-TITLES = {'ann-we': 'Anualizarea cu frecvența reală (2/2)', 'desc-tab': 'Cinci active comparate', 'hill-tab': 'Cozi groase: estimatorul Hill (2/2)',
+TITLES = {'ann-we': 'Anualizarea cu frecvența reală (2/2)', 'desc-tab': 'Compararea a cinci active', 'hill-tab': 'Cozi groase: estimatorul Hill (2/2)',
           'lb-we': 'Interpretarea ACF și a testului Ljung–Box', 'garch-tab': 'GARCH(1,1)-t pentru active cripto și tradiționale (2/2)',
           'vr-tab': 'Testele raportului varianțelor pe întregul eșantion', 'rc-we': 'Măsurarea corelației între calendare diferite', 'corr-tab': 'Corelația an cu an',
-          'crisis-tab': 'Trei episoade de criză', 'haven-we': 'Acoperire sau refugiu?', 'mdd-we': 'Drawdown-ul', 'dd-tab': 'Marile drawdown-uri ale Bitcoin',
-          'etf-tab': 'Înainte și după: o comparație simplă', 'ibit-we': 'Cît de bine urmărește un ETF prețul Bitcoin?', 'bp-we': 'Abaterea de la paritate în puncte de bază',
+          'crisis-tab': 'Trei episoade de criză', 'haven-we': 'Bitcoin ca instrument de acoperire sau activ de refugiu', 'mdd-we': 'Drawdown-ul', 'dd-tab': 'Marile drawdown-uri ale Bitcoin',
+          'etf-tab': 'Bitcoin înainte și după lansarea ETF-urilor spot', 'ibit-we': 'Eroarea de replicare a unui ETF spot pe Bitcoin', 'bp-we': 'Abaterea de la paritate în puncte de bază',
           'usd-we': 'VaR 1% și ES 2,5% în dolari', 'var-tab': 'VaR 1% și ES 2,5% prin patru metode', 'sqrt-we': 'Interpretarea cifrelor de risc', 'kup-we': 'Backtesting: testul Kupiec'}
-TITLES_EN = {'ann-we': 'Annualisation with the Actual Frequency (2/2)', 'desc-tab': 'Five Assets Side by Side', 'hill-tab': 'Heavy Tails: the Hill Estimator (2/2)',
+TITLES_EN = {'ann-we': 'Annualisation with the Actual Frequency (2/2)', 'desc-tab': 'Comparison of Five Assets', 'hill-tab': 'Heavy Tails: the Hill Estimator (2/2)',
              'lb-we': 'Reading the ACF and the Ljung–Box Test', 'garch-tab': 'GARCH(1,1)-t for Crypto and Traditional Assets (2/2)',
              'vr-tab': 'Variance-Ratio Tests on the Whole Sample', 'rc-we': 'Measuring Correlation Across Calendars', 'corr-tab': 'Correlation Year by Year',
-             'crisis-tab': 'Three Crisis Episodes', 'haven-we': 'Hedge or Safe Haven?', 'mdd-we': 'Drawdown', 'dd-tab': "Bitcoin's Large Drawdowns",
-             'etf-tab': 'Before and After: a Simple Comparison', 'ibit-we': 'How Well Does an ETF Track Bitcoin?', 'bp-we': 'Peg Deviation in Basis Points',
+             'crisis-tab': 'Three Crisis Episodes', 'haven-we': 'Bitcoin as a Hedge or a Safe Haven', 'mdd-we': 'Drawdown', 'dd-tab': "Bitcoin's Large Drawdowns",
+             'etf-tab': 'Bitcoin before and after the Spot ETFs', 'ibit-we': 'Tracking Error of a Spot Bitcoin ETF', 'bp-we': 'Peg Deviation in Basis Points',
              'usd-we': 'VaR 1% and ES 2.5% in Dollars', 'var-tab': 'VaR 1% and ES 2.5% under Four Methods', 'sqrt-we': 'Interpretation of the Risk Numbers', 'kup-we': 'Backtesting: the Kupiec Test'}
 
 PFX = {'halving': 'hv', 'ann-we': 'an', 'desc-tab': 'ds', 'rvol': 'rv', 'weekday': 'wd', 'hill-tab': 'hl', 'lb-we': 'lb', 'acf': 'ac', 'garch-tab': 'gt', 'garch': 'gv',
@@ -51,9 +51,9 @@ PFX = {'halving': 'hv', 'ann-we': 'an', 'desc-tab': 'ds', 'rvol': 'rv', 'weekday
        'sqrt-we': 'sq', 'kup-we': 'kp', 'btcvar': 'bt'}
 
 SECTIONS = {
- 'ro': dict(btc='Bitcoin și Ethereum pe scurt', asset='Cripto ca o clasă de active', tails='Cozi și volatility clustering', eff='Este piața cripto eficientă?',
+ 'ro': dict(btc='Bitcoin și Ethereum pe scurt', asset='Activele cripto ca clasă de active', tails='Cozi și volatility clustering', eff='Eficiența pieței cripto',
             corr='Corelația cu acțiunile și aurul', bub='Bule și crahuri', etf='ETF-urile spot pe Bitcoin', stable='Stablecoins', risk='Riscul unei poziții cripto'),
- 'en': dict(btc='Bitcoin and Ethereum in Brief', asset='Crypto as an Asset Class', tails='Tails and Volatility Clustering', eff='Is the Crypto Market Efficient?',
+ 'en': dict(btc='Bitcoin and Ethereum in Brief', asset='Crypto as an Asset Class', tails='Tails and Volatility Clustering', eff='Efficiency of the Crypto Market',
             corr='Correlation with Equities and Gold', bub='Bubbles and Crashes', etf='Spot Bitcoin ETFs', stable='Stablecoins', risk='The Risk of a Crypto Position'),
 }
 
@@ -867,7 +867,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch14-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch14-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH14_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH14_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

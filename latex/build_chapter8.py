@@ -185,7 +185,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. VOLATILITATEA
 # =============================================================================
-D.section('What Is Volatility?', 'Volatilitatea: definiție și caracter latent')
+D.section('Volatility: Definition and Latent Nature', 'Volatilitatea: definiție și caracter latent')
 
 D.frame(T('Volatility Clustering and the Uses of Volatility', 'Volatility clustering și utilizările volatilității'), cols(items(
     (T('``Large changes tend to be followed by large changes, of either sign, and small changes tend to be followed by small changes\'\' \\refMandelbrot',
@@ -226,7 +226,7 @@ D.frame(T('Interpretation: Volatility in Four Markets', 'Interpretarea volatilit
     T('Excess kurtosis far above 0 (the Normal value): heavy tails; Section 6 shows that clustering is one cause',
       'Excesul de boltire este mult peste 0 (valoarea pentru distribuția Normală): cozi groase; secțiunea 6 arată că volatility clustering este una dintre cauze')) + ql('SFM_ch8_returns_volatility'), 'footnotesize')
 
-D.frame(T('Volatility Is Latent', 'Volatilitatea este latentă'), items(
+D.frame(T('The Latent Nature of Volatility', 'Caracterul latent al volatilității'), items(
     (T('Model: the return is a constant mean plus a shock whose size changes every day: $r_t = \\mu + \\sigma_t z_t$', 'Modelul: randamentul este o medie constantă plus un șoc a cărui mărime se schimbă zilnic: $r_t = \\mu + \\sigma_t z_t$'),
      [T('$\\mu$: the mean return; $z_t$: i.i.d.\\ shocks with mean 0 and variance 1', '$\\mu$: randamentul mediu; $z_t$: șocuri i.i.d., de medie 0 și varianță 1'),
       T('$\\sigma_t$ is the \\textbf{conditional volatility}: $\\sigma_t^2 = \\mathrm{Var}(r_t \\mid \\mathcal{F}_{t-1})$, with $\\mathcal{F}_{t-1}$ the information at the close of day $t-1$',
@@ -288,7 +288,7 @@ D.frame(T('Interpretation: the Window Trade-Off', 'Interpretarea compromisului d
     T('At the end of the sample: @{w.21.last}\\% (21 days), @{w.63.last}\\% (63 days), @{w.252.last}\\% (252 days)',
       'La sfîrșitul eșantionului: @{w.21.last}\\% (21 de zile), @{w.63.last}\\% (63 de zile), @{w.252.last}\\% (252 de zile)')) + ql('SFM_ch8_returns_volatility'))
 
-D.frame(T('How Precise Is a Sample Volatility?', 'Precizia unei volatilități de selecție'), items(
+D.frame(T('Precision of a Sample Volatility', 'Precizia unei volatilități de selecție'), items(
     (T('With $n$ i.i.d.\\ Normal returns, the relative standard error of $\\hat\\sigma$ is $\\mathrm{SE}(\\hat\\sigma)/\\sigma \\approx 1/\\sqrt{2n}$',
        'Cu $n$ randamente Normale i.i.d., eroarea standard relativă a lui $\\hat\\sigma$ este $\\mathrm{SE}(\\hat\\sigma)/\\sigma \\approx 1/\\sqrt{2n}$'),
      [T('$\\mathrm{SE}(\\hat\\sigma)$: the standard deviation of the estimate across samples; divided by $\\sigma$ it is a relative error',
@@ -393,7 +393,7 @@ D.frame(T('Open, High, Low and Close Prices', 'Prețurile de deschidere, maxim, 
     T('Data: S\\&P 500 since 2008, DAX since 2006, Bitcoin since 2014, BVB stocks since 2010; the BET file has closes only',
       'Date: S\\&P 500 din 2008, DAX din 2006, Bitcoin din 2014, acțiuni BVB din 2010; fișierul BET conține doar închideri')))
 
-chart(T('One Trading Day: What OHLC Records', 'O zi de tranzacționare în datele OHLC'), 'sfm_ch8_ohlc_path', 'SFM_ch8_range_estimators', [
+chart(T('One Trading Day in OHLC Data', 'O zi de tranzacționare în datele OHLC'), 'sfm_ch8_ohlc_path', 'SFM_ch8_range_estimators', [
     T('Simulated log price (Brownian motion, 390 one-minute steps) after an overnight gap of $0.35\\%$: the close keeps only the end point; high and low summarise the path',
       'Preț logaritmic simulat (mișcare browniană, 390 de pași de un minut) după un salt overnight de $0{,}35\\%$: închiderea păstrează doar punctul final; maximul și minimul rezumă traiectoria'),
     T('Two days with the same close can have very different ranges, and so very different risk', 'Două zile cu aceeași închidere pot avea amplitudini foarte diferite, deci riscuri foarte diferite')],
@@ -483,7 +483,7 @@ D.frame(T('Volatility Estimators for Five Assets', 'Estimatorii volatilității 
     T('Stocks: Banca Transilvania (TLV) and OMV Petrom (SNP); open, high and low adjusted with the same factor as the close; days without trades removed',
       'Acțiuni: Banca Transilvania (TLV) și OMV Petrom (SNP); deschiderea, maximul și minimul ajustate cu același factor ca închiderea; zilele fără tranzacții sînt eliminate')) + ql('SFM_ch8_range_estimators'), 'footnotesize')
 
-D.frame(T('Interpretation: Why the Estimators Disagree', 'Interpretarea diferențelor dintre estimatori'), items(
+D.frame(T('Interpretation: Differences between the Estimators', 'Interpretarea diferențelor dintre estimatori'), items(
     (T('Bitcoin trades 24 hours a day: the night share is almost 0, and all five estimators agree within a few points',
        'Bitcoin se tranzacționează 24 de ore din 24: ponderea nopții este aproape 0, iar toți cei cinci estimatori sînt apropiați'),
      [T('the remaining gap: the daily path is observed in discrete trades, not continuously', 'diferența rămasă: traiectoria zilei este observată prin tranzacții discrete, nu continuu')]),
@@ -523,7 +523,7 @@ D.frame(T('Realised Variance from Intraday Returns', 'Varianța realizată din r
     T('Our course data are daily; the next two slides use simulated one-minute prices to show how RV behaves',
       'Datele cursului sînt zilnice; următoarele două slide-uri folosesc prețuri simulate la un minut pentru a arăta comportamentul RV')))
 
-chart(T('Simulated Example: RV Tracks the True Volatility', 'Exemplu simulat: RV urmărește volatilitatea reală'), 'sfm_ch8_realised', 'SFM_ch8_realised_volatility', [
+chart(T('Simulated Example: RV against the True Volatility', 'Exemplu simulat: RV comparată cu volatilitatea reală'), 'sfm_ch8_realised', 'SFM_ch8_realised_volatility', [
     T('60 simulated days of 390 one-minute returns; the daily volatility follows a log AR(1) process (persistence $0.9$)',
       '60 de zile simulate, fiecare cu 390 de randamente de un minut; logaritmul volatilității zilnice urmează un proces AR(1) (persistența $0{,}9$)'),
     T('Mean absolute relative error: 5-minute RV @{rv.mae5}\\%, Parkinson @{rv.maep}\\%, $|r_t|$ @{rv.maer}\\%; correlation with the truth: @{rv.c5}, @{rv.cp} and @{rv.cr}',
@@ -629,7 +629,7 @@ D.frame(T('Clustering Tests in Six Series', 'Testele de volatility clustering pe
     T('Bitcoin, Banca Transilvania (TLV) and OMV Petrom (SNP) have the smallest ARCH-LM values despite heavy tails: $\\mathrm{LM} = nR^2$ grows with the sample length, and these series are shorter; their $R^2$ is also lower (@{cl.btc.lmr2}, @{cl.tlv.lmr2}, @{cl.snp.lmr2} against @{cl.sp500.lmr2} for the S\\&P 500): a few extreme days dilute the regression',
       'Bitcoin, Banca Transilvania (TLV) și OMV Petrom (SNP) au cele mai mici valori ARCH-LM, deși au cozi groase: $\\mathrm{LM} = nR^2$ crește cu lungimea eșantionului, iar aceste serii sînt mai scurte; și $R^2$ este mai mic (@{cl.btc.lmr2}, @{cl.tlv.lmr2}, @{cl.snp.lmr2} față de @{cl.sp500.lmr2} la S\\&P 500): cîteva zile extreme domină regresia și reduc $R^2$')) + ql('SFM_ch8_clustering'), 'footnotesize')
 
-chart(T('Clustering Creates Heavy Tails', 'Volatility clustering produce cozi groase'), 'sfm_ch8_kurtosis', 'SFM_ch8_kurgarch', [
+chart(T('Volatility Clustering and Heavy Tails', 'Volatility clustering și cozile groase'), 'sfm_ch8_kurtosis', 'SFM_ch8_kurgarch', [
     T('Left: calm days with sd 1, turbulent days with sd 2 (share $p = 0.2$): $E[\\sigma^2] = @{mx.e2}$, $E[\\sigma^4] = @{mx.e4}$, kurtosis $3E[\\sigma^4]/E[\\sigma^2]^2 = @{ku.m022}$, though each day is Normal',
       'Stînga: zile liniștite cu abaterea standard 1, zile agitate cu abaterea standard 2 (ponderea $p = 0{,}2$): $E[\\sigma^2] = @{mx.e2}$, $E[\\sigma^4] = @{mx.e4}$, coeficientul de boltire $3E[\\sigma^4]/E[\\sigma^2]^2 = @{ku.m022}$, deși randamentul fiecărei zile urmează distribuția Normală'),
     T('Right: GARCH(1,1) kurtosis $3 + 6\\alpha^2/(1 - \\beta^2 - 2\\alpha\\beta - 3\\alpha^2)$, as in SFEkurgarch; $\\alpha = 0.10$, $\\beta = 0.85$: @{ku.g} (Chapter 9)',
@@ -696,7 +696,7 @@ D.frame(T('The Leverage Effect', 'Efectul de levier'), items(
     T('Chapter 2 met the asymmetry of the distribution; here the asymmetry is in the \\textbf{dynamics} of volatility',
       'Capitolul 2 a arătat asimetria distribuției; aici asimetria apare în \\textbf{dinamica} volatilității')))
 
-chart(T('Bad News Raises Future Volatility', 'Știrile negative cresc volatilitatea viitoare'), 'sfm_ch8_leverage', 'SFM_ch8_leverage', [
+chart(T('Negative Returns and Future Volatility', 'Randamentele negative și volatilitatea viitoare'), 'sfm_ch8_leverage', 'SFM_ch8_leverage', [
     T('$\\mathrm{corr}(r_t, |r_{t+j}|)$, $j = 1, \\dots, 10$; S\\&P 500: $@{lv.sp500.c1}$ at $j = 1$; the reverse direction $\\mathrm{corr}(|r_{t-1}|, r_t) = @{lv.sp500.cm1}$',
       '$\\mathrm{corr}(r_t, |r_{t+j}|)$, $j = 1, \\dots, 10$; S\\&P 500: $@{lv.sp500.c1}$ la $j = 1$; în sens invers, $\\mathrm{corr}(|r_{t-1}|, r_t) = @{lv.sp500.cm1}$'),
     T('Mean $r_{t+1}^2$ after a down day divided by that after an up day: S\\&P 500 @{lv.sp500.ratio}, DAX @{lv.dax.ratio}, BET @{lv.bet.ratio}, Bitcoin @{lv.btc.ratio}',
@@ -736,7 +736,7 @@ D.frame(T('Loss Functions: MSE and QLIKE', 'Funcții de pierdere: MSE și QLIKE'
       T('QLIKE: $1/0.5 + (@{ql.ln05}) = @{ql.h05}$ against $1/2 + @{ql.ln2} = @{ql.h2}$: QLIKE punishes under-prediction more, the costly error for risk management',
         'QLIKE: $1/0{,}5 + (@{ql.ln05}) = @{ql.h05}$ față de $1/2 + @{ql.ln2} = @{ql.h2}$: QLIKE penalizează mai mult subestimarea, eroarea costisitoare în managementul riscului')])))
 
-D.frame(T('S\\&P 500: Which Forecast Is Best?', 'S\\&P 500: compararea prognozelor'), table(
+D.frame(T('S\\&P 500: Comparison of the Forecasts', 'S\\&P 500: compararea prognozelor'), table(
     'lrrrrrr', T('& \\textbf{21 days} & \\textbf{63 days} & \\textbf{252 days} & \\textbf{EWMA 0.94} & \\textbf{EWMA 0.97} & \\textbf{VIX}',
                  '& \\textbf{21 de zile} & \\textbf{63 de zile} & \\textbf{252 de zile} & \\textbf{EWMA 0,94} & \\textbf{EWMA 0,97} & \\textbf{VIX}'),
     ['MSE & ' + ' & '.join(f'@{{fc.{m}.mse}}' for m in ['hist21', 'hist63', 'hist252', 'ewma94', 'ewma97', 'vix']),
@@ -771,7 +771,7 @@ chart(T('Choosing $\\lambda$ by QLIKE', 'Alegerea lui $\\lambda$ după QLIKE'), 
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Do range-based estimators help on the Bucharest Stock Exchange, where many stocks trade thinly?}',
        '\\textbf{Ajută estimatorii de amplitudine la Bursa de Valori București, unde multe acțiuni se tranzacționează rar?}'),
      [T('theory: ranges are @{ef.lo} to @{ef.hi} times more efficient; but thin trading shrinks the observed range (Section 4)',
@@ -846,7 +846,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'MSE, QLIKE & $(\\hat\\sigma_t^2 - h_t)^2$, \\quad $\\hat\\sigma_t^2/h_t + \\ln h_t$'],
     size='small') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a stock has $H = 102$, $L = 98$ on one day; what is the Parkinson daily volatility?', '\\textbf{Întrebare}: o acțiune are $H = 102$, $L = 98$ într-o zi; care este volatilitatea zilnică Parkinson?'),
      [T('\\textbf{Answer}: $\\ln(102/98) = @{cy.hl}\\%$; $\\sqrt{@{cy.hl}^2/@{cy.c}} = @{cy.vol}\\%$', '\\textbf{Răspuns}: $\\ln(102/98) = @{cy.hl}\\%$; $\\sqrt{@{cy.hl}^2/@{cy.c}} = @{cy.vol}\\%$')]),
     (T('\\textbf{Question}: Ljung--Box on returns does not reject, on squared returns it rejects strongly; what do you conclude?',

@@ -119,7 +119,7 @@ window.SFM_DATA.quizzes['crypto'] = {
         {
             "correct": 1,
             "en": {
-                "title": "The 252-day mistake",
+                "title": "Annualising with 252 instead of 365 days",
                 "text": "By how much does annualising a crypto volatility with sqrt(252) instead of sqrt(365) understate it?",
                 "options": [
                     "By about 31%",
@@ -131,7 +131,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                 "incorrectExplanation": "The bias depends only on the two conventions: sqrt(252/365) = 0.831; the 31% figure is the bias of the mean (1 - 252/365)."
             },
             "ro": {
-                "title": "Greșeala cu 252 de zile",
+                "title": "Anualizarea cu 252 de zile în loc de 365",
                 "text": "Cu cît subestimează volatilitatea cripto anualizarea cu sqrt(252) în loc de sqrt(365)?",
                 "options": [
                     "Cu aproximativ 31%",
@@ -281,7 +281,7 @@ window.SFM_DATA.quizzes['crypto'] = {
         {
             "correct": 3,
             "en": {
-                "title": "The weekend",
+                "title": "Weekend effect in Bitcoin",
                 "text": "For Bitcoin, the weekend dummy in the mean has p = 0.83, while the Brown-Forsythe test of equal variance has p < 0.001 (weekend/weekday variance 0.39). What is the conclusion?",
                 "options": [
                     "Weekend returns are higher",
@@ -293,7 +293,7 @@ window.SFM_DATA.quizzes['crypto'] = {
                 "incorrectExplanation": "A large p-value for the mean and a tiny one for the variance point in different directions: the effect is in the risk, and the risk is lower at weekends."
             },
             "ro": {
-                "title": "Weekendul",
+                "title": "Efectul de weekend la Bitcoin",
                 "text": "Pentru Bitcoin, variabila weekend din ecuația mediei are p = 0,83, iar testul Brown-Forsythe al egalității varianțelor are p < 0,001 (varianța weekend/zile lucrătoare 0,39). Care este concluzia?",
                 "options": [
                     "Randamentele din weekend sînt mai mari",

@@ -319,14 +319,14 @@ TICKET = [
 # ================================================================= table and worked-example blocks
 # (anchor, frame number in the deck (same in RO and EN), section key, chart block that carries it on the web lecture,
 #  title check EN, title check RO)
-XBLOCKS = [('crash-table', 10, 'why', 'crash-days', 'Worst Days under the Normal Law', 'celor mai proaste zile'),
+XBLOCKS = [('crash-table', 10, 'why', 'crash-days', 'Largest Daily Losses under the Normal', 'Cele mai mari pierderi zilnice'),
            ('hill-six', 21, 'hill', 'loglog-real', 'Hill on Six Losses', 'Hill pe șase pierderi'),
            ('hill-table', 25, 'hill', 'hill-plot', 'Hill Estimates for Four Markets', 'Estimări Hill pentru patru piețe'),
            ('bvb-table', 27, 'hill', 'hill-plot', 'Four Stocks of the Bucharest', 'Patru acțiuni de la Bursa'),
            ('me-table', 31, 'me', 'mean-excess', 'Reading the Mean Excess Plot', 'mean excess'),
            ('gev-table', 38, 'gev', 'maxima-sim', 'GEV Fits to Monthly Maxima', 'Ajustări GEV la maximele lunare'),
            ('rl-example', 40, 'gev', 'gev-ppqq', 'Return Levels', 'Return levels'),
-           ('rl-table', 42, 'gev', 'return-levels', '10-Year Loss', 'pierderii de 10 ani'),
+           ('rl-table', 42, 'gev', 'return-levels', 'Return Levels of Daily Losses', 'Return levels ale pierderilor'),
            ('gpd-table', 48, 'pot', 'threshold-stability', 'GPD Fits above the 90% Quantile', 'Ajustări GPD peste cuantila de 90%'),
            ('crash-evt', 52, 'pot', 'tail-fit', 'Waiting Times of the Worst Days', 'Timpii de așteptare'),
            ('var-example', 55, 'var', 'tail-fit', 'Step by Step', 'pas cu pas'),
@@ -698,7 +698,7 @@ VEIL = {'hill-six': {'out': True, 'charts': ['hs-tab', 'hs-we-box']}, 'hill-tabl
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch5-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch5-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH5_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH5_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

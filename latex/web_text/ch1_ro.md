@@ -50,7 +50,7 @@ Datele financiare se împart în patru grupe. **Datele de piață** sînt inform
 
 **Datele fundamentale și macroeconomice**, ca bilanțurile, profiturile, inflația, produsul intern brut (PIB) și dobînzile de politică monetară, descriu firmele și economia din spatele prețurilor. **Datele alternative** includ știri, rețele sociale, imagini din satelit și tranzacții pe blockchain. Cursul lucrează în principal cu date zilnice de piață.
 
-## De la banda telegrafică la fluxurile de date {h=0fa8f280}
+## Banda telegrafică și fluxurile electronice de date {h=b573c8e6}
 
 Primul flux de prețuri în timp real a fost telegraful bursier (*stock ticker*), folosit din 1867. Aparatul primea prin telegraf prețurile tranzacțiilor și le tipărea pe o bandă de hîrtie: prețul ultimei tranzacții, la cîteva minute după ce avusese loc. Investitorii aflați departe de sala bursei puteau urmări piața aproape în timp real.
 
@@ -446,7 +446,7 @@ Pentru S&P 500, 79,6% din zile se află la cel mult o abatere standard de medie,
 
 Cele două efecte sînt legate. Cu abaterea standard fixată, o distribuție care pune mai multe zile în cozi trebuie să pună mai multe zile și lîngă centru, și mai puține între ele. Un model Normal potrivit pe aceste date subestimează deci atît frecvența zilelor liniștite, cît și, mai important pentru risc, frecvența zilelor extreme. Măsurile de risc care presupun normalitate, ca un VaR Normal, moștenesc această eroare.
 
-## Volatilitatea se schimbă în timp {h=7251e6a4}
+## Volatilitatea variabilă în timp {h=711eaf0c}
 
 Graficul arată volatilitatea anualizată a S&P 500, BET și Bitcoin, calculată pe ferestre mobile de un an. Volatilitatea S&P 500 variază între 7% și 35%, cea a Bitcoin între 41% și 106%. BET urmează un tipar asemănător cu S&P 500, cu un salt în 2020.
 
@@ -488,7 +488,7 @@ unde $\mu$ este randamentul mediu, $r_f$ rata fără risc, iar $\sigma$ volatili
 
 Raportul Sharpe nu depinde de efectul de levier. Un împrumut la rata fără risc care dublează poziția dublează atît randamentul în exces, cît și volatilitatea, deci raportul rămîne același. Două investiții cu același raport Sharpe oferă deci același randament pe unitatea de risc, iar un investitor poate atinge cu oricare dintre ele nivelul de risc dorit. William F. Sharpe, din imaginea slide-ului, a primit Premiul Nobel pentru economie în 1990.
 
-## Raportul Sharpe este o estimare {h=51403a58}
+## Eroarea de estimare a raportului Sharpe {h=159c7cdf}
 
 Pentru randamente i.i.d. (independente și identic distribuite), @Lo2002 dă eroarea standard a raportului Sharpe estimat $\widehat{\text{SR}}$:
 
@@ -622,7 +622,7 @@ Indicatorii secțiunii răspund la întrebări diferite și, pe aceleași date, 
 
 Capitolul se încheie cu o întrebare deschisă pe care metodele lui o pot aborda și cu rolul pe care instrumentele de inteligență artificială (AI, *artificial intelligence*) îl pot avea în studierea ei. Întrebarea este dacă rapoartele Sharpe persistă în timp. Secțiunea descrie ce poate aduce AI, ce verificări rămîn în sarcina cercetătorului și un proiect care aplică indicatorii capitolului acțiunilor de la BVB.
 
-## O întrebare deschisă {h=a172c5ad}
+## O întrebare de cercetare deschisă {h=a6a22462}
 
 **Persistă în timp rapoartele Sharpe?** Dacă o acțiune BVB a avut un raport Sharpe mare în 2015–2020, a avut unul mare și în 2021–2026? Răspunsul contează în practică. Dacă rapoartele Sharpe din trecut nu persistă, clasarea fondurilor sau a acțiunilor după raportul Sharpe trecut, o practică frecventă, îi este de puțin folos unui investitor care alege pentru viitor.
 

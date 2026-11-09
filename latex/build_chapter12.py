@@ -188,7 +188,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. CE ESTE UN SCOR DE CREDIT
 # =============================================================================
-D.section('What a Credit Score Is', 'Scorul de credit: definiție')
+D.section('The Credit Score: Definition', 'Scorul de credit: definiție')
 
 D.frame(T('The Lending Decision', 'Decizia de creditare'), items(
     (T('An applicant asks for a loan; the bank must decide \\textbf{accept} or \\textbf{reject}, and at which interest rate',
@@ -203,7 +203,7 @@ D.frame(T('The Lending Decision', 'Decizia de creditare'), items(
      [T('application scores (new clients) and behavioural scores (existing clients, from their payment history)', 'scoruri de aplicare (clienți noi) și scoruri comportamentale (clienți existenți, din istoricul plăților)'),
       T('consumer scores (statistical models on many small loans) and corporate scores (accounting ratios, market prices)', 'scoruri pentru persoane fizice (modele statistice pe multe credite mici) și pentru companii (indicatori contabili, prețuri de piață)')])))
 
-D.frame(T('From Durand to FICO', 'De la Durand la FICO'), cols(items(
+D.frame(T('Early Credit Scoring: Durand and FICO', 'Începuturile scoringului de credit: Durand și FICO'), cols(items(
     (T('1941: \\refDurand separates good and bad instalment loans of US lenders with Fisher\'s discriminant analysis',
        '1941: \\refDurand separă creditele bune de cele rele ale creditorilor americani cu analiza discriminantă a lui Fisher'),
      [T('the first statistical credit-scoring study', 'primul studiu statistic de scoring de credit')]),
@@ -237,7 +237,7 @@ D.frame(T('The Basel IRB Capital Formula', 'Formula de capital IRB din Basel'), 
      [T('so $K$ is the credit VaR 0.1\\% of the loss minus EL: the unexpected loss (Chapter 10)', 'deci $K$ este VaR 0,1\\% al pierderii din credit minus EL: pierderea neașteptată (Capitolul 10)')])),
     ph('bis', T('The BIS tower in Basel', 'Turnul BIS din Basel'), h='0.40\\textheight'), wl='0.62', wr='0.34'), 'footnotesize')
 
-chart(T('PD in Good and Bad Years: the One-Factor Model', 'PD în ani buni și în ani proști: modelul cu un factor'), 'sfm_ch12_conditional_pd', 'SFM_ch12_validation_irb', [
+chart(T('PD in Good and Bad Years: the One-Factor Model', 'PD în anii favorabili și nefavorabili: modelul cu un factor'), 'sfm_ch12_conditional_pd', 'SFM_ch12_validation_irb', [
     T('Borrower $i$ defaults if $\\sqrt{\\rho}\\,Y + \\sqrt{1 - \\rho}\\,\\varepsilon_i < \\Phi^{-1}(\\mathrm{PD})$; $Y$: the state of the economy; given $Y = y$: PD$(y) = \\Phi\\big((\\Phi^{-1}(\\mathrm{PD}) - \\sqrt{\\rho}\\,y)/\\sqrt{1 - \\rho}\\big)$, $\\rho = 0.2$',
       'Debitorul $i$ intră în nerambursare dacă $\\sqrt{\\rho}\\,Y + \\sqrt{1 - \\rho}\\,\\varepsilon_i < \\Phi^{-1}(\\mathrm{PD})$; $Y$: starea economiei; dat fiind $Y = y$: PD$(y) = \\Phi\\big((\\Phi^{-1}(\\mathrm{PD}) - \\sqrt{\\rho}\\,y)/\\sqrt{1 - \\rho}\\big)$, $\\rho = 0{,}2$'),
     T('$\\varepsilon_i$: the borrower\'s own shock; $Y$ and $\\varepsilon_i$ independent $N(0,1)$; $\\rho$: the weight of the common factor', '$\\varepsilon_i$: șocul propriu al debitorului; $Y$ și $\\varepsilon_i$ independente, $N(0,1)$; $\\rho$: ponderea factorului comun'),
@@ -468,7 +468,7 @@ D.frame(T('Correcting for Oversampling', 'Corecția pentru suprareprezentarea r�
 # =============================================================================
 D.section('Linear Discriminant Analysis', 'Analiza discriminantă liniară')
 
-D.frame(T('Fisher\'s Idea (1936)', 'Ideea lui Fisher (1936)'), cols(items(
+D.frame(T('Fisher\'s Discriminant Function (1936)', 'Funcția discriminantă a lui Fisher (1936)'), cols(items(
     (T('\\refFisher: find the linear combination $w^\\top x$ that separates two groups best', '\\refFisher: găsim combinația liniară $w^\\top x$ care separă cel mai bine două grupuri'),
      [T('he used measurements of iris flowers; Durand applied it to loans five years later', 'a folosit măsurători ale florilor de iris; Durand a aplicat metoda creditelor cinci ani mai tîrziu')]),
     (T('Fisher criterion: $J(w) = \\dfrac{[w^\\top(m_1 - m_0)]^2}{w^\\top S_W w}$', 'Criteriul Fisher: $J(w) = \\dfrac{[w^\\top(m_1 - m_0)]^2}{w^\\top S_W w}$'),
@@ -507,7 +507,7 @@ chart(T('Fisher\'s Boundary and the Logit Boundary', 'Frontiera Fisher și front
       'Interpretare: ambele frontiere sînt drepte cu aproape aceeași pantă; cei doi nori se suprapun mult, deci două variabile sînt departe de a fi suficiente')],
     h='0.50\\textheight')
 
-D.frame(T('Logit or LDA?', 'Logit sau LDA?'), table(
+D.frame(T('Comparison of Logit and LDA', 'Compararea modelelor logit și LDA'), table(
     'p{3.0cm}p{3.9cm}p{3.9cm}', T('& \\textbf{Logit} & \\textbf{LDA (Fisher)}', '& \\textbf{Logit} & \\textbf{LDA (Fisher)}'),
     [T('model', 'modelul') + ' & ' + T('$P(Y \\mid x)$ only', 'doar $P(Y \\mid x)$') + ' & ' + T('$P(x \\mid Y)$ Normal, common $\\Sigma$', '$P(x \\mid Y)$ Normală, $\\Sigma$ comun'),
      T('estimation', 'estimarea') + ' & ' + T('maximum likelihood, iterative', 'verosimilitate maximă, iterativ') + ' & ' + T('means and covariance, closed form', 'medii și covarianță, formulă explicită'),
@@ -522,7 +522,7 @@ D.frame(T('Logit or LDA?', 'Logit sau LDA?'), table(
 # =============================================================================
 # 6. SCORECARD
 # =============================================================================
-D.section('From Model to Scorecard', 'De la model la scorecard')
+D.section('Building the Scorecard', 'Construirea scorecard-ului')
 
 D.frame(T('Scaling a Scorecard', 'Scalarea unui scorecard'), items(
     (T('\\textbf{Scorecard}: a table that gives points to every attribute; the score of an applicant is the sum of the points \\refSiddiqi',
@@ -728,7 +728,7 @@ chart(T('Approval and Default by Group: Taiwan', 'Aprobarea și nerambursarea pe
       'Interpretare: modelul este calibrat în fiecare grup (PD medie apropiată de rata observată), deci grupurile cu mai multe nerambursări (bărbații, cei mai tineri și cei mai în vîrstă) sînt aprobate mai rar')],
     h='0.46\\textheight')
 
-D.frame(T('Case Study: Machine Learning and Unequal Credit', 'Studiu de caz: învățarea automată și creditul inegal'), items(
+D.frame(T('Case Study: Machine Learning and Inequality in Credit Access', 'Studiu de caz: învățarea automată și inegalitatea accesului la credit'), items(
     (T('\\refFuster: US mortgages; default predicted with a traditional logit and with machine-learning models', '\\refFuster: credite ipotecare din SUA; nerambursarea prezisă cu un logit tradițional și cu modele de învățare automată'),
      [T('question: who gains and who loses when the lender switches to the more accurate model?', 'întrebarea: cine cîștigă și cine pierde cînd creditorul trece la modelul mai precis?')]),
     (T('Findings', 'Rezultatele'),
@@ -790,7 +790,7 @@ chart(T('Merton: Asset Paths and PD', 'Merton: traiectoriile activelor și PD'),
     T('Interpretation: PD is almost zero at low leverage and rises steeply between 70\\% and 90\\%; the higher the volatility, the earlier the rise', 'Interpretare: PD este aproape zero la îndatorare mică și crește abrupt între 70\\% și 90\\%; cu cît volatilitatea este mai mare, cu atît creșterea începe mai devreme')],
     h='0.46\\textheight')
 
-D.frame(T('Case Study: How Good Is the Merton Model?', 'Studiu de caz: cît de bun este modelul Merton?'), items(
+D.frame(T('Case Study: Predictive Accuracy of the Merton Model', 'Studiu de caz: acuratețea predictivă a modelului Merton'), items(
     (T('\\refBS: US firms; the Merton DD against a ``naive\'\' DD with the same functional form but without solving the model', '\\refBS: companii americane; DD Merton față de un DD „naiv”, cu aceeași formă funcțională, dar fără rezolvarea modelului'),
      [T('design: hazard models of default and out-of-sample forecasts; comparison with CDS (credit default swap) spreads and bond yields', 'metoda: modele de hazard ale nerambursării și prognoze în afara eșantionului; comparație cu spread-urile CDS (credit default swap) și randamentele obligațiunilor')]),
     (T('Findings', 'Rezultatele'),
@@ -804,7 +804,7 @@ D.frame(T('Case Study: How Good Is the Merton Model?', 'Studiu de caz: cît de b
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Do flexible machine-learning scores improve default prediction enough to justify their cost in transparency and fairness?}',
        '\\textbf{Îmbunătățesc scorurile flexibile de învățare automată prognoza nerambursării suficient pentru a justifica pierderea de transparență și de echitate?}'),
      [T('today: WoE logit and LDA reach a test AUC of about @{cv.wl.test}; benchmarks find significant gains for ensembles \\refLessmann', 'azi: logit-ul WoE și LDA ating un AUC de test de aproximativ @{cv.wl.test}; comparațiile găsesc cîștiguri semnificative pentru ansambluri \\refLessmann'),
@@ -867,7 +867,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'Merton & $\\mathrm{DD} = \\frac{\\ln(V/D) + (\\mu - \\sigma^2/2)T}{\\sigma\\sqrt{T}}$, \\ $\\mathrm{PD} = \\Phi(-\\mathrm{DD})$'],
     size='small') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a model has an accuracy of 70\\% on the South German Credit test sample. Is it good?', '\\textbf{Întrebare}: un model are o acuratețe de 70\\% pe eșantionul de test South German Credit. Este bun?'),
      [T('\\textbf{Answer}: not necessarily: ``everybody is good\'\' already reaches 70\\%; look at AUC, TPR, FPR and the cost', '\\textbf{Răspuns}: nu neapărat: regula „toți sînt bun-platnici” atinge deja 70\\%; ne uităm la AUC, TPR, FPR și cost')]),
     (T('\\textbf{Question}: the coefficient of a dummy in a logit is 0.69. What does it mean?', '\\textbf{Întrebare}: coeficientul unei variabile indicator într-un logit este 0,69. Ce înseamnă?'),

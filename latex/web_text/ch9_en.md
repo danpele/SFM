@@ -61,7 +61,7 @@ The effect on volatility was nevertheless similar. The daily standard deviation 
 
 The episodes thus show two properties a model must have. Today's variance must depend on recent shocks, so that a turbulent day makes another turbulent day likely. And the effect of a shock must die out slowly, over weeks and months, not in a single day.
 
-## Why Model the Conditional Variance? {h=5391f7fd}
+## Motivation for Modelling the Conditional Variance {h=f1c3865e}
 
 In risk management, the value at risk (VaR), the loss exceeded with a given probability, and the expected shortfall (ES), the average loss beyond the VaR, need tomorrow's volatility, not the average volatility of the last 20 years. A VaR computed with a constant variance is too large in calm years and too small in crises, exactly when it matters; [Chapter 10](ch10.html) measures this failure with backtesting.
 
@@ -379,7 +379,7 @@ For Bitcoin, the bottom panel has a different scale: the conditional volatility 
 
 The chart also shows a common fact. The March 2020 shock hit all markets in the same week, from the US index to the Bucharest market and Bitcoin, although they differ greatly in their usual level of volatility.
 
-## How Long Does a Shock Last? {h=31632a0d}
+## Duration of a Volatility Shock {h=d0c922ec}
 
 The chart shows the share of a variance shock left after $h$ days, $(\alpha + \beta)^h$, for each market, with the estimated persistences. The half-life is the point at which the curve crosses the horizontal line at 1/2. The more slowly the curve falls, the longer the market "remembers" a crisis.
 
@@ -519,7 +519,7 @@ On the calm day of 2017, the volatility forecast for tomorrow is 7.3%, and the a
 
 All curves head towards the same long-run level, at the same relative speed set by the persistence of 0.9947, which is slow: after 250 days none has reached it. The slope of the term structure shows the regime the market is in: an upward-sloping curve indicates a calm period, a downward-sloping one a turbulent period.
 
-## How to Evaluate a Volatility Forecast {h=e691198b}
+## Evaluating a Volatility Forecast {h=eac6fb47}
 
 The true variance $\sigma_t^2$ is never observed, so a forecast $h_t$ is compared with a noisy proxy, here $r_t^2$. The proxy is unbiased, $E_{t-1}[r_t^2] = \sigma_t^2$ when $\mu \approx 0$, but very noisy, because $r_t^2 = \sigma_t^2 z_t^2$ and $z_t^2$ varies a lot from day to day. Hence a regression of $r_t^2$ on the forecast has a low $R^2$ even for a perfect forecast [@AndersenBollerslev1998]: a low $R^2$ does not mean the model is weak.
 
@@ -583,7 +583,7 @@ The conditional VaR, @eq:var, combines the GARCH volatility forecast with the qu
 
 The section starts from an open question raised by the contrast between Bitcoin and the S&P 500 and shows where AI (artificial intelligence) tools can help a researcher who studies it and which checks they cannot replace.
 
-## An Open Question {h=f9a79ece}
+## An Open Research Question {h=730aaf04}
 
 Is Bitcoin volatility becoming more like the volatility of an equity index? Over the full sample, the contrast is clear. Bitcoin is an IGARCH, without mean reversion, with extremely heavy-tailed innovations ($\hat\nu = 3.18$) and no leverage effect. The S&P 500 has mean-reverting volatility and a strong leverage effect. Since 2024, exchange-traded funds (ETFs) on Bitcoin have brought investors from the equity market into the crypto market, which could bring the dynamics of the two markets closer.
 
@@ -639,7 +639,7 @@ GJR-GARCH, @eq:gjr, and EGARCH, @eq:egarch, add the leverage effect. The Normal 
 
 All forecast formulas depend on the persistence through powers of $\alpha + \beta$, and the long-run variance depends on it through the denominator $1 - \alpha - \beta$. When the persistence is close to 1, small errors in its estimate produce large errors in long-horizon forecasts.
 
-## Check Yourself {h=3f14327f}
+## Self-Assessment {h=103f3c4b}
 
 The first question gives $\omega = 0.05$, $\alpha = 0.05$ and $\beta = 0.90$ and asks for the long-run variance and the half-life. The long-run variance is $0.05/(1 - 0.95) = 1$, and the half-life is $\ln 0.5/\ln 0.95 = 13.5$ days.
 

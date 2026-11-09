@@ -177,10 +177,10 @@ const range = (a, b, st) => { const r = []; for (let x = a; st > 0 ? x <= b + 1e
 // Pages that do not call predict() or exitTicket() are unchanged.
 const UI = LANG === 'ro'
   ? { pick: 'Ce credeți? Alegeți o variantă:', check: 'Verifică', right: 'Corect.', wrong: 'Nu: varianta corectă este marcată.', checkAll: 'Verifică răspunsurile',
-      score: (k, n) => `${k} din ${n} răspunsuri corecte.`, none: 'Fără răspuns.', ok: 'Corect', bad: 'Greșit', title: 'Verifică-te',
+      score: (k, n) => `${k} din ${n} răspunsuri corecte.`, none: 'Fără răspuns.', ok: 'Corect', bad: 'Greșit', title: 'Autoevaluare',
       show: 'Arată slide-ul', hidden: 'Rezultatul apare după „Verifică”, după ▶ sau cînd modificați parametrii.' }
   : { pick: 'What do you think? Pick an option:', check: 'Check', right: 'Correct.', wrong: 'No: the correct option is marked.', checkAll: 'Check answers',
-      score: (k, n) => `${k} of ${n} answers correct.`, none: 'No answer.', ok: 'Correct', bad: 'Wrong', title: 'Check Yourself',
+      score: (k, n) => `${k} of ${n} answers correct.`, none: 'No answer.', ok: 'Correct', bad: 'Wrong', title: 'Self-Assessment',
       show: 'Show slide', hidden: 'The result appears after “Check”, after ▶, or when you change the parameters.' };
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Opt-in veil of a block: the slide image is blurred under a „Arată slide-ul” / "Show slide" button and, with { out: true },

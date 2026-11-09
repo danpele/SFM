@@ -31,7 +31,7 @@ VaR 1% of six fitted models divided by the empirical VaR 1%, for BET, S&P 500, D
 [Seminar 6](../EN/Seminars/seminar6_model_selection_risk_management.pdf) comes before this lecture and practises the same tools on data.
 
 @plan
-- The Candidates | Seven distributions for daily returns, their tails, and the statistics every model must reproduce.
+- Candidate Distributions | Seven distributions for daily returns, their tails, and the statistics every model must reproduce.
 - Review of Maximum Likelihood Estimation | The log-likelihood, the Normal case in closed form, numerical fits, the profile likelihood of ν and numerical problems.
 - Nested Models: the Likelihood-Ratio Test | Nested pairs, Wilks' theorem, the boundary case of the Normal inside the Student-t, and the Vuong test.
 - Information Criteria: AIC and BIC | Akaike's argument, AIC, BIC, ΔAIC and Akaike weights on seven series.
@@ -43,7 +43,7 @@ VaR 1% of six fitted models divided by the empirical VaR 1%, for BET, S&P 500, D
 - AI for Scientific Discovery | An open question on filtered returns, how AI can help and what must be checked.
 - Summary | Key ideas, key formulas and self-check questions.
 
-# The Candidates
+# Candidate Distributions
 
 A statistical model of returns is chosen from a list of candidates, and the list itself is the first modelling decision. This section presents seven distributions used in the literature for daily returns, shows how differently they treat large losses although they look alike near the centre, and fixes the empirical facts that any candidate must reproduce: skewness, excess kurtosis and the occasional data error that can masquerade as a market crash.
 
@@ -63,7 +63,7 @@ The Normal mixture of @Kon1984 draws each day from one of two Normal laws: with 
 
 The stable laws of Chapter 3 have power tails with index $\alpha < 2$, the heaviest of the list, and infinite variance. The candidates differ in their number of parameters, from 2 for the Normal law to 5 for the two-component mixture, and this count will matter when models are compared: a model with more parameters can always fit the same sample at least as well.
 
-## The Candidates Side by Side {h=569ceca5}
+## Comparison of the Candidate Distributions {h=60d49f1c}
 
 The chart draws one member of each family, all standardised to mean 0 and variance 1; the stable law, which has no variance, is scaled to the same interquartile range as the Normal law. The left panel shows the densities on a linear scale, the right panel the same densities on a logarithmic vertical scale, which makes the tails visible.
 
@@ -79,7 +79,7 @@ The Student-t therefore assigns this loss a probability about 76 times the Norma
 
 **Question for the room**: if all the candidates fit the centre well, why not keep the simplest one? **Answer**: the simplest one, the Normal law, is wrong precisely in the region that determines capital and margin requirements. A model that is good for typical days can be useless for the days that matter for risk.
 
-## What Every Model Must Reproduce: the SFESumm Statistics {h=4203348d}
+## Benchmark Statistics for the Models: SFESumm {h=ba8a8136}
 
 Before fitting any model, the data must be described. The chart shows monthly DAX log returns, computed between the first trading days of consecutive months. The darker segment is the sample of the classic SFESumm Quantlet of the textbook @FrankeHardleHafner2019, July 2004 to May 2014 with $n = 119$ months; the lighter segment extends the series to September 2026.
 
@@ -149,7 +149,7 @@ The skewed-t estimate $\hat\lambda = -0.067$ is negative, which means a slightly
 
 The Normal mixture splits the days into 79% calm days with standard deviation 0.71% and 21% turbulent days with standard deviation 2.26% and a negative mean of −0.223%, a reading in terms of market regimes. The stable law has $\hat\alpha = 1.540$, well below 2, which gives it heavier tails than any other candidate.
 
-## How Precise Is ν? The Profile Log-Likelihood {h=b2ab450c}
+## Precision of ν: the Profile Log-Likelihood {h=daa1984e}
 
 The precision of $\hat\nu$ can be read from the profile log-likelihood. For each fixed value of $\nu$ on a grid, $\ell$ is maximised over the location and scale, and the chart plots the result minus its overall maximum, $\ell(\nu) - \ell(\hat\nu)$. The curve peaks at $\hat\nu = 2.67$ (dotted line) and falls steeply on both sides; at $\nu = 5$ it lies 92 points below the maximum.
 
@@ -191,7 +191,7 @@ Since $\ell$ is a logarithm, $LR$ is twice the log of how many times more probab
 
 At the 5% level, $H_0$ is rejected when $LR$ exceeds the 95% quantile $\chi^2_{0.95}(d)$, which is 3.84 for one restriction and 5.99 for two. These thresholds are low compared with the log-likelihood differences of the previous section, which already suggests that many of the restrictions will be rejected on daily data.
 
-## Worked Example: Is the Skewness Parameter Needed? {h=81e3d047}
+## Worked Example: Testing the Skewness Parameter {h=12373274}
 
 For the S&P 500 the Student-t reaches $\ell = -9\,848$ and the skewed-t $\ell = -9\,838$. The skewed-t has one parameter more, so $d = 1$. From the unrounded log-likelihoods, $LR = 19.63$, far above 3.84, with a $p$-value below 0.001: the restriction $\lambda = 0$ is rejected, and the S&P 500 needs a skewness parameter. The DAX gives the same answer, with $LR = 20.92$ and $p < 0.001$.
 
@@ -223,7 +223,7 @@ The likelihood-ratio test compares nested models through twice the log-likelihoo
 
 Tests compare two models at a time and answer a yes-or-no question. Information criteria rank any number of candidates, nested or not, on a common scale. This section presents Akaike's argument from the Kullback–Leibler divergence, defines AIC and BIC, introduces ΔAIC and Akaike weights, and applies them to the seven candidates on the S&P 500 and on six other series.
 
-## Akaike's Idea {h=17156388}
+## Akaike's Approach: the Kullback–Leibler Divergence {h=b473d02e}
 
 Hirotugu Akaike asked which model will predict new data best, rather than which model is true. He measured the distance from the true density $g$ to a model $f$ by the Kullback–Leibler divergence [@KullbackLeibler1951],
 
@@ -289,7 +289,7 @@ AIC and BIC rank all candidates on the same data by penalised log-likelihood, wi
 
 Ranking says which candidate is best among those considered; it does not say whether the best one fits. Goodness-of-fit tests compare one fitted model with the data. This section moves from Pearson's $\chi^2$ test to tests based on the empirical distribution function, treats the problem of estimated parameters, compares the power of the Kolmogorov–Smirnov, Cramér–von Mises and Anderson–Darling tests, and applies them to the S&P 500.
 
-## From Pearson to the Empirical Distribution Function {h=485a7fcb}
+## Pearson's χ² Test and the Empirical Distribution Function {h=b793a0ba}
 
 The first goodness-of-fit test is the $\chi^2$ test of @Pearson1900. The data are grouped into bins, and the observed count in each bin is compared with the count expected under the model. The test is general, but its result depends on the choice of bins, and the tails, where few observations fall, are merged into wide bins or poorly represented, which is a serious drawback for heavy-tailed data.
 
@@ -335,7 +335,7 @@ $$ A^2 = n\int \frac{[F_n - F]^2}{F(1 - F)}\, dF. $$ {#eq:ad}
 
 The weight $1/[F(1 - F)]$ is small in the centre, where $F$ is near $1/2$, and very large in the tails, where $F$ is near 0 or 1. A gap of 0.001 at a probability level of 0.001 is a relative error of 100%, and Anderson–Darling treats it as such. The computing formula of @AndersonDarling1954 is $A^2 = -n - \frac{1}{n}\sum_i (2i - 1)[\ln u_{(i)} + \ln(1 - u_{(n + 1 - i)})]$, with $u_{(i)} = F(r_{(i)})$ as in the KS test. For both statistics, large values indicate a poor fit.
 
-## Why KS Is Weak in the Tails {h=b263e025}
+## Low Power of KS in the Tails {h=bc8a3858}
 
 The chart compares the S&P 500 with its fitted Normal law. The left panel plots the raw gap $F_n(x) - F(x)$. It is largest in absolute value at $x = -0.41\%$, near the centre, where the model probability is $F = 36\%$, and its size there is the KS statistic $D_n = 0.093$. Beyond about ±3% the raw gap is almost zero.
 
@@ -375,7 +375,7 @@ EDF tests compare the fitted distribution function with the empirical one: KS th
 
 Test statistics compress the fit into one number; plots show where the misfit lies. This section defines the probability–probability (PP) plot and the quantile–quantile (QQ) plot, explains why they emphasise different regions of the distribution, and applies them to the S&P 500, the BET, Bitcoin and Banca Transilvania.
 
-## Two Ways to Look at a Fit {h=a1c0c2e9}
+## Definitions of PP and QQ Plots {h=88e54e68}
 
 A PP plot (probability–probability plot) draws the points $(p_i, F(r_{(i)}))$, where $p_i = (i - 0.5)/n$ is the empirical probability of the $i$-th smallest return and $F(r_{(i)})$ its model probability. Under a correct model the points lie on the diagonal. Both axes run from 0 to 1, so differences in the centre of the distribution are clearly visible, while the tails are squeezed into the two corners. The PP plot is the visual counterpart of the KS test: the largest vertical distance from the diagonal is close to $D_n$.
 
@@ -587,7 +587,7 @@ The AIC winner for the S&P 500 is stable under resampling, but the VaR 1% it pro
 
 The chapter compares distributions on raw returns, whose heavy tails come partly from changing volatility. This section poses an open research question about standardised returns, describes how AI assistants can help with such a study, lists the checks their output requires and proposes a team project.
 
-## An Open Question {h=83585fb1}
+## An Open Research Question {h=6eb20613}
 
 Does NIG still win after volatility clustering is removed? Part of the heavy tails of daily returns comes from changing volatility, as Chapter 2 showed: a mixture of calm and turbulent periods has heavier tails than either period alone. Returns divided by a volatility forecast, for example the EMA forecast with $\lambda = 0.96$ of the previous section, have lighter tails, and the best distribution for them may differ from the best one for raw returns.
 
@@ -643,7 +643,7 @@ The Vuong statistic $V = \sqrt{n}\,\bar m/s_m$ compares non-nested models day by
 
 For risk, the Kupiec statistic @eq:kupiec tests the number of VaR exceedances, and the pinball loss @eq:pinball scores a quantile forecast out of sample.
 
-## Check Yourself {h=7ed10a73}
+## Self-Assessment {h=3b3fe8f8}
 
 The first question compares model A, with $\ell = -1000$ and $k = 3$, and model B, with $\ell = -998$ and $k = 5$. Their AIC values are $2000 + 6 = 2006$ and $1996 + 10 = 2006$: a tie, $\Delta = 0$. The two extra parameters of B improve the fit by exactly as much as their penalty.
 

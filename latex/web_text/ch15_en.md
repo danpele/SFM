@@ -29,7 +29,7 @@ Value of 100 units invested in the equally weighted portfolio of US, European an
 - **Name** the macroprudential tools of Basel III and the institutions that apply them in the EU and in Romania.
 
 @plan
-- What Is Systemic Risk? | The G-20 definition, the limits of individual VaR, contagion, fire sales, bank runs and too big to fail.
+- Systemic Risk: Definition and Channels | The G-20 definition, the limits of individual VaR, contagion, fire sales, bank runs and too big to fail.
 - Four Crises in the Data | The bank portfolios since 2005, Lehman, the euro area, March 2020, SVB and Credit Suisse.
 - Correlation and Tail Dependence in Crises | Rolling correlations, the Forbes–Rigobon correction, empirical and t-copula tail dependence.
 - CoVaR and Delta-CoVaR | Quantile regression, three-step estimation, 13 banks, time-varying ΔCoVaR.
@@ -39,11 +39,11 @@ Value of 100 units invested in the equally weighted portfolio of US, European an
 - AI for Scientific Discovery | An open question about Romanian banks, the possible help of AI and the checks needed.
 - Summary | The main ideas, the formulas and self-check questions.
 
-# What Is Systemic Risk?
+# Systemic Risk: Definition and Channels
 
 The section defines systemic risk and explains why VaR computed separately for each bank does not capture it. It then presents the three channels through which a local problem becomes a problem of the system: direct contagion, common exposures with fire sales, and deposit withdrawals. It ends with the problem of banks too big to be allowed to fail and with a table of the measures used in the rest of the chapter.
 
-## A Definition {h=6a9df454}
+## Definition of Systemic Risk {h=177654d3}
 
 In 2009, at the request of the G-20, the IMF (International Monetary Fund), the BIS (Bank for International Settlements) and the FSB (Financial Stability Board) defined systemic risk as the risk that the financial system as a whole stops performing its functions, namely lending, payments and trading, with large costs for the real economy [@IMFBISFSB2009]. The emphasis is on functions, not institutions: the failure of a small bank whose services are taken over immediately by other banks is not a systemic event.
 
@@ -51,7 +51,7 @@ The same report proposes three criteria for judging whether an institution is sy
 
 The definition yields the idea that organises the chapter: systemic risk is a property of the system, not of a single balance sheet. A bank can look safe when viewed on its own and still be dangerous for the system, because its losses arrive exactly when the other banks also lose. The measures of the following sections all try to capture this link between the bank and the system.
 
-## Why VaR of Each Bank Is Not Enough {h=42f0eab9}
+## Limitations of VaR Computed Bank by Bank {h=d05a86ff}
 
 The VaR 1% of a bank, defined in [Chapter 10](ch10.html), is the loss of this bank exceeded with probability 1%. The measure looks only at the distribution of the bank's returns and says nothing about what happens to the other banks on the days when this bank is in trouble. Two banks with the same VaR 1% can have entirely different effects on the system: one loses on days when the rest of the market is calm, the other loses together with everyone else.
 
@@ -187,7 +187,7 @@ The four crises show all channels of systemic risk: direct and common exposures 
 
 The section measures how much banks move together and how this comovement changes in crises. It starts from rolling correlations, shows why a higher correlation does not prove contagion (the Forbes–Rigobon correction), and then turns to tail dependence, which looks only at bad days, estimated empirically and from a t copula.
 
-## Correlation between Banks Rises in Crises {h=4d8d0924}
+## Correlation between Banks in Crises {h=8031f4c5}
 
 The chart shows, for each group of banks, the average of the pairwise correlations between banks, computed on daily returns in rolling windows of 120 days. The vertical axis runs from 0 to 1, and the dotted lines mark the same four events as in the previous section. For the Romanian banks, the average is simply the correlation between TLV and BRD.
 
@@ -195,7 +195,7 @@ For the US banks, the average correlation was 0.59 before the crisis, between Ju
 
 The rolling correlation shows that the link between banks is not constant. In calm years, each bank responds partly to its own news; in a crisis, the same common factor dominates the returns of all.
 
-## Interpretation: When Diversification Fails {h=33eb1f39}
+## Interpretation: Limits of Diversification in Crises {h=caa85ca2}
 
 When the average correlation approaches 1, a portfolio of several banks behaves almost like a single bank. The benefit of diversification, which rests on the losses of one bank being offset by the gains of another, disappears exactly in the period when it would be most useful. The cause is the common factor: the market as a whole and funding stress dominate the news specific to each bank.
 
@@ -203,7 +203,7 @@ The case of the two Romanian banks is the clearest, with one caveat: the series 
 
 Two precautions are needed. A correlation estimated over 120 days has a large estimation error, so small movements of the line should not be interpreted; with only two stocks, as for TLV and BRD, even a peak can come in a calm year. And a rise in correlation does not, on its own, prove that the link between banks has strengthened: it can also appear only because volatility has risen, as the next slide shows.
 
-## Contagion or Interdependence? Forbes and Rigobon (1/2) {h=79479596}
+## Contagion and Interdependence: Forbes and Rigobon (1/2) {h=cdf16e53}
 
 @ForbesRigobon2002 start from a simple model, $y = \beta x + e$, in which $x$ is the return of the source market, $y$ the return of the other market, $\beta$ the strength of the link, and $e$ a shock to $y$ unrelated to $x$. The correlation between $x$ and $y$ is $\rho = \beta\sigma_x/\sqrt{\beta^2\sigma_x^2 + \sigma_e^2}$. If the variance of $x$ rises while $\beta$ and $\sigma_e$ stay the same, the correlation rises automatically, because the common part of $y$ becomes larger relative to its own noise.
 
@@ -213,7 +213,7 @@ $$ \rho^* = \frac{\rho}{\sqrt{1 + \delta(1 - \rho^2)}}, \qquad \delta = \frac{\s
 
 In @eq:fr, $\rho$ is the correlation measured in the crisis, $\sigma^2$ is the variance of the source market in each period, and $\delta$ is the relative increase in this variance. The corrected correlation $\rho^*$ is compared with the correlation of the calm period, $\rho_{\text{calm}}$: if $\rho^* > \rho_{\text{calm}}$, the link has strengthened and the data point to contagion; otherwise, the rise in correlation is explained by volatility.
 
-## Contagion or Interdependence? Forbes and Rigobon (2/2) {h=d3cc26e9}
+## Contagion and Interdependence: Forbes and Rigobon (2/2) {h=3fe5b157}
 
 The example applies the correction to the US bank portfolio, as the source, and the European bank portfolio. The calm period is January 2005 – June 2007, with 506 days, and the crisis is 15 September – 31 December 2008, with 72 days. The correlation rises from 0.40 in the calm period to 0.60 in the crisis, a rise that, taken alone, would suggest contagion.
 
@@ -267,7 +267,7 @@ In crises, correlations between banks rise, and diversification across banks los
 
 The section defines CoVaR, the VaR of the system conditional on the state of an institution, and ΔCoVaR, the institution's contribution to systemic risk. It estimates them by quantile regression for JPMorgan Chase and for all 13 banks, compares ΔCoVaR with the bank's own VaR and builds a time-varying version. It ends with the paper of Adrian and Brunnermeier.
 
-## From VaR to CoVaR {h=e25371bd}
+## Definition of CoVaR {h=7747f284}
 
 Let $X^i$ be the return of institution $i$ and $X^{sys}$ the return of the system. For the level $\alpha$, the tail probability, $q_\alpha(X^i)$ is the $\alpha$-quantile of $X^i$, and $\mathrm{VaR}^i_\alpha = -q_\alpha(X^i)$ is the loss of $i$ exceeded with probability $\alpha$, as in [Chapter 10](ch10.html). @AdrianBrunnermeier2016 define CoVaR as the VaR of the system on a day when the institution is exactly at its own VaR:
 
@@ -419,7 +419,7 @@ MES and ΔCoVaR rank the 13 banks differently: the Spearman correlation between 
 
 For a regulator, the conclusion is that no measure is sufficient on its own. @BenoitColliardHurlinPerignon2017 recommend looking at several measures, each with its uncertainty; a bank ranked high by all measures, with intervals that do not overlap those of the rest, is a safer candidate for extra capital than one ranked high by a single measure.
 
-## Case Study: Did MES Predict the 2008 Losses? {h=3e465030}
+## Case Study: MES and the Bank Losses of 2008 {h=5146de2b}
 
 @AcharyaPedersenPhilipponRichardson2017 test whether MES measured before the crisis anticipates the losses in the crisis. The design is reproduced here: MES 5% is measured from June 2006 to June 2007, and the stock return is measured from July 2007 to December 2008, for 11 US and European banks. The chart has the pre-crisis MES 5% on the horizontal axis and the crisis return on the vertical axis, both in percent, with a least-squares line.
 
@@ -427,7 +427,7 @@ The line slopes down: banks with a higher MES before the crisis lost more on ave
 
 The lesson is one of statistical power. With 11 banks, even a real relation is hard to distinguish from noise. The original paper uses a much larger sample of US financial institutions and finds a significant relation; the chapter's example shows the same direction but cannot confirm the result on its own.
 
-## From MES to LRMES {h=73f9988c}
+## Long-Run MES (LRMES) {h=d05b7694}
 
 Daily MES describes one bad day, but a crisis lasts months. What matters for a bank's capital is the cumulative loss in a long crisis, for example a 40% fall of the market in six months. This loss is LRMES, the long-run MES. @AcharyaEngleRichardson2012 propose a simple approximation:
 
@@ -473,7 +473,7 @@ MES is the average loss of a bank on the market's bad days, with values between 
 
 The section estimates the links between banks from returns. It presents Granger causality and the degree of Granger causality on rolling windows, compares a crisis network with one from calm years, and builds the Diebold–Yilmaz connectedness table, static and on rolling windows. It ends with the Financial Risk Meter, as further reading.
 
-## The Network View {h=93e73798}
+## The Banking System as a Network {h=ac4bf806}
 
 A network consists of nodes, here the banks, and directed links of the form "a shock at $i$ affects $j$". The network view puts at the centre the direct-contagion channel of [section 1](#sec-1): it asks not only how risky a bank is, but through whom its risk is transmitted.
 
@@ -595,7 +595,7 @@ Macroprudential policy looks at the system, not the individual bank, along two d
 
 The section formulates an open research question about the systemic risk of Romanian banks, shows how an AI (artificial intelligence) assistant can help study it and which checks are needed before the results can be believed. It ends with a project idea.
 
-## An Open Question {h=afd6b083}
+## An Open Research Question {h=58e2d9c4}
 
 The question is whether the systemic risk of Romanian banks is imported from their parent banks in the euro area or has local sources. The chapter's results give only hints. The ΔCoVaR of TLV peaks at 12.81% in March 2020, together with the US and European banks. BRD belongs to a French banking group, while TLV has Romanian shareholders, so the two banks could respond differently to a shock from the euro area.
 
@@ -651,7 +651,7 @@ MES, @eq:mes, is a conditional average of the bank's returns, LRMES, @eq:lrmes, 
 
 The Granger test, @eq:granger, asks whether $c = 0$ in the regression of $y_t$ on $y_{t-1}$ and $x_{t-1}$. Diebold–Yilmaz total connectedness, @eq:dy, is the average of the off-diagonal sums, and NET$_i$ $=$ TO$_i$ $-$ FROM$_i$ separates transmitters from receivers.
 
-## Check Yourself {h=3338c953}
+## Self-Assessment {h=ff691eb4}
 
 The first question compares two banks: bank A has a higher VaR 1% than bank B. This does not make A more systemically important. Systemic importance depends on the bank's link with the system, measured by ΔCoVaR or MES, not on its own tail; Citigroup and Bank of America have among the largest VaR 1% and among the smallest ΔCoVaR in the sample.
 

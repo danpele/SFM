@@ -31,13 +31,13 @@ XBLOCKS = [('wf-we', 22, 'val', 'cvs'), ('ridge-we', 27, 'pen', 'shrink'), ('las
 ORDER = ['bv', 'cvs', 'wf-we', 'leak', 'ridge-we', 'lasso-we', 'shrink', 'split-we', 'tree', 'rf-we', 'gb-we', 'ens', 'mlp-we', 'mlp', 'nnarch', 'nnjpy',
          'har-we', 'r2-we', 'qlike-we', 'dm-we', 'rv-tab', 'rvf', 'imp', 'sign-we', 'sign', 'pin-we', 'var-tab', 'qvar', 'maxsr-we', 'snoop', 'dsr-we', 'gkx']
 TITLES = {'wf-we': 'Validarea walk-forward, pas cu pas', 'ridge-we': 'Regresia ridge (2/2)', 'lasso-we': 'Lasso', 'split-we': 'Exemplu rezolvat: o împărțire, pas cu pas',
-          'rf-we': 'Random forest', 'gb-we': 'Gradient boosting', 'mlp-we': 'De la perceptron la perceptronul multistrat (2/2)', 'har-we': 'Reperul HAR (1/2)',
+          'rf-we': 'Random forest', 'gb-we': 'Gradient boosting', 'mlp-we': 'Perceptronul și perceptronul multistrat (2/2)', 'har-we': 'Reperul HAR (1/2)',
           'r2-we': 'Evaluarea (1/3): R² în afara eșantionului', 'qlike-we': 'Evaluarea (2/3): QLIKE', 'dm-we': 'Evaluarea (3/3): testul Diebold–Mariano',
           'rv-tab': 'Rezultatele: S&P 500 și Bitcoin', 'sign-we': 'Reperul clasei majoritare', 'pin-we': 'Regresia cuantilică (1/2)',
           'var-tab': 'Backtesting pentru VaR 1%: metode cuantilice, HS și GARCH-t (1/2)', 'maxsr-we': 'Cea mai bună dintre N strategii (2/2)',
           'dsr-we': 'Raportul Sharpe deflatat (2/2)'}
 TITLES_EN = {'wf-we': 'Walk-Forward Validation, Step by Step', 'ridge-we': 'Ridge Regression (2/2)', 'lasso-we': 'The Lasso', 'split-we': 'Worked Example: One Split, Step by Step',
-             'rf-we': 'Random Forest', 'gb-we': 'Gradient Boosting', 'mlp-we': 'From the Perceptron to the Multilayer Perceptron (2/2)', 'har-we': 'The HAR Benchmark (1/2)',
+             'rf-we': 'Random Forest', 'gb-we': 'Gradient Boosting', 'mlp-we': 'The Perceptron and the Multilayer Perceptron (2/2)', 'har-we': 'The HAR Benchmark (1/2)',
              'r2-we': 'Evaluation (1/3): Out-of-Sample R²', 'qlike-we': 'Evaluation (2/3): QLIKE', 'dm-we': 'Evaluation (3/3): the Diebold–Mariano Test',
              'rv-tab': 'Results: S&P 500 and Bitcoin', 'sign-we': 'The Majority-Class Baseline', 'pin-we': 'Quantile Regression (1/2)',
              'var-tab': 'Backtest of VaR 1%: Quantile Methods, HS and GARCH-t (1/2)', 'maxsr-we': 'The Best of N Strategies (2/2)', 'dsr-we': 'The Deflated Sharpe Ratio (2/2)'}
@@ -859,7 +859,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch13-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch13-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH13_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH13_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

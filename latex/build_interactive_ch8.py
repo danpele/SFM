@@ -53,7 +53,7 @@ SECTIONS = {
  'ro': dict(**{'def': 'Volatilitatea: definiție și caracter latent'}, hist='Volatilitatea istorică și alegerea ferestrei', ewma='EWMA și RiskMetrics',
             range='Estimatori de amplitudine (range-based)', rv='Volatilitatea realizată', cl='Volatility clustering',
             lt='Comportamentul pe termen lung, VIX și efectul de levier', fc='Evaluarea prognozelor de volatilitate'),
- 'en': dict(**{'def': 'What Is Volatility?'}, hist='Historical Volatility and the Choice of the Window', ewma='EWMA and RiskMetrics', range='Range-Based Estimators',
+ 'en': dict(**{'def': 'Volatility: Definition and Latent Nature'}, hist='Historical Volatility and the Choice of the Window', ewma='EWMA and RiskMetrics', range='Range-Based Estimators',
             rv='Realised Volatility', cl='Volatility Clustering', lt='Long-Run Behaviour, the VIX and the Leverage Effect', fc='Evaluating Volatility Forecasts'),
 }
 
@@ -808,7 +808,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch8-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch8-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH8_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH8_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

@@ -30,9 +30,9 @@ Volatilitatea anualizată pe circa o lună, din 2016: Bitcoin (portocaliu) și E
 
 @plan
 - Bitcoin și Ethereum pe scurt | Blockchain-ul, proof of work, halving-ul și oferta de 21 de milioane, Ethereum și proof of stake, datele de preț.
-- Cripto ca o clasă de active | Anualizarea cu 365 de zile, cinci active comparate, volatilitatea în timp și efectul weekendului.
+- Activele cripto ca clasă de active | Anualizarea cu 365 de zile, cinci active comparate, volatilitatea în timp și efectul weekendului.
 - Cozi și volatility clustering | Estimatorul Hill, ACF și testul Ljung–Box, GARCH(1,1)-t și GJR pentru Bitcoin, Ethereum, S&P 500 și aur.
-- Este piața cripto eficientă? | Testele raportului varianțelor pe întregul eșantion și pe ferestre mobile, literatura despre eficiența Bitcoin și două studii de caz.
+- Eficiența pieței cripto | Testele raportului varianțelor pe întregul eșantion și pe ferestre mobile, literatura despre eficiența Bitcoin și două studii de caz.
 - Corelația cu acțiunile și aurul | Corelația între calendare diferite, corelația mobilă și anuală, trei crize și testul activului de refugiu.
 - Bule și crahuri | Drawdown-ul, marile scăderi ale Bitcoin și legea de putere log-periodică.
 - ETF-urile spot pe Bitcoin | Volatilitatea și ponderea weekendului înainte și după ianuarie 2024 și tracking error-ul unui ETF.
@@ -45,7 +45,7 @@ Volatilitatea anualizată pe circa o lună, din 2016: Bitcoin (portocaliu) și E
 
 Secțiunea descrie mecanismul din spatele celor două active cripto principale atît cît este necesar pentru analiza statistică: cum ține un blockchain evidența proprietății, ce asigură securitatea lui, de unde vine regula ofertei de Bitcoin și ce schimbă Ethereum. Se încheie cu datele: cum se formează o serie zilnică de prețuri pentru o piață fără o bursă centrală.
 
-## De la o lucrare de nouă pagini la o piață {h=d6138f35}
+## Lucrarea lui Nakamoto (2008) {h=ad2c7970}
 
 Pe 31 octombrie 2008, un autor care semna „Satoshi Nakamoto” a publicat o lucrare de nouă pagini care propunea un sistem de numerar electronic peer-to-peer [@Nakamoto2008]. Peer-to-peer înseamnă că utilizatorii își plătesc direct unii altora, fără o bancă la mijloc. Problema pe care o rezolvă lucrarea este dubla cheltuire (*double spending*): o monedă digitală este un fișier care poate fi copiat, iar fără o autoritate care ține evidența nimic nu împiedică plata de două ori cu aceeași monedă.
 
@@ -87,7 +87,7 @@ Panoul din dreapta arată oferta de Bitcoin rezultată din regula protocolului, 
 
 La un an după cele trei halving-uri, prețul era mai mare cu 287%, 559% și, respectiv, 31%. Cifrele par să susțină ideea unui efect al halving-ului, dar trei observații nu sînt o dovadă statistică: fiecare an conține și alte evenimente, iar efectul se micșorează de la un halving la altul. Cu un eveniment la patru ani, un test credibil nu va fi posibil încă multă vreme.
 
-## Un fondator anonim {h=f36655df}
+## Anonimatul fondatorului Bitcoin {h=d9924dd5}
 
 Nimeni nu știe cine este „Satoshi Nakamoto”: fondatorul a încetat să mai scrie în 2011. Regulile Bitcoin se schimbă doar dacă majoritatea nodurilor acceptă noul software, deci nu există o persoană sau o companie care să decidă politica rețelei.
 
@@ -115,7 +115,7 @@ Pentru piața în ansamblu există indici cu mai multe monede, de exemplu CRIX (
 
 Bitcoin este un registru public securizat prin proof of work, cu o ofertă fixă de 21 de milioane de monede, iar Ethereum adaugă contracte inteligente și, din 2022, proof of stake. Activele cripto nu au fluxuri de numerar, se tranzacționează non-stop pe multe platforme, iar seriile lor zilnice au alt calendar decît cele ale acțiunilor; aceste trăsături determină alegerile statistice din restul capitolului.
 
-# Cripto ca o clasă de active
+# Activele cripto ca clasă de active
 
 Secțiunea compară activele cripto cu acțiunile și aurul prin statisticile din capitolele anterioare. Începe cu anualizarea, unde calendarul de 365 de zile schimbă rezultatul, continuă cu un tabel al celor cinci active și cu volatilitatea în timp și se încheie cu întrebarea dacă weekendul este diferit pe o piață care nu se închide.
 
@@ -137,7 +137,7 @@ Regula cu 252 subestimează deci volatilitatea cu 16,9% și media cu 31,0%. Rapo
 
 Regula practică este ca fiecare serie să fie anualizată cu propriul $A$, niciodată cu unul comun. O comparație între Bitcoin și S&P 500 folosește deci 365 pentru primul și 252 pentru al doilea, ca în toate tabelele acestui capitol.
 
-## Cinci active comparate {h=4ae532b8}
+## Compararea a cinci active {h=134d99a9}
 
 Tabelul rezumă randamentele logaritmice zilnice ale celor cinci active pînă pe 18 septembrie 2026: Bitcoin din 2014, Ethereum din 2016, Solana din 2020, S&P 500 din 2014 și aurul (cursul XAU/USD) din 2014. Volatilitatea anuală este calculată cu @eq:annual și cu frecvența reală a fiecărei serii. Asimetria este media lui $((r_t - \bar r)/s)^3$, iar excesul de boltire media lui $((r_t - \bar r)/s)^4$ minus 3; ambele sînt 0 pentru distribuția Normală.
 
@@ -161,7 +161,7 @@ Rezultatul principal este că randamentele cripto nu au aproape nicio expunere l
 
 @LiuTsyvinskiWu2022 continuă analiza în secțiune transversală și arată că trei factori cripto, piața, dimensiunea și momentum-ul, explică randamentele diferitelor monede. Ambele studii folosesc însă date de dinainte de 2020, iar legătura cu acțiunile s-a schimbat după acest an ([Secțiunea 5](#sec-5)): concluzia de independență față de piețele tradiționale depinde de perioada eșantionului.
 
-## Este weekendul diferit? {h=bec5ee5f}
+## Efectul zilei săptămînii la Bitcoin {h=c0a7631d}
 
 Bursele de acțiuni se închid în weekend, piețele cripto nu. Totuși, în weekend băncile sînt închise, investitorii instituționali sînt mai puțin activi, iar fluxul de știri încetinește. Efectul zilei din săptămînă (*day-of-the-week effect*) înseamnă o medie sau o varianță a randamentelor diferită în anumite zile; @CaporalePlastun2019 îl studiază pe piața cripto.
 
@@ -259,7 +259,7 @@ Spre deosebire de volatilitatea pe ferestre mobile din [Secțiunea 2](#sec-2), e
 
 Cozile stîngi ale tuturor celor cinci active au tail index sub 4, iar intervalele pentru cripto și pentru acțiuni se suprapun. Randamentele Bitcoin sînt aproape necorelate, dar pătratele lor sînt puternic autocorelate. Modelul GARCH(1,1)-t al activelor cripto este integrat, cu inovații cu cozi foarte groase și fără leverage effect, spre deosebire de S&P 500.
 
-# Este piața cripto eficientă?
+# Eficiența pieței cripto
 
 Secțiunea aplică testele de eficiență în formă slabă din [Capitolul 7](ch7_ro.html) pe Bitcoin și Ethereum, pe întregul eșantion, pe subperioade și pe ferestre mobile, le compară cu literatura despre eficiența Bitcoin și arată, prin două studii de caz, ce pot vedea datele de tranzacționare și cele din blockchain dincolo de o singură serie de prețuri.
 
@@ -355,7 +355,7 @@ Al treilea episod este falimentul FTX, un exchange cripto care a intrat în inso
 
 Comparația arată o dependență asimetrică. COVID-19 a fost un șoc global: activele cripto au scăzut cît acțiunile, iar aurul nu s-a mișcat. Terra/Luna și FTX au fost șocuri specifice pieței cripto: activele cripto au pierdut un sfert sau mai mult, iar S&P 500 mult mai puțin sau deloc. Crahurile acțiunilor ajung la cripto, crahurile cripto rareori ajung la acțiuni.
 
-## Acoperire sau refugiu? {h=eb3fa3ed}
+## Bitcoin ca instrument de acoperire sau activ de refugiu {h=2be0b8b4}
 
 @BaurLucey2010 disting două roluri ale unui activ într-un portofoliu de acțiuni. O acoperire (*hedge*) este necorelată sau corelată negativ cu acțiunile în medie. Un activ de refugiu (*safe haven*) are această proprietate în timpul crahurilor, adică exact atunci cînd investitorul are nevoie de ea. Un activ poate fi o acoperire slabă în medie fără să fie un refugiu.
 
@@ -399,7 +399,7 @@ Al doilea episod lung a pornit de la 67 567 USD pe 8 noiembrie 2021 și a ajuns
 
 Cinci scăderi de peste jumătate din valoare în doisprezece ani arată că un crah de această mărime este, pentru Bitcoin, un eveniment obișnuit, nu unul rar. Maximele din 2017 și 2021 au cerut, fiecare, mai mult de doi ani pentru recuperare.
 
-## Bulele și ideea log-periodică {h=edcdd25a}
+## Bulele și modelele log-periodice {h=1a3cbe7a}
 
 O bulă (*bubble*) este un preț mult peste valoarea fundamentală, susținut de așteptarea că activul va putea fi revîndut la un preț și mai mare. @CheahFry2015 susțin că valoarea fundamentală a Bitcoin este zero și găsesc în prețul lui semnele unor bule speculative.
 
@@ -419,7 +419,7 @@ Drawdown-urile de peste 50% sînt obișnuite pentru Bitcoin: cinci în doispreze
 
 Secțiunea studiază un eveniment instituțional, aprobarea ETF-urilor spot pe Bitcoin în ianuarie 2024. Întrebarea este dacă volatilitatea Bitcoin, tiparul ei de weekend și legătura cu acțiunile s-au schimbat după intrarea activului la bursă și cît de bine urmărește un astfel de fond prețul Bitcoin.
 
-## Ianuarie 2024: Bitcoin intră la bursă {h=099d5b42}
+## Ianuarie 2024: aprobarea ETF-urilor spot pe Bitcoin {h=21070879}
 
 Un ETF (*exchange-traded fund*) este un fond ale cărui unități se tranzacționează la bursă, ca acțiunile. Un ETF spot deține activul însuși, nu contracte futures pe acel activ. Pe 10 ianuarie 2024, SEC (*Securities and Exchange Commission*), autoritatea americană a pieței de capital, a aprobat 11 ETF-uri spot pe Bitcoin [@SEC2024], iar tranzacționarea a început pe 11 ianuarie.
 
@@ -435,7 +435,7 @@ Volatilitatea a continuat să scadă după ianuarie 2024, dar era deja în scăd
 
 Ponderea weekendului este sub 2/7 în fiecare an, iar din 2020 este mult sub această valoare: barele din 2020–2026 sînt, cu excepția lui 2025, mult mai joase decît cele din 2015–2019. Schimbarea tiparului de weekend a avut loc deci în 2020, cu patru ani înainte de ETF-uri.
 
-## Înainte și după: o comparație simplă {h=9a909b7a}
+## Bitcoin înainte și după lansarea ETF-urilor spot {h=81cfb6ba}
 
 Tabelul compară două ferestre de doi ani: 11 ianuarie 2022 – 10 ianuarie 2024 (729 de zile) și 11 ianuarie 2024 – 10 ianuarie 2026 (730 de zile). Volatilitatea anuală a scăzut de la 55,2% la 47,5%, raportul dintre varianța din weekend și cea din zilele lucrătoare a crescut de la 0,30 la 0,42, corelația cu S&P 500 a scăzut de la 0,45 la 0,37, iar persistența GARCH(1,1)-t $\hat\alpha + \hat\beta$ a scăzut de la 1,000 la 0,97.
 
@@ -443,7 +443,7 @@ Testul Brown–Forsythe al egalității varianțelor dă statistica 1,22, cu p-v
 
 Chiar și o diferență semnificativă nu ar fi un efect cauzal. Între cele două ferestre s-au schimbat în același timp dobînzile, a avut loc halving-ul din aprilie 2024 și au avut loc alegerile din SUA. Un studiu credibil ar avea nevoie de un grup de control, de exemplu monede fără ETF, sau de date intrazilnice în jurul deschiderii bursei americane, unde efectul tranzacționării ETF ar trebui să fie vizibil direct.
 
-## Cît de bine urmărește un ETF prețul Bitcoin? {h=21d87455}
+## Eroarea de replicare a unui ETF spot pe Bitcoin {h=23b5f162}
 
 Capitolul compară IBIT (iShares Bitcoin Trust), unul dintre ETF-urile spot, cu Bitcoin. Se folosește închiderea ajustată a IBIT, iar prețurile sînt unite în cele 671 de zile de tranzacționare ale ETF-ului. Corelația randamentelor zilnice este 0,91, iar panta regresiei randamentului IBIT pe randamentul Bitcoin este 0,94.
 
@@ -619,7 +619,7 @@ O poziție în Bitcoin are un VaR 1% istoric de 10,54%, de trei ori mai mare dec
 
 Secțiunea pornește de la o întrebare deschisă ridicată de capitol, dacă fluxurile de stablecoins influențează prețurile activelor cripto, și arată unde pot ajuta instrumentele AI (*artificial intelligence*) un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=8b5f58a7}
+## O întrebare de cercetare deschisă {h=df133a93}
 
 Întrebarea este dacă fluxurile de stablecoins influențează prețurile activelor cripto. @GriffinShams2020 au găsit că emisiunea de Tether a susținut prețul Bitcoin în 2017, iar piața stablecoin-urilor este acum de circa 74 de ori mai mare decît în 2020. Dacă fluxurile de stablecoins sînt o sursă a cererii pentru Bitcoin, ele ar trebui să se vadă în randamente.
 

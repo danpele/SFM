@@ -36,7 +36,7 @@ Sus: valoarea a 100 de unități investite la începutul lui 2015 în S&P 500 (a
 - Sinteza metodelor | Ce test sau model răspunde la ce întrebare, convențiile cursului și erorile metodologice frecvente.
 - Examenul | Formatul, conținutul, criteriile de notare și opt probleme rezolvate.
 - Proiectul de echipă | Livrabile, criterii, susținerea orală și fișierul AI_USE.md.
-- Instrumente AI pentru un proiect de cercetare | O întrebare deschisă despre BET, bucla de cercetare, ajutorul și verificările AI, o idee de proiect.
+- Instrumente AI pentru un proiect de cercetare | O întrebare deschisă despre BET, etapele unui proiect de cercetare, ajutorul și verificările AI, o idee de proiect.
 - Rezumat | Ideile principale și întrebări de autoevaluare.
 
 # Harta cursului
@@ -717,7 +717,7 @@ Proiectul de echipă răspunde la o singură întrebare clară, cu metodele potr
 
 # Instrumente AI pentru un proiect de cercetare
 
-Fiecare capitol al cursului s-a încheiat cu o întrebare deschisă, la care metodele capitolului pot contribui. Întrebarea acestui capitol reunește mai multe instrumente: s-a schimbat comportamentul statistic al pieței din România de-a lungul timpului? Secțiunea descrie bucla de cercetare, ce poate face un asistent AI, ce trebuie verificat și o idee de proiect.
+Fiecare capitol al cursului s-a încheiat cu o întrebare deschisă, la care metodele capitolului pot contribui. Întrebarea acestui capitol reunește mai multe instrumente: s-a schimbat comportamentul statistic al pieței din România de-a lungul timpului? Secțiunea descrie etapele unui proiect de cercetare, ce poate face un asistent AI, ce trebuie verificat și o idee de proiect.
 
 ## O întrebare de cercetare deschisă despre BET {h=ae70a9db}
 
@@ -727,9 +727,9 @@ Fiecare capitol al cursului s-a încheiat cu o întrebare deschisă, la care met
 
 Există și un motiv mai general. @MenkveldEtAl2024 au dat aceleași date și aceeași întrebare mai multor echipe de cercetători și au găsit că rezultatele diferă mult de la o echipă la alta; variația provine din alegerile de metodă, nu din date, și au numit-o eroare nestandard (*non-standard error*). Pentru întrebarea despre BET, alegerea ferestrei, a lui $k$ sau a estimatorului poate schimba răspunsul.
 
-## Bucla de cercetare {h=3a1b42c6}
+## Etapele unui proiect de cercetare {h=25a8670d}
 
-Bucla are șase pași. Întrebarea se formulează într-o frază, împreună cu cifra care i-ar răspunde. Datele, adică seria, sursa, calendarul și fereastra, se fixează înainte de a vedea rezultatele, astfel încît alegerile să nu fie influențate de ele. Metoda este testul potrivit din trusa de instrumente, cu ipoteza nulă precizată.
+Proiectul are șase etape. Întrebarea se formulează într-o frază, împreună cu cifra care i-ar răspunde. Datele, adică seria, sursa, calendarul și fereastra, se fixează înainte de a vedea rezultatele, astfel încît alegerile să nu fie influențate de ele. Metoda este testul potrivit din trusa de instrumente, cu ipoteza nulă precizată.
 
 Urmează verificările: erori standard robuste, benzi Monte Carlo, subeșantioane și un al doilea estimator. Interpretarea dă răspunsul, incertitudinea lui și limitele lui. Ultimul pas este replicarea: o a doua persoană rulează codul și obține aceleași cifre.
 
@@ -761,7 +761,7 @@ Livrabilul este un grafic cu patru panouri, un tabel și un paragraf despre ce p
 
 ## @end
 
-Întrebarea dacă BET a devenit o piață „obișnuită” rămîne deschisă: momentum-ul a slăbit, dar cozile nu s-au subțiat, iar rezultatele depind de alegerile de metodă. Bucla de cercetare fixează datele înainte de rezultate, cere verificări de robustețe și replicare, iar un asistent AI poate accelera fiecare pas, fără să înlocuiască vreuna dintre verificări.
+Întrebarea dacă BET a devenit o piață „obișnuită” rămîne deschisă: momentum-ul a slăbit, dar cozile nu s-au subțiat, iar rezultatele depind de alegerile de metodă. Etapele unui proiect de cercetare fixează datele înainte de rezultate, cer verificări de robustețe și replicare, iar un asistent AI poate accelera fiecare pas, fără să înlocuiască vreuna dintre verificări.
 
 # Rezumat
 

@@ -171,9 +171,9 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. CE ESTE RISCUL SISTEMIC
 # =============================================================================
-D.section('What Is Systemic Risk?', 'Riscul sistemic: definiție și canale')
+D.section('Systemic Risk: Definition and Channels', 'Riscul sistemic: definiție și canale')
 
-D.frame(T('A Definition', 'O definiție'), items(
+D.frame(T('Definition of Systemic Risk', 'Definiția riscului sistemic'), items(
     (T('\\textbf{Systemic risk}: the risk that the financial system as a whole stops working (lending, payments, trading), with large costs for the real economy \\refFSB',
        '\\textbf{Riscul sistemic}: riscul ca sistemul financiar în ansamblu să nu mai funcționeze (creditare, plăți, tranzacționare), cu costuri mari pentru economia reală \\refFSB'),
      [T('the definition of the IMF (International Monetary Fund), the BIS and the FSB (Financial Stability Board) for the G-20 in 2009', 'definiția dată în 2009 pentru G-20 de IMF (International Monetary Fund, Fondul Monetar Internațional), BIS și FSB (Financial Stability Board, Consiliul pentru Stabilitate Financiară)')]),
@@ -183,7 +183,7 @@ D.frame(T('A Definition', 'O definiție'), items(
       T('\\textbf{interconnectedness}: how many others it would drag down', '\\textbf{interconectarea}: pe cîte alte instituții le-ar trage în jos')]),
     T('Key point: systemic risk is a property of the \\textbf{system}, not of a single balance sheet', 'Ideea principală: riscul sistemic este o proprietate a \\textbf{sistemului}, nu a unui singur bilanț')))
 
-D.frame(T('Why VaR of Each Bank Is Not Enough', 'Limitele VaR calculat separat pentru fiecare bancă'), items(
+D.frame(T('Limitations of VaR Computed Bank by Bank', 'Limitele VaR calculat separat pentru fiecare bancă'), items(
     (T('VaR 1\\% of a bank (Chapter 10): the loss of \\textbf{this} bank exceeded with probability 1\\%', 'VaR 1\\% al unei bănci (Capitolul 10): pierderea \\textbf{acestei} bănci, depășită cu probabilitatea 1\\%'),
      [T('it ignores what happens to the others when this bank is in trouble', 'ignoră ce se întîmplă cu celelalte bănci cînd această bancă are probleme')]),
     (T('\\textbf{Fallacy of composition}: if every bank sells risky assets to cut its own VaR, prices fall for all and the risk of all rises',
@@ -343,20 +343,20 @@ chart(T('Four Episodes Side by Side', 'Patru episoade comparate'), 'sfm_ch15_epi
 # =============================================================================
 D.section('Correlation and Tail Dependence in Crises', 'Corelația și dependența în cozi în crize')
 
-chart(T('Correlation between Banks Rises in Crises', 'Corelația dintre bănci crește în crize'), 'sfm_ch15_rolling_corr', 'SFM_ch15_dependence', [
+chart(T('Correlation between Banks in Crises', 'Corelația dintre bănci în perioadele de criză'), 'sfm_ch15_rolling_corr', 'SFM_ch15_dependence', [
     T('Average of the pairwise correlations of daily returns within each group, on 120-day windows', 'Media corelațiilor dintre perechile de bănci, pe randamente zilnice, în fiecare grup, pe ferestre de 120 de zile'),
     T('US banks: $@{co.US.calm}$ before the crisis (July 2005 -- June 2007), up to $@{co.US.max}$ (@{co.US.dmax}); TLV and BRD: $@{co.RO.y2017}$ in 2017, $@{co.RO.c2020}$ in April--June 2020, maximum $@{co.RO.max}$ (@{co.RO.dmax})',
       'Băncile americane: $@{co.US.calm}$ înainte de criză (iulie 2005 -- iunie 2007), pînă la $@{co.US.max}$ (@{co.US.dmax}); TLV și BRD: $@{co.RO.y2017}$ în 2017, $@{co.RO.c2020}$ în aprilie--iunie 2020, maximul $@{co.RO.max}$ (@{co.RO.dmax})')],
     h='0.62\\textheight')
 
-D.frame(T('Interpretation: When Diversification Fails', 'Interpretarea corelațiilor: cînd diversificarea nu mai funcționează'), items(
+D.frame(T('Interpretation: Limits of Diversification in Crises', 'Interpretarea corelațiilor: limitele diversificării în criză'), items(
     (T('In crises, the banks move together: a portfolio of several banks is almost one bank', 'În crize, băncile se mișcă împreună: un portofoliu de mai multe bănci este aproape o singură bancă'),
      [T('the common factor (the market, funding stress) dominates the bank-specific news', 'factorul comun (piața, stresul de finanțare) domină știrile specifice fiecărei bănci')]),
     (T('The two Romanian banks: low correlation in 2017, very high in 2020; the maximum (@{co.RO.dmax}) falls outside any crisis', 'Cele două bănci românești: corelație mică în 2017, foarte mare în 2020; maximul (@{co.RO.dmax}) apare în afara oricărei crize'),
      [T('in calm years the BVB stocks are driven by their own news and by low liquidity; in a crisis, by the common shock', 'în anii liniștiți, acțiunile BVB sînt determinate de propriile știri și de lichiditatea redusă; într-o criză, de șocul comun')]),
     T('Caution: a rolling correlation estimated on 120 days is noisy (for two stocks, it can peak in a calm year), and a rise in correlation does not prove contagion (next slide)', 'Atenție: o corelație pe 120 de zile este zgomotoasă (pentru două acțiuni, poate atinge maximul într-un an liniștit), iar o creștere a corelației nu dovedește contagiunea (slide-ul următor)')))
 
-D.frame(T('Contagion or Interdependence? Forbes and Rigobon (1/2)', 'Contagiune sau interdependență? Forbes și Rigobon (1/2)'), items(
+D.frame(T('Contagion and Interdependence: Forbes and Rigobon (1/2)', 'Contagiune și interdependență: Forbes și Rigobon (1/2)'), items(
     (T('If $y = \\beta x + e$ with fixed $\\beta$, the correlation of $x$ and $y$ rises \\textbf{automatically} when the variance of $x$ rises \\refFR',
        'Dacă $y = \\beta x + e$ cu $\\beta$ fix, corelația dintre $x$ și $y$ crește \\textbf{automat} cînd crește varianța lui $x$ \\refFR'),
      [T('$x$: the return of the source market; $y$: the return of the other market; $\\beta$: the strength of the link; $e$: a shock of $y$ unrelated to $x$',
@@ -369,7 +369,7 @@ D.frame(T('Contagion or Interdependence? Forbes and Rigobon (1/2)', 'Contagiune 
       T('$\\delta$: the relative rise of that variance; $\\rho^*$: the crisis correlation that the calm-period volatility would give', '$\\delta$: creșterea relativă a acestei varianțe; $\\rho^*$: corelația din criză, recalculată la volatilitatea din perioada calmă'),
       T('compare $\\rho^*$ with $\\rho_{\\text{calm}}$: $\\rho^* > \\rho_{\\text{calm}}$ points to contagion', 'comparăm $\\rho^*$ cu $\\rho_{\\text{calm}}$: $\\rho^* > \\rho_{\\text{calm}}$ indică o contagiune')])))
 
-D.frame(T('Contagion or Interdependence? Forbes and Rigobon (2/2)', 'Contagiune sau interdependență? Forbes și Rigobon (2/2)'), items(
+D.frame(T('Contagion and Interdependence: Forbes and Rigobon (2/2)', 'Contagiune și interdependență: Forbes și Rigobon (2/2)'), items(
     (T('Worked example', 'Exemplu rezolvat'),
      [T('US bank portfolio (source) and European bank portfolio: calm January 2005 -- June 2007 ($n = @{fr.n0}$), crisis 15 September -- 31 December 2008 ($n = @{fr.n1}$)',
         'Portofoliul băncilor americane (sursa) și cel al băncilor europene: perioada calmă ianuarie 2005 -- iunie 2007 ($n = @{fr.n0}$), criza 15 septembrie -- 31 decembrie 2008 ($n = @{fr.n1}$)'),
@@ -424,7 +424,7 @@ chart(T('Joint Large Losses', 'Pierderi mari simultane'), 'sfm_ch15_tail_scatter
 # =============================================================================
 D.section('CoVaR and Delta-CoVaR', 'CoVaR și Delta-CoVaR')
 
-D.frame(T('From VaR to CoVaR', 'De la VaR la CoVaR'), items(
+D.frame(T('Definition of CoVaR', 'Definiția CoVaR'), items(
     (T('$X^i$: return of institution $i$; $X^{sys}$: return of the system; level $\\alpha$ = probability of the tail (Chapter 10)', '$X^i$: randamentul instituției $i$; $X^{sys}$: randamentul sistemului; nivelul $\\alpha$ = probabilitatea cozii (Capitolul 10)'),
      [T('$q_\\alpha(X^i)$: the $\\alpha$-quantile of $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: the loss of $i$ exceeded with probability $\\alpha$', '$q_\\alpha(X^i)$: cuantila de ordin $\\alpha$ a lui $X^i$; $\\mathrm{VaR}^i_\\alpha = -q_\\alpha(X^i)$: pierderea lui $i$ depășită cu probabilitatea $\\alpha$')]),
     (T('\\textbf{CoVaR} (conditional VaR of the system) \\refAB', '\\textbf{CoVaR} (VaR-ul condiționat al sistemului) \\refAB')
@@ -570,14 +570,14 @@ D.frame(T('Interpretation: MES and $\\Delta$CoVaR', 'Interpretarea MES și a $\\
      [T('they answer different questions: ``who suffers in a crash\'\' against ``who adds to the crash\'\'', 'răspund la întrebări diferite: „cine suferă într-o prăbușire” față de „cine contribuie la prăbușire”'),
       T('a regulator should look at several measures, with their intervals \\refBCHP', 'o autoritate de reglementare ar trebui să privească mai multe măsuri, cu intervalele lor \\refBCHP')])))
 
-chart(T('Case Study: Did MES Predict the 2008 Losses?', 'Studiu de caz: a prezis MES pierderile din 2008?'), 'sfm_ch15_mes_crisis', 'SFM_ch15_mes_srisk', [
+chart(T('Case Study: MES and the Bank Losses of 2008', 'Studiu de caz: MES și pierderile băncilor din 2008'), 'sfm_ch15_mes_crisis', 'SFM_ch15_mes_srisk', [
     T('Design of \\refAPPR: MES 5\\% measured from June 2006 to June 2007, against the return from July 2007 to December 2008; here 11 US and European banks',
       'Schema din \\refAPPR: MES 5\\% măsurat din iunie 2006 pînă în iunie 2007, comparat cu randamentul din iulie 2007 pînă în decembrie 2008; aici 11 bănci americane și europene'),
     T('Spearman correlation $@{mc.sp}$ (p $= @{mc.p}$, $n = @{mc.n}$): the sign of the paper (higher MES, larger loss), but not significant with 11 banks; worst return: @{mc.worst} ($@{mc.C.r}\\%$)',
       'Corelația Spearman $@{mc.sp}$ (p $= @{mc.p}$, $n = @{mc.n}$): semnul din lucrare (MES mai mare, pierdere mai mare), dar nesemnificativ cu 11 bănci; cel mai prost randament: @{mc.worst} ($@{mc.C.r}\\%$)')],
     h='0.58\\textheight')
 
-D.frame(T('From MES to LRMES', 'De la MES la LRMES'), items(
+D.frame(T('Long-Run MES (LRMES)', 'MES pe termen lung (LRMES)'), items(
     (T('A crisis lasts months: we need the loss of the bank if the market falls 40\\% over six months: \\textbf{LRMES} (long-run MES)',
        'O criză durează luni: avem nevoie de pierderea băncii dacă piața scade cu 40\\% în șase luni: \\textbf{LRMES} (long-run MES, MES pe termen lung)'),
      [T('approximation of \\refAER: $\\mathrm{LRMES} \\approx 1 - \\exp(-18 \\times \\mathrm{MES})$, with MES the daily loss (as a fraction) on the days when the market falls by more than 2\\%',
@@ -619,7 +619,7 @@ D.frame(T('Case Study: SRISK and V-Lab', 'Studiu de caz: SRISK și V-Lab'), cols
 # =============================================================================
 D.section('Networks of Banks', 'Rețele de bănci')
 
-D.frame(T('The Network View', 'Perspectiva rețelei'), items(
+D.frame(T('The Banking System as a Network', 'Sistemul bancar ca rețea'), items(
     (T('A \\textbf{network}: nodes (banks) and directed links (``a shock to $i$ affects $j$\'\')', 'O \\textbf{rețea}: noduri (bănci) și legături orientate („un șoc la $i$ îl afectează pe $j$”)'),
      [T('real links (interbank loans) are mostly confidential; we estimate links from returns', 'legăturile reale (creditele interbancare) sînt în mare parte confidențiale; estimăm legăturile din randamente')]),
     (T('Two statistical tools', 'Două instrumente statistice'),
@@ -726,7 +726,7 @@ D.frame(T('Macroprudential Authorities: the ESRB and the BNR', 'Autoritățile m
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Is the systemic risk of the Romanian banks imported from their euro-area parents, or is it local?}', '\\textbf{Este riscul sistemic al băncilor românești importat de la băncile-mamă din zona euro sau este local?}'),
      [T('today: $\\Delta$CoVaR of TLV peaks in March 2020 ($@{dy.TLV.max}\\%$); BRD belongs to a French group, TLV is Romanian-owned', 'azi: $\\Delta$CoVaR al TLV atinge maximul în martie 2020 ($@{dy.TLV.max}\\%$); BRD aparține unui grup francez, TLV are acționariat românesc'),
       T('the BET is partly the banks themselves, so a better ``system\'\' is needed', 'BET este parțial chiar băncile, deci este nevoie de un „sistem” mai bun')]),
@@ -784,7 +784,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'Diebold--Yilmaz & ' + T('total', 'total') + ' $= \\frac1N\\sum_{i \\ne j} d_{ij}$, \\ NET$_i = $ TO$_i - $ FROM$_i$'],
     size='scriptsize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: bank A has a larger VaR 1\\% than bank B. Is A more systemic?', '\\textbf{Întrebare}: banca A are un VaR 1\\% mai mare decît banca B. Este A mai importantă sistemic?'),
      [T('\\textbf{Answer}: not necessarily: systemic importance depends on the link with the system ($\\Delta$CoVaR, MES), not on the bank\'s own tail', '\\textbf{Răspuns}: nu neapărat: importanța sistemică depinde de legătura cu sistemul ($\\Delta$CoVaR, MES), nu de coada proprie a băncii')]),
     (T('\\textbf{Question}: a quantile regression at 1\\% gives $\\hat b = 0.5$, $\\hat q_{1\\%}(X^i) = -6\\%$, $\\hat q_{50\\%}(X^i) = 0$. What is $\\Delta$CoVaR?', '\\textbf{Întrebare}: o regresie cuantilică la 1\\% dă $\\hat b = 0{,}5$, $\\hat q_{1\\%}(X^i) = -6\\%$, $\\hat q_{50\\%}(X^i) = 0$. Cît este $\\Delta$CoVaR?'),

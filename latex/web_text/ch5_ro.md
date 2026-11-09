@@ -72,7 +72,7 @@ Numărul observat este de 35 de astfel de zile pentru S&P 500 din 1990 și de 34
 
 Graficul arată și cele două fapte stilizate de care EVT trebuie să țină seama. Coada este groasă: pierderile dincolo de nivelul „o dată pe secol” al distribuției Normale sînt mult prea multe. Iar extremele vin în rafale, astfel încît estimările cozii din acest capitol, care tratează zilele ca pe un singur eșantion, descriu coada necondiționată, o medie între perioadele calme și cele agitate.
 
-## Raritatea celor mai proaste zile în distribuția Normală {h=9ce2b5a3}
+## Cele mai mari pierderi zilnice în ipoteza distribuției Normale {h=44319ee5}
 
 Tabelul cuantifică cea mai proastă zi a fiecărei serii. Valoarea standardizată $z = (r - \hat\mu)/\hat\sigma$ folosește media și abaterea standard ale întregului eșantion. Probabilitatea, în distribuția Normală, a unei zile cel puțin la fel de proaste este $p = \Phi(z)$, unde $\Phi$ este funcția de repartiție (CDF, *cumulative distribution function*) a distribuției $N(0, 1)$, iar timpul de așteptare pentru o astfel de zi este $1/(p \times 252)$ ani, cu 252 de zile de tranzacționare pe an (365 pentru Bitcoin, care se tranzacționează în fiecare zi).
 
@@ -116,7 +116,7 @@ O coadă este subțire (*light tail*) cînd $\bar F(x)$ scade cel puțin la fel 
 
 Exponentul $\alpha > 0$ este tail index-ul. Cu cît $\alpha$ este mai mic, cu atît $\bar F$ scade mai încet și coada este mai groasă. Diferența față de o coadă subțire nu este una de grad: o putere scade mai încet decît orice exponențială, deci suficient de departe în coadă o lege cu coadă groasă atribuie întotdeauna mai multă probabilitate decît orice lege cu coadă subțire.
 
-## Legile de putere scad mult mai încet {h=d9d0d7fb}
+## Cozile de tip putere și cozile subțiri {h=c2018670}
 
 Graficul compară funcțiile de supraviețuire ale unei distribuții Normale, ale unei distribuții exponențiale și ale unei distribuții Student-t cu 3 grade de libertate, pe axe liniare și pe axe log-log. Pe axe log-log, adică $\ln \bar F$ în funcție de $\ln x$, o lege de putere $\bar F(x) = C x^{-\alpha}$ este o dreaptă cu panta $-\alpha$. Cozile subțiri se curbează în jos și ies prin partea de jos a graficului: logaritmul lor scade mai repede decît orice funcție liniară de $\ln x$.
 
@@ -232,7 +232,7 @@ Toate cele patru estimări sînt cuprinse între 2,57 și 3,00, iar toate cele p
 
 Ultima coloană aplică estimatorul cîștigurilor, adică zilelor cu $r_t > 0$, cu același $k$. Indicii cîștigurilor sînt 2,96 pentru S&P 500, 3,22 pentru DAX, 2,82 pentru BET și 3,37 pentru Bitcoin. Pentru DAX, BET și Bitcoin, cîștigurile au o coadă mai subțire decît pierderile; pentru S&P 500 cei doi indici sînt practic egali.
 
-## De la tail index-ul la o cuantilă {h=c68ed9ec}
+## Estimatorul de cuantilă Hill (Weissman) {h=11db6c54}
 
 Un tail index devine o cifră de risc prin intermediul unei cuantile. Estimatorul de cuantilă Hill (Weissman) [@Weissman1978] este
 
@@ -364,7 +364,7 @@ Toate cele patru estimări ale formei sînt pozitive: 0,21 pentru S&P 500, 0,17 
 
 Ultima coloană, $1/\hat\xi$, este o a doua estimare a tail index-ului: 4,7 pentru S&P 500, 5,9 pentru DAX, 2,7 pentru BET și 4,3 pentru Bitcoin. Numai valoarea BET este apropiată de estimarea Hill. Cu o singură pierdere pe lună, abordarea block maxima folosește mai puține observații din coadă decît estimatorul Hill și este mai puțin precisă; în plus, o lună de aproximativ 21 de zile este un bloc scurt, iar limita GEV este atunci doar o aproximare.
 
-## Se potrivește GEV? Grafice PP și QQ {h=a849ee62}
+## Calitatea ajustării GEV: grafice PP și QQ {h=1cbde8a6}
 
 Două grafice verifică ajustarea pentru S&P 500. Graficul probabilitate–probabilitate (PP) pune probabilitatea ajustată $H(m_{(i)})$ a fiecărui maxim ordonat $m_{(i)}$ față de probabilitatea lui empirică $(i - 0{,}5)/n$. Graficul cuantilă–cuantilă (QQ) pune maximele observate față de cuantilele GEV ajustate. Dacă modelul este corect, ambele grafice se află pe prima bisectoare.
 
@@ -392,7 +392,7 @@ Pînă la perioade de revenire de cîțiva ani, punctele urmează îndeaproape l
 
 Cel mai mare maxim Bitcoin, pierderea de 46,5% din martie 2020, se află mult deasupra curbei, la o perioadă empirică de revenire de aproximativ 12 ani: un singur punct poate fi departe de un model care potrivește bine toate celelalte luni. Return levels la orizonturi lungi trebuie citite împreună cu intervalele lor, date pe slide-ul următor.
 
-## Mărimea pierderii de 10 ani {h=f925c6c2}
+## Return levels ale pierderilor zilnice: 1, 10 și 50 de ani {h=b5821d3a}
 
 Tabelul dă pierderea zilnică, în procente, depășită în medie o dată la 1, 10 și 50 de ani, cu un interval de 95% pentru nivelul de 10 ani obținut prin bootstrap al maximelor lunare, cu 200 de eșantioane, și le compară cu cea mai mare pierdere observată și cu lungimea eșantionului. Pentru S&P 500, nivelul de 1 an este 3,7%, cel de 10 ani 7,4%, cu intervalul $[6{,}2; 8{,}9]$, iar cel de 50 de ani 11,3%; cea mai mare pierdere observată în 36,7 ani este 12,8%.
 
@@ -464,7 +464,7 @@ Toate cele patru forme sînt pozitive și mai mici decît 0,5: cozi groase cu va
 
 Aceste valori sînt mai mari decît estimările Hill, care au folosit cele mai mari 2,5% dintre pierderi. Cei doi estimatori privesc părți diferite ale cozii: peste cuantila de 90%, o GPD cu scala liberă $\beta$ potrivește curbura cozii moderate cu un $\xi$ mai mic, în timp ce estimatorul Hill impune o formă Pareto pură peste un prag mai înalt. Tail index-ul este greu de estimat precis, iar o analiză atentă raportează mai mulți estimatori. Pentru măsurile de risc din interiorul datelor sau din apropierea lor, discrepanța contează mai puțin, așa cum a arătat graficul stabilității parametrilor.
 
-## Se potrivește GPD? Grafice PP și QQ {h=c577ac62}
+## Calitatea ajustării GPD: grafice PP și QQ {h=f50a9b26}
 
 Graficele PP și QQ verifică ajustarea GPD la excesele S&P 500 peste $u$. Graficul PP stă pe prima bisectoare pe tot intervalul. Graficul QQ stă pe dreaptă pînă la excese de aproximativ 4%, adică pierderi de aproximativ 5%; dincolo de acest nivel punctele se împrăștie în jurul dreptei.
 
@@ -472,7 +472,7 @@ Cel mai mare exces, 11,6%, din martie 2020, este comparat cu o cuantilă ajustat
 
 Ca întotdeauna la graficele QQ pentru cozi groase, ultimele cîteva puncte au o variabilitate de eșantionare mare: chiar și un model corect produce puncte împrăștiate în partea de sus. Acordul pînă la 4% și abaterea moderată de dincolo de acest nivel susțin GPD ca descriere a cozii S&P 500.
 
-## De la GPD la coada pierderilor {h=91236a4f}
+## Estimatorul GPD al cozii pierderilor {h=cffa7028}
 
 GPD descrie excesele condiționat de $L > u$; măsurile de risc au nevoie de probabilitatea necondiționată $P(L > x)$. Pentru $x > u$, $P(L > x) = P(L > u)\,P(L > x \mid L > u)$. Primul factor se estimează prin proporția pierderilor de peste prag, $N_u/n$, iar al doilea prin GPD. Rezultatul este estimatorul cozii
 
@@ -592,7 +592,7 @@ Formulele EVT @eq:evtvar și @eq:evtes dau VaR și ES din cele cinci numere ale 
 
 Secțiunea pornește de la o întrebare deschisă ridicată de rezultatele capitolului, dacă s-a schimbat coada pierderilor BET, și arată unde pot ajuta instrumentele AI un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=816422ad}
+## O întrebare de cercetare deschisă {h=cda18207}
 
 S-a schimbat coada pierderilor BET pe măsură ce piața din București a crescut? Cu estimatorul Hill la $k = 2{,}5\%$ din $n$, perioada 1997–2009 dă $\hat\alpha = 2{,}90$, cu eroarea standard bootstrap pe blocuri 0,33, iar perioada 2010–2026 dă $\hat\alpha = 2{,}16$, cu eroarea standard bootstrap pe blocuri 0,27. Indicele mai mic de după 2010 indică o coadă mai groasă.
 

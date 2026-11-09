@@ -802,7 +802,7 @@ D.frame(T('An Open Research Question on the BET', 'O întrebare de cercetare des
     T('Different teams with the same data reach different answers: nonstandard errors \\refMenk', 'Echipe diferite, cu aceleași date, ajung la răspunsuri diferite: erorile nestandard \\refMenk')),
     ph('mandelbrot', T('Benoit Mandelbrot, who showed in 1963 that price changes have heavy tails', 'Benoit Mandelbrot, care a arătat în 1963 că variațiile prețurilor au cozi groase'), h='0.40\\textheight'), '0.60', '0.36'))
 
-D.frame(T('The Research Loop', 'Bucla de cercetare'), enum(
+D.frame(T('Steps of a Research Project', 'Etapele unui proiect de cercetare'), enum(
     T('\\textbf{Question}: one sentence, with a number that would answer it', '\\textbf{Întrebarea}: o frază, cu o cifră care i-ar răspunde'),
     T('\\textbf{Data}: series, source, calendar, window, fixed before looking at the results', '\\textbf{Datele}: seria, sursa, calendarul, fereastra, fixate înainte de a vedea rezultatele'),
     T('\\textbf{Method}: the test chosen from the overview of methods, with its null hypothesis', '\\textbf{Metoda}: testul ales din sinteza metodelor, cu ipoteza nulă'),
@@ -850,7 +850,7 @@ D.frame(T('Key Takeaways', 'Idei de reținut'), items(
     T('Every result needs its uncertainty: SE, robust tests, Monte Carlo bands, out-of-sample checks', 'Orice rezultat are nevoie de incertitudinea lui: SE, teste robuste, benzi Monte Carlo, verificări în afara eșantionului'),
     T('The exam rewards method, result and interpretation; the project rewards a clear question answered honestly', 'Examenul răsplătește metoda, rezultatul și interpretarea; proiectul răsplătește o întrebare clară, cu un răspuns onest')))
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: Ljung--Box does not reject on $r_t$ but rejects strongly on $r_t^2$. What does this mean?', '\\textbf{Întrebare}: Ljung--Box nu respinge pe $r_t$, dar respinge puternic pe $r_t^2$. Ce înseamnă acest lucru?'),
      [T('\\textbf{Answer}: returns are uncorrelated but not independent: volatility clustering; model the variance (GARCH)', '\\textbf{Răspuns}: randamentele sînt necorelate, dar nu independente: volatility clustering; modelăm varianța (GARCH)')]),
     (T('\\textbf{Question}: a fitted stable law gives $\\hat\\alpha = 1.5$ and the Hill estimate is $\\hat\\alpha = 3$. Which is right about the variance?', '\\textbf{Întrebare}: o lege stabilă estimată dă $\\hat\\alpha = 1{,}5$, iar estimarea Hill este $\\hat\\alpha = 3$. Care are dreptate în privința varianței?'),

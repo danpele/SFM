@@ -342,8 +342,8 @@ ORDER = ['down-days', 'random-variables', 'cdf-quantile', 'annual-moments', 'che
          'two-step-tree', 'crr-tree', 'binomial', 'ar1-sim', 'processes', 'spot-the-real', 'wiener', 'gbm-median', 'gbm-paths', 'gbm-fan', 'gbm-check']
 PFX.update({'down-days': 'dw', 'annual-moments': 'am', 'chebyshev': 'cb', 'portfolio': 'pf', 'two-regimes': 'rg', 'lln-table': 'lt', 'lcg': 'lc',
             'inverse-exp': 'ie', 'mc-error': 'me', 'two-step-tree': 'tt', 'crr-tree': 'cr', 'ar1-sim': 'ar', 'gbm-median': 'gm'})
-SECTIONS['ro'].update(ax='De la jocuri de noroc la axiome', ev='Media și varianța')
-SECTIONS['en'].update(ax='From Games of Chance to Axioms', ev='Expectation and Variance')
+SECTIONS['ro'].update(ax='Originile teoriei probabilităților: jocurile de noroc și axiomele', ev='Media și varianța')
+SECTIONS['en'].update(ax='Origins of Probability Theory: Games of Chance and Axioms', ev='Expectation and Variance')
 
 CSS = """<style>
 .tw{overflow-x:auto;max-width:100%;margin:.5rem 0 .3rem;-webkit-overflow-scrolling:touch}
@@ -778,7 +778,7 @@ TEXT_JS['en'] += r"""Object.assign(window.CH4_TEXT, {
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch4-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch4-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH4_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH4_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

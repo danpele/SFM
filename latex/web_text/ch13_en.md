@@ -28,7 +28,7 @@ Annualised realised volatility of the S&P 500 over the next 5 days and the HAR, 
 - **Forecast** VaR 1% by quantile regression and correct a Sharpe ratio for the number of strategies tried.
 
 @plan
-- What Machine Learning Adds to Statistics | The perceptron, Breiman's two cultures, prediction and inference, the notation of supervised learning.
+- The Contribution of Machine Learning to Statistics | The perceptron, Breiman's two cultures, prediction and inference, the notation of supervised learning.
 - Overfitting, Bias and Variance | Training and test error, the bias–variance decomposition and a simulation with trees.
 - Validation for Time Series | Training, validation and test samples, look-ahead bias, leakage and the walk-forward scheme.
 - Penalised Regression: Ridge and Lasso | Shrinkage of coefficients, variable selection and the paths on volatility data.
@@ -42,7 +42,7 @@ Annualised realised volatility of the S&P 500 over the next 5 days and the HAR, 
 - AI for Scientific Discovery | An open question about the BVB, how AI could help and what to check.
 - Summary | The main ideas, the formulas and self-check questions.
 
-# What Machine Learning Adds to Statistics
+# The Contribution of Machine Learning to Statistics
 
 The section places machine learning in the history of statistics. It starts from the perceptron of 1958, presents Breiman's distinction between data modelling and algorithmic modelling, separates prediction from inference and fixes the notation of supervised learning: features, target, loss function and hyperparameters. It ends with a map of the areas of finance where these methods help and those where they struggle.
 
@@ -62,7 +62,7 @@ In the algorithmic-modelling culture, the mechanism that generated the data is t
 
 The course has so far worked in the first culture, from [Chapter 2](ch2.html) to [Chapter 11](ch11.html): distributions, volatility models, tests of long memory. This chapter adds the second culture and asks under what conditions it brings a real gain on financial data, where noise is large and only one history is available.
 
-## Prediction against Inference {h=74ec77d1}
+## Prediction and Inference {h=8f877093}
 
 Inference asks whether a coefficient $\beta_j$ differs from zero and how large the effect is, using standard errors and tests, as in [Chapter 6](ch6.html). An example from the course is the leverage effect: the asymmetry parameter of a GJR-GARCH (Glosten–Jagannathan–Runkle GARCH) model, from [Chapter 9](ch9.html), says whether price falls raise volatility more than rises.
 
@@ -192,7 +192,7 @@ The first data set is a simulated random walk, in which future returns are indep
 
 The results on real data are almost identical to those on the random walk. The similarity shows that the large $R^2$ of the random folds reflects not a predictability of the S&P 500 but the validation scheme.
 
-## Interpretation: a Forecast of Pure Noise with R² > 30% {h=b259752d}
+## Interpretation: Leakage in the Forecast of a Random Walk {h=37c3fc3e}
 
 The random walk has nothing to predict, yet the random folds report an $R^2$ of 34.5%. The explanation is leakage: the random forest memorises neighbouring days in the training set, whose targets share 20 of 21 returns with the test day. The forecast "guesses" the target because it has already seen almost all of it.
 
@@ -354,7 +354,7 @@ A regression tree splits the data by greedily chosen thresholds and has high var
 
 The section moves from the perceptron to the multilayer perceptron and explains activation functions, the number of parameters and training by gradient descent. It then applies networks in two Quantlets of the textbook: the neural-network ARCH model for GBP/USD and the forecast of the USD/JPY exchange rate level.
 
-## From the Perceptron to the Multilayer Perceptron (1/2) {h=4810b54f}
+## The Perceptron and the Multilayer Perceptron (1/2) {h=2f2acc7f}
 
 The basic unit of a network is the neuron: $h = g(b + w^\top x)$. The neuron computes a weighted sum of the inputs $x$, with weights $w$ and constant $b$ (the neuron's intercept), and passes it through an activation function $g$. The result $h$ is the neuron's output.
 
@@ -362,7 +362,7 @@ The function $g$ is nonlinear and fixed in advance. Nonlinearity is necessary: a
 
 The perceptron of [Section 1](#sec-1) uses a step function, with values 0 or 1. Modern networks use smooth or piecewise-linear functions, which allow the gradient to be computed: the logistic function $1/(1 + e^{-z})$, the hyperbolic tangent tanh and the ReLU (rectified linear unit), $\max(0, z)$.
 
-## From the Perceptron to the Multilayer Perceptron (2/2) {h=a7d711a1}
+## The Perceptron and the Multilayer Perceptron (2/2) {h=19f2b783}
 
 A multilayer perceptron (MLP) with one hidden layer of $K$ neurons produces the forecast
 
@@ -390,7 +390,7 @@ Back-propagation [@RumelhartHintonWilliams1986] computes the gradient layer by l
 
 The loss of a network is not convex, so different initial weights lead to different networks. The chapter fixes the random seeds and averages five networks, an ensemble. Against overfitting, the inputs and the target are standardised with training statistics, the weights get an $L_2$ penalty, as in ridge, and the number of epochs is fixed. With little data, the network must be small: here a single hidden layer with 16 neurons is enough.
 
-## From Deep Blue to Deep Learning {h=9c53cb7d}
+## Deep Blue and Deep Learning {h=202571fa}
 
 In 1997, IBM's (International Business Machines) Deep Blue computer beat the world chess champion. The success came mainly from search and from evaluation rules written by people, not from learning from data: Deep Blue belongs to classical artificial intelligence rather than to machine learning.
 
@@ -604,7 +604,7 @@ The AUC confirms the picture. For the logit and the random forest, the AUC is 0.
 
 The logit forecasts "up" on 86% of S&P 500 days. Its estimated probabilities are almost constant, slightly above 0.5, so the logit behaves almost like the benchmark. This explains why it loses little against the benchmark, while the flexible models lose more.
 
-## Interpretation: Why Sign Prediction Mostly Fails {h=3fe9eb3c}
+## Interpretation: Limits of Sign Prediction {h=bf7753af}
 
 On no market is any model significantly better than the rule "always up", and the flexible models are worse than the logit. On the S&P 500, the differences from the benchmark are −0.6 points for the logit, −1.3 for the random forest and −2.3 for boosting; on Bitcoin, +0.1 for the logit and −0.9 for the random forest.
 
@@ -770,7 +770,7 @@ The results also have limits. Portfolios built on the networks turn over more th
 
 The section poses an open research question related to the Romanian market, shows how an AI (artificial intelligence) assistant could speed up its study and what checks are needed before the results can be believed. It ends with a project idea.
 
-## An Open Question {h=bbb978d7}
+## An Open Research Question {h=0faf5190}
 
 The question is whether machine learning volatility forecasts help on the Bucharest Stock Exchange, where liquidity is low and intraday data are scarce. The results so far are mixed: on the S&P 500, the lasso gains +7.1% over HAR, while on Bitcoin there is no significant gain (+2.0%, p 0.520).
 
@@ -826,7 +826,7 @@ The multilayer perceptron, @eq:mlp, is a linear regression in learned nonlinear 
 
 The quantile loss, @eq:pinball, both estimates and evaluates VaR forecasts. The deflated Sharpe ratio, @eq:dsr, corrects the Sharpe ratio for the number of trials and for the skewness and kurtosis of returns.
 
-## Check Yourself {h=079b0c3c}
+## Self-Assessment {h=d4279e61}
 
 The first question describes a model with a training $R^2$ of 80% and an out-of-sample $R^2$ of −5%. The diagnosis is overfitting: the model has learned the noise of the training sample and loses to the benchmark on new data.
 

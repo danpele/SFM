@@ -47,7 +47,7 @@ Secțiunea arată cum a ajuns un singur număr zilnic să rezume riscul unei bă
 
 Publicarea a transformat VaR într-un limbaj comun. Băncile, autoritățile de reglementare și administratorii de fonduri își puteau exprima riscul de piață în aceleași unități, o pierdere în bani la o probabilitate dată, și puteau compara poziții care nu aveau altceva în comun. Simplitatea care a făcut metoda populară conține și cele două puncte slabe ale ei, pe care capitolul le examinează pe rînd: distribuția Normală are o coadă prea subțire, iar o cuantilă nu spune nimic despre mărimea pierderilor de dincolo de ea.
 
-## De la RiskMetrics la Basel {h=b58c892b}
+## RiskMetrics și reglementările Basel {h=8852f2e6}
 
 Comitetul de la Basel pentru supraveghere bancară (BCBS, *Basel Committee on Banking Supervision*), găzduit de Banca Reglementelor Internaționale (BIS, *Bank for International Settlements*) din Basel, stabilește standardele internaționale pentru capitalul băncilor ([istoria Comitetului de la Basel](https://www.bis.org/bcbs/history.htm)). În 1996, comitetul a permis băncilor să calculeze capitalul pentru riscul de piață cu propriile modele VaR [@BCBS1996a]. Regula folosește VaR 1% pe 10 zile, înmulțit cu un factor de cel puțin 3, iar factorul crește dacă modelul nu trece backtesting-ul, adică dacă pierderile efective depășesc VaR prea des [@BCBS1996b].
 
@@ -143,7 +143,7 @@ Condiția $\nu > 1$ este necesară pentru ca media, deci și ES, să existe. Sca
 
 Ajustată la S&P 500 prin verosimilitate maximă, distribuția are poziția $\hat m = 0{,}068$, scala $\hat s = 0{,}703$ și $\hat\nu = 2{,}67$ grade de libertate. Cuantila este $t_{0{,}01} = -5{,}023$, deci VaR 1% $= -(0{,}068 + 0{,}703 \times (-5{,}023)) = 3{,}46\%$, exact valoarea istorică. Factorul ES este 5,720, deci ES 2,5% $= -0{,}068 + 0{,}703 \times 5{,}720 = 3{,}95\%$, peste valoarea istorică de 3,76%. Cu $\nu < 3$, coada estimată este foarte groasă: se potrivește cu cuantila de 1%, dar dincolo de ea distribuția t plasează mai multă masă decît arată datele.
 
-## De la o zi la zece zile {h=7a142e70}
+## Scalarea VaR de la o zi la zece zile {h=4ea7a948}
 
 VaR-ul de reglementare are un orizont de 10 zile, în timp ce datele și modelele sînt zilnice. **Regula rădăcinii pătrate a timpului** (*square-root-of-time rule*) face legătura: $\mathrm{VaR}^{(h)} \approx \sqrt{h}\,\mathrm{VaR}^{(1)}$. Regula este exactă pentru randamente Normale i.i.d. cu media zero, deoarece randamentul pe $h$ zile este atunci Normal, cu abaterea standard $\sigma\sqrt{h}$, iar fiecare cuantilă se scalează cu $\sqrt{h}$. Basel 1996 cerea un VaR pe 10 zile, obținut de obicei din VaR-ul pe o zi prin factorul $\sqrt{10} = 3{,}162$.
 
@@ -287,7 +287,7 @@ Pentru VaR 1% și ES 2,5%, simularea istorică, Student-t și EVT sînt de acord
 
 Secțiunea combină prognozele volatilității din [Capitolul 9](ch9_ro.html) cu modelele cozii din secțiunea precedentă. O prognoză VaR devine produsul dintre volatilitatea de mîine și o cuantilă a inovației standardizate. Secțiunea calculează astfel de prognoze pentru șase serii, evaluează prognoze pe fereastră mobilă din 2005 pînă în 2026 și compară metodele condiționate cu cele necondiționate în crizele din 2008 și 2020.
 
-## Rolul volatilității de azi {h=391e65cc}
+## Condiționarea pe volatilitatea curentă {h=aea33004}
 
 Volatilitatea apare grupat ([Capitolele 8](ch8_ro.html) și [9](ch9_ro.html)): zilele liniștite urmează după zile liniștite, iar zilele agitate după zile agitate. Un VaR necondiționat face media celor două regimuri, deci este prea mare în anii liniștiți și prea mic la începutul unei crize, exact atunci cînd contează cel mai mult.
 
@@ -375,7 +375,7 @@ Pas cu pas: $w_1\sigma_1 = 0{,}712$, $w_2\sigma_2 = 0{,}614$, iar termenul de co
 
 Contribuțiile Euler $w_i(\Sigma w)_i/\sigma_p$, unde $(\Sigma w)_i$ este componenta $i$ a vectorului $\Sigma w$, au suma exact $\sigma_p$, deci împart riscul portofoliului între active. BET contribuie cu 56%, iar S&P 500 cu 44%: BET, cu volatilitatea mai mare, poartă mai mult de jumătate din risc, deși are aceeași pondere.
 
-## Corelația crește în crize {h=7d57c650}
+## Corelația în perioadele de criză {h=5f217fff}
 
 Graficul arată corelația randamentelor zilnice BET și S&P 500 pe ferestre mobile de 250 de zile din 2001, cu cele două perioade de stres hașurate și cu corelația pe întregul eșantion, 0,21, ca linie întreruptă. Înainte de 2008, corelația pe fereastră mobilă era apropiată de zero; ea a sărit în toamna lui 2008 și din nou, mult mai sus, în martie 2020.
 
@@ -451,7 +451,7 @@ Diversificarea între BET și S&P 500 elimină 22% din VaR-ul Normal, dar corela
 
 Secțiunea întreabă dacă o prognoză VaR a fost corectă, folosind doar prognozele și randamentele realizate. Ea definește secvența depășirilor, deduce testul Kupiec pentru numărul depășirilor și testul Christoffersen pentru gruparea lor, prezintă semaforul Basel, aplică toate cele trei instrumente prognozelor pe fereastră mobilă pentru patru indici din 2005 pînă în 2026, ordonează prognozele prin pierderea cuantilă și se încheie cu backtesting-ul ES al lui Acerbi și Székely.
 
-## Ideea: secvența depășirilor {h=94e919a6}
+## Secvența depășirilor {h=a620bcc1}
 
 O **depășire** (*exception*, sau *exceedance*) este o zi în care pierderea a depășit prognoza VaR, $r_t < -\mathrm{VaR}_t$. Secvența depășirilor (*hit sequence*) le înregistrează: $I_t = \mathbf{1}\{r_t < -\mathrm{VaR}_t\}$. VaR trebuie să fie prognoza făcută cu o zi înainte, fără informații din viitor; un VaR estimat pe un eșantion care include ziua $t$ va fi depășit mai rar decît o prognoză reală.
 
@@ -531,7 +531,7 @@ Pentru Bitcoin, HS trece toate cele trei teste, cu 33 de depășiri, o rată de 
 
 Nicio metodă nu cîștigă peste tot. Ordinea depinde de piață: metodele condiționate sînt cele mai bune pentru indicii de acțiuni, în timp ce schimbările extreme și frecvente ale volatilității Bitcoin sînt tratate rezonabil chiar și de o fereastră istorică de doi ani. Singurul rezultat constant este metoda Normală: ea eșuează pe fiecare serie.
 
-## Ordonarea prognozelor și zona de azi {h=17e3c469}
+## Clasamentul prognozelor și zona actuală a semaforului Basel {h=7f4e430f}
 
 Testele spun dacă un model este acceptabil; o **funcție de scor** spune care dintre două modele este mai bun. Deoarece VaR este elicitabil, media pierderii cuantile
 
@@ -579,7 +579,7 @@ Un VaR corect produce depășiri Bernoulli i.i.d. Testul Kupiec @eq:kupiec verif
 
 Secțiunea pornește de la o întrebare deschisă ridicată de rezultatele pentru portofoliu: dacă dependența în cozi dintre piața din București și piețele mondiale crește brusc în crize și revine apoi la nivelul anterior. Ea arată unde pot ajuta instrumentele AI un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=c9d83c08}
+## O întrebare de cercetare deschisă {h=7ee15988}
 
 Crește brusc dependența în cozi dintre BVB și piețele mondiale în crize și revine apoi la nivelul anterior? Rezultatele capitolului indică această direcție. Corelația BET–S&P 500 a fost 0,20 într-un an liniștit și 0,71 în primăvara lui 2020; o copulă t constantă dă o dependență în coadă $\lambda_L = 0{,}096$; iar un VaR de portofoliu construit pe o copulă constantă rămîne sub VaR-ul istoric ([secțiunea despre VaR de portofoliu](#sec-6)).
 

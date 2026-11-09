@@ -34,7 +34,7 @@ Randamentele logaritmice zilnice ale BET și S&P 500 (puncte, histogramă pe sca
 - Simulare | Metoda Chambers–Mallows–Stuck, în cazul simetric și în cel asimetric.
 - Estimare | Metoda cuantilelor a lui McCulloch și verosimilitatea maximă, comparate într-un studiu Monte Carlo.
 - Estimarea pe randamente reale | Legile stabilă, Student-t și Normală estimate pe BET, S&P 500, DAX și Bitcoin.
-- Critica: varianță finită sau infinită? | Trei teste ale ipotezei varianței infinite și explicațiile aspectului stabil.
+- Critica modelului stabil: varianță finită sau infinită | Trei teste ale ipotezei varianței infinite și explicațiile aspectului stabil.
 - AI pentru descoperire științifică | O întrebare deschisă despre cozile Bitcoin, verificările necesare și o idee de proiect.
 - Rezumat | Formulele capitolului și întrebări de autoevaluare.
 
@@ -58,7 +58,7 @@ A doua observație a fost că forma distribuției era aceeași la orice orizont.
 
 Propunerea lui a reunit cele două observații: variațiile de preț urmează legi stabile de tip Pareto (*stable Paretian laws*) cu un indice $\alpha \approx 1{,}7$ [@Mandelbrot1963]. „De tip Pareto” se referă la cozi care scad ca o putere a lui $x$, ca în legea veniturilor a lui Pareto. Consecința, discutată pe tot parcursul capitolului, este că varianța variațiilor de preț ar fi infinită.
 
-## Fama testează ideea pe acțiuni {h=358e1d16}
+## Testele lui Fama pe randamentele acțiunilor {h=09e36c5e}
 
 @Fama1965 a mutat ipoteza de pe mărfuri pe acțiuni. El a studiat randamentele zilnice ale celor 30 de acțiuni din Dow Jones Industrial Average și a găsit, pentru fiecare acțiune, mai multe randamente mari decît prevede distribuția Normală. Estimările lui pentru indicele $\alpha$ erau sub 2, ceea ce susținea ipoteza lui Mandelbrot.
 
@@ -322,7 +322,7 @@ Consecințele rezultă din compararea lui $\alpha$ cu 1 și cu 2. Pentru $\alpha
 
 Ce credeți? Mandelbrot a găsit $\alpha \approx 1{,}7$ pentru bumbac. Există media variației zilnice? Da, pentru că $1 < 1{,}7$. Varianța însă nu există, pentru că $2 > 1{,}7$.
 
-## Varianța de selecție nu se stabilizează {h=24927ca7}
+## Instabilitatea varianței de selecție {h=03630c01}
 
 Graficul arată cum arată o varianță infinită într-un eșantion. El reprezintă varianța de selecție în funcție de mărimea eșantionului, ambele pe scară logaritmică, pentru un eșantion Normal (albastru), din legea $S(2; 0; 1; 0)$ cu varianța adevărată 2, și pentru trei eșantioane independente dintr-o lege stabilă cu $\alpha = 1{,}7$.
 
@@ -558,11 +558,11 @@ Ea supraestimează cozile îndepărtate: prevede prea multe pierderi extreme și
 
 Estimată pe randamente reale, legea stabilă este o îmbunătățire mare față de distribuția Normală și o descriere mai slabă decît distribuția Student-t. Valorile $\hat\alpha$ între 1,410 și 1,606 surprind cozile groase din apropierea centrului, dar același $\alpha$ impune cozi de tip putere prea groase în zona extremă: 19,1 zile așteptate cu pierderi de peste 10% pentru S&P 500, față de una observată, și un VaR 0,1% de două pînă la patru ori mai mare decît cel empiric. Estimările Student-t $\hat\nu$ între 2,23 și 3,09 indică o varianță finită. [Secțiunea următoare](#sec-9) testează direct varianța infinită.
 
-# Critica: varianță finită sau infinită?
+# Critica modelului stabil: varianță finită sau infinită
 
 Estimările din secțiunea anterioară sugerează că cozile îndepărtate ale randamentelor sînt mai subțiri decît orice coadă stabilă. Secțiunea testează direct ipoteza varianței infinite, cu trei teste derivate din teoria capitolului, apoi explică de ce randamentele zilnice par totuși stabile.
 
-## Testul 1: rămîne α la fel cînd randamentele se adună? {h=308df4b2}
+## Testul 1: stabilitatea lui α la agregarea randamentelor {h=70782f3f}
 
 Primul test folosește chiar proprietatea de stabilitate. Dacă randamentele zilnice ar fi i.i.d. stabile, sumele săptămînale și lunare ar fi stabile cu același $\alpha$. Dacă, în schimb, randamentele zilnice au varianță finită, GCLT prevede că $\alpha$ estimat urcă spre 2 pe măsură ce randamentele se adună pe orizonturi mai lungi.
 
@@ -576,13 +576,13 @@ BET este excepția: $1{,}49 \to 1{,}56 \to 1{,}50$, fără o creștere clară. E
 
 Același tipar apare în studiile clasice ale lui @Officer1972 și @AkgirayBooth1988. Un $\alpha$ crescător este exact ceea ce prevede GCLT pentru sume de randamente cu varianță finită care converg lent la distribuția Normală: în această lume, estimarea stabilă pe date zilnice este o aproximare pe care agregarea o elimină treptat.
 
-## Testul 2: se stabilizează varianța de selecție? {h=34f4a040}
+## Testul 2: convergența varianței de selecție {h=bb9f82e3}
 
 Al doilea test repetă observația lui Mandelbrot pe date actuale. Graficul reprezintă varianța de selecție cumulată a randamentelor logaritmice zilnice ale S&P 500 (în %, linia albastră groasă) din 2000 pînă în 2026, pe scară logaritmică. Varianța sare în 2008 și în 2020, anii celor mai mari crize din eșantion, și apoi se stabilizează în jur de 1,47.
 
 Liniile subțiri sînt traiectorii de aceeași lungime simulate din legea stabilă estimată. Ele se comportă ca în [simularea din secțiunea despre cozi](#s34): salturi repetate, scădere lentă și nicio convergență. Varianțele lor finale se află între 5,4 și 15,6, mult peste valoarea datelor. Varianța observată este stabilă într-un mod pe care o lege stabilă cu $\hat\alpha = 1{,}540$ nu îl permite.
 
-## Testul 3: cît de groasă este coada îndepărtată? {h=0f67e7b5}
+## Testul 3: grosimea cozii îndepărtate {h=d36c704f}
 
 $\alpha$ stabil este determinat de întreaga distribuție, mai ales de corpul ei, unde se află majoritatea observațiilor. Tail index-ul cozii îndepărtate se estimează separat, cu estimatorul Hill [@Hill1975], care folosește doar observațiile cele mai mari; Capitolul 5 îl dezvoltă.
 
@@ -618,7 +618,7 @@ Cele trei teste resping varianța infinită fără a respinge cozile groase. Agr
 
 Instrumentele capitolului se pot aplica unor întrebări încă deschise. Secțiunea formulează o astfel de întrebare, despre cozile Bitcoin, descrie cum ar putea instrumentele AI (inteligență artificială) să sprijine studiul ei, enumeră verificările de care are nevoie și propune o idee de proiect.
 
-## O întrebare deschisă {h=23a0a79c}
+## O întrebare de cercetare deschisă {h=58236429}
 
 Întrebarea deschisă este dacă cozile randamentelor Bitcoin au devenit mai subțiri pe măsură ce piața s-a maturizat. Piața a cîștigat mai mulți participanți, contracte futures din 2017 și fonduri spot tranzacționate la bursă (ETF, *exchange-traded funds*) din 2024. Dacă cozile au devenit mai subțiri, modelele de risc estimate pe date vechi supraestimează riscul de azi.
 

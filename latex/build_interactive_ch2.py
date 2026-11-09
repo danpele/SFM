@@ -92,13 +92,13 @@ def widgets_old(lang):
 
 # table and worked-example blocks: (anchor, frame number in the EN deck (RO: +1, one more acronym frame), section key,
 # chart block that carries it on the web lecture, title check EN, title check RO)
-XBLOCKS = [('rare-moves', 13, 'norm', 'normal-pdf', 'How Rare', 'Frecvența variațiilor'),
+XBLOCKS = [('rare-moves', 13, 'norm', 'normal-pdf', 'Frequency of Large Moves', 'Frecvența variațiilor'),
            ('large-losses', 14, 'norm', 'normal-pdf', 'Large Losses', 'pierderile mari'),
            ('bet-100', 19, 'logn', 'lognormal', '100 Lei', '100 de lei'),
            ('moments', 30, 'mom', 'dax-density', 'Moments, 2010', 'momente, 2010'),
            ('jb', 35, 'jb', 'qq-normal', 'Jarque', 'Jarque'),
            ('t-fit-table', 45, 't', 't-fit', 'Degrees of Freedom', 'gradele de libertate'),
-           ('sigma-table', 52, 'sf', 'sigma-days', 'Heavy Tails, Counted', 'cozile groase în cifre'),
+           ('sigma-table', 52, 'sf', 'sigma-days', 'Heavy Tails, Number of', 'cozile groase, numărul zilelor'),
            ('agg-table', 54, 'sf', 'aggregation', 'Aggregational Gaussianity', 'gaussianitatea agregată'),
            ('ljung-box', 59, 'sf', 'acf', 'Weak Autocorrelation', 'autocorelația slabă'),
            ('facts-table', 65, 'sf', 'gain-loss', 'Six Stylised Facts in Eight', 'șase fapte stilizate în opt')]
@@ -647,7 +647,7 @@ TEXT_JS['en'] += r"""Object.assign(window.CH2_TEXT, {
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch2-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch2-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH2_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH2_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

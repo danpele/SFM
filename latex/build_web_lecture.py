@@ -56,15 +56,15 @@ VER = '20261109m'
 L = {
  'ro': dict(html_lang='ro', course='Statistica piețelor financiare', chapter='Capitolul', back='Site-ul cursului', pdf_btn='PDF-ul cursului',
             ql='Quantlets', inter='Pagina interactivă', toc='Cuprins', slide='Slide-ul', pdf_slide='Slide {n} în PDF', ask='Întrebare pentru sală',
-            answer='Răspuns', site='../index_ro.html#chapters', ticket='Verifică-te', back_link='Înapoi',
+            answer='Răspuns', site='../index_ro.html#chapters', ticket='Autoevaluare', back_link='Înapoi',
             brief='Pe scurt', synth='Sinteza secțiunii', bib='Bibliografie',
-            intro='Introducere', goals='Ce veți putea face', plan='Planul capitolului', tr='traducere', live='Graficul interactiv',
+            intro='Introducere', goals='Rezultatele învățării', plan='Planul capitolului', tr='traducere', live='Graficul interactiv',
             thm=dict(defn='Definiție', thm='Teoremă', prop='Propoziție', rmk='Observație')),
  'en': dict(html_lang='en', course='Statistics of Financial Markets', chapter='Chapter', back='Course site', pdf_btn='Lecture PDF',
             ql='Quantlets', inter='Interactive page', toc='Contents', slide='Slide', pdf_slide='Slide {n} in the PDF', ask='Question for the room',
-            answer='Answer', site='../index.html#chapters', ticket='Check Yourself', back_link='Back',
+            answer='Answer', site='../index.html#chapters', ticket='Self-Assessment', back_link='Back',
             brief='In brief', synth='Section summary', bib='References',
-            intro='Introduction', goals='What you will be able to do', plan='Chapter plan', tr='translation', live='Interactive chart',
+            intro='Introduction', goals='Learning outcomes', plan='Chapter plan', tr='translation', live='Interactive chart',
             thm=dict(defn='Definition', thm='Theorem', prop='Proposition', rmk='Remark')),
 }
 

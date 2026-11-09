@@ -220,7 +220,7 @@ def crow(k):
             f'@{{c.{k}.n4}} & $@{{c.{k}.e4}}$')
 
 
-D.frame(T('How Rare Are the Worst Days under the Normal Law?', 'Raritatea celor mai proaste zile în distribuția Normală'), table(
+D.frame(T('The Largest Daily Losses under the Normal Distribution', 'Cele mai mari pierderi zilnice în ipoteza distribuției Normale'), table(
     'llrrrrr', T('& worst day & loss (\\%) & $z$ & Normal: once in (years) & days below $-4\\sigma$ & expected',
                  '& cea mai proastă zi & pierdere (\\%) & $z$ & distribuția Normală: o dată la (ani) & zile sub $-4\\sigma$ & așteptat'),
     [crow(k) for k in ASSETS], size='scriptsize') + items(
@@ -232,7 +232,7 @@ D.frame(T('How Rare Are the Worst Days under the Normal Law?', 'Raritatea celor 
     T('Losses beyond $4\\sigma$: the Normal law expects fewer than one day per series; we see between @{n4.min} and @{n4.max}',
       'Pierderi dincolo de $4\\sigma$: distribuția Normală prevede mai puțin de o zi pe serie; observăm între @{n4.min} și @{n4.max}')) + ql('SFM_ch5_crashes'), 'footnotesize')
 
-D.frame(T('Where Extreme Value Theory Comes From', 'Originile teoriei valorilor extreme'), cols(items(
+D.frame(T('Origins of Extreme Value Theory', 'Originile teoriei valorilor extreme'), cols(items(
     (T('\\textbf{EVT} (extreme value theory): the statistics of the largest values of a sample', '\\textbf{EVT} (extreme value theory, teoria valorilor extreme): statistica celor mai mari valori dintr-un eșantion'),
      [T('first used for floods, storms and the strength of materials', 'folosită întîi pentru inundații, furtuni și rezistența materialelor'),
       T('\\refGumbel: the yearly maximum of a river decides the height of a dam', '\\refGumbel: nivelul maxim anual al unui rîu determină înălțimea unui baraj')]),
@@ -275,7 +275,7 @@ D.frame(T('Light and Heavy Tails', 'Cozi subțiri și cozi groase'), items(
      [T('examples: Pareto, Student-t, the $\\alpha$-stable laws of Chapter 3', 'exemple: Pareto, Student-t, legile $\\alpha$-stabile din Capitolul 3'),
       T('$\\alpha > 0$ is the \\textbf{tail index}: the smaller $\\alpha$, the heavier the tail', '$\\alpha > 0$ este \\textbf{tail index-ul}: cu cît $\\alpha$ este mai mic, cu atît coada este mai groasă')])))
 
-chart(T('Power Laws Fall Much More Slowly', 'Legile de putere scad mult mai încet'), 'sfm_ch5_light_heavy', 'SFM_ch5_tails_loglog', [
+chart(T('Power-Law Tails and Light Tails', 'Cozile de tip putere și cozile subțiri'), 'sfm_ch5_light_heavy', 'SFM_ch5_tails_loglog', [
     T('On log-log axes a power law is a straight line with slope $-\\alpha$; light tails bend down and vanish',
       'Pe axe log-log, o lege de putere este o dreaptă cu panta $-\\alpha$; cozile subțiri se curbează în jos și coboară rapid spre zero'),
     T('$P(X > 10)$: Normal $@{lh.n10}$, Exponential $@{lh.e10}$, Student-t with 3 degrees of freedom $@{lh.t10}$',
@@ -409,7 +409,7 @@ D.frame(T('Hill Estimates for Four Markets', 'Estimări Hill pentru patru piețe
       'SE din bootstrap pe blocuri este apropiată de cea i.i.d. pentru DAX, BET și Bitcoin, dar mai mare pentru S\\&P 500 ($@{h.sp500.se_block}$ față de $@{h.sp500.se_iid}$); estimările variază cu $k$ cu mai mult de o SE'),
     T('Last column: the Hill index of gains ($r_t > 0$), same $k$', 'Ultima coloană: indicele Hill al cîștigurilor ($r_t > 0$), același $k$')) + ql('SFM_ch5_hill'), 'footnotesize')
 
-D.frame(T('From the Tail Index to a Quantile', 'De la tail index-ul la o cuantilă'), items(
+D.frame(T('The Hill (Weissman) Quantile Estimator', 'Estimatorul de cuantilă Hill (Weissman)'), items(
     (T('\\textbf{Hill (Weissman) quantile} \\refWeissman: $\\hat x_p = L_{(k+1)}\\Big(\\dfrac{k}{n p}\\Big)^{1/\\hat\\alpha}$', '\\textbf{Cuantila Hill (Weissman)} \\refWeissman: $\\hat x_p = L_{(k+1)}\\Big(\\dfrac{k}{n p}\\Big)^{1/\\hat\\alpha}$'),
      [T('$\\hat x_p$: the loss exceeded with probability $p$; $k/n$: the share of losses above the threshold $L_{(k+1)}$', '$\\hat x_p$: pierderea depășită cu probabilitatea $p$; $k/n$: proporția pierderilor de peste pragul $L_{(k+1)}$'),
       T('extrapolated from the threshold with the power law; SFE Quantlet SFEhillquantile', 'extrapolată de la prag cu legea de putere; Quantlet-ul SFE SFEhillquantile')]),
@@ -553,7 +553,7 @@ D.frame(T('GEV Fits to Monthly Maxima', 'Ajustări GEV la maximele lunare'), tab
     T('$1/\\hat\\xi$ is a second estimate of the tail index; with only one loss per month it is less precise than Hill',
       '$1/\\hat\\xi$ este o a doua estimare a tail index-ului; cu o singură pierdere pe lună este mai puțin precisă decît estimatorul Hill')) + ql('SFM_ch5_gev_block_maxima'), 'footnotesize')
 
-chart(T('Does the GEV Fit? PP and QQ Plots', 'Se potrivește GEV? Grafice PP și QQ'), 'sfm_ch5_gev_ppqq', 'SFM_ch5_gev_block_maxima', [
+chart(T('Goodness of Fit of the GEV: PP and QQ Plots', 'Calitatea ajustării GEV: grafice PP și QQ'), 'sfm_ch5_gev_ppqq', 'SFM_ch5_gev_block_maxima', [
     T('\\textbf{PP plot}: fitted probability $H(m_{(i)})$ against the empirical $(i - 0.5)/n$; \\textbf{QQ plot}: observed maxima against fitted quantiles; S\\&P 500',
       '\\textbf{Graficul PP}: probabilitatea ajustată $H(m_{(i)})$ față de cea empirică $(i - 0{,}5)/n$; \\textbf{graficul QQ}: maximele observate față de cuantilele ajustate; S\\&P 500'),
     T('Both close to the 45-degree line; the QQ plot shows the few largest months (2008, 2020) a little above: the hardest part to fit',
@@ -581,7 +581,7 @@ def rrow(k):
     return (f'{NAMES[k]} & $@{{g.{k}.rl1}}$ & $@{{g.{k}.rl10}}$ & $[@{{g.{k}.rl10_lo}}⟦, ||; ⟧@{{g.{k}.rl10_hi}}]$ & $@{{g.{k}.rl50}}$ & $@{{g.{k}.max}}$ & $@{{g.{k}.years}}$')
 
 
-D.frame(T('How Large Is a 10-Year Loss?', 'Mărimea pierderii de 10 ani'), table(
+D.frame(T('Return Levels of Daily Losses: 1, 10 and 50 Years', 'Return levels ale pierderilor zilnice: 1, 10 și 50 de ani'), table(
     'lrrrrrr', T('& 1 year & 10 years & 95\\% interval & 50 years & largest observed & years of data',
                  '& 1 an & 10 ani & interval 95\\% & 50 de ani & cea mai mare observată & ani de date'),
     [rrow(k) for k in ASSETS], size='footnotesize') + items(
@@ -654,13 +654,13 @@ D.frame(T('GPD Fits above the 90\\% Quantile', 'Ajustări GPD peste cuantila de 
      [T('above the 90\\% quantile, a GPD with a free scale $\\beta$ needs a smaller $\\xi$', 'peste cuantila de 90\\%, o GPD cu scala liberă $\\beta$ are nevoie de un $\\xi$ mai mic'),
       T('the tail index is hard to pin down: report more than one estimator', 'tail index-ul este greu de estimat precis: raportați mai mulți estimatori')])) + ql('SFM_ch5_pot_gpd'), 'footnotesize')
 
-chart(T('Does the GPD Fit? PP and QQ Plots', 'Se potrivește GPD? Grafice PP și QQ'), 'sfm_ch5_gpd_ppqq', 'SFM_ch5_pot_gpd', [
+chart(T('Goodness of Fit of the GPD: PP and QQ Plots', 'Calitatea ajustării GPD: grafice PP și QQ'), 'sfm_ch5_gpd_ppqq', 'SFM_ch5_pot_gpd', [
     T('S\\&P 500 excesses over $u$: the PP plot is on the line; the QQ plot is on the line up to excesses of about 4\\%',
       'Excesele S\\&P 500 peste $u$: punctele graficului PP stau pe dreaptă; cele ale graficului QQ, pînă la excese de circa 4\\%'),
     T('The largest excess ($@{gq.y}\\%$, March 2020) against a fitted quantile of $@{gq.q}\\%$; ported from the SFE Quantlets SFEtailGPareto\\_pp and \\_qq',
       'Cel mai mare exces ($@{gq.y}\\%$, martie 2020) față de o cuantilă ajustată de $@{gq.q}\\%$; portat din Quantlet-urile SFE SFEtailGPareto\\_pp și \\_qq')], h='0.54\\textheight')
 
-D.frame(T('From the GPD to the Tail of the Losses', 'De la GPD la coada pierderilor'), items(
+D.frame(T('The GPD Tail Estimator of Losses', 'Estimatorul GPD al cozii pierderilor'), items(
     (T('For $x > u$: $P(L > x) = P(L > u)\\,P(L > x \\mid L > u)$', 'Pentru $x > u$: $P(L > x) = P(L > u)\\,P(L > x \\mid L > u)$'),
      [T('estimate $P(L > u)$ by $N_u/n$ and $P(L > x \\mid L > u)$ by the GPD', 'estimăm $P(L > u)$ prin $N_u/n$ și $P(L > x \\mid L > u)$ prin GPD')]),
     (T('\\textbf{Tail estimator}: $\\hat{\\bar F}(x) = \\dfrac{N_u}{n}\\Big(1 + \\hat\\xi\\,\\dfrac{x - u}{\\hat\\beta}\\Big)^{-1/\\hat\\xi}$, $x > u$',
@@ -786,7 +786,7 @@ D.frame(T('Counting the Exceedances', 'Numărarea depășirilor'), table(
     T('A VaR estimated once ignores the changing volatility: conditional EVT (GARCH + POT) \\refMF, Chapters 9 and 10',
       'Un VaR estimat o singură dată ignoră variația volatilității în timp: EVT condiționată (GARCH + POT) \\refMF, Capitolele 9 și 10')) + ql('SFM_ch5_evt_var'), 'footnotesize')
 
-D.frame(T('What EVT Can and Cannot Do', 'Posibilitățile și limitele EVT'), items(
+D.frame(T('Strengths and Limitations of EVT', 'Posibilitățile și limitele EVT'), items(
     (T('\\textbf{Can}: give a principled model of the tail and extrapolate beyond the largest observed loss', '\\textbf{Poate}: să ofere un model teoretic fundamentat al cozii și să extrapoleze dincolo de cea mai mare pierdere observată'),
      [T('stable VaR and ES at 0.1\\% where historical simulation has only a handful of points', 'VaR și ES stabile la 0,1\\%, acolo unde simularea istorică are doar cîteva puncte')]),
     (T('\\textbf{Cannot}: remove the uncertainty of the far tail', '\\textbf{Nu poate}: să elimine incertitudinea cozii îndepărtate'),
@@ -801,7 +801,7 @@ D.frame(T('What EVT Can and Cannot Do', 'Posibilitățile și limitele EVT'), it
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Has the tail of BET losses changed as the Bucharest market grew?}', '\\textbf{S-a schimbat coada pierderilor BET pe măsură ce piața din București a crescut?}'),
      [T('Hill index, $k = 2.5\\%$ of $n$, @{bp.before.y0}--@{bp.before.y1}: $\\hat\\alpha = @{bp.before.alpha}$ (block SE $@{bp.before.se_block}$)', 'indicele Hill, $k = 2.5\\%$ din $n$, @{bp.before.y0}--@{bp.before.y1}: $\\hat\\alpha = @{bp.before.alpha}$ (SE pe blocuri $@{bp.before.se_block}$)'),
       T('@{bp.after.y0}--@{bp.after.y1}: $\\hat\\alpha = @{bp.after.alpha}$ (block SE $@{bp.after.se_block}$)', '@{bp.after.y0}--@{bp.after.y1}: $\\hat\\alpha = @{bp.after.alpha}$ (SE pe blocuri $@{bp.after.se_block}$)'),
@@ -865,7 +865,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'ES (POT) & $(\\mathrm{VaR}_p + \\beta - \\xi u)/(1 - \\xi)$'],
     size='footnotesize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a GPD fit gives $\\hat\\xi = 0.25$; which moments of the losses exist?', '\\textbf{Întrebare}: o ajustare GPD dă $\\hat\\xi = 0{,}25$; ce momente ale pierderilor există?'),
      [T('\\textbf{Answer}: $\\alpha = 1/\\xi = 4$: mean, variance and skewness exist; the kurtosis does not ($m < 4$ only)',
         '\\textbf{Răspuns}: $\\alpha = 1/\\xi = 4$: există media, varianța și asimetria; boltirea nu (doar $m < 4$)')]),

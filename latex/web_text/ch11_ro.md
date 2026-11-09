@@ -26,7 +26,7 @@ Funcția de autocorelație a randamentelor zilnice ale S&P 500 (albastru închis
 - **Explicați** cum schimbă $H$ scalarea riscului cu orizontul.
 
 @plan
-- De la piețe eficiente la piețe fractale | Ce lasă deschis EMH, cele cinci afirmații ale lui Peters, crahul din 1987 și comparația EMH, FMH și AMH.
+- Piețe eficiente și piețe fractale | Ce lasă deschis EMH, cele cinci afirmații ale lui Peters, crahul din 1987 și comparația EMH, FMH și AMH.
 - Autosimilaritate și fractali | Mandelbrot, dimensiunea fractală, procesele autosimilare și scalarea randamentelor pe $h$ zile.
 - Hurst, Nilul și statistica R/S | Problema rezervoarelor de pe Nil, statistica R/S calculată pas cu pas și deplasarea ei în eșantioane mici.
 - Memoria lungă: definiții și modele | Autocorelații nesumabile, mișcarea browniană fracționară, zgomotul gaussian fracționar și ARFIMA.
@@ -38,11 +38,11 @@ Funcția de autocorelație a randamentelor zilnice ale S&P 500 (albastru închis
 - AI pentru descoperire științifică | O întrebare deschisă despre exponentul Hurst înaintea crizelor, ajutorul posibil al AI și verificările necesare.
 - Rezumat | Ideile principale, formulele și întrebări de autoevaluare.
 
-# De la piețe eficiente la piețe fractale
+# Piețe eficiente și piețe fractale
 
 Secțiunea pornește de la ipoteza pieței eficiente și de la faptele pe care modelul ei standard, mersul aleator cu creșteri Normale, nu le explică. Introduce apoi ipoteza pieței fractale, care descrie piața prin investitorii ei și prin orizonturile lor, o ilustrează cu crahul din 1987 și arată ce consecințe statistice ale ei pot fi testate. Secțiunea se încheie cu o comparație între ipoteza pieței eficiente, ipoteza pieței fractale și ipoteza piețelor adaptive.
 
-## Întrebări lăsate deschise de EMH {h=7341ede5}
+## Limitele EMH {h=f1c72a6b}
 
 Ipoteza pieței eficiente (EMH, *efficient market hypothesis*) afirmă că prețurile reflectă informația disponibilă [@Fama1970]. În forma ei slabă, studiată în [Capitolul 7](ch7_ro.html), randamentele trecute nu ajută la anticiparea randamentelor viitoare. Modelul statistic asociat este mersul aleator al prețurilor logaritmice, cu creșteri independente. În limbajul acestui capitol, mersul aleator corespunde exponentului Hurst $H = 0{,}5$, iar orice abatere sistematică de la 0,5 indică o formă de dependență pe termen lung.
 
@@ -98,7 +98,7 @@ EMH tratează piața ca pe un singur investitor reprezentativ și implică $H = 
 
 Secțiunea introduce limbajul geometric al capitolului. Pornește de la lucrările lui Benoît Mandelbrot, definește dimensiunea fractală și procesele autosimilare și arată că autosimilaritatea are o consecință directă pentru randamente: abaterea standard a randamentelor pe $h$ zile crește ca $h^H$. Panta acestei creșteri, estimată pentru S&P 500, BET și Bitcoin, dă o primă estimare a exponentului Hurst.
 
-## Benoît Mandelbrot: măsurarea neregularității {h=f233e018}
+## Benoît Mandelbrot și măsurarea neregularității {h=b645bf8f}
 
 Benoît Mandelbrot (1924–2010) a adus în finanțe ideea că neregularitatea poate fi măsurată. În @Mandelbrot1963 a arătat că variațiile prețului bumbacului au cozi groase și că distribuția lor arată asemănător la scară zilnică, lunară și anuală. Modelul propus atunci au fost distribuțiile $\alpha$-stabile, subiectul [Capitolului 3](ch3_ro.html), care sînt invariante, pînă la o rescalare, la însumarea variabilelor independente.
 
@@ -226,7 +226,7 @@ cu o constantă $C > 0$ și parametrul de memorie (*memory parameter*) $0 < d < 
 
 Memoria scurtă este cea a modelelor ARMA (*autoregressive moving average*). Pentru un AR(1) cu coeficientul $\phi$, $\rho(k) = \phi^k$ scade exponențial, iar suma $\sum_k |\phi|^k$ este finită, egală cu $1/(1 - |\phi|)$. Diferența dintre $\phi^k$ și $k^{2d-1}$ este diferența dintre un șoc uitat după cîteva perioade și un șoc care contează încă după sute de perioade. Legătura cu exponentul Hurst este $d = H - 1/2$.
 
-## Exemplu rezolvat: cît de repede se stinge memoria? {h=0230be3a}
+## Exemplu rezolvat: descreșterea autocorelației la memoria lungă și la memoria scurtă {h=274c64ba}
 
 Exemplul compară două procese cu aceeași autocorelație de ordinul întîi. Primul este un zgomot gaussian fracționar cu $H = 0{,}8$, modelul cu memorie lungă definit cîteva slide-uri mai departe. Autocorelația lui de ordinul întîi este $\rho(1) = 2^{2H-1} - 1 = 2^{0{,}6} - 1 = 0{,}516$, iar la laguri mari autocorelațiile sînt $\rho(10) = 0{,}191$, $\rho(50) = 0{,}100$ și $\rho(100) = 0{,}076$.
 
@@ -510,7 +510,7 @@ Exponenții randamentelor absolute se află mult deasupra benzilor, între 0,73 
 
 Testul permutării decide unde se află memoria randamentelor absolute. Permutarea păstrează exact distribuția fiecărei serii, inclusiv cozile groase, dar distruge ordinea zilelor. După permutare, exponenții scad la valori între 0,46 și 0,55, toți în interiorul benzilor. Memoria se află, așadar, în ordinea zilelor, în succesiunea perioadelor calme și agitate, nu în forma distribuției.
 
-## Interpretarea rezultatelor: ce este previzibil? {h=c0ccd56c}
+## Interpretarea rezultatelor: previzibilitatea randamentelor și a volatilității {h=f418f0f1}
 
 Randamentele nu au memorie lungă la S&P 500, DAX, TLV și SNP, iar Bitcoin se află la limita benzii. BET este excepția: randamentele lui arată o persistență slabă, în acord cu testele raportului varianțelor din [Capitolul 7](ch7_ro.html). O parte din această persistență se datorează tranzacționării reduse din primii ani ai indicelui, cum arată estimările pe ferestre mobile din [Secțiunea 8](#sec-8).
 
@@ -534,7 +534,7 @@ Memoria lungă a pieței se află în volatilitate, nu în direcție. Randamente
 
 Ipoteza piețelor adaptive și ipoteza pieței fractale prezic, amîndouă, că memoria unei piețe se schimbă în timp. Secțiunea estimează exponenții DFA ai randamentelor și ai randamentelor absolute pe ferestre mobile pentru S&P 500, BET și Bitcoin, interpretează traiectoriile obținute, discută cazul Bitcoin în literatură și enumeră limitele acestui tip de analiză.
 
-## Se schimbă eficiența în timp? {h=6309aec0}
+## Variația în timp a eficienței pieței {h=abe81ac6}
 
 Dacă eficiența unei piețe depinde de mediul ei, cum susține AMH, sau de diversitatea orizonturilor, cum susține FMH, atunci exponentul Hurst nu este o constantă a pieței, ci o mărime care variază în timp. Literatura a urmărit această idee cu estimări pe ferestre mobile (*rolling windows*). @CajueiroTabak2004 au estimat exponenți Hurst pe ferestre mobile pentru piețe bursiere emergente, pentru a testa dacă acestea devin mai eficiente în timp. @Bariviera2017 a aplicat DFA pe ferestre mobile randamentelor și volatilității Bitcoin.
 
@@ -558,7 +558,7 @@ Pentru BET, 20% dintre ferestre se află deasupra benzii. Exponentul mediu al ra
 
 Pentru Bitcoin, ferestrele încep la 13 iunie 2017. Exponentul randamentelor variază între 0,45 și 0,59, iar doar 1% dintre ferestre se află deasupra benzii. Exponentul randamentelor absolute scade în timp, de la valori în jurul a 0,8 la aproximativ 0,6–0,7, dar rămîne peste bandă.
 
-## Studiu de caz: este Bitcoin eficient? {h=66727b71}
+## Studiu de caz: eficiența pieței Bitcoin {h=6826558f}
 
 Bitcoin oferă un caz de studiu util, deoarece literatura despre eficiența lui s-a dezvoltat rapid, cu rezultate aparent contradictorii. @Urquhart2016 a aplicat mai multe teste de eficiență, printre care R/S, randamentelor Bitcoin din 2010–2016. Concluzia a fost că Bitcoin este ineficient pe întregul eșantion, dar evoluează spre eficiență în ultimii ani ai acestuia.
 
@@ -602,7 +602,7 @@ Riscul pe $h$ zile al unor randamente autosimilare crește ca $h^H$. Pentru o vo
 
 Secțiunea pornește de la o întrebare deschisă ridicată de rezultatele capitolului, dacă exponentul Hurst se schimbă înaintea unei crize sau doar după ea, și arată unde pot ajuta instrumentele AI un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=03fb3a28}
+## O întrebare de cercetare deschisă {h=4ee6af9f}
 
 Întrebarea este dacă schimbarea exponentului Hurst apare înaintea unei crize sau doar după ea. FMH prezice o prăbușire a orizonturilor în crize, iar în datele capitolului exponentul randamentelor absolute crește în timpul și după crizele din 2008 și 2020. Dacă exponentul s-ar schimba sistematic și înainte, el ar putea servi ca indicator de avertizare timpurie.
 

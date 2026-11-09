@@ -31,7 +31,7 @@ VaR 1% al șase modele estimate, împărțit la VaR 1% empiric, pentru BET, S&P 
 [Seminarul 6](../RO/Seminarii/seminar6_selectia_modelului_managementul_riscului_ro.pdf) are loc înaintea acestui curs și exersează aceleași instrumente pe date.
 
 @plan
-- Candidații | Șapte distribuții pentru randamentele zilnice, cozile lor și statisticile pe care orice model trebuie să le reproducă.
+- Distribuțiile candidate | Șapte distribuții pentru randamentele zilnice, cozile lor și statisticile pe care orice model trebuie să le reproducă.
 - Recapitulare: metoda verosimilității maxime | Log-verosimilitatea, cazul Normal în formă analitică, estimările numerice, log-verosimilitatea profil a lui ν și problemele numerice.
 - Modele imbricate: testul raportului de verosimilitate | Perechi imbricate, teorema lui Wilks, cazul de frontieră al distribuției Normale în Student-t și testul Vuong.
 - Criterii informaționale: AIC și BIC | Argumentul lui Akaike, AIC, BIC, ΔAIC și ponderile Akaike pe șapte serii.
@@ -43,7 +43,7 @@ VaR 1% al șase modele estimate, împărțit la VaR 1% empiric, pentru BET, S&P 
 - AI pentru descoperire științifică | O întrebare deschisă despre randamentele filtrate, contribuția posibilă a AI și verificările necesare.
 - Rezumat | Ideile, formulele de reținut și întrebările de autoevaluare.
 
-# Candidații
+# Distribuțiile candidate
 
 Un model statistic al randamentelor se alege dintr-o listă de candidați, iar lista însăși este prima decizie de modelare. Această secțiune prezintă șapte distribuții folosite în literatură pentru randamentele zilnice, arată cît de diferit tratează ele pierderile mari, deși se aseamănă în centru, și fixează faptele empirice pe care orice candidat trebuie să le reproducă: asimetria, boltirea mare și eroarea ocazională din date care poate arăta ca un crah al pieței.
 
@@ -63,7 +63,7 @@ Amestecul Normal al lui @Kon1984 extrage fiecare zi din una dintre două distrib
 
 Distribuțiile stabile din Capitolul 3 au cozi de tip putere cu indicele $\alpha < 2$, cele mai groase din listă, și varianță infinită. Candidații diferă prin numărul de parametri, de la 2 pentru distribuția Normală la 5 pentru amestecul cu două componente, iar acest număr va conta la compararea modelelor: un model cu mai mulți parametri se poate ajusta întotdeauna cel puțin la fel de bine pe același eșantion.
 
-## Candidații comparați {h=7032958a}
+## Compararea distribuțiilor candidate {h=049511bc}
 
 Graficul desenează cîte un membru al fiecărei familii, toți standardizați la media 0 și varianța 1; distribuția stabilă, care nu are varianță, este scalată la același interval intercuartilic ca distribuția Normală. Panoul din stînga arată densitățile pe o scară liniară, cel din dreapta aceleași densități pe o scară verticală logaritmică, care face vizibile cozile.
 
@@ -79,7 +79,7 @@ Distribuția Student-t atribuie, așadar, acestei pierderi o probabilitate de ci
 
 **Întrebare pentru sală**: dacă toți candidații se potrivesc bine în centru, de ce nu îl păstrăm pe cel mai simplu? **Răspuns**: cel mai simplu, distribuția Normală, greșește exact în zona care determină cerințele de capital și de marjă. Un model bun pentru zilele obișnuite poate fi inutil pentru zilele care contează pentru risc.
 
-## Statisticile SFESumm: reperele oricărui model {h=260a849b}
+## Statisticile de referință pentru modele: SFESumm {h=bfbea26e}
 
 Înainte de a estima un model, datele trebuie descrise. Graficul arată randamentele logaritmice lunare ale DAX, calculate între primele zile de tranzacționare ale lunilor consecutive. Segmentul mai închis este eșantionul Quantlet-ului clasic SFESumm din manualul @FrankeHardleHafner2019, iulie 2004 – mai 2014, cu $n = 119$ luni; segmentul mai deschis extinde seria pînă în septembrie 2026.
 
@@ -191,7 +191,7 @@ Cum $\ell$ este un logaritm, $LR$ este de două ori logaritmul raportului dintre
 
 La nivelul de 5%, $H_0$ se respinge cînd $LR$ depășește cuantila de 95% $\chi^2_{0{,}95}(d)$, care este 3,84 pentru o restricție și 5,99 pentru două. Aceste praguri sînt mici în comparație cu diferențele de log-verosimilitate din secțiunea anterioară, ceea ce sugerează deja că multe restricții vor fi respinse pe date zilnice.
 
-## Exemplu lucrat: este necesar parametrul de asimetrie? {h=667de225}
+## Exemplu lucrat: testarea parametrului de asimetrie {h=74207ea4}
 
 Pentru S&P 500, Student-t ajunge la $\ell = -9\,848$, iar skewed-t la $\ell = -9\,838$. Skewed-t are un parametru în plus, deci $d = 1$. Din log-verosimilitățile nerotunjite, $LR = 19{,}63$, mult peste 3,84, cu un p-value sub 0,001: restricția $\lambda = 0$ este respinsă, iar S&P 500 are nevoie de un parametru de asimetrie. DAX dă același răspuns, cu $LR = 20{,}92$ și $p < 0{,}001$.
 
@@ -223,7 +223,7 @@ Testul raportului de verosimilitate compară modele imbricate prin dublul cîșt
 
 Testele compară cîte două modele și răspund la o întrebare de tip da sau nu. Criteriile informaționale ordonează oricîți candidați, imbricați sau nu, pe o scară comună. Această secțiune prezintă argumentul lui Akaike pornind de la divergența Kullback–Leibler, definește AIC și BIC, introduce ΔAIC și ponderile Akaike și le aplică celor șapte candidați pe S&P 500 și pe alte șase serii.
 
-## Ideea lui Akaike {h=432dd3f8}
+## Abordarea lui Akaike: divergența Kullback–Leibler {h=e33c0d94}
 
 Hirotugu Akaike a întrebat ce model va descrie cel mai bine date noi, nu ce model este adevărat. El a măsurat distanța de la densitatea adevărată $g$ la un model $f$ prin divergența Kullback–Leibler [@KullbackLeibler1951],
 
@@ -289,7 +289,7 @@ AIC și BIC ordonează toți candidații estimați pe aceleași date după log-v
 
 Clasamentul spune care candidat este cel mai bun dintre cei considerați; nu spune dacă cel mai bun se potrivește datelor. Testele de concordanță (*goodness of fit*) compară un singur model estimat cu datele. Această secțiune trece de la testul $\chi^2$ al lui Pearson la testele bazate pe funcția de repartiție empirică, tratează problema parametrilor estimați, compară puterea testelor Kolmogorov–Smirnov, Cramér–von Mises și Anderson–Darling și le aplică pe S&P 500.
 
-## De la Pearson la funcția de repartiție empirică {h=1d852223}
+## Testul χ² al lui Pearson și funcția de repartiție empirică {h=def008d0}
 
 Primul test de concordanță este testul $\chi^2$ al lui @Pearson1900. Datele se grupează în clase, iar frecvența observată în fiecare clasă se compară cu frecvența așteptată sub model. Testul este general, dar rezultatul lui depinde de alegerea claselor, iar cozile, unde cad puține observații, sînt comasate în clase largi sau slab reprezentate, un neajuns serios pentru datele cu cozi groase.
 
@@ -335,7 +335,7 @@ $$ A^2 = n\int \frac{[F_n - F]^2}{F(1 - F)}\, dF. $$ {#eq:ad}
 
 Ponderea $1/[F(1 - F)]$ este mică în centru, unde $F$ este aproape de $1/2$, și foarte mare în cozi, unde $F$ este aproape de 0 sau de 1. O distanță de 0,001 la un nivel de probabilitate de 0,001 este o eroare relativă de 100%, iar Anderson–Darling o tratează ca atare. Formula de calcul a lui @AndersonDarling1954 este $A^2 = -n - \frac{1}{n}\sum_i (2i - 1)[\ln u_{(i)} + \ln(1 - u_{(n + 1 - i)})]$, cu $u_{(i)} = F(r_{(i)})$ ca la testul KS. Pentru ambele statistici, valorile mari indică o ajustare slabă.
 
-## Slăbiciunea testului KS în cozi {h=2fa1a835}
+## Puterea redusă a testului KS în cozi {h=75409230}
 
 Graficul compară S&P 500 cu distribuția Normală estimată. Panoul din stînga arată diferența brută $F_n(x) - F(x)$. Ea este cea mai mare în valoare absolută la $x = -0{,}41\%$, aproape de centru, unde probabilitatea în model este $F = 36\%$, iar mărimea ei acolo este statistica KS, $D_n = 0{,}093$. Dincolo de aproximativ ±3%, diferența brută este aproape zero.
 
@@ -375,7 +375,7 @@ Testele EDF compară funcția de repartiție estimată cu cea empirică: KS prin
 
 Statisticile de test comprimă ajustarea într-un singur număr; graficele arată unde se află nepotrivirea. Această secțiune definește graficul probabilitate–probabilitate (PP) și graficul cuantilă–cuantilă (QQ), explică de ce ele pun accentul pe zone diferite ale distribuției și le aplică pe S&P 500, BET, Bitcoin și Banca Transilvania.
 
-## Două moduri de a evalua vizual ajustarea {h=07c42dc1}
+## Definițiile graficelor PP și QQ {h=44407290}
 
 Un grafic PP (probabilitate–probabilitate) desenează punctele $(p_i, F(r_{(i)}))$, unde $p_i = (i - 0{,}5)/n$ este probabilitatea empirică a celui de-al $i$-lea cel mai mic randament, iar $F(r_{(i)})$ probabilitatea lui în model. Sub un model corect, punctele se află pe diagonală. Ambele axe merg de la 0 la 1, deci diferențele din centrul distribuției se văd clar, în timp ce cozile sînt înghesuite în cele două colțuri. Graficul PP este echivalentul vizual al testului KS: cea mai mare distanță pe verticală față de diagonală este apropiată de $D_n$.
 
@@ -587,7 +587,7 @@ Cîștigătorul AIC pentru S&P 500 este stabil la reeșantionare, dar VaR 1% pe 
 
 Capitolul compară distribuții pe randamente brute, ale căror cozi groase provin în parte din volatilitatea variabilă. Această secțiune formulează o întrebare de cercetare deschisă despre randamentele standardizate, descrie cum pot ajuta asistenții AI un astfel de studiu, enumeră verificările pe care le cer rezultatele lor și propune un proiect de echipă.
 
-## O întrebare deschisă {h=6f081cb4}
+## O întrebare de cercetare deschisă {h=a23b9c3d}
 
 Mai cîștigă NIG după eliminarea efectului de volatility clustering? O parte din cozile groase ale randamentelor zilnice provine din volatilitatea variabilă în timp, cum a arătat Capitolul 2: un amestec de perioade calme și agitate are cozi mai groase decît fiecare perioadă luată separat. Randamentele împărțite la o prognoză de volatilitate, de exemplu prognoza EMA cu $\lambda = 0{,}96$ din secțiunea anterioară, au cozi mai subțiri, iar cea mai bună distribuție pentru ele poate diferi de cea mai bună distribuție pentru randamentele brute.
 

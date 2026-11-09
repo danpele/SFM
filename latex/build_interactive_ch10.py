@@ -31,14 +31,14 @@ XBLOCKS = [('normal-we', 16, 'def', 'def'), ('horizon', 18, 'def', 'def'), ('hs-
 ORDER = ['def', 'normal-we', 'horizon', 'hs-we', 'precision', 'cf-we', 'evt-we', 'curves', 'var-table', 'es-table', 'cond-we', 'cond-table', 'rolling', 'stress-table',
          'vc-we', 'corr', 'tail-dep', 'copula-we', 'copula', 'port-table', 'binom', 'kupiec-we', 'kupiec-sp', 'chris-we', 'basel', 'hits', 'bt-sd', 'bt-bb', 'score',
          'traffic', 'es-bt']
-TITLES = {'normal-we': 'Exemplu rezolvat: VaR și ES Normale pentru S&P 500', 'horizon': 'De la o zi la zece zile', 'hs-we': 'Simularea istorică',
+TITLES = {'normal-we': 'Exemplu rezolvat: VaR și ES Normale pentru S&P 500', 'horizon': 'Scalarea VaR de la o zi la zece zile', 'hs-we': 'Simularea istorică',
           'precision': 'Precizia unui VaR istoric', 'cf-we': 'Dezvoltarea Cornish–Fisher', 'evt-we': 'EVT: peaks over threshold (Capitolul 5)',
           'var-table': 'VaR 1% pe metode, pentru șase serii', 'es-table': 'ES 2,5% pe metode, pentru șase serii', 'cond-we': 'Exemplu rezolvat: S&P 500 la 18 septembrie 2026',
           'cond-table': 'VaR și ES pentru ziua următoare, pe șase serii', 'stress-table': 'Perioade de stres: depășiri în 2008 și 2020', 'vc-we': 'Metoda varianță–covarianță',
           'tail-dep': 'Corelația și dependența în cozi', 'copula-we': 'Copula Gaussiană și copula t', 'port-table': 'VaR 1% și ES 2,5% ale portofoliului, pe metode',
           'kupiec-we': 'Testul POF al lui Kupiec', 'kupiec-sp': 'Testul Kupiec pe 21 de ani de prognoze pentru S&P 500', 'chris-we': 'Testul de independență al lui Christoffersen',
           'basel': 'Semaforul Basel', 'bt-sd': 'Rezultatele backtesting-ului: S&P 500 și DAX', 'bt-bb': 'Rezultatele backtesting-ului: BET și Bitcoin',
-          'score': 'Ordonarea prognozelor și zona de azi', 'es-bt': 'Backtesting pentru ES: Acerbi și Székely'}
+          'score': 'Clasamentul prognozelor și zona actuală a semaforului Basel', 'es-bt': 'Backtesting pentru ES: Acerbi și Székely'}
 
 PFX = {'def': 'df', 'normal-we': 'nw', 'horizon': 'hz', 'hs-we': 'hs', 'precision': 'pr', 'cf-we': 'cf', 'evt-we': 'ev', 'curves': 'cv', 'var-table': 'vt', 'es-table': 'et',
        'cond-we': 'cw', 'cond-table': 'ct', 'rolling': 'rv', 'stress-table': 'sx', 'vc-we': 'vc', 'corr': 'rc', 'tail-dep': 'td', 'copula-we': 'cq', 'copula': 'cp',
@@ -864,7 +864,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch10-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch10-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH10_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH10_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

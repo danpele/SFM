@@ -27,19 +27,19 @@ Share of bad credits by the state of the checking account in the South German Cr
 [Seminar 12](../EN/Seminars/seminar12_scoring_models.pdf) comes before this lecture and practises the same tools on data.
 
 @plan
-- What a Credit Score Is | The lending decision, the history of scoring, PD, LGD, EAD, the expected loss and the Basel IRB capital.
+- The Credit Score: Definition | The lending decision, the history of scoring, PD, LGD, EAD, the expected loss and the Basel IRB capital.
 - Default Data | The South German Credit data, coding errors in the original data, class imbalance and the split into training and test samples.
 - Weight of Evidence and Information Value | Recoding a variable by its evidence on default, binning rules and the ranking of the 20 variables.
 - Logistic Regression | Odds and log-odds, the logit model, odds ratios, a WoE scorecard and the correction for oversampling.
 - Linear Discriminant Analysis | Fisher's criterion, LDA as a probability model and its comparison with the logit.
-- From Model to Scorecard | Points to double the odds, the points of each attribute and the scores of the test sample.
+- Building the Scorecard | Points to double the odds, the points of each attribute and the scores of the test sample.
 - Validation | Confusion matrix, cut-offs and costs, ROC, AUC, Gini, CAP, KS, calibration, Brier score, cross-validation and drift.
 - Reject Inference and Fairness | The missing outcomes of rejected applicants and three criteria of fairness, on the Taiwan data.
 - Corporate Default: Altman and Merton | The Z-score from accounting ratios and the distance to default from market prices.
 - AI for Scientific Discovery | An open question on machine-learning scores, how AI can help and what must be checked.
 - Summary | Key ideas, key formulas and self-check questions.
 
-# What a Credit Score Is
+# The Credit Score: Definition
 
 A credit score is a number that orders applicants by their risk of not paying back. This section sets out the decision the score serves, recalls how statistical scoring replaced the judgement of loan officers, and defines the three risk parameters of a loan: the probability of default, the loss given default and the exposure at default. Their product is the expected loss, which the bank prices in; the Basel capital formula then measures the loss above that level in a bad year.
 
@@ -51,7 +51,7 @@ A credit score is a number computed from the data of an applicant that orders ap
 
 Scores differ by the client and by the information they use. Application scores are computed for new clients from the data in their application; behavioural scores are computed for existing clients from their payment history. Consumer scores rest on statistical models estimated on many small loans, while corporate scores use accounting ratios and market prices, as in the Altman and Merton models of [Section 9](#sec-9).
 
-## From Durand to FICO {h=a1c243a6}
+## Early Credit Scoring: Durand and FICO {h=1392cfb4}
 
 Statistical credit scoring is older than the computer. In 1941 @Durand1941 studied the instalment loans of US lenders and separated good from bad loans with the discriminant analysis that Fisher had proposed five years earlier; this is the first statistical credit-scoring study. In 1956 the engineer Bill Fair and the mathematician Earl Isaac founded Fair, Isaac and Company, today [FICO](https://www.myfico.com/credit-education/blog/history-of-the-fico-score). In 1989 the company introduced the FICO score, computed from the reports of the credit bureaus and ranging from 300 to 850 points, which became the standard consumer score in the United States.
 
@@ -309,7 +309,7 @@ The logit models the log-odds of default as a linear function of the variables a
 
 Fisher's linear discriminant was the first statistical method of credit scoring and remains the method behind the Altman Z-score. This section presents Fisher's criterion, shows that under Normality with a common covariance matrix it gives log-odds that are linear in the variables, exactly as in the logit, computes the discriminant direction by hand for two variables, and compares the two methods on the test sample.
 
-## Fisher's Idea (1936) {h=73b2b9f5}
+## Fisher's Discriminant Function (1936) {h=5d4c17c2}
 
 @Fisher1936 asked which linear combination $w^\top x$ of several measurements separates two groups best. He worked with measurements of iris flowers of different species; five years later Durand applied the same method to loans. The answer depends on what "best" means, and Fisher's choice was to compare the distance between the group means with the spread inside the groups, both measured along the direction $w$:
 
@@ -355,7 +355,7 @@ The chart plots duration against age for every credit, with a small random jitte
 
 The more striking feature is the overlap of the two clouds: good and bad credits occupy largely the same region of the plane. Duration and age carry information, but far too little to separate the groups; a useful scorecard needs more variables, such as the checking account and the credit history. The choice between LDA and logit matters much less than the choice of variables.
 
-## Logit or LDA? {h=fad75bfe}
+## Comparison of Logit and LDA {h=dc16e2a2}
 
 The table sets the two methods side by side. The logit models only $P(Y \mid x)$; LDA models the distribution of $x$ within each group, as Normal with a common $\Sigma$. The logit is estimated iteratively by maximum likelihood, LDA in closed form from means and covariances. When $x$ really is Normal, both are consistent, and LDA is more efficient because it uses the information in the distribution of $x$. When $x$ contains dummies, WoE values or skewed variables, the Normal assumption fails: the ranking of LDA usually remains good, but its PDs may be off, while the logit is unaffected.
 
@@ -367,7 +367,7 @@ For ranking applicants, the two methods are practically identical here. For PDs,
 
 Fisher's discriminant chooses the direction $w \propto S_W^{-1}(m_1 - m_0)$ that maximises the distance between the group means relative to the spread inside the groups. Under Normality with a common covariance matrix it gives log-odds linear in $x$, the same form as the logit, estimated differently. With duration and age, the two methods weigh one month of duration like about two years of age; with the six WoE variables, both reach a test AUC of 0.801, and the DeLong test finds no difference. [The next section](#sec-6) turns the fitted log-odds into a scorecard of points.
 
-# From Model to Scorecard
+# Building the Scorecard
 
 Banks rarely show PDs to their staff or to applicants; they show scores. This section explains how the log-odds of a model are rescaled into points with two conventions, a base score at given odds and the points needed to double the odds, how each attribute of an applicant receives its own points, and how the scores of the test sample are distributed.
 
@@ -565,7 +565,7 @@ The model is calibrated in every group: the mean PD of each group is close to it
 
 The chart thus illustrates the conflict of the previous frame in numbers. Equalising the approval rates would require different cut-offs by sex, which would break calibration within groups and would use the protected variable explicitly.
 
-## Case Study: Machine Learning and Unequal Credit {h=e865ba3e}
+## Case Study: Machine Learning and Inequality in Credit Access {h=0c86b033}
 
 @FusterEtAl2022 studied US mortgages and predicted default both with a traditional logit and with machine-learning models. Their question goes beyond accuracy: when a lender switches to the more accurate model, who gains and who loses?
 
@@ -625,7 +625,7 @@ The left panel of the chart simulates 40 paths of the asset value over one year,
 
 The right panel draws the one-year PD against leverage $D/V$ for three asset volatilities. The PD is almost zero at low leverage and rises steeply between a leverage of 70% and 90%. The higher the volatility, the earlier the rise: a firm with volatile assets becomes risky at a leverage that would be harmless for a firm with stable assets. This is the content of the distance to default, leverage scaled by volatility.
 
-## Case Study: How Good Is the Merton Model? {h=cc346fb2}
+## Case Study: Predictive Accuracy of the Merton Model {h=ed33591a}
 
 @BharathShumway2008 tested the Merton model on US firms. They compared the Merton DD, obtained by solving the option-pricing equations, with a "naive" DD that has the same functional form but replaces the solution with simple approximations of the asset value and its volatility. Both were used in hazard models of default and in out-of-sample forecasts, and compared with the information in credit default swap (CDS) spreads and bond yields.
 
@@ -641,7 +641,7 @@ The Altman Z-score is Fisher's discriminant applied to five accounting ratios: t
 
 The last section of each chapter takes an open research question in its field and shows how AI tools can speed up a study of it, and which checks remain the researcher's job. For credit scoring, the question is whether flexible machine-learning scores improve default prediction enough to justify what they cost in transparency and fairness.
 
-## An Open Question {h=377c724a}
+## An Open Research Question {h=d2f4f1ec}
 
 The question of this chapter is: do flexible machine-learning scores improve default prediction enough to justify their cost in transparency and fairness? The evidence of the chapter frames it. The WoE logit and LDA reach a cross-validated test AUC of about 0.764 on the German data. Large benchmarks find significant gains for ensembles of classifiers [@LessmannEtAl2015]; the gains may be unequal across groups of borrowers [@FusterEtAl2022]; and support vector machines have been applied to default prediction by @ChenHardleMoro2011.
 
@@ -693,7 +693,7 @@ The table collects the formulas of the chapter. The expected loss is @eq:el; the
 
 For validation, AUC is the probability @eq:auc that a random bad has a higher risk score than a random good, Gini is $2\,\mathrm{AUC} - 1$, KS is the largest gap between the score distributions of bads and goods, and the Brier score @eq:brier is the mean squared error of the PDs. The Bayes cut-off @eq:bayes rejects when the PD exceeds $C_{FP}/(C_{FP} + C_{FN})$. The Merton distance to default and its PD are @eq:dd.
 
-## Check Yourself {h=0735f992}
+## Self-Assessment {h=49603cf1}
 
 **Question for the room**: a model has an accuracy of 70% on the South German Credit test sample. Is it good? **Answer**: not necessarily. The rule "everybody is good" already reaches 70%, because 30% of the credits are bad. The model must be judged by AUC, by TPR and FPR at the chosen cut-off and by the cost of its errors.
 

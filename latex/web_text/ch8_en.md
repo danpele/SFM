@@ -25,7 +25,7 @@ Daily log returns (%) of the S&P 500 and the DAX since 1990, of the BET since 19
 - **Compare** implied and realised volatility, and evaluate volatility forecasts with MSE and QLIKE.
 
 @plan
-- What Is Volatility? | The definition, the units and annualisation, four markets, and why volatility is latent.
+- Volatility: Definition and Latent Nature | The definition, the units and annualisation, four markets, and why volatility is latent.
 - Historical Volatility and the Choice of the Window | Rolling windows of 21, 63 and 252 days, the trade-off between speed and noise, and the precision of a sample volatility.
 - EWMA and RiskMetrics | The EWMA recursion, its weights and half-life, the ghost effect of rolling windows and the link to GARCH.
 - Range-Based Estimators | Parkinson, Garman–Klass, Rogers–Satchell and Yang–Zhang, their efficiency in simulation and their behaviour on real OHLC data.
@@ -36,7 +36,7 @@ Daily log returns (%) of the S&P 500 and the DAX since 1990, of the BET since 19
 - AI for Scientific Discovery | An open question on range-based estimators for thinly traded Bucharest stocks, the help AI can give and the checks it needs.
 - Summary | Key results, formulas and questions for self-assessment.
 
-# What Is Volatility?
+# Volatility: Definition and Latent Nature
 
 The section defines volatility as the standard deviation of returns, fixes its units and the rule for annualising it, and shows on four markets that it changes over time. It then separates the conditional volatility of a given day, which is the object of interest, from the unconditional volatility, its long-run average, and explains why the first is never observed directly.
 
@@ -76,7 +76,7 @@ Measured in units of the daily standard deviation, these moves lie between about
 
 The last column gives the excess kurtosis, the kurtosis minus 3, which is 0 for the Normal distribution: 10.9 for the S&P 500, 6.0 for the DAX, 9.9 for the BET and 12.0 for Bitcoin. All four values indicate heavy tails. [Section 6](#sec-6) shows that volatility clustering is one cause: a mixture of calm and turbulent days produces heavy tails even when the return of each day is Normal.
 
-## Volatility Is Latent {h=1d4726d7}
+## The Latent Nature of Volatility {h=a20316c6}
 
 A convenient model writes the return as a constant mean plus a shock whose size changes every day,
 
@@ -132,7 +132,7 @@ The answer to the question is therefore a short window, or the EWMA of the next 
 
 At the end of the sample the three windows give 9.6% (21 days), 11.1% (63 days) and 12.9% (252 days), all well below the whole-sample 18.0%. The ordering says that the last month was calmer than the last quarter, which was calmer than the last year. Three reasonable estimators thus give three answers to the question "how volatile is the S&P 500 today", differing by about a third.
 
-## How Precise Is a Sample Volatility? {h=9c2f7620}
+## Precision of a Sample Volatility {h=e9c1d13a}
 
 With $n$ i.i.d. Normal returns, the sample variance has variance about $2\sigma^4/n$, and the delta method transfers this to the standard deviation. The relative standard error of $\hat\sigma$, the standard deviation of the estimate across samples divided by the true $\sigma$, is then approximately $\mathrm{SE}(\hat\sigma)/\sigma \approx 1/\sqrt{2n}$. It is 15.4% for $n = 21$, 8.9% for $n = 63$ and 4.5% for $n = 252$: a monthly estimate is uncertain by about one sixth of its value, and halving the error requires four times as many days.
 
@@ -232,7 +232,7 @@ All quantities are log differences in percent measured from the open of day $t$:
 
 The chapter's OHLC data cover the S&P 500 since 2008, the DAX since 2006, Bitcoin since 2014 and stocks of the Bucharest Stock Exchange since 2010. The BET file contains closing prices only, so the range-based estimators cannot be computed for the index itself.
 
-## One Trading Day: What OHLC Records {h=cd6bf6d6}
+## One Trading Day in OHLC Data {h=99950982}
 
 The chart shows a simulated log price during one trading day: a Brownian motion on 390 one-minute steps, the length of a 6.5-hour session, after an overnight gap of 0.35%. The vertical axis is the log price relative to the previous close, in percent. The green dot marks the open at 0.35%, the orange dot the low, slightly below the previous close, the red dot the high, reached late in the day, and the purple dot the close.
 
@@ -312,7 +312,7 @@ The two Bucharest stocks are Banca Transilvania (TLV) and OMV Petrom (SNP), both
 
 The last two columns help explain the differences. The night share, $\hat\sigma_O^2/(\hat\sigma_O^2 + \hat\sigma_C^2)$, is the fraction of the variance that comes overnight: 13% for the S&P 500, 31% for the DAX, 0% for Bitcoin, 26% for TLV and 27% for SNP. The last column is the correlation between the overnight and the open-to-close return, $\mathrm{corr}(o, c)$: 0.22 for the S&P 500, 0.02 for the DAX and Bitcoin, −0.08 for TLV and −0.20 for SNP. In every row the session estimators lie below close-to-close.
 
-## Interpretation: Why the Estimators Disagree {h=41bc85a7}
+## Interpretation: Differences between the Estimators {h=068bff72}
 
 Bitcoin trades 24 hours a day, so its night share is practically zero and all five estimators agree within a few points, from 62.4% to 66.6%. The remaining gap comes from the fact that the daily path is observed through discrete trades rather than continuously, which makes the observed range slightly too small, as in the simulation.
 
@@ -348,7 +348,7 @@ and the realised volatility is $\sqrt{\mathrm{RV}_t}$. Each squared intraday ret
 
 This changes how volatility can be studied. Realised variance is used to evaluate forecasts ([Section 8](#sec-8)) and to forecast volatility directly, for example with the HAR model of @Corsi2009, which regresses realised volatility on its own averages over the previous day, week and month. @PeleMazurencuMarinescuPele2019 use high-frequency Bitcoin prices to study daily risk. The course data are daily, so the next two frames use simulated one-minute prices to show how realised variance behaves.
 
-## Simulated Example: RV Tracks the True Volatility {h=fb71c46f}
+## Simulated Example: RV against the True Volatility {h=b9c8def4}
 
 The simulation generates 60 days, each with 390 one-minute returns. The daily volatility changes from day to day: its logarithm follows an AR(1) process with persistence 0.9. In the chart, the black line is the true daily volatility, the red line the square root of the five-minute realised variance, the green dashed line the square root of the Parkinson estimate and the blue dots the absolute daily return $|r_t|$. The volatility stays close to 1% for most of the sample and then rises in a burst to several times this level.
 
@@ -440,7 +440,7 @@ The statistics on squares and absolute values are large everywhere. $Q(10)$ of $
 
 The ARCH-LM(5) statistics are 2,227 for the S&P 500, 1,209 for the DAX, 1,057 for the BET, 115 for Bitcoin, 253 for TLV and 234 for SNP. Bitcoin and the two Bucharest stocks have the smallest values despite the heaviest tails, with excess kurtosis 12.0, 13.5 and 8.9. Part of the difference comes from the shorter samples, since LM is proportional to $n$, but the $R^2$ is also much smaller: a few extreme days dominate the regression of squared returns and reduce the share of the variance that it explains.
 
-## Clustering Creates Heavy Tails {h=08ff4286}
+## Volatility Clustering and Heavy Tails {h=ceafbc24}
 
 The left panel shows why clustering produces heavy tails even when every day is Normal. Suppose calm days have standard deviation 1, turbulent days standard deviation 2, and a share $p = 0.2$ of days are turbulent. Given $\sigma$, the return is Normal, so $E[r^4 \mid \sigma] = 3\sigma^4$, and the kurtosis of the mixture is $3E[\sigma^4]/E[\sigma^2]^2$. Here $E[\sigma^2] = 0.8 \times 1 + 0.2 \times 4 = 1.6$ and $E[\sigma^4] = 0.8 \times 1 + 0.2 \times 16 = 4.0$, so the kurtosis is $3 \times 4.0/1.6^2 = 4.69$, above the Normal value of 3. By Jensen's inequality $E[\sigma^4] \ge E[\sigma^2]^2$, with equality only when $\sigma$ is constant: any variation in volatility raises the kurtosis. The curves show the kurtosis as a function of $p$ for turbulent days 2, 3 and 4 times as volatile as calm ones; the effect is strongest when turbulent days are rare and very different from calm ones.
 
@@ -508,7 +508,7 @@ A simple measure of the effect is the correlation $\mathrm{corr}(r_t, |r_{t+j}|)
 
 [Chapter 2](ch2.html) met an asymmetry in the distribution of returns, through their skewness. Here the asymmetry is in the dynamics of volatility: the same absolute move has different consequences depending on its sign. The next two frames measure this asymmetry in the data, first with correlations and conditional means, then with a nonparametric regression.
 
-## Bad News Raises Future Volatility {h=4f7a40ed}
+## Negative Returns and Future Volatility {h=7a76e5d8}
 
 The chart shows $\mathrm{corr}(r_t, |r_{t+j}|)$ for $j = 1, \dots, 10$ days ahead in four markets. For the S&P 500, the DAX and the BET all ten correlations are negative; for the S&P 500 the correlation is −0.122 at $j = 1$ and decays only slowly with the horizon. For Bitcoin the correlations are small and of mixed sign, positive at lags 8 and 9.
 
@@ -560,7 +560,7 @@ Both losses are robust: with a noisy but unbiased proxy they rank forecasts in t
 
 The worked example shows how the two losses weigh errors. Let the true variance and the proxy both equal 1, and compare the forecasts $h = 0.5$ and $h = 2$, each wrong by a factor of 2. The MSE is $(1 - 0.5)^2 = 0.25$ against $(1 - 2)^2 = 1$: it punishes over-prediction more. QLIKE is $1/0.5 + \ln 0.5 = 2 - 0.693 = 1.307$ against $1/2 + \ln 2 = 0.5 + 0.693 = 1.193$, compared with the minimum 1 at $h = 1$: it punishes under-prediction more, which is the costly error in risk management, because an understated variance understates VaR. QLIKE also depends on the forecast error only through the ratio $\hat\sigma_t^2/h_t$, so calm and turbulent days weigh comparably, while the MSE is dominated by the few days with the largest variances.
 
-## S&P 500: Which Forecast Is Best? {h=bc5e2aaa}
+## S&P 500: Comparison of the Forecasts {h=1f5dff3c}
 
 The table compares six next-day variance forecasts of the S&P 500 over 4,202 days from 2010: rolling windows of 21, 63 and 252 days, EWMA with $\lambda = 0.94$ and $\lambda = 0.97$, and the VIX. The VIX forecast is $\mathrm{VIX}^2/A$, which converts the annualised implied volatility into a daily variance. The proxy is $r_t^2$; the range proxy used in the last row is $o_t^2$ plus the Garman–Klass term, which adds the night to an efficient session estimate.
 
@@ -592,7 +592,7 @@ Volatility forecasts are compared with a proxy, and only robust losses such as M
 
 The section starts from an open question raised by the results of the chapter: whether range-based estimators help on the Bucharest Stock Exchange, where many stocks trade thinly. It shows where AI tools can help a researcher who studies it and which checks they cannot replace.
 
-## An Open Question {h=1a89e81c}
+## An Open Research Question {h=6845eff1}
 
 Do range-based estimators help on the Bucharest Stock Exchange, where many stocks trade thinly? The theory of [Section 4](#sec-4) points both ways. Ranges are 5 to 9 times more efficient than closes under continuous trading, but thin trading shrinks the observed range, so the estimators become biased downwards.
 
@@ -648,7 +648,7 @@ The four range-based estimators use the moves from the open to the high, the low
 
 The McLeod–Li statistic, @eq:lb, and the ARCH-LM statistic, @eq:archlm, test for clustering, both with $\chi^2$ distributions under the null hypothesis. The MSE and QLIKE losses, @eq:qlike, evaluate variance forecasts against a proxy; both are robust to the noise of the proxy.
 
-## Check Yourself {h=921d55d3}
+## Self-Assessment {h=f2a67281}
 
 The first question gives a stock with a high of 102 and a low of 98 on one day and asks for its Parkinson daily volatility. The log range is $\ln(102/98) = 4.00\%$, and by @eq:park the variance is $4.00^2/2.77$, so the daily volatility is $\sqrt{4.00^2/2.77} = 2.40\%$.
 

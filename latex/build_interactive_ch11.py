@@ -29,7 +29,7 @@ XBLOCKS = [('fractal-dim', 14, 'self', 'scaling'), ('rs-hurst', 21, 'rs', 'rs-ex
            ('risk-we', 61, 'risk', 'rolling')]
 ORDER = ['fractal-dim', 'scaling', 'rs-example', 'rs-hurst', 'memory-we', 'fbm', 'fgn', 'arfima', 'arfima-we', 'dfa-we', 'rs-dfa', 'gph-we', 'gph', 'lo-we', 'lo', 'mc',
          'sp-table', 'nile', 'spurious', 'vol-acf', 'mk-table', 'markets', 'rolling', 'risk-we']
-TITLES = {'fractal-dim': 'Dimensiunea fractală', 'rs-hurst': 'De la R/S la exponentul Hurst', 'memory-we': 'Exemplu rezolvat: cît de repede se stinge memoria?',
+TITLES = {'fractal-dim': 'Dimensiunea fractală', 'rs-hurst': 'De la R/S la exponentul Hurst', 'memory-we': 'Exemplu rezolvat: descreșterea autocorelației la memoria lungă și la memoria scurtă',
           'arfima-we': 'Exemplu rezolvat: ARFIMA(0; 0,3; 0)', 'dfa-we': 'Analiza fluctuațiilor fără tendință (DFA)', 'gph-we': 'Regresia GPH pe log-periodogramă',
           'lo-we': 'Testul R/S modificat al lui Lo', 'sp-table': 'S&P 500: toți estimatorii', 'mk-table': 'Șase piețe: randamente și randamente absolute',
           'risk-we': 'Scalarea riscului cu h^H'}
@@ -744,7 +744,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch11-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch11-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH11_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH11_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

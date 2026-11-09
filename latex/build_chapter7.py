@@ -161,7 +161,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. POT FI PREVĂZUTE PREȚURILE?
 # =============================================================================
-D.section('Can Prices Be Predicted?', 'Previzibilitatea prețurilor')
+D.section('Predictability of Prices', 'Previzibilitatea prețurilor')
 
 D.frame(T('Returns above the Market', 'Randamente peste cele ale pieței'), cols(items(
     (T('If past prices predicted future returns, a simple rule would earn money with no risk', 'Dacă prețurile trecute ar anticipa randamentele viitoare, o regulă simplă ar aduce bani fără risc'),
@@ -186,7 +186,7 @@ D.frame(T('1900: Prices as a Random Walk', '1900: prețurile ca mers aleator'), 
       '\\refRoberts: mersurile aleatoare simulate arată „tipare” pe care analiștii tehnici le văd în prețurile reale')),
     ph('bachelier', T('Louis Bachelier (1870--1946)', 'Louis Bachelier (1870--1946)'), h='0.42\\textheight'), wl='0.64', wr='0.32'))
 
-chart(T('Which One Is the S\\&P 500?', 'Întrebare pentru sală: care traiectorie este S\\&P 500?'), 'sfm_ch7_rw_paths', 'SFM_ch7_random_walk', [
+chart(T('Question for the Room: Which Path Is the S\\&P 500?', 'Întrebare pentru sală: care traiectorie este S\\&P 500?'), 'sfm_ch7_rw_paths', 'SFM_ch7_random_walk', [
     T('Four random walks with i.i.d.\\ Normal steps (mean $@{rw.mu}\\%$, standard deviation $@{rw.sd}\\%$ per day, as the S\\&P 500) and the S\\&P 500 log price since 1990',
       'Patru mersuri aleatoare cu pași Normali i.i.d.\\ (media $@{rw.mu}\\%$, abaterea standard $@{rw.sd}\\%$ pe zi, ca la S\\&P 500) și prețul logaritmic S\\&P 500 din 1990'),
     T('\\textbf{Question for the room}: without the legend, could you tell which path is real?', '\\textbf{Întrebare pentru sală}: fără legendă, ați putea spune care traiectorie este cea reală?'),
@@ -217,7 +217,7 @@ chart(T('Yesterday\'s Return and Today\'s Return', 'Randamentul de ieri și rand
 # =============================================================================
 D.section('Efficient Markets', 'Piețe eficiente')
 
-D.frame(T('What Is an Efficient Market?', 'Piața eficientă: definiția'), cols(items(
+D.frame(T('Definition of an Efficient Market', 'Definiția pieței eficiente'), cols(items(
     (T('\\textbf{EMH} (efficient market hypothesis) \\refFamaA: prices ``fully reflect\'\' the available information $\\Omega_t$',
        '\\textbf{EMH} (efficient market hypothesis, ipoteza pieței eficiente) \\refFamaA: prețurile „reflectă pe deplin” informația disponibilă $\\Omega_t$'),
      [T('no trading rule based on $\\Omega_t$ earns more than the return that compensates its risk',
@@ -310,7 +310,7 @@ D.frame(T('Three Random Walk Hypotheses', 'Trei ipoteze de mers aleator'), items
      [T('the weakest: allows $\\mathrm{Cov}(\\varepsilon_t^2, \\varepsilon_{t-k}^2) \\ne 0$, that is, volatility clustering', 'cea mai slabă: permite $\\mathrm{Cov}(\\varepsilon_t^2, \\varepsilon_{t-k}^2) \\ne 0$, adică volatility clustering')]),
     T('Nested: RW1 $\\Rightarrow$ RW2 $\\Rightarrow$ RW3; tests of RW3 use only autocorrelations of returns', 'Incluse una în alta: RW1 $\\Rightarrow$ RW2 $\\Rightarrow$ RW3; testele RW3 folosesc doar autocorelațiile randamentelor')))
 
-D.frame(T('What Each Hypothesis Allows', 'Comparația ipotezelor de mers aleator'), table(
+D.frame(T('Comparison of the Random Walk Hypotheses', 'Comparația ipotezelor de mers aleator'), table(
     'lcccc', T('\\textbf{Property of the returns}', '\\textbf{Proprietatea randamentelor}') + ' & RW1 & RW2 & RW3 & ' + T('\\textbf{Martingale}', '\\textbf{Martingal}'),
     [T('$\\mathrm{Corr}(r_t, r_{t-k}) = 0$', '$\\mathrm{Corr}(r_t, r_{t-k}) = 0$') + ' & ' + ' & '.join([T('yes', 'da')] * 4),
      T('$E[r_t \\mid \\text{past}] = \\mu$ (unpredictable mean)', '$E[r_t \\mid \\text{trecut}] = \\mu$ (media imprevizibilă)') + ' & ' + T('yes', 'da') + ' & ' + T('yes', 'da') + ' & ' + T('not always', 'nu mereu') + ' & ' + T('yes', 'da'),
@@ -332,7 +332,7 @@ D.frame(T('Martingale and Random Walk', 'Martingal și mers aleator'), items(
      [T('\\textbf{Answer}: no; it rejects RW1 and RW2, but a predictable variance gives no predictable return; the martingale and RW3 survive',
         '\\textbf{Răspuns}: nu; respinge RW1 și RW2, dar o varianță previzibilă nu face randamentul previzibil; martingalul și RW3 rămîn valabile')])))
 
-D.frame(T('Worked Example: How Risk Grows with the Horizon', 'Exemplu lucrat: cum crește riscul cu orizontul'), items(
+D.frame(T('Worked Example: Risk as a Function of the Horizon', 'Exemplu lucrat: riscul în funcție de orizont'), items(
     (T('S\\&P 500 since 1990: daily standard deviation $\\hat\\sigma = @{ex.sdd}\\%$', 'S\\&P 500 din 1990: abaterea standard zilnică $\\hat\\sigma = @{ex.sdd}\\%$'),
      [T('under a random walk, $\\mathrm{sd}(r_t(q)) = \\sigma\\sqrt{q}$', 'în ipoteza de mers aleator, $\\mathrm{sd}(r_t(q)) = \\sigma\\sqrt{q}$')]),
     (T('Step by step', 'Pas cu pas'),
@@ -586,7 +586,7 @@ D.frame(T('Unit Roots and Market Efficiency', 'Rădăcina unitară și eficienț
 # =============================================================================
 D.section('The Variance-Ratio Test', 'Testul variance ratio')
 
-D.frame(T('The Idea of the Variance Ratio', 'Ideea raportului varianțelor'), items(
+D.frame(T('The Variance Ratio: Definition', 'Raportul varianțelor: definiție'), items(
     (T('Under a random walk, $\\mathrm{Var}(r_t(q)) = q\\,\\mathrm{Var}(r_t)$; the \\textbf{VR} (variance ratio) compares the two sides',
        'În ipoteza de mers aleator, $\\mathrm{Var}(r_t(q)) = q\\,\\mathrm{Var}(r_t)$; \\textbf{VR} (variance ratio, raportul varianțelor) compară cei doi termeni'),
      [T('$\\mathrm{VR}(q) = \\dfrac{\\mathrm{Var}(r_t(q))}{q\\,\\mathrm{Var}(r_t)} = 1 + 2\\sum_{k=1}^{q-1}\\Big(1 - \\dfrac{k}{q}\\Big)\\rho(k)$ \\refLM, \\refCLM',
@@ -622,7 +622,7 @@ D.frame(T('Lo and MacKinlay (1988): Estimator and Tests', 'Lo și MacKinlay (198
       T('$\\hat\\theta(q)/T$: the variance of $\\widehat{\\mathrm{VR}}(q)$ that allows for volatility clustering', '$\\hat\\theta(q)/T$: varianța lui $\\widehat{\\mathrm{VR}}(q)$ care ține seama de volatility clustering')])),
     ph('lo', T('Andrew W. Lo, MIT', 'Andrew W. Lo, MIT'), h='0.40\\textheight'), wl='0.66', wr='0.30') + ql('SFM_ch7_variance_ratio'), 'footnotesize')
 
-chart(T('Why the Robust Test: a Monte Carlo Check', 'Necesitatea testului robust: o verificare Monte Carlo'), 'sfm_ch7_vr_size', 'SFM_ch7_variance_ratio', [
+chart(T('The Need for a Robust Test: a Monte Carlo Study', 'Necesitatea testului robust: un studiu Monte Carlo'), 'sfm_ch7_vr_size', 'SFM_ch7_variance_ratio', [
     (T('1\\,000 samples of $T = 2000$ returns with $H_0$ true: i.i.d.\\ Normal, and GARCH(1,1) ($\\alpha = 0.12$, $\\beta = 0.86$)', '1\\,000 de eșantioane de $T = 2000$ de randamente cu $H_0$ adevărată: Normale i.i.d.\\ și GARCH(1,1) ($\\alpha = 0{,}12$, $\\beta = 0{,}86$)'),
      [T('GARCH: uncorrelated returns, with volatility clustering ($\\alpha$: reaction to yesterday\'s shock, $\\beta$: persistence)', 'GARCH: randamente necorelate, dar cu volatility clustering ($\\alpha$: reacția la șocul de ieri, $\\beta$: persistența)')]),
     T('i.i.d.: both reject about 5\\%; GARCH: $Z(2)$ rejects @{size.garch.2.z}\\% of the time, $Z^*(2)$ only @{size.garch.2.zs}\\%',
@@ -653,7 +653,7 @@ D.frame(T('Variance Ratios and Robust Tests', 'Rapoarte ale varianțelor și tes
       'Transgaz: $Z^*(2) = @{vr.tgn.zs2}$ și $Z^*(5) = @{vr.tgn.zs5}$; DAX, Bitcoin, TLV, SNP, BRD: nicio respingere'),
     T('But four tests per series, 32 in the table: some ``significant\'\' horizons appear by chance', 'Atenție: sînt patru teste pe fiecare serie, 32 în tabel, deci unele orizonturi „semnificative” apar din întîmplare')) + ql('SFM_ch7_variance_ratio'), 'footnotesize')
 
-D.frame(T('Several Horizons at Once: the Chow--Denning Test', 'Mai multe orizonturi deodată: testul Chow--Denning'), items(
+D.frame(T('Joint Test over Several Horizons: the Chow--Denning Test', 'Testarea simultană a mai multor orizonturi: testul Chow--Denning'), items(
     (T('Testing $q = 2, 5, 10, 20$ separately at 5\\% gives a much higher chance of at least one false rejection', 'Testarea separată pentru $q = 2, 5, 10, 20$ la 5\\% crește mult probabilitatea de a obține cel puțin o respingere falsă'),
      [T('for 4 independent tests: $1 - 0.95^4 = @{mt.4}\\%$', 'pentru 4 teste independente: $1 - 0{,}95^4 = @{mt.4}\\%$')]),
     (T('\\textbf{CD} (Chow--Denning) statistic \\refCD: $\\mathrm{CD} = \\max_{i} |Z^*(q_i)|$, $i = 1, \\dots, m$', 'Statistica \\textbf{CD} (Chow--Denning) \\refCD: $\\mathrm{CD} = \\max_{i} |Z^*(q_i)|$, $i = 1, \\dots, m$'),
@@ -751,7 +751,7 @@ D.frame(T('Three Sub-Periods per Market', 'Trei subperioade pentru fiecare piaț
     (T('S\\&P 500: the negative autocorrelation appears after 2002', 'S\\&P 500: autocorelația negativă apare după 2002'),
      [T('Bitcoin: no rejection in any period since 2014; \\refUrquhart found inefficiency in its earliest years', 'Bitcoin: nicio respingere în vreuna dintre subperioadele de după 2014; \\refUrquhart a găsit ineficiență în primii lui ani')])) + ql('SFM_ch7_adaptive_markets'), 'footnotesize')
 
-D.frame(T('Why the Early BET Was Predictable', 'Previzibilitatea BET în primii ani'), cols(items(
+D.frame(T('Predictability of the BET in Its Early Years', 'Previzibilitatea BET în primii ani'), cols(items(
     (T('\\textbf{Thin trading}: few trades per day in many index stocks', '\\textbf{Tranzacționare redusă} (thin trading): puține tranzacții pe zi la multe acțiuni din indice'),
      [T('a closing price may be hours old; news enters the index over several days', 'un preț de închidere poate fi stale (neactualizat de cîteva ore); știrile intră în indice pe parcursul mai multor zile'),
       T('the index then shows positive autocorrelation even if each stock is efficient', 'indicele arată atunci autocorelație pozitivă chiar dacă fiecare acțiune este eficientă')]),
@@ -802,7 +802,7 @@ chart(T('Day-of-Week Returns: S\\&P 500 and BET', 'Randamentele pe zile ale săp
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Did the BET become more efficient after Romania\'s upgrade to Secondary Emerging market (September 2020)?} \\refFTSE',
        '\\textbf{A devenit BET mai eficient după trecerea României la statutul de piață Secondary Emerging (septembrie 2020)?} \\refFTSE'),
      [T('five years before: $\\hat\\rho(1) = @{up.before.rho1}$, VR(5) $= @{up.before.vr}$ ($Z^* = @{up.before.zs}$)', 'cinci ani înainte: $\\hat\\rho(1) = @{up.before.rho1}$, VR(5) $= @{up.before.vr}$ ($Z^* = @{up.before.zs}$)'),
@@ -869,7 +869,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'Chow--Denning & $\\max_i |Z^*(q_i)|$, \\quad $P(\\mathrm{CD} \\le c) = (2\\Phi(c) - 1)^m$'],
     size='footnotesize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\hat\\rho(1) = 0.10$ and $\\hat\\rho(k) = 0$ for $k \\ge 2$; what does VR(2) tell us?', '\\textbf{Întrebare}: $\\hat\\rho(1) = 0{,}10$ și $\\hat\\rho(k) = 0$ pentru $k \\ge 2$; ce ne spune VR(2)?'),
      [T('\\textbf{Answer}: $1 + 0.10 = 1.10$: the two-day variance is 10\\% larger than under a random walk: momentum', '\\textbf{Răspuns}: $1 + 0{,}10 = 1{,}10$: varianța pe două zile este cu 10\\% mai mare decît în cazul unui mers aleator, deci momentum')]),
     (T('\\textbf{Question}: ADF does not reject on log prices and KPSS rejects; is the market efficient?', '\\textbf{Întrebare}: ADF nu respinge pe prețurile logaritmice, iar KPSS respinge; este piața eficientă?'),

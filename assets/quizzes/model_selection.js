@@ -389,7 +389,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
         {
             "correct": 2,
             "en": {
-                "title": "PP or QQ?",
+                "title": "PP and QQ plots in the tails",
                 "text": "Which plot shows best whether a model gets the extreme losses right?",
                 "options": [
                     "The PP plot",
@@ -401,7 +401,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                 "incorrectExplanation": "PP plots compare probabilities in $[0, 1]$ and hide the tails; QQ plots compare quantiles, so each extreme day is visible."
             },
             "ro": {
-                "title": "PP sau QQ?",
+                "title": "Graficele PP și QQ în cozi",
                 "text": "Ce grafic arată cel mai bine dacă un model descrie corect pierderile extreme?",
                 "options": [
                     "Graficul PP",
@@ -551,7 +551,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
         {
             "correct": 0,
             "en": {
-                "title": "Best density, best VaR?",
+                "title": "Log score and VaR accuracy",
                 "text": "A model has the best out-of-sample log score. Does it necessarily give the best VaR 1%?",
                 "options": [
                     "No: the log score judges the whole density, VaR depends on one quantile; check exceedances and the pinball loss",
@@ -563,7 +563,7 @@ window.SFM_DATA.quizzes['model-selection'] = {
                 "incorrectExplanation": "The log score rewards the body of the distribution too; the 1% quantile can still be off, as the DAX test period shows."
             },
             "ro": {
-                "title": "Cea mai bună densitate, cel mai bun VaR?",
+                "title": "Scorul logaritmic și acuratețea VaR",
                 "text": "Un model are cel mai bun scor logaritmic în afara eșantionului. Dă el neapărat cel mai bun VaR 1%?",
                 "options": [
                     "Nu: scorul logaritmic judecă întreaga densitate, VaR depinde de o singură cuantilă; verificați depășirile și pierderea pinball",

@@ -25,7 +25,7 @@ Traiectorii reale de preț în evantaiul GBM: pentru S&P 500 (stînga), BET (cen
 - **Definiți și simulați** modelul binomial, mersul aleator, martingalul, zgomotul alb, procesul AR(1), procesul Wiener și GBM.
 
 @plan
-- De la jocuri de noroc la axiome | Problema punctelor, spațiul de probabilitate al lui Kolmogorov, probabilitatea condiționată, regula lui Bayes și independența.
+- Originile teoriei probabilităților: jocurile de noroc și axiomele | Problema punctelor, spațiul de probabilitate al lui Kolmogorov, probabilitatea condiționată, regula lui Bayes și independența.
 - Variabile aleatoare și distribuții | PMF, PDF, CDF și cuantile; VaR ca cuantilă; CDF empirică a S&P 500.
 - Media și varianța | Liniaritatea, inegalitatea lui Jensen, momentele, regula rădăcinii pătrate a timpului și marginea lui Cebîșev.
 - Distribuții comune și dependență | Distribuții comune și marginale, covarianța și corelația, varianța portofoliului, randamente necorelate, dar dependente.
@@ -38,7 +38,7 @@ Traiectorii reale de preț în evantaiul GBM: pentru S&P 500 (stînga), BET (cen
 - AI pentru descoperire științifică | O întrebare deschisă despre riscul de drawdown, rolul AI, verificările necesare și o idee de proiect.
 - Rezumat | Formulele de reținut și întrebări de autoevaluare.
 
-# De la jocuri de noroc la axiome
+# Originile teoriei probabilităților: jocurile de noroc și axiomele
 
 Probabilitatea a început ca o teorie a jocurilor echitabile și a devenit, trei secole mai tîrziu, o ramură a teoriei măsurii. Secțiunea urmează acest drum în patru pași. Problema punctelor, rezolvată de Pascal și Fermat în 1654, introduce ideea că valoarea corectă a unui joc este o valoare așteptată. Axiomele lui Kolmogorov din 1933 dau cadrul modern, spațiul de probabilitate. Probabilitatea condiționată și regula lui Bayes descriu cum schimbă informația probabilitățile, iar independența este cazul în care nu le schimbă.
 
@@ -88,7 +88,7 @@ Definițiile pot fi testate pe randamentele zilnice ale indicilor. Pentru S&P 50
 
 BET se comportă diferit. După o zi de scădere, probabilitatea unei noi zile de scădere este 50,0%, față de 42,6% după o zi de creștere: semnul randamentului persistă. Explicația obișnuită este tranzacționarea redusă (*thin trading*). Pe o piață cu mai puține tranzacții și cu acțiuni mai puțin lichide, prețurile se ajustează la știri în mai multe zile, nu dintr-odată, astfel încît o scădere de azi tinde să fie urmată de o nouă ajustare mîine. Același efect apare mai jos ca autocorelație pozitivă de ordinul întîi a randamentelor BET.
 
-## Recapitulare: de la jocuri la axiome {h=564e0a86}
+## Recapitulare: originile teoriei probabilităților {h=f2bd7313}
 
 Un model probabilist este un spațiu de probabilitate $(\Omega, \mathcal{F}, P)$, iar cele trei axiome ale lui Kolmogorov fixează regulile pentru $P$. Ideea lui Pascal și Fermat, că valoarea corectă este o valoare așteptată, revine în modelul binomial și în evaluarea opțiunilor.
 
@@ -352,7 +352,7 @@ Media condiționată a S&P 500 se află între 0,006% și 0,042% pe zi în cele 
 
 Legea varianței totale @eq:totvar face afirmația exactă. Pentru S&P 500, varianța totală de 1,469 se împarte într-o parte din interiorul chintilelor de 1,469 și o parte dintre chintile de 0,00013: diferențele dintre mediile condiționate explică 0,01% din varianță. Condiționarea pe trecut lasă media aproape neschimbată și mută varianța.
 
-## De la varianța condiționată la GARCH {h=ce8d8c66}
+## Varianța condiționată și modelele GARCH {h=cc692c4b}
 
 Slide-ul anterior sugerează scrierea randamentului ca
 
@@ -410,7 +410,7 @@ LLN garantează convergența mediilor, iar CLT le dă eroarea, de ordinul $\sigm
 
 Metodele Monte Carlo estimează o medie sau o probabilitate simulînd de multe ori variabila aleatoare de interes și calculînd media rezultatelor. Ele au nevoie de două ingrediente: un șir de numere care se comportă ca extrageri uniforme independente și o metodă care transformă extragerile uniforme în extrageri din orice distribuție. Secțiunea le tratează pe amîndouă, de la generatoarele congruențiale liniare și eșecul lui RANDU la transformarea inversă, apoi estimează probabilitatea unei pierderi lunare mari a S&P 500 și compară estimarea Monte Carlo cu valoarea exactă.
 
-## Ideea Monte Carlo {h=704b7565}
+## Metoda Monte Carlo {h=833f186f}
 
 Metoda Monte Carlo estimează $\theta = E[g(X)]$ prin media de eșantion a unor valori simulate,
 
@@ -488,7 +488,7 @@ distanța tipică dintre $\hat p_N$ și $p$. Cu $N = 1\,000$ de simulări, estim
 
 Formula dă și numărul de simulări necesar pentru o precizie-țintă. Pentru ca semilățimea intervalului de 95% să fie 10% din $p$, punem $1{,}96\sqrt{p(1 - p)/N} = 0{,}1\,p$ și rezolvăm: $N \approx 1{,}96^2(1 - p)/(0{,}1^2 p) = 12\,762$. Numărul $N$ necesar este invers proporțional cu $p$, deci un eveniment rar cere multe simulări: efortul este determinat de eroarea relativă, nu de cea absolută.
 
-## Monte Carlo converge cu viteza 1/√N {h=bc6be5a7}
+## Viteza de convergență Monte Carlo: 1/√N {h=495b68f6}
 
 Graficul urmărește estimarea Monte Carlo $\hat p_N$ pe măsură ce $N$ crește de la 10 la un milion, pe o axă orizontală logaritmică. Linia întreruptă este valoarea exactă 2,922%, iar zona colorată este banda de 95% $p \pm 1{,}96\sqrt{p(1 - p)/N}$. Pentru $N$ mic, estimarea sare: în primele cîteva zeci de simulări nu a apărut încă nicio lună sub $-10\%$, iar estimarea este zero, apoi fiecare nouă lună cu pierdere o mișcă vizibil. Pe măsură ce $N$ crește, estimarea se stabilizează în interiorul benzii, care se îngustează ca $1/\sqrt{N}$.
 
@@ -620,7 +620,7 @@ Cu $\phi = 0{,}95$, varianța de eșantion este 10,20, față de valoarea teoret
 
 Cu cît $\phi$ este mai aproape de unu, cu atît varianța este mai mare și un șoc se stinge mai încet. Cînd $\phi \to 1$, varianța $\sigma^2/(1 - \phi^2)$ diverge, iar timpul de înjumătățire devine infinit: AR(1) se apropie de mersul aleator, în care șocurile nu se sting niciodată. Deosebirea dintre $\phi = 0{,}95$ și $\phi = 1$ într-un eșantion finit este dificilă, problema testării rădăcinii unitare (*unit root*).
 
-## Zgomot alb, AR(1) și mers aleator, aceleași șocuri {h=37788547}
+## Zgomot alb, AR(1) și mers aleator cu aceleași șocuri {h=241126cc}
 
 Cele patru panouri folosesc aceleași 500 de șocuri $\varepsilon_t$ și diferă doar prin $\phi$. Zgomotul alb (stînga sus) fluctuează în jurul lui zero, fără memorie. AR(1) cu $\phi = 0{,}5$ (dreapta sus) arată asemănător, dar mai neted, cu o amplitudine puțin mai mare. AR(1) cu $\phi = 0{,}95$ (stînga jos) face excursii lungi, aici pînă la circa $\pm 10$, dar revine întotdeauna la zero. Scalele verticale diferă de la un panou la altul.
 
@@ -678,7 +678,7 @@ unde $\lfloor nt\rfloor$ este partea întreagă a lui $nt$, numărul de pași p�
 
 Scalarea explică de ce procesul Wiener este universal: oricare ar fi distribuția pașilor, atîta timp cît aceștia sînt i.i.d. cu varianță finită, mersul rescalat converge la aceeași limită. Tratarea din manual este în @FrankeHardleHafner2019, cap. 5.
 
-## De la mersul aleator la procesul Wiener (SFEWienerProcess) {h=119002bf}
+## Procesul Wiener ca limită a mersului aleator (SFEWienerProcess) {h=38d0dc58}
 
 Panoul din stînga arată mersuri aleatoare scalate $W_n(t)$ pe $[0, 1]$ cu 10, 100 și 10 000 de pași. Cu 10 pași, traiectoria este o scară grosieră; cu 100, treptele sînt mai mici; cu 10 000, pașii individuali nu se mai văd, iar traiectoria arată ca o curbă continuă și neregulată. Pe măsură ce $n$ crește, pașii dispar, dar aleatorismul rămîne: varianța la $t = 1$ rămîne egală cu unu.
 
@@ -764,7 +764,7 @@ Procesul Wiener este limita în timp continuu a mersului aleator, iar GBM îl tr
 
 Fiecare capitol al cursului se încheie cu o întrebare de cercetare deschisă, la care instrumentele capitolului pot răspunde, și cu o discuție despre cum pot ajuta instrumentele de inteligență artificială (AI) și unde trebuie verificate rezultatele lor. Întrebarea de aici privește riscul de drawdown: dacă GBM, care ignoră volatility clustering, redă corect probabilitatea unui an prost. Secțiunea formulează întrebarea pe datele capitolului, descrie cum ar putea ajuta AI la literatură, la cod și la proiectarea testului, enumeră verificările necesare unui răspuns solid și propune un proiect.
 
-## O întrebare deschisă: estimează GBM corect riscul de drawdown? {h=937c733c}
+## O întrebare de cercetare deschisă: riscul de drawdown în modelul GBM {h=1fe02e84}
 
 Graficul aplică drawdown-ul maxim din @eq:mdd în interiorul fiecărui an calendaristic. Pentru fiecare serie, histograma este distribuția drawdown-ului maxim pe un an într-un GBM calibrat pe acea serie, marcajele verticale sînt drawdown-urile anilor calendaristici reali, iar linia întreruptă marchează $-20\%$, o definiție uzuală a unei piețe în scădere (*bear market*).
 

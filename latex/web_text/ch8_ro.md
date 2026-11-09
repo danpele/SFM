@@ -76,7 +76,7 @@ Măsurate în abateri standard zilnice, aceste variații se află la aproximativ
 
 Ultima coloană dă excesul de boltire (*excess kurtosis*), adică boltirea minus 3, care este 0 pentru distribuția Normală: 10,9 pentru S&P 500, 6,0 pentru DAX, 9,9 pentru BET și 12,0 pentru Bitcoin. Toate cele patru valori indică cozi groase. [Secțiunea 6](#sec-6) arată că volatility clustering este una dintre cauze: un amestec de zile liniștite și zile agitate produce cozi groase chiar dacă randamentul fiecărei zile urmează distribuția Normală.
 
-## Volatilitatea este latentă {h=31bfa836}
+## Caracterul latent al volatilității {h=8cf82e64}
 
 Un model comod scrie randamentul ca o medie constantă plus un șoc a cărui mărime se schimbă zilnic,
 
@@ -348,7 +348,7 @@ iar volatilitatea realizată este $\sqrt{\mathrm{RV}_t}$. Fiecare randament intr
 
 Aceasta schimbă modul în care poate fi studiată volatilitatea. Varianța realizată se folosește la evaluarea prognozelor ([secțiunea 8](#sec-8)) și la prognoza directă a volatilității, de exemplu cu modelul HAR al lui @Corsi2009, care regresează volatilitatea realizată pe propriile ei medii din ziua, săptămîna și luna precedente. @PeleMazurencuMarinescuPele2019 folosesc prețuri Bitcoin de înaltă frecvență pentru a studia riscul zilnic. Datele cursului sînt zilnice, așa că următoarele două slide-uri folosesc prețuri simulate la un minut pentru a arăta comportamentul varianței realizate.
 
-## Exemplu simulat: RV urmărește volatilitatea reală {h=806b9737}
+## Exemplu simulat: RV comparată cu volatilitatea reală {h=793ac4a7}
 
 Simularea generează 60 de zile, fiecare cu 390 de randamente de un minut. Volatilitatea zilnică se schimbă de la o zi la alta: logaritmul ei urmează un proces AR(1) cu persistența 0,9. Pe grafic, linia neagră este volatilitatea zilnică reală, linia roșie rădăcina pătrată a varianței realizate la cinci minute, linia verde întreruptă rădăcina pătrată a estimării Parkinson, iar punctele albastre randamentul zilnic în valoare absolută $|r_t|$. Volatilitatea rămîne aproape de 1% în cea mai mare parte a eșantionului și apoi crește brusc la de cîteva ori acest nivel.
 
@@ -440,7 +440,7 @@ Statisticile pe pătrate și pe valori absolute sînt mari peste tot. $Q(10)$ pe
 
 Statisticile ARCH-LM(5) sînt 2 227 pentru S&P 500, 1 209 pentru DAX, 1 057 pentru BET, 115 pentru Bitcoin, 253 pentru TLV și 234 pentru SNP. Bitcoin și cele două acțiuni de la București au cele mai mici valori, deși au cele mai groase cozi, cu excese de boltire de 12,0, 13,5 și 8,9. O parte din diferență vine din eșantioanele mai scurte, deoarece LM este proporțional cu $n$, dar și $R^2$ este mult mai mic: cîteva zile extreme domină regresia randamentelor la pătrat și reduc proporția din varianță pe care o explică.
 
-## Volatility clustering produce cozi groase {h=abbef397}
+## Volatility clustering și cozile groase {h=8432682f}
 
 Panoul din stînga arată de ce volatility clustering produce cozi groase chiar dacă fiecare zi urmează distribuția Normală. Să presupunem că zilele liniștite au abaterea standard 1, zilele agitate abaterea standard 2, iar o proporție $p = 0{,}2$ dintre zile sînt agitate. Condiționat de $\sigma$, randamentul urmează distribuția Normală, deci $E[r^4 \mid \sigma] = 3\sigma^4$, iar coeficientul de boltire al amestecului este $3E[\sigma^4]/E[\sigma^2]^2$. Aici $E[\sigma^2] = 0{,}8 \times 1 + 0{,}2 \times 4 = 1{,}6$ și $E[\sigma^4] = 0{,}8 \times 1 + 0{,}2 \times 16 = 4{,}0$, deci boltirea este $3 \times 4{,}0/1{,}6^2 = 4{,}69$, peste valoarea Normală de 3. Din inegalitatea lui Jensen, $E[\sigma^4] \ge E[\sigma^2]^2$, cu egalitate doar dacă $\sigma$ este constant: orice variație a volatilității crește boltirea. Curbele arată boltirea în funcție de $p$ pentru zile agitate de 2, 3 și 4 ori mai volatile decît cele liniștite; efectul este cel mai puternic cînd zilele agitate sînt rare și foarte diferite de cele liniștite.
 
@@ -508,7 +508,7 @@ O măsură simplă a efectului este corelația $\mathrm{corr}(r_t, |r_{t+j}|)$ p
 
 [Capitolul 2](ch2_ro.html) a întîlnit o asimetrie în distribuția randamentelor, prin coeficientul lor de asimetrie. Aici asimetria se află în dinamica volatilității: aceeași variație în valoare absolută are consecințe diferite în funcție de semnul ei. Următoarele două slide-uri măsoară această asimetrie în date, întîi cu corelații și medii condiționate, apoi cu o regresie neparametrică.
 
-## Știrile negative cresc volatilitatea viitoare {h=b0f95dfa}
+## Randamentele negative și volatilitatea viitoare {h=d2da0d0e}
 
 Graficul arată $\mathrm{corr}(r_t, |r_{t+j}|)$ pentru $j = 1, \dots, 10$ zile în avans, pe patru piețe. Pentru S&P 500, DAX și BET, toate cele zece corelații sînt negative; pentru S&P 500 corelația este −0,122 la $j = 1$ și scade doar lent în valoare absolută odată cu orizontul. Pentru Bitcoin, corelațiile sînt mici și au semne diferite, pozitive la lagurile 8 și 9.
 
@@ -592,7 +592,7 @@ Prognozele de volatilitate se compară cu o variabilă proxy, iar doar pierderil
 
 Secțiunea pornește de la o întrebare deschisă ridicată de rezultatele capitolului: dacă estimatorii de amplitudine ajută la Bursa de Valori București, unde multe acțiuni se tranzacționează rar. Ea arată unde pot ajuta instrumentele AI un cercetător care o studiază și ce verificări nu pot înlocui.
 
-## O întrebare deschisă {h=9854b638}
+## O întrebare de cercetare deschisă {h=b8bc6d86}
 
 Ajută estimatorii de amplitudine la Bursa de Valori București, unde multe acțiuni se tranzacționează rar? Teoria din [secțiunea 4](#sec-4) indică ambele sensuri. Amplitudinile sînt de 5–9 ori mai eficiente decît închiderile cînd tranzacționarea este continuă, dar tranzacționarea rară micșorează amplitudinea observată, astfel încît estimatorii devin deplasați în jos.
 

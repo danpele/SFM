@@ -329,7 +329,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. CANDIDAȚII
 # =============================================================================
-D.section('The Candidates', 'Candidații')
+D.section('Candidate Distributions', 'Distribuțiile candidate')
 
 D.frame(T('``All Models Are Wrong\'\'', '„Toate modelele sînt greșite”'), cols(items(
     (T('George Box: a statistician should look for a model that is useful, not one that is true \\refBox',
@@ -363,7 +363,7 @@ D.frame(T('Seven Candidate Distributions', 'Șapte distribuții candidate'), tab
     T('Normal mixture: with probability $w$ a calm-day $N(\\mu_1, \\sigma_1^2)$, otherwise a turbulent-day $N(\\mu_2, \\sigma_2^2)$',
       'Amestecul Normal: cu probabilitatea $w$, o zi calmă $N(\\mu_1, \\sigma_1^2)$, altfel o zi agitată $N(\\mu_2, \\sigma_2^2)$')), size='footnotesize')
 
-chart(T('The Candidates Side by Side', 'Candidații comparați'), 'sfm_ch6_candidates', 'SFM_ch6_candidates', [
+chart(T('Comparison of the Candidate Distributions', 'Compararea distribuțiilor candidate'), 'sfm_ch6_candidates', 'SFM_ch6_candidates', [
     T('All with mean 0 and variance 1 (stable: the same interquartile range as the Normal law); right panel on a log scale',
       'Toate au media 0 și varianța 1 (distribuția stabilă: același interval intercuartilic ca distribuția Normală); panoul din dreapta folosește scara logaritmică'),
     T('Near the centre they look alike; in the tails they differ by orders of magnitude', 'În centru arată aproape la fel; în cozi diferă cu cîteva ordine de mărime')], h='0.58\\textheight')
@@ -380,7 +380,7 @@ D.frame(T('Tail Probabilities at Equal Variance', 'Probabilitățile din cozi la
      [T('the simplest one (Normal) is wrong precisely in the region that drives capital and margin requirements',
         'cel mai simplu model (distribuția Normală) greșește exact în zona care determină cerințele de capital și de marjă')])))
 
-chart(T('What Every Model Must Reproduce: the SFESumm Statistics', 'Statisticile SFESumm: reperele oricărui model'), 'sfm_ch6_dax_monthly', 'SFM_ch6_summary', [
+chart(T('Benchmark Statistics for the Models: SFESumm', 'Statisticile de referință pentru modele: SFESumm'), 'sfm_ch6_dax_monthly', 'SFM_ch6_summary', [
     T('Quantlet SFESumm: DAX monthly log returns between first trading days, July 2004 -- May 2014 ($n = @{dm.book.n}$), extended here to @{dm.full.last}',
       'Quantlet-ul SFESumm: randamentele logaritmice lunare DAX între primele zile de tranzacționare, iulie 2004 -- mai 2014 ($n = @{dm.book.n}$), extinse aici pînă la @{dm.full.last}'),
     T('Even monthly returns are skewed and heavy-tailed: the next slide gives the numbers', 'Chiar și randamentele lunare sînt asimetrice și au cozi groase: cifrele sînt pe slide-ul următor')], h='0.56\\textheight')
@@ -464,7 +464,7 @@ D.frame(T('Reading the Estimates', 'Interpretarea estimărilor'), items(
       'Amestecul Normal: $@{sp.mix.w1}\\%$ zile calme cu abaterea standard $@{sp.mix.s1}\\%$, $@{sp.mix.w2}\\%$ zile agitate cu $@{sp.mix.s2}\\%$ și medie negativă'),
     T('Stable $\\hat\\alpha = @{sp.st.a}$ (Chapter 3): heavier tails than any other candidate', 'Distribuția stabilă, $\\hat\\alpha = @{sp.st.a}$ (Capitolul 3): cozi mai groase decît orice alt candidat')))
 
-chart(T('How Precise Is $\\hat\\nu$? The Profile Log-Likelihood', 'Precizia lui $\\hat\\nu$: log-verosimilitatea profil'), 'sfm_ch6_profile_nu', 'SFM_ch6_ml_fits', [
+chart(T('Precision of $\\hat\\nu$: the Profile Log-Likelihood', 'Precizia lui $\\hat\\nu$: log-verosimilitatea profil'), 'sfm_ch6_profile_nu', 'SFM_ch6_ml_fits', [
     T('For each $\\nu$, maximise $\\ell$ over location and scale; at $\\nu = 5$ the curve is $@{pr.l5}$ below its maximum',
       'Pentru fiecare $\\nu$, maximizăm $\\ell$ în raport cu locația și scala; la $\\nu = 5$, curba se află cu $@{pr.l5}$ sub maximul său'),
     T('95\\% interval: all $\\nu$ with $2[\\ell(\\hat\\nu) - \\ell(\\nu)] \\le @{chi95}$, here $[@{pr.lo}, @{pr.hi}]$ around $\\hat\\nu = @{pr.nu}$: the tails are pinned down well',
@@ -506,7 +506,7 @@ D.frame(T('The Likelihood-Ratio Test', 'Testul raportului de verosimilitate'), i
      [T('$\\chi^2_{0.95}(1) = @{chi95}$, $\\chi^2_{0.95}(2) = @{chi2_95}$', '$\\chi^2_{0.95}(1) = @{chi95}$; $\\chi^2_{0.95}(2) = @{chi2_95}$')]),
     T('Intuition: twice the log of how many times more likely the data are under the larger model', 'Intuiția: de două ori logaritmul raportului dintre verosimilitățile datelor sub cele două modele')))
 
-D.frame(T('Worked Example: Is the Skewness Parameter Needed?', 'Exemplu lucrat: este necesar parametrul de asimetrie?'), items(
+D.frame(T('Worked Example: Testing the Skewness Parameter', 'Exemplu lucrat: testarea parametrului de asimetrie'), items(
     (T('S\\&P 500: $\\ell$(Student-t) $= @{ll.sp500.Student-t}$, $\\ell$(skewed-t) $= @{ll.sp500.Skewed-t}$', 'S\\&P 500: $\\ell$(Student-t) $= @{ll.sp500.Student-t}$, $\\ell$(skewed-t) $= @{ll.sp500.Skewed-t}$'),
      [T('$LR = 2(@{ll.sp500.Skewed-t} - (@{ll.sp500.Student-t})) = @{lr.tskt.sp500} > @{chi95}$; $p = @{lrp.tskt.sp500}$: reject $\\lambda = 0$',
         '$LR = 2(@{ll.sp500.Skewed-t} - (@{ll.sp500.Student-t})) = @{lr.tskt.sp500} > @{chi95}$; $p = @{lrp.tskt.sp500}$: respingem $\\lambda = 0$')]),
@@ -546,7 +546,7 @@ D.frame(T('Non-Nested Models: the Vuong Test', 'Modele neimbricate: testul Vuong
 # =============================================================================
 D.section('Information Criteria: AIC and BIC', 'Criterii informaționale: AIC și BIC')
 
-D.frame(T('Akaike\'s Idea', 'Ideea lui Akaike'), cols(items(
+D.frame(T('Akaike\'s Approach: the Kullback--Leibler Divergence', 'Abordarea lui Akaike: divergența Kullback--Leibler'), cols(items(
     (T('Hirotugu Akaike asked: which model will predict \\textbf{new} data best?', 'Hirotugu Akaike și-a pus întrebarea: ce model va descrie cel mai bine date \\textbf{noi}?'),
      [T('the distance from the truth $g$ to a model $f$: the Kullback--Leibler divergence \\refKL', 'distanța de la distribuția adevărată $g$ la un model $f$: divergența Kullback--Leibler \\refKL'),
       T('$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero only if $f = g$', '$KL(g, f) = E_g[\\ln g(R) - \\ln f(R)] \\ge 0$, zero doar dacă $f = g$'),
@@ -616,7 +616,7 @@ D.frame(T('Reading the $\\Delta$AIC Map', 'Interpretarea hărții $\\Delta$AIC')
 # =============================================================================
 D.section('Goodness-of-Fit Tests', 'Teste de concordanță')
 
-D.frame(T('From Pearson to the Empirical Distribution Function', 'De la Pearson la funcția de repartiție empirică'), cols(items(
+D.frame(T('Pearson\'s $\\chi^2$ Test and the Empirical Distribution Function', 'Testul $\\chi^2$ al lui Pearson și funcția de repartiție empirică'), cols(items(
     (T('\\refPearson: the first goodness-of-fit test, the $\\chi^2$ test', '\\refPearson: primul test de concordanță, testul $\\chi^2$'),
      [T('group the data into bins and compare observed with expected counts', 'grupăm datele în clase și comparăm frecvențele observate cu cele așteptate'),
       T('the result depends on the bins, and the tails hold few observations', 'rezultatul depinde de clase, iar cozile conțin puține observații')]),
@@ -673,7 +673,7 @@ D.frame(T('Cramér--von Mises and Anderson--Darling', 'Cramér--von Mises și An
         'Photo: unknown photographer (1951); public domain; Wikimedia Commons', 'Foto: fotograf necunoscut (1951); domeniu public; Wikimedia Commons',
         h='0.42\\textheight'), wl='0.66', wr='0.30'))
 
-chart(T('Why KS Is Weak in the Tails', 'Slăbiciunea testului KS în cozi'), 'sfm_ch6_ks_tail', 'SFM_ch6_gof_tests', [
+chart(T('Low Power of KS in the Tails', 'Puterea redusă a testului KS în cozi'), 'sfm_ch6_ks_tail', 'SFM_ch6_gof_tests', [
     T('S\\&P 500 against its Normal fit. Left: the KS gap peaks at $x = @{kt.x}\\%$, near the centre ($F = @{kt.F}\\%$), with $D_n = @{kt.d}$',
       'S\\&P 500 comparat cu distribuția Normală estimată. Stînga: distanța KS are maximul la $x = @{kt.x}\\%$, aproape de centru ($F = @{kt.F}\\%$), cu $D_n = @{kt.d}$'),
     (T('In the tails $F_n$ and $F$ are both close to 0 or 1, so the raw gap is small even when the model is badly wrong', 'În cozi, $F_n$ și $F$ sînt amîndouă aproape de 0 sau 1, deci distanța brută este mică chiar dacă modelul greșește mult'),
@@ -719,7 +719,7 @@ D.frame(T('Statistical vs Practical Significance', 'Semnificație statistică ș
 # =============================================================================
 D.section('PP and QQ Plots', 'Grafice PP și QQ')
 
-D.frame(T('Two Ways to Look at a Fit', 'Două moduri de a evalua vizual ajustarea'), items(
+D.frame(T('Definitions of PP and QQ Plots', 'Definițiile graficelor PP și QQ'), items(
     (T('\\textbf{PP plot} (probability--probability): points $\\big(p_i, F(r_{(i)})\\big)$ with $p_i = (i - 0.5)/n$', '\\textbf{Grafic PP} (probabilitate--probabilitate): punctele $\\big(p_i, F(r_{(i)})\\big)$ cu $p_i = (i - 0{,}5)/n$'),
      [T('both axes in $[0, 1]$: differences in the centre show; the tails are squeezed into the corners', 'ambele axe în $[0, 1]$: se văd diferențele din centru; cozile sînt înghesuite în colțuri'),
       T('the visual twin of KS: the largest vertical distance to the diagonal is close to $D_n$', 'echivalentul grafic al testului KS: cea mai mare distanță pe verticală față de diagonală este apropiată de $D_n$')]),
@@ -934,7 +934,7 @@ D.frame(T('A Model-Selection Workflow', 'Etapele selecției modelului'), items(
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Does NIG still win after we remove volatility clustering?}', '\\textbf{Mai cîștigă NIG după ce eliminăm efectul de volatility clustering?}'),
      [T('part of the heavy tails of daily returns comes from changing volatility (Chapter 2)', 'o parte din cozile groase ale randamentelor zilnice provine din volatilitatea variabilă în timp (Capitolul 2)'),
       T('returns divided by a volatility forecast (for example EMA, $\\lambda = 0.96$) have lighter tails; which candidate fits them best?',
@@ -998,7 +998,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      T('Pinball loss', 'Pierderea pinball') + ' & $\\frac{1}{n}\\sum_t (\\alpha - \\mathbf{1}\\{r_t < q\\})(r_t - q)$'],
     size='footnotesize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: model A has $\\ell = -1000$ with $k = 3$, model B has $\\ell = -998$ with $k = 5$; which has the lower AIC?',
        '\\textbf{Întrebare}: modelul A are $\\ell = -1000$ cu $k = 3$, modelul B are $\\ell = -998$ cu $k = 5$; care are AIC mai mic?'),
      [T('\\textbf{Answer}: A: $2006$; B: $2006$; a tie ($\\Delta = 0$): the two extra parameters buy exactly their penalty',

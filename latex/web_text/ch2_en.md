@@ -120,7 +120,7 @@ The remaining 0.27% lies beyond three standard deviations, in both tails: about 
 
 For returns, this property means that the Normal distribution gives large moves very small probabilities. The next table quantifies this.
 
-## How Rare Are Large Moves under the Normal Distribution? {h=ba0c18ad}
+## Frequency of Large Moves under the Normal Distribution {h=d59f168f}
 
 For $k$ from 1 to 6, the table gives the probability $P(|Z| > k)$ that a standard Normal variable lies more than $k$ standard deviations from 0, and its inverse expressed in trading days and in years, with 252 trading days a year. A one-standard-deviation move occurs once every 3 days, a two-standard-deviation move once every 22 days, and a three-standard-deviation move once every 370 days, about once in a year and a half.
 
@@ -224,7 +224,7 @@ The theorem has three conditions: independence of the terms, identical distribut
 
 The speed of convergence is given by the Berry–Esseen bound: the largest gap between the CDF of the standardised mean and $\Phi$ falls like $1/\sqrt{n}$ and grows with the skewness of $X$. The theorem explains why the Normal distribution appears so often in data, and why confidence intervals for a mean are built with Normal quantiles whatever the distribution of the data.
 
-## The CLT at Work (SFEclt) {h=0e1b56d2}
+## Illustration of the CLT (SFEclt) {h=4027ad77}
 
 The simulation uses a strongly skewed variable: a Bernoulli draw with success probability $p = 0.2$. For $n = 5$, 30 and 300 draws, the standardised mean of @eq:clt is computed, and the experiment is repeated 20,000 times. Each panel compares the histogram of the 20,000 standardised means (bars) with the $N(0,1)$ density (curve).
 
@@ -276,7 +276,7 @@ The skewness $\gamma_1$ uses the third power, which keeps the sign of each devia
 
 The kurtosis $\gamma_2$ uses the fourth power, which ignores the sign and magnifies large deviations. For the Normal distribution $\gamma_2 = 3$, which is why the excess kurtosis $\gamma_2 - 3$ is usually reported. A positive excess means heavy tails and a tall, narrow centre; such a distribution is called leptokurtic. Both quantities describe the shape, not the location or the scale. The fourth power has a cost: a single deviation of 10 standard deviations contributes as much to the fourth moment as ten thousand deviations of one standard deviation, so the kurtosis is very sensitive to a few extreme days.
 
-## What Skewness and Kurtosis Look Like {h=d6eec300}
+## Skewness and Kurtosis: Graphical Illustration {h=31cb6b43}
 
 The left panel compares two densities with the same mean, 0, and the same variance, 1: the Normal distribution, with excess kurtosis 0, and the Student-t distribution with 5 degrees of freedom, rescaled to unit variance, with excess kurtosis 6. The Student-t distribution is defined in [Section 7](#sec-7). Although the variances are equal, the shapes differ: the Student-t curve has more mass in the centre and in the tails and less in the shoulders, the region about one to two standard deviations from the mean.
 
@@ -484,7 +484,7 @@ The Student-t distribution corrects the main departure from normality, heavy tai
 
 The previous sections tested a single assumption of the benchmark model, normality. This section moves to a full description of returns through stylised facts: statistical properties that appear in many markets and periods. Six of them are checked on the chapter's eight series. They concern the tails, the change of shape with the horizon, the autocorrelation of returns and of their size, and the asymmetry between falls and rises. Together they show that the i.i.d. Normal model violates not only normality but also independence, and they specify what a better model has to reproduce.
 
-## What Is a Stylised Fact? {h=1ee4c41d}
+## Definition of a Stylised Fact {h=40de6852}
 
 A stylised fact is a statistical property shared by many assets, markets and periods [@Cont2001]. The term stresses that the property is qualitative: "returns have heavy tails" is a stylised fact, "the degrees of freedom are 3.2" is not, because the exact value differs from one series to another. This generality is what gives stylised facts their value: a property that appears in stocks, indices, currencies and cryptocurrencies, over different periods, cannot be an accident of one sample.
 
@@ -500,7 +500,7 @@ The third fact is the absence of linear autocorrelation: past returns have almos
 
 The fifth fact is the leverage effect: price falls raise future volatility more than rises of the same size. The sixth is gain/loss asymmetry: large losses are larger and more frequent than large gains. The last two facts concern asymmetry, in the dynamics and in the distribution. Each fact is checked below with a statistic and a chart.
 
-## Fact 1: Heavy Tails, Counted {h=0a9d5fbf}
+## Fact 1: Heavy Tails, Number of k-Sigma Days {h=8b7ca808}
 
 For the S&P 500, DAX, BET and Bitcoin, the table counts the days on which the return lies more than $k$ standard deviations from the mean, $|r_t - \bar r| > k\,s$, for $k$ from 3 to 6, where $s$ is the sample standard deviation. The last row gives the number of days expected under the Normal distribution for a sample of 4,201 days, the length of the S&P 500 series: 11.34 days beyond 3 standard deviations, 0.27 days beyond 4, $2.4 \times 10^{-3}$ days beyond 5 and $8.3 \times 10^{-6}$ days beyond 6.
 
@@ -624,7 +624,7 @@ Fact 1 holds for every series: the daily excess kurtosis is at least 5.1. Fact 3
 
 Facts 5 and 6 are clear for the indices, with $\bar L(1..5)$ between −0.12 and −0.10 and quantile ratios between 1.12 and 1.30. Fact 5 is equally weak for Bitcoin, SNP, SNN and SNG, with $\bar L(1..5)$ between −0.04 and −0.03; BRD, at −0.05, lies in between. Fact 6 fails only for SNN, whose ratio of 0.88 is below 1, and is close to 1 for SNP (1.04) and SNG (1.02). A systematic comparison of the return distributions of cryptocurrencies and traditional assets is made by @PeleEtAl2023.
 
-## What the Facts Mean for Models {h=af61abe8}
+## Implications of the Stylised Facts for Models {h=d229a8c3}
 
 The table shows which of the six facts are reproduced by four classes of models. The i.i.d. Normal model reproduces only the absence of autocorrelation; aggregational Gaussianity holds trivially, because returns are Normal at every horizon. The i.i.d. Student-t model adds heavy tails, and aggregation brings it closer to the Normal distribution, but it has no volatility dynamics.
 
@@ -646,7 +646,7 @@ The stylised facts show that the benchmark model fails in three ways: the daily 
 
 This section applies the chapter's tools to an open research question: are the tails of the Bitcoin return distribution getting thinner as the market matures? It presents the preliminary evidence and the reasons why the question remains open, describes where artificial intelligence (AI) tools can help in such a study and what has to be checked in their output, and proposes a project seed.
 
-## An Open Question: Are Bitcoin's Tails Getting Thinner? {h=ad1d93f6}
+## An Open Research Question: Evolution of Bitcoin's Tails {h=1f133d1d}
 
 The working hypothesis is that as a market matures, through more participants, futures contracts and exchange-traded funds (ETFs), the tails of its return distribution might thin out. For Bitcoin, and for the S&P 500 as a benchmark, the chart shows the excess kurtosis of daily returns in each year (top) and the degrees of freedom $\hat\nu$ of the Student-t distribution fitted separately to each year (bottom), with values capped at 30.
 
@@ -694,7 +694,7 @@ The next rows measure departures from normality. Sample skewness and excess kurt
 
 The last rows serve to check the stylised facts. The sample autocorrelation $\hat\rho(h)$ and the Ljung–Box statistic $Q(m)$ test the linear dependence of returns and, applied to $|r_t|$, volatility clustering. The leverage correlation $L(k) = \text{Corr}(r_t, |r_{t+k}|)$ measures the leverage effect.
 
-## Check Yourself {h=6a8a9265}
+## Self-Assessment {h=f8416dfa}
 
 The first question asks for the standardisation of a return. If daily returns are $N(0.05\%, 1\%^2)$, a day of −3% lies $z = (-3 - 0.05)/1 = -3.05$ standard deviations from the mean. According to the Normal frequency table, such a day should occur less than once a year.
 

@@ -26,7 +26,7 @@ Variance ratio VR(q) of daily log returns for horizons q from 2 to 40 trading da
 - **Judge**, on real data, which markets look efficient and whether this changes over time.
 
 @plan
-- Can Prices Be Predicted? | The economic argument against predictability, the history from Bachelier to Fama, and a first look at random walks and real prices.
+- Predictability of Prices | The economic argument against predictability, the history from Bachelier to Fama, and a first look at random walks and real prices.
 - Efficient Markets | The definition of efficiency, its three forms, the fair-game model, the joint-hypothesis problem and the Grossman–Stiglitz paradox.
 - Random Walk Hypotheses | The random walk of log prices, the hypotheses RW1, RW2, RW3, the martingale and the square-root-of-time rule.
 - White Noise and the Autocorrelation Function | White noise, the ACF of AR and MA processes and the ACF of daily returns with i.i.d. and robust bands.
@@ -40,7 +40,7 @@ Variance ratio VR(q) of daily log returns for horizons q from 2 to 40 trading da
 
 [Seminar 7](../EN/Seminars/seminar7_efficient_markets_random_walk_vr.pdf) comes before this lecture and practises the same tests on data.
 
-# Can Prices Be Predicted?
+# Predictability of Prices
 
 The question of the chapter is old. This section gives the economic argument for why predictable prices should not last, follows the idea of random price changes from Bachelier in 1900 to Samuelson and Fama in 1965, and ends with two pictures of real data that show why a formal test is needed.
 
@@ -60,7 +60,7 @@ Bachelier's work remained almost unknown for half a century. The empirical side 
 
 @Roberts1959 added a methodological point. He simulated random walks and showed that they display the same "patterns" that chartists, the analysts who forecast prices from charts, see in real prices. A pattern on a chart is therefore not evidence of predictability, since pure chance produces such patterns as well. The next frame repeats Roberts' experiment with modern data.
 
-## Which One Is the S&P 500? {h=dff6dd26}
+## Question for the Room: Which Path Is the S&P 500? {h=2e33b1a6}
 
 The chart shows five paths of log prices since 1990, each started at 0, so that the vertical axis measures the cumulative log return. Four paths are simulated random walks whose daily steps are i.i.d. (independent and identically distributed) Normal, with mean 0.033% and standard deviation 1.13% per day, the values of the S&P 500 over the same period. The fifth path is the log price of the S&P 500 minus its first value.
 
@@ -92,7 +92,7 @@ The economic argument says that exploitable predictability should disappear thro
 
 This section defines market efficiency, distinguishes its three forms by the information set involved, and writes efficiency as a fair-game model. It then explains two limits of the concept: every test is also a test of a model of expected returns, and perfect efficiency is logically impossible when information is costly.
 
-## What Is an Efficient Market? {h=32718c73}
+## Definition of an Efficient Market {h=ab1cd21d}
 
 According to @Fama1970, a market is efficient if prices "fully reflect" the available information $\Omega_t$. The operational meaning of this definition is that no trading rule based on $\Omega_t$ earns more than the return that compensates its risk. The EMH (efficient market hypothesis) is the hypothesis that real markets have this property.
 
@@ -170,7 +170,7 @@ RW2 assumes independent but not identically distributed increments. It allows th
 
 The hypotheses are nested: RW1 implies RW2, which implies RW3. Tests of RW3 use only the autocorrelations of returns, and the tests of the following sections differ mainly in which of the three hypotheses they assume under the null.
 
-## What Each Hypothesis Allows {h=10e901b5}
+## Comparison of the Random Walk Hypotheses {h=13302cbd}
 
 The table compares the three hypotheses with the martingale, property by property. All four make returns uncorrelated, $\mathrm{Corr}(r_t, r_{t-k}) = 0$. All except RW3 make the conditional mean unpredictable, $E[r_t \mid \text{past}] = \mu$. RW3 does so "not always", because a process can be uncorrelated and still have a mean that depends on the past in a nonlinear way, which a correlation does not detect.
 
@@ -186,7 +186,7 @@ The martingale sits between the random walk hypotheses. A martingale difference 
 
 Question for the room: does volatility clustering contradict weak-form efficiency? The answer is no. Volatility clustering rejects RW1 and RW2, since the variance of tomorrow's return depends on today's return. But a predictable variance does not make the return predictable: knowing that tomorrow will be turbulent does not say whether the price will rise or fall. The martingale and RW3 survive, and with them weak-form efficiency.
 
-## Worked Example: How Risk Grows with the Horizon {h=0e3321d6}
+## Worked Example: Risk as a Function of the Horizon {h=cec1a116}
 
 The variance rule $\mathrm{Var}(r_t(q)) = q\sigma^2$ of the random walk gives the standard deviation of the $q$-day return as $\mathrm{sd}(r_t(q)) = \sigma\sqrt{q}$. For the S&P 500 since 1990, the daily standard deviation is $\hat\sigma = 1.1337\%$.
 
@@ -418,7 +418,7 @@ Log prices are $I(1)$ and returns $I(0)$ in all eight series: ADF and PP do not 
 
 The random walk implies that the variance of returns grows linearly with the horizon. The variance ratio compares the two sides of this relation and summarises many autocorrelations in one number. This section defines it, presents the Lo–MacKinlay estimator and its homoskedastic and robust tests, shows by simulation why the robust test is needed, and extends the test to several horizons and to a horizon chosen by the data.
 
-## The Idea of the Variance Ratio {h=cc019eae}
+## The Variance Ratio: Definition {h=4584d245}
 
 Under a random walk, $\mathrm{Var}(r_t(q)) = q\,\mathrm{Var}(r_t)$: the variance of the $q$-day return is $q$ times the daily variance. The VR (variance ratio) compares the two sides. For a stationary return series, the variance of a sum of $q$ returns equals $q\gamma(0) + 2\sum_{k=1}^{q-1}(q-k)\gamma(k)$, and dividing by $q\gamma(0)$ gives [@LoMacKinlay1988; @CampbellLoMacKinlay1997]
 
@@ -450,7 +450,7 @@ Both statistics are approximately $N(0, 1)$ under their null hypotheses.
 
 The robust variance $\hat\theta(q)/T$ follows from @eq:vr: $\widehat{\mathrm{VR}}(q) - 1$ is a weighted sum of sample autocorrelations with weights $2(q-j)/q$, and each autocorrelation has variance $\hat\delta(j)/T$, with the $\hat\delta(j)$ of the robust ACF band @eq:delta. With i.i.d. returns, $\hat\delta(j) \approx 1$ and $Z^*(q) \approx Z(q)$. The photograph shows Andrew W. Lo of MIT (Massachusetts Institute of Technology), one of the two authors of the test.
 
-## Why the Robust Test: a Monte Carlo Check {h=ac76df17}
+## The Need for a Robust Test: a Monte Carlo Study {h=1eea349c}
 
 The size of a test is how often it rejects a true null hypothesis; a 5% test should reject a true $H_0$ in 5% of samples. The chart reports the sizes of $Z$ and $Z^*$ in a simulation: 1,000 samples of $T = 2000$ returns in which $H_0$ is true, generated either as i.i.d. Normal returns or by a GARCH(1,1) model with $\alpha = 0.12$ and $\beta = 0.86$. GARCH returns are uncorrelated but have volatility clustering; $\alpha$ measures the reaction of the variance to yesterday's shock and $\beta$ its persistence. The bars give the percentage of rejections at the 5% level for $q = 2$, 5 and 10; the dashed line marks 5%.
 
@@ -474,7 +474,7 @@ For the S&P 500, all four ratios are below 1, from 0.922 at two days to 0.767 at
 
 The table contains four tests per series and 32 in all, and the more tests are run, the more "significant" horizons appear by chance. A rejection at two horizons out of four, as for Transgaz, needs a test that accounts for the multiple comparisons. The next frame gives it.
 
-## Several Horizons at Once: the Chow–Denning Test {h=e25f20b6}
+## Joint Test over Several Horizons: the Chow–Denning Test {h=82afbfee}
 
 Testing $q = 2$, 5, 10 and 20 separately at 5% gives a much higher probability of at least one false rejection than 5%. For 4 independent tests it would be $1 - 0.95^4 = 18.5\%$; the variance ratios at different horizons are positively correlated, so the true figure is lower, but still well above 5%.
 
@@ -558,7 +558,7 @@ For the BET, the first period, 1997–2006, shows strong momentum: $\hat\rho(1) 
 
 For the S&P 500, the negative autocorrelation appears only after 2002: in 1990–2001, $\hat\rho(1) = 0.017$ and VR(5) $= 0.96$, while in 2002–2013, $\hat\rho(1) = -0.100$, VR(5) $= 0.80$ and the joint test rejects (p-value 0.010), and in 2014–2026, $\hat\rho(1) = -0.124$, VR(5) $= 0.85$ and the joint p-value is 0.080. Bitcoin shows no rejection in any period since 2014, with VR(5) between 0.98 and 1.01; @Urquhart2016 found inefficiency in its earliest years, before the sample of this chapter begins.
 
-## Why the Early BET Was Predictable {h=6771deda}
+## Predictability of the BET in Its Early Years {h=af25aca7}
 
 The main explanation of the early momentum of the BET is thin trading: in its first years, many index stocks traded only a few times per day, some not every day. A closing price could then be hours old, a stale price that does not yet reflect the news of the afternoon. News entered the index over several days, as each stock traded in turn.
 
@@ -606,7 +606,7 @@ Event studies test the semi-strong form by the speed with which prices absorb pu
 
 The tools of the chapter can be applied to questions that are still open. This section states one such question, about the efficiency of the Bucharest market after its upgrade to emerging-market status, describes how AI (artificial intelligence) tools could support a study of it, lists the checks such a study needs and proposes a project.
 
-## An Open Question {h=56bc2676}
+## An Open Research Question {h=589a5cdc}
 
 Did the BET become more efficient after Romania's upgrade to Secondary Emerging market status by FTSE Russell, effective in September 2020 [@FTSERussell2019]? The upgrade brought index funds and foreign investors, which should increase liquidity and reduce the stale prices that produced the early momentum of the BET.
 
@@ -662,7 +662,7 @@ For unit roots, the ADF regression @eq:adf gives the statistic $\tau = \hat\gamm
 
 For the variance ratio, @eq:vr writes $\mathrm{VR}(q)$ as a weighted sum of autocorrelations, the robust test $Z^*(q)$ and its variance $\hat\theta(q)$ are given in @eq:zstar, and the Chow–Denning test @eq:cd takes the maximum of $|Z^*(q_i)|$ over $m$ horizons, with $P(\mathrm{CD} \le c) = (2\Phi(c) - 1)^m$.
 
-## Check Yourself {h=c3fcd153}
+## Self-Assessment {h=242eaefd}
 
 First question: $\hat\rho(1) = 0.10$ and $\hat\rho(k) = 0$ for $k \ge 2$; what does VR(2) tell us? By @eq:vr, $\mathrm{VR}(2) = 1 + 0.10 = 1.10$: the two-day variance is 10% larger than under a random walk, a sign of momentum.
 

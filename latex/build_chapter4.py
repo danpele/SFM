@@ -331,7 +331,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. DE LA JOCURI DE NOROC LA AXIOME
 # =============================================================================
-D.section('From Games of Chance to Axioms', 'De la jocuri de noroc la axiome')
+D.section('Origins of Probability Theory: Games of Chance and Axioms', 'Originile teoriei probabilităților: jocurile de noroc și axiomele')
 
 D.frame(T('1654: the Problem of Points', '1654: problema punctelor'), cols(items(
     T('Two players stop a fair game before the end: how should the stake be split?', 'Doi jucători opresc un joc echitabil înainte de final: cum se împarte miza?'),
@@ -384,7 +384,7 @@ D.frame(T('Example: Down Days in a Row', 'Exemplu: zile de scădere consecutive'
      [T('the sign of the return persists from one day to the next', 'semnul randamentului persistă de la o zi la alta'),
       T('a consequence of thin trading: prices adjust to news over several days', 'o consecință a lichidității reduse: prețurile se ajustează la știri în mai multe zile')])))
 
-D.recap(('From Games to Axioms', 'De la jocuri la axiome'), [
+D.recap(('Origins of Probability Theory', 'Originile teoriei probabilităților'), [
     T('Probability space $(\\Omega, \\mathcal{F}, P)$ and three axioms', 'Spațiul de probabilitate $(\\Omega, \\mathcal{F}, P)$ și trei axiome'),
     T('Fair value = expected value: the idea of Pascal and Fermat', 'Valoare corectă = valoare așteptată: ideea lui Pascal și Fermat'),
     T('Conditional probability measures how information changes the odds', 'Probabilitatea condiționată măsoară cum schimbă informația șansele')])
@@ -484,7 +484,7 @@ D.frame(T('Worked Example: Annual Mean and Volatility', 'Exemplu lucrat: media �
      [T('annual volatility $\\sigma\\sqrt{A} = @{an.s}\\sqrt{@{an.ppy}} = @{an.sa}\\%$', 'volatilitatea anuală $\\sigma\\sqrt{A} = @{an.s}\\sqrt{@{an.ppy}} = @{an.sa}\\%$'),
       T('the square-root-of-time rule: volatility grows with $\\sqrt{h}$ over $h$ periods', 'regula rădăcinii pătrate a timpului: pe $h$ perioade, volatilitatea crește cu $\\sqrt{h}$')])))
 
-D.frame(T('How Rare Is a 4-Sigma Day? Chebyshev\'s Bound', 'Frecvența zilelor de 4 sigma: marginea lui Cebîșev'), items(
+D.frame(T('Frequency of 4-Sigma Days: Chebyshev\'s Bound', 'Frecvența zilelor de 4 sigma: marginea lui Cebîșev'), items(
     (T('\\textbf{Chebyshev\'s inequality}: for any $X$ with finite variance, $P(|X - \\mu| \\ge k\\sigma) \\le 1/k^2$', '\\textbf{Inegalitatea lui Cebîșev}: pentru orice $X$ cu varianță finită, $P(|X - \\mu| \\ge k\\sigma) \\le 1/k^2$'),
      [T('$\\mu$, $\\sigma$: the mean and the standard deviation; $k > 1$: the distance from the mean, in standard deviations', '$\\mu$, $\\sigma$: media și abaterea standard; $k > 1$: distanța față de medie, în abateri standard'),
       T('it uses only the mean and the variance, so it holds for every distribution', 'folosește doar media și varianța, deci este valabilă pentru orice distribuție')]),
@@ -609,7 +609,7 @@ chart(T('Today\'s Return Given Yesterday\'s Move', 'Randamentul de azi dată fii
     T('Law of total variance, S\\&P 500: @{cd.sp500.total} = @{cd.sp500.within} + @{cd.sp500.between}; the between part is @{cd.sp500.share}\\%',
       'Legea varianței totale, S\\&P 500: @{cd.sp500.total} = @{cd.sp500.within} + @{cd.sp500.between}; componenta dintre grupuri reprezintă @{cd.sp500.share}\\% din total')], h='0.50\\textheight')
 
-D.frame(T('From Conditional Variance to GARCH', 'De la varianța condiționată la GARCH'), items(
+D.frame(T('Conditional Variance and GARCH Models', 'Varianța condiționată și modelele GARCH'), items(
     (T('Write the return as $r_t = \\mu_t + \\sigma_t z_t$, with $z_t$ i.i.d., mean 0, variance 1', 'Scriem randamentul ca $r_t = \\mu_t + \\sigma_t z_t$, cu $z_t$ i.i.d., media 0, varianța 1'),
      [T('$\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$: the conditional mean, close to constant', '$\\mu_t = E[r_t \\mid \\mathcal{F}_{t-1}]$: media condiționată, aproape constantă'),
       T('$\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$: the conditional variance, which changes with the news', '$\\sigma_t^2 = \\text{Var}(r_t \\mid \\mathcal{F}_{t-1})$: varianța condiționată, care se schimbă cu știrile')]),
@@ -654,7 +654,7 @@ chart(T('The LLN for the Mean Return: Slow Convergence', 'LLN pentru randamentul
 # =============================================================================
 D.section('Random Numbers and Monte Carlo', 'Numere aleatoare și Monte Carlo')
 
-D.frame(T('The Monte Carlo Idea', 'Ideea Monte Carlo'), items(
+D.frame(T('The Monte Carlo Method', 'Metoda Monte Carlo'), items(
     (T('Estimate $\\theta = E[g(X)]$ by $\\hat\\theta_N = \\frac1N\\sum_{i=1}^N g(X_i)$ with simulated $X_i$', 'Estimăm $\\theta = E[g(X)]$ prin $\\hat\\theta_N = \\frac1N\\sum_{i=1}^N g(X_i)$, cu $X_i$ simulate'),
      [T('$\\theta$: the unknown quantity; $g$: a function of the simulated variable; $N$: the number of simulations', '$\\theta$: mărimea necunoscută; $g$: o funcție de variabila simulată; $N$: numărul de simulări'),
       T('a probability is an expectation: $P(A) = E[\\mathbf{1}_A]$, with $\\mathbf{1}_A = 1$ if $A$ occurs and 0 otherwise', 'o probabilitate este o medie: $P(A) = E[\\mathbf{1}_A]$, cu $\\mathbf{1}_A = 1$ dacă $A$ are loc și 0 altfel'),
@@ -730,7 +730,7 @@ D.frame(T('Worked Example: a Monthly Loss Probability by Monte Carlo (2/2)', 'Ex
      [T('obtained from $1.96 \\times \\sqrt{p(1 - p)/N} = 0.1\\,p$: the half-width of the interval is 10\\% of $p$', 'se obține din $1.96 \\times \\sqrt{p(1 - p)/N} = 0.1\\,p$: semilățimea intervalului este 10\\% din $p$'),
       T('a rare event needs many simulations', 'un eveniment rar cere multe simulări')])))
 
-chart(T('Monte Carlo Converges at Rate $1/\\sqrt{N}$', 'Monte Carlo converge cu viteza $1/\\sqrt{N}$'), 'sfm_ch4_monte_carlo', 'SFM_ch4_monte_carlo', [
+chart(T('Convergence Rate of Monte Carlo: $1/\\sqrt{N}$', 'Viteza de convergență Monte Carlo: $1/\\sqrt{N}$'), 'sfm_ch4_monte_carlo', 'SFM_ch4_monte_carlo', [
     T('The estimate wanders for small $N$ and settles inside the 95\\% band, which shrinks like $1/\\sqrt{N}$', 'Pentru $N$ mic estimarea fluctuează mult, apoi intră în banda de 95\\%, care se îngustează ca $1/\\sqrt{N}$'),
     T('$N = 10^6$: $@{mc.e1000000}\\%$ vs exact @{mc.p}\\%, s.e. @{mc.s1000000}\\%', '$N = 10^6$: $@{mc.e1000000}\\%$ față de valoarea exactă @{mc.p}\\%, eroarea standard @{mc.s1000000}\\%'),
     T('Monte Carlo removes the simulation error, not the model error: Seminar 4 (B3) repeats it with resampled days', 'Un $N$ mare reduce eroarea de simulare, nu și eroarea de model: Seminarul 4 (B3) repetă calculul cu zile reeșantionate')], h='0.56\\textheight')
@@ -847,7 +847,7 @@ D.frame(T('The AR(1) Process: Simulation', 'Procesul AR(1): simulare'), items(
       T('$\\rho(5) = @{pr.095.r5}$; half-life @{pr.095.hl} periods', '$\\rho(5) = @{pr.095.r5}$; timpul de înjumătățire @{pr.095.hl} perioade')]),
     T('The closer $\\phi$ is to 1, the larger the variance and the slower a shock fades', 'Cu cît $\\phi$ este mai aproape de 1, cu atît varianța este mai mare și un șoc se stinge mai încet')))
 
-chart(T('White Noise, AR(1) and Random Walk, Same Shocks', 'Zgomot alb, AR(1) și mers aleator, aceleași șocuri'), 'sfm_ch4_processes', 'SFM_ch4_processes', [
+chart(T('White Noise, AR(1) and Random Walk with the Same Shocks', 'Zgomot alb, AR(1) și mers aleator cu aceleași șocuri'), 'sfm_ch4_processes', 'SFM_ch4_processes', [
     T('The larger $\\phi$, the longer a shock lives: the AR(1) with $\\phi = 0.95$ wanders, but returns to 0', 'Cu cît $\\phi$ este mai mare, cu atît un șoc persistă mai mult: AR(1) cu $\\phi = 0.95$ se abate mult timp de la 0, dar revine'),
     T('The random walk never returns on purpose: shocks are permanent and its variance grows with $t$', 'Mersul aleator nu revine în mod sistematic: șocurile sînt permanente, iar varianța lui crește cu $t$')], h='0.58\\textheight')
 
@@ -897,7 +897,7 @@ D.frame(T('The Wiener Process', 'Procesul Wiener'), cols(items(
     T('Textbook: \\refFHH, Ch.~5', 'Manual: \\refFHH, cap.~5')),
     ph('wiener', 'Norbert Wiener (1894--1964)', h='0.50\\textheight'), wl='0.64', wr='0.32'), 'footnotesize')
 
-chart(T('From Random Walks to the Wiener Process (SFEWienerProcess)', 'De la mersul aleator la procesul Wiener (SFEWienerProcess)'), 'sfm_ch4_wiener', 'SFM_ch4_wiener_gbm', [
+chart(T('The Wiener Process as a Limit of Random Walks (SFEWienerProcess)', 'Procesul Wiener ca limită a mersului aleator (SFEWienerProcess)'), 'sfm_ch4_wiener', 'SFM_ch4_wiener_gbm', [
     T('Left: scaled random walks with 10, 100 and 10\\,000 steps; the steps vanish, the randomness stays', 'Stînga: mersuri aleatoare scalate cu 10, 100 și 10\\,000 de pași; treptele dispar, caracterul aleator rămîne'),
     (T('Right: 20 Wiener paths; $\\text{Var}(W(t)) = t$, so they spread like $\\pm\\sqrt{t}$', 'Dreapta: 20 de traiectorii Wiener; $\\text{Var}(W(t)) = t$, deci dispersia crește ca $\\pm\\sqrt{t}$'),
      [T('simulated $\\text{Var}(W(1)) = @{w.v1}$; @{w.in1}\\% of $W(1)$ inside $\\pm 1$ (theory @{w.in1th}\\%)', '$\\text{Var}(W(1))$ simulată $= @{w.v1}$; @{w.in1}\\% din valorile $W(1)$ în $\\pm 1$ (teoretic @{w.in1th}\\%)')])], h='0.50\\textheight')
@@ -966,7 +966,7 @@ D.recap(('Wiener Process and GBM', 'Procesul Wiener și GBM'), [
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-chart(T('An Open Question: Does GBM Get Drawdown Risk Right?', 'O întrebare deschisă: estimează GBM corect riscul de drawdown?'), 'sfm_ch4_drawdown_years', 'SFM_ch4_drawdown_open', [
+chart(T('An Open Research Question: Drawdown Risk under GBM', 'O întrebare de cercetare deschisă: riscul de drawdown în modelul GBM'), 'sfm_ch4_drawdown_years', 'SFM_ch4_drawdown_open', [
     (T('Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitations of the GBM Model}}), here within a calendar year', 'Drawdown (\\hyperlink{ch4-dd}{\\textcolor{MainBlue}{Limitele modelului GBM}}), aici în cursul unui an calendaristic'),
      [T('beyond 20\\%: S\\&P 500 in @{dd.sp500.nh} of @{dd.sp500.ny} years (@{dd.sp500.sr}\\%) vs @{dd.sp500.pg}\\% under GBM; BET @{dd.bet.sr}\\% vs @{dd.bet.pg}\\%', 'peste 20\\%: S\\&P 500 în @{dd.sp500.nh} din @{dd.sp500.ny} ani (@{dd.sp500.sr}\\%), față de @{dd.sp500.pg}\\% în GBM; BET @{dd.bet.sr}\\% față de @{dd.bet.pg}\\%')]),
     (T('Beyond 40\\%: GBM expects @{dd.sp500.e40} such years for the S\\&P 500 and @{dd.bet.e40} for the BET', 'Peste 40\\%: GBM prevede, în medie, @{dd.sp500.e40} asemenea ani pentru S\\&P 500 și @{dd.bet.e40} pentru BET'),
@@ -1017,7 +1017,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), table(
      'GBM & $S_t = S_0\\exp((\\mu - \\sigma^2/2)t + \\sigma W_t)$, $E[S_t] = S_0e^{\\mu t}$'],
     size='footnotesize'))
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: $\\sigma_1 = 2\\%$, $\\sigma_2 = 3\\%$, $\\rho = 0.5$; what is the volatility of the 50/50 portfolio?', '\\textbf{Întrebare}: $\\sigma_1 = 2\\%$, $\\sigma_2 = 3\\%$, $\\rho = 0.5$; cît este volatilitatea portofoliului 50/50?'),
      [T('\\textbf{Answer}: $\\sqrt{0.25 \\times 4 + 0.25 \\times 9 + 2 \\times 0.25 \\times 0.5 \\times 2 \\times 3} = \\sqrt{@{cy.var}} = @{cy.sd}\\%$', '\\textbf{Răspuns}: $\\sqrt{0.25 \\times 4 + 0.25 \\times 9 + 2 \\times 0.25 \\times 0.5 \\times 2 \\times 3} = \\sqrt{@{cy.var}} = @{cy.sd}\\%$')]),
     (T('\\textbf{Question}: GBM with $\\mu = 8\\%$, $\\sigma = 20\\%$, $S_0 = 100$; what are the mean and the median of $S_1$?', '\\textbf{Întrebare}: GBM cu $\\mu = 8\\%$, $\\sigma = 20\\%$, $S_0 = 100$; cît sînt media și mediana lui $S_1$?'),

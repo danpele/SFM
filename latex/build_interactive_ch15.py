@@ -31,15 +31,15 @@ XBLOCKS = [('corr-tab', 25, 'dep', 'rcorr'), ('fr-we', 27, 'dep', 'rcorr'), ('ta
            ('basel-we', 63, 'macro', 'dyroll')]
 ORDER = ['indices', 'episodes', 'rcorr', 'corr-tab', 'fr-we', 'tail-tab', 'tscatter', 'covar-we', 'covarqr', 'dcovar', 'dcovar-tab', 'tlv-we', 'vardcovar', 'dyn',
          'mes-we', 'mes', 'mes-tab', 'mescrisis', 'lrmes-we', 'srisk-we', 'srisk', 'dgc', 'gnet', 'dy-we', 'dytab', 'dy-tab', 'dyroll', 'basel-we']
-TITLES = {'corr-tab': 'Interpretarea corelațiilor: cînd diversificarea nu mai funcționează', 'fr-we': 'Contagiune sau interdependență? Forbes și Rigobon (2/2)',
+TITLES = {'corr-tab': 'Interpretarea corelațiilor: limitele diversificării în criză', 'fr-we': 'Contagiune și interdependență: Forbes și Rigobon (2/2)',
           'tail-tab': 'Dependența în cozi dintre bănci și piețe', 'covar-we': 'Exemplu rezolvat: JPMorgan Chase și S&P 500', 'dcovar-tab': 'Interpretarea ΔCoVaR',
           'tlv-we': 'Exemplu rezolvat: Banca Transilvania și BET', 'mes-we': 'Exemplu rezolvat: MES din zece zile', 'mes-tab': 'Interpretarea MES și a ΔCoVaR',
-          'lrmes-we': 'De la MES la LRMES', 'srisk-we': 'SRISK: deficitul de capital într-o criză', 'dy-we': 'Conectivitatea Diebold–Yilmaz',
+          'lrmes-we': 'MES pe termen lung (LRMES)', 'srisk-we': 'SRISK: deficitul de capital într-o criză', 'dy-we': 'Conectivitatea Diebold–Yilmaz',
           'dy-tab': 'Interpretarea tabelului de conectivitate', 'basel-we': 'Amortizoarele de capital din Basel III'}
-TITLES_EN = {'corr-tab': 'Interpretation: When Diversification Fails', 'fr-we': 'Contagion or Interdependence? Forbes and Rigobon (2/2)',
+TITLES_EN = {'corr-tab': 'Interpretation: Limits of Diversification in Crises', 'fr-we': 'Contagion and Interdependence: Forbes and Rigobon (2/2)',
              'tail-tab': 'Tail Dependence of Banks and Markets', 'covar-we': 'Worked Example: JPMorgan Chase and the S&P 500', 'dcovar-tab': 'Interpretation of ΔCoVaR',
              'tlv-we': 'Worked Example: Banca Transilvania and the BET', 'mes-we': 'Worked Example: MES from Ten Days', 'mes-tab': 'Interpretation: MES and ΔCoVaR',
-             'lrmes-we': 'From MES to LRMES', 'srisk-we': 'SRISK: the Capital Shortfall in a Crisis', 'dy-we': 'Diebold–Yilmaz Connectedness',
+             'lrmes-we': 'Long-Run MES (LRMES)', 'srisk-we': 'SRISK: the Capital Shortfall in a Crisis', 'dy-we': 'Diebold–Yilmaz Connectedness',
              'dy-tab': 'Interpretation of the Connectedness Table', 'basel-we': 'Basel III Capital Buffers'}
 
 PFX = {'indices': 'bi', 'episodes': 'ep', 'rcorr': 'rc', 'corr-tab': 'ct', 'fr-we': 'fr', 'tail-tab': 'tt', 'tscatter': 'ts', 'covar-we': 'cw', 'covarqr': 'cq',
@@ -729,7 +729,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch15-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch15-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH15_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH15_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

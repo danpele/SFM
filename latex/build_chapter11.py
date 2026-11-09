@@ -141,9 +141,9 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. DE LA PIEȚE EFICIENTE LA PIEȚE FRACTALE
 # =============================================================================
-D.section('From Efficient to Fractal Markets', 'De la piețe eficiente la piețe fractale')
+D.section('Efficient Markets and Fractal Markets', 'Piețe eficiente și piețe fractale')
 
-D.frame(T('What the EMH Leaves Open', 'Întrebări lăsate deschise de EMH'), items(
+D.frame(T('Limitations of the EMH', 'Limitele EMH'), items(
     (T('EMH (efficient market hypothesis, \\refFama; Chapter 7): prices reflect the available information, so returns cannot be forecast from past returns',
        'EMH (efficient market hypothesis, ipoteza pieței eficiente, \\refFama; Capitolul 7): prețurile reflectă informația disponibilă, deci randamentele nu pot fi anticipate din randamentele trecute'),
      [T('the random walk of prices implies independent increments: in this chapter, $H = 0.5$', 'mersul aleator al prețurilor implică creșteri independente: în acest capitol, $H = 0.5$')]),
@@ -216,7 +216,7 @@ D.frame(T('EMH, FMH and AMH', 'EMH, FMH și AMH'), table(
 # =============================================================================
 D.section('Self-Similarity and Fractals', 'Autosimilaritate și fractali')
 
-D.frame(T('Benoît Mandelbrot: Roughness as a Measure', 'Benoît Mandelbrot: măsurarea neregularității'), cols(items(
+D.frame(T('Benoît Mandelbrot and the Measurement of Roughness', 'Benoît Mandelbrot și măsurarea neregularității'), cols(items(
     (T('\\refMan: cotton prices have heavy tails and look alike at daily, monthly and yearly scales', '\\refMan: prețurile bumbacului au cozi groase și arată asemănător la scară zilnică, lunară și anuală'),
      [T('the $\\alpha$-stable distributions of Chapter 3', 'distribuțiile $\\alpha$-stabile din Capitolul 3')]),
     T('\\refCoast: the measured length of a coast grows as the ruler shrinks; the growth rate defines a \\textbf{fractal dimension}',
@@ -348,7 +348,7 @@ D.frame(T('Short and Long Memory', 'Memorie scurtă și memorie lungă'), items(
      [T('exponential decay: $\\sum_k |\\phi|^k = 1/(1 - |\\phi|) < \\infty$', 'scădere exponențială: $\\sum_k |\\phi|^k = 1/(1 - |\\phi|) < \\infty$')]),
     T('Link with the Hurst exponent: $d = H - 1/2$', 'Legătura cu exponentul Hurst: $d = H - 1/2$')))
 
-D.frame(T('Worked Example: How Fast Does Memory Fade?', 'Exemplu rezolvat: cît de repede se stinge memoria?'), items(
+D.frame(T('Worked Example: Autocorrelation Decay under Long and Short Memory', 'Exemplu rezolvat: descreșterea autocorelației la memoria lungă și la memoria scurtă'), items(
     (T('Long memory: fractional Gaussian noise (next slides) with $H = 0.8$', 'Memorie lungă: zgomot gaussian fracționar (slide-urile următoare) cu $H = 0.8$'),
      [T('$\\rho(1) = 2^{2H - 1} - 1 = 2^{0.6} - 1 = @{fgn.r1f}$', '$\\rho(1) = 2^{2H - 1} - 1 = 2^{0.6} - 1 = @{fgn.r1f}$'),
       T('$\\rho(10) = @{fgn.8.r10}$, $\\rho(50) = @{fgn.8.r50}$, $\\rho(100) = @{fgn.8.r100}$', '$\\rho(10) = @{fgn.8.r10}$, $\\rho(50) = @{fgn.8.r50}$, $\\rho(100) = @{fgn.8.r100}$')]),
@@ -627,7 +627,7 @@ chart(T('Six Markets: DFA Exponents and the Shuffle Test', 'Șase piețe: expone
       '$|r_t|$: DFA între $@{m.absdfa.min}$ și $@{m.absdfa.max}$; după permutare: între $@{m.shuf.min}$ și $@{m.shuf.max}$, în interiorul benzilor: memoria se află în ordinea zilelor')],
     h='0.50\\textheight')
 
-D.frame(T('Interpretation: What Is Predictable?', 'Interpretarea rezultatelor: ce este previzibil?'), items(
+D.frame(T('Interpretation: Predictability of Returns and Volatility', 'Interpretarea rezultatelor: previzibilitatea randamentelor și a volatilității'), items(
     (T('\\textbf{Returns}: no long memory in the S\\&P 500, DAX, TLV and SNP; Bitcoin at the edge of its band', '\\textbf{Randamentele}: fără memorie lungă la S\\&P 500, DAX, TLV și SNP; Bitcoin la limita benzii'),
      [T('BET: persistence, as in the variance-ratio tests of Chapter 7; partly the thin trading of the early years (Section 8)', 'BET: persistență, ca în testele raportului varianțelor din Capitolul 7; în parte, efectul tranzacționării reduse din primii ani (secțiunea 8)')]),
     (T('\\textbf{Volatility}: long memory everywhere, strongest in the large equity indices', '\\textbf{Volatilitatea}: memorie lungă peste tot, cea mai puternică la marii indici de acțiuni'),
@@ -649,7 +649,7 @@ D.frame(T('Models for Long Memory in Volatility', 'Modele pentru memoria lungă 
 # =============================================================================
 D.section('Rolling Hurst Exponents', 'Exponenți Hurst pe ferestre mobile')
 
-D.frame(T('Does Efficiency Change over Time?', 'Se schimbă eficiența în timp?'), items(
+D.frame(T('Time Variation of Market Efficiency', 'Variația în timp a eficienței pieței'), items(
     (T('The AMH and the FMH both predict that market memory changes over time', 'AMH și FMH prezic, amîndouă, că memoria pieței se schimbă în timp'),
      [T('\\refCT: rolling Hurst exponents of emerging stock markets, to test whether they become more efficient', '\\refCT: exponenți Hurst pe ferestre mobile pentru piețe emergente, pentru a testa dacă devin mai eficiente'),
       T('\\refBar: rolling DFA on Bitcoin returns and volatility', '\\refBar: DFA pe ferestre mobile pentru randamentele și volatilitatea Bitcoin')]),
@@ -673,7 +673,7 @@ D.frame(T('Interpretation: Rolling Exponents', 'Interpretarea exponenților pe f
     T('Bitcoin: windows from @{rl.btc.e0}; $\\hat H$ between $@{rl.btc.min}$ and $@{rl.btc.max}$, @{rl.btc.above}\\% of windows above the band',
       'Bitcoin: ferestre din @{rl.btc.e0}; $\\hat H$ între $@{rl.btc.min}$ și $@{rl.btc.max}$, @{rl.btc.above}\\% dintre ferestre peste bandă')))
 
-D.frame(T('Case Study: Is Bitcoin Efficient?', 'Studiu de caz: este Bitcoin eficient?'), cols(items(
+D.frame(T('Case Study: Efficiency of the Bitcoin Market', 'Studiu de caz: eficiența pieței Bitcoin'), cols(items(
     (T('\\refUrq: several tests, among them R/S, on Bitcoin 2010--2016', '\\refUrq: mai multe teste, printre care R/S, pe Bitcoin, 2010--2016'),
      [T('inefficient over the full sample, moving towards efficiency in the later years', 'ineficient pe întregul eșantion, cu o evoluție spre eficiență în ultimii ani')]),
     T('\\refNC: the same data after a power transformation of the returns: consistent with weak-form efficiency', '\\refNC: aceleași date după o transformare de tip putere a randamentelor: în acord cu eficiența în formă slabă'),
@@ -714,7 +714,7 @@ D.frame(T('Scaling Risk with $h^H$', 'Scalarea riscului cu $h^H$'), items(
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Does a change in the Hurst exponent come before a crisis, or only after it?}', '\\textbf{Apare schimbarea exponentului Hurst înaintea unei crize sau doar după ea?}'),
      [T('the FMH predicts a collapse of horizons; in our data, $\\hat H$ of $|r_t|$ rises in and after 2008 and 2020', 'FMH prezice o prăbușire a orizonturilor; în datele noastre, $\\hat H$ al lui $|r_t|$ crește în timpul și după 2008 și 2020'),
       T('a rolling window contains the crisis only after it starts: is there any signal before?', 'o fereastră mobilă conține criza doar după ce aceasta începe: există vreun semnal înainte?')]),
@@ -773,7 +773,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'VaR 1\\% & $-z_{0.01}\\,\\sigma\\,h^H$'],
     size='small') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: an R/S estimate on 1000 i.i.d.\\ returns is $\\hat H = 0.56$. Is this evidence of long memory?', '\\textbf{Întrebare}: o estimare R/S pe 1000 de randamente i.i.d.\\ este $\\hat H = 0{,}56$. Este o dovadă de memorie lungă?'),
      [T('\\textbf{Answer}: no: the i.i.d.\\ band for $N = 1000$ is $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$, centred near $@{mc.1000.rs.mean}$', '\\textbf{Răspuns}: nu: banda i.i.d.\\ pentru $N = 1000$ este $[@{mc.1000.rs.lo}, @{mc.1000.rs.hi}]$, centrată în jur de $@{mc.1000.rs.mean}$')]),
     (T('\\textbf{Question}: GPH gives $\\hat d = 0.35$ for $|r_t|$. What is $\\hat H$?', '\\textbf{Întrebare}: GPH dă $\\hat d = 0{,}35$ pentru $|r_t|$. Cît este $\\hat H$?'),

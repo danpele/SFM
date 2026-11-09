@@ -35,7 +35,7 @@ Valoarea a 100 de unități investite în ianuarie 2015 în S&P 500, DAX, BET-TR
 - Importanța piețelor financiare | Funcțiile unei piețe, participanții, clasele de active, registrul de ordine și rolul statisticii.
 - Piețele financiare în 2026: statistici descriptive | Creștere, risc și randament, drawdown-uri, VIX, piața din România și activele cripto din 2015.
 - O scurtă istorie a piețelor | Primele burse și bule, 1929, tranzacționarea electronică, Bursa de Valori București și modelele statistice ale prețurilor.
-- De la prețuri la randamente: primii pași | Randamente simple și logaritmice, media și volatilitatea, anualizarea, cozile groase și drawdown-ul.
+- Prețuri și randamente: primele definiții | Randamente simple și logaritmice, media și volatilitatea, anualizarea, cozile groase și drawdown-ul.
 - AI pentru descoperire științifică | O întrebare deschisă despre volatilitatea Bitcoin, folosirea asistenților AI și verificările pe care le cer.
 - Concluzii | Întrebări de autoevaluare și întrebările Capitolului 1.
 
@@ -333,7 +333,7 @@ Crahul a avut consecințe pentru statistică. Au urmat reguli mai stricte de tra
 
 Crahul arată și că drawdown-urile lungi nu sînt o noutate. BET a avut nevoie de treisprezece ani ca să-și revină după 2008, cum arată [Drawdown-uri: interpretare](#s29); revenirile lungi fac parte din istoria piețelor, nu sînt excepția unei singure piețe.
 
-## De la ringul bursei la ecrane {h=e6034f38}
+## Ringul bursei și tranzacționarea electronică {h=3d61bc15}
 
 Din 1867, telegraful bursier (*stock ticker*) a transmis prețurile prin telegraf, tipărite pe benzi de hîrtie. Pentru prima dată, seriile de timp ale prețurilor erau disponibile în afara bursei, investitorilor și cercetătorilor.
 
@@ -349,7 +349,7 @@ Bursa de Valori București (BVB) reînființată a ținut prima ședință de tr
 
 Pentru statistician, această istorie are o consecință practică: seriile zilnice ale pieței din România încep abia la sfîrșitul anilor 1990, iar primii lor ani descriu o piață mică și tînără. [Graficul BET](#s33) arată cît de diferiți au fost acești ani de cei următori.
 
-## Statistica intră în finanțe (1/2): mersul aleator și variațiile extreme ale prețurilor {h=f89e3852}
+## Istoria statisticii financiare (1/2): mersul aleator și variațiile extreme ale prețurilor {h=c6619aba}
 
 În teza sa de doctorat din 1900, @Bachelier1900 a modelat prețurile obligațiunilor de la Paris ca un **mers aleator** (*random walk*): variațiile prețului sînt independente și urmează distribuția Normală. Modelul a anticipat cu cîteva decenii matematica mișcării browniene folosită în finanțe, iar cele două ipoteze ale lui au devenit reperul față de care au fost testate modelele ulterioare.
 
@@ -357,7 +357,7 @@ Pentru statistician, această istorie are o consecință practică: seriile ziln
 
 Mandelbrot a propus distribuțiile α-stabile, care păstrează stabilitatea distribuției Normale la însumare, dar permit cozi groase; [Capitolul 3](ch3_ro.html) le studiază. Cele două portrete încadrează cursul: modelul lui Bachelier este reperul, iar obiecția lui Mandelbrot este primul dintre faptele stilizate.
 
-## Statistica intră în finanțe (2/2): risc, eficiență, volatilitate {h=872261c7}
+## Istoria statisticii financiare (2/2): risc, eficiență, volatilitate {h=f4e5fc45}
 
 În 1952, @Markowitz1952 a măsurat riscul prin varianța randamentelor și a construit portofolii diversificate care minimizează această varianță pentru un randament așteptat dat. Riscul a devenit o mărime care poate fi estimată din date.
 
@@ -383,7 +383,7 @@ Modelele statistice s-au succedat: mersul aleator (1900), riscul portofoliului (
 
 Patru secole de piețe arată același tipar: instrumente și locuri de tranzacționare noi, urmate de bule și crahuri, urmate de date noi și de modele noi. Modelele studiate în curs, de la mersul aleator al lui Bachelier la ARCH-ul lui Engle, au răspuns fiecare unui eșec al modelului anterior, iar eșecul a fost aproape întotdeauna același: variațiile extreme și volatilitatea schimbătoare. [Secțiunea următoare](#sec-5) introduce instrumentele care le măsoară.
 
-# De la prețuri la randamente: primii pași
+# Prețuri și randamente: primele definiții
 
 Prețurile nu se compară direct: un indice la 32 758 de puncte și o acțiune de 50 de lei nu spun nimic unul despre celălalt. Cursul lucrează cu randamente, adică modificările relative ale prețurilor. Această secțiune definește randamentele simple și logaritmice și regulile lor de agregare, media și volatilitatea randamentelor și anualizarea lor, apoi le aplică randamentelor zilnice ale S&P 500 din 2000, care arată volatility clustering și cozi groase. Ea se încheie cu calculul pas cu pas al drawdown-ului.
 
@@ -403,7 +403,7 @@ unde $\ln$ este logaritmul natural; $r_t$ este randamentul compus continuu al zi
 
 Exemplul $P_0 = 100$, $P_1 = 110$, $P_2 = 99$ arată diferența. În prima zi $R_1 = +10\%$ și $r_1 = \ln 1{,}1 = +9{,}53\%$; în a doua zi $R_2 = -10\%$ și $r_2 = \ln 0{,}9 = -10{,}54\%$. Randamentul logaritmic este sub cel simplu în ambele cazuri, iar diferența este mai mare în ziua de scădere.
 
-## Randamentele care se adună {h=055af33b}
+## Întrebare pentru sală: adunarea randamentelor pe două zile {h=df101630}
 
 Întrebări pentru sală, pe același exemplu $100 \to 110 \to 99$: cît este suma celor două randamente simple și a cîștigat, a pierdut sau a rămas pe loc investitorul în cele două zile? Suma este $R_1 + R_2 = 10\% - 10\% = 0\%$, dar investitorul a pierdut: $99/100 - 1 = -1\%$.
 
@@ -467,7 +467,7 @@ Tabelul calculează drawdown-ul pentru șase prețuri. **Vîrful curent** (*runn
 
 Investitorii urmăresc drawdown-ul maxim pentru că măsoară cel mai dureros episod, pe care volatilitatea nu îl arată. El nu arată însă cît a durat revenirea, așa că trebuie raportat împreună cu durata drawdown-ului, ca în cazul BET după 2008.
 
-## Recapitulare: de la prețuri la randamente {h=7f906f80}
+## Recapitulare: prețuri și randamente {h=b32e92ee}
 
 Randamentul simplu $R_t = P_t/P_{t-1} - 1$ se compune în timp; randamentul logaritmic $r_t = \ln(P_t/P_{t-1})$ se adună în timp. Media se anualizează cu $A$, iar volatilitatea cu $\sqrt{A}$, cu $A = 365$ pentru Bitcoin.
 
@@ -481,7 +481,7 @@ Obiectul cursului sînt randamentele, nu prețurile. Randamentele logaritmice se
 
 Fiecare capitol al cursului se încheie cu o întrebare de cercetare deschisă, la care metodele capitolului pot contribui, împreună cu modurile în care poate ajuta un asistent AI, verificările pe care le cer rezultatele lui, un scurt studiu de caz pe datele cursului și o idee de proiect. Întrebarea acestui capitol este dacă Bitcoin a devenit mai puțin volatil de cînd a intrat în finanțele tradiționale.
 
-## O întrebare deschisă {h=96bc3aa3}
+## O întrebare de cercetare deschisă {h=8fefff3c}
 
 Întrebarea este dacă Bitcoin a devenit mai puțin volatil de cînd a intrat în finanțele tradiționale. Ea contează pentru că un Bitcoin mai puțin volatil ar fi mai ușor de deținut în portofoliul unui fond de pensii sau al unei bănci. ETF-urile spot pe Bitcoin aprobate în ianuarie 2024 au deschis Bitcoin investitorilor care cumpără prin conturi obișnuite de brokeraj, iar acești investitori pot tranzacționa altfel decît deținătorii de dinainte.
 
@@ -527,9 +527,9 @@ Raportul prezintă cele două volatilități, raportul lor, rezultatul testului 
 
 Capitolul se încheie cu întrebări de autoevaluare despre principalele sale instrumente și cu întrebările la care răspunde [Capitolul 1](ch1_ro.html).
 
-## Autoevaluare; urmează Capitolul 1 {h=75be3a44}
+## Autoevaluare și prezentarea Capitolului 1 {h=fa1696e6}
 
-Întrebările de autoevaluare acoperă cele patru instrumente ale capitolului. De ce suma randamentelor simple nu este randamentul total? Cum se anualizează volatilitatea zilnică a Bitcoin? Ce înseamnă pentru un investitor un drawdown maxim de −80%? Ce trebuie verificat înainte de a folosi o referință generată de AI? Fiecare răspuns se află în acest capitol: în [Randamentele care se adună](#s48), [Media, volatilitatea și anualizarea](#s50), [Drawdown-uri: interpretare](#s29) și [Politica privind AI](#s13).
+Întrebările de autoevaluare acoperă cele patru instrumente ale capitolului. De ce suma randamentelor simple nu este randamentul total? Cum se anualizează volatilitatea zilnică a Bitcoin? Ce înseamnă pentru un investitor un drawdown maxim de −80%? Ce trebuie verificat înainte de a folosi o referință generată de AI? Fiecare răspuns se află în acest capitol: în [Întrebare pentru sală: adunarea randamentelor pe două zile](#s48), [Media, volatilitatea și anualizarea](#s50), [Drawdown-uri: interpretare](#s29) și [Politica privind AI](#s13).
 
 [Capitolul 1](ch1_ro.html), despre date, randamente și indicatori, continuă de aici. El întreabă de unde vin datele, ce coloană de preț folosim, cum se agregă randamentele pe zile, luni și ani, ce este raportul Sharpe și ce înseamnă volatility drag.
 

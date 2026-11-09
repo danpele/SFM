@@ -169,7 +169,7 @@ D.frame(T('Reading and Tools', 'Bibliografie și instrumente'), items(
 # =============================================================================
 # 1. MACHINE LEARNING ȘI STATISTICA
 # =============================================================================
-D.section('What Machine Learning Adds to Statistics', 'Contribuția machine learning în statistică')
+D.section('The Contribution of Machine Learning to Statistics', 'Contribuția învățării automate la statistică')
 
 D.frame(T('The Perceptron, 1958', 'Perceptronul, 1958'), cols(items(
     (T('\\refRosenblatt: a machine that learns to classify images by adjusting weights after each error', '\\refRosenblatt: o mașină care învață să clasifice imagini ajustîndu-și ponderile după fiecare eroare'),
@@ -196,7 +196,7 @@ D.frame(T('Two Cultures of Statistical Modelling', 'Două culturi ale modelării
     ph('evans', T('Evans Hall, University of California, Berkeley, home of the Department of Statistics', 'Evans Hall, Universitatea California din Berkeley, sediul Departamentului de Statistică'), h='0.46\\textheight'),
     wl='0.60', wr='0.36'), 'footnotesize')
 
-D.frame(T('Prediction against Inference', 'Predicție și inferență'), items(
+D.frame(T('Prediction and Inference', 'Predicție și inferență'), items(
     (T('\\textbf{Inference}: is $\\beta_j \\ne 0$? how large is the effect? (standard errors, tests, Chapter 6)', '\\textbf{Inferența}: este $\\beta_j \\ne 0$? cît de mare este efectul? (erori standard, teste, Capitolul 6)'),
      [T('example: does the leverage effect exist (GJR-GARCH, Chapter 9)?', 'exemplu: există efectul de levier (GJR-GARCH, Capitolul 9)?')]),
     (T('\\textbf{Prediction}: how close is $\\hat y$ to $y$ on data the model has never seen?', '\\textbf{Predicția}: cît de aproape este $\\hat y$ de $y$ pe date pe care modelul nu le-a văzut niciodată?'),
@@ -340,7 +340,7 @@ chart(T('Leakage in Practice: Random Folds on Overlapping Targets', 'Leakage în
       'Mers aleator simulat: 5-fold aleator $@{lk.sim.kfold}\\%$, walk-forward $@{lk.sim.wf}\\%$; S\\&P 500 (@{lk.sp500.n} zile): $@{lk.sp500.kfold}\\%$ și $@{lk.sp500.wf}\\%$')],
     h='0.48\\textheight')
 
-D.frame(T('Interpretation: a Forecast of Pure Noise with $R^2 > 30\\%$', 'Interpretare: o prognoză a zgomotului pur cu $R^2 > 30\\%$'), items(
+D.frame(T('Interpretation: Leakage in the Forecast of a Random Walk', 'Interpretare: leakage în prognoza unui mers aleator'), items(
     (T('The random walk has nothing to predict, yet random folds report $R^2 = @{lk.sim.kfold}\\%$', 'Mersul aleator nu are nimic de prezis, totuși partițiile aleatoare raportează $R^2 = @{lk.sim.kfold}\\%$'),
      [T('the forest memorises neighbouring days, whose targets share 20 of 21 returns with the test day', 'random forest memorează zilele vecine, ale căror ținte au 20 din 21 de randamente comune cu ziua de test')]),
     (T('Walk-forward gives a negative $R^2$: the forest fits noise and loses against the training mean', 'Walk-forward dă un $R^2$ negativ: random forest învață zgomotul și este inferior mediei de antrenare'),
@@ -483,7 +483,7 @@ D.frame(T('Interpretation: Averaging and Early Stopping', 'Interpretare: media �
 # =============================================================================
 D.section('Neural Networks', 'Rețele neuronale')
 
-D.frame(T('From the Perceptron to the Multilayer Perceptron (1/2)', 'De la perceptron la perceptronul multistrat (1/2)'), items(
+D.frame(T('The Perceptron and the Multilayer Perceptron (1/2)', 'Perceptronul și perceptronul multistrat (1/2)'), items(
     (T('A \\textbf{neuron}: $h = g(b + w^\\top x)$, a weighted sum of the inputs passed through an \\textbf{activation function} $g$', 'Un \\textbf{neuron}: $h = g(b + w^\\top x)$, o sumă ponderată a intrărilor trecută printr-o \\textbf{funcție de activare} $g$'),
      [T('$x$: the inputs; $w$: their weights; $b$: a constant (the bias term of the neuron); $h$: the output of the neuron', '$x$: intrările; $w$: ponderile lor; $b$: o constantă (termenul liber al neuronului); $h$: ieșirea neuronului'),
       T('$g$: a fixed nonlinear function; without it, a network of neurons would be just a linear regression', '$g$: o funcție neliniară fixată; fără ea, o rețea de neuroni ar fi doar o regresie liniară')]),
@@ -491,7 +491,7 @@ D.frame(T('From the Perceptron to the Multilayer Perceptron (1/2)', 'De la perce
      [T('the perceptron uses a step function (0 or 1)', 'perceptronul folosește o funcție treaptă (0 sau 1)'),
       T('modern networks use smooth or piecewise linear $g$: logistic $1/(1 + e^{-z})$, tanh, ReLU $\\max(0, z)$', 'rețelele moderne folosesc funcții $g$ netede sau liniare pe porțiuni: logistică $1/(1 + e^{-z})$, tanh, ReLU $\\max(0, z)$')])))
 
-D.frame(T('From the Perceptron to the Multilayer Perceptron (2/2)', 'De la perceptron la perceptronul multistrat (2/2)'), items(
+D.frame(T('The Perceptron and the Multilayer Perceptron (2/2)', 'Perceptronul și perceptronul multistrat (2/2)'), items(
     (T('\\textbf{MLP} (multilayer perceptron) with one hidden layer of $K$ neurons', '\\textbf{MLP} (multilayer perceptron, perceptron multistrat) cu un strat ascuns de $K$ neuroni') + ' \\[ \\hat y = c + \\sum_{k=1}^{K} v_k\\, g(b_k + w_k^\\top x) \\]',
      [T('$w_k$, $b_k$: the weights and the constant of hidden neuron $k$; $v_k$: the weight of neuron $k$ in the output; $c$: the output constant',
         '$w_k$, $b_k$: ponderile și constanta neuronului ascuns $k$; $v_k$: ponderea neuronului $k$ în ieșire; $c$: constanta ieșirii'),
@@ -520,7 +520,7 @@ D.frame(T('Training a Network', 'Antrenarea unei rețele'), items(
         'standardizăm intrările și ținta cu statisticile de antrenare; o penalizare $L_2$ a ponderilor (ca la ridge); un număr fix de epoci'),
       T('small data, small network: one hidden layer of 16 neurons is enough here', 'date puține, rețea mică: aici este suficient un strat ascuns cu 16 neuroni')])))
 
-D.frame(T('From Deep Blue to Deep Learning', 'De la Deep Blue la deep learning'), cols(
+D.frame(T('Deep Blue and Deep Learning', 'Deep Blue și deep learning'), cols(
     ph('blue', T('IBM Deep Blue, Computer History Museum', 'IBM Deep Blue, Computer History Museum'), h='0.36\\textheight'),
     ph('hinton', T('Geoffrey Hinton, Nobel Prize in Physics 2024', 'Geoffrey Hinton, Premiul Nobel pentru fizică 2024'), h='0.36\\textheight'),
     wl='0.48', wr='0.48') + items(
@@ -726,7 +726,7 @@ chart(T('Accuracy against the Baseline', 'Acuratețea față de reper'), 'sfm_ch
       'AUC pentru logit și pentru random forest: S\\&P 500 @{sg.sp500.Logit.auc} și @{sg.sp500.RF.auc}, BET @{sg.bet.Logit.auc} și @{sg.bet.RF.auc}, Bitcoin @{sg.btc.Logit.auc} și @{sg.btc.RF.auc}; logit prognozează „creștere” în @{sg.sp500.Logit.upred}\\% din zilele S\\&P 500')],
     h='0.48\\textheight')
 
-D.frame(T('Interpretation: Why Sign Prediction Mostly Fails', 'Interpretare: eșecul obișnuit al prognozei semnului'), items(
+D.frame(T('Interpretation: Limits of Sign Prediction', 'Interpretare: limitele prognozei semnului'), items(
     (T('No model beats ``always up\'\' significantly on any market; the flexible models do worse than the logit', 'Pe nicio piață, niciun model nu este semnificativ superior regulii „mereu creștere”; modelele flexibile sînt mai slabe decît logit'),
      [T('S\\&P 500: logit $@{sg.sp500.Logit.diff}$, forest $@{sg.sp500.RF.diff}$, boosting $@{sg.sp500.GB.diff}$ points; Bitcoin: logit $@{sg.btc.Logit.diff}$, forest $@{sg.btc.RF.diff}$',
         'S\\&P 500: logit $@{sg.sp500.Logit.diff}$, random forest $@{sg.sp500.RF.diff}$, boosting $@{sg.sp500.GB.diff}$ puncte; Bitcoin: logit $@{sg.btc.Logit.diff}$, random forest $@{sg.btc.RF.diff}$')]),
@@ -893,7 +893,7 @@ D.frame(T('Interpretation and Limits', 'Interpretare și limite'), items(
 # =============================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 
-D.frame(T('An Open Question', 'O întrebare deschisă'), items(
+D.frame(T('An Open Research Question', 'O întrebare de cercetare deschisă'), items(
     (T('\\textbf{Do machine-learning volatility forecasts help on the Bucharest Stock Exchange, where liquidity is low and intraday data are scarce?}',
        '\\textbf{Ajută prognozele de volatilitate prin machine learning la Bursa de Valori București, unde lichiditatea este redusă și datele intrazilnice sînt rare?}'),
      [T('today: on the S\\&P 500 the lasso gains $@{rv.sp500.Lasso.r2h}\\%$ over HAR; on Bitcoin no significant gain ($@{rv.btc.Lasso.r2h}\\%$, p @{rv.btc.Lasso.dmp})', 'azi: la S\\&P 500, lasso cîștigă $@{rv.sp500.Lasso.r2h}\\%$ față de HAR; la Bitcoin niciun cîștig semnificativ ($@{rv.btc.Lasso.r2h}\\%$, p @{rv.btc.Lasso.dmp})'),
@@ -956,7 +956,7 @@ D.frame(T('Key Formulas', 'Formule de reținut'), '{\\renewcommand{\\arraystretc
      'DSR & $\\Phi\\big((\\widehat{SR} - SR_0)\\sqrt{T - 1}/\\sqrt{1 - \\hat\\gamma_3\\widehat{SR} + (\\hat\\gamma_4 - 1)\\widehat{SR}^2/4}\\big)$'],
     size='scriptsize') + '}')
 
-D.frame(T('Check Yourself', 'Autoevaluare'), items(
+D.frame(T('Self-Assessment', 'Autoevaluare'), items(
     (T('\\textbf{Question}: a model has a training $R^2$ of 80\\% and an out-of-sample $R^2$ of $-5\\%$. What happened?', '\\textbf{Întrebare}: un model are un $R^2$ de antrenare de 80\\% și un $R^2$ în afara eșantionului de $-5\\%$. Ce s-a întîmplat?'),
      [T('\\textbf{Answer}: overfitting: the model learned the noise of the training sample and loses against the benchmark on new data', '\\textbf{Răspuns}: overfitting: modelul a învățat zgomotul eșantionului de antrenare și pierde în fața reperului pe date noi')]),
     (T('\\textbf{Question}: why is random K-fold wrong for a 21-day return target?', '\\textbf{Întrebare}: de ce este greșit K-fold aleator pentru o țintă de tip randament pe 21 de zile?'),

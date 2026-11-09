@@ -68,7 +68,7 @@
                 comingSoonShort: 'in preparation',
                 chapterSoon: 'The materials of this chapter are in preparation.',
                 selfStudy: 'Self-study',
-                quantinar: 'Go deeper on Quantinar',
+                quantinar: 'Further study on Quantinar',
                 links: {
                     slides: 'Slides', web: 'Web page', interactive: 'Interactive', slidesExtra: 'Additional Slides', seminar: 'Seminar', seminarExtra: 'Additional Seminar',
                     notebook: 'Notebook', quantlets: 'Quantlets', colab: 'Open in Colab'
@@ -503,9 +503,9 @@
         // ---------------------------------------------------------------
         project: {
             en: [
-                { h: 'What', p: ['A team analysis of real market data with the methods of the course: returns and indicators, distributions and tails, efficiency tests, volatility and risk measures.', 'The project counts for 20% of the final grade.'] },
+                { h: 'Content', p: ['A team analysis of real market data with the methods of the course: returns and indicators, distributions and tails, efficiency tests, volatility and risk measures.', 'The project counts for 20% of the final grade.'] },
                 { h: 'Deliverables', p: ['A GitHub repository whose code reproduces every number and chart from the saved data.', 'A short report and a presentation of the results.'] },
-                { h: 'What we grade', p: ['A clear question, correct methods and checks, and the interpretation of the results.', 'Each member must be able to explain the code and the results.'] }
+                { h: 'Grading criteria', p: ['A clear question, correct methods and checks, and the interpretation of the results.', 'Each member must be able to explain the code and the results.'] }
             ],
             ro: [
                 { h: 'Conținut', p: ['O analiză în echipă a unor date reale de piață cu metodele cursului: randamente și indicatori, distribuții și cozi, teste de eficiență, volatilitate și măsuri de risc.', 'Proiectul reprezintă 20% din nota finală.'] },

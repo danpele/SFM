@@ -42,10 +42,10 @@ PFX = {'candidates': 'ca', 'dax-monthly': 'dm', 'desc-stats': 'ds', 'ml-table': 
        'model-avg': 'av'}
 
 SECTIONS = {
- 'ro': dict(cand='Candidații', ml='Recapitulare: metoda verosimilității maxime', lr='Modele imbricate: testul raportului de verosimilitate',
+ 'ro': dict(cand='Distribuțiile candidate', ml='Recapitulare: metoda verosimilității maxime', lr='Modele imbricate: testul raportului de verosimilitate',
             ic='Criterii informaționale: AIC și BIC', gof='Teste de concordanță', ppqq='Grafice PP și QQ',
             var='Compararea modelelor după VaR 1%', oos='În afara eșantionului: validare și supraajustare', unc='Incertitudinea de model'),
- 'en': dict(cand='The Candidates', ml='Review of Maximum Likelihood Estimation', lr='Nested Models: the Likelihood-Ratio Test', ic='Information Criteria: AIC and BIC',
+ 'en': dict(cand='Candidate Distributions', ml='Review of Maximum Likelihood Estimation', lr='Nested Models: the Likelihood-Ratio Test', ic='Information Criteria: AIC and BIC',
             gof='Goodness-of-Fit Tests', ppqq='PP and QQ Plots', var='Comparing the Models on VaR 1%',
             oos='Out of Sample: Validation and Overfitting', unc='Model Uncertainty'),
 }
@@ -730,7 +730,7 @@ TICKET = [
 def _predict_js():
     for i, lang in enumerate(('ro', 'en')):
         pr = {a: dict(key=k, opts=[o[i] for o in opts]) for a, (k, opts) in PREDICT.items()}
-        tk = dict(title='Verifică-te' if lang == 'ro' else 'Check Yourself', id='check', store=f'sfm-ch6-check-{lang}',
+        tk = dict(title='Autoevaluare' if lang == 'ro' else 'Self-Assessment', id='check', store=f'sfm-ch6-check-{lang}',
                   qs=[dict(q=t['q'][i], key=t['key'], opts=[dict(t=o[i], why=w[i]) for o, w in t['opts']]) for t in TICKET])
         TEXT_JS[lang] += ('window.CH6_TEXT.predict = ' + json.dumps(pr, ensure_ascii=False) + ';\n'
                           + 'window.CH6_TEXT.ticket = ' + json.dumps(tk, ensure_ascii=False) + ';\n'

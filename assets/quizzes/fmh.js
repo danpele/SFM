@@ -200,7 +200,7 @@ window.SFM_DATA.quizzes['fmh'] = {
         {
             "correct": 3,
             "en": {
-                "title": "H is not a probability",
+                "title": "Interpretation of the Hurst exponent",
                 "text": "A student says: \"H = 0.7 means a 70% chance that tomorrow has the same sign as today\". What is correct?",
                 "options": [
                     "The statement is correct",
@@ -212,7 +212,7 @@ window.SFM_DATA.quizzes['fmh'] = {
                 "incorrectExplanation": "There is no direct mapping from H to the probability of repeating a sign, and fGn with H = 0.7 is stationary."
             },
             "ro": {
-                "title": "H nu este o probabilitate",
+                "title": "Interpretarea exponentului Hurst",
                 "text": "Un student spune: „H = 0,7 înseamnă 70% șanse ca mîine să aibă același semn ca azi”. Ce este corect?",
                 "options": [
                     "Afirmația este corectă",
@@ -227,7 +227,7 @@ window.SFM_DATA.quizzes['fmh'] = {
         {
             "correct": 0,
             "en": {
-                "title": "From d to H",
+                "title": "Relation between d and H",
                 "text": "The GPH regression gives d = 0.35 for absolute returns. What is the implied Hurst exponent?",
                 "options": [
                     "H = 0.85",
@@ -239,7 +239,7 @@ window.SFM_DATA.quizzes['fmh'] = {
                 "incorrectExplanation": "The conversion is d = H - 0.5, so H = d + 0.5; subtracting 0.5, keeping d or doubling it are wrong."
             },
             "ro": {
-                "title": "De la d la H",
+                "title": "Relația dintre d și H",
                 "text": "Regresia GPH dă d = 0,35 pentru randamentele absolute. Cît este exponentul Hurst corespunzător?",
                 "options": [
                     "H = 0,85",

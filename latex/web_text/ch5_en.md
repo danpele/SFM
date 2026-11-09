@@ -72,7 +72,7 @@ The observed counts are 35 such days for the S&P 500 since 1990 and 34 for the B
 
 The chart also shows the two stylised facts that EVT has to handle. The tail is heavy: the losses beyond the Normal once-a-century level are far too many. And the extremes come in bursts, so the tail estimates of the chapter, which treat the days as a single sample, describe the unconditional tail averaged over calm and turbulent periods.
 
-## How Rare Are the Worst Days under the Normal Law? {h=6f242d15}
+## The Largest Daily Losses under the Normal Distribution {h=84da6454}
 
 The table puts a number on each series' worst day. The standardised value $z = (r - \hat\mu)/\hat\sigma$ uses the mean and standard deviation of the whole sample. The Normal probability of a day at least as bad is $p = \Phi(z)$, with $\Phi$ the cumulative distribution function (CDF) of $N(0, 1)$, and the expected waiting time for such a day is $1/(p \times 252)$ years, with 252 trading days per year (365 for Bitcoin, which trades every day).
 
@@ -80,7 +80,7 @@ The worst S&P 500 day, 16 March 2020, lies at $z = -11.3$; the Normal law expect
 
 The last two columns count the days with a loss beyond four standard deviations. The Normal law expects 0.29 such days in the S&P 500 and DAX samples, 0.23 in the BET sample and 0.14 in the Bitcoin sample, fewer than one day in each case. The data show 35 days for the S&P 500, 27 for the DAX, 33 for the BET and 18 for Bitcoin. The failure is not limited to one exceptional day: the whole region beyond $4\sigma$ is populated about a hundred times more densely than the Normal law allows.
 
-## Where Extreme Value Theory Comes From {h=b728c180}
+## Origins of Extreme Value Theory {h=632ee254}
 
 Extreme value theory (EVT) is the statistics of the largest values of a sample. It developed in hydrology, meteorology and engineering, where the questions concern floods, storms and the strength of materials. @Gumbel1958 gives the classical example: the height of a dam is set by the distribution of the yearly maximum level of the river, not by its average level.
 
@@ -116,7 +116,7 @@ A tail is light when $\bar F(x)$ falls at least as fast as an exponential, $e^{-
 
 The exponent $\alpha > 0$ is the tail index. The smaller $\alpha$, the slower $\bar F$ decays and the heavier the tail. The difference from a light tail is not one of degree: a power decays more slowly than any exponential, so far enough in the tail a heavy-tailed law always assigns more probability than any light-tailed one.
 
-## Power Laws Fall Much More Slowly {h=3483e045}
+## Power-Law Tails and Light Tails {h=12ce936d}
 
 The chart compares the survival functions of a Normal, an Exponential and a Student-t distribution with 3 degrees of freedom, on linear and on log-log axes. On log-log axes, $\ln \bar F$ against $\ln x$, a power law $\bar F(x) = C x^{-\alpha}$ is a straight line with slope $-\alpha$. Light tails bend downwards and drop off the bottom of the chart: their logarithm falls faster than any linear function of $\ln x$.
 
@@ -232,7 +232,7 @@ All four estimates lie between 2.57 and 3.00, and all four intervals exclude 2 a
 
 The last column applies the estimator to the gains, the days with $r_t > 0$, with the same $k$. The gain indices are 2.96 for the S&P 500, 3.22 for the DAX, 2.82 for the BET and 3.37 for Bitcoin. For the DAX, the BET and Bitcoin the gains have a lighter tail than the losses; for the S&P 500 the two indices are practically equal.
 
-## From the Tail Index to a Quantile {h=b8ca5ab3}
+## The Hill (Weissman) Quantile Estimator {h=6c1c1ac8}
 
 A tail index becomes a risk number through a quantile. The Hill (Weissman) quantile estimator [@Weissman1978] is
 
@@ -364,7 +364,7 @@ All four shape estimates are positive: 0.21 for the S&P 500, 0.17 for the DAX, 0
 
 The last column, $1/\hat\xi$, is a second estimate of the tail index: 4.7 for the S&P 500, 5.9 for the DAX, 2.7 for the BET and 4.3 for Bitcoin. Only the BET value is close to the Hill estimate. With one loss per month, the block-maxima approach uses fewer tail observations than Hill and is less precise; in addition, a month of about 21 days is a short block, and the GEV limit is then only an approximation.
 
-## Does the GEV Fit? PP and QQ Plots {h=b66c24d6}
+## Goodness of Fit of the GEV: PP and QQ Plots {h=2956a89a}
 
 Two plots check the fit for the S&P 500. The probability–probability (PP) plot puts the fitted probability $H(m_{(i)})$ of each sorted maximum $m_{(i)}$ against its empirical probability $(i - 0.5)/n$. The quantile–quantile (QQ) plot puts the observed maxima against the fitted GEV quantiles. If the model is right, both plots lie on the 45-degree line.
 
@@ -392,7 +392,7 @@ Up to return periods of a few years, the dots follow the lines closely. Beyond t
 
 The largest Bitcoin maximum, the 46.5% loss of March 2020, lies well above its curve at an empirical return period of about 12 years: one point can be far from a model that fits all other months well. Return levels at long horizons should be read together with their intervals, given in the next frame.
 
-## How Large Is a 10-Year Loss? {h=d302bbf7}
+## Return Levels of Daily Losses: 1, 10 and 50 Years {h=92b5d445}
 
 The table gives the daily loss, in percent, exceeded on average once in 1, 10 and 50 years, with a 95% interval for the 10-year level from a bootstrap of the monthly maxima with 200 samples, and compares them with the largest observed loss and the length of the sample. For the S&P 500 the 1-year level is 3.7%, the 10-year level 7.4% with interval $[6.2, 8.9]$, and the 50-year level 11.3%; the largest observed loss in 36.7 years is 12.8%.
 
@@ -464,7 +464,7 @@ All four shapes are positive and below 0.5: heavy tails with a finite variance. 
 
 These values are larger than the Hill estimates, which used the 2.5% largest losses. The two estimators look at different parts of the tail: above the 90% quantile, a GPD with a free scale $\beta$ fits the curvature of the moderate tail with a smaller $\xi$, while Hill imposes a pure Pareto form above a higher threshold. The tail index is hard to pin down, and a careful analysis reports more than one estimator. For risk measures inside or near the data, the discrepancy matters less, as the parameter stability plot showed.
 
-## Does the GPD Fit? PP and QQ Plots {h=1600b958}
+## Goodness of Fit of the GPD: PP and QQ Plots {h=7ffa7c42}
 
 The PP and QQ plots check the GPD fit to the S&P 500 excesses over $u$. The PP plot lies on the 45-degree line over its whole range. The QQ plot lies on the line up to excesses of about 4%, that is, losses of about 5%; above that the points scatter around the line.
 
@@ -472,7 +472,7 @@ The largest excess, 11.6%, from March 2020, is compared with a fitted quantile o
 
 As always with QQ plots of heavy tails, the last few points carry large sampling variability: even a correct model produces scattered points at the top. The agreement up to 4% and the moderate deviation beyond it support the GPD as a description of the S&P 500 tail.
 
-## From the GPD to the Tail of the Losses {h=46a676de}
+## The GPD Tail Estimator of Losses {h=a6d0f786}
 
 The GPD describes the excesses given $L > u$; the risk measures need the unconditional probability $P(L > x)$. For $x > u$, $P(L > x) = P(L > u)\,P(L > x \mid L > u)$. The first factor is estimated by the share of losses above the threshold, $N_u/n$, and the second by the GPD. The result is the tail estimator
 
@@ -576,7 +576,7 @@ The Normal VaR is exceeded far too often in every series, and the failure is wor
 
 The opposite errors of the S&P 500 and the BET have the same cause. A VaR estimated once, from the unconditional tail, ignores the changing volatility: it is too low in a crisis and too high in calm years. The remedy is conditional EVT, which applies POT to returns standardised by a GARCH volatility [@McNeilFrey2000]. GARCH models are the subject of [Chapter 9](ch9.html), and the backtesting of VaR and ES that of [Chapter 10](ch10.html).
 
-## What EVT Can and Cannot Do {h=a09ced88}
+## Strengths and Limitations of EVT {h=a912dcf8}
 
 EVT gives a principled model of the tail, derived from limit theorems rather than chosen for convenience, and it extrapolates beyond the largest observed loss. It gives stable estimates of VaR and ES at 0.1%, where historical simulation has only a handful of points, and finite, interpretable waiting times for events such as the 1987 crash.
 
@@ -592,7 +592,7 @@ The EVT formulas @eq:evtvar and @eq:evtes give VaR and ES from the five numbers 
 
 The section takes an open question raised by the chapter's results, whether the tail of BET losses has changed, and shows where AI tools can help a researcher study it and which checks they cannot replace.
 
-## An Open Question {h=43c03c09}
+## An Open Research Question {h=a54c6ad7}
 
 Has the tail of BET losses changed as the Bucharest market grew? With the Hill estimator at $k = 2.5\%$ of $n$, the period 1997–2009 gives $\hat\alpha = 2.90$, with block-bootstrap standard error 0.33, and the period 2010–2026 gives $\hat\alpha = 2.16$, with block-bootstrap standard error 0.27. The lower index after 2010 points to a heavier tail.
 
@@ -648,7 +648,7 @@ The mean excess function, @eq:me, is linear for a GPD tail. The GEV, @eq:gev, de
 
 All the far-tail formulas share one feature: the shape parameter appears as an exponent. Small errors in $\xi$ or $\alpha$ therefore produce large errors in quantiles far beyond the data, which is why the chapter reports intervals and more than one estimator.
 
-## Check Yourself {h=ab60d50a}
+## Self-Assessment {h=d324cda0}
 
 The first question asks which moments exist when a GPD fit gives $\hat\xi = 0.25$. The tail index is $\alpha = 1/\xi = 4$, and moments exist for orders below 4: the mean, the variance and the skewness exist; the kurtosis does not.
 

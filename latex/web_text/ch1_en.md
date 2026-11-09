@@ -50,7 +50,7 @@ Financial data fall into four groups. **Market data** are the information produc
 
 **Fundamental and macroeconomic data**, such as balance sheets, earnings, inflation, gross domestic product (GDP) and policy rates, describe the firms and the economy behind the prices. **Alternative data** include news, social media, satellite images and blockchain transactions. The course works mainly with daily market data.
 
-## From the Ticker Tape to Data Feeds {h=80768d9c}
+## Ticker Tape and Electronic Data Feeds {h=180f0ffa}
 
 The first real-time price feed was the stock ticker, in use from 1867. The machine received trade prices by telegraph and printed them on a paper tape: the price of the last trade, a few minutes after it had taken place. Investors far from the exchange floor could follow the market almost as it happened.
 
@@ -226,7 +226,7 @@ The name comes from compounding. One leu invested at a rate $r$ compounded $m$ t
 
 Unlike the simple return, the log return is unbounded: $r_t \in (-\infty, +\infty)$, and a total loss, $P_t = 0$, corresponds to $r_t = -\infty$. Log returns are the default in the statistics of financial markets. The main reason, shown in the [next section](#sec-4), is that they add up over time, so that the return over a long period is the sum of the daily returns. Their range over the whole real line also suits statistical models better.
 
-## How Far Apart Are r and R? {h=558f63ed}
+## The Difference between r and R {h=98810099}
 
 The relation between the two returns follows from the Taylor expansion of the logarithm around zero:
 
@@ -368,7 +368,7 @@ For the S&P 500 over 2015–2026, the annual mean of the log returns is 11.2%, a
 
 The CAGR uses only the first and the last price. It says nothing about the path between them: two investments with the same CAGR can have had very different volatilities and very different falls along the way. The indicators of the [performance section](#sec-7) measure these differences.
 
-## How Precisely Do We Know the Mean? {h=b72f541a}
+## Precision of the Estimated Mean {h=e9c0148f}
 
 The standard error (SE) of the estimated annual mean $\hat\mu_{\text{year}}$, computed from $Y$ years of data, is
 
@@ -446,7 +446,7 @@ For the S&P 500, 79.6% of days lie within one standard deviation of the mean, ag
 
 The two effects are linked. With the standard deviation fixed, a distribution that places more days in the tails must place more days near the centre as well, and fewer in between. A Normal model fitted to these data therefore underestimates both the frequency of quiet days and, more importantly for risk, the frequency of extreme days. Measures of risk that assume normality, such as a Normal VaR, inherit this error.
 
-## Volatility Changes over Time {h=9d9515a0}
+## Time-Varying Volatility {h=c678a694}
 
 The chart shows the annualised volatility of the S&P 500, the BET and Bitcoin, computed on rolling windows of one year. The volatility of the S&P 500 ranges between 7% and 35%, that of Bitcoin between 41% and 106%. The BET follows a pattern similar to the S&P 500, with a jump in 2020.
 
@@ -488,7 +488,7 @@ In this chapter the Sharpe ratio uses the mean of daily simple returns and $r_f 
 
 The Sharpe ratio does not depend on leverage. Borrowing at the risk-free rate to double a position doubles both the excess return and the volatility, so the ratio stays the same. Two investments with the same Sharpe ratio thus offer the same return per unit of risk, and an investor can reach any desired level of risk with either. William F. Sharpe, shown on the slide, received the Nobel Prize in Economics in 1990.
 
-## The Sharpe Ratio Is an Estimate {h=0fae61e2}
+## Estimation Error of the Sharpe Ratio {h=6d29e0f9}
 
 For returns that are i.i.d. (independent and identically distributed), @Lo2002 gives the standard error of the estimated Sharpe ratio $\widehat{\text{SR}}$:
 
@@ -622,7 +622,7 @@ The indicators of the section answer different questions, and on the same data t
 
 The chapter ends with an open question that its methods can address, and with the role that artificial intelligence (AI) tools can play in studying it. The question is whether Sharpe ratios persist over time. The section describes what AI can contribute, which checks remain the researcher's responsibility, and a project that applies the chapter's indicators to BVB stocks.
 
-## An Open Question {h=af788dfa}
+## An Open Research Question {h=487fa523}
 
 **Do Sharpe ratios persist over time?** If a BVB stock had a high Sharpe ratio in 2015–2020, did it also have a high one in 2021–2026? The answer matters in practice. If past Sharpe ratios do not persist, ranking funds or stocks by their past Sharpe ratio, a common practice, is of little use to an investor choosing for the future.
 
@@ -670,7 +670,7 @@ Annualisation multiplies the mean by $A$ and the volatility by $\sqrt{A}$ @eq:an
 
 The last row gives the two standard errors of the chapter: $\sigma_{\text{year}}/\sqrt{Y}$ for the annual mean @eq:se-mean and $\sqrt{(1 + \text{SR}^2/2)/n}$ for the Sharpe ratio @eq:se-sr. Both depend on the length of the sample, and both are large enough to change the reading of most comparisons in the chapter.
 
-## Check Yourself {h=82470915}
+## Self-Assessment {h=3a77cd6c}
 
 The first question asks for the annual mean and volatility of a fund whose daily log returns have a mean of 0.05% and a standard deviation of 1%. With 252 trading days, the annual mean is $252 \times 0.05\% = 12.6\%$ and the annual volatility $\sqrt{252} \times 1\% = 15.9\%$, by @eq:annual.
 

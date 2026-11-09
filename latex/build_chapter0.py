@@ -582,7 +582,7 @@ D.frame('⟦Black Tuesday, 1929||Marțea Neagră, 1929⟧', cols(
             '⟦long drawdowns are not new: the BET needed 13 years after 2008||drawdown-urile lungi nu sînt o noutate: BET a avut nevoie de 13 ani după 2008⟧'])),
     '0.36', '0.60'), size='footnotesize')
 
-D.frame('⟦From the Trading Floor to Screens||De la ringul bursei la ecrane⟧', cols(
+D.frame('⟦Trading Floors and Electronic Trading||Ringul bursei și tranzacționarea electronică⟧', cols(
     ph('floor1963', '⟦The NYSE trading floor, 1963||Ringul NYSE, 1963⟧', h='0.27\\textheight')
     + '\\\\[1mm]\n' + ph('ticker', '⟦A stock ticker of Thomas Edison||Un telegraf bursier (stock ticker) al lui Thomas Edison⟧', h='0.17\\textheight'),
     items(('⟦\\textbf{Stock ticker}, from 1867: prices travel by telegraph, printed on paper strips||\\textbf{Telegraful bursier (stock ticker)}, din 1867: prețurile circulă prin telegraf, tipărite pe benzi de hîrtie⟧',
@@ -606,7 +606,7 @@ D.frame('⟦The Bucharest Stock Exchange||Bursa de Valori București⟧', cols(
           '⟦\\textbf{July 2023}: Hidroelectrica, the largest IPO (initial public offering) in BVB history||\\textbf{iulie 2023}: Hidroelectrica, cea mai mare ofertă publică inițială (IPO, initial public offering) din istoria BVB⟧'),
     '0.30', '0.66'), size='footnotesize')
 
-D.frame('⟦Statistics Enters Finance (1/2): Random Walks and Wild Prices||Statistica intră în finanțe (1/2): mersul aleator și variațiile extreme ale prețurilor⟧', cols(
+D.frame('⟦History of Financial Statistics (1/2): Random Walks and Extreme Price Changes||Istoria statisticii financiare (1/2): mersul aleator și variațiile extreme ale prețurilor⟧', cols(
     ph('bachelier', 'Louis Bachelier (1870--1946)', h='0.32\\textheight')
     + '\\\\[1mm]\n\\raggedright\n' + items(
         '⟦\\textbf{1900}: in his doctoral thesis, Bachelier models Paris bond prices as a \\textbf{random walk} (\\refBachelier)||\\textbf{1900}: în teza de doctorat, Bachelier modelează prețurile obligațiunilor de la Paris ca un \\textbf{mers aleator} (\\refBachelier)⟧',
@@ -617,7 +617,7 @@ D.frame('⟦Statistics Enters Finance (1/2): Random Walks and Wild Prices||Stati
         '⟦he proposes the $\\alpha$-stable distributions of Chapter 3||el propune distribuțiile $\\alpha$-stabile din Capitolul 3⟧'),
     '0.48', '0.48'), size='footnotesize')
 
-D.frame('⟦Statistics Enters Finance (2/2): Risk, Efficiency, Volatility||Statistica intră în finanțe (2/2): risc, eficiență, volatilitate⟧', cols(
+D.frame('⟦History of Financial Statistics (2/2): Risk, Efficiency, Volatility||Istoria statisticii financiare (2/2): risc, eficiență, volatilitate⟧', cols(
     items(('⟦\\textbf{1952}: Markowitz measures risk by the variance of returns and builds diversified portfolios (\\refMarkowitz)||\\textbf{1952}: Markowitz măsoară riscul prin varianța randamentelor și construiește portofolii diversificate (\\refMarkowitz)⟧',
            ['⟦risk becomes a number that can be estimated||riscul devine o mărime care poate fi estimată⟧']),
           ('⟦\\textbf{1970}: Fama defines the \\textbf{efficient market}: prices reflect all available information (\\refFama)||\\textbf{1970}: Fama definește \\textbf{piața eficientă}: prețurile reflectă toată informația disponibilă (\\refFama)⟧',
@@ -646,7 +646,7 @@ D.recap(('a short history', 'o scurtă istorie'), [
     '⟦Each crisis showed that extreme days are more frequent than the Normal distribution predicts||Fiecare criză a arătat că zilele extreme sînt mai frecvente decît prevede distribuția Normală⟧'])
 
 # ===============================================================================================================
-D.section('From Prices to Returns: a First Look', 'De la prețuri la randamente: primii pași')
+D.section('Prices and Returns: First Definitions', 'Prețuri și randamente: primele definiții')
 # ===============================================================================================================
 D.frame('⟦Simple and Log Returns||Randamente simple și logaritmice⟧', items(
     '⟦$P_t$: the price at the end of day $t$ (for ETFs and shares, the price adjusted for dividends and splits); $P_{t-1}$: the price of the previous day||$P_t$: prețul de la sfîrșitul zilei $t$ (pentru ETF-uri și acțiuni, prețul ajustat pentru dividende și splituri); $P_{t-1}$: prețul din ziua precedentă⟧',
@@ -659,7 +659,7 @@ D.frame('⟦Simple and Log Returns||Randamente simple și logaritmice⟧', items
      ['⟦$R_1 = +10\\%$, $r_1 = \\ln 1.1 = +$@{ex_r1}\\%||$R_1 = +10\\%$, $r_1 = \\ln 1.1 = +$@{ex_r1}\\%⟧',
       '⟦$R_2 = -10\\%$, $r_2 = \\ln 0.9 = $ @{ex_r2}\\%||$R_2 = -10\\%$, $r_2 = \\ln 0.9 = $ @{ex_r2}\\%⟧'])))
 
-D.frame('⟦Which Returns Add Up?||Randamentele care se adună⟧', items(
+D.frame('⟦Question for the Room: Adding Returns over Two Days||Întrebare pentru sală: adunarea randamentelor pe două zile⟧', items(
     (f'\\textbf{{{QUESTIONS}}}: ⟦same example, $100 \\to 110 \\to 99$||același exemplu, $100 \\to 110 \\to 99$⟧',
      ['⟦what is the sum of the two simple returns?||cît este suma celor două randamente simple?⟧',
       '⟦did the investor gain, lose or break even over the two days?||a cîștigat, a pierdut sau a rămas pe loc investitorul în cele două zile?⟧']),
@@ -724,7 +724,7 @@ D.frame('⟦Drawdown, Step by Step||Drawdown-ul, pas cu pas⟧', cols(
             '⟦it ignores how long the recovery takes: report the duration too||nu arată cît durează revenirea: raportați și durata⟧'])),
     '0.38', '0.58'), size='footnotesize')
 
-D.recap(('from prices to returns', 'de la prețuri la randamente'), [
+D.recap(('prices and returns', 'prețuri și randamente'), [
     '⟦$R_t = P_t/P_{t-1} - 1$ compounds; $r_t = \\ln(P_t/P_{t-1})$ adds up over time||$R_t = P_t/P_{t-1} - 1$ se compune; $r_t = \\ln(P_t/P_{t-1})$ se adună în timp⟧',
     '⟦Annualise the mean with $A$ and the volatility with $\\sqrt{A}$; $A = 365$ for Bitcoin||Anualizăm media cu $A$ și volatilitatea cu $\\sqrt{A}$; $A = 365$ pentru Bitcoin⟧',
     '⟦Daily returns: volatility clustering and heavy tails (kurtosis @{sp_kurt} against 3)||Randamentele zilnice: volatility clustering și cozi groase (coeficient de boltire @{sp_kurt}, față de 3)⟧',
@@ -733,7 +733,7 @@ D.recap(('from prices to returns', 'de la prețuri la randamente'), [
 # ===============================================================================================================
 D.section('AI for Scientific Discovery', 'AI pentru descoperire științifică')
 # ===============================================================================================================
-D.frame('⟦An Open Question||O întrebare deschisă⟧', items(
+D.frame('⟦An Open Research Question||O întrebare de cercetare deschisă⟧', items(
     '⟦\\textbf{Question}: has Bitcoin become less volatile since it entered mainstream finance?||\\textbf{Întrebarea}: a devenit Bitcoin mai puțin volatil de cînd a intrat în finanțele tradiționale?⟧',
     ('⟦\\textbf{Why it matters}||\\textbf{De ce contează}⟧',
      ['⟦a less volatile Bitcoin would be easier to hold in a pension fund or a bank portfolio||un Bitcoin mai puțin volatil ar fi mai ușor de deținut în portofoliul unui fond de pensii sau al unei bănci⟧',
@@ -753,7 +753,7 @@ D.frame('⟦Possible Uses of AI Tools||Utilizări posibile ale instrumentelor AI
     ('⟦\\textbf{Critique}: ask the assistant to act as a hostile referee of your result||\\textbf{Critica}: cereți asistentului să joace rolul unui recenzent ostil al rezultatului dumneavoastră⟧',
      ['⟦machine learning can generate hypotheses; testing them stays a human job (\\refLM)||învățarea automată poate genera ipoteze; testarea lor rămîne sarcina cercetătorului (\\refLM)⟧'])))
 
-chart(D, '⟦Mini-Case: Volatility per Year||Mini-studiu de caz: volatilitatea pe ani⟧', 'sfm_ch0_btc_vol', 'SFM_ch0_btc_vol', [
+chart(D, '⟦Mini Case Study: Volatility by Year||Mini-studiu de caz: volatilitatea pe ani⟧', 'sfm_ch0_btc_vol', 'SFM_ch0_btc_vol', [
     '⟦Annualised volatility of daily log returns in each calendar year; Bitcoin with 365 days, the S\\&P 500 with its own frequency; 2026*: until 18 September||Volatilitatea anualizată a randamentelor logaritmice zilnice în fiecare an calendaristic; Bitcoin cu 365 de zile, S\\&P 500 cu frecvența proprie; 2026*: pînă la 18 septembrie⟧',
     '⟦Bitcoin: average @{btc_vol_pre}\\% a year in 2015--2023, @{btc_vol_post}\\% in 2024--2026; in 2025, @{ratio_2025} times the S\\&P 500||Bitcoin: în medie @{btc_vol_pre}\\% pe an în 2015--2023, @{btc_vol_post}\\% în 2024--2026; în 2025, de @{ratio_2025} ori volatilitatea S\\&P 500⟧'],
     h='0.52\\textheight')
@@ -783,7 +783,7 @@ D.frame('⟦Project Idea||Idee de proiect⟧', items(
 # ===============================================================================================================
 D.section('Conclusions', 'Concluzii')
 # ===============================================================================================================
-D.frame('⟦Check Yourself, and Next: Chapter 1||Autoevaluare; urmează Capitolul 1⟧', cols(
+D.frame('⟦Self-Assessment and Preview of Chapter 1||Autoevaluare și prezentarea Capitolului 1⟧', cols(
     items(('⟦\\textbf{Check yourself}||\\textbf{Autoevaluare}⟧',
            ['⟦Why is the sum of simple returns not the total return?||De ce suma randamentelor simple nu este randamentul total?⟧',
             '⟦How do you annualise a daily volatility of Bitcoin?||Cum anualizați volatilitatea zilnică a Bitcoin?⟧',

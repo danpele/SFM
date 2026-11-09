@@ -308,7 +308,7 @@ window.SFM_DATA.quizzes['stable'] = {
         {
             "correct": 2,
             "en": {
-                "title": "Which moments exist",
+                "title": "Existence of moments",
                 "text": "$X$ is stable with $\\alpha = 1.7$. Which statement about its moments is correct?",
                 "options": [
                     "Both the mean and the variance are finite",
@@ -320,7 +320,7 @@ window.SFM_DATA.quizzes['stable'] = {
                 "incorrectExplanation": "The rule $E|X|^p < \\infty \\iff p < \\alpha$ gives a finite mean ($1 < 1.7$) and an infinite variance ($2 > 1.7$); kurtosis does not exist either."
             },
             "ro": {
-                "title": "Ce momente există",
+                "title": "Existența momentelor",
                 "text": "$X$ este stabilă cu $\\alpha = 1{,}7$. Care afirmație despre momentele ei este corectă?",
                 "options": [
                     "Și media, și varianța sînt finite",

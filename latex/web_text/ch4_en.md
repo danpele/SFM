@@ -25,7 +25,7 @@ Real price paths inside the GBM fan: for the S&P 500 (left), the BET (centre) an
 - **Define and simulate** the binomial model, a random walk, a martingale, white noise, AR(1), the Wiener process and GBM.
 
 @plan
-- From Games of Chance to Axioms | The problem of points, Kolmogorov's probability space, conditional probability, Bayes' rule and independence.
+- Origins of Probability Theory: Games of Chance and Axioms | The problem of points, Kolmogorov's probability space, conditional probability, Bayes' rule and independence.
 - Random Variables and Distributions | PMF, PDF, CDF and quantiles; VaR as a quantile; the empirical CDF of the S&P 500.
 - Expectation and Variance | Linearity, Jensen's inequality, moments, the square-root-of-time rule and Chebyshev's bound.
 - Joint Distributions and Dependence | Joint and marginal laws, covariance and correlation, portfolio variance, uncorrelated but dependent returns.
@@ -38,7 +38,7 @@ Real price paths inside the GBM fan: for the S&P 500 (left), the BET (centre) an
 - AI for Scientific Discovery | An open question on drawdown risk, the role of AI, the checks and a project idea.
 - Summary | Key formulas and self-check questions.
 
-# From Games of Chance to Axioms
+# Origins of Probability Theory: Games of Chance and Axioms
 
 Probability began as a theory of fair games and became, three centuries later, a branch of measure theory. The section follows this path in four steps. The problem of points, solved by Pascal and Fermat in 1654, introduces the idea that a fair value is an expected value. Kolmogorov's axioms of 1933 give the modern framework, the probability space. Conditional probability and Bayes' rule describe how information changes probabilities, and independence is the case in which it does not.
 
@@ -88,7 +88,7 @@ The definitions can be tested on daily index returns. For the S&P 500 between 20
 
 The BET behaves differently. After a down day the probability of another down day is 50.0%, against 42.6% after an up day: the sign of the return persists. The usual explanation is thin trading. On a market with fewer trades and less liquid stocks, prices adjust to news over several days instead of at once, so a fall today tends to be followed by a further adjustment tomorrow. The same effect appears below as a positive first-order autocorrelation of BET returns.
 
-## Recap: From Games to Axioms {h=04a95999}
+## Recap: Origins of Probability Theory {h=cf08aee9}
 
 A probability model is a probability space $(\Omega, \mathcal{F}, P)$, and the three axioms of Kolmogorov fix the rules for $P$. The idea of Pascal and Fermat, that a fair value is an expected value, will return in the binomial model and in option pricing.
 
@@ -204,7 +204,7 @@ By linearity of expectation, the annual mean is $A$ times the daily mean: $252 \
 
 This is the **square-root-of-time rule**: over $h$ periods the mean grows like $h$ and the volatility like $\sqrt{h}$. It is used everywhere to annualise volatility and to scale a one-day VaR to longer horizons. It depends on the absence of autocorrelation; with persistent returns, positive autocorrelations make the variance of the sum larger than $h\sigma^2$, and negative ones make it smaller.
 
-## How Rare Is a 4-Sigma Day? Chebyshev's Bound {h=cbfc642a}
+## Frequency of 4-Sigma Days: Chebyshev's Bound {h=06df61fb}
 
 **Chebyshev's inequality** bounds the probability of a large deviation using only the mean and the variance. For any $X$ with finite variance and any $k > 1$,
 
@@ -352,7 +352,7 @@ The conditional mean of the S&P 500 lies between 0.006% and 0.042% a day across 
 
 The law of total variance @eq:totvar makes the point exact. For the S&P 500, the total variance of 1.469 splits into a within-quintile part of 1.469 and a between-quintile part of 0.00013: the differences between conditional means account for 0.01% of the variance. Conditioning on the past leaves the mean almost unchanged and moves the variance.
 
-## From Conditional Variance to GARCH {h=f2a89023}
+## Conditional Variance and GARCH Models {h=f2e9ec95}
 
 The previous frame suggests writing the return as
 
@@ -410,7 +410,7 @@ The LLN guarantees that averages converge and the CLT gives their error, of orde
 
 Monte Carlo methods estimate an expected value or a probability by simulating the underlying random variable many times and averaging. They require two ingredients: a stream of numbers that behave like independent uniform draws, and a method to turn uniform draws into draws from any distribution. This section covers both, from linear congruential generators and the failure of RANDU to the inverse transform, and then estimates the probability of a large monthly loss of the S&P 500, comparing the Monte Carlo estimate with the exact value.
 
-## The Monte Carlo Idea {h=44519b5c}
+## The Monte Carlo Method {h=ffeac30c}
 
 The Monte Carlo method estimates $\theta = E[g(X)]$ by the sample mean of simulated values,
 
@@ -488,7 +488,7 @@ the typical distance between $\hat p_N$ and $p$. With $N = 1{,}000$ simulations 
 
 The formula also gives the number of simulations needed for a target precision. For the half-width of the 95% interval to be 10% of $p$, set $1.96\sqrt{p(1 - p)/N} = 0.1\,p$ and solve: $N \approx 1.96^2(1 - p)/(0.1^2 p) = 12{,}762$. The required $N$ is inversely proportional to $p$, so a rare event needs many simulations: the relative error, not the absolute one, determines the effort.
 
-## Monte Carlo Converges at Rate 1/√N {h=f0604e22}
+## Convergence Rate of Monte Carlo: 1/√N {h=e80b8a01}
 
 The chart follows the Monte Carlo estimate $\hat p_N$ as $N$ grows from 10 to one million, on a logarithmic horizontal axis. The dashed line is the exact value 2.922% and the shaded area the 95% band $p \pm 1.96\sqrt{p(1 - p)/N}$. For small $N$ the estimate jumps: with fewer than about 40 simulations no month below $-10\%$ has occurred yet and the estimate is zero, and every new loss month moves it visibly. As $N$ grows the estimate settles inside the band, which narrows like $1/\sqrt{N}$.
 
@@ -620,7 +620,7 @@ With $\phi = 0.95$, the sample variance is 10.20, against the theoretical $1/(1 
 
 The closer $\phi$ is to one, the larger the variance and the slower a shock fades. As $\phi \to 1$ the variance $\sigma^2/(1 - \phi^2)$ diverges and the half-life becomes infinite: the AR(1) approaches the random walk, in which shocks never fade. Distinguishing $\phi = 0.95$ from $\phi = 1$ in a finite sample is difficult, the problem of unit-root testing.
 
-## White Noise, AR(1) and Random Walk, Same Shocks {h=36471afd}
+## White Noise, AR(1) and Random Walk with the Same Shocks {h=64eca4f7}
 
 The four panels use the same 500 shocks $\varepsilon_t$ and differ only in $\phi$. The white noise (top left) fluctuates around zero without memory. The AR(1) with $\phi = 0.5$ (top right) looks similar but smoother, with a slightly larger range. The AR(1) with $\phi = 0.95$ (bottom left) makes long excursions, here to about $\pm 10$, but always returns to zero. The vertical scales differ between panels.
 
@@ -678,7 +678,7 @@ where $\lfloor nt\rfloor$ is the integer part of $nt$, the number of steps up to
 
 The scaling explains why the Wiener process is universal: whatever the distribution of the steps, as long as they are i.i.d. with finite variance, the rescaled walk converges to the same limit. The textbook treatment is in @FrankeHardleHafner2019, Ch. 5.
 
-## From Random Walks to the Wiener Process (SFEWienerProcess) {h=0bcb100c}
+## The Wiener Process as a Limit of Random Walks (SFEWienerProcess) {h=f80c6509}
 
 The left panel shows scaled random walks $W_n(t)$ on $[0, 1]$ with 10, 100 and 10,000 steps. With 10 steps the path is a coarse staircase; with 100 the steps are smaller; with 10,000 the individual steps can no longer be seen and the path looks like a continuous, irregular curve. As $n$ grows the steps vanish but the randomness stays: the variance at $t = 1$ remains equal to one.
 
@@ -764,7 +764,7 @@ The Wiener process is the continuous-time limit of the random walk, and GBM turn
 
 Each chapter of the course ends with an open research question that the chapter's tools can address, and with a discussion of how AI tools can help and where their output must be checked. The question here concerns drawdown risk: whether GBM, which ignores volatility clustering, gets the probability of a bad year right. The section states the question with the chapter's data, describes how AI could help with the literature, the code and the test design, lists the checks that a sound answer requires, and proposes a project.
 
-## An Open Question: Does GBM Get Drawdown Risk Right? {h=74262fb5}
+## An Open Research Question: Drawdown Risk under GBM {h=859b3929}
 
 The chart applies the maximum drawdown of @eq:mdd within each calendar year. For each series, the histogram is the distribution of the one-year maximum drawdown under a GBM calibrated to that series, the vertical marks are the drawdowns of the real calendar years, and the dashed line marks $-20\%$, a common definition of a bear market.
 
@@ -810,7 +810,7 @@ The table gathers the results used most often in the rest of the course. The var
 
 The inverse transform, @eq:inverse, and the Monte Carlo standard error, @eq:mcse, are the basis of every simulation in the course: the first turns uniform numbers into draws from any distribution, the second says how many draws a given precision requires. The last three rows describe the price models: the random walk, whose variance grows linearly in time; the stationary AR(1), with variance $\sigma^2/(1 - \phi^2)$ and geometrically decaying autocorrelation; and GBM, with lognormal prices and mean $S_0e^{\mu t}$.
 
-## Check Yourself {h=20f59217}
+## Self-Assessment {h=97a5b6d7}
 
 The three questions apply the main formulas to simple numbers. The first uses the variance of a sum: two assets with daily volatilities of 2% and 3% and correlation 0.5, held in equal weights. By @eq:varsum the portfolio variance is $0.25 \times 4 + 0.25 \times 9 + 2 \times 0.25 \times 0.5 \times 2 \times 3 = 4.75$, and the volatility is $\sqrt{4.75} = 2.18\%$, below the average volatility of 2.5%.
 
